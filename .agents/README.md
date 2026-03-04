@@ -41,6 +41,7 @@ tasks/               — эпики, спринты, inbox
 | # | Агент | Выход |
 |---|--------|--------|
 | — | CEO / Team Audit (_ceo) | TEAM_AUDIT, TEAM_FIX_PLAN, TEAM_READINESS, START_HERE (разовый, вне пайплайна) |
+| 00 | As-Is Audit | AS_IS_AUDIT, AS_IS_BACKLOG, AS_IS_RISKS |
 | 00 | Client Discovery | DISCOVERY.md, REQUIREMENTS.md |
 | 01 | Product Manager | epics, sprint_01, sprint_02 |
 | 02 | Growth & SEO | SEO_PLAN, CONTENT_PLAN, TRACKING |
