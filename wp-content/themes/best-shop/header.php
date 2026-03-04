@@ -23,6 +23,9 @@ do_action( 'best_shop_doctype' );
 
 <body <?php body_class(); ?> itemscope itemtype="https://schema.org/WebPage">
 <?php wp_body_open();
+    if ( defined( 'WP_ENVIRONMENT_TYPE' ) && WP_ENVIRONMENT_TYPE === 'staging' ) :
+        ?><div class="staging-banner" style="background:#d32f2f;color:#fff;text-align:center;padding:20px;font-size:32px;font-weight:bold;line-height:1.2;">СТЕЙДЖИНГ ДЛЯ МИНСК 7 _ ПРИСПОСОБЛЕНИЯ</div><?php
+    endif;
     /**
      * Before Header
      * 
