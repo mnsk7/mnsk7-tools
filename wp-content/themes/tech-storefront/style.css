@@ -14,8 +14,21 @@ Text Domain: tech-storefront
 *
 */
 
-
-
+/* Основные цвета и шрифт Inter */
+:root {
+  --gbl-primary-font: 'Inter', sans-serif;
+  --gbl-secondary-font: 'Inter', sans-serif;
+  --gbl-primary-color: #0c7ddb;
+  --gbl-secondary-color: #000;
+}
+body,
+body .site,
+h1, h2, h3, h4, h5, h6,
+.entry-title,
+.site-title,
+.widget-title {
+  font-family: 'Inter', sans-serif !important;
+}
 
   .custom_product_widget .woocommerce-result-count {
     font-size: 0.9em;

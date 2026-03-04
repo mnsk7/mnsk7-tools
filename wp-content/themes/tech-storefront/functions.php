@@ -5,13 +5,14 @@ if ( !defined( 'ABSPATH' ) )exit;
 
 function tech_storefront_settings( $values ) {
 
-$values[ 'primary_color' ] = '#6e2eff';
+// Основные цвета: синий, бежевый, белый, чёрный
+$values[ 'primary_color' ] = '#0c7ddb';
 $values[ 'secondary_color' ] = '#000';
-$values[ 'heading_font' ] = 'Jost';
-$values[ 'body_font' ] = 'Lato';
+$values[ 'heading_font' ] = 'Inter';
+$values[ 'body_font' ] = 'Inter';
 
 $values[ 'woo_bar_color' ] = '#000';
-$values[ 'woo_bar_bg_color' ] = '#fff';
+$values[ 'woo_bar_bg_color' ] = '#e9e8cc';
 
 $values[ 'preloader_enabled' ] = false;
 
@@ -30,12 +31,11 @@ $values[ 'top_bar_left_content' ] = 'contacts';
 $values[ 'top_bar_left_text' ] = esc_html__( 'edit top bar text', 'tech-storefront' );
 $values[ 'top_bar_right_content' ] = 'menu_social';
 $values[ 'enable_top_bar' ] = true;
-$values[ 'topbar_bg_color' ] = '#7345dd';
+$values[ 'topbar_bg_color' ] = '#0c7ddb';
 $values[ 'topbar_text_color' ] = '#fff';
 
-
 $values[ 'footer_text_color' ] = '#000';
-$values[ 'footer_color' ] = '#e3e3e3';
+$values[ 'footer_color' ] = '#e9e8cc';
 $values[ 'footer_link' ] = 'https://gradientthemes.com/';
 $values[ 'footer_copyright' ] = esc_html__( 'A theme by GradientThemes', 'tech-storefront' );
 
@@ -95,6 +95,17 @@ function tech_storefront_cfg_parent_css() {
 endif;
 
 add_action( 'wp_enqueue_scripts', 'tech_storefront_cfg_parent_css', 10 );
+
+// Inter: подключаем явно (на случай если parent не подхватит по настройке)
+function tech_storefront_enqueue_inter_font() {
+	wp_enqueue_style(
+		'tech-storefront-inter',
+		'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap',
+		array(),
+		null
+	);
+}
+add_action( 'wp_enqueue_scripts', 'tech_storefront_enqueue_inter_font', 9 );
 
 // Add prealoder js
 function tech_storefront_custom_scripts() {
