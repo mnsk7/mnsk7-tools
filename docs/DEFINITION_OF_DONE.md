@@ -15,45 +15,55 @@
 
 ## Задача на тему / frontend
 
+- [ ] Страница категории открывается без ошибок.
+- [ ] Карточка товара открывается без ошибок.
+- [ ] add_to_cart работает из категории и из карточки.
 - [ ] Изменения только в теме / mu-plugins / кастом-плагине (не в ядре/плагинах).
 - [ ] Проверено на мобильном (≤375px).
-- [ ] CLS / LCP не ухудшились (PageSpeed или визуально).
+- [ ] LCP/CLS не ухудшились (PageSpeed или визуально — хотя бы не хуже чем было).
 - [ ] Woo overrides через `/woocommerce/` в теме, не в шаблонах плагина.
-
----
-
-## Задача на SEO / контент
-
-- [ ] Title/H1/Description прописаны по шаблону (см. seo_woocommerce).
-- [ ] Не появились лишние noindex (проверить в Search Console после деплоя).
-- [ ] schema.org корректна (Product / BreadcrumbList / FAQ — при наличии).
-- [ ] Внутренние ссылки добавлены (или не нужны — зафиксировано в задаче).
 
 ---
 
 ## Задача на Woo (каталог / чекаут / лояльность)
 
 - [ ] add_to_cart работает из категории и из карточки.
-- [ ] Чекаут проходит end-to-end (включая подтверждение заказа).
-- [ ] Письмо заказа на staging перехвачено staging-safety (не ушло реальному пользователю).
-- [ ] Acceptance criteria из задачи сняты.
+- [ ] Чекаут проходит end-to-end: add_to_cart → checkout → заказ создан.
+- [ ] Статус заказа корректный после оформления (pending / processing).
+- [ ] Письмо заказа на staging перехвачено staging-safety (не ушло наружу).
+- [ ] Acceptance criteria из задачи выполнены.
+
+---
+
+## Задача на SEO / контент
+
+- [ ] Категории: Title, H1, Description прописаны по шаблону (см. seo_woocommerce).
+- [ ] Мусорные URL фильтров: noindex или canonical (не создают тонкого контента).
+- [ ] schema.org не ломает валидацию (Rich Results Test или schema.org/validator).
+- [ ] Не появились лишние noindex (проверить в Search Console после деплоя).
+- [ ] Внутренние ссылки добавлены (или явно не нужны — зафиксировано в задаче).
 
 ---
 
 ## Деплой на staging
 
-- [ ] Backup БД и файлов сделан перед деплоем.
-- [ ] `make deploy-files` + `make staging-refresh` выполнены.
+- [ ] Backup БД: `wp db export /tmp/backup-$(date +%Y%m%d).sql`
+- [ ] Backup темы: `cp -a themes/<THEME> themes/<THEME>_prev` (на сервере перед rsync).
+- [ ] `make deploy-files` выполнен.
+- [ ] `make staging-refresh` выполнен (если нужно обновить БД).
 - [ ] blog_public = 0 (noindex на staging).
 - [ ] staging-safety.php активен (wp-content/mu-plugins/).
-- [ ] Smoke-тест (корзина → чекаут → заказ).
+- [ ] post-deploy: `wp cache flush`, `wp rewrite flush --hard`.
+- [ ] Smoke-тест: добавить в корзину → чекаут → проверить что заказ создан, письмо не ушло.
 
 ---
 
 ## Деплой на prod
 
 - [ ] Staging протестирован и одобрен.
-- [ ] Backup сделан.
+- [ ] Backup сделан (DB + тема в _prev).
+- [ ] Rollback шаг проверен (знаем как откатить).
 - [ ] Деплой в рабочие часы (не в пятницу вечером).
-- [ ] После деплоя: cache flush, permalinks flush.
-- [ ] Проверить, что blog_public = 1 на проде.
+- [ ] post-deploy: `wp cache flush`, `wp rewrite flush --hard`.
+- [ ] blog_public = 1 на проде.
+- [ ] Smoke-тест после деплоя на проде.

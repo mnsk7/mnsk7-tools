@@ -13,6 +13,8 @@ wp-content/upgrade-temp-backup/
 wp-content/advanced-cache.php
 wp-content/object-cache.php
 wp-content/wp-rocket-config/
+wp-content/wflogs/
+*.log
 
 # Мусор сервера/плагинов
 cgi-bin/
