@@ -1,0 +1,35 @@
+# Секреты и конфиг с паролями
+.env
+.env.local
+.env.*.local
+wp-config.php
+
+# WordPress — не деплоим из git
+wp-content/uploads/
+wp-content/cache/
+wp-content/debug.log
+wp-content/upgrade/
+wp-content/upgrade-temp-backup/
+wp-content/advanced-cache.php
+wp-content/object-cache.php
+wp-content/wp-rocket-config/
+
+# Мусор сервера/плагинов
+cgi-bin/
+seraphinite-accelerator-*.htaccess
+seraph-accel-img-compr-redir.conf
+*.backup.*
+pwa-sw.js
+pwa-register-sw.js
+pwa-manifest.json
+
+# Устаревшие скрипты и черновые заметки
+ssh-run.sh
+sync-from-server.sh
+PORADKEK-DZIALAN.txt
+instalacje.txt
+staging-plan.txt
+
+# Системные файлы
+.DS_Store
+Thumbs.db
