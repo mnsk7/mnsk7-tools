@@ -48,13 +48,15 @@ make github-create-repo
 
 | Имя секрета | Значение | Пример |
 |-------------|----------|--------|
-| `STAGING_SSH_KEY` | Приватный SSH-ключ (целиком, с `-----BEGIN ... END-----`) | содержимое `~/.ssh/id_ed25519_mnsk7` |
+| `STAGING_SSH_KEY` | Приватный ключ **в base64** (иначе в Actions «error in libcrypto») | см. ниже |
 | `STAGING_SSH_HOST` | Хост сервера | `s56.cyber-folks.pl` |
 | `STAGING_SSH_USER` | SSH-пользователь | `llojjlcemq` |
 | `STAGING_SSH_PORT` | Порт SSH | `222` |
 | `STAGING_REMOTE_PATH` | Путь до каталога стейджа на сервере (без `~/`) | `domains/mnsk7-tools.pl/public_html/staging` |
 
 Публичный ключ должен быть добавлен на сервер (DirectAdmin → Klucze SSH или `ssh-copy-id`).
+
+**STAGING_SSH_KEY в base64** (иначе в Actions «error in libcrypto»): в секрет вставляем ключ одной строкой в base64. В терминале: `cat ~/.ssh/id_rsa_mnsk7_deploy | base64 | tr -d '\n' | pbcopy` — затем вставь в значение секрета. Воркфлоу при запуске делает `base64 -d` и восстанавливает ключ.
 
 ---
 
