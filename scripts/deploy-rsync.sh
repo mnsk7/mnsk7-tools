@@ -16,7 +16,7 @@ fi
 SSH_HOST=$(grep '^cyberfolks_ssh_host=' .env | cut -d= -f2)
 SSH_PORT=$(grep '^cyberfolks_ssh_port=' .env | cut -d= -f2)
 SSH_USER=$(grep '^cyberfolks_ssh_user=' .env | cut -d= -f2)
-REMOTE_BASE="${STAGING_REMOTE_PATH:-domains/staging.mnsk7-tools.pl/public_html}"
+REMOTE_BASE="${STAGING_REMOTE_PATH:-domains/mnsk7-tools.pl/public_html/staging}"
 TARGET="${1:-staging}"
 
 if [[ "$TARGET" == "prod" ]]; then

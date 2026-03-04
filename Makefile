@@ -1,7 +1,23 @@
 # mnsk7-tools.pl — staging / deploy
 # Wymaga: .env (cyberfolks_ssh_*), na serwerze wp-cli
 
-.PHONY: staging-refresh deploy-files deploy-mu-plugins
+.PHONY: staging-refresh deploy-files deploy-mu-plugins staging-fix-db sync-prod-to-staging github-create-repo check-db
+
+# Создать репо на GitHub и запушить (gh auth login нужен один раз): make github-create-repo REPO=mnsk7-tools
+github-create-repo:
+	./scripts/github-create-repo.sh $(or $(REPO),mnsk7-tools)
+
+# Проверка каталога по БД (атрибуты, SKU, alt): DB_PASS='...' make check-db
+check-db:
+	./scripts/check-db-catalog.sh
+
+# На сервере: копировать файлы ПРОД → СТЕЙДЖ (wp-config не трогаем)
+sync-prod-to-staging:
+	./scripts/sync-prod-to-staging.sh
+
+# В базе staging: siteurl/home → staging URL, blog_public=0 (без ручного phpMyAdmin)
+staging-fix-db:
+	./scripts/staging-fix-db.sh
 
 # One-button: odświeżenie staging (DB z prod + replace + flush)
 staging-refresh:

@@ -4,7 +4,21 @@
 .env.*.local
 wp-config.php
 
-# WordPress — не деплоим из git
+# Ядро WordPress — не в репо (деплоим только тему/mu-plugins/скрипты)
+index.php
+wp-admin/
+wp-includes/
+wp-*.php
+xmlrpc.php
+readme.html
+license.txt
+robots.txt
+.htaccess
+.htaccess.*
+wp-content/index.php
+wp-content/languages/
+
+# WordPress content — не деплоим из git
 wp-content/uploads/
 wp-content/cache/
 wp-content/debug.log
@@ -15,6 +29,13 @@ wp-content/object-cache.php
 wp-content/wp-rocket-config/
 wp-content/wflogs/
 *.log
+# Дубликат mu-plugins (источник истины — корневой mu-plugins/)
+wp-content/mu-plugins/
+# Дефолтные темы — не редактируем
+wp-content/themes/twentytwentyfive/
+wp-content/themes/twentytwentyfour/
+# Плагины — в репо только кастом (исключения через ! вручную при необходимости)
+wp-content/plugins/
 
 # Мусор сервера/плагинов
 cgi-bin/

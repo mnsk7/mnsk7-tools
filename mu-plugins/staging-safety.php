@@ -15,8 +15,7 @@ add_filter('wp_mail', function ($args) {
     return $args;
 }, 1);
 
-// Opcjonalnie: wyłączyć realne bramki płatności na stagingu
-// Odkomentuj i dostosuj, jeśli używasz konkretnych gateway (stripe, paypal itd.)
-// add_filter('woocommerce_available_payment_gateways', function ($gateways) {
-//     return []; // lub zostaw tylko 'cod' / 'cheque' do testów
-// });
+// Wyłączenie realnych bramek płatności na stagingu (tylko testy)
+add_filter('woocommerce_available_payment_gateways', function ($gateways) {
+    return []; // Na stagingu brak płatności — zostaw tylko 'cod'/'cheque' jeśli potrzebujesz testów
+}, 5);

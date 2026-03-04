@@ -17,7 +17,7 @@ SSH_HOST=$(grep '^cyberfolks_ssh_host=' .env | cut -d= -f2)
 SSH_PORT=$(grep '^cyberfolks_ssh_port=' .env | cut -d= -f2)
 SSH_USER=$(grep '^cyberfolks_ssh_user=' .env | cut -d= -f2)
 PROD_PATH="${STAGING_PROD_PATH:-domains/mnsk7-tools.pl/public_html}"
-STAGING_PATH="${STAGING_STAGING_PATH:-domains/staging.mnsk7-tools.pl/public_html}"
+STAGING_PATH="${STAGING_STAGING_PATH:-domains/mnsk7-tools.pl/public_html/staging}"
 PROD_URL="${STAGING_PROD_URL:-https://mnsk7-tools.pl}"
 STAGING_URL="${STAGING_STAGING_URL:-https://staging.mnsk7-tools.pl}"
 

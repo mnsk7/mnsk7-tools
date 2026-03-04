@@ -1,0 +1,42 @@
+# Деплой на staging при пуше в main
+# Секреты в Settings → Secrets and variables → Actions:
+#   STAGING_SSH_KEY  — приватный SSH-ключ (содержимое, с переносами строк)
+#   STAGING_SSH_HOST — хост (например s56.cyber-folks.pl)
+#   STAGING_SSH_USER — пользователь (например llojjlcemq)
+#   STAGING_SSH_PORT — порт (например 222)
+#   STAGING_REMOTE_PATH — путь на сервере (например domains/mnsk7-tools.pl/public_html/staging)
+
+name: Deploy to Staging
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup SSH
+        env:
+          SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}
+          SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          SSH_PORT: ${{ secrets.STAGING_SSH_PORT }}
+        run: |
+          mkdir -p ~/.ssh
+          echo "$SSH_KEY" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
+
+      - name: Deploy mu-plugins and themes
+        env:
+          SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          SSH_USER: ${{ secrets.STAGING_SSH_USER }}
+          SSH_PORT: ${{ secrets.STAGING_SSH_PORT }}
+          REMOTE_PATH: ${{ secrets.STAGING_REMOTE_PATH }}
+        run: |
+          RSYNC_SSH="ssh -i ~/.ssh/deploy_key -p $SSH_PORT -o StrictHostKeyChecking=no"
+          rsync -avz --delete -e "$RSYNC_SSH" mu-plugins/ "$SSH_USER@$SSH_HOST:~/$REMOTE_PATH/wp-content/mu-plugins/"
+          rsync -avz --delete -e "$RSYNC_SSH" wp-content/themes/ "$SSH_USER@$SSH_HOST:~/$REMOTE_PATH/wp-content/themes/"
