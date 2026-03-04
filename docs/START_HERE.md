@@ -6,37 +6,39 @@
 
 ## Перед первым запуском (один раз)
 
-### 1. SSH-ключ (без пароля)
+### 1. SSH-ключ (без пароля) — ⚠️ осталась одна команда
+Ключ `~/.ssh/id_ed25519_mnsk7` и `~/.ssh/config` — уже созданы.  
+Скопировать ключ на сервер (последний раз введёшь пароль):
 ```bash
-ssh-keygen -t ed25519 -C "deploy"
-ssh-copy-id -p 222 llojjlcemq@s56.cyber-folks.pl
-eval "$(ssh-agent -s)" && ssh-add ~/.ssh/id_ed25519
+ssh-copy-id -p 222 -i ~/.ssh/id_ed25519_mnsk7.pub llojjlcemq@s56.cyber-folks.pl
 ```
-
-Добавь в `~/.ssh/config`:
-```
-Host mnsk7-staging
-  HostName s56.cyber-folks.pl
-  User llojjlcemq
-  Port 222
-  IdentityFile ~/.ssh/id_ed25519
-  IdentitiesOnly yes
-```
-
-### 2. Поддомен + БД на сервере (один раз в DirectAdmin)
-- Создать поддомен `staging.mnsk7-tools.pl`
-- Создать БД `mnsk7_stg` + пользователь + права
-- Создать `wp-config.php` для staging (DB_NAME=mnsk7_stg, WP_SITEURL=staging.mnsk7-tools.pl, WP_ENVIRONMENT_TYPE=staging)
-
-### 3. SSL для staging (один раз)
-DirectAdmin → SSL/TLS → Let's Encrypt → staging.mnsk7-tools.pl
-
-### 4. GitHub репо (один раз)
+После — проверить:
 ```bash
-cd /Users/imac/staging.mnsk7-tools.pl
-git init
-git add .
-git commit -m "Initial: site code + agents"
+ssh mnsk7-staging "echo OK"
+```
+
+### 2. Поддомен + БД на сервере (один раз в DirectAdmin) — ⚠️ вручную
+- Создать поддомен `staging.mnsk7-tools.pl` (DirectAdmin → Subdomains)
+- Создать БД `mnsk7_stg` + пользователь + права (DirectAdmin → MySQL)
+- Создать `~/domains/staging.mnsk7-tools.pl/public_html/wp-config.php`:
+  ```php
+  define('DB_NAME', 'llojjlcemq_mnsk7stg');
+  define('DB_USER', 'ПОЛЬЗОВАТЕЛЬ_БД');
+  define('DB_PASSWORD', 'ПАРОЛЬ_БД');
+  define('DB_HOST', 'localhost');
+  define('WP_HOME', 'https://staging.mnsk7-tools.pl');
+  define('WP_SITEURL', 'https://staging.mnsk7-tools.pl');
+  define('WP_ENVIRONMENT_TYPE', 'staging');
+  define('DISALLOW_FILE_EDIT', true);
+  ```
+
+### 3. SSL для staging (один раз) — ⚠️ вручную
+DirectAdmin → SSL Certificates → Let's Encrypt → staging.mnsk7-tools.pl
+
+### 4. GitHub репо — ⚠️ добавить remote и push
+git init и первый коммит уже сделаны (commit `bfea9b3`).  
+Осталось: создать репо на GitHub и подключить:
+```bash
 git remote add origin https://github.com/ТВОЙ_ЛОГИН/mnsk7-tools.pl.git
 git branch -M main
 git push -u origin main
