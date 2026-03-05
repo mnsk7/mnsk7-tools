@@ -25,31 +25,37 @@ if ( post_password_required() ) {
 	<?php do_action( 'woocommerce_before_single_product_summary' ); ?>
 
 	<div class="summary entry-summary">
-		<?php do_action( 'woocommerce_single_product_summary' ); ?>
-
-		<?php if ( function_exists( 'mnsk7_single_product_availability' ) ) : ?>
-			<?php mnsk7_single_product_availability(); ?>
-		<?php endif; ?>
+		<?php
+		/**
+		 * woocommerce_single_product_summary hooks (priority):
+		 *  5  – woocommerce_template_single_rating
+		 *  8  – mnsk7_single_product_availability
+		 * 10  – woocommerce_template_single_title
+		 * 20  – woocommerce_template_single_excerpt
+		 * 21  – mnsk7_single_product_key_params
+		 * 23  – mnsk7_single_product_zastosowanie
+		 * 25  – woocommerce_template_single_price
+		 * 30  – woocommerce_template_single_add_to_cart
+		 * 32  – mnsk7_single_product_trust_badges
+		 * 40  – woocommerce_template_single_meta
+		 */
+		do_action( 'woocommerce_single_product_summary' );
+		?>
 	</div>
 
 	<?php
-	// Blok kluczowych parametrów (S2-04) i "Do czego" (S2-05)
-	if ( function_exists( 'mnsk7_single_product_key_params' ) ) {
-		mnsk7_single_product_key_params();
-	}
-	if ( function_exists( 'mnsk7_single_product_zastosowanie' ) ) {
-		mnsk7_single_product_zastosowanie();
-	}
-	?>
-
-	<?php
-	// S2-06: miejsce na schemat parametrów lub wideo (treść dodawana później)
+	// S2-06: miejsce na schemat parametrów lub wideo (treść dodawana przez klienta)
+	if ( function_exists( 'mnsk7_single_product_schema_video_placeholder' ) ) :
+		$extra = mnsk7_single_product_schema_video_placeholder();
+		if ( ! empty( $extra ) ) :
 	?>
 	<div class="mnsk7-product-extra-media">
-		<?php if ( function_exists( 'mnsk7_single_product_schema_video_placeholder' ) ) : ?>
-			<?php mnsk7_single_product_schema_video_placeholder(); ?>
-		<?php endif; ?>
+		<?php echo $extra; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
 	</div>
+	<?php
+		endif;
+	endif;
+	?>
 
 	<?php do_action( 'woocommerce_after_single_product_summary' ); ?>
 </div>

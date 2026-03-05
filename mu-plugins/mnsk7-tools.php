@@ -15,7 +15,7 @@ if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) {
 	exit;
 }
 
-define( 'MNK7_TOOLS_VERSION', '1.0.0' );
+define( 'MNK7_TOOLS_VERSION', '1.1.0' );
 
 /**
  * Stałe kontaktowe (klient).
@@ -313,8 +313,47 @@ function mnsk7_single_product_availability() {
 	$class        = ! empty( $availability['class'] ) ? $availability['class'] : '';
 	$text         = ! empty( $availability['availability'] ) ? $availability['availability'] : ( $product->is_in_stock() ? __( 'W magazynie', 'mnsk7-tools' ) : __( 'Na zamówienie', 'mnsk7-tools' ) );
 
-	echo '<p class="mnsk7-product-availability ' . esc_attr( $class ) . '">' . esc_html( $text ) . '</p>';
+	if ( empty( $class ) ) {
+		$class = $product->is_in_stock() ? 'in-stock' : 'out-of-stock';
+	}
+
+	echo '<p class="mnsk7-product-availability ' . esc_attr( $class ) . '">'
+		. '<i class="mnsk7-product-trust__badge-icon">&#10003;</i> '
+		. esc_html( $text )
+		. '</p>';
 }
+
+/**
+ * Trust badges pod przyciskiem "Dodaj do koszyka" w karcie produktu.
+ * Wyróżnia: dostawę jutro, fakturę VAT, darmową dostawę od X zł, zwroty 30 dni.
+ */
+function mnsk7_single_product_trust_badges() {
+	$min = number_format_i18n( MNK7_FREE_SHIPPING_MIN, 0 );
+	echo '<div class="mnsk7-product-trust">';
+	$badges = array(
+		__( 'Dostawa jutro', 'mnsk7-tools' ),
+		__( 'Faktura VAT', 'mnsk7-tools' ),
+		sprintf( __( 'Darmowa dostawa od %s zł', 'mnsk7-tools' ), $min ),
+		__( 'Zwroty 30 dni', 'mnsk7-tools' ),
+	);
+	foreach ( $badges as $badge ) {
+		echo '<span class="mnsk7-product-trust__badge"><i class="mnsk7-product-trust__badge-icon" aria-hidden="true">&#10003;</i>'
+			. esc_html( $badge ) . '</span>';
+	}
+	echo '</div>';
+}
+
+/**
+ * Podpięcie bloków karty produktu do hooków WooCommerce.
+ * availability   → woocommerce_single_product_summary priority 8  (przed ceną/tytułem)
+ * key_params     → woocommerce_single_product_summary priority 21 (po excerptie, przed CTA)
+ * zastosowanie   → woocommerce_single_product_summary priority 23
+ * trust_badges   → woocommerce_single_product_summary priority 32 (po "Dodaj do koszyka")
+ */
+add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_availability', 8 );
+add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_key_params', 21 );
+add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_zastosowanie', 23 );
+add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_trust_badges', 32 );
 
 /**
  * Wyświetla informację o dostawie i fakturze VAT (S2-11) — w karcie produktu i shortcode.
@@ -728,8 +767,7 @@ add_action( 'wp_footer', function () {
  * Gdy dodasz zdjęcie schematu / wideo — wyświetl je tutaj lub usuń wywołanie.
  */
 function mnsk7_single_product_schema_video_placeholder() {
-	// Opcjonalnie: echo '<p class="mnsk7-schema-video-placeholder" style="color:#999;font-size:0.9em;">Miejsce na schemat parametrów lub wideo.</p>';
-	// Na razie puste — blok jest w szablonie, można dodać treść per produkt (np. custom field).
+	return '';
 }
 
 /**
@@ -739,6 +777,65 @@ function mnsk7_single_product_schema_video_placeholder() {
 function mnsk7_get_filter_attribute_order() {
 	return array( 'typ', 'srednica', 'fi', 'dlugosc-robocza-h', 'dlugosc-calkowita-l', 'zastosowanie' );
 }
+
+/**
+ * SEO: Organization + LocalBusiness JSON-LD schema w <head>.
+ * Dane statyczne (adres, kontakt) na podstawie REQUIREMENTS / CONTACT_DELIVERY_LOYALTY.md.
+ * Produkt JSON-LD obsługuje Yoast SEO — tutaj tylko dane firmy.
+ */
+add_action( 'wp_head', function () {
+	$schema = array(
+		'@context' => 'https://schema.org',
+		'@type'    => array( 'Organization', 'OnlineStore' ),
+		'name'     => 'MNK7 Tools',
+		'legalName' => 'MNSK7 SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ',
+		'url'      => home_url( '/' ),
+		'logo'     => array(
+			'@type' => 'ImageObject',
+			'url'   => get_site_icon_url( 512 ) ?: home_url( '/wp-content/themes/tech-storefront/assets/images/logo.png' ),
+		),
+		'contactPoint' => array(
+			'@type'             => 'ContactPoint',
+			'telephone'         => MNK7_CONTACT_PHONE,
+			'email'             => MNK7_CONTACT_EMAIL,
+			'contactType'       => 'customer service',
+			'availableLanguage' => array( 'Polish' ),
+			'hoursAvailable'    => array(
+				array(
+					'@type'     => 'OpeningHoursSpecification',
+					'dayOfWeek' => array( 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday' ),
+					'opens'     => '09:00',
+					'closes'    => '17:00',
+				),
+				array(
+					'@type'     => 'OpeningHoursSpecification',
+					'dayOfWeek' => 'Saturday',
+					'opens'     => '10:00',
+					'closes'    => '12:00',
+				),
+			),
+		),
+		'address' => array(
+			'@type'           => 'PostalAddress',
+			'streetAddress'   => 'ul. Williama Heerleina Lindleya 16/512',
+			'addressLocality' => 'Warszawa',
+			'postalCode'      => '02-013',
+			'addressCountry'  => 'PL',
+		),
+		'vatID'          => 'PL5242991741',
+		'taxID'          => '5242991741',
+		'sameAs'         => array(
+			MNK7_INSTAGRAM_URL,
+			MNK7_ALLEGRO_SELLER_URL,
+		),
+		'areaServed'     => array(
+			'@type' => 'Country',
+			'name'  => 'Poland',
+		),
+		'description'    => __( 'Sklep z frezami CNC i narzędziami do obróbki drewna, MDF, aluminium, stali i tworzyw sztucznych. Dostawa następnego dnia, faktura VAT.', 'mnsk7-tools' ),
+	);
+	echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}, 5 );
 
 /**
  * Shortcode: rating sklepu (S2-09). Placeholder pod Allegro lub przyszłe opinie.
