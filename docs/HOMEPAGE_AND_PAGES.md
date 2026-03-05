@@ -44,7 +44,7 @@ Kolejność bloków (wg UI_SPEC i notatek z PDF):
 
 | Shortcode | Gdzie użyć |
 |-----------|------------|
-| `[mnsk7_contact_info]` | Stopka / strona Kontakt (jeśli chcesz osobny blok; w stopce jest już globalnie). |
+| `[mnsk7_contact_info]` | Stopka ma kontakt globalnie. Strona Kontakt: utwórz stronę i wybierz szablon **„Kontakt”** — blok kontaktu pojawi się pod treścią. |
 | `[mnsk7_dostawa_vat]` | Karta produktu ma to wbudowane; ewentualnie w widgecie. |
 | `[mnsk7_rating url="https://allegro.pl/uzytkownik/mnsk7-tools_pl"]` | Stopka lub sekcja „Opinie”. |
 | `[mnsk7_allegro_reviews_pages from="1" to="20"]` | Osobna sekcja „Wszystkie strony z ocenami” (page 1–20). |

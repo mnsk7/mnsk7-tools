@@ -25,6 +25,32 @@ define( 'MNK7_CONTACT_PHONE', '+48 451696511' );
 define( 'MNK7_CONTACT_HOURS', 'pn.–pt. 9.00–17.00, sb. 10.00–12.00, nd. zamknięte' );
 define( 'MNK7_INSTAGRAM_URL', 'https://www.instagram.com/mnsk7tools/' );
 define( 'MNK7_ALLEGRO_SELLER_URL', 'https://allegro.pl/uzytkownik/mnsk7-tools_pl' );
+define( 'MNK7_FREE_SHIPPING_MIN', 300 );
+
+/**
+ * Komunikat w koszyku i przy checkout: darmowa dostawa od 300 zł.
+ */
+add_action( 'woocommerce_before_cart', 'mnsk7_cart_free_shipping_notice', 5 );
+add_action( 'woocommerce_before_checkout_form', 'mnsk7_cart_free_shipping_notice', 5 );
+function mnsk7_cart_free_shipping_notice() {
+	if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+		return;
+	}
+	$min   = (float) MNK7_FREE_SHIPPING_MIN;
+	$total = WC()->cart->get_displayed_subtotal();
+	if ( $total >= $min ) {
+		wc_print_notice( __( 'Masz darmową dostawę!', 'mnsk7-tools' ), 'success' );
+		return;
+	}
+	$lack = $min - $total;
+	$msg  = sprintf(
+		/* translators: 1: amount in zł, 2: amount missing */
+		__( 'Darmowa dostawa od %1$s zł. Do gratisowej dostawy brakuje Ci %2$s zł.', 'mnsk7-tools' ),
+		number_format_i18n( $min, 0 ),
+		number_format_i18n( $lack, 2 )
+	);
+	wc_print_notice( $msg, 'notice' );
+}
 
 /**
  * Lista atrybutów wyświetlanych w bloku "Kluczowe parametry" w karcie produktu.

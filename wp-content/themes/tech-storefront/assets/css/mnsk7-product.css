@@ -196,6 +196,13 @@
 	color: #555;
 }
 
+.mnsk7-page-kontakt .entry-content {
+	margin-top: 1rem;
+}
+.mnsk7-page-kontakt .mnsk7-contact-info {
+	margin-top: 1.5rem;
+}
+
 /* Legacy: gdy shortcode używany w treści */
 .mnsk7-footer-dostawa-vat {
 	margin: 0;
