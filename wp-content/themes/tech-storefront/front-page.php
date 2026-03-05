@@ -92,7 +92,7 @@ get_header();
 	</section>
 	<?php endif; ?>
 
-	<!-- TRUST — statystyki Allegro -->
+	<!-- TRUST + OPINIE (single section) -->
 	<section class="mnsk7-section mnsk7-section--trust mnsk7-section--light">
 		<div class="container">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Dlaczego kupujący nam ufają', 'tech-storefront' ); ?></h2>
@@ -102,35 +102,22 @@ get_header();
 					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'pozytywnych opinii', 'tech-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number">383</span>
-					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'oceny na Allegro', 'tech-storefront' ); ?></span>
+					<span class="mnsk7-trust-stats__number">383+</span>
+					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'ocen na Allegro', 'tech-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-trust-stats__item">
 					<span class="mnsk7-trust-stats__number">3 500+</span>
-					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'zamówień w 2025 r.', 'tech-storefront' ); ?></span>
-				</div>
-				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number">425</span>
-					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'produktów w ofercie', 'tech-storefront' ); ?></span>
+					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'zamówień rocznie', 'tech-storefront' ); ?></span>
 				</div>
 			</div>
+			<?php echo do_shortcode( '[mnsk7_allegro_reviews title=""]' ); ?>
 			<p class="mnsk7-trust-stats__allegro">
-				<?php esc_html_e( 'Super Sprzedawca Allegro — najwyższa jakość obsługi i realizacji zamówień.', 'tech-storefront' ); ?>
 				<a href="<?php echo esc_url( MNK7_ALLEGRO_SELLER_URL ); ?>" target="_blank" rel="noopener nofollow">
-					<?php esc_html_e( 'Zobacz profil na Allegro →', 'tech-storefront' ); ?>
+					<?php esc_html_e( 'Super Sprzedawca Allegro — zobacz profil →', 'tech-storefront' ); ?>
 				</a>
 			</p>
 		</div>
 	</section>
-
-	<!-- OPINIE -->
-	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
-	<section class="mnsk7-section mnsk7-section--reviews">
-		<div class="container">
-			<?php echo do_shortcode( '[mnsk7_allegro_reviews title="Co mówią kupujący"]' ); ?>
-		</div>
-	</section>
-	<?php endif; ?>
 
 	<!-- SYSTEM RABATÓW -->
 	<section class="mnsk7-section mnsk7-section--loyalty mnsk7-section--light">
