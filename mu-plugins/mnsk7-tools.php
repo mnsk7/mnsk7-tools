@@ -359,6 +359,103 @@ function mnsk7_allegro_trust_html( $atts = array() ) {
 	return $html;
 }
 
+/**
+ * Linki do stron z ocenami Allegro (page=1..N).
+ */
+function mnsk7_allegro_reviews_pages_html( $atts = array() ) {
+	$atts = shortcode_atts(
+		array(
+			'from'  => 1,
+			'to'    => 20,
+			'base'  => 'https://allegro.pl/uzytkownik/mnsk7-tools_pl/oceny?page=%d',
+			'title' => __( 'Wszystkie oceny Allegro', 'mnsk7-tools' ),
+		),
+		$atts,
+		'mnsk7_allegro_reviews_pages'
+	);
+
+	$from = max( 1, (int) $atts['from'] );
+	$to   = max( $from, min( 50, (int) $atts['to'] ) );
+	$base = (string) $atts['base'];
+
+	$html  = '<section class="mnsk7-allegro-pages">';
+	$html .= '<h4 class="mnsk7-allegro-pages__title">' . esc_html( $atts['title'] ) . '</h4>';
+	$html .= '<div class="mnsk7-allegro-pages__links">';
+	for ( $page = $from; $page <= $to; $page++ ) {
+		$url   = esc_url( sprintf( $base, $page ) );
+		$html .= '<a href="' . $url . '" target="_blank" rel="noopener">page ' . (int) $page . '</a>';
+	}
+	$html .= '</div>';
+	$html .= '</section>';
+
+	return $html;
+}
+
+/**
+ * Ręczne cytaty z opinii Allegro.
+ * Domyślnie puste; można podpiąć filtrem:
+ * add_filter( 'mnsk7_allegro_review_quotes', fn() => [ [ 'text' => '...', 'author' => 'Kupujący' ] ] );
+ */
+function mnsk7_allegro_review_quotes() {
+	$quotes = array();
+	return apply_filters( 'mnsk7_allegro_review_quotes', $quotes );
+}
+
+/**
+ * Shortcode z cytatami opinii + CTA do wszystkich stron ocen.
+ * Użycie: [mnsk7_allegro_reviews]
+ */
+function mnsk7_allegro_reviews_html( $atts = array() ) {
+	$atts = shortcode_atts(
+		array(
+			'title'      => __( 'Opinie kupujących z Allegro', 'mnsk7-tools' ),
+			'empty_text' => __( 'Opinie produktowe są aktualnie synchronizowane. Zobacz pełne oceny sprzedawcy na Allegro.', 'mnsk7-tools' ),
+			'pages'      => 20,
+		),
+		$atts,
+		'mnsk7_allegro_reviews'
+	);
+
+	$quotes = mnsk7_allegro_review_quotes();
+	$html   = '<section class="mnsk7-allegro-reviews">';
+	$html  .= '<h4 class="mnsk7-allegro-reviews__title">' . esc_html( $atts['title'] ) . '</h4>';
+
+	if ( empty( $quotes ) || ! is_array( $quotes ) ) {
+		$html .= '<p class="mnsk7-allegro-reviews__empty">' . esc_html( $atts['empty_text'] ) . '</p>';
+		$html .= mnsk7_allegro_reviews_pages_html(
+			array(
+				'from' => 1,
+				'to'   => (int) $atts['pages'],
+			)
+		);
+		$html .= '</section>';
+		return $html;
+	}
+
+	$html .= '<div class="mnsk7-allegro-reviews__list">';
+	foreach ( $quotes as $quote ) {
+		$text   = isset( $quote['text'] ) ? sanitize_text_field( (string) $quote['text'] ) : '';
+		$author = isset( $quote['author'] ) ? sanitize_text_field( (string) $quote['author'] ) : __( 'Kupujący Allegro', 'mnsk7-tools' );
+		if ( $text === '' ) {
+			continue;
+		}
+		$html .= '<blockquote class="mnsk7-allegro-reviews__item">';
+		$html .= '<p>' . esc_html( $text ) . '</p>';
+		$html .= '<cite>' . esc_html( $author ) . '</cite>';
+		$html .= '</blockquote>';
+	}
+	$html .= '</div>';
+	$html .= mnsk7_allegro_reviews_pages_html(
+		array(
+			'from' => 1,
+			'to'   => (int) $atts['pages'],
+		)
+	);
+	$html .= '</section>';
+
+	return $html;
+}
+
 add_action( 'init', function () {
 	add_shortcode( 'mnsk7_dostawa_vat', function () {
 		return mnsk7_dostawa_vat_html();
@@ -388,6 +485,12 @@ add_action( 'init', function () {
 	} );
 	add_shortcode( 'mnsk7_allegro_trust', function ( $atts ) {
 		return mnsk7_allegro_trust_html( $atts );
+	} );
+	add_shortcode( 'mnsk7_allegro_reviews_pages', function ( $atts ) {
+		return mnsk7_allegro_reviews_pages_html( $atts );
+	} );
+	add_shortcode( 'mnsk7_allegro_reviews', function ( $atts ) {
+		return mnsk7_allegro_reviews_html( $atts );
 	} );
 }, 5 );
 

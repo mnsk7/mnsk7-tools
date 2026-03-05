@@ -119,3 +119,10 @@ Klient chce przenieść „zaufanie z Allegro” na stronę. Do wdrożenia są 2
    - Opcja C: osadzenie oficjalnego widgetu/sekcji Allegro, jeśli dostępne.
 
 Rekomendacja: najpierw seller trust + CTA do Allegro, potem osobny mini-projekt „opinie produktowe” po weryfikacji prawnej i technicznej.
+
+**Dodatkowo wdrożone shortcode:**
+
+- `[mnsk7_allegro_reviews_pages from="1" to="20"]` — lista linków do stron ocen `page=1..20`.
+- `[mnsk7_allegro_reviews]` — sekcja opinii (ręczne cytaty przez filtr) + automatyczny fallback do linków wszystkich stron ocen.
+
+Uwaga techniczna: Allegro stosuje ochronę anti-bot (`Please enable JS...`), więc pełny automatyczny scraping HTML z serwera bywa niestabilny.

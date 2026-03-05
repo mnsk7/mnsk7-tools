@@ -154,6 +154,57 @@
 	font-weight: 600;
 }
 
+.mnsk7-allegro-pages {
+	margin: 0.8em 0 0 0;
+}
+
+.mnsk7-allegro-pages__title {
+	margin: 0 0 0.45em 0;
+	font-size: 0.98em;
+}
+
+.mnsk7-allegro-pages__links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4em;
+}
+
+.mnsk7-allegro-pages__links a {
+	padding: 0.25em 0.45em;
+	border: 1px solid #d7d7d7;
+	border-radius: 4px;
+	text-decoration: none;
+}
+
+.mnsk7-allegro-reviews {
+	margin: 1.25em 0;
+	padding: 1em;
+	background: #f9fafb;
+	border: 1px solid #e5e7eb;
+	border-radius: 6px;
+}
+
+.mnsk7-allegro-reviews__title {
+	margin: 0 0 0.6em 0;
+}
+
+.mnsk7-allegro-reviews__item {
+	margin: 0 0 0.8em 0;
+	padding: 0.6em;
+	border-left: 3px solid #0c7ddb;
+	background: #fff;
+}
+
+.mnsk7-allegro-reviews__item p {
+	margin: 0 0 0.4em 0;
+}
+
+.mnsk7-allegro-reviews__item cite {
+	font-style: normal;
+	font-size: 0.9em;
+	color: #666;
+}
+
 .mnsk7-delivery-rules {
 	margin: 1.25em 0;
 	padding: 1em;
