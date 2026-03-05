@@ -93,7 +93,19 @@
 
 ---
 
-## 6. Связь с другими документами
+## 6. Kontakt, dostawa, lojalność (doprecyzowanie od klienta)
+
+Pełna specyfikacja: [CONTACT_DELIVERY_LOYALTY.md](CONTACT_DELIVERY_LOYALTY.md).
+
+- **Kontakt:** office@mnsk7.pl, +48 451696511, godziny pn.–pt. 9–17, sb. 10–12, nd. zamknięte.
+- **Stopka:** widżet Instagram (mnsk7tools, 1 rząd), link do profilu.
+- **Dostawa:** tylko Polska; InPost i DPD; tabela warunków (np. zamów pn.–pt. InPost do 15:00 → dostawa jutro); darmowa dostawa od 300 zł.
+- **Loyalty:** w panelu klienta — progi roczne 1000/3000/5000/10000 zł → 5/10/15/20%; automatyczne naliczanie i wykorzystanie rabatu.
+- **Główna / header / footer:** według notatek z PDF (staging.kayer.pl) — [CONTACT_DELIVERY_LOYALTY.md](CONTACT_DELIVERY_LOYALTY.md) §7. Specyfikacja wizualna: agent **09_ui_designer** → [UI_SPEC.md](UI_SPEC.md).
+
+---
+
+## 7. Связь с другими документами
 
 - **AS_IS_AUDIT.md** — текущее состояние (тема, плагины, атрибуты, изображения).  
 - **AS_IS_BACKLOG.md** — технические и продуктовые задачи (P0–P3, UX-01–UX-07).  

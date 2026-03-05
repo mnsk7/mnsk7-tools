@@ -5,18 +5,14 @@
 ## Три слоя skills
 
 1. **Официальные WP skills** (скачиваемые) — чтобы агент не генерировал устаревший WP-код.  
-   Установка в корне проекта:
+   Установлены в `.agents/skills/`: wordpress-router, wp-project-triage, wp-plugin-development, wp-wpcli-and-ops, wp-performance, wp-phpstan, wpds.  
+   Повторная установка (в корне проекта):
    ```bash
-   npx skills add https://github.com/WordPress/agent-skills --agent cursor \
-     --skill wordpress-router \
-     --skill wp-project-triage \
-     --skill wp-plugin-development \
-     --skill wp-wpcli-and-ops \
-     --skill wp-performance \
-     --skill wp-phpstan \
-     --skill wpds
+   npx skills add https://github.com/WordPress/agent-skills --agent cursor -y \
+     --skill wordpress-router --skill wp-project-triage --skill wp-plugin-development \
+     --skill wp-wpcli-and-ops --skill wp-performance --skill wp-phpstan --skill wpds
    ```
-   Даёт: wordpress-router, wp-project-triage, wp-plugin-development, wp-wpcli-and-ops, wp-performance, wpds.
+   Флаг `-y` — без интерактивных вопросов.
 
 2. **Ops skills** — wp-cli, миграции, деплой на VPS (часть в WP repo, часть project).
 
@@ -48,10 +44,11 @@ tasks/               — эпики, спринты, inbox
 | 03 | WP Architect | ARCHITECTURE, BACKLOG |
 | 04 | Woo Engineer | **код:** PHP (mu-plugin, хуки Woo), шаблоны Woo (чекаут, каталог, карточка); задачи в sprint |
 | 05 | Theme & UX Frontend | **код:** тема (overrides, CSS/JS), вёрстка категории и карточки, мобильный UX |
+| 09 | UI Designer | **не код:** UI_SPEC, гайды header/footer/карточка/главная, визуальные рекомендации |
 | 06 | DevOps GitHub | ветки, PR, Actions |
 | 07 | Server Ops CyberFolks | playbook, инструкции, бэкапы |
 | 08 | QA & Security | QA_REPORT, чеклисты, inbox |
 
 Порядок работы — см. **orchestrator.md**.
 
-**Кто пишет код:** бизнес-логику и шаблоны Woo — **04_woo_engineer**; вёрстку темы, UX и фронт — **05_theme_ux_frontend**. Оба работают по ARCHITECTURE и спринтам. 06 пишет только CI (workflows, PR template).
+**Кто пишет код:** 04_woo_engineer (логика Woo, шаблоны); 05_theme_ux_frontend (тема, вёрстка). **09_ui_designer** только спецификация и гайды (UI_SPEC), без кода. 06 — CI (workflows, PR template).

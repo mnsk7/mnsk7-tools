@@ -18,6 +18,15 @@ if ( defined( 'XMLRPC_REQUEST' ) && XMLRPC_REQUEST ) {
 define( 'MNK7_TOOLS_VERSION', '1.0.0' );
 
 /**
+ * Stałe kontaktowe (klient).
+ */
+define( 'MNK7_CONTACT_EMAIL', 'office@mnsk7.pl' );
+define( 'MNK7_CONTACT_PHONE', '+48 451696511' );
+define( 'MNK7_CONTACT_HOURS', 'pn.–pt. 9.00–17.00, sb. 10.00–12.00, nd. zamknięte' );
+define( 'MNK7_INSTAGRAM_URL', 'https://www.instagram.com/mnsk7tools/' );
+define( 'MNK7_ALLEGRO_SELLER_URL', 'https://allegro.pl/uzytkownik/mnsk7-tools_pl' );
+
+/**
  * Lista atrybutów wyświetlanych w bloku "Kluczowe parametry" w karcie produktu.
  * Klucz = slug atrybutu (Woo: pa_* dla globalnych), wartość = etykieta.
  */
@@ -126,9 +135,259 @@ function mnsk7_dostawa_vat_html() {
 		. '</p>';
 }
 
+/**
+ * Kontakt do wyświetlenia w stopce / shortcode.
+ */
+function mnsk7_contact_info_html() {
+	$email = antispambot( MNK7_CONTACT_EMAIL );
+	$phone = preg_replace( '/\s+/', '', MNK7_CONTACT_PHONE );
+
+	return '<div class="mnsk7-contact-info">'
+		. '<h4 class="mnsk7-contact-info__title">' . esc_html__( 'Kontakt', 'mnsk7-tools' ) . '</h4>'
+		. '<p class="mnsk7-contact-info__line"><strong>' . esc_html__( 'Email:', 'mnsk7-tools' ) . '</strong> <a href="mailto:' . esc_attr( $email ) . '">' . esc_html( $email ) . '</a></p>'
+		. '<p class="mnsk7-contact-info__line"><strong>' . esc_html__( 'Telefon:', 'mnsk7-tools' ) . '</strong> <a href="tel:' . esc_attr( $phone ) . '">' . esc_html( MNK7_CONTACT_PHONE ) . '</a></p>'
+		. '<p class="mnsk7-contact-info__line"><strong>' . esc_html__( 'Godziny:', 'mnsk7-tools' ) . '</strong> ' . esc_html( MNK7_CONTACT_HOURS ) . '</p>'
+		. '<p class="mnsk7-contact-info__line"><strong>' . esc_html__( 'Instagram:', 'mnsk7-tools' ) . '</strong> <a href="' . esc_url( MNK7_INSTAGRAM_URL ) . '" target="_blank" rel="noopener">mnsk7tools</a></p>'
+		. '</div>';
+}
+
+/**
+ * Reguły dostawy (InPost / DPD) + darmowa dostawa.
+ */
+function mnsk7_delivery_rules_table_html() {
+	$rows = array(
+		array(
+			'courier' => 'InPost',
+			'order'   => __( 'pn.–pt. do 15:00', 'mnsk7-tools' ),
+			'result'  => __( 'dostawa następnego dnia', 'mnsk7-tools' ),
+		),
+		array(
+			'courier' => 'InPost',
+			'order'   => __( 'sb. do 11:00', 'mnsk7-tools' ),
+			'result'  => __( 'dostawa w poniedziałek', 'mnsk7-tools' ),
+		),
+		array(
+			'courier' => 'DPD',
+			'order'   => __( 'pn.–czw. do 17:00', 'mnsk7-tools' ),
+			'result'  => __( 'dostawa następnego dnia', 'mnsk7-tools' ),
+		),
+		array(
+			'courier' => 'DPD',
+			'order'   => __( 'pt. do 17:00', 'mnsk7-tools' ),
+			'result'  => __( 'dostawa w poniedziałek', 'mnsk7-tools' ),
+		),
+	);
+
+	$html  = '<div class="mnsk7-delivery-rules">';
+	$html .= '<h4 class="mnsk7-delivery-rules__title">' . esc_html__( 'Orientacyjny czas dostawy (Polska)', 'mnsk7-tools' ) . '</h4>';
+	$html .= '<table class="mnsk7-delivery-rules__table"><thead><tr>';
+	$html .= '<th>' . esc_html__( 'Kurier', 'mnsk7-tools' ) . '</th>';
+	$html .= '<th>' . esc_html__( 'Kiedy zamówisz', 'mnsk7-tools' ) . '</th>';
+	$html .= '<th>' . esc_html__( 'Dostawa', 'mnsk7-tools' ) . '</th>';
+	$html .= '</tr></thead><tbody>';
+
+	foreach ( $rows as $row ) {
+		$html .= '<tr>';
+		$html .= '<td>' . esc_html( $row['courier'] ) . '</td>';
+		$html .= '<td>' . esc_html( $row['order'] ) . '</td>';
+		$html .= '<td>' . esc_html( $row['result'] ) . '</td>';
+		$html .= '</tr>';
+	}
+
+	$html .= '</tbody></table>';
+	$html .= '<p class="mnsk7-delivery-rules__free">' . esc_html__( 'Darmowa dostawa od 300 zł.', 'mnsk7-tools' ) . '</p>';
+	$html .= '</div>';
+
+	return $html;
+}
+
+/**
+ * Szacowany komunikat ETA pod wybraną metodę dostawy.
+ */
+function mnsk7_estimated_delivery_text( $courier ) {
+	$hour = (int) current_time( 'G' );
+	$wday = (int) current_time( 'w' ); // 0 = Sunday, 6 = Saturday.
+
+	if ( $courier === 'inpost' ) {
+		if ( $wday >= 1 && $wday <= 5 ) {
+			if ( $hour < 15 ) {
+				return __( 'InPost: zamów do 15:00 — dostawa następnego dnia.', 'mnsk7-tools' );
+			}
+			return __( 'InPost: zamówienie po 15:00 — dostawa zwykle w najbliższy dzień roboczy.', 'mnsk7-tools' );
+		}
+		if ( $wday === 6 ) {
+			return __( 'InPost: sobota do 11:00 — dostawa w poniedziałek.', 'mnsk7-tools' );
+		}
+		return __( 'InPost: zamówienie w niedzielę — wysyłka od poniedziałku.', 'mnsk7-tools' );
+	}
+
+	if ( $courier === 'dpd' ) {
+		if ( $wday >= 1 && $wday <= 4 ) {
+			if ( $hour < 17 ) {
+				return __( 'DPD: zamów do 17:00 — dostawa następnego dnia.', 'mnsk7-tools' );
+			}
+			return __( 'DPD: zamówienie po 17:00 — dostawa zwykle w najbliższy dzień roboczy.', 'mnsk7-tools' );
+		}
+		if ( $wday === 5 ) {
+			return __( 'DPD: piątek do 17:00 — dostawa w poniedziałek.', 'mnsk7-tools' );
+		}
+		return __( 'DPD: zamówienie w weekend — wysyłka od poniedziałku.', 'mnsk7-tools' );
+	}
+
+	return __( 'Dostawa: wybierz InPost lub DPD, aby zobaczyć orientacyjny termin dostawy.', 'mnsk7-tools' );
+}
+
+/**
+ * Próba rozpoznania kuriera na podstawie wybranej metody Woo (checkout/cart).
+ */
+function mnsk7_detect_selected_courier() {
+	if ( ! function_exists( 'WC' ) || ! WC()->session ) {
+		return '';
+	}
+
+	$methods = WC()->session->get( 'chosen_shipping_methods', array() );
+	if ( empty( $methods ) || ! is_array( $methods ) ) {
+		return '';
+	}
+
+	$method = strtolower( (string) reset( $methods ) );
+	if ( strpos( $method, 'inpost' ) !== false ) {
+		return 'inpost';
+	}
+	if ( strpos( $method, 'dpd' ) !== false ) {
+		return 'dpd';
+	}
+	return '';
+}
+
+/**
+ * HTML komunikatu ETA.
+ */
+function mnsk7_delivery_eta_html( $courier = '' ) {
+	if ( $courier === '' ) {
+		$courier = mnsk7_detect_selected_courier();
+	}
+	return '<p class="mnsk7-delivery-eta">' . esc_html( mnsk7_estimated_delivery_text( $courier ) ) . '</p>';
+}
+
+/**
+ * Instagram block (shortcode).
+ * Użycie:
+ * [mnsk7_instagram_feed]
+ * [mnsk7_instagram_feed posts="https://www.instagram.com/p/abc/,https://www.instagram.com/p/def/"]
+ */
+function mnsk7_instagram_feed_html( $atts = array() ) {
+	$atts = shortcode_atts(
+		array(
+			'posts' => '',
+			'limit' => 3,
+			'title' => __( 'Instagram @mnsk7tools', 'mnsk7-tools' ),
+		),
+		$atts,
+		'mnsk7_instagram_feed'
+	);
+
+	$limit = max( 1, min( 6, (int) $atts['limit'] ) );
+	$posts = array_filter( array_map( 'trim', explode( ',', (string) $atts['posts'] ) ) );
+	if ( ! empty( $posts ) ) {
+		$posts = array_slice( $posts, 0, $limit );
+	}
+
+	$html  = '<section class="mnsk7-instagram-feed">';
+	$html .= '<h4 class="mnsk7-instagram-feed__title">' . esc_html( $atts['title'] ) . '</h4>';
+
+	if ( ! empty( $posts ) ) {
+		$html .= '<div class="mnsk7-instagram-feed__grid">';
+		foreach ( $posts as $post_url ) {
+			$post_url = esc_url( $post_url );
+			if ( $post_url === '' ) {
+				continue;
+			}
+			$embed = wp_oembed_get( $post_url );
+			$html .= '<div class="mnsk7-instagram-feed__item">';
+			if ( $embed ) {
+				$html .= $embed; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			} else {
+				$html .= '<a href="' . $post_url . '" target="_blank" rel="noopener">' . esc_html__( 'Zobacz post na Instagramie', 'mnsk7-tools' ) . '</a>';
+			}
+			$html .= '</div>';
+		}
+		$html .= '</div>';
+	} else {
+		$html .= '<p class="mnsk7-instagram-feed__fallback">' . esc_html__( 'Najświeższe posty znajdziesz na naszym profilu Instagram.', 'mnsk7-tools' ) . '</p>';
+	}
+
+	$html .= '<p class="mnsk7-instagram-feed__cta"><a href="' . esc_url( MNK7_INSTAGRAM_URL ) . '" target="_blank" rel="noopener">@mnsk7tools</a></p>';
+	$html .= '</section>';
+
+	return $html;
+}
+
+/**
+ * Allegro trust block (shortcode).
+ * Użycie:
+ * [mnsk7_allegro_trust]
+ */
+function mnsk7_allegro_trust_html( $atts = array() ) {
+	$atts = shortcode_atts(
+		array(
+			'seller'              => 'mnsk7-tools_pl',
+			'recommendation'      => '100%',
+			'positive'            => '383',
+			'negative'            => '0',
+			'on_allegro'          => 'od 1 roku i 8 miesięcy',
+			'title'               => __( 'Super sprzedawca na Allegro', 'mnsk7-tools' ),
+			'cta'                 => __( 'Zobacz wszystkie oceny i komentarze', 'mnsk7-tools' ),
+			'url'                 => MNK7_ALLEGRO_SELLER_URL,
+		),
+		$atts,
+		'mnsk7_allegro_trust'
+	);
+
+	$html  = '<section class="mnsk7-allegro-trust">';
+	$html .= '<h4 class="mnsk7-allegro-trust__title">' . esc_html( $atts['title'] ) . '</h4>';
+	$html .= '<p class="mnsk7-allegro-trust__seller"><strong>' . esc_html( $atts['seller'] ) . '</strong> — ' . esc_html( $atts['on_allegro'] ) . '</p>';
+	$html .= '<ul class="mnsk7-allegro-trust__stats">';
+	$html .= '<li><strong>' . esc_html( $atts['recommendation'] ) . '</strong> ' . esc_html__( 'kupujących poleca sprzedawcę', 'mnsk7-tools' ) . '</li>';
+	$html .= '<li>' . esc_html__( 'Oceny pozytywne:', 'mnsk7-tools' ) . ' <strong>' . esc_html( $atts['positive'] ) . '</strong></li>';
+	$html .= '<li>' . esc_html__( 'Oceny negatywne:', 'mnsk7-tools' ) . ' <strong>' . esc_html( $atts['negative'] ) . '</strong></li>';
+	$html .= '<li>' . esc_html__( 'Wszystkie opinie są potwierdzone zakupem na Allegro.', 'mnsk7-tools' ) . '</li>';
+	$html .= '</ul>';
+	$html .= '<p class="mnsk7-allegro-trust__cta"><a href="' . esc_url( $atts['url'] ) . '" target="_blank" rel="noopener">' . esc_html( $atts['cta'] ) . '</a></p>';
+	$html .= '</section>';
+
+	return $html;
+}
+
 add_action( 'init', function () {
 	add_shortcode( 'mnsk7_dostawa_vat', function () {
 		return mnsk7_dostawa_vat_html();
+	} );
+	add_shortcode( 'mnsk7_contact_info', function () {
+		return mnsk7_contact_info_html();
+	} );
+	add_shortcode( 'mnsk7_delivery_rules', function () {
+		return mnsk7_delivery_rules_table_html();
+	} );
+	add_shortcode( 'mnsk7_delivery_eta', function ( $atts ) {
+		$atts = shortcode_atts(
+			array(
+				'courier' => '',
+			),
+			$atts,
+			'mnsk7_delivery_eta'
+		);
+		$courier = strtolower( sanitize_text_field( $atts['courier'] ) );
+		if ( ! in_array( $courier, array( '', 'inpost', 'dpd' ), true ) ) {
+			$courier = '';
+		}
+		return mnsk7_delivery_eta_html( $courier );
+	} );
+	add_shortcode( 'mnsk7_instagram_feed', function ( $atts ) {
+		return mnsk7_instagram_feed_html( $atts );
+	} );
+	add_shortcode( 'mnsk7_allegro_trust', function ( $atts ) {
+		return mnsk7_allegro_trust_html( $atts );
 	} );
 }, 5 );
 
@@ -139,10 +398,15 @@ add_action( 'woocommerce_single_product_summary', function () {
 
 // W stopce: dostawa + VAT na stronach sklepu i produktu
 add_action( 'wp_footer', function () {
-	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product() && ! is_cart() && ! is_checkout() ) ) {
+	if ( is_admin() ) {
 		return;
 	}
-	echo '<div class="mnsk7-footer-dostawa-vat">' . mnsk7_dostawa_vat_html() . '</div>';
+	echo '<div class="mnsk7-footer-dostawa-vat">'
+		. mnsk7_dostawa_vat_html()
+		. mnsk7_delivery_eta_html()
+		. mnsk7_contact_info_html()
+		. mnsk7_instagram_feed_html( array( 'limit' => 1 ) )
+		. '</div>';
 }, 5 );
 
 /**

@@ -40,6 +40,11 @@ Krótki przegląd: co jest zrobione w kodzie, co zostało (admin, konfiguracja, 
 | **S2-09** | Stopka / strona | Dodać `[mnsk7_rating url="https://allegro.pl/..."]` tam, gdzie ma być link do opinii (stopka lub osobna sekcja). |
 | **S2-08** | WooCommerce → Ustawienia → Produkty | Upewnić się, że recenzje są włączone; na karcie produktu zakładka z recenzjami jest domyślna w Woo. |
 
+### 3b. UI według specyfikacji (05/04)
+
+- **[UI_SPEC.md](UI_SPEC.md)** jest gotowy: header (logo, menu z kategoriami, search, konto, koszyk), footer (kontakt, Instagram 1 rząd, linki, skrót dostawy), główna (baner, kategorie, karuzela, loyalty, Instagram), karta produktu (kolejność sekcji, CTA, odstępy).
+- Do wdrożenia: blok kontaktu w stopce (email, tel, godziny), ewentualnie menu z kategoriami w headerze (zależnie od motywu), strona z tabelą dostaw, widżet Instagram.
+
 ### 4. Później (Sprint 03 / backlog)
 
 - **SEO (E5):** strony docelowe pod zapytania (frezy do aluminium, MDF, drewna, CNC), struktura meta (SEO_PLAN), ewentualnie blog/instrukcje (CONTENT_PLAN).

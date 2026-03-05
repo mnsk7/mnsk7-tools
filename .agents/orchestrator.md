@@ -21,6 +21,8 @@
 
 6) **05_theme_ux_frontend** + **04_woo_engineer** → код + коммиты
 
+6b) **09_ui_designer** → /docs/UI_SPEC.md (гайды: header, footer, карточка, главная; без кода)
+
 7) **08_qa_security** → QA отчёт в /docs/QA_REPORT.md
 
 8) **06_devops_github** + **07_server_ops_cyberfolks** → staging deploy

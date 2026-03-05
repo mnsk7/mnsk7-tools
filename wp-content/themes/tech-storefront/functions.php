@@ -26,11 +26,11 @@ $values[ 'ed_social_links' ] = true;
 
 $values[ 'subscription_shortcode' ] = '';
 
-$values[ 'enable_top_bar' ] = true;
+$values[ 'enable_top_bar' ] = false;
 $values[ 'top_bar_left_content' ] = 'contacts';
 $values[ 'top_bar_left_text' ] = esc_html__( 'edit top bar text', 'tech-storefront' );
 $values[ 'top_bar_right_content' ] = 'menu_social';
-$values[ 'enable_top_bar' ] = true;
+$values[ 'enable_top_bar' ] = false;
 $values[ 'topbar_bg_color' ] = '#0c7ddb';
 $values[ 'topbar_text_color' ] = '#fff';
 
@@ -116,25 +116,94 @@ add_action( 'wp_enqueue_scripts', 'tech_storefront_custom_scripts' );
 
 // MNK7: style bloków karty produktu (parametry, zastosowanie, dostawa)
 function tech_storefront_enqueue_mnsk7_product_css() {
-	if ( is_product() ) {
-		wp_enqueue_style(
-			'tech-storefront-mnsk7-product',
-			get_stylesheet_directory_uri() . '/assets/css/mnsk7-product.css',
-			array(),
-			'1.0'
-		);
-	}
-	// Na stronie głównej / z shortcode bestsellers
-	if ( is_front_page() || is_shop() ) {
-		wp_enqueue_style(
-			'tech-storefront-mnsk7-product',
-			get_stylesheet_directory_uri() . '/assets/css/mnsk7-product.css',
-			array(),
-			'1.0'
-		);
-	}
+	wp_enqueue_style(
+		'tech-storefront-mnsk7-product',
+		get_stylesheet_directory_uri() . '/assets/css/mnsk7-product.css',
+		array(),
+		'1.1'
+	);
 }
 add_action( 'wp_enqueue_scripts', 'tech_storefront_enqueue_mnsk7_product_css', 15 );
+
+/**
+ * UX: pod "Sklep" dodajemy główne kategorie Woo (header menu).
+ * Priorytet: wygoda użytkownika i standard e-commerce.
+ */
+function tech_storefront_add_product_cats_under_shop_menu( $items, $args ) {
+	if ( is_admin() ) {
+		return $items;
+	}
+
+	if ( isset( $args->theme_location ) && $args->theme_location === 'footer-menu' ) {
+		return $items;
+	}
+
+	if ( ! taxonomy_exists( 'product_cat' ) || empty( $items ) || ! is_array( $items ) ) {
+		return $items;
+	}
+
+	$shop_item_id = 0;
+	foreach ( $items as $item ) {
+		if ( (int) $item->menu_item_parent !== 0 ) {
+			continue;
+		}
+		$title = function_exists( 'mb_strtolower' ) ? mb_strtolower( (string) $item->title ) : strtolower( (string) $item->title );
+		if ( strpos( $title, 'sklep' ) !== false || strpos( $title, 'shop' ) !== false ) {
+			$shop_item_id = (int) $item->ID;
+			$item->classes[] = 'menu-item-has-children';
+			break;
+		}
+	}
+
+	if ( $shop_item_id <= 0 ) {
+		return $items;
+	}
+
+	$categories = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'hide_empty' => true,
+			'parent'     => 0,
+			'number'     => 8,
+			'orderby'    => 'count',
+			'order'      => 'DESC',
+		)
+	);
+
+	if ( is_wp_error( $categories ) || empty( $categories ) ) {
+		return $items;
+	}
+
+	$base_id = 900000;
+	foreach ( $categories as $index => $category ) {
+		$menu_item                  = new stdClass();
+		$menu_item->ID              = $base_id + $index;
+		$menu_item->db_id           = 0;
+		$menu_item->menu_item_parent = $shop_item_id;
+		$menu_item->object_id       = (int) $category->term_id;
+		$menu_item->object          = 'product_cat';
+		$menu_item->type            = 'custom';
+		$menu_item->type_label      = 'Custom';
+		$menu_item->title           = $category->name;
+		$menu_item->url             = get_term_link( $category );
+		$menu_item->target          = '';
+		$menu_item->attr_title      = '';
+		$menu_item->description     = '';
+		$menu_item->classes         = array( 'menu-item', 'menu-item-type-taxonomy', 'menu-item-object-product_cat', 'mnsk7-shop-cat-item' );
+		$menu_item->xfn             = '';
+		$menu_item->status          = '';
+		$menu_item->current         = false;
+		$menu_item->current_item_ancestor = false;
+		$menu_item->current_item_parent   = false;
+
+		if ( ! is_wp_error( $menu_item->url ) ) {
+			$items[] = $menu_item;
+		}
+	}
+
+	return $items;
+}
+add_filter( 'wp_nav_menu_objects', 'tech_storefront_add_product_cats_under_shop_menu', 20, 2 );
 
 // END ENQUEUE PARENT ACTION
 
