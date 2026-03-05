@@ -8,6 +8,10 @@ Krótki przegląd: co jest zrobione w kodzie, co zostało (admin, konfiguracja, 
 
 - **Sprint 01:** mu-plugin `mnsk7-tools.php`, overrides karty produktu (single + content-single), blokada xmlrpc (P0-03), override archiwum kategorii (`archive-product.php`).
 - **Sprint 02:** blok parametrów i „Do czego” w karcie, dostępność, dostawa+VAT (karta + stopka + shortcode), shortcode bestsellery i rating, placeholder pod schemat/wideo, CSS (`assets/css/mnsk7-product.css`), helper kolejności atrybutów do filtrów.
+- **UI / kontakt / dostawa:** blok kontaktu w stopce (email, tel, godziny, Instagram), tabela warunków dostawy (InPost/DPD, free od 300 zł), ETA przy wyborze kuriera, shortcode `[mnsk7_delivery_rules]`, `[mnsk7_contact_info]`, `[mnsk7_delivery_eta]`. Top bar wyłączony w motywie.
+- **Trust / Allegro:** shortcode `[mnsk7_allegro_trust]` (100%, 383 pozytywne, CTA do Allegro), `[mnsk7_allegro_reviews]` i `[mnsk7_allegro_reviews_pages from="1" to="20"]` — linki do stron ocen page 1–20.
+- **Instagram:** `[mnsk7_instagram_feed]` (embed + link do @mnsk7tools); w stopce wyświetlany jest skrót (limit 1).
+- **Menu:** pod punktem „Sklep” w menu głównym wstrzykiwane są główne kategorie Woo (filter `wp_nav_menu_objects`).
 - **DevOps:** PR template, PHP lint (Actions), DEPLOY_PLAYBOOK, sekrety GitHub → deploy przy pushu na `main`.
 
 ---
@@ -43,7 +47,7 @@ Krótki przegląd: co jest zrobione w kodzie, co zostało (admin, konfiguracja, 
 ### 3b. UI według specyfikacji (05/04)
 
 - **[UI_SPEC.md](UI_SPEC.md)** jest gotowy: header (logo, menu z kategoriami, search, konto, koszyk), footer (kontakt, Instagram 1 rząd, linki, skrót dostawy), główna (baner, kategorie, karuzela, loyalty, Instagram), karta produktu (kolejność sekcji, CTA, odstępy).
-- Do wdrożenia: blok kontaktu w stopce (email, tel, godziny), ewentualnie menu z kategoriami w headerze (zależnie od motywu), strona z tabelą dostaw, widżet Instagram.
+- **Zrobione w kodzie:** stopka w **szablonie** (footer.php) — 3 kolumny: kontakt | dostawa+VAT+ETA | Instagram (ciemne tło, czytelna typografia). Główna: **front-page.php** — hero, kategorie, bestsellery, Allegro trust, lojalność, opinie, Instagram. Cookie bar w mu-plugin („Przyjmuję”) — można wyłączyć zewnętrzny plugin cookies. Lista pluginów do wyłączenia: [PLUGINS_CLEANUP.md](PLUGINS_CLEANUP.md).
 
 ### 4. Później (Sprint 03 / backlog)
 
@@ -58,6 +62,7 @@ Krótki przegląd: co jest zrobione w kodzie, co zostało (admin, konfiguracja, 
 
 - **Smoke i bezpieczeństwo:** [docs/QA_REPORT.md](QA_REPORT.md)
 - **Deploy i rollback:** [docs/DEPLOY_PLAYBOOK.md](DEPLOY_PLAYBOOK.md)
+- **Główna:** szablon `front-page.php` (używany automatycznie dla strony głównej). Strona dostawy: [HOMEPAGE_AND_PAGES.md](HOMEPAGE_AND_PAGES.md). **Pluginy do wyłączenia:** [PLUGINS_CLEANUP.md](PLUGINS_CLEANUP.md).
 - **Sprinty:** [tasks/020_sprint_01.md](../tasks/020_sprint_01.md), [tasks/030_sprint_02.md](../tasks/030_sprint_02.md)
 - **Backlog techniczny:** [docs/AS_IS_BACKLOG.md](AS_IS_BACKLOG.md)
 - **Inbox:** [tasks/000_inbox.md](../tasks/000_inbox.md)

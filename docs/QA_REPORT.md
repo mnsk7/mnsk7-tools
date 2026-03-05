@@ -19,6 +19,8 @@
 | S5 | Checkout end-to-end | Заполнение полей → выбор доставки/оплаты → размещение заказа без ошибок | ☐ |
 | S6 | Письмо клиенту после заказа | Email уходит (на prod; на staging — см. staging-safety, maile blokowane) | ☐ |
 | S7 | Статус заказа | W panelu: zamówienie w odpowiednim statusie; brak duplikatów | ☐ |
+| S8 | Strona pojedynczego produktu | 200 OK, brak białego ekranu; bloki: parametry, „Do czego”, dostępność, dostawa+VAT, CTA | ☐ |
+| S9 | Stopka (strony sklepu i inne) | Widoczny blok: dostawa+VAT, ETA (jeśli wybrano kuriera), kontakt (email, tel, godziny), Instagram | ☐ |
 
 **Uwagi:** Na staging płatności są wyłączone (staging-safety); S5 można sprawdzić do momentu wyboru metody płatności lub z testową metodą (np. COD jeśli włączona). S6 na staging — nie testować (maile blokowane).
 
@@ -69,7 +71,8 @@ Rekomendacja: najpierw S1-02, S1-03, potem pełny smoke (S1–S7) na staging.
 ## 5. Otwarte punkty / inbox
 
 - Przed wyłączeniem 3 pluginów filtrów (S1-08): sprawdzić w Google Search Console URL-e filtrów w indeksie; zaplanować przekierowania (R02).
-- Po wdrożeniu overrides karty produktu (S1-07): dodać do smoke weryfikację wyświetlania pojedynczego produktu (strona 200, brak białego ekranu, hooki Woo działają).
+- Po wdrożeniu overrides karty produktu (S1-07): weryfikacja pojedynczego produktu — w checklist powyżej jako S8.
+- Strona „Dostawa i płatności”: utworzyć (jeśli brak) i wstawić `[mnsk7_delivery_rules]` — [HOMEPAGE_AND_PAGES.md](HOMEPAGE_AND_PAGES.md).
 
 W razie znalezionych błędów: opisać w [tasks/000_inbox.md](../tasks/000_inbox.md) i przypisać do sprintu.
 
@@ -80,3 +83,4 @@ W razie znalezionych błędów: opisać w [tasks/000_inbox.md](../tasks/000_inbo
 | Data | Opis |
 |------|------|
 | 2026-03-05 | Utworzenie raportu przez 08_qa_security: checklists smoke, security, performance; powiązanie ze Sprint 01 i AS_IS. |
+| 2026-03-05 | Dodanie S8 (strona produktu), S9 (stopka: kontakt, ETA, Instagram); link do HOMEPAGE_AND_PAGES. |

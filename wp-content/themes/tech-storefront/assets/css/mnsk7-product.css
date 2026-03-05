@@ -64,7 +64,129 @@
 	color: #555;
 }
 
-/* W stopce */
+/* Stopka — blok MNK7 (kontakt | dostawa | Instagram) */
+.mnsk7-site-footer-block {
+	background: #2d3748;
+	color: #e2e8f0;
+	padding: 2rem 0;
+	margin: 0;
+	border-top: 1px solid #4a5568;
+}
+
+.mnsk7-site-footer-block__grid {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	gap: 2rem;
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.mnsk7-site-footer-block__col-title {
+	margin: 0 0 0.5rem 0;
+	font-size: 1rem;
+	font-weight: 600;
+	color: #fff;
+}
+
+.mnsk7-site-footer-block__col--contact .mnsk7-contact-info__title,
+.mnsk7-site-footer-block__col--contact h4 {
+	color: #fff;
+	margin-top: 0;
+}
+
+.mnsk7-site-footer-block__col--contact .mnsk7-contact-info__line,
+.mnsk7-site-footer-block__col--contact p {
+	margin: 0.25rem 0;
+	font-size: 0.9rem;
+}
+
+.mnsk7-site-footer-block__col--contact a {
+	color: #90cdf4;
+	text-decoration: none;
+}
+
+.mnsk7-site-footer-block__col--contact a:hover {
+	text-decoration: underline;
+}
+
+.mnsk7-site-footer-block__col--delivery .mnsk7-dostawa-vat,
+.mnsk7-site-footer-block__col--delivery .mnsk7-delivery-eta {
+	margin: 0 0 0.5rem 0;
+	font-size: 0.9rem;
+	color: #e2e8f0;
+}
+
+.mnsk7-site-footer-block__delivery-note {
+	margin: 0.5rem 0 0 0;
+	font-size: 0.85rem;
+	opacity: 0.9;
+}
+
+.mnsk7-site-footer-block__col--instagram a {
+	color: #90cdf4;
+	text-decoration: none;
+}
+
+.mnsk7-site-footer-block__col--instagram a:hover {
+	text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+	.mnsk7-site-footer-block__grid {
+		grid-template-columns: 1fr;
+		gap: 1.5rem;
+	}
+	.mnsk7-site-footer-block {
+		padding: 1.5rem 0;
+	}
+}
+
+/* Cookie consent bar */
+.mnsk7-cookie-bar {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 999999;
+	background: #1a202c;
+	color: #e2e8f0;
+	box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
+}
+
+.mnsk7-cookie-bar__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 1rem 1.5rem;
+	flex-wrap: wrap;
+}
+
+.mnsk7-cookie-bar__text {
+	margin: 0;
+	font-size: 0.9rem;
+	flex: 1;
+	min-width: 200px;
+}
+
+.mnsk7-cookie-bar__btn {
+	padding: 0.5rem 1.25rem;
+	background: #0c7ddb;
+	color: #fff;
+	border: none;
+	border-radius: 6px;
+	font-weight: 600;
+	cursor: pointer;
+	white-space: nowrap;
+}
+
+.mnsk7-cookie-bar__btn:hover {
+	background: #065a9e;
+}
+
+/* Legacy: gdy shortcode używany w treści */
 .mnsk7-footer-dostawa-vat {
 	margin: 0;
 	padding: 0.75em 1em;
@@ -259,6 +381,115 @@
 .mnsk7-product-extra-media {
 	margin: 1em 0;
 	min-height: 80px;
+}
+
+/* ========== Strona główna (front-page.php) ========== */
+.mnsk7-front-page {
+	padding-bottom: 2rem;
+}
+
+.mnsk7-front-hero {
+	background: linear-gradient(135deg, #0c7ddb 0%, #065a9e 100%);
+	color: #fff;
+	padding: 3rem 0;
+	text-align: center;
+}
+
+.mnsk7-front-hero__title {
+	margin: 0 0 0.5rem 0;
+	font-size: clamp(1.5rem, 4vw, 2.25rem);
+}
+
+.mnsk7-front-hero__tagline {
+	margin: 0 0 0.5rem 0;
+	font-size: 1.1rem;
+	opacity: 0.95;
+}
+
+.mnsk7-front-hero__text {
+	margin: 0.75rem 0 0 0;
+	font-size: 0.95rem;
+	opacity: 0.9;
+}
+
+.mnsk7-front-section-title {
+	margin: 0 0 1.25rem 0;
+	font-size: 1.35rem;
+	text-align: center;
+}
+
+.mnsk7-front-cats {
+	padding: 2.5rem 0;
+}
+
+.mnsk7-front-cats__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+	gap: 0.75rem;
+	max-width: 900px;
+	margin: 0 auto;
+}
+
+.mnsk7-front-cats__item {
+	display: block;
+	padding: 0.75rem 1rem;
+	background: #f5f5f5;
+	border-radius: 6px;
+	text-align: center;
+	text-decoration: none;
+	color: #1a1a1a;
+	font-weight: 500;
+	transition: background 0.2s;
+}
+
+.mnsk7-front-cats__item:hover {
+	background: #e8e8e8;
+}
+
+.mnsk7-front-cats__shop-link {
+	text-align: center;
+	margin: 1.25rem 0 0 0;
+}
+
+.mnsk7-front-cats__shop-link a {
+	color: #0c7ddb;
+	text-decoration: none;
+}
+
+.mnsk7-front-cats__shop-link a:hover {
+	text-decoration: underline;
+}
+
+.mnsk7-front-section {
+	padding: 2rem 0;
+}
+
+.mnsk7-front-section:nth-child(even) {
+	background: #f9fafb;
+}
+
+.mnsk7-front-bestsellers .container {
+	max-width: 1200px;
+	margin: 0 auto;
+}
+
+.mnsk7-front-loyalty__text {
+	margin: 0 0 0.75rem 0;
+	font-size: 1rem;
+}
+
+.mnsk7-front-loyalty a {
+	color: #0c7ddb;
+	text-decoration: none;
+}
+
+@media (max-width: 640px) {
+	.mnsk7-front-cats__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+	.mnsk7-front-hero {
+		padding: 2rem 0;
+	}
 }
 
 /* Responsywność: parametry w jednej kolumnie na wąskich ekranach */

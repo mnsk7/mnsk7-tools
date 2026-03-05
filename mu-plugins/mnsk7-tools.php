@@ -499,18 +499,39 @@ add_action( 'woocommerce_single_product_summary', function () {
 	echo mnsk7_dostawa_vat_html();
 }, 35 );
 
-// W stopce: dostawa + VAT na stronach sklepu i produktu
+// Stopka: treść wyświetlana w szablonie footer (tech-storefront), nie w wp_footer.
+
+/**
+ * Cookie consent — minimalny pasek (zastępuje zewnętrzny plugin).
+ * Po kliknięciu "Przyjmuję" ustawia ciasteczko na 1 rok i chowa pasek.
+ */
 add_action( 'wp_footer', function () {
 	if ( is_admin() ) {
 		return;
 	}
-	echo '<div class="mnsk7-footer-dostawa-vat">'
-		. mnsk7_dostawa_vat_html()
-		. mnsk7_delivery_eta_html()
-		. mnsk7_contact_info_html()
-		. mnsk7_instagram_feed_html( array( 'limit' => 1 ) )
-		. '</div>';
-}, 5 );
+	$text = __( 'Ta strona używa plików cookie. Kliknij „Przyjmuję”, aby kontynuować.', 'mnsk7-tools' );
+	$btn = __( 'Przyjmuję', 'mnsk7-tools' );
+	?>
+	<div id="mnsk7-cookie-bar" class="mnsk7-cookie-bar" role="dialog" aria-label="<?php echo esc_attr__( 'Informacja o cookies', 'mnsk7-tools' ); ?>" hidden>
+		<div class="mnsk7-cookie-bar__inner">
+			<p class="mnsk7-cookie-bar__text"><?php echo esc_html( $text ); ?></p>
+			<button type="button" class="mnsk7-cookie-bar__btn" id="mnsk7-cookie-bar-accept"><?php echo esc_html( $btn ); ?></button>
+		</div>
+	</div>
+	<script>
+	(function() {
+		var key = 'mnsk7_cookie_ok';
+		function get(name) { var m = document.cookie.match(new RegExp('(?:^|; )' + name.replace(/([\.$?*|{}\(\)\[\]\\\/+^])/g, '\\$1') + '=([^;]*)')); return m ? decodeURIComponent(m[1]) : null; }
+		function set(name, val, days) { var d = new Date(); d.setTime(d.getTime() + days * 86400000); document.cookie = name + '=' + encodeURIComponent(val) + ';path=/;expires=' + d.toUTCString() + ';SameSite=Lax'; }
+		var bar = document.getElementById('mnsk7-cookie-bar');
+		if (!bar) return;
+		if (get(key)) { bar.remove(); return; }
+		bar.removeAttribute('hidden');
+		document.getElementById('mnsk7-cookie-bar-accept').addEventListener('click', function() { set(key, '1', 365); bar.remove(); });
+	})();
+	</script>
+	<?php
+}, 99 );
 
 /**
  * S2-06: placeholder na schemat parametrów lub wideo w karcie produktu.

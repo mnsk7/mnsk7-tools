@@ -52,10 +52,37 @@ $social_links = best_shop_get_setting( 'social_links' );
               </div>
           </div>
       <?php 
-      }      
+      } 
 
-
+      // MNK7: blok kontakt + dostawa + Instagram (struktura kolumnowa)
+      if ( function_exists( 'mnsk7_contact_info_html' ) ) :
       ?>
+      <div class="mnsk7-site-footer-block">
+          <div class="container">
+              <div class="mnsk7-site-footer-block__grid">
+                  <div class="mnsk7-site-footer-block__col mnsk7-site-footer-block__col--contact">
+                      <?php echo mnsk7_contact_info_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                  </div>
+                  <div class="mnsk7-site-footer-block__col mnsk7-site-footer-block__col--delivery">
+                      <?php
+                      if ( function_exists( 'mnsk7_dostawa_vat_html' ) ) {
+                          echo mnsk7_dostawa_vat_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                      }
+                      if ( function_exists( 'mnsk7_delivery_eta_html' ) ) {
+                          echo mnsk7_delivery_eta_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                      }
+                      ?>
+                      <p class="mnsk7-site-footer-block__delivery-note"><?php esc_html_e( 'Darmowa dostawa od 300 zł. Tylko Polska.', 'tech-storefront' ); ?></p>
+                  </div>
+                  <div class="mnsk7-site-footer-block__col mnsk7-site-footer-block__col--instagram">
+                      <h4 class="mnsk7-site-footer-block__col-title"><?php esc_html_e( 'Instagram', 'tech-storefront' ); ?></h4>
+                      <p><a href="<?php echo esc_url( defined( 'MNK7_INSTAGRAM_URL' ) ? MNK7_INSTAGRAM_URL : 'https://www.instagram.com/mnsk7tools/' ); ?>" target="_blank" rel="noopener">@mnsk7tools</a></p>
+                  </div>
+              </div>
+          </div>
+      </div>
+      <?php endif; ?>
+
       <div class="footer-bottom">
 
           <?php

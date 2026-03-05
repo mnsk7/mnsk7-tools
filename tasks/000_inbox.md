@@ -13,9 +13,9 @@
 
 ## Z wymagań klienta (kontakt, dostawa, lojalność, UI)
 
-- [ ] **Kontakt w stopce/headerze:** email office@mnsk7.pl, tel. +48 451696511, godziny (pn.–pt. 9–17, sb. 10–12, nd. zamknięte). Źródło: [CONTACT_DELIVERY_LOYALTY.md](../docs/CONTACT_DELIVERY_LOYALTY.md).
-- [ ] **Widżet Instagram** w stopce: posty z https://www.instagram.com/mnsk7tools/ (1 rząd), link do profilu.
-- [ ] **Strona z tabelą dostaw:** InPost (pn.–pt. do 15:00 → jutro; sb. do 11:00 → poniedziałek), DPD (pn.–czw. do 17:00 → jutro; pt. do 17:00 → poniedziałek). Darmowa dostawa od 300 zł. Tylko Polska.
+- [x] **Kontakt w stopce:** w kodzie (mu-plugin) — email, tel, godziny, Instagram; wyświetlane globalnie w stopce. Źródło: [CONTACT_DELIVERY_LOYALTY.md](../docs/CONTACT_DELIVERY_LOYALTY.md). W WP: ewentualnie dodać stronę Kontakt z `[mnsk7_contact_info]`.
+- [x] **Widżet Instagram** w stopce: shortcode `[mnsk7_instagram_feed]`; w stopce jest skrót (limit 1). Na głównej wstawić pełny blok — [HOMEPAGE_AND_PAGES.md](../docs/HOMEPAGE_AND_PAGES.md).
+- [ ] **Strona z tabelą dostaw:** utworzyć stronę „Dostawa i płatności” i wstawić `[mnsk7_delivery_rules]`. InPost/DPD + free od 300 zł. Instrukcja: [HOMEPAGE_AND_PAGES.md](../docs/HOMEPAGE_AND_PAGES.md).
 - [ ] **Loyalty w panelu:** automatyczne progi w roku (1000→5%, 3000→10%, 5000→15%, 10000→20%); wyświetlanie w Moje konto, auto-rabat przy zamówieniach.
 - [ ] **Główna (z PDF):** górny bar off; logo + search + konto; menu Sklep / O nas / Pomoc / Kontakt; baner „dlaczego my”; kategorie; karuzela produktów; blok lojalności; Instagram 1 rząd; stopka bez listy kategorii — link „Sklep”.
 - [ ] **Karta produktu:** redesign wg [product_card_visual](../.agents/skills/product_card_visual/SKILL.md) — hierarchia, odstępy, jeden CTA; spec od 09_ui_designer → wdrożenie 05/04.
