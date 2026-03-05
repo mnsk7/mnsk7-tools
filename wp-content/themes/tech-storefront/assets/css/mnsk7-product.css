@@ -1002,6 +1002,142 @@
 }
 
 /* =========================================================
+   FAQ SHORTCODE [mnsk7_faq]
+   ========================================================= */
+
+.mnsk7-faq {
+	margin: 2rem 0;
+}
+
+.mnsk7-faq__title {
+	font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+	font-weight: 700;
+	margin: 0 0 1.25rem;
+	color: #0f172a;
+}
+
+.mnsk7-faq__list {
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.mnsk7-faq__item {
+	border: 1px solid #e2e8f0;
+	border-radius: 8px;
+	overflow: hidden;
+}
+
+.mnsk7-faq__q {
+	margin: 0;
+	padding: 0.9rem 1.1rem;
+	font-weight: 700;
+	font-size: 0.95rem;
+	color: #1e293b;
+	background: #f8fafc;
+	cursor: pointer;
+	position: relative;
+	padding-right: 2.5rem;
+	list-style: none;
+}
+
+.mnsk7-faq__q::after {
+	content: '+';
+	position: absolute;
+	right: 1.1rem;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 1.2rem;
+	color: #0c7ddb;
+	font-weight: 400;
+	line-height: 1;
+	transition: transform 0.2s;
+}
+
+.mnsk7-faq__item.is-open .mnsk7-faq__q::after {
+	content: '−';
+}
+
+.mnsk7-faq__a {
+	margin: 0;
+	padding: 0 1.1rem;
+	max-height: 0;
+	overflow: hidden;
+	transition: max-height 0.25s ease, padding 0.2s;
+	font-size: 0.91rem;
+	color: #334155;
+	line-height: 1.65;
+}
+
+.mnsk7-faq__item.is-open .mnsk7-faq__a {
+	max-height: 500px;
+	padding: 0.75rem 1.1rem 1rem;
+}
+
+/* =========================================================
+   SEO LANDING PAGES — frezy do aluminium / MDF / drewna / CNC
+   ========================================================= */
+
+.mnsk7-seo-page {
+	padding-bottom: 2rem;
+}
+
+.mnsk7-seo-hero {
+	background: linear-gradient(135deg, #0c3060 0%, #0c7ddb 100%);
+	color: #fff;
+	padding: 3rem 0 2.5rem;
+}
+
+.mnsk7-seo-hero__title {
+	margin: 0 0 0.6rem;
+	font-size: clamp(1.5rem, 4vw, 2.2rem);
+	font-weight: 800;
+	color: #fff;
+}
+
+.mnsk7-seo-hero__sub {
+	margin: 0;
+	font-size: 1rem;
+	opacity: 0.85;
+	color: #e2e8f0;
+}
+
+.mnsk7-seo-intro {
+	padding: 2rem 0;
+	background: #f8fafc;
+}
+
+.mnsk7-seo-intro__text {
+	max-width: 860px;
+	font-size: 0.97rem;
+	color: #334155;
+	line-height: 1.75;
+}
+
+.mnsk7-seo-intro__text h2 {
+	font-size: 1.2rem;
+	margin-top: 1.25rem;
+	color: #0f172a;
+}
+
+.mnsk7-seo-products {
+	padding: 2rem 0;
+}
+
+.mnsk7-seo-products__title {
+	font-size: 1.35rem;
+	font-weight: 700;
+	margin: 0 0 1.25rem;
+	color: #0f172a;
+}
+
+.mnsk7-seo-faq {
+	padding: 2rem 0;
+	background: #f8fafc;
+}
+
+/* =========================================================
    RESPONSYWNOŚĆ — mobilne
    ========================================================= */
 

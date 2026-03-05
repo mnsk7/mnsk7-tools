@@ -1035,3 +1035,246 @@ add_action( 'woocommerce_review_order_before_submit', function () {
 		. esc_html__( '🚚 Zamówienia złożone do 15:00 (InPost) lub 17:00 (DPD) wysyłamy tego samego dnia.', 'mnsk7-tools' )
 		. '</p>';
 }, 5 );
+
+/* ==========================================================================
+   SEO: FAQ shortcode [mnsk7_faq] + FAQPage JSON-LD (rich results Google)
+   ==========================================================================
+
+   Użycie:
+     [mnsk7_faq set="dostawa"]          — predefiniowany zestaw pytań
+     [mnsk7_faq set="produkt"]          — pytania o produkty CNC
+     [mnsk7_faq set="sklep"]            — pytania ogólne o sklep
+     [mnsk7_faq]                        — wszystkie powyższe
+
+   Albo ręcznie przez filtr:
+     add_filter('mnsk7_faq_items_custom', fn($items) => [
+       ['q' => 'Pytanie?', 'a' => 'Odpowiedź.'],
+     ]);
+   ========================================================================== */
+
+function mnsk7_get_faq_set( $set = '' ) {
+	$sets = array(
+
+		'dostawa' => array(
+			array(
+				'q' => 'Ile czasu trwa dostawa?',
+				'a' => 'Zamówienia złożone w dni robocze do 15:00 (InPost) lub 17:00 (DPD) wysyłamy tego samego dnia — dostawa trafia do Ciebie następnego dnia roboczego. Dostarczamy wyłącznie na terenie Polski.',
+			),
+			array(
+				'q' => 'Ile kosztuje dostawa?',
+				'a' => 'Zamówienia powyżej 300 zł — dostawa gratis. Poniżej tego progu koszt dostawy zależy od wybranego kuriera (InPost / DPD).',
+			),
+			array(
+				'q' => 'Jakie formy dostawy są dostępne?',
+				'a' => 'Wysyłamy przez InPost (paczkomaty i kurier) oraz DPD. Wyboru dokonujesz przy składaniu zamówienia.',
+			),
+			array(
+				'q' => 'Czy wystawiacie faktury VAT?',
+				'a' => 'Tak — faktura VAT jest wystawiana na życzenie. Podaj NIP i dane firmy w uwagach do zamówienia lub w polu NIP w koszyku.',
+			),
+			array(
+				'q' => 'Czy mogę zwrócić towar?',
+				'a' => 'Tak, masz 30 dni na zwrot nieużywanego towaru. Skontaktuj się z nami mailowo: office@mnsk7.pl.',
+			),
+		),
+
+		'produkt' => array(
+			array(
+				'q' => 'Jak dobrać frez do materiału?',
+				'a' => 'Do drewna i MDF: frezy spiralne z powłoką lub frezy jednopiórowe. Do aluminium: frezy jednopiórowe lub dwupiórowe z powłoką DLC/AlTiN, szeroki rowek na wiór. Do stali: frezy wielopiórowe (4P) z twardego stopu (VHM) HRC 65+. Do tworzyw: frezy jednopiórowe z ostrą krawędzią.',
+			),
+			array(
+				'q' => 'Co oznacza HRC 65 na frezie?',
+				'a' => 'HRC 65 to twardość materiału narzędzia w skali Rockwella. Im wyższe HRC, tym większa odporność na ścieranie i wyższa trwałość frezu — szczególnie ważna przy obróbce stali i metali nieżelaznych.',
+			),
+			array(
+				'q' => 'Czym różni się frez 1-piórowy od 2- lub 4-piórowego?',
+				'a' => 'Frez 1P (jednopiórowy) ma duże rowki na wiór — idealny do aluminium i tworzyw, gdzie odprowadzenie wióra jest kluczowe. Frez 2P: kompromis szybkość/wykończenie. Frez 4P: gładkie wykończenie powierzchni, wolniejszy posuw, do stali i twardych metali.',
+			),
+			array(
+				'q' => 'Czy frezy VHM nadają się do frezarek CNC?',
+				'a' => 'Tak, wszystkie frezy VHM (pełny twardy stop) w naszej ofercie są dedykowane do frezarek CNC. Parametry (prędkość obrotowa, posuw) dobieramy do materiału — szczegóły podajemy w opisach produktów.',
+			),
+			array(
+				'q' => 'Jakie frezy pasują do frezowania MDF?',
+				'a' => 'Do MDF najlepsze są frezy spiralne (2 lub 3 pióra), frezy jednopiórowe do szybkiego usuwania materiału lub frezy z podkładką (kopiowarki) do rowków i krawędzi. Polecamy kategorie: Frezy do drewna i MDF.',
+			),
+		),
+
+		'sklep' => array(
+			array(
+				'q' => 'Skąd pochodzi mnsk7-tools.pl?',
+				'a' => 'Jesteśmy polską firmą MNSK7 sp. z o.o. z siedzibą w Warszawie. Sprzedajemy frezy CNC i narzędzia skrawające przez własny sklep internetowy oraz Allegro (ponad 383 pozytywne oceny, 100% satysfakcji).',
+			),
+			array(
+				'q' => 'Jak skontaktować się ze sklepem?',
+				'a' => 'Email: office@mnsk7.pl, telefon: +48 451 696 511. Godziny pracy: pn.–pt. 9:00–17:00, sob. 10:00–12:00.',
+			),
+			array(
+				'q' => 'Czy możliwy jest zakup hurtowy?',
+				'a' => 'Tak, obsługujemy zamówienia hurtowe i oferujemy program rabatowy dla stałych klientów: od 1 000 zł/rok → 5%, od 3 000 zł → 10%, od 5 000 zł → 15%, od 10 000 zł → 20% rabatu.',
+			),
+		),
+	);
+
+	if ( $set === '' ) {
+		return array_merge( $sets['dostawa'], $sets['produkt'], $sets['sklep'] );
+	}
+
+	return isset( $sets[ $set ] ) ? $sets[ $set ] : array();
+}
+
+add_action( 'init', function () {
+	add_shortcode( 'mnsk7_faq', function ( $atts ) {
+		$atts  = shortcode_atts( array(
+			'set'   => '',
+			'title' => '',
+		), $atts, 'mnsk7_faq' );
+
+		$items = mnsk7_get_faq_set( sanitize_key( $atts['set'] ) );
+		$items = apply_filters( 'mnsk7_faq_items_custom', $items, $atts['set'] );
+
+		if ( empty( $items ) ) {
+			return '';
+		}
+
+		$title  = sanitize_text_field( $atts['title'] );
+		$html   = '<section class="mnsk7-faq">';
+		if ( $title ) {
+			$html .= '<h2 class="mnsk7-faq__title">' . esc_html( $title ) . '</h2>';
+		}
+		$html .= '<dl class="mnsk7-faq__list">';
+		foreach ( $items as $item ) {
+			if ( empty( $item['q'] ) || empty( $item['a'] ) ) {
+				continue;
+			}
+			$html .= '<div class="mnsk7-faq__item">';
+			$html .= '<dt class="mnsk7-faq__q">' . esc_html( $item['q'] ) . '</dt>';
+			$html .= '<dd class="mnsk7-faq__a">' . wp_kses_post( $item['a'] ) . '</dd>';
+			$html .= '</div>';
+		}
+		$html .= '</dl>';
+		$html .= '</section>';
+
+		/* FAQPage JSON-LD schema (rich results) */
+		$faq_schema = array(
+			'@context'   => 'https://schema.org',
+			'@type'      => 'FAQPage',
+			'mainEntity' => array(),
+		);
+		foreach ( $items as $item ) {
+			if ( empty( $item['q'] ) || empty( $item['a'] ) ) {
+				continue;
+			}
+			$faq_schema['mainEntity'][] = array(
+				'@type'          => 'Question',
+				'name'           => wp_strip_all_tags( $item['q'] ),
+				'acceptedAnswer' => array(
+					'@type' => 'Answer',
+					'text'  => wp_strip_all_tags( $item['a'] ),
+				),
+			);
+		}
+		$html .= '<script type="application/ld+json">'
+			. wp_json_encode( $faq_schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES )
+			. '</script>';
+
+		return $html;
+	} );
+}, 6 );
+
+/* FAQ: skrypt akordeonu (czysty JS, bez jQuery) */
+add_action( 'wp_footer', function () {
+	if ( ! has_shortcode( get_post()->post_content ?? '', 'mnsk7_faq' )
+		&& ! is_singular( 'page' )
+		&& ! is_product_category() ) {
+		return;
+	}
+	?>
+	<script>
+	(function(){
+		document.querySelectorAll('.mnsk7-faq__item').forEach(function(item){
+			var dt = item.querySelector('.mnsk7-faq__q');
+			if(!dt) return;
+			dt.addEventListener('click', function(){
+				item.classList.toggle('is-open');
+			});
+		});
+	})();
+	</script>
+	<?php
+}, 20 );
+
+/* ==========================================================================
+   SEO: Yoast — auto meta description dla produktów
+   ========================================================================== */
+
+/**
+ * Jeśli Yoast nie ma ręcznie wpisanego meta description dla produktu,
+ * generujemy go automatycznie: typ + ø + zastosowanie + USP (dostawa/VAT).
+ */
+add_filter( 'wpseo_metadesc', 'mnsk7_auto_meta_desc_product', 20 );
+function mnsk7_auto_meta_desc_product( $desc ) {
+	if ( ! empty( $desc ) ) {
+		return $desc;
+	}
+
+	if ( ! is_singular( 'product' ) ) {
+		return $desc;
+	}
+
+	global $product;
+	if ( ! is_a( $product, 'WC_Product' ) ) {
+		$product = wc_get_product( get_the_ID() );
+	}
+	if ( ! is_a( $product, 'WC_Product' ) ) {
+		return $desc;
+	}
+
+	$name   = $product->get_name();
+	$srednica = $product->get_attribute( 'srednica' ) ?: $product->get_attribute( 'pa_srednica' );
+	$zast     = $product->get_attribute( 'zastosowanie' ) ?: $product->get_attribute( 'pa_zastosowanie' );
+	$sku      = $product->get_sku();
+	$parts    = array();
+
+	$parts[] = $name;
+	if ( $srednica ) {
+		$parts[] = '| Ø' . $srednica;
+	}
+	if ( $zast ) {
+		$parts[] = '| ' . $zast;
+	}
+
+	$base   = implode( ' ', $parts );
+	$usp    = __( 'Dostawa następnego dnia. Faktura VAT. Zamów na mnsk7-tools.pl.', 'mnsk7-tools' );
+	$result = $base . ' — ' . $usp;
+
+	/* Yoast truncuje do 156 znaków, ale tu nie przycinamy — Yoast zrobi to sam */
+	return $result;
+}
+
+/**
+ * Yoast — auto meta description dla kategorii produktów (jeśli brak ręcznego).
+ */
+add_filter( 'wpseo_metadesc', 'mnsk7_auto_meta_desc_category', 21 );
+function mnsk7_auto_meta_desc_category( $desc ) {
+	if ( ! empty( $desc ) ) {
+		return $desc;
+	}
+
+	if ( ! is_product_category() ) {
+		return $desc;
+	}
+
+	$cat = get_queried_object();
+	if ( ! $cat ) {
+		return $desc;
+	}
+
+	return sprintf(
+		/* translators: 1: category name, 2: product count */
+		__( '%1$s — %2$d produktów. Dostawa następnego dnia. Faktura VAT. Sklep mnsk7-tools.pl — frezy CNC i narzędzia skrawające.', 'mnsk7-tools' ),
+		$cat->name,
+		(int) $cat->count
+	);
+}
