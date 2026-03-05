@@ -1,0 +1,162 @@
+<?php
+/**
+ * Strona główna sklepu MNK7 Tools.
+ *
+ * @package tech-storefront
+ */
+
+get_header();
+?>
+
+<main id="main" class="site-main mnsk7-front-page">
+
+	<!-- HERO -->
+	<section class="mnsk7-hero">
+		<div class="mnsk7-hero__inner container">
+			<h1 class="mnsk7-hero__title"><?php esc_html_e( 'Frezy CNC i narzędzia skrawające', 'tech-storefront' ); ?></h1>
+			<p class="mnsk7-hero__sub"><?php esc_html_e( 'Drewno · MDF · Aluminium · Stal · Tworzywa sztuczne', 'tech-storefront' ); ?></p>
+			<div class="mnsk7-hero__usps">
+				<div class="mnsk7-hero__usp">
+					<span class="mnsk7-hero__usp-icon">🚚</span>
+					<span><?php esc_html_e( 'Dostawa następnego dnia', 'tech-storefront' ); ?></span>
+				</div>
+				<div class="mnsk7-hero__usp">
+					<span class="mnsk7-hero__usp-icon">🧾</span>
+					<span><?php esc_html_e( 'Faktura VAT', 'tech-storefront' ); ?></span>
+				</div>
+				<div class="mnsk7-hero__usp">
+					<span class="mnsk7-hero__usp-icon">⭐</span>
+					<span><?php esc_html_e( '100% pozytywnych opinii', 'tech-storefront' ); ?></span>
+				</div>
+				<div class="mnsk7-hero__usp">
+					<span class="mnsk7-hero__usp-icon">📦</span>
+					<span><?php esc_html_e( '3 500+ zamówień rocznie', 'tech-storefront' ); ?></span>
+				</div>
+			</div>
+			<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
+			<div class="mnsk7-hero__ctas">
+				<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="mnsk7-hero__btn mnsk7-hero__btn--primary">
+					<?php esc_html_e( 'Przejdź do sklepu', 'tech-storefront' ); ?>
+				</a>
+			</div>
+			<?php endif; ?>
+		</div>
+	</section>
+
+	<!-- KATEGORIE -->
+	<?php if ( taxonomy_exists( 'product_cat' ) ) :
+		$cats = get_terms( array(
+			'taxonomy'   => 'product_cat',
+			'hide_empty' => true,
+			'parent'     => 0,
+			'number'     => 10,
+			'orderby'    => 'count',
+			'order'      => 'DESC',
+		) );
+		if ( ! is_wp_error( $cats ) && ! empty( $cats ) ) :
+	?>
+	<section class="mnsk7-section mnsk7-section--cats mnsk7-section--light">
+		<div class="container">
+			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Kategorie', 'tech-storefront' ); ?></h2>
+			<div class="mnsk7-cats">
+				<?php foreach ( $cats as $cat ) :
+					$link = get_term_link( $cat );
+					if ( is_wp_error( $link ) ) continue;
+					$img_id = get_term_meta( $cat->term_id, 'thumbnail_id', true );
+					$img    = $img_id ? wp_get_attachment_image( $img_id, 'thumbnail' ) : '';
+					?>
+					<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-cats__item">
+						<?php if ( $img ) : ?>
+						<span class="mnsk7-cats__img"><?php echo $img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+						<?php else : ?>
+						<span class="mnsk7-cats__icon" aria-hidden="true">⚙️</span>
+						<?php endif; ?>
+						<span class="mnsk7-cats__name"><?php echo esc_html( $cat->name ); ?></span>
+						<span class="mnsk7-cats__count"><?php echo esc_html( $cat->count ); ?> <?php esc_html_e( 'prod.', 'tech-storefront' ); ?></span>
+					</a>
+				<?php endforeach; ?>
+			</div>
+			<p class="mnsk7-section__more">
+				<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>"><?php esc_html_e( 'Wszystkie produkty →', 'tech-storefront' ); ?></a>
+			</p>
+		</div>
+	</section>
+	<?php endif; endif; ?>
+
+	<!-- BESTSELLERS -->
+	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
+	<section class="mnsk7-section mnsk7-section--bestsellers">
+		<div class="container">
+			<?php echo do_shortcode( '[mnsk7_bestsellers limit="8" title="Bestsellery i polecane"]' ); ?>
+		</div>
+	</section>
+	<?php endif; ?>
+
+	<!-- TRUST + OPINIE (single section) -->
+	<section class="mnsk7-section mnsk7-section--trust mnsk7-section--light">
+		<div class="container">
+			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Dlaczego kupujący nam ufają', 'tech-storefront' ); ?></h2>
+			<div class="mnsk7-trust-stats">
+				<div class="mnsk7-trust-stats__item">
+					<span class="mnsk7-trust-stats__number">100%</span>
+					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'pozytywnych opinii', 'tech-storefront' ); ?></span>
+				</div>
+				<div class="mnsk7-trust-stats__item">
+					<span class="mnsk7-trust-stats__number">383+</span>
+					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'ocen na Allegro', 'tech-storefront' ); ?></span>
+				</div>
+				<div class="mnsk7-trust-stats__item">
+					<span class="mnsk7-trust-stats__number">3 500+</span>
+					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'zamówień rocznie', 'tech-storefront' ); ?></span>
+				</div>
+			</div>
+			<?php echo do_shortcode( '[mnsk7_allegro_reviews title=""]' ); ?>
+			<p class="mnsk7-trust-stats__allegro">
+				<a href="<?php echo esc_url( MNK7_ALLEGRO_SELLER_URL ); ?>" target="_blank" rel="noopener nofollow">
+					<?php esc_html_e( 'Super Sprzedawca Allegro — zobacz profil →', 'tech-storefront' ); ?>
+				</a>
+			</p>
+		</div>
+	</section>
+
+	<!-- SYSTEM RABATÓW -->
+	<section class="mnsk7-section mnsk7-section--loyalty mnsk7-section--light">
+		<div class="container">
+			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Program rabatowy dla stałych klientów', 'tech-storefront' ); ?></h2>
+			<p class="mnsk7-loyalty-intro"><?php esc_html_e( 'Im więcej zamawiasz w ciągu roku, tym większy stały rabat na każde kolejne zamówienie:', 'tech-storefront' ); ?></p>
+			<div class="mnsk7-loyalty-tiers">
+				<?php
+				$tiers = array(
+					array( 'from' => '1 000', 'pct' => '5%',  'label' => '' ),
+					array( 'from' => '3 000', 'pct' => '10%', 'label' => '' ),
+					array( 'from' => '5 000', 'pct' => '15%', 'label' => '' ),
+					array( 'from' => '10 000', 'pct' => '20%', 'label' => '🏆' ),
+				);
+				foreach ( $tiers as $tier ) :
+				?>
+				<div class="mnsk7-loyalty-tier">
+					<span class="mnsk7-loyalty-tier__pct"><?php echo esc_html( $tier['pct'] ); ?></span>
+					<span class="mnsk7-loyalty-tier__from"><?php printf( esc_html__( 'od %s zł/rok', 'tech-storefront' ), esc_html( $tier['from'] ) ); ?></span>
+				</div>
+				<?php endforeach; ?>
+			</div>
+			<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
+			<p class="mnsk7-section__more">
+				<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>"><?php esc_html_e( 'Sprawdź swój poziom rabatu w Moje konto →', 'tech-storefront' ); ?></a>
+			</p>
+			<?php endif; ?>
+		</div>
+	</section>
+
+	<!-- INSTAGRAM -->
+	<section class="mnsk7-section mnsk7-section--insta">
+		<div class="container">
+			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Obserwuj nas na Instagramie', 'tech-storefront' ); ?></h2>
+			<?php echo do_shortcode( '[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]' ); ?>
+		</div>
+	</section>
+
+</main>
+
+<?php
+get_footer();
