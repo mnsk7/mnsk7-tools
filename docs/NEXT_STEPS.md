@@ -9,6 +9,7 @@ Krótki przegląd: co jest zrobione w kodzie, co zostało (admin, konfiguracja, 
 - **Sprint 01:** mu-plugin `mnsk7-tools.php`, overrides karty produktu (single + content-single), blokada xmlrpc (P0-03), override archiwum kategorii (`archive-product.php`).
 - **Sprint 02:** blok parametrów i „Do czego” w karcie, dostępność, dostawa+VAT (karta + stopka + shortcode), shortcode bestsellery i rating, placeholder pod schemat/wideo, CSS (`assets/css/mnsk7-product.css`), helper kolejności atrybutów do filtrów.
 - **UI / kontakt / dostawa:** blok kontaktu w stopce (email, tel, godziny, Instagram), tabela warunków dostawy (InPost/DPD, free od 300 zł), ETA przy wyborze kuriera, shortcode `[mnsk7_delivery_rules]`, `[mnsk7_contact_info]`, `[mnsk7_delivery_eta]`. Top bar wyłączony w motywie.
+- **Lojalność:** w **Moje konto** (dashboard) blok „System rabatów” (suma w roku, aktualny %, brak do następnego progu, lista progów 1000→5% … 10 000→20%). Shortcode `[mnsk7_loyalty]`. Automatyczny rabat w koszyku (fee „Rabat lojalnościowy X%”) na podstawie sumy zamówień w bieżącym roku (completed).
 - **Trust / Allegro:** shortcode `[mnsk7_allegro_trust]` (100%, 383 pozytywne, CTA do Allegro), `[mnsk7_allegro_reviews]` i `[mnsk7_allegro_reviews_pages from="1" to="20"]` — linki do stron ocen page 1–20.
 - **Instagram:** `[mnsk7_instagram_feed]` (embed + link do @mnsk7tools); w stopce wyświetlany jest skrót (limit 1).
 - **Menu:** pod punktem „Sklep” w menu głównym wstrzykiwane są główne kategorie Woo (filter `wp_nav_menu_objects`).

@@ -24,7 +24,7 @@ Wyświetlać w stopce (i ewentualnie w „Kontakt” / górny bar).
 
 Opcje: plugin (np. Instagram Feed), osadzenie oficjalnego embedu lub karuzela zdjęć z API (zgodnie z polityką Instagram). W specyfikacji UI: jeden rząd postów + przycisk/link „Obserwuj na Instagramie”.
 
-**Wdrożone technicznie (shortcode):**
+ghj**Wdrożone technicznie (shortcode):**
 
 - `[mnsk7_instagram_feed]` — blok Instagram + link do profilu.
 - `[mnsk7_instagram_feed posts="https://www.instagram.com/p/.../,https://www.instagram.com/p/.../"]` — jeśli podasz URL-e postów, shortcode spróbuje osadzić je jako embed.
@@ -77,7 +77,7 @@ Z notatek z PDF — **nakładająca się w ciągu roku** w panelu klienta:
 
 **Wymaganie:** „warunki automatyczne w panelu” — czyli w **Moje konto** klient widzi swój poziom (progi) i naliczony rabat; rabat ma być stosowany automatycznie (np. przy kolejnych zakupach w danym roku).
 
-Do realizacji: logika w Woo (np. custom role / pole „suma w roku” + kupon lub automatyczna zniżka), wyświetlenie bloku w „Moje konto” (np. shortcode lub szablon). Zgodnie z `woo_loyalty_design`: ustalić moment naliczania (np. po completed), sposób naliczenia (np. % od zamówienia) i sposób wykorzystania (kupon / auto-rabat).
+**Wdrożone w kodzie:** w **Moje konto** (dashboard) wyświetlany jest blok „System rabatów”: suma zamówień w bieżącym roku (status completed), aktualny % rabatu, brakująca kwota do następnego progu, lista progów (1000→5%, 3000→10%, 5000→15%, 10 000→20%). Shortcode `[mnsk7_loyalty]` — ten sam blok (dla zalogowanych). Automatyczne stosowanie rabatu przy zamówieniu (kupon / auto-rabat) — do ustalenia w kolejnym etapie; na razie wyświetlanie poziomu.
 
 ---
 
