@@ -157,6 +157,17 @@ function mnsk7_single_product_schema_video_placeholder() {
 	return '';
 }
 
+/*
+ * WooCommerce domyślnie wyświetla "X w magazynie" wewnątrz formularza "Dodaj do koszyka"
+ * (woocommerce_get_stock_html). Wyłączamy to żeby nie duplikować z naszym badgem.
+ */
+add_filter( 'woocommerce_get_stock_html', function ( $html ) {
+	if ( is_singular( 'product' ) ) {
+		return ''; // nasz mnsk7_single_product_availability() obsługuje to na priority 8
+	}
+	return $html;
+} );
+
 /* Hooki WooCommerce summary (priority):
  *  8  → availability
  * 21  → key_params
