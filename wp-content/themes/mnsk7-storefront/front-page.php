@@ -92,38 +92,49 @@ get_header();
 	</section>
 	<?php endif; ?>
 
-	<!-- TRUST + OPINIE (single section) -->
+	<!-- TRUST + OPINIE (single section) — layout: 4 stats, Allegro line + link, reviews, one CTA button -->
 	<section class="mnsk7-section mnsk7-section--trust mnsk7-section--light">
 		<div class="col-full">
-			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Dlaczego kupujący nam ufają', 'tech-storefront' ); ?></h2>
+			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Dlaczego kupujący nam ufają', 'mnsk7-storefront' ); ?></h2>
 			<div class="mnsk7-trust-stats">
 				<div class="mnsk7-trust-stats__item">
 					<span class="mnsk7-trust-stats__number">100%</span>
-					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'pozytywnych opinii', 'tech-storefront' ); ?></span>
+					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'pozytywnych opinii', 'mnsk7-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number">383+</span>
-					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'ocen na Allegro', 'tech-storefront' ); ?></span>
+					<span class="mnsk7-trust-stats__number">383</span>
+					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'ocen na Allegro', 'mnsk7-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-trust-stats__item">
 					<span class="mnsk7-trust-stats__number">3 500+</span>
-					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'zamówień rocznie', 'tech-storefront' ); ?></span>
+					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'zamówień w 2025 r.', 'mnsk7-storefront' ); ?></span>
+				</div>
+				<div class="mnsk7-trust-stats__item">
+					<span class="mnsk7-trust-stats__number">425</span>
+					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'produktów w ofercie', 'mnsk7-storefront' ); ?></span>
 				</div>
 			</div>
-			<?php echo do_shortcode( '[mnsk7_allegro_reviews title=""]' ); ?>
+			<p class="mnsk7-trust-stats__sub"><?php esc_html_e( 'Super Sprzedawca Allegro — najwyższa jakość obsługi i realizacji zamówień.', 'mnsk7-storefront' ); ?></p>
 			<p class="mnsk7-trust-stats__allegro">
-				<a href="<?php echo esc_url( MNK7_ALLEGRO_SELLER_URL ); ?>" target="_blank" rel="noopener nofollow">
-					<?php esc_html_e( 'Super Sprzedawca Allegro — zobacz profil →', 'tech-storefront' ); ?>
+				<?php $allegro_url = defined( 'MNK7_ALLEGRO_SELLER_URL' ) ? MNK7_ALLEGRO_SELLER_URL : '#'; ?>
+				<a href="<?php echo esc_url( $allegro_url ); ?>" target="_blank" rel="noopener nofollow">
+					<?php esc_html_e( 'Zobacz profil na Allegro →', 'mnsk7-storefront' ); ?>
 				</a>
 			</p>
+			<?php echo do_shortcode( '[mnsk7_allegro_reviews title=""]' ); ?>
+			<div class="mnsk7-trust-cta">
+				<a href="<?php echo esc_url( $allegro_url ); ?>" class="mnsk7-trust-cta__btn" target="_blank" rel="noopener nofollow">
+					<?php esc_html_e( 'Czytaj wszystkie opinie na Allegro →', 'mnsk7-storefront' ); ?>
+				</a>
+			</div>
 		</div>
 	</section>
 
 	<!-- SYSTEM RABATÓW -->
 	<section class="mnsk7-section mnsk7-section--loyalty mnsk7-section--light">
 		<div class="col-full">
-			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Program rabatowy dla stałych klientów', 'tech-storefront' ); ?></h2>
-			<p class="mnsk7-loyalty-intro"><?php esc_html_e( 'Im więcej zamawiasz w ciągu roku, tym większy stały rabat na każde kolejne zamówienie:', 'tech-storefront' ); ?></p>
+			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Program rabatowy dla stałych klientów', 'mnsk7-storefront' ); ?></h2>
+			<p class="mnsk7-loyalty-intro"><?php esc_html_e( 'Im więcej zamawiasz w ciągu roku, tym większy stały rabat na każde kolejne zamówienie:', 'mnsk7-storefront' ); ?></p>
 			<div class="mnsk7-loyalty-tiers">
 				<?php
 				$tiers = array(
@@ -136,7 +147,7 @@ get_header();
 				?>
 				<div class="mnsk7-loyalty-tier">
 					<span class="mnsk7-loyalty-tier__pct"><?php echo esc_html( $tier['pct'] ); ?></span>
-					<span class="mnsk7-loyalty-tier__from"><?php printf( esc_html__( 'od %s zł/rok', 'tech-storefront' ), esc_html( $tier['from'] ) ); ?></span>
+					<span class="mnsk7-loyalty-tier__from"><?php printf( esc_html__( 'od %s zł/rok', 'mnsk7-storefront' ), esc_html( $tier['from'] ) ); ?></span>
 				</div>
 				<?php endforeach; ?>
 			</div>
@@ -151,7 +162,7 @@ get_header();
 	<!-- INSTAGRAM -->
 	<section class="mnsk7-section mnsk7-section--insta">
 		<div class="col-full">
-			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Obserwuj nas na Instagramie', 'tech-storefront' ); ?></h2>
+			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Obserwuj nas na Instagramie', 'mnsk7-storefront' ); ?></h2>
 			<?php echo do_shortcode( '[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]' ); ?>
 		</div>
 	</section>

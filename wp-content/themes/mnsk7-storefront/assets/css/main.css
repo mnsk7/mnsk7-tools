@@ -8,24 +8,26 @@
    ----------------------------------------------------------------- */
 
 :root {
-  /* Palette */
+  /* Palette: blue #0c7ddb, beige #e9e8cc, white, black */
   --color-bg:             #ffffff;
-  --color-surface:        #f8fafc;
-  --color-surface-2:      #f1f5f9;
-  --color-text:           #0f172a;
-  --color-text-secondary: #475569;
-  --color-text-muted:     #94a3b8;
-  --color-border:         #e2e8f0;
-  --color-border-strong:  #cbd5e1;
+  --color-beige:          #e9e8cc;
+  --color-surface:        #e9e8cc;
+  --color-surface-2:      #e0dfc4;
+  --color-text:           #000000;
+  --color-text-secondary: #333333;
+  --color-text-muted:     #666666;
+  --color-border:         #e9e8cc;
+  --color-border-strong:  #d4d3b8;
   --color-primary:        #0c7ddb;
-  --color-primary-hover:  #0b69ba;
-  --color-primary-dark:   #0c3060;
+  --color-primary-hover:   #0a6bc2;
+  --color-primary-dark:   #0a5a9e;
   --color-accent:         #22c55e;
   --color-warning:        #f59e0b;
   --color-danger:         #ef4444;
   --color-white:          #ffffff;
+  --color-black:          #000000;
 
-  /* Typography */
+  /* Typography — Inter */
   --font-base: "Inter", system-ui, -apple-system, sans-serif;
   --fs-xs:  0.75rem;   /* 12 px */
   --fs-sm:  0.8125rem; /* 13 px */
@@ -199,9 +201,11 @@ img {
   text-decoration: none;
 }
 
-.site-header-cart .cart-contents .count {
-  background: var(--color-primary);
-  color: var(--color-white);
+.site-header-cart .cart-contents .count,
+.woocommerce-cart-form .cart-contents .count,
+.widget_shopping_cart .quantity {
+  background: var(--color-primary) !important;
+  color: var(--color-white) !important;
   font-size: var(--fs-xs);
   border-radius: var(--r-pill);
   min-width: 18px;
@@ -303,12 +307,13 @@ img {
   font-weight: 700;
 }
 
-/* Add to cart button */
+/* Add to cart button — prevent vertical text (narrow cards in cart/related) */
 .woocommerce ul.products li.product .button,
 .woocommerce ul.products li.product .add_to_cart_button,
 .woocommerce ul.products li.product a.added_to_cart {
-  display: block;
+  display: inline-block;
   width: calc(100% - 1.5rem);
+  min-width: 120px;
   margin: auto 0.75rem 0.75rem;
   background: var(--color-primary);
   color: var(--color-white);
@@ -322,6 +327,8 @@ img {
   cursor: pointer;
   transition: background 0.15s ease;
   text-decoration: none;
+  white-space: normal;
+  flex-shrink: 0;
 }
 
 .woocommerce ul.products li.product .button:hover,
@@ -388,14 +395,53 @@ img {
 
 .single-product div.product {
   margin-top: 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
 }
 
-.single-product .images {
-  margin-bottom: 1.5rem;
+.single-product div.product .images {
+  flex: 1 1 280px;
+  min-width: 280px;
+  max-width: 50%;
+  margin-bottom: 0;
+}
+
+.single-product div.product .summary {
+  flex: 1 1 300px;
+  min-width: 300px;
+  max-width: calc(50% - 2rem);
 }
 
 .single-product .images img {
   border-radius: var(--r-md);
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.single-product .images .woocommerce-product-gallery__image img {
+  min-width: 200px;
+}
+
+.single-product .images .flex-control-thumbs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.single-product .images .flex-control-thumbs li {
+  width: auto;
+  min-width: 60px;
+}
+
+.single-product .images .flex-control-thumbs img {
+  min-width: 60px;
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: var(--r-sm);
 }
 
 .single-product .summary {
@@ -929,14 +975,49 @@ img {
   font-weight: 500;
 }
 
+.mnsk7-trust-stats__sub {
+  text-align: center;
+  font-size: var(--fs-base);
+  color: var(--color-text-secondary);
+  margin: 0 0 0.5rem;
+}
+
 .mnsk7-trust-stats__allegro {
   text-align: center;
-  margin-top: 1.5rem;
+  margin-top: 0;
+  margin-bottom: 2rem;
 }
 
 .mnsk7-trust-stats__allegro a {
   font-weight: 600;
   font-size: var(--fs-sm);
+}
+
+.mnsk7-trust-cta {
+  text-align: center;
+  margin-top: 1.5rem;
+}
+
+.mnsk7-trust-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-radius: var(--r-sm);
+  font-size: var(--fs-base);
+  font-weight: 600;
+  font-family: var(--font-base);
+  text-decoration: none;
+  transition: background 0.15s ease;
+  min-height: 44px;
+}
+
+.mnsk7-trust-cta__btn:hover {
+  background: var(--color-primary-hover);
+  color: var(--color-white);
+  text-decoration: none;
 }
 
 /* Loyalty tiers */
@@ -1039,6 +1120,16 @@ img {
   transform: translateY(-1px);
 }
 
+/* Instagram section — centered content (heading + shortcode output) */
+.mnsk7-section--insta .col-full {
+  text-align: center;
+}
+
+.mnsk7-section--insta .col-full > * {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Bestsellers shortcode */
 .mnsk7-bestsellers {
   margin: 0;
@@ -1059,7 +1150,7 @@ img {
   background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
   padding: 3.5rem 0 2.5rem;
   border-top: 3px solid var(--color-primary);
-  color: #cbd5e1;
+  color: var(--color-white);
   width: 100%;
 }
 
@@ -1089,25 +1180,25 @@ img {
 }
 
 .mnsk7-site-footer-block__col {
-  color: #cbd5e1;
+  color: rgba(255, 255, 255, 0.9);
   font-size: var(--fs-sm);
 }
 
 .mnsk7-site-footer-block__col p,
 .mnsk7-site-footer-block__col .mnsk7-contact-info__line {
-  color: #cbd5e1;
+  color: rgba(255, 255, 255, 0.9);
   margin: 0.4rem 0;
   line-height: 1.7;
 }
 
 .mnsk7-site-footer-block__col a {
-  color: #60a5fa;
+  color: var(--color-primary);
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
 .mnsk7-site-footer-block__col a:hover {
-  color: #93c5fd;
+  color: var(--color-beige);
   text-decoration: underline;
 }
 
@@ -1116,7 +1207,7 @@ img {
 }
 
 .mnsk7-site-footer-block__delivery-note {
-  color: #94a3b8;
+  color: rgba(255, 255, 255, 0.75);
   font-size: var(--fs-xs);
   margin-top: 0.75rem;
 }
@@ -1140,12 +1231,12 @@ img {
 }
 
 .mnsk7-site-footer-block__links a {
-  color: #60a5fa;
+  color: rgba(255, 255, 255, 0.95);
   font-size: var(--fs-sm);
 }
 
 .mnsk7-site-footer-block__links a:hover {
-  color: #93c5fd;
+  color: var(--color-beige);
 }
 
 /* Footer bottom bar */
@@ -1154,11 +1245,11 @@ img {
   padding: 1rem 0;
   text-align: center;
   font-size: var(--fs-xs);
-  color: var(--color-text-muted);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .mnsk7-footer-copyright {
-  color: var(--color-text-muted);
+  color: rgba(255, 255, 255, 0.9);
 }
 
 /* Hide Storefront default credit if still rendered */
@@ -1289,6 +1380,21 @@ a.add_to_wishlist,
 .cross-sells ul.products li.product:hover {
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
+}
+
+/* Related/cross-sells: force Add to cart button horizontal text (fix vertical letter stacking) */
+.related.products .add_to_cart_button,
+.cross-sells .add_to_cart_button,
+.upsells.products .add_to_cart_button {
+  writing-mode: horizontal-tb;
+  display: block !important;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.625rem 0.75rem;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.3;
 }
 
 /* -----------------------------------------------------------------
@@ -1522,10 +1628,30 @@ a.add_to_wishlist,
   font-size: var(--fs-sm);
 }
 
-.woocommerce-info {
+.woocommerce-info,
+.woocommerce-message {
   border-top-color: var(--color-primary);
-  background: rgba(12, 125, 219, 0.06);
+  border-radius: var(--r-sm);
+  background: rgba(12, 125, 219, 0.08);
   font-size: var(--fs-sm);
+  color: var(--color-text);
+}
+
+/* Cart/checkout notice banner — brand blue, consistent corners */
+.woocommerce-info.darmowa-dostawa,
+.woocommerce .cart-subtotal + .woocommerce-info,
+.woocommerce-cart .woocommerce-info {
+  background: var(--color-primary) !important;
+  color: var(--color-white) !important;
+  border: none;
+  border-radius: var(--r-sm);
+  padding: 0.75rem 1.25rem;
+}
+
+.woocommerce-cart .woocommerce-info a,
+.woocommerce .woocommerce-info a {
+  color: var(--color-white);
+  text-decoration: underline;
 }
 
 /* -----------------------------------------------------------------
@@ -1716,10 +1842,11 @@ a.add_to_wishlist,
     padding: 2rem 0 1rem;
   }
 
-  /* PDP layout */
+  /* PDP layout: stack images + summary */
   .single-product div.product .images,
   .single-product div.product .summary {
     width: 100%;
+    max-width: 100%;
     float: none;
   }
 }
