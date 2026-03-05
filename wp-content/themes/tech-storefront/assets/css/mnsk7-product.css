@@ -129,19 +129,86 @@ a.compare,
 	display: none !important;
 }
 
-/* Hide duplicate product title above image (breadcrumb-style bar from parent theme) */
-.woocommerce-breadcrumb + .product_title,
-.single-product .content-area > .product_title,
-.single-product .site-main > .entry-header,
-.single-product .entry-header .entry-title,
-.single-product > .entry-title,
-header.entry-header {
+/* Hide duplicate product title (h2.page-title in breadcrumb-wrapper from parent theme) */
+.single-product .page-title,
+.single-product .breadcrumb-wrapper + .page-title,
+.single-product header.entry-header,
+.single-product .entry-header,
+.woocommerce .page-title:not(.woocommerce-products-header__title) {
 	display: none !important;
 }
 
 /* Hide old product_meta completely */
 .single-product .product_meta {
 	display: none !important;
+}
+
+/* ShopEngine wishlist/compare/quickview icons — kill all of them */
+.shopengine-wishlist-trigger,
+.shopengine-quickview-trigger,
+.shopengine-icon-product_compare_1,
+a.shopengine-badge,
+.shopengine-badge,
+.wpc-compare-button,
+[class*="shopengine-icon-product_compare"],
+[class*="shopengine-icon-wishlist"],
+.woocommerce ul.products li.product .shopengine-badge,
+.single-product .shopengine-badge {
+	display: none !important;
+}
+
+/* PLP: show full product name (no aggressive truncation) */
+.woocommerce ul.products li.product .woocommerce-loop-product__title,
+.woocommerce ul.products li.product h2 {
+	-webkit-line-clamp: unset !important;
+	display: block !important;
+	overflow: visible !important;
+	font-size: var(--fs-sm);
+	line-height: 1.4;
+	min-height: 2.8em;
+}
+
+/* Related/cross-sell: force horizontal grid */
+.related.products ul.products,
+.up-sells ul.products {
+	display: grid !important;
+	grid-template-columns: repeat(4, 1fr) !important;
+	gap: 1rem !important;
+}
+
+@media (max-width: 768px) {
+	.related.products ul.products,
+	.up-sells ul.products {
+		grid-template-columns: repeat(2, 1fr) !important;
+	}
+}
+
+/* TRUST BADGES vs META CHIPS — visual differentiation */
+.mnsk7-product-trust__badge {
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--r-pill);
+	font-size: var(--fs-xs);
+	color: var(--color-text-secondary);
+	padding: 0.3rem 0.75rem;
+}
+
+.mnsk7-product-trust__badge-icon {
+	color: var(--color-accent);
+}
+
+.mnsk7-product-meta-chips a {
+	background: var(--color-primary) !important;
+	color: var(--color-white) !important;
+	border: none !important;
+	border-radius: var(--r-sm) !important;
+	font-size: var(--fs-xs);
+	padding: 0.25rem 0.6rem;
+	font-weight: 600;
+}
+
+.mnsk7-product-meta-chips a:hover {
+	background: var(--color-primary-hover) !important;
 }
 
 /* =========================================================
@@ -530,11 +597,11 @@ body {
    ========================================================= */
 
 .mnsk7-site-footer-block {
-	background: #1e293b;
+	background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
 	color: #cbd5e1;
-	padding: 3rem 0;
+	padding: 3.5rem 0 2.5rem;
 	margin: 0;
-	border-top: 1px solid rgba(255,255,255,0.08);
+	border-top: 3px solid var(--color-primary);
 }
 
 .mnsk7-site-footer-block__grid {
@@ -611,9 +678,9 @@ body {
 }
 
 .mnsk7-footer-bottom {
-	background: #0f172a;
+	background: #020617;
 	border-top: 1px solid rgba(255,255,255,0.06);
-	padding: 1.25rem 2rem;
+	padding: 1rem 2rem;
 	text-align: center;
 }
 
