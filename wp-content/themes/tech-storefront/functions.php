@@ -146,8 +146,58 @@ function tech_storefront_enqueue_mnsk7_product_css() {
 add_action( 'wp_enqueue_scripts', 'tech_storefront_enqueue_mnsk7_product_css', 15 );
 
 /**
+ * When no custom menu is assigned, WP falls back to wp_page_menu() which lists
+ * ALL published pages. Override fallback to show only essential navigation.
+ */
+add_filter( 'wp_page_menu_args', function ( $args ) {
+	$args['include'] = '0';
+	return $args;
+} );
+
+/**
+ * Build a clean programmatic primary menu when no custom menu is assigned.
+ * Shows: Sklep (with category dropdown), top-level parent categories, Kontakt.
+ */
+add_filter( 'wp_nav_menu_args', function ( $args ) {
+	if ( ! empty( $args['theme_location'] ) && $args['theme_location'] === 'primary-menu' && ! has_nav_menu( 'primary-menu' ) ) {
+		$args['fallback_cb'] = 'mnsk7_primary_menu_fallback';
+	}
+	return $args;
+} );
+
+function mnsk7_primary_menu_fallback() {
+	if ( ! taxonomy_exists( 'product_cat' ) ) {
+		return;
+	}
+	$cats = get_terms( array(
+		'taxonomy'   => 'product_cat',
+		'hide_empty' => true,
+		'parent'     => 0,
+		'number'     => 8,
+		'orderby'    => 'count',
+		'order'      => 'DESC',
+	) );
+	echo '<div class="menu-primary-menu-container"><ul id="primary-menu" class="menu">';
+	echo '<li class="menu-item menu-item-has-children"><a href="' . esc_url( wc_get_page_permalink( 'shop' ) ) . '">Sklep</a>';
+	if ( ! is_wp_error( $cats ) && ! empty( $cats ) ) {
+		echo '<ul class="sub-menu">';
+		foreach ( $cats as $cat ) {
+			$link = get_term_link( $cat );
+			if ( ! is_wp_error( $link ) ) {
+				echo '<li class="menu-item"><a href="' . esc_url( $link ) . '">' . esc_html( $cat->name ) . '</a></li>';
+			}
+		}
+		echo '</ul>';
+	}
+	echo '</li>';
+	echo '<li class="menu-item"><a href="' . esc_url( home_url( '/kontakt/' ) ) . '">Kontakt</a></li>';
+	echo '<li class="menu-item"><a href="' . esc_url( home_url( '/dostawa-i-platnosci/' ) ) . '">Dostawa</a></li>';
+	echo '</ul></div>';
+}
+
+/**
  * UX: pod "Sklep" dodajemy główne kategorie Woo (header menu).
- * Priorytet: wygoda użytkownika i standard e-commerce.
+ * Only fires when a custom WP menu IS assigned (not the fallback).
  */
 function tech_storefront_add_product_cats_under_shop_menu( $items, $args ) {
 	if ( is_admin() ) {
