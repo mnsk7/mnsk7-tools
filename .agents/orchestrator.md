@@ -10,8 +10,8 @@
 1) **00_as_is_audit** → /docs/AS_IS_AUDIT.md + /docs/AS_IS_BACKLOG.md + /docs/AS_IS_RISKS.md  
    _(снимает реальность: атрибуты, плагины, тема, SEO, performance — до любого планирования)_
 
-2) **00_client_discovery** → /docs/DISCOVERY.md + /docs/REQUIREMENTS.md  
-   _(уже опирается на as-is — не в воздухе, а от реального состояния)_
+2) **00_client_discovery** → /docs/DISCOVERY_GAP_ANALYSIS.md + /docs/DISCOVERY.md + /docs/REQUIREMENTS.md  
+   _(вход: CLIENT_INTERVIEW_SUMMARY.md; проверяет, что интервью закрывает все вопросы дискавери; фиксирует открытые пункты)_
 
 3) **02_growth_seo** → /docs/SEO_PLAN.md + /docs/CONTENT_PLAN.md + /docs/TRACKING.md
 

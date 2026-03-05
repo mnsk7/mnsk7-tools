@@ -1,0 +1,27 @@
+# Prosta weryfikacja składni PHP przed merge (theme + mu-plugins)
+name: PHP Lint
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.1'
+
+      - name: Lint mu-plugins
+        run: |
+          for f in mu-plugins/*.php; do php -l "$f" || exit 1; done
+
+      - name: Lint theme (tech-storefront)
+        run: |
+          find wp-content/themes/tech-storefront -name "*.php" -exec php -l {} \;

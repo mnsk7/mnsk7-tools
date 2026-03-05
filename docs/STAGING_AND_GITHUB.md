@@ -76,3 +76,13 @@ make deploy-files   # mu-plugins + themes + plugins из локальной па
 - **Почта и оплата:** MU-плагин `staging-safety.php` (блокирует отправку писем и отключает платёжные методы на стейдже).
 
 После пуша в `main` воркфлоу заливает актуальный `mu-plugins/`, в том числе `staging-safety.php`.
+
+---
+
+## 6. Ветки и PR
+
+- **main** — основная ветка; push в `main` запускает деплой на стейдж (GitHub Actions).
+- **feature/*** — фичи; мердж через PR в `main`. Шаблон PR: [.github/PULL_REQUEST_TEMPLATE.md](../.github/PULL_REQUEST_TEMPLATE.md).
+- Перед мерджем: PHP Lint (workflow `php-lint.yml`) и smoke по [QA_REPORT.md](QA_REPORT.md).
+
+Полный чеклист деплоя, отката и бэкапов: [DEPLOY_PLAYBOOK.md](DEPLOY_PLAYBOOK.md).

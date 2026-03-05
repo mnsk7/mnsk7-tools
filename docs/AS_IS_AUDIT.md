@@ -1,6 +1,6 @@
 # AS-IS Audit — mnsk7-tools.pl
 
-Дата: 2026-03-04  
+Дата: 2026-03-04 (обновлено: запуск агента 00_as_is_audit)  
 Агент: 00_as_is_audit  
 Метод: сканирование файловой системы (wp-content, плагины, темы, конфиги)
 
@@ -34,7 +34,7 @@
 | Проблема | Плагины |
 |----------|---------|
 | 3+ фильтр-плагина одновременно | `filter-everything`, `woo-product-filter`, `woocommerce-products-filter`, `woof-by-category` |
-| 2 платёжных плагина Przelewy24 | `przelewy24` + `woo-przelewy24` |
+| 2 плагина Przelewy24? | `przelewy24` + `woo-przelewy24` — уточнить: если один обычная оплата, другой Raty (рассрочка), то оба нужны; дубль только при двух плагинах на один шлюз |
 | 2 вишлист-плагина | `flexible-wishlist` + `woo-smart-wishlist` |
 | 2 page builder | `elementor` + `beaver-builder-lite-version` |
 | 2 плагина профилей/регистрации | `ultimate-member` + `profile-builder` |
@@ -50,7 +50,7 @@
 - **Риск:** конфликт кеш-плагинов → двойная отдача кеша, баги чекаута, сломанная инвалидация.
 
 ### Критичные (оставить)
-WooCommerce, Yoast SEO, Przelewy24 (один), LiteSpeed Cache или WP Rocket (один), InPost/Paczkomaty, limit-login-attempts-reloaded, Google Site Kit, GTM (один).
+WooCommerce, Yoast SEO, Przelewy24 + Przelewy24 Raty при необходимости (не дубли одного шлюза), LiteSpeed Cache или WP Rocket (один), InPost/Paczkomaty, limit-login-attempts-reloaded, Google Site Kit, GTM (один).
 
 ### Под вопросом / убрать
 Дублирующие фильтр-плагины, второй вишлист, второй builder, второй профиль-плагин, второй GTM, schema-плагин (Yoast уже делает), seraphinite если оставляем LiteSpeed.
@@ -115,13 +115,27 @@ export DB_PASS='пароль_от_БД_прода/стейджа'
 ```
 Либо выполнить SQL из вывода скрипта в phpMyAdmin (база `llojjlcemq_stg` или продовая).
 
-### Результаты проверки (заполнить после выполнения запросов)
+### Результаты проверки (по БД стейджа, 2026-03-04)
 
 | Вопрос | Результат |
 |--------|-----------|
-| **Атрибуты товаров** (материал, операция, диаметр, хвостовик, покрытие, зубья) | *Запрос: `SELECT attribute_name, attribute_label FROM cmee_woocommerce_attribute_taxonomies;` → вписать список атрибутов или «нет данных»* |
-| **SKU** — сколько заполнено, сколько пустых, примеры значений | *Запросы из check-db-catalog.sh (total_sku, empty_sku, sample_sku) → вписать числа и примеры* |
+| **Атрибуты товаров** | **17 атрибутов.** fi (Średnica trzpienia), srednica (Średnica części roboczej), r (Promień frezu R), er (Typ tulei zaciskowej), typ-pilnika, kat-skosu, typ, dlugosc-calkowita-l, dlugosc-robocza-h, dlugosc-czesci-roboczej, zastosowanie, wymiary-trzpienia, dlugosc-calkowita, czolo, dlugosc-robocza, ksztalt, kat. Есть диаметр, хвостовик, длина, радиус, тип — для фильтров база есть. Отдельно «материал»/«покрытие»/«зубья» в списке нет — проверить в Admin → Attributes, возможно под другими именами. |
+| **SKU** | **423 записи с _sku**, пустых **0**. Примеры: 2294, 3921, 2299, H0410070101, H0617070101. Заполненность хорошая; формат смешанный (цифры и коды). |
 | **Описания товаров** — структура (польза vs параметры) | Ручная выборочная проверка в карточках товаров. |
-| **Фото** — сколько вложений с alt, сколько с пустым alt | *Запросы из check-db-catalog.sh (attachments_with_alt, attachments_empty_alt) → вписать числа* |
+| **Фото** — alt-атрибуты | **Всего вложений: 1690.** С непустым alt: **56.** Без alt или пустой alt: **1634** (~97%) — высокий риск для SEO и доступности. |
 
-Фото: ~34 000 файлов, много тяжёлых PNG. После подстановки цифр по alt — при необходимости массовое заполнение или скрипт.
+Фото: в БД стейджа 1690 вложений; в файловой системе uploads ~34 000 файлов, много тяжёлых PNG. Рекомендация: массовое заполнение alt (ключевое слово + параметры фрезы) — см. P2-04 в AS_IS_BACKLOG.
+
+---
+
+## G. Текущий прогресс (после настройки стейджа и пайплайна)
+
+| Что сделано | Статус |
+|-------------|--------|
+| Staging | ✅ https://staging.mnsk7-tools.pl — поддомен, отдельная БД `llojjlcemq_stg`, wp-config с WP_ENVIRONMENT_TYPE=staging |
+| Деплой при пуше | ✅ GitHub Actions: push в `main` → rsync mu-plugins + themes на стейдж (ключ в base64 в секрете) |
+| Staging-safety | ✅ MU-плагин: почта не уходит, платёжные методы отключены, blog_public=0 |
+| Проверка каталога по БД | Скрипт `scripts/check-db-catalog.sh` — запуск с `DB_PASS` даёт атрибуты, SKU, alt; иначе выводит SQL для phpMyAdmin |
+| Тема | В `best-shop/header.php` добавлен баннер только для стейджа (по WP_ENVIRONMENT_TYPE) — проверка деплоя |
+
+Важные страницы для ручной проверки (чеклист агента): главная ✅, категория, карточка товара, корзина, чекаут, аккаунт, поиск, доставка/возврат/контакты.

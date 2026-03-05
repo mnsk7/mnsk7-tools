@@ -42,14 +42,16 @@ tasks/               — эпики, спринты, inbox
 |---|--------|--------|
 | — | CEO / Team Audit (_ceo) | TEAM_AUDIT, TEAM_FIX_PLAN, TEAM_READINESS, START_HERE (разовый, вне пайплайна) |
 | 00 | As-Is Audit | AS_IS_AUDIT, AS_IS_BACKLOG, AS_IS_RISKS |
-| 00 | Client Discovery | DISCOVERY.md, REQUIREMENTS.md |
+| 00 | Client Discovery | DISCOVERY_GAP_ANALYSIS.md, DISCOVERY.md, REQUIREMENTS.md (проверка закрытости интервью) |
 | 01 | Product Manager | epics, sprint_01, sprint_02 |
 | 02 | Growth & SEO | SEO_PLAN, CONTENT_PLAN, TRACKING |
 | 03 | WP Architect | ARCHITECTURE, BACKLOG |
-| 04 | Woo Engineer | код, задачи в sprint |
-| 05 | Theme & UX Frontend | тема, UX |
+| 04 | Woo Engineer | **код:** PHP (mu-plugin, хуки Woo), шаблоны Woo (чекаут, каталог, карточка); задачи в sprint |
+| 05 | Theme & UX Frontend | **код:** тема (overrides, CSS/JS), вёрстка категории и карточки, мобильный UX |
 | 06 | DevOps GitHub | ветки, PR, Actions |
 | 07 | Server Ops CyberFolks | playbook, инструкции, бэкапы |
 | 08 | QA & Security | QA_REPORT, чеклисты, inbox |
 
 Порядок работы — см. **orchestrator.md**.
+
+**Кто пишет код:** бизнес-логику и шаблоны Woo — **04_woo_engineer**; вёрстку темы, UX и фронт — **05_theme_ux_frontend**. Оба работают по ARCHITECTURE и спринтам. 06 пишет только CI (workflows, PR template).

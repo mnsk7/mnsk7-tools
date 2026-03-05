@@ -1,0 +1,107 @@
+/**
+ * MNK7 Tools — bloki w karcie produktu i shortcode (Sprint 02)
+ * Tech Storefront child theme
+ */
+
+/* Kluczowe parametry (S2-04) */
+.mnsk7-product-key-params {
+	margin: 1em 0;
+	padding: 1em;
+	background: #f5f5f5;
+	border-radius: 4px;
+}
+
+.mnsk7-product-key-params__title {
+	margin: 0 0 0.5em 0;
+	font-size: 1em;
+	font-weight: 600;
+}
+
+.mnsk7-product-key-params__list {
+	margin: 0;
+	display: grid;
+	grid-template-columns: auto 1fr;
+	gap: 0.25em 1em;
+}
+
+.mnsk7-product-key-params__list dt {
+	margin: 0;
+	font-weight: 600;
+}
+
+.mnsk7-product-key-params__list dd {
+	margin: 0;
+}
+
+/* Do czego / Zastosowanie (S2-05) */
+.mnsk7-product-zastosowanie {
+	margin: 1em 0;
+	padding: 1em;
+	background: #e8f4e8;
+	border-radius: 4px;
+}
+
+.mnsk7-product-zastosowanie__title {
+	margin: 0 0 0.5em 0;
+	font-size: 1em;
+	font-weight: 600;
+}
+
+.mnsk7-product-zastosowanie__text {
+	margin: 0;
+}
+
+/* Dostępność (S2-10) */
+.mnsk7-product-availability {
+	margin: 0.5em 0;
+	font-weight: 600;
+}
+
+/* Dostawa + VAT w karcie i shortcode (S2-11) */
+.mnsk7-dostawa-vat {
+	margin: 0.5em 0;
+	font-size: 0.9em;
+	color: #555;
+}
+
+/* W stopce */
+.mnsk7-footer-dostawa-vat {
+	margin: 0;
+	padding: 0.5em 1em;
+	text-align: center;
+	font-size: 0.9em;
+	color: #555;
+	background: #f9f9f9;
+}
+
+.mnsk7-footer-dostawa-vat .mnsk7-dostawa-vat {
+	margin: 0;
+}
+
+/* Bestsellery (S2-07) */
+.mnsk7-bestsellers {
+	margin: 2em 0;
+}
+
+.mnsk7-bestsellers-title {
+	margin-bottom: 1em;
+}
+
+/* Rating (S2-09) */
+.mnsk7-store-rating {
+	font-size: 0.9em;
+	color: #555;
+}
+
+/* Miejsce na schemat/wideo (S2-06) */
+.mnsk7-product-extra-media {
+	margin: 1em 0;
+	min-height: 80px;
+}
+
+/* Responsywność: parametry w jednej kolumnie na wąskich ekranach */
+@media (max-width: 480px) {
+	.mnsk7-product-key-params__list {
+		grid-template-columns: 1fr;
+	}
+}

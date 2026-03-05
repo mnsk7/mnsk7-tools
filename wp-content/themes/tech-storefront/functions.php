@@ -114,6 +114,28 @@ wp_enqueue_script( 'tech-storefront', get_stylesheet_directory_uri() . '/assests
 
 add_action( 'wp_enqueue_scripts', 'tech_storefront_custom_scripts' );
 
+// MNK7: style bloków karty produktu (parametry, zastosowanie, dostawa)
+function tech_storefront_enqueue_mnsk7_product_css() {
+	if ( is_product() ) {
+		wp_enqueue_style(
+			'tech-storefront-mnsk7-product',
+			get_stylesheet_directory_uri() . '/assets/css/mnsk7-product.css',
+			array(),
+			'1.0'
+		);
+	}
+	// Na stronie głównej / z shortcode bestsellers
+	if ( is_front_page() || is_shop() ) {
+		wp_enqueue_style(
+			'tech-storefront-mnsk7-product',
+			get_stylesheet_directory_uri() . '/assets/css/mnsk7-product.css',
+			array(),
+			'1.0'
+		);
+	}
+}
+add_action( 'wp_enqueue_scripts', 'tech_storefront_enqueue_mnsk7_product_css', 15 );
+
 // END ENQUEUE PARENT ACTION
 
 if ( !function_exists( 'tech_storefront_customize_register' ) ):
