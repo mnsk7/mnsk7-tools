@@ -186,6 +186,16 @@
 	background: #065a9e;
 }
 
+/* Strona Dostawa i płatności */
+.mnsk7-page-dostawa .entry-content {
+	margin-top: 1rem;
+}
+.mnsk7-page-dostawa__note {
+	margin-top: 1.5rem;
+	font-size: 0.95rem;
+	color: #555;
+}
+
 /* Legacy: gdy shortcode używany w treści */
 .mnsk7-footer-dostawa-vat {
 	margin: 0;

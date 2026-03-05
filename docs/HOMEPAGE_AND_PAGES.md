@@ -34,17 +34,9 @@ Kolejność bloków (wg UI_SPEC i notatek z PDF):
 
 ## Strona „Dostawa i płatności” (lub „Dostawa”)
 
-W treści strony wstaw:
+**Szybki sposób:** utwórz nową stronę (np. tytuł „Dostawa i płatności”), w atrybutach strony wybierz **szablon „Dostawa i płatności”**, opublikuj. Tabela warunków (InPost/DPD, free od 300 zł), ETA i krótka notka pojawią się automatycznie.
 
-1. **Tabela warunków dostawy:**  
-   `[mnsk7_delivery_rules]`  
-   (InPost/DPD, kiedy zamówić → kiedy dostawa; darmowa dostawa od 300 zł.)
-2. **Krótki tekst** (np. tylko Polska, InPost i DPD, faktura VAT na życzenie).
-3. Opcjonalnie:  
-   `[mnsk7_delivery_eta]`  
-   (na stronie dostawy można zostawić bez parametru — w koszyku/checkout będzie ETA pod wybrany kurier.)
-
-Link do tej strony warto dać w menu stopki (Pomoc / Dostawa i płatności).
+**Ręcznie:** w treści strony wstaw `[mnsk7_delivery_rules]`, opcjonalnie `[mnsk7_delivery_eta]` i tekst (tylko Polska, faktura VAT). Link do strony dodaj w menu stopki (Pomoc / Dostawa i płatności).
 
 ---
 
