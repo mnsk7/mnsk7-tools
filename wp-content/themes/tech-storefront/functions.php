@@ -58,14 +58,18 @@ add_filter( 'best_shop_settings', 'tech_storefront_settings' );
 add_filter( 'theme_mod_enable_top_bar', '__return_false' );
 
 /**
- * Ustawiamy copyright na "© 2025 mnsk7-tools.pl" niezależnie od Customizer.
+ * Nadpisujemy best_shop_get_footer_copyright() z parent theme.
+ * Wersja darmowa parent theme zawsze dołącza " - A theme by Gradient Themes ©" —
+ * jedynym sposobem na usunięcie jest override funkcji (używa if(!function_exists)).
  */
-add_filter( 'theme_mod_footer_copyright', function () {
-	return '&copy; ' . date( 'Y' ) . ' mnsk7-tools.pl';
-} );
-add_filter( 'theme_mod_footer_link', function () {
-	return home_url( '/' );
-} );
+function best_shop_get_footer_copyright() {
+	$year = date( 'Y' );
+	echo '<span class="copy-right">'
+		. '<a href="' . esc_url( home_url( '/' ) ) . '">'
+		. '&copy; ' . esc_html( $year ) . ' mnsk7-tools.pl'
+		. '</a>'
+		. '</span>';
+}
 
 /*
 * Add default header image
@@ -136,7 +140,7 @@ function tech_storefront_enqueue_mnsk7_product_css() {
 		'tech-storefront-mnsk7-product',
 		get_stylesheet_directory_uri() . '/assets/css/mnsk7-product.css',
 		array(),
-		'1.6'
+		'1.7'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'tech_storefront_enqueue_mnsk7_product_css', 15 );

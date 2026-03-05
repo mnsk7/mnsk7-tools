@@ -29,11 +29,49 @@ function mnsk7_get_key_param_attributes() {
 	);
 }
 
+/**
+ * Parsuje krótki opis produktu i wyciąga parametry w formacie "Nazwa (X) = wartość"
+ * lub "Nazwa = wartość". Fallback gdy WC-atrybuty nie są ustawione.
+ *
+ * @param WC_Product $product
+ * @return array Tablica ['etykieta' => 'wartość']
+ */
+function mnsk7_parse_excerpt_params( $product ) {
+	$excerpt = $product->get_short_description();
+	if ( empty( $excerpt ) ) {
+		return array();
+	}
+
+	$text   = wp_strip_all_tags( $excerpt );
+	$lines  = preg_split( '/[\n\r<br>]+/', $text );
+	$params = array();
+
+	foreach ( $lines as $line ) {
+		$line = trim( $line );
+		if ( $line === '' ) {
+			continue;
+		}
+		/* Format: "Etykieta (X) = wartość mm" lub "Etykieta = wartość" */
+		if ( preg_match( '/^([^\=]+?)\s*=\s*(.+)$/', $line, $m ) ) {
+			$label = trim( preg_replace( '/\s*\([A-Z]+\)\s*$/', '', trim( $m[1] ) ) );
+			$value = trim( $m[2] );
+			if ( $label !== '' && $value !== '' && strlen( $label ) < 60 ) {
+				/* Unikamy duplikatów */
+				$params[ $label ] = $value;
+			}
+		}
+	}
+
+	return $params;
+}
+
 function mnsk7_single_product_key_params() {
 	global $product;
 	if ( ! is_a( $product, 'WC_Product' ) ) {
 		return;
 	}
+
+	/* 1. Próbujemy WC-atrybuty (priorytet) */
 	$labels = mnsk7_get_key_param_attributes();
 	$found  = array();
 	foreach ( array_keys( $labels ) as $slug ) {
@@ -42,9 +80,16 @@ function mnsk7_single_product_key_params() {
 			$found[ $labels[ $slug ] ] = $val;
 		}
 	}
+
+	/* 2. Fallback: parsowanie krótkiego opisu */
+	if ( empty( $found ) ) {
+		$found = mnsk7_parse_excerpt_params( $product );
+	}
+
 	if ( empty( $found ) ) {
 		return;
 	}
+
 	echo '<div class="mnsk7-product-key-params">';
 	echo '<h4 class="mnsk7-product-key-params__title">' . esc_html__( 'Kluczowe parametry', 'mnsk7-tools' ) . '</h4>';
 	echo '<dl class="mnsk7-product-key-params__list">';
@@ -122,3 +167,61 @@ add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_availabi
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_key_params', 21 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_zastosowanie', 23 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_trust_badges', 32 );
+
+/**
+ * Jeśli parametry są wyciągane z krótkiego opisu przez nasz fallback parser,
+ * zastępujemy wyjście krótkiego opisu (excerpt) aby uniknąć duplikatu "Wymiary: = ..."
+ * Tylko gdy parsowanie znalazło ≥2 wiersze "label = value".
+ */
+add_filter( 'woocommerce_short_description', 'mnsk7_clean_excerpt_when_params_parsed', 10 );
+function mnsk7_clean_excerpt_when_params_parsed( $excerpt ) {
+	if ( ! is_singular( 'product' ) ) {
+		return $excerpt;
+	}
+	global $product;
+	if ( ! is_a( $product, 'WC_Product' ) ) {
+		return $excerpt;
+	}
+
+	/* Sprawdź czy WC-atrybuty są dostępne — jeśli tak, excerpt pozostaje bez zmian */
+	$labels = mnsk7_get_key_param_attributes();
+	foreach ( array_keys( $labels ) as $slug ) {
+		if ( $product->get_attribute( $slug ) !== '' ) {
+			return $excerpt;
+		}
+	}
+
+	/* Fallback był użyty — sprawdź czy excerpt zawiera głównie linie "X = Y" */
+	$parsed = mnsk7_parse_excerpt_params( $product );
+	if ( count( $parsed ) < 2 ) {
+		return $excerpt;
+	}
+
+	/*
+	 * Usuwamy blok wymiarów z excerpta (linie "coś = wartość"),
+	 * zostawiając tylko sekcje takie jak "Kluczowe cechy:" i inne teksty.
+	 */
+	$text  = wp_strip_all_tags( $excerpt );
+	$lines = preg_split( '/[\n\r]+/', $text );
+	$keep  = array();
+	foreach ( $lines as $line ) {
+		$line = trim( $line );
+		if ( $line === '' ) {
+			continue;
+		}
+		/* Opuść linie w stylu "Etykieta = wartość" i "Wymiary:" */
+		if ( preg_match( '/^[^\=]+=\s*.+$/', $line ) ) {
+			continue;
+		}
+		if ( preg_match( '/^Wymiary\s*:?\s*$/i', $line ) ) {
+			continue;
+		}
+		$keep[] = $line;
+	}
+
+	if ( empty( $keep ) ) {
+		return '';
+	}
+
+	return '<p>' . implode( '</p><p>', array_map( 'esc_html', $keep ) ) . '</p>';
+}

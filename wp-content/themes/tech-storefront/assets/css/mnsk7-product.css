@@ -1,6 +1,6 @@
 /**
  * MNK7 Tools — bloki w karcie produktu i shortcode
- * Tech Storefront child theme — v1.5
+ * Tech Storefront child theme — v1.6
  */
 
 /* Top bar: wyłączony — wymuszamy CSS jako fallback jeśli theme_mod nie działa */
@@ -15,6 +15,47 @@
 .footer-bottom a[href*="gradientthemes"],
 .site-footer a[href*="gradientthemes"] {
 	display: none !important;
+}
+
+/* =========================================================
+   KARTA PRODUKTU — ogólne poprawki layoutu
+   ========================================================= */
+
+/* Upewniamy się, że blok summary ma odpowiednie odstępy */
+.single-product .summary.entry-summary {
+	padding-top: 0.5rem;
+}
+
+/* Tytuł produktu — lekko zmniejszamy margines */
+.single-product .product_title {
+	margin-bottom: 0.25rem;
+}
+
+/* Cena — wyróżnienie */
+.single-product .price {
+	font-size: 1.5rem;
+	font-weight: 700;
+	color: #0c3060;
+	margin: 0.5rem 0;
+}
+
+/* Quantity + button — obok siebie na desktopie */
+.single-product .cart {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.75rem;
+}
+
+/* Badge "X osób kupiło" — wyróżnienie gwiazdką */
+.mnsk7-product-trust__badge--sales {
+	background: #fffbeb;
+	border-color: #fde68a;
+	color: #92400e;
+}
+
+.mnsk7-product-trust__badge--sales .mnsk7-product-trust__badge-icon {
+	color: #f59e0b;
 }
 
 /* =========================================================
