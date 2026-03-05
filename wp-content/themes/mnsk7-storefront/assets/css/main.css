@@ -343,14 +343,53 @@ a:hover {
 
 .mnsk7-site-footer-block {
   background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
-  padding: 3rem 0;
+  padding: 3.5rem 0 2.5rem;
+  border-top: 3px solid var(--color-primary);
+  color: #cbd5e1;
+}
+
+.mnsk7-site-footer-block__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2rem;
+  gap: 3rem;
   max-width: 1200px;
   margin: 0 auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding: 0 2rem;
+}
+
+.mnsk7-site-footer-block__col p,
+.mnsk7-site-footer-block__col .mnsk7-contact-info__line {
+  color: #cbd5e1;
+  margin: 0.4rem 0;
+  line-height: 1.6;
+}
+
+.mnsk7-site-footer-block__col a {
+  color: #60a5fa;
+  text-decoration: none;
+}
+
+.mnsk7-site-footer-block__col a:hover {
+  color: #93c5fd;
+  text-decoration: underline;
+}
+
+.mnsk7-site-footer-block__col .mnsk7-contact-info__title {
+  display: none;
+}
+
+.mnsk7-site-footer-block__delivery-note {
+  color: #94a3b8;
+  font-size: var(--fs-sm);
+  margin-top: 0.75rem;
+}
+
+.mnsk7-site-footer-block__social {
+  margin-top: 1rem;
+}
+
+.mnsk7-site-footer-block__social a {
+  font-weight: 600;
 }
 
 .mnsk7-site-footer-block .footer-column-title,
@@ -592,7 +631,7 @@ a.add_to_wishlist,
   }
 
   .mnsk7-site-footer-block__grid {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
     gap: 2rem;
   }
 
