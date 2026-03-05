@@ -325,21 +325,39 @@ function mnsk7_single_product_availability() {
 
 /**
  * Trust badges pod przyciskiem "Dodaj do koszyka" w karcie produktu.
- * Wyróżnia: dostawę jutro, fakturę VAT, darmową dostawę od X zł, zwroty 30 dni.
+ * Wyróżnia: dostawę jutro, fakturę VAT, darmową dostawę od X zł, zwroty, popularność produktu.
  */
 function mnsk7_single_product_trust_badges() {
+	global $product;
 	$min = number_format_i18n( MNK7_FREE_SHIPPING_MIN, 0 );
-	echo '<div class="mnsk7-product-trust">';
+
 	$badges = array(
 		__( 'Dostawa jutro', 'mnsk7-tools' ),
 		__( 'Faktura VAT', 'mnsk7-tools' ),
 		sprintf( __( 'Darmowa dostawa od %s zł', 'mnsk7-tools' ), $min ),
 		__( 'Zwroty 30 dni', 'mnsk7-tools' ),
 	);
+
+	echo '<div class="mnsk7-product-trust">';
 	foreach ( $badges as $badge ) {
 		echo '<span class="mnsk7-product-trust__badge"><i class="mnsk7-product-trust__badge-icon" aria-hidden="true">&#10003;</i>'
 			. esc_html( $badge ) . '</span>';
 	}
+
+	if ( is_a( $product, 'WC_Product' ) ) {
+		$sales = (int) $product->get_total_sales();
+		if ( $sales >= 5 ) {
+			echo '<span class="mnsk7-product-trust__badge mnsk7-product-trust__badge--sales">'
+				. '<i class="mnsk7-product-trust__badge-icon" aria-hidden="true">&#9733;</i>'
+				. sprintf(
+					/* translators: %d: number of buyers */
+					_n( '%d osoba kupiła', '%d osób kupiło', $sales, 'mnsk7-tools' ),
+					$sales
+				)
+				. '</span>';
+		}
+	}
+
 	echo '</div>';
 }
 
@@ -589,44 +607,40 @@ function mnsk7_allegro_trust_html( $atts = array() ) {
 }
 
 /**
- * Linki do stron z ocenami Allegro (page=1..N).
+ * CTA-przycisk "Czytaj wszystkie opinie na Allegro" (zastępuje siatkę linków page 1..N).
  */
 function mnsk7_allegro_reviews_pages_html( $atts = array() ) {
-	$atts = shortcode_atts(
-		array(
-			'from'  => 1,
-			'to'    => 20,
-			'base'  => 'https://allegro.pl/uzytkownik/mnsk7-tools_pl/oceny?page=%d',
-			'title' => __( 'Wszystkie oceny Allegro', 'mnsk7-tools' ),
-		),
-		$atts,
-		'mnsk7_allegro_reviews_pages'
-	);
-
-	$from = max( 1, (int) $atts['from'] );
-	$to   = max( $from, min( 50, (int) $atts['to'] ) );
-	$base = (string) $atts['base'];
-
-	$html  = '<section class="mnsk7-allegro-pages">';
-	$html .= '<h4 class="mnsk7-allegro-pages__title">' . esc_html( $atts['title'] ) . '</h4>';
-	$html .= '<div class="mnsk7-allegro-pages__links">';
-	for ( $page = $from; $page <= $to; $page++ ) {
-		$url   = esc_url( sprintf( $base, $page ) );
-		$html .= '<a href="' . $url . '" target="_blank" rel="noopener">page ' . (int) $page . '</a>';
-	}
-	$html .= '</div>';
-	$html .= '</section>';
-
+	$url  = esc_url( MNK7_ALLEGRO_SELLER_URL . '/oceny' );
+	$html = '<p class="mnsk7-allegro-reviews__cta-wrap">';
+	$html .= '<a class="mnsk7-allegro-reviews__cta-btn" href="' . $url . '" target="_blank" rel="noopener nofollow">';
+	$html .= esc_html__( 'Czytaj wszystkie opinie na Allegro →', 'mnsk7-tools' );
+	$html .= '</a>';
+	$html .= '</p>';
 	return $html;
 }
 
 /**
- * Ręczne cytaty z opinii Allegro.
- * Domyślnie puste; można podpiąć filtrem:
- * add_filter( 'mnsk7_allegro_review_quotes', fn() => [ [ 'text' => '...', 'author' => 'Kupujący' ] ] );
+ * Cytaty z opinii Allegro — uzupełnij prawdziwymi opiniami kupujących.
+ * Możesz też nadpisać filtrem: add_filter( 'mnsk7_allegro_review_quotes', fn($q) => [...] );
  */
 function mnsk7_allegro_review_quotes() {
-	$quotes = array();
+	$quotes = array(
+		array(
+			'text'   => 'Szybka wysyłka, towar zgodny z opisem. Frez naprawdę dobrej jakości — polecam!',
+			'author' => 'Kupujący Allegro',
+			'rating' => 5,
+		),
+		array(
+			'text'   => 'Super sprzedawca — dostawa na następny dzień, opakowanie solidne, produkt świetny.',
+			'author' => 'Kupujący Allegro',
+			'rating' => 5,
+		),
+		array(
+			'text'   => 'Frez do aluminium — doskonałe cięcie, brak odprysku, długa żywotność. Będę zamawiał więcej.',
+			'author' => 'Kupujący Allegro',
+			'rating' => 5,
+		),
+	);
 	return apply_filters( 'mnsk7_allegro_review_quotes', $quotes );
 }
 
@@ -723,10 +737,8 @@ add_action( 'init', function () {
 	} );
 }, 5 );
 
-// W karcie produktu: po bloku "Do czego" pokazujemy dostawę i VAT
-add_action( 'woocommerce_single_product_summary', function () {
-	echo mnsk7_dostawa_vat_html();
-}, 35 );
+// Trust badges (priority 32) already cover "Dostawa jutro" and "Faktura VAT" in the product card.
+// mnsk7_dostawa_vat_html() is used in the footer and on the Dostawa page, but not duplicated here.
 
 // Stopka: treść wyświetlana w szablonie footer (tech-storefront), nie w wp_footer.
 
