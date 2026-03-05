@@ -176,6 +176,14 @@ a.shopengine-badge,
 	gap: 1rem !important;
 }
 
+.related.products ul.products li.product,
+.up-sells ul.products li.product {
+	width: 100% !important;
+	max-width: 100% !important;
+	margin: 0 !important;
+	float: none !important;
+}
+
 @media (max-width: 768px) {
 	.related.products ul.products,
 	.up-sells ul.products {
