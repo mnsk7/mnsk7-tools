@@ -36,8 +36,8 @@ $values[ 'topbar_text_color' ] = '#fff';
 
 $values[ 'footer_text_color' ] = '#000';
 $values[ 'footer_color' ] = '#e9e8cc';
-$values[ 'footer_link' ] = 'https://gradientthemes.com/';
-$values[ 'footer_copyright' ] = esc_html__( 'A theme by GradientThemes', 'tech-storefront' );
+$values[ 'footer_link' ] = home_url( '/' );
+$values[ 'footer_copyright' ] = '&copy; ' . date( 'Y' ) . ' mnsk7-tools.pl';
 
 $values[ 'page_sidebar_layout' ] = 'right-sidebar';
 $values[ 'post_sidebar_layout' ] = 'right-sidebar';
@@ -50,6 +50,22 @@ return $values;
 
 
 add_filter( 'best_shop_settings', 'tech_storefront_settings' );
+
+/**
+ * Wymuszamy wyłączenie top bar niezależnie od wartości w Customizer (baza danych).
+ * Filtr theme_mod_* zawsze nadpisuje get_theme_mod().
+ */
+add_filter( 'theme_mod_enable_top_bar', '__return_false' );
+
+/**
+ * Ustawiamy copyright na "© 2025 mnsk7-tools.pl" niezależnie od Customizer.
+ */
+add_filter( 'theme_mod_footer_copyright', function () {
+	return '&copy; ' . date( 'Y' ) . ' mnsk7-tools.pl';
+} );
+add_filter( 'theme_mod_footer_link', function () {
+	return home_url( '/' );
+} );
 
 /*
 * Add default header image
@@ -120,7 +136,7 @@ function tech_storefront_enqueue_mnsk7_product_css() {
 		'tech-storefront-mnsk7-product',
 		get_stylesheet_directory_uri() . '/assets/css/mnsk7-product.css',
 		array(),
-		'1.5'
+		'1.6'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'tech_storefront_enqueue_mnsk7_product_css', 15 );

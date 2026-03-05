@@ -1,7 +1,21 @@
 /**
  * MNK7 Tools — bloki w karcie produktu i shortcode
- * Tech Storefront child theme — v1.2
+ * Tech Storefront child theme — v1.5
  */
+
+/* Top bar: wyłączony — wymuszamy CSS jako fallback jeśli theme_mod nie działa */
+.top-bar,
+.header-top-bar,
+#top-bar,
+.site-top-bar {
+	display: none !important;
+}
+
+/* Copyright: ukrywamy link do GradientThemes */
+.footer-bottom a[href*="gradientthemes"],
+.site-footer a[href*="gradientthemes"] {
+	display: none !important;
+}
 
 /* =========================================================
    KARTA PRODUKTU — kluczowe parametry (S2-04)
