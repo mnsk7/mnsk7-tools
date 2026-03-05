@@ -29,11 +29,13 @@ add_action( 'wp_head', function () {
 }, 2 );
 
 /**
- * Pierwszemu obrazkowi produktu w archiwum ustawiamy fetchpriority="high" i loading="eager"
- * (LCP candidate). Pozostałe — loading="lazy".
+ * Lazy loading obrazków — ustawiamy loading="lazy" jeśli nie jest jeszcze ustawiony.
+ * WooCommerce 10.6 (marzec 2026) robi to domyślnie dla obrazków produktów;
+ * nasz filtr jest bezpieczny dzięki sprawdzeniu isset().
+ *
+ * @see https://developer.woocommerce.com/ (advisory: "Product images are now lazy-loaded by default in WooCommerce 10.6")
  */
 add_filter( 'wp_get_attachment_image_attributes', function ( $attr, $attachment, $size ) {
-	/* Ustawiamy lazy dla wszystkich obrazków poza tymi, gdzie eager jest wymagany */
 	if ( ! isset( $attr['loading'] ) ) {
 		$attr['loading'] = 'lazy';
 	}
@@ -54,19 +56,8 @@ add_filter( 'woocommerce_product_get_image', function ( $image, $product, $size,
 	return $image;
 }, 10, 6 );
 
-/**
- * Usuwamy zbędne query strings z wersji statycznych assetów (cache busting przez nazwę pliku).
- * Pomaga przy niektórych konfiguracjach cache.
- */
-add_filter( 'style_loader_src', 'mnsk7_remove_query_string_from_static', 10 );
-add_filter( 'script_loader_src', 'mnsk7_remove_query_string_from_static', 10 );
-function mnsk7_remove_query_string_from_static( $src ) {
-	/* Tylko dla plików z wp-content, pomijamy jQuery i inne kluczowe skrypty */
-	if ( strpos( $src, 'wp-content' ) !== false && strpos( $src, '?ver=' ) !== false ) {
-		return remove_query_arg( 'ver', $src );
-	}
-	return $src;
-}
+/* Uwaga: nie usuwamy ?ver= z assetów — LiteSpeed Cache i WP Rocket obsługują to samodzielnie.
+ * Ręczne usuwanie może powodować problemy z inwalidacją cache w niektórych konfiguracjach. */
 
 /**
  * Wyłącz emoji scripts — zmniejszenie liczby requestów.

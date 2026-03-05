@@ -17,6 +17,15 @@ Krótki przegląd: co jest zrobione w kodzie, co zostało (admin, konfiguracja, 
 
 ---
 
+## ⚠️ Pilne: aktualizacje bezpieczeństwa (marzec 2026)
+
+| Zadanie | Priorytet | Uwagi |
+|---------|-----------|-------|
+| **Aktualizacja WooCommerce → 10.5.3+** | 🔴 P0 | Krytyczny security patch Store API (02.03.2026). [Advisory](https://developer.woocommerce.com/) |
+| **WooCommerce 10.6** (10.03.2026) | 🟡 Sprawdzić | Lazy loading obrazków będzie domyślny — nasz kod jest kompatybilny. Zmiany w breadcrumbs. |
+
+---
+
 ## Najbliższe kroki (kolejność)
 
 ### 1. Deploy na staging i smoke
