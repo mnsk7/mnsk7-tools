@@ -17,6 +17,61 @@
 	display: none !important;
 }
 
+/* P0 readability hardening */
+body {
+	color: #0f172a;
+}
+
+.site-header .site-title a,
+.site-header .site-description,
+.site-header .site-branding p {
+	color: #f8fafc !important;
+}
+
+.woocommerce ul.products li.product {
+	background: #ffffff;
+	border: 1px solid #e2e8f0;
+	border-radius: 10px;
+	padding: 0.75rem;
+}
+
+.woocommerce ul.products li.product .woocommerce-loop-product__title,
+.woocommerce ul.products li.product h2,
+.woocommerce ul.products li.product a {
+	color: #0f172a !important;
+}
+
+.woocommerce ul.products li.product .price,
+.woocommerce ul.products li.product .price .amount {
+	color: #0c3060 !important;
+	font-weight: 700;
+}
+
+.woocommerce ul.products li.product,
+.woocommerce-page ul.products li.product,
+.woocommerce ul.products li.product .product-content,
+.woocommerce ul.products li.product .product-caption,
+.woocommerce ul.products li.product .product-inner {
+	background: #ffffff !important;
+}
+
+.woocommerce ul.products li.product,
+.woocommerce ul.products li.product *:not(.button):not(.added_to_cart) {
+	color: #0f172a !important;
+}
+
+.woocommerce ul.products li.product .button,
+.woocommerce ul.products li.product .added_to_cart {
+	color: #ffffff !important;
+}
+
+.single-product .summary.entry-summary,
+.single-product .summary.entry-summary p,
+.single-product .summary.entry-summary li,
+.single-product .summary.entry-summary .product_title {
+	color: #0f172a;
+}
+
 /* =========================================================
    KARTA PRODUKTU — ogólne poprawki layoutu
    ========================================================= */

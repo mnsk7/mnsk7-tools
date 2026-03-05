@@ -165,12 +165,7 @@ get_header();
 	<section class="mnsk7-section mnsk7-section--insta">
 		<div class="container">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Obserwuj nas na Instagramie', 'tech-storefront' ); ?></h2>
-			<p class="mnsk7-insta-cta">
-				<a href="<?php echo esc_url( MNK7_INSTAGRAM_URL ); ?>" target="_blank" rel="noopener" class="mnsk7-insta-cta__link">
-					<span class="mnsk7-insta-cta__icon">📸</span>
-					<?php esc_html_e( '@mnsk7tools — zdjęcia produktów, nowości i inspiracje', 'tech-storefront' ); ?>
-				</a>
-			</p>
+			<?php echo do_shortcode( '[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]' ); ?>
 		</div>
 	</section>
 
