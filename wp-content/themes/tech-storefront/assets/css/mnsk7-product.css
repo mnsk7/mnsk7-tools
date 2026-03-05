@@ -1,6 +1,6 @@
 /**
  * MNK7 Tools — bloki w karcie produktu i shortcode
- * Tech Storefront child theme — v1.6
+ * Tech Storefront child theme — v1.8
  */
 
 /* Top bar: wyłączony — wymuszamy CSS jako fallback jeśli theme_mod nie działa */
@@ -14,6 +14,21 @@
 /* Copyright: ukrywamy link do GradientThemes */
 .footer-bottom a[href*="gradientthemes"],
 .site-footer a[href*="gradientthemes"] {
+	display: none !important;
+}
+
+/* Wishlist remnants: hide anything from deleted plugin */
+.flexible-wishlist-button,
+.flexible-wishlist-wrapper,
+.woosc-btn,
+.woosw-btn,
+.woo-smart-wishlist,
+a[href*="wishlist"],
+.yith-wcwl-add-to-wishlist,
+button.add-to-wishlist,
+.tinv-wishlist,
+.product_meta .posted_in,
+.product_meta .tagged_as {
 	display: none !important;
 }
 
@@ -269,6 +284,48 @@ body {
 	color: #22c55e;
 	font-style: normal;
 	font-size: 0.85em;
+}
+
+/* =========================================================
+   META CHIPS (kategoria / tagi zamiast ALL-CAPS dumpu)
+   ========================================================= */
+
+.mnsk7-product-meta-chips {
+	margin: 0.75rem 0 0.25rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+}
+
+.mnsk7-product-meta-chips__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+}
+
+.mnsk7-product-meta-chips a,
+.mnsk7-product-meta-chips__row a {
+	display: inline-block;
+	padding: 0.28rem 0.65rem;
+	background: #f1f5f9;
+	border: 1px solid #e2e8f0;
+	border-radius: 50px;
+	font-size: 0.78rem;
+	font-weight: 600;
+	color: #334155;
+	text-decoration: none;
+	transition: background 0.15s, border-color 0.15s;
+}
+
+.mnsk7-product-meta-chips a:hover,
+.mnsk7-product-meta-chips__row a:hover {
+	background: #0c7ddb;
+	border-color: #0c7ddb;
+	color: #ffffff;
+}
+
+.single-product .product_meta {
+	display: none !important;
 }
 
 /* =========================================================

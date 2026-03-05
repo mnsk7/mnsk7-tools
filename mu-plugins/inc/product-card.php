@@ -169,15 +169,48 @@ add_filter( 'woocommerce_get_stock_html', function ( $html ) {
 } );
 
 /* Hooki WooCommerce summary (priority):
+ *  5  → rating (WC default)
  *  8  → availability
- * 21  → key_params
+ * 10  → title (WC default)
+ * 15  → price (moved up from 25 for above-fold visibility)
+ * 21  → key_params (structured table, replaces raw excerpt params)
  * 23  → zastosowanie
+ * 30  → add_to_cart (WC default)
  * 32  → trust_badges
+ * 40  → meta as chips
+ *
+ * Removed: excerpt at 20 (duplicate of key_params), price at 25 (moved to 15).
  */
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20 );
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_price', 10 );
+add_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_price', 15 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_availability', 8 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_key_params', 21 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_zastosowanie', 23 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_trust_badges', 32 );
+
+remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
+add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_meta_chips', 40 );
+
+function mnsk7_single_product_meta_chips() {
+	global $product;
+	if ( ! is_a( $product, 'WC_Product' ) ) {
+		return;
+	}
+	$cats = wc_get_product_category_list( $product->get_id(), '' );
+	$tags = wc_get_product_tag_list( $product->get_id(), '' );
+	if ( ! $cats && ! $tags ) {
+		return;
+	}
+	echo '<div class="mnsk7-product-meta-chips">';
+	if ( $cats ) {
+		echo '<div class="mnsk7-product-meta-chips__row">' . $cats . '</div>';
+	}
+	if ( $tags ) {
+		echo '<div class="mnsk7-product-meta-chips__row">' . $tags . '</div>';
+	}
+	echo '</div>';
+}
 
 /**
  * Jeśli parametry są wyciągane z krótkiego opisu przez nasz fallback parser,

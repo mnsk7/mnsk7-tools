@@ -28,16 +28,17 @@ if ( post_password_required() ) {
 		<?php
 		/**
 		 * woocommerce_single_product_summary hooks (priority):
-		 *  5  – woocommerce_template_single_rating
+		 *  5  – rating
 		 *  8  – mnsk7_single_product_availability
-		 * 10  – woocommerce_template_single_title
-		 * 20  – woocommerce_template_single_excerpt
+		 * 10  – title
+		 * 15  – price (moved up for above-fold)
 		 * 21  – mnsk7_single_product_key_params
 		 * 23  – mnsk7_single_product_zastosowanie
-		 * 25  – woocommerce_template_single_price
-		 * 30  – woocommerce_template_single_add_to_cart
+		 * 30  – add_to_cart
 		 * 32  – mnsk7_single_product_trust_badges
-		 * 40  – woocommerce_template_single_meta
+		 * 40  – mnsk7_single_product_meta_chips
+		 *
+		 * Removed: excerpt (20), old meta (40) — replaced by structured blocks.
 		 */
 		do_action( 'woocommerce_single_product_summary' );
 		?>
