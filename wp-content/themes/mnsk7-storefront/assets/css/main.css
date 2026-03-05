@@ -106,12 +106,28 @@ a:hover {
    PRODUCT CARDS (PLP)
    ========================================================= */
 
-.woocommerce ul.products li.product {
+/* Override Storefront default product grid with CSS grid */
+.woocommerce ul.products,
+.woocommerce-page ul.products {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1.5rem !important;
+  margin: 0 !important;
+}
+
+.woocommerce ul.products li.product,
+.woocommerce-page ul.products li.product {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  float: none !important;
+  clear: none !important;
   background: var(--color-white);
   box-shadow: var(--shadow-sm);
   border-radius: var(--r-md);
   overflow: hidden;
   transition: box-shadow 0.2s ease;
+  padding: 0.75rem;
 }
 
 .woocommerce ul.products li.product:hover {
@@ -415,9 +431,20 @@ a.add_to_wishlist,
 [class*="wishlist"],
 [class*="compare"],
 [data-product_id].compare,
-.woocommerce-product-details__short-description + .product_meta,
+.shopengine-wishlist-trigger,
+.shopengine-quickview-trigger,
+[class*="shopengine-icon-product_compare"],
+[class*="shopengine-badge"],
+.wpc-btn,
+.wooscp-btn,
+.woosc-btn,
 .product_meta {
   display: none !important;
+}
+
+.storefront-sorting,
+.woocommerce-result-count {
+  margin-bottom: 1rem;
 }
 
 /* =========================================================
@@ -427,17 +454,22 @@ a.add_to_wishlist,
 .related.products ul.products,
 .upsells.products ul.products,
 .cross-sells ul.products {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1.5rem !important;
 }
 
 .related.products ul.products li.product,
 .upsells.products ul.products li.product,
 .cross-sells ul.products li.product {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  float: none !important;
   background: var(--color-white);
   box-shadow: var(--shadow-sm);
   border-radius: var(--r-md);
+  padding: 0.75rem;
 }
 
 .related.products ul.products li.product:hover,
@@ -554,16 +586,20 @@ a.add_to_wishlist,
    ========================================================= */
 
 @media (max-width: 768px) {
-  .mnsk7-site-footer-block {
-    display: grid;
-    grid-template-columns: 1fr;
+  .woocommerce ul.products,
+  .woocommerce-page ul.products {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  .mnsk7-site-footer-block__grid {
+    grid-template-columns: 1fr !important;
     gap: 2rem;
   }
 
   .related.products ul.products,
   .upsells.products ul.products,
   .cross-sells ul.products {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 
   .mnsk7-hero {
