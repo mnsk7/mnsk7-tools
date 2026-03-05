@@ -1,0 +1,31 @@
+User-agent: *
+
+# Blokujemy wyłącznie to, czego nie chcemy w indeksie
+Disallow: /cgi-bin/
+Disallow: /wp-admin/
+Disallow: /xmlrpc.php
+Disallow: /wp-login.php
+Disallow: /cart/
+Disallow: /checkout/
+Disallow: /my-account/
+Disallow: /moje-konto/
+Disallow: /author/
+Disallow: */feed/
+Disallow: */embed/
+Disallow: */trackback/
+Disallow: /search/
+
+# Parametry URL — blokujemy tylko faktycznie bezużyteczne
+Disallow: /*?s=
+Disallow: /*?add-to-cart=
+Disallow: /*?utm_*
+Disallow: /*?openstat=
+
+# Pozwalamy na JS/CSS potrzebne do renderowania
+Allow: /wp-content/uploads/
+Allow: /wp-content/themes/
+Allow: /wp-content/plugins/
+Allow: /*.js$
+Allow: /*.css$
+
+Sitemap: https://mnsk7-tools.pl/sitemap_index.xml

@@ -12,7 +12,7 @@ wp-*.php
 xmlrpc.php
 readme.html
 license.txt
-robots.txt
+# robots.txt tracked intentionally (production version; staging uses Disallow: / via deploy workflow)
 .htaccess
 .htaccess.*
 wp-content/index.php

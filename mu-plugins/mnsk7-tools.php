@@ -889,3 +889,149 @@ add_action( 'init', function () {
 			. '</section>';
 	} );
 }, 6 );
+
+/* ==========================================================================
+   SEO: Auto-alt dla zdjęć produktów
+   ========================================================================== */
+
+/**
+ * Jeśli zdjęcie produktu nie ma atrybutu alt, generujemy go automatycznie
+ * na podstawie: 1) tytułu produktu-rodzica, 2) tytułu załącznika, 3) SKU.
+ * Dotyczy ~1634 zdjęć bez alt (dane z bazy stagingg, audit 2026-03-05).
+ */
+add_filter( 'wp_get_attachment_image_attributes', 'mnsk7_auto_alt_product_image', 20, 2 );
+function mnsk7_auto_alt_product_image( $attr, $attachment ) {
+	if ( ! empty( $attr['alt'] ) ) {
+		return $attr;
+	}
+
+	$alt = trim( (string) get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ) );
+	if ( $alt !== '' ) {
+		$attr['alt'] = $alt;
+		return $attr;
+	}
+
+	$parent_id = (int) $attachment->post_parent;
+	if ( $parent_id > 0 ) {
+		$parent = get_post( $parent_id );
+		if ( $parent ) {
+			if ( $parent->post_type === 'product' ) {
+				$sku = get_post_meta( $parent_id, '_sku', true );
+				$attr['alt'] = trim( $parent->post_title . ( $sku ? ' | ' . $sku : '' ) );
+				return $attr;
+			}
+			$attr['alt'] = $parent->post_title;
+			return $attr;
+		}
+	}
+
+	if ( ! empty( $attachment->post_title ) ) {
+		$attr['alt'] = $attachment->post_title;
+	}
+
+	return $attr;
+}
+
+/* ==========================================================================
+   WooCommerce: powiązane produkty (related) — limit 4, 4 kolumny
+   ========================================================================== */
+
+add_filter( 'woocommerce_output_related_products_args', function ( $args ) {
+	$args['posts_per_page'] = 4;
+	$args['columns']        = 4;
+	return $args;
+} );
+
+/* Upsells: też 4 w jednym rzędzie */
+add_filter( 'woocommerce_upsells_total', function () { return 4; } );
+add_filter( 'woocommerce_upsells_columns', function () { return 4; } );
+
+/* ==========================================================================
+   WooCommerce: strona kategorii — opis SEO przed produktami
+   ========================================================================== */
+
+/**
+ * Na stronie kategorii produktów: wyświetla zdjęcie kategorii + opis w czytelnym bloku.
+ * WooCommerce domyślnie wyświetla opis, ale bez odpowiedniej struktury/CSS.
+ * Zastępujemy domyślny hook.
+ */
+remove_action( 'woocommerce_archive_description', 'woocommerce_taxonomy_archive_description', 10 );
+add_action( 'woocommerce_archive_description', 'mnsk7_category_description_block', 10 );
+function mnsk7_category_description_block() {
+	if ( ! is_product_category() ) {
+		return;
+	}
+
+	$cat = get_queried_object();
+	if ( ! $cat || ! ( $cat instanceof WP_Term ) ) {
+		return;
+	}
+
+	$img_id = get_term_meta( $cat->term_id, 'thumbnail_id', true );
+	$desc   = term_description();
+
+	if ( empty( $img_id ) && empty( $desc ) ) {
+		return;
+	}
+
+	echo '<div class="mnsk7-cat-header">';
+
+	if ( $img_id ) {
+		echo '<div class="mnsk7-cat-header__img">';
+		echo wp_get_attachment_image( (int) $img_id, 'medium', false, array(
+			'alt'     => esc_attr( $cat->name ),
+			'loading' => 'eager',
+		) );
+		echo '</div>';
+	}
+
+	if ( ! empty( $desc ) ) {
+		echo '<div class="mnsk7-cat-header__desc">' . wp_kses_post( $desc ) . '</div>';
+	}
+
+	echo '</div>';
+}
+
+/* ==========================================================================
+   WooCommerce: checkout — lepsze etykiety pól (PL)
+   ========================================================================== */
+
+add_filter( 'woocommerce_checkout_fields', 'mnsk7_checkout_field_labels' );
+function mnsk7_checkout_field_labels( $fields ) {
+	$billing = array(
+		'billing_first_name' => array( 'label' => 'Imię', 'placeholder' => 'Jan' ),
+		'billing_last_name'  => array( 'label' => 'Nazwisko', 'placeholder' => 'Kowalski' ),
+		'billing_company'    => array( 'label' => 'Firma (opcjonalnie)', 'placeholder' => 'Nazwa firmy' ),
+		'billing_address_1'  => array( 'label' => 'Ulica i numer', 'placeholder' => 'ul. Przykładowa 1/2' ),
+		'billing_address_2'  => array( 'label' => 'Kod pocztowy, Miasto', 'placeholder' => '' ),
+		'billing_city'       => array( 'label' => 'Miasto', 'placeholder' => 'Warszawa' ),
+		'billing_postcode'   => array( 'label' => 'Kod pocztowy', 'placeholder' => '00-000' ),
+		'billing_phone'      => array( 'label' => 'Telefon', 'placeholder' => '+48 500 000 000', 'description' => 'Potrzebny do powiadomień o dostawie.' ),
+		'billing_email'      => array( 'label' => 'E-mail', 'placeholder' => 'adres@email.pl', 'description' => 'Na ten adres wyślemy potwierdzenie zamówienia.' ),
+		'billing_nip'        => array( 'label' => 'NIP (jeśli chcesz fakturę VAT)', 'placeholder' => '000-000-00-00' ),
+	);
+
+	foreach ( $billing as $key => $values ) {
+		if ( isset( $fields['billing'][ $key ] ) ) {
+			foreach ( $values as $prop => $val ) {
+				$fields['billing'][ $key ][ $prop ] = $val;
+			}
+		}
+	}
+
+	if ( isset( $fields['order']['order_comments'] ) ) {
+		$fields['order']['order_comments']['label']       = 'Uwagi do zamówienia';
+		$fields['order']['order_comments']['placeholder'] = 'Np. prośba o konkretny czas dostawy, nr paczkomatu itp.';
+	}
+
+	return $fields;
+}
+
+/**
+ * Checkout: krótka informacja o dostawie tuż nad przyciskiem "Składam zamówienie".
+ */
+add_action( 'woocommerce_review_order_before_submit', function () {
+	echo '<p class="mnsk7-checkout-delivery-note">'
+		. esc_html__( '🚚 Zamówienia złożone do 15:00 (InPost) lub 17:00 (DPD) wysyłamy tego samego dnia.', 'mnsk7-tools' )
+		. '</p>';
+}, 5 );
