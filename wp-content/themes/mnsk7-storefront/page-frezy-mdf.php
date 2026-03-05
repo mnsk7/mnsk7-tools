@@ -12,14 +12,14 @@ get_header();
 <main class="mnsk7-seo-page">
 
 	<section class="mnsk7-seo-hero">
-		<div class="container">
+		<div class="col-full">
 			<h1 class="mnsk7-seo-hero__title">Frezy do drewna i MDF — CNC</h1>
 			<p class="mnsk7-seo-hero__sub">Spiralne · z podłożem · jednopiórowe · dostawa następnego dnia · faktura VAT</p>
 		</div>
 	</section>
 
 	<section class="mnsk7-seo-intro">
-		<div class="container">
+		<div class="col-full">
 			<div class="mnsk7-seo-intro__text">
 				<p>Drewno i MDF to jedne z najpopularniejszych materiałów obrabianych na frezarkach CNC — w produkcji mebli, elementów dekoracyjnych, szablonów i prototypów. Dobry frez do drewna i MDF powinien zapewniać czystą krawędź, minimalny wyrwany włókna i długą żywotność.</p>
 
@@ -38,7 +38,7 @@ get_header();
 	</section>
 
 	<section class="mnsk7-seo-products">
-		<div class="container">
+		<div class="col-full">
 			<h2 class="mnsk7-seo-products__title">Frezy do drewna i MDF — produkty</h2>
 			<?php
 			echo do_shortcode( '[products category="frezy-do-drewna" limit="12" columns="4" orderby="popularity"]' );
@@ -49,7 +49,7 @@ get_header();
 	</section>
 
 	<section class="mnsk7-seo-faq">
-		<div class="container">
+		<div class="col-full">
 			<?php echo do_shortcode( '[mnsk7_faq set="produkt" title="FAQ — frezy do drewna i MDF"]' ); ?>
 			<?php echo do_shortcode( '[mnsk7_faq set="dostawa"]' ); ?>
 		</div>

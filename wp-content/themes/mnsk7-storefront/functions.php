@@ -11,8 +11,8 @@ defined( 'ABSPATH' ) || exit;
 /* 1. Enqueue styles */
 add_action( 'wp_enqueue_scripts', function () {
 	wp_enqueue_style( 'storefront-style', get_template_directory_uri() . '/style.css' );
-	wp_enqueue_style( 'mnsk7-storefront-style', get_stylesheet_uri(), array( 'storefront-style' ), '1.0.0' );
-	wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( 'mnsk7-storefront-style' ), '1.0.1' );
+	wp_enqueue_style( 'mnsk7-storefront-style', get_stylesheet_uri(), array( 'storefront-style' ), '2.0.0' );
+	wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( 'mnsk7-storefront-style' ), '2.0.0' );
 }, 10 );
 
 /* 2. Google Fonts: Inter (replace Storefront default) */

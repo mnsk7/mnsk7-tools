@@ -12,7 +12,7 @@ get_header();
 
 	<!-- HERO -->
 	<section class="mnsk7-hero">
-		<div class="mnsk7-hero__inner container">
+		<div class="mnsk7-hero__inner col-full">
 			<h1 class="mnsk7-hero__title"><?php esc_html_e( 'Frezy CNC i narzędzia skrawające', 'tech-storefront' ); ?></h1>
 			<p class="mnsk7-hero__sub"><?php esc_html_e( 'Drewno · MDF · Aluminium · Stal · Tworzywa sztuczne', 'tech-storefront' ); ?></p>
 			<div class="mnsk7-hero__usps">
@@ -56,7 +56,7 @@ get_header();
 		if ( ! is_wp_error( $cats ) && ! empty( $cats ) ) :
 	?>
 	<section class="mnsk7-section mnsk7-section--cats mnsk7-section--light">
-		<div class="container">
+		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Kategorie', 'tech-storefront' ); ?></h2>
 			<div class="mnsk7-cats">
 				<?php foreach ( $cats as $cat ) :
@@ -86,7 +86,7 @@ get_header();
 	<!-- BESTSELLERS -->
 	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
 	<section class="mnsk7-section mnsk7-section--bestsellers">
-		<div class="container">
+		<div class="col-full">
 			<?php echo do_shortcode( '[mnsk7_bestsellers limit="8" title="Bestsellery i polecane"]' ); ?>
 		</div>
 	</section>
@@ -94,7 +94,7 @@ get_header();
 
 	<!-- TRUST + OPINIE (single section) -->
 	<section class="mnsk7-section mnsk7-section--trust mnsk7-section--light">
-		<div class="container">
+		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Dlaczego kupujący nam ufają', 'tech-storefront' ); ?></h2>
 			<div class="mnsk7-trust-stats">
 				<div class="mnsk7-trust-stats__item">
@@ -121,7 +121,7 @@ get_header();
 
 	<!-- SYSTEM RABATÓW -->
 	<section class="mnsk7-section mnsk7-section--loyalty mnsk7-section--light">
-		<div class="container">
+		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Program rabatowy dla stałych klientów', 'tech-storefront' ); ?></h2>
 			<p class="mnsk7-loyalty-intro"><?php esc_html_e( 'Im więcej zamawiasz w ciągu roku, tym większy stały rabat na każde kolejne zamówienie:', 'tech-storefront' ); ?></p>
 			<div class="mnsk7-loyalty-tiers">
@@ -150,7 +150,7 @@ get_header();
 
 	<!-- INSTAGRAM -->
 	<section class="mnsk7-section mnsk7-section--insta">
-		<div class="container">
+		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Obserwuj nas na Instagramie', 'tech-storefront' ); ?></h2>
 			<?php echo do_shortcode( '[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]' ); ?>
 		</div>

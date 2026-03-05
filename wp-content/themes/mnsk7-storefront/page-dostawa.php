@@ -10,7 +10,7 @@ get_header();
 ?>
 
 <main id="main" class="site-main mnsk7-page-dostawa">
-	<div class="container">
+	<div class="col-full">
 		<?php
 		while ( have_posts() ) :
 			the_post();

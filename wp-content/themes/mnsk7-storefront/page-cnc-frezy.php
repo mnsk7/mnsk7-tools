@@ -12,14 +12,14 @@ get_header();
 <main class="mnsk7-seo-page">
 
 	<section class="mnsk7-seo-hero">
-		<div class="container">
+		<div class="col-full">
 			<h1 class="mnsk7-seo-hero__title">Frezy CNC — sklep internetowy</h1>
 			<p class="mnsk7-seo-hero__sub">425+ produktów · VHM · dostawa następnego dnia · faktura VAT · 100% pozytywnych opinii</p>
 		</div>
 	</section>
 
 	<section class="mnsk7-seo-intro">
-		<div class="container">
+		<div class="col-full">
 			<div class="mnsk7-seo-intro__text">
 				<p>MNK7 Tools to polski sklep specjalizujący się w <strong>frezach CNC i narzędziach skrawających</strong> do obróbki drewna, MDF, aluminium, stali i tworzyw sztucznych. W ofercie ponad 425 produktów — frezy palcowe, jednopiórowe, kulowe, kopiarkowe, pilniki obrotowe i zestawy frezów.</p>
 
@@ -45,14 +45,14 @@ get_header();
 	</section>
 
 	<section class="mnsk7-seo-products">
-		<div class="container">
+		<div class="col-full">
 			<h2 class="mnsk7-seo-products__title">Bestsellery — najpopularniejsze frezy CNC</h2>
 			<?php echo do_shortcode( '[mnsk7_bestsellers limit="8" title=""]' ); ?>
 		</div>
 	</section>
 
 	<section class="mnsk7-seo-faq">
-		<div class="container">
+		<div class="col-full">
 			<?php echo do_shortcode( '[mnsk7_faq title="FAQ — frezy CNC"]' ); ?>
 		</div>
 	</section>

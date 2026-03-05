@@ -12,14 +12,14 @@ get_header();
 <main class="mnsk7-seo-page">
 
 	<section class="mnsk7-seo-hero">
-		<div class="container">
+		<div class="col-full">
 			<h1 class="mnsk7-seo-hero__title">Frezy do stali i metalu — CNC</h1>
 			<p class="mnsk7-seo-hero__sub">VHM HRC 65 · 4P · pilniki obrotowe · dostawa następnego dnia · faktura VAT</p>
 		</div>
 	</section>
 
 	<section class="mnsk7-seo-intro">
-		<div class="container">
+		<div class="col-full">
 			<div class="mnsk7-seo-intro__text">
 				<p>Frezowanie stali wymaga narzędzi o wysokiej twardości, odporności na ścieranie i stabilności termicznej. Nasze frezy do stali i metalu wykonane są z pełnego twardego stopu (VHM) o twardości HRC 65, co gwarantuje długą żywotność nawet przy intensywnej obróbce.</p>
 
@@ -38,7 +38,7 @@ get_header();
 	</section>
 
 	<section class="mnsk7-seo-products">
-		<div class="container">
+		<div class="col-full">
 			<h2 class="mnsk7-seo-products__title">Frezy do stali i metalu — produkty</h2>
 			<?php
 			echo do_shortcode( '[products category="frezy-do-stali" limit="12" columns="4" orderby="popularity"]' );
@@ -49,7 +49,7 @@ get_header();
 	</section>
 
 	<section class="mnsk7-seo-faq">
-		<div class="container">
+		<div class="col-full">
 			<?php echo do_shortcode( '[mnsk7_faq set="produkt" title="FAQ — frezy do stali i metalu"]' ); ?>
 			<?php echo do_shortcode( '[mnsk7_faq set="dostawa"]' ); ?>
 		</div>

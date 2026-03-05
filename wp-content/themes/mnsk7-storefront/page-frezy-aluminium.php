@@ -12,14 +12,14 @@ get_header();
 <main class="mnsk7-seo-page">
 
 	<section class="mnsk7-seo-hero">
-		<div class="container">
+		<div class="col-full">
 			<h1 class="mnsk7-seo-hero__title">Frezy do aluminium CNC</h1>
 			<p class="mnsk7-seo-hero__sub">VHM · DLC · 1P / 2P · dostawa następnego dnia · faktura VAT</p>
 		</div>
 	</section>
 
 	<section class="mnsk7-seo-intro">
-		<div class="container">
+		<div class="col-full">
 			<div class="mnsk7-seo-intro__text">
 				<p>Aluminium jest jednym z najtrudniejszych materiałów do frezowania — tworzy długie wióry, nagrzewa się i skleja do krawędzi skrawającej. Wybór odpowiedniego frezu do aluminium decyduje o jakości powierzchni, trwałości narzędzia i wydajności obróbki.</p>
 
@@ -38,7 +38,7 @@ get_header();
 	</section>
 
 	<section class="mnsk7-seo-products">
-		<div class="container">
+		<div class="col-full">
 			<h2 class="mnsk7-seo-products__title">Frezy do aluminium — dostępne produkty</h2>
 			<?php
 			echo do_shortcode( '[products category="frezy-do-aluminium" limit="12" columns="4" orderby="popularity"]' );
@@ -49,7 +49,7 @@ get_header();
 	</section>
 
 	<section class="mnsk7-seo-faq">
-		<div class="container">
+		<div class="col-full">
 			<?php echo do_shortcode( '[mnsk7_faq set="produkt" title="Najczęściej zadawane pytania — frezy do aluminium"]' ); ?>
 			<?php echo do_shortcode( '[mnsk7_faq set="dostawa"]' ); ?>
 		</div>
