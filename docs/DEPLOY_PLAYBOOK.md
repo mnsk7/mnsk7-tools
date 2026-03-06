@@ -14,7 +14,7 @@ Procedura wdrożenia, odświeżenia staging, odwołania i backupy. Źródła: cy
 | Źródło | Na serwer (staging) |
 |--------|----------------------|
 | Git: `mu-plugins/` | `~/domains/.../staging/wp-content/mu-plugins/` |
-| Git: `wp-content/themes/` (best-shop, tech-storefront) | `~/.../staging/wp-content/themes/` |
+| Git: `wp-content/themes/mnsk7-storefront` (parent Storefront na serwerze osobno) | `~/.../staging/wp-content/themes/` |
 | **Nie w Git:** plugins, uploads, wp-config, .env | Na staging już są (kopie z prod lub ręcznie) |
 
 Trigger: **push do gałęzi `main`** → GitHub Actions robi rsync mu-plugins + themes. Lokalnie: `make deploy-files`.
@@ -34,7 +34,7 @@ PR: użyj szablonu `.github/PULL_REQUEST_TEMPLATE.md` (opis, jak testować, ryzy
 ## 3. Przed wdrożeniem (checklist)
 
 - [ ] **Backup plików** (jeśli zmieniasz theme/mu-plugins na prod):  
-  `tar -czf backup-theme-$(date +%Y%m%d).tar.gz -C wp-content themes/tech-storefront`
+  `tar -czf backup-theme-$(date +%Y%m%d).tar.gz -C wp-content themes/mnsk7-storefront`
 - [ ] **Backup BД** (przed staging-refresh lub przed zmianami na prod):  
   Na serwerze: `wp db export /tmp/backup-$(date +%Y%m%d).sql` (w katalogu staging lub prod).
 - [ ] **wp-config na staging:** DB_NAME, DB_USER, DB_PASSWORD, WP_HOME, WP_SITEURL — dla staging; nie nadpisuj wp-config z Git.

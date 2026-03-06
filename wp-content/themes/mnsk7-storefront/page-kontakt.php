@@ -3,7 +3,7 @@
  * Template Name: Kontakt
  * Strona z danymi kontaktowymi (email, telefon, godziny, Instagram).
  *
- * @package tech-storefront
+ * @package mnsk7-storefront
  */
 
 get_header();

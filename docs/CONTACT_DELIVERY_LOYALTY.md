@@ -20,6 +20,10 @@ Wyświetlać w stopce (i ewentualnie w „Kontakt” / górny bar).
 
 - **Profil:** https://www.instagram.com/mnsk7tools/
 - **Wymaganie:** widżet z postami z Insty; użytkownik może przejść do profilu.
+- **Przykładowe embedy (do stopki / shortcode):**
+  - https://www.instagram.com/mnsk7tools/p/DC9J3JjNobj/
+  - https://www.instagram.com/mnsk7tools/p/DC4agmPtKoy/
+  - https://www.instagram.com/mnsk7tools/p/DCzOqKqtjUe/
 - **Uwaga z PDF:** „może tylko mniej postów żeby było widać (1 rząd)”.
 
 Opcje: plugin (np. Instagram Feed), osadzenie oficjalnego embedu lub karuzela zdjęć z API (zgodnie z polityką Instagram). W specyfikacji UI: jeden rząd postów + przycisk/link „Obserwuj na Instagramie”.

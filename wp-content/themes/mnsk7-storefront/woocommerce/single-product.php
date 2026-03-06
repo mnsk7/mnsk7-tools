@@ -3,7 +3,7 @@
  * The Template for displaying all single products
  *
  * Override: copy from WooCommerce to yourtheme/woocommerce/single-product.php.
- * Child theme: tech-storefront. Customizations in content-single-product.php.
+ * Child theme: mnsk7-storefront. Customizations in content-single-product.php.
  *
  * @see         https://woocommerce.com/document/template-structure/
  * @package     WooCommerce\Templates

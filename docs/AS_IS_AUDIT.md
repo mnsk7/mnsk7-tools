@@ -25,6 +25,16 @@
 | — Material landings | e.g. frezy-aluminium, frezy-mdf, frezy-stali | `page-frezy-aluminium.php`, `page-frezy-mdf.php`, `page-frezy-stali.php` |
 
 **ASSUMPTION:** Exact shop/cart/checkout/account slugs depend on WooCommerce permalink settings on server; Polish slugs are documented in repo and `robots.txt`.
+### Тема
+- **Parent:** `best-shop` (gradientthemes.com) — готовая коммерческая WP/Woo тема.
+- **Child:** `mnsk7-storefront` — child theme (Template: best-shop), 11 файлов.
+- Child-theme **есть** ✅ — хорошо, правки не потеряются при обновлении parent.
+- Весь кастомный код child: только переопределение цветов и шрифтов через `add_filter('best_shop_settings', ...)`. Логики — нет.
+
+### Woo overrides
+- В `best-shop/woocommerce/`: **1 файл** — `content-product.php`.
+- В `mnsk7-storefront/`: Woo overrides **отсутствуют**.
+- **Вывод:** кастомизация Woo — минимальная, почти всё идёт из коробки parent-темы.
 
 **Staging vs production:** Porównanie drogi użytkownika (główna, kategoria, PDP, koszyk, checkout) oraz mapowanie plików — [USER_JOURNEY_STAGING_VS_PROD.md](USER_JOURNEY_STAGING_VS_PROD.md). **Krytyczne:** staging musi mieć osobną bazę (DB_NAME); inaczej zmiana motywu/opcji na staging zmienia prod.
 

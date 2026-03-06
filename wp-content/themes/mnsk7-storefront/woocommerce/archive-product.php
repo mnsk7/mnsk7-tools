@@ -1,6 +1,6 @@
 <?php
 /**
- * Template for product archives (shop and category). Override: tech-storefront.
+ * Template for product archives (shop and category). Override: mnsk7-storefront.
  * S2-03: kontrolowany szablon kategorii; filtry (S2-02) — w sidebarze przez plugin.
  *
  * @see https://woocommerce.com/document/template-structure/

@@ -29,7 +29,7 @@ make github-create-repo
 | В репо | Куда деплоится при пуше в `main` |
 |--------|-----------------------------------|
 | `mu-plugins/` | `staging.../wp-content/mu-plugins/` |
-| `wp-content/themes/` (best-shop, tech-storefront; twenty* в .gitignore) | `staging.../wp-content/themes/` |
+| `wp-content/themes/` (best-shop, mnsk7-storefront; twenty* в .gitignore) | `staging.../wp-content/themes/` |
 | `scripts/`, `docs/`, `Makefile`, `.agents/`, `tasks/`, `.cursorrules` | только в репо (на сервер не копируются) |
 
 **Не в репо:** ядро WP, `wp-config.php`, `.env`, `wp-content/uploads/`, `wp-content/plugins/` (плагины не версионируем; при локальном `make deploy-files` можно гнать плагины с машины на стейдж отдельно).

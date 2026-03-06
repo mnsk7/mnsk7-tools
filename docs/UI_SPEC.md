@@ -1,6 +1,8 @@
 # UI Spec — mnsk7-tools.pl
 
-*(Wyjście 09_ui_designer; wejście: REQUIREMENTS, CONTACT_DELIVERY_LOYALTY, skills ecommerce_header_footer_guidelines, product_card_visual, visual_design_woo)*
+**⚠️ SUPERSEDED — zastąpiony przez docs/UI_SPEC_V2.md.** Ten plik tylko do odniesienia historycznego. Wszystkie nowe decyzje i implementacja: UI_SPEC_V2.
+
+*(Wyjście 09_ui_designer; wejście: REQUIREMENTS, CONTACT_DELIVERY_LOYALTY, skills)*
 
 Specyfikacja układu i treści: header, footer, strona główna, karta produktu. **Priorytet: wygoda użytkownika i standardy e-commerce** — życzenia klienta stosujemy tylko gdy nie kolidują z UX.
 

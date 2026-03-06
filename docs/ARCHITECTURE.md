@@ -8,7 +8,7 @@
 
 ## 1. Подход к теме
 
-- **Текущее состояние:** parent `best-shop` (gradientthemes.com), child `tech-storefront`. Child сохраняем — правки не теряются при обновлении parent.
+- **Текущее состояние:** parent Storefront (WooCommerce), child mnsk7-storefront. Child сохраняем — правки не теряются при обновлении parent.
 - **Решение:** продолжать использовать **child theme**. Не переходить на кастом-тему с нуля — слишком дорого при уже работающем стейдже и деплое.
 - **Правило:** все кастомизации интерфейса и Woo — через overrides и хуки в child или в отдельном плагине проекта; не править файлы parent и плагинов напрямую (wp_theme_architecture).
 
@@ -16,14 +16,14 @@
 
 ## 2. Где правим шаблоны Woo (overrides)
 
-- **Путь overrides:** в **child-theme** `tech-storefront/woocommerce/`. Копировать только нужные шаблоны из `best-shop/woocommerce/` или из `woocommerce/templates/`.
+- **Путь overrides:** в **child-theme** `mnsk7-storefront/woocommerce/`. Копировать только нужные шаблоны из `storefront/` или из `woocommerce/templates/`.
 - **Соглашения:**
   - Имена и иерархия файлов — как в Woo (например `content-single-product.php`, `archive-product.php`, `single-product/...`).
   - В шаблоне — только разметка и вызовы Woo-функций; бизнес-логику выносить в плагин или `inc/` (не смешивать логику в шаблонах).
 - **Приоритетные overrides (по REQUIREMENTS и спринтам):**
   - **Карточка товара (single product):** блок ключевых параметров, «подходит для», наличие/доставка (Sprint 02). Файлы: `single-product/` при необходимости, либо `content-single-product.php`.
   - **Страница категории (archive):** разметка списка товаров и блока фильтров, при необходимости блок текста/FAQ (SEO_PLAN, CONTENT_PLAN). Файл: `archive-product.php` и связанные.
-- **Assets:** CSS/JS кастомные — в `tech-storefront/assets/css`, `assets/js`; подключать через `functions.php` или модуль в `inc/`, не хардкодить в parent.
+- **Assets:** CSS/JS кастомные — в `mnsk7-storefront/assets/css`, `assets/js`; подключать через `functions.php` или модуль в `inc/`, не хардкодить в parent.
 
 ---
 
@@ -32,7 +32,7 @@
 - **Вынести из `functions.php` child-theme** в:
   - **mu-plugin** проекта (например `mnsk7-tools.php` или аналог в `wp-content/mu-plugins/`) — логика, общая для темы и Woo (фильтры, хелперы, регистрация блоков).
   - Либо **обычный плагин** в `wp-content/plugins/` с префиксом проекта — если нужна активация/деактивация.
-- **В child `functions.php`** оставить только: подключение parent, подключение модулей из `inc/` (если логика остаётся в теме), настройки темы (цвета, шрифты через `best_shop_settings`).
+- **В child `functions.php`** оставить только: подключение parent, подключение модулей из `inc/` (если логика остаётся в теме), настройки темы (цвета, шрифты через `theme customizer`).
 - **Правило:** при смене темы бизнес-логика в mu-plugin/плагине не теряется (AS_IS_BACKLOG P1-06).
 
 ---

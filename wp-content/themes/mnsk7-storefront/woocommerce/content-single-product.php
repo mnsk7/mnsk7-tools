@@ -2,7 +2,7 @@
 /**
  * The template for displaying product content in the single-product.php template
  *
- * Override: tech-storefront. W Sprint 02: dodać blok kluczowych parametrów i "podstaw dla".
+ * Override: mnsk7-storefront. W Sprint 02: dodać blok kluczowych parametrów i "podstaw dla".
  *
  * @see     https://woocommerce.com/document/template-structure/
  * @package WooCommerce\Templates

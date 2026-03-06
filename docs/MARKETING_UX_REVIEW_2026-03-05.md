@@ -41,9 +41,9 @@ Status: **DO PRZERÓBKI (global rework)**.
 
 ## Dowody w kodzie (obszary ryzyka)
 
-- Duża liczba ręcznie zdefiniowanych sekcji i hardcoded statystyk na home: `wp-content/themes/tech-storefront/front-page.php`.
-- Bardzo rozbudowany, mieszany arkusz stylów dla wielu obszarów jednocześnie: `wp-content/themes/tech-storefront/assets/css/mnsk7-product.css`.
-- Dodatkowy blok footer doklejony do istniejącej struktury motywu parent: `wp-content/themes/tech-storefront/footer.php`.
+- Duża liczba ręcznie zdefiniowanych sekcji i hardcoded statystyk na home: `wp-content/themes/mnsk7-storefront/front-page.php`.
+- Bardzo rozbudowany, mieszany arkusz stylów dla wielu obszarów jednocześnie: `wp-content/themes/mnsk7-storefront/assets/css/mnsk7-product.css`.
+- Dodatkowy blok footer doklejony do istniejącej struktury motywu parent: `wp-content/themes/mnsk7-storefront/footer.php`.
 
 ## Zwrot do agentów (mandatory rework)
 

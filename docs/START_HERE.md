@@ -1,6 +1,25 @@
 # START HERE — How to run the pipeline (mnsk7-tools.pl)
 
 **Date:** 2026-03-05
+# START HERE — Как запускать пайплайн и doprowadzać do wyniku (mnsk7-tools.pl)
+
+Дата: 2026-03-06
+
+Pipeline to nie tylko „kogo uruchomić i jakie pliki mają powstać” — to **pipeline jakości**. Wynik musi przejść gate’y; „dokument powstał” ≠ „etap zamknięty”. Szczegóły: **docs/QUALITY_GATES.md**.
+
+---
+
+## Kolejność gate’ów (jak doprowadzać do wyniku)
+
+1. **Discovery approved** — REQUIREMENTS z acceptance criteria per szablon.
+2. **Requirements frozen**
+3. **Architecture frozen** — theme / Woo / mu-plugin; overrides inventory.
+4. **UI approved** — UI_SPEC_V2 (jedyna aktualna spec); SCREEN_REVIEW_PACK (docs/SCREEN_REVIEW_PACK.md).
+5. **Shell implemented and reviewed** — Screen Review dla Header, Footer approved.
+6. **PLP/PDP implemented and reviewed** — Screen Review approved.
+7. **Checkout reviewed** — conversion blockers usunięte.
+8. **QA passed** — 4 sign-offy: Visual, IA, Conversion, Smoke (docs/QA_REPORT.md).
+9. **Release candidate** → dopiero wtedy deploy według DEPLOY_SAFETY.
 
 ---
 
@@ -110,3 +129,15 @@ Full flow: `make staging-full` (if defined in Makefile).
 | Team audit | `docs/TEAM_AUDIT.md` |
 | Fix plan | `docs/TEAM_FIX_PLAN.md` |
 | Readiness | `docs/TEAM_READINESS.md` |
+| Что | Где |
+|-----|-----|
+| **Quality gates (kto blokuje release, niedopuszczalny wynik)** | **docs/QUALITY_GATES.md** |
+| **Screen Review Pack (gate per ekran)** | **docs/SCREEN_REVIEW_PACK.md** |
+| Порядок агентов | `.agents/orchestrator.md` |
+| Описания агентов | `.agents/agents/*.md` |
+| Skills | `.agents/skills/*/SKILL.md` |
+| **Jedyna aktualna spec UI** | **docs/UI_SPEC_V2.md** (UI_SPEC.md = superseded) |
+| Деплой playbook | `docs/STAGING_PLAYBOOK.md` |
+| DoD | `docs/DEFINITION_OF_DONE.md` |
+| Аудит команды | `docs/TEAM_AUDIT.md` |
+| Статус готовности | `docs/TEAM_READINESS.md` |

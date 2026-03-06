@@ -3,7 +3,7 @@
  * Template Name: Dostawa i płatności
  * Strona z tabelą warunków dostawy (InPost, DPD, free od 300 zł).
  *
- * @package tech-storefront
+ * @package mnsk7-storefront
  */
 
 get_header();
@@ -29,7 +29,7 @@ get_header();
 						echo do_shortcode( '[mnsk7_delivery_eta]' );
 					}
 					?>
-					<p class="mnsk7-page-dostawa__note"><?php esc_html_e( 'Realizujemy zamówienia tylko na terenie Polski. Faktura VAT na życzenie.', 'tech-storefront' ); ?></p>
+					<p class="mnsk7-page-dostawa__note"><?php esc_html_e( 'Realizujemy zamówienia tylko na terenie Polski. Faktura VAT na życzenie.', 'mnsk7-storefront' ); ?></p>
 				</div>
 			</article>
 			<?php
