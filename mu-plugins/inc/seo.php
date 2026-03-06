@@ -109,7 +109,12 @@ add_action( 'woocommerce_archive_description', function () {
 			. '</div>';
 	}
 	if ( ! empty( $desc ) ) {
-		echo '<div class="mnsk7-cat-header__desc">' . wp_kses_post( $desc ) . '</div>';
+		$desc = preg_replace( '/\[wpf[-_]filters[^\]]*\]/i', '', (string) $desc );
+		$desc = preg_replace( '/\s*Filtruj:\s*[^<]*?(?=\n\s*\n|\z)/s', '', $desc );
+		$desc = trim( $desc );
+		if ( $desc !== '' ) {
+			echo '<div class="mnsk7-cat-header__desc">' . wp_kses_post( $desc ) . '</div>';
+		}
 	}
 	echo '</div>';
 }, 10 );

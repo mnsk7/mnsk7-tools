@@ -22,6 +22,16 @@ body.single-product #content #secondary {
   padding: 0 1rem 1.5rem;
 }
 
+/* Opis, podobne produkty i cała treść pod buyboxem — pełna szerokość, pod zdjęciem i summary */
+.single-product div.product > .mnsk7-product-description-accordion,
+.single-product div.product > .mnsk7-product-extra-media,
+.single-product div.product > .related.products,
+.single-product div.product > .upsells.products {
+  flex: 1 1 100%;
+  width: 100%;
+  min-width: 100%;
+}
+
 .single-product div.product .images {
   position: sticky;
   top: 1rem;
@@ -376,9 +386,9 @@ body.single-product #content #secondary {
   color: var(--color-text);
 }
 
-/* Opis jako harmonijka (domyślnie zwinięty) */
+/* Opis jako harmonijka (domyślnie zwinięty) — zawsze pod blokiem zdjęcie+buybox */
 .mnsk7-product-description-accordion {
-  margin: 0.5rem 0;
+  margin: 1.25rem 0 0.5rem;
   border: 1px solid var(--color-border);
   border-radius: var(--r-sm);
   overflow: hidden;

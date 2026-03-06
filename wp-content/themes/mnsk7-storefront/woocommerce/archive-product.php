@@ -15,66 +15,66 @@ get_header( 'shop' );
 do_action( 'woocommerce_before_main_content' );
 
 $is_taxonomy = is_product_taxonomy();
+$current_term = $is_taxonomy ? get_queried_object() : null;
 
-if ( $is_taxonomy ) {
-	// Чипсы: подкатегории или соседние термины (стиль Sandvik)
-	$current_term = get_queried_object();
+do_action( 'woocommerce_shop_loop_header' );
+
+/* Чипсы pod nazwą kategorii (breadcrumb → tytuł → chips) */
+if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 	$chips = array();
-	if ( $current_term && isset( $current_term->taxonomy ) ) {
-		if ( $current_term->taxonomy === 'product_cat' ) {
-			$parent_id = $current_term->parent;
-			$chips = get_terms( array(
-				'taxonomy'   => 'product_cat',
-				'parent'     => $parent_id,
-				'hide_empty' => true,
-			) );
-		} else {
-			// product_tag lub inna taksonomia: pokaż top-level product_cat jako чипсы do nawigacji
-			$chips = get_terms( array(
-				'taxonomy'   => 'product_cat',
-				'parent'     => 0,
-				'hide_empty' => true,
-				'number'     => 12,
-			) );
-		}
+	if ( $current_term->taxonomy === 'product_cat' ) {
+		$parent_id = $current_term->parent;
+		$chips = get_terms( array(
+			'taxonomy'   => 'product_cat',
+			'parent'     => $parent_id,
+			'hide_empty' => true,
+		) );
+	} else {
+		$chips = get_terms( array(
+			'taxonomy'   => 'product_cat',
+			'parent'     => 0,
+			'hide_empty' => true,
+			'number'     => 12,
+		) );
 	}
 	if ( ! is_wp_error( $chips ) && ! empty( $chips ) ) {
 		echo '<div class="mnsk7-plp-chips col-full" role="navigation" aria-label="' . esc_attr__( 'Kategorie', 'mnsk7-storefront' ) . '">';
 		foreach ( $chips as $term ) {
 			$link = get_term_link( $term );
-			if ( is_wp_error( $link ) ) {
-				continue;
-			}
-			$active = ( $current_term && (int) $current_term->term_id === (int) $term->term_id );
-			printf(
-				'<a href="%s" class="mnsk7-plp-chip %s">%s</a>',
-				esc_url( $link ),
-				$active ? 'mnsk7-plp-chip--active' : '',
-				esc_html( $term->name )
-			);
+			if ( is_wp_error( $link ) ) { continue; }
+			$active = (int) $current_term->term_id === (int) $term->term_id;
+			printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $link ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $term->name ) );
 		}
 		echo '</div>';
 	}
+	$attr_data = function_exists( 'mnsk7_get_archive_attribute_filter_chips' ) ? mnsk7_get_archive_attribute_filter_chips() : array( 'filters' => array() );
+	if ( ! empty( $attr_data['filters'] ) ) {
+		foreach ( $attr_data['filters'] as $attribute_filter ) {
+			if ( empty( $attribute_filter['chips'] ) ) { continue; }
+			echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="' . esc_attr__( 'Filtruj', 'mnsk7-storefront' ) . '">';
+			echo '<span class="mnsk7-plp-chips__label">' . esc_html( $attribute_filter['label'] ) . '</span>';
+			foreach ( $attribute_filter['chips'] as $slug => $label ) {
+				$url = add_query_arg( $attribute_filter['param'], $slug );
+				$active = isset( $_GET[ $attribute_filter['param'] ] ) && sanitize_text_field( wp_unslash( $_GET[ $attribute_filter['param'] ] ) ) === $slug;
+				printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
+			}
+			echo '</div>';
+		}
+	}
+}
 
-	$attribute_filter = function_exists( 'mnsk7_get_archive_attribute_filter_chips' ) ? mnsk7_get_archive_attribute_filter_chips() : array( 'label' => '', 'param' => '', 'chips' => array() );
-	if ( ! empty( $attribute_filter['chips'] ) ) {
-		echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="' . esc_attr__( 'Filtruj', 'mnsk7-storefront' ) . '">';
-		echo '<span class="mnsk7-plp-chips__label">' . esc_html( $attribute_filter['label'] ) . '</span>';
-		foreach ( $attribute_filter['chips'] as $slug => $label ) {
-			$url = add_query_arg( $attribute_filter['param'], $slug );
-			$active = isset( $_GET[ $attribute_filter['param'] ] ) && sanitize_text_field( wp_unslash( $_GET[ $attribute_filter['param'] ] ) ) === $slug;
-			printf(
-				'<a href="%s" class="mnsk7-plp-chip %s">%s</a>',
-				esc_url( $url ),
-				$active ? 'mnsk7-plp-chip--active' : '',
-				esc_html( $label )
-			);
+if ( is_shop() && ! $is_taxonomy && taxonomy_exists( 'product_cat' ) ) {
+	$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true, 'number' => 20 ) );
+	if ( ! is_wp_error( $top_cats ) && ! empty( $top_cats ) ) {
+		echo '<div class="mnsk7-plp-chips col-full" role="navigation" aria-label="' . esc_attr__( 'Kategorie', 'mnsk7-storefront' ) . '">';
+		foreach ( $top_cats as $term ) {
+			$link = get_term_link( $term );
+			if ( is_wp_error( $link ) ) { continue; }
+			echo '<a href="' . esc_url( $link ) . '" class="mnsk7-plp-chip">' . esc_html( $term->name ) . '</a>';
 		}
 		echo '</div>';
 	}
 }
-
-do_action( 'woocommerce_shop_loop_header' );
 
 if ( woocommerce_product_loop() ) {
 	do_action( 'woocommerce_before_shop_loop' );
