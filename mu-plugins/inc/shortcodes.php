@@ -110,6 +110,10 @@ function mnsk7_allegro_trust_html( $atts = array() ) {
 }
 
 function mnsk7_allegro_reviews_pages_html( $atts = array() ) {
+	$atts = shortcode_atts( array( 'show' => '1' ), $atts, 'mnsk7_allegro_reviews_pages' );
+	if ( isset( $atts['show'] ) && ( $atts['show'] === '0' || $atts['show'] === false ) ) {
+		return '';
+	}
 	$url  = esc_url( MNK7_ALLEGRO_SELLER_URL . '/oceny' );
 	return '<p class="mnsk7-allegro-reviews__cta-wrap">'
 		. '<a class="mnsk7-allegro-reviews__cta-btn" href="' . $url . '" target="_blank" rel="noopener nofollow">'
@@ -128,16 +132,20 @@ function mnsk7_allegro_review_quotes() {
 
 function mnsk7_allegro_reviews_html( $atts = array() ) {
 	$atts   = shortcode_atts( array(
-		'title'      => __( 'Opinie kupujących z Allegro', 'mnsk7-tools' ),
-		'empty_text' => __( 'Opinie produktowe są aktualnie synchronizowane. Zobacz pełne oceny sprzedawcy na Allegro.', 'mnsk7-tools' ),
-		'pages'      => 20,
+		'title'       => __( 'Opinie kupujących z Allegro', 'mnsk7-tools' ),
+		'empty_text'  => __( 'Opinie produktowe są aktualnie synchronizowane. Zobacz pełne oceny sprzedawcy na Allegro.', 'mnsk7-tools' ),
+		'pages'       => 20,
+		'allegro_link' => '1', // '0' = nie pokazuj linku "Czytaj wszystkie opinie" (gdy sekcja ma własny CTA)
 	), $atts, 'mnsk7_allegro_reviews' );
+	$show_pages_link = ( isset( $atts['allegro_link'] ) && ( $atts['allegro_link'] === '0' || $atts['allegro_link'] === false ) ) ? false : true;
 	$quotes = mnsk7_allegro_review_quotes();
 	$html   = '<section class="mnsk7-allegro-reviews">';
 	$html  .= '<h4 class="mnsk7-allegro-reviews__title">' . esc_html( $atts['title'] ) . '</h4>';
 	if ( empty( $quotes ) ) {
 		$html .= '<p class="mnsk7-allegro-reviews__empty">' . esc_html( $atts['empty_text'] ) . '</p>';
-		$html .= mnsk7_allegro_reviews_pages_html();
+		if ( $show_pages_link ) {
+			$html .= mnsk7_allegro_reviews_pages_html( array( 'show' => '1' ) );
+		}
 		$html .= '</section>';
 		return $html;
 	}
@@ -149,7 +157,9 @@ function mnsk7_allegro_reviews_html( $atts = array() ) {
 		$html .= '<blockquote class="mnsk7-allegro-reviews__item"><p>' . esc_html( $text ) . '</p><cite>' . esc_html( $author ) . '</cite></blockquote>';
 	}
 	$html .= '</div>';
-	$html .= mnsk7_allegro_reviews_pages_html();
+	if ( $show_pages_link ) {
+		$html .= mnsk7_allegro_reviews_pages_html( array( 'show' => '1' ) );
+	}
 	$html .= '</section>';
 	return $html;
 }

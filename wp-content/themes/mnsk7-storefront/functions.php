@@ -18,7 +18,7 @@ function mnsk7_parent_storefront_available() {
 
 /* 1. Enqueue styles — many small CSS parts (easier to maintain than one 2000+ line file) */
 add_action( 'wp_enqueue_scripts', function () {
-	$v = '2.1.0';
+	$v = '2.2.0';
 	$base = get_stylesheet_directory_uri() . '/assets/css/parts/';
 	$dir = get_stylesheet_directory() . '/assets/css/parts/';
 	if ( mnsk7_parent_storefront_available() ) {
@@ -93,3 +93,14 @@ add_filter( 'wp_page_menu_args', function ( $args ) {
 
 /* 7. Override Storefront typography */
 add_filter( 'storefront_google_font_families', '__return_empty_array' );
+
+/* 8. Front page document title (SEO + zakładka) — fallback gdy brak ustawionej strony głównej */
+add_filter( 'document_title_parts', function ( $parts ) {
+	if ( ! is_front_page() ) {
+		return $parts;
+	}
+	if ( empty( $parts['title'] ) || trim( (string) $parts['title'] ) === '' ) {
+		$parts['title'] = __( 'Frezy CNC i narzędzia skrawające', 'mnsk7-storefront' );
+	}
+	return $parts;
+}, 15 );
