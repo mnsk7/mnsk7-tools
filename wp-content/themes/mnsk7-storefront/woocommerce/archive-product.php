@@ -154,6 +154,8 @@ if ( woocommerce_product_loop() ) {
 }
 
 do_action( 'woocommerce_after_main_content' );
-do_action( 'woocommerce_sidebar' );
+if ( ! $is_taxonomy ) {
+	do_action( 'woocommerce_sidebar' );
+}
 
 get_footer( 'shop' );

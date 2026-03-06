@@ -177,6 +177,15 @@ add_filter( 'wp_page_menu_args', function ( $args ) {
 /* 7. Override Storefront typography */
 add_filter( 'storefront_google_font_families', '__return_empty_array' );
 
+/* 7b. PLP: nie pokazuj nieobsłużonych shortcodów w opisie kategorii (np. [wpf-filters id=7] gdy plugin wyłączony) */
+add_filter( 'term_description', function ( $desc ) {
+	if ( ! function_exists( 'is_product_taxonomy' ) || ! is_product_taxonomy() ) {
+		return $desc;
+	}
+	$desc = preg_replace( '/\[wpf-filters[^\]]*\]/i', '', (string) $desc );
+	return trim( $desc );
+}, 5 );
+
 /* 8. Front page document title (SEO + zakładka) — fallback gdy brak ustawionej strony głównej */
 add_filter( 'document_title_parts', function ( $parts ) {
 	if ( ! is_front_page() ) {
