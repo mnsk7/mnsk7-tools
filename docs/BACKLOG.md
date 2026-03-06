@@ -11,8 +11,8 @@
 | ID | Задача | Связь |
 |----|--------|--------|
 | ARCH-01 | Держать все кастомизации в child-theme `mnsk7-storefront`; не править parent и плагины напрямую | ARCHITECTURE §1, §2 |
-| ARCH-02 | Вынести бизнес-логику из `functions.php` в mu-plugin или плагин проекта (mnsk7-tools) | P1-06, ARCHITECTURE §3 |
-| ARCH-03 | Добавить Woo overrides в child: карточка товара (single product), при необходимости страница категории (archive) | P1-07, P3-01, ARCHITECTURE §2 |
+| ARCH-02 | ~~Вынести бизнес-логику в mu-plugin~~ | **Частично:** основная логика в mnsk7-tools.php (key params, availability, trust, shortcodes); часть остаётся в theme functions.php (enqueue, hooks Storefront) |
+| ARCH-03 | ~~Woo overrides в child: карточка и категория~~ | **Есть:** mnsk7-storefront/woocommerce/ (content-single-product, single-product, archive-product, wrappers, content-product-table-row) |
 | ARCH-04 | В child: подключать кастомные CSS/JS из `assets/`; логику в `inc/` или в плагине | wp_theme_architecture |
 
 ---
@@ -55,7 +55,7 @@
 
 | ID | Задача | Связь |
 |----|--------|--------|
-| ARCH-18 | Заблокировать xmlrpc.php (.htaccess или плагин) | P0-03, ARCHITECTURE §7 |
+| ARCH-18 | ~~Заблокировать xmlrpc.php~~ | **Сделано:** mu-plugin mnsk7-tools.php возвращает 403 на XMLRPC_REQUEST |
 | ARCH-19 | Проверить/настроить бэкапы (БД + файлы) | P0-04 |
 | ARCH-20 | Пересмотреть robots.txt после выбора фильтра: не блокировать нужные параметры; noindex для тонких комбинаций фильтров | P2-02, SEO_PLAN §5 |
 

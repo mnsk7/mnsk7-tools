@@ -51,6 +51,14 @@
   margin-top: 0.75rem;
 }
 
+.mnsk7-plp-no-results {
+  margin: 1.5rem 0;
+  font-size: var(--fs-base);
+}
+.mnsk7-plp-no-results a {
+  font-weight: 600;
+}
+
 @media (max-width: 768px) {
   .mnsk7-plp-chips {
     gap: 0.4rem;

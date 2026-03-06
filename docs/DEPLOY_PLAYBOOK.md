@@ -1,8 +1,10 @@
 # Deploy Playbook — mnsk7-tools.pl (Cyber_Folks)
 
-*(Wyjście agentów 06_devops_github, 07_server_ops_cyberfolks)*
+*(Wyjście agentów 06_devops_github, 07_server_ops_cyberfolks; aktualizacja 2026-03-06)*
 
 Procedura wdrożenia, odświeżenia staging, odwołania i backupy. Źródła: cyberfolks_deploy_playbook, staging_bootstrap, ssl_cyberfolks.
+
+**Gałęzie:** push do `main` → GitHub Actions deploy na staging. PR z `feature/*` do `main` — szablon `.github/PULL_REQUEST_TEMPLATE.md`. Theme: **storefront** (parent) + **mnsk7-storefront** (child) w repozytorium.
 
 **Pełny playbook ops (deploy, rollback, wp-config, backupy, SSL):** [SERVER_OPS_CYBERFOLKS.md](SERVER_OPS_CYBERFOLKS.md).  
 **Bezpieczeństwo (stage vs prod, ścieżki, dry-run, 4 testy):** [DEPLOY_SAFETY.md](DEPLOY_SAFETY.md).
@@ -85,7 +87,8 @@ Wymaga: wp-cli w PATH na serwerze, poprawne ścieżki w `.env` (lub w skrypcie `
 ## 6. Po wdrożeniu
 
 - [ ] Na serwerze (staging): `wp cache flush` (jeśli cache włączony), `wp rewrite flush --hard`.
-- [ ] Smoke: dodanie do koszyka, wejście w checkout, sprawdzenie że strona produktu się ładuje ([QA_REPORT.md](QA_REPORT.md)).
+- [ ] Smoke: S1–S9 według [QA_REPORT.md](QA_REPORT.md) (dodanie do koszyka, checkout, strona produktu).
+- [ ] Weryfikacja UI (QA_REPORT §5): header bez duplikatów, PDP, footer, tap targets 44px, mobile.
 - [ ] Na stagingu maile nie wychodzą do klientów (staging-safety); płatności wyłączone.
 
 ---
@@ -95,7 +98,7 @@ Wymaga: wp-cli w PATH na serwerze, poprawne ścieżki w `.env` (lub w skrypcie `
 **Tylko pliki (theme / mu-plugins):**  
 - Wrócić do poprzedniego commita w Git i zrobić push (nowy deploy) albo lokalnie `make deploy-files` po `git checkout` poprzedniego stanu.  
 - Alternatywa: na serwerze przywrócić kopię z backupu: `tar -xzf ~/backups/staging-theme-....tar.gz` w katalogu staging (albo `make backup-files` przed deployem, potem przywrócić).  
-- Jeśli używano `DEPLOY_BACKUP_THEME=1 make deploy-files`, na serwerze: `cd .../themes && rm -rf tech-storefront && mv tech-storefront_prev tech-storefront`, potem `wp cache flush` i `wp rewrite flush --hard`.
+- Jeśli używano `DEPLOY_BACKUP_THEME=1 make deploy-files`, na serwerze: `cd .../themes && rm -rf mnsk7-storefront && mv mnsk7-storefront_prev mnsk7-storefront` (lub storefront w zależności od backupu), potem `wp cache flush` i `wp rewrite flush --hard`.
 
 **Baza danych:**  
 Przy krytycznej zmianie BД na staging: przywrócić z backupu, np.  
@@ -139,3 +142,4 @@ Na shared hosting Cyber_Folks: sprawdzić, czy panel oferuje automatyczne backup
 - [STAGING_AND_GITHUB.md](STAGING_AND_GITHUB.md) — repozytorium, sekrety, co jest w Git, deploy przy pushu.
 - [QA_REPORT.md](QA_REPORT.md) — smoke i checklisty bezpieczeństwa/wydajności.
 - Skrypty: `scripts/deploy-rsync.sh`, `scripts/staging-refresh.sh`, `scripts/staging-fix-db.sh`, `Makefile`.
+- **06_devops_github / 07_server_ops (2026-03-06):** potwierdzono workflow `deploy-staging.yml` (push main → rsync), PR template, gałąź main; zaktualizowano nazwy tematów (storefront + mnsk7-storefront) w playbooku i STAGING_AND_GITHUB.

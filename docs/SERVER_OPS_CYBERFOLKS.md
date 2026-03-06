@@ -39,7 +39,7 @@ Deploy **only** theme, mu-plugins, and (optionally) custom plugins. Do **not** d
 
 | Method | Command | Notes |
 |--------|---------|--------|
-| **GitHub Actions** | Push to branch `staging` | Workflow runs rsync mu-plugins + themes + robots.txt |
+| **GitHub Actions** | Push to branch `main` | Workflow runs rsync mu-plugins + themes + robots.txt (`.github/workflows/deploy-staging.yml`) |
 | **Local** | `make deploy-files` | Uses `.env` (cyberfolks_ssh_*); target staging by default |
 | **With theme backup** | `DEPLOY_BACKUP_THEME=1 make deploy-files` | Before rsync, copies current theme to `<THEME>_prev` on server for quick rollback |
 | **Prod target** | `./scripts/deploy-rsync.sh prod` | Set `STAGING_PROD_PATH` in `.env` for prod path |

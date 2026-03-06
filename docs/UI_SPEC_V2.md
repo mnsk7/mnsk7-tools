@@ -1,8 +1,10 @@
 # UI SPEC V2 — mnsk7-tools.pl (staging)
 
-Data: 2026-03-05  
+Data: 2026-03-05 | Weryfikacja 09_ui_designer: 2026-03-06  
 Owner: `09_ui_designer`  
 Zakres: tylko `theme/mu/custom docs/tasks` (bez zmian w core WP i zewnętrznych pluginach)
+
+**Źródła:** REQUIREMENTS.md, CONTACT_DELIVERY_LOYALTY.md, notatki PDF (staging.kayer.pl), skills: ecommerce_header_footer_guidelines, product_card_visual, visual_design_woo.
 
 ## 1) Cel biznesowy i zasady
 
@@ -258,3 +260,15 @@ UX:
   - priorytet wdrożenia: P0 (header/home/PLP/PDP), P1 (footer/kontakt/dostawa).
 - `05_theme_ux_frontend` implementuje warstwę UI w theme.
 - `04_woo_engineer` dopina logikę PDP/PLP i zgodność z WooCommerce.
+
+---
+
+## 10) Weryfikacja z CONTACT_DELIVERY_LOYALTY (09_ui_designer 2026-03-06)
+
+| Wymaganie klienta | Gdzie w spec |
+|-------------------|---------------|
+| Kontakt: office@mnsk7.pl, +48 451696511, godziny pn.–pt. 9–17, sb. 10–12, nd. zamknięte | §6.2 Footer — kolumna Kontakt (tel, email, godziny) |
+| Instagram: 1 rząd postów, link do profilu @mnsk7tools | §6.2 Home p.6; §6.5 Footer; shortcode `[mnsk7_instagram_feed]` |
+| Dostawa: InPost/DPD, tabela warunków (pn.–pt. do 15:00 InPost → jutro), darmowa od 300 zł | §6.7 Dostawa i płatności; CONTACT_DELIVERY_LOYALTY §4, §5 |
+| Lojalność: progi 1000/3000/5000/10 000 zł → 5/10/15/20% w panelu | §6.2 Home p.5 (blok informacyjny + CTA „Zobacz progi”); implementacja w panelu klienta |
+| Menu: Sklep (kategorie), O nas, Pomoc, Kontakt | §4.5 Nawigacja; §6.1 Header; ecommerce_header_footer_guidelines — kategorie w menu robimy (standard e-commerce) |

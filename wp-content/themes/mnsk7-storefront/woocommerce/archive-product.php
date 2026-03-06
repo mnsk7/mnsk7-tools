@@ -122,6 +122,21 @@ if ( woocommerce_product_loop() ) {
 
 	do_action( 'woocommerce_after_shop_loop' );
 } else {
+	$filter_params = array( 'filter_srednica', 'filter_srednica-trzpienia', 'filter_dlugosc-calkowita-l', 'filter_dlugosc-robocza-h' );
+	$has_filter = false;
+	foreach ( $filter_params as $p ) {
+		if ( ! empty( $_GET[ $p ] ) ) {
+			$has_filter = true;
+			break;
+		}
+	}
+	if ( $is_taxonomy && $has_filter ) {
+		$clear_url = remove_query_arg( $filter_params );
+		echo '<p class="mnsk7-plp-no-results col-full">';
+		echo esc_html__( 'Brak produktów dla wybranego filtra.', 'mnsk7-storefront' );
+		echo ' <a href="' . esc_url( $clear_url ) . '">' . esc_html__( 'Wyczyść filtr i pokaż wszystkie', 'mnsk7-storefront' ) . '</a>';
+		echo '</p>';
+	}
 	do_action( 'woocommerce_no_products_found' );
 }
 

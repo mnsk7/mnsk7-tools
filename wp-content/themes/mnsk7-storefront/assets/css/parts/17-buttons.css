@@ -3,6 +3,7 @@
    § BUTTONS (global)
    ----------------------------------------------------------------- */
 
+/* Tap target min 44px (WCAG 2.5.5, UI_SPEC_V2 §4.1) */
 .woocommerce a.button,
 .woocommerce button.button,
 .woocommerce input.button,
@@ -17,8 +18,17 @@
   font-weight: 600;
   font-size: var(--fs-sm);
   padding: 0.625rem 1.25rem;
+  min-height: 44px;
+  box-sizing: border-box;
   transition: background 0.15s ease;
   cursor: pointer;
+}
+
+.woocommerce a.button:focus-visible,
+.woocommerce button.button:focus-visible,
+.woocommerce input.button:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
 }
 
 .woocommerce a.button:hover,

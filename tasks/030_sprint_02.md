@@ -24,7 +24,7 @@
 | S2-02 | Настроить фильтры по логике выбора: тип, Ø, хвостовик, длина, зубья, материал (UX-02) | На странице категории фильтры в нужном порядке и с нужными атрибутами | Выбрать тип → сузить по диаметру/хвостовику → результат релевантный |
 | S2-03 | Проверить/добавить Woo override страницы категории при необходимости (P3-01) | Верстка категории под контролем child-theme | Отображение категории и фильтров на мобильном и десктопе |
 
-**Zrobione:** S2-03 — `tech-storefront/woocommerce/archive-product.php` (kopia z Woo). W **mnsk7-storefront**: `woocommerce/archive-product.php` — na archiwum kategorii/tagu: tabela Sandvik-style + чипсы (podkategorie); `content-product-table-row.php`, `parts/24-plp-table.css`. Sklep (bez taksonomii) = siatka kart.
+**Zrobione:** S2-03 — w **mnsk7-storefront**: `woocommerce/archive-product.php` (chips podkategorii, chips atrybutów, tabela), `content-product-table-row.php`, `parts/24-plp-table.css`. Sklep (bez taksonomii) = siatka kart.
 
 ### E3. Карточка товара
 

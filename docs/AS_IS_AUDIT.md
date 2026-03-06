@@ -1,8 +1,8 @@
-# AS-IS Audit — mnsk7-tools.pl
+# AS-Is Audit — mnsk7-tools.pl
 
-**Date:** 2026-03-05  
+**Date:** 2026-03-06  
 **Agent:** 00_as_is_audit  
-**Method:** File system scan (wp-content, themes, mu-plugins, docs), existing DB/catalog notes. Live site not crawled; items unchecked on production are marked **ASSUMPTION**.
+**Method:** File system scan (wp-content/themes/mnsk7-storefront, mu-plugins, docs), VERIFICATION_CHECKLIST, MARKETING_UX_REVIEW, PDP_IMPROVEMENTS_REVIEW. Live/staging not crawled in this run; items unchecked on production are marked **ASSUMPTION**.
 
 ---
 
@@ -10,33 +10,34 @@
 
 | Page type | URL / template | Source / note |
 |-----------|----------------|---------------|
-| **Home** | `/` | `wp-content/themes/tech-storefront/front-page.php` |
-| **Shop (catalog)** | WooCommerce shop base (e.g. `/sklep/`) | WooCommerce; category listing uses `archive-product.php` |
-| **Category** | `/product-category/{slug}/` | `tech-storefront/woocommerce/archive-product.php` |
-| **Product** | `/product/{slug}/` | `tech-storefront/woocommerce/single-product.php`, `content-single-product.php` |
+| **Home** | `/` | `mnsk7-storefront/front-page.php` |
+| **Shop (catalog)** | WooCommerce shop base (e.g. `/sklep/`) | WooCommerce; category uses `archive-product.php` |
+| **Category** | `/product-category/{slug}/` | `mnsk7-storefront/woocommerce/archive-product.php` (chips, attribute filters, table) |
+| **Product** | `/product/{slug}/` | `mnsk7-storefront/woocommerce/single-product.php`, `content-single-product.php` |
 | **Cart** | `/koszyk/` (Polish) or `/cart/` | WooCommerce; blocked from index in `robots.txt` |
-| **Checkout** | `/zamowienie/` or `/checkout/` | WooCommerce; blocked from index in `robots.txt` |
-| **Account** | `/moje-konto/` or `/my-account/` | WooCommerce; `Disallow: /moje-konto/` and `/my-account/` in `robots.txt` |
-| **Search** | `/?s=...` or `/search/` | `Disallow: /search/` and `Disallow: /*?s=` in `robots.txt` |
-| **Policy / service** | | |
-| — Delivery & payments | Page using template "Dostawa i płatności" | `tech-storefront/page-dostawa.php` |
-| — Contact | Page using template "Kontakt" | `tech-storefront/page-kontakt.php` |
-| — SEO landing (CNC) | e.g. `/cnc-frezy/` or page with template | `tech-storefront/page-cnc-frezy.php` |
-| — Material landings | e.g. frezy-aluminium, frezy-mdf, frezy-stali | `page-frezy-aluminium.php`, `page-frezy-mdf.php`, `page-frezy-stali.php` |
+| **Checkout** | `/zamowienie/` or `/checkout/` | WooCommerce; blocked from index |
+| **Account** | `/moje-konto/` or `/my-account/` | WooCommerce; Disallow in `robots.txt` |
+| **Search** | `/?s=...` or `/search/` | Disallow in `robots.txt` |
+| **Delivery** | Page with template "Dostawa i płatności" | `mnsk7-storefront/page-dostawa.php` |
+| **Contact** | "Kontakt" | `mnsk7-storefront/page-kontakt.php` |
+| **SEO landing (CNC)** | e.g. `/cnc-frezy/` | `mnsk7-storefront/page-cnc-frezy.php` |
+| **Material landings** | frezy-aluminium, frezy-mdf, frezy-stali | `page-frezy-*.php`, `page-category-landing.php` |
 
-**ASSUMPTION:** Exact shop/cart/checkout/account slugs depend on WooCommerce permalink settings on server; Polish slugs are documented in repo and `robots.txt`.
-### Тема
-- **Parent:** `best-shop` (gradientthemes.com) — готовая коммерческая WP/Woo тема.
-- **Child:** `mnsk7-storefront` — child theme (Template: best-shop), 11 файлов.
-- Child-theme **есть** ✅ — хорошо, правки не потеряются при обновлении parent.
-- Весь кастомный код child: только переопределение цветов и шрифтов через `add_filter('best_shop_settings', ...)`. Логики — нет.
+**ASSUMPTION:** Exact shop/cart/checkout/account slugs depend on WooCommerce permalink settings on server.
 
-### Woo overrides
-- В `best-shop/woocommerce/`: **1 файл** — `content-product.php`.
-- В `mnsk7-storefront/`: Woo overrides **отсутствуют**.
-- **Вывод:** кастомизация Woo — минимальная, почти всё идёт из коробки parent-темы.
+### Тема (актуальное состояние)
 
-**Staging vs production:** Porównanie drogi użytkownika (główna, kategoria, PDP, koszyk, checkout) oraz mapowanie plików — [USER_JOURNEY_STAGING_VS_PROD.md](USER_JOURNEY_STAGING_VS_PROD.md). **Krytyczne:** staging musi mieć osobną bazę (DB_NAME); inaczej zmiana motywu/opcji na staging zmienia prod.
+- **Parent:** Storefront (official WooCommerce theme). В репо: `wp-content/themes/storefront` — деплоится вместе с child.
+- **Child:** `mnsk7-storefront` (Template: storefront). Child-theme есть — правки не теряются при обновлении parent.
+- Кастом: header/footer свои (mnsk7-header, mnsk7-footer), Woo overrides в child (archive-product, content-single-product, single-product, global wrappers, content-product-table-row), CSS parts (01–24 в `assets/css/parts/`).
+
+### Woo overrides (mnsk7-storefront)
+
+- `woocommerce/archive-product.php` — категория: chips подкатегорий, chips атрибутов (`mnsk7_get_archive_attribute_filter_chips`), таблица товаров.
+- `woocommerce/single-product.php`, `content-single-product.php` — PDP: buybox (title, price, availability, key params, CTA, trust badges).
+- `woocommerce/global/wrapper-start.php`, `wrapper-end.php`, `content-product-table-row.php` — обёртки и строка таблицы каталога.
+
+**Staging vs prod:** [USER_JOURNEY_STAGING_VS_PROD.md](USER_JOURNEY_STAGING_VS_PROD.md). Staging: https://staging.mnsk7-tools.pl; отдельная БД; staging-safety mu-plugin (no mail, payments off, blog_public=0).
 
 ---
 
@@ -44,20 +45,19 @@
 
 ### 2.1 Attributes
 
-- **Observed (from prior DB check, staging):** 17 global attributes, e.g. `fi` (Średnica trzpienia), `srednica`, `r`, `er`, `typ-pilnika`, `kat-skosu`, `typ`, `dlugosc-calkowita-l`, `dlugosc-robocza-h`, `zastosowanie`, `wymiary-trzpienia`, `czolo`, `ksztalt`, `kat`. Diameter, shank, length, radius, type present; **ASSUMPTION:** "material" / "coating" / "flutes" may exist under other names or need to be verified in Admin → Attributes.
+- **From code (mnsk7_get_key_param_attributes, mnsk7_get_filter_attribute_order):** srednica, fi (trzpienia), dlugosc-robocza-h, dlugosc-calkowita-l, r, typ, ksztalt, zastosowanie (pa_* variants). **ASSUMPTION:** заполненность по каталогу и наличие материал/покрытие/зубья — проверить в Admin → Attributes и на 3–5 товарах.
 
 ### 2.2 SKU
 
-- **Observed:** 423 product meta records with `_sku`; 0 empty. Format mixed (numeric and codes e.g. H0410070101). Good fill rate.
+- **ASSUMPTION:** 423 product meta with `_sku` (from prior audit); формат смешанный. Проверка: скрипт `scripts/check-db-catalog.sh` или phpMyAdmin.
 
 ### 2.3 Descriptions (structure: benefit vs parameters)
 
-- **ASSUMPTION:** Not verified from code; requires manual check on 3–5 product pages for consistent structure (benefit vs specs vs compatibility). Client interview noted cards are text-heavy without quick access to key parameters.
+- **ASSUMPTION:** Не проверено по коду; нужна ручная проверка 3–5 карточек (польза vs спецификации vs совместимость). Клиент: карточки перегружены текстом, нет быстрого доступа к параметрам — частично закрыто блоками «Kluczowe parametry» и «Do czego» в PDP.
 
 ### 2.4 Photos
 
-- **Alt/title:** Staging DB: 1690 attachments; 56 with non-empty alt, **1634 with empty/missing alt** (~97%) — high SEO/accessibility risk.
-- **Style/count/size:** **ASSUMPTION.** Repo/docs note ~34k files in uploads, large PNGs (3–4 MB), hashed filenames; WebP rare (~0.5%). Consistent style and per-product count not verified in code.
+- **ASSUMPTION (prior):** ~97% изображений без alt — высокий SEO/accessibility риск. Размеры/WebP: docs отмечают тяжёлые PNG (3–4 MB), мало WebP.
 
 ---
 
@@ -65,19 +65,19 @@
 
 ### 3.1 CTA, price, delivery, returns near CTA
 
-- **Observed:** Theme uses `woocommerce_single_product_summary` (price, add-to-cart). MU-plugin `inc/delivery.php` provides free-shipping notice in cart/checkout; product-card and checkout logic in `mu-plugins/inc/product-card.php`, `checkout.php`. Docs (UI_SPEC, WOO_CONVERSION_REWORK_PLAN) require single primary CTA "Dodaj do koszyka" and delivery/VAT visible — **ASSUMPTION:** placement and clarity on live PDP need visual check.
+- **Observed:** PDP — `woocommerce_single_product_summary`: price (15), availability (8), key params (21), add-to-cart (30), trust badges (32). MU-plugin: `mnsk7_single_product_availability`, `mnsk7_single_product_trust_badges`, `mnsk7_dostawa_vat_html`. «X osób kupiło» (total_sales) в trust badges — рядом с CTA. **ASSUMPTION:** визуальная заметность и порядок на живой странице — проверить на staging.
 
 ### 3.2 Filters / sort
 
-- **Observed:** Four filter plugins cited in docs (filter-everything, woo-product-filter, woocommerce-products-filter, woof-by-category) — conflict and duplicate URL risk. Child theme hides `.woocommerce-ordering` in `.custom_product_widget` (style.css). **ASSUMPTION:** Which filter is primary and whether sort/filters are useful/sufficient on category pages — manual check.
+- **Observed:** В теме — chips по таксономии и атрибутам в `archive-product.php`; `woocommerce_product_query` в theme добавляет `tax_query` по `filter_<attr>`. MU-plugin деактивирует woo-product-filter и wc-product-table-lite при первом заходе в admin. **ASSUMPTION:** на проде — какие фильтры активны и индексируются ли URL фильтров — ручная проверка.
 
 ### 3.3 Mobile
 
-- **ASSUMPTION:** Client feedback: "poor mobile version"; not verified in repo (no viewport or mobile-specific audit in code).
+- **Observed:** Viewport в header; CSS parts 20 (tablet), 21 (mobile), 22 (touch targets). **ASSUMPTION:** качество мобильного UX и Core Web Vitals — Lighthouse/ручная проверка.
 
 ### 3.4 Trust (policies, guarantee, reviews)
 
-- **Observed:** Delivery page template (`page-dostawa.php`), Contact template (`page-kontakt.php`). Shortcodes for Allegro trust/rating and reviews (`[mnsk7_rating]`, `[mnsk7_allegro_reviews]`, `[mnsk7_allegro_trust]`) in `mu-plugins/inc/shortcodes.php`. FAQ sets in `inc/faq.php` (dostawa, produkt, sklep). **ASSUMPTION:** Visibility of policies and reviews on key pages (PDP, footer) not confirmed on live site.
+- **Observed:** Шаблоны dostawa, kontakt; shortcodes `[mnsk7_rating]`, `[mnsk7_bestsellers]`, `[mnsk7_dostawa_vat]`; trust badges в PDP и footer на shop/product/cart/checkout. **ASSUMPTION:** видимость политик и отзывов в футере/на ключевых страницах — проверить на сайте.
 
 ---
 
@@ -85,35 +85,31 @@
 
 ### 4.1 Title / H1 on categories and products
 
-- **ASSUMPTION:** Not derivable from code; needs browser/Search Console check for unique, non-template Title/H1 on category and product pages.
+- **Observed:** Theme: `document_title_parts` fallback для главной (AS_IS_STAGING_TOP5). **ASSUMPTION:** уникальные Title/H1 по категориям и товарам — GSC или View Source.
 
 ### 4.2 Duplicates, thin pages (filters)
 
-- **Observed:** Multiple filter plugins can create many parameter URLs. **ASSUMPTION:** Whether filter URLs are indexed and whether noindex/canonical is set depends on plugin and Yoast; needs GSC/URL check.
+- **ASSUMPTION:** URL фильтров (query params) — индексация и noindex/canonical зависят от плагинов и Yoast; проверить в GSC.
 
 ### 4.3 Indexing (robots.txt, sitemap)
 
-- **Observed (repo root `robots.txt`):**  
-  Disallow: `/wp-admin/`, `/xmlrpc.php`, `/wp-login.php`, `/cart/`, `/checkout/`, `/my-account/`, `/moje-konto/`, `/author/`, `*/feed/`, `*/embed/`, `*/trackback/`, `/search/`, `/*?s=`, `/*?add-to-cart=`, `/*?utm_*`, `/*?openstat=`.  
-  Allow: `/wp-content/uploads/`, `/wp-content/themes/`, `/wp-content/plugins/`, `/*.js$`, `/*.css$`.  
-  Sitemap: `https://mnsk7-tools.pl/sitemap_index.xml`.
-- **Note:** No `Disallow: /?` in repo; production may differ. Yoast and sitemap referenced in docs.
+- **Repo `robots.txt`:** Disallow: wp-admin, xmlrpc, wp-login, cart, checkout, my-account, moje-konto, author, feed, embed, trackback, search, ?s=, add-to-cart, utm_*, openstat. Sitemap: sitemap_index.xml. **ASSUMPTION:** прод может отличаться.
 
 ### 4.4 Schema (Product, BreadcrumbList, FAQ)
 
-- **Observed:** Yoast SEO used; duplicate schema from `schema-and-structured-data-for-wp` noted in docs — risk of double JSON-LD. BreadcrumbList/FAQ not verified in code; **ASSUMPTION:** Yoast handles Product/BreadcrumbList; FAQ schema depends on FAQ blocks/shortcodes.
+- **ASSUMPTION:** Yoast SEO; дубли schema с schema-and-structured-data-for-wp отмечены в docs — риск двойного JSON-LD.
 
 ---
 
 ## 5. Performance
 
-### 5.1 Heavy images, CLS/LCP sources
+### 5.1 Heavy images, CLS/LCP
 
-- **Observed:** Docs and prior audit: ~34k files in uploads, large PNGs (3–4 MB), few WebP. Product images are likely LCP elements. **ASSUMPTION:** Actual LCP/CLS values and which elements cause layout shift need real-device or Lighthouse run.
+- **From docs:** большие PNG, мало WebP. PDP/PLP изображения — кандидаты в LCP. **ASSUMPTION:** фактические LCP/CLS — Lighthouse/Real User Monitoring.
 
 ### 5.2 Caching (exclusions for cart/checkout)
 
-- **Observed:** LiteSpeed Cache and Seraphinite Accelerator mentioned as active; WP Rocket config folder empty; Redis object cache. **ASSUMPTION:** Cart/checkout/my-account exclusion must be verified in active cache plugin settings on server.
+- **ASSUMPTION:** Исключения cart/checkout/my-account должны быть в настройках активного кеш-плагина на сервере.
 
 ---
 
@@ -121,39 +117,54 @@
 
 ### 6.1 Theme
 
-- **Parent:** `best-shop` (gradientthemes.com), commercial Woo theme.
-- **Child:** `tech-storefront` (Template: best-shop). Child theme present; customisation via `add_filter('best_shop_settings', ...)` (colors, fonts, header layout `woocommerce-bar`, preloader off, logo width, layout, footer, sidebar for Woo left).
+- **Parent:** Storefront. **Child:** mnsk7-storefront. Кастомизация: свой header/footer, отключение части storefront_header/footer, свои Woo шаблоны и CSS parts.
 
-### 6.2 Woo overrides
+### 6.2 Woo overrides (child)
 
-- **best-shop:** `woocommerce/content-product.php` (loop item).
-- **tech-storefront:** `woocommerce/archive-product.php`, `woocommerce/single-product.php`, `woocommerce/content-single-product.php`. No loop override in child; product loop styling in `assets/css/mnsk7-product.css`.
+- archive-product.php, single-product.php, content-single-product.php, global/wrapper-start|end, content-product-table-row.php.
 
 ### 6.3 Plugins (from docs; not re-scanned)
 
-- **Conflicts/duplicates:** 3+ filter plugins; 2× Przelewy24 (gateway vs Raty to confirm); 2× wishlist; 2× page builder (Elementor, Beaver Builder); 2× profile (Ultimate Member, Profile Builder); 2× GTM; 2× schema (Yoast + schema-and-structured-data-for-wp); 2× Facebook (facebook-for-woocommerce, official-facebook-pixel).
-- **Cache:** LiteSpeed + Seraphinite + (WP Rocket unclear); Redis object cache. **ASSUMPTION:** Full plugin list and active state only on server.
+- Конфликты/дубли ранее отмечены: несколько фильтров, 2× Przelewy24, 2× wishlist, 2× page builder, 2× profile, 2× GTM, 2× schema, 2× Facebook. Кеш: LiteSpeed/Seraphinite/WP Rocket — уточнять на сервере. **ASSUMPTION:** полный список активных плагинов только на хосте.
 
-### 6.4 Child theme custom code
+### 6.4 Custom code
 
-- **Location:** `wp-content/themes/tech-storefront/`  
-  `functions.php`: theme settings, footer copyright override, custom header, parent/Inter font, preloader script, mnsk7-product.css enqueue, menu filter adding product categories under "Sklep".  
-  `footer.php`, `front-page.php`, page templates (dostawa, kontakt, cnc-frezy, frezy-aluminium, frezy-mdf, frezy-stali).  
-  `style.css`: CSS for product widget, pagination, add-to-cart, hover, wishlist, accessibility, Woo bar, search, preloader, newsletter, currency, custom widget.
+- **Theme:** `mnsk7-storefront/functions.php` — enqueue, fonts, storefront hooks, header actions, breadcrumbs, body class; page templates (dostawa, kontakt, cnc-frezy, frezy-*, category-landing, seo).
+- **MU-plugins (repo):** `mnsk7-tools.php` (bootstrap, xmlrpc block, deactivate filter/table plugins, parent theme notice, nav menu filter, key params, availability, trust/dostawa/VAT, shortcodes rating/bestsellers/instagram), `staging-safety.php`, `automation-by-installatron.php`. Отдельной папки `inc/` в репо нет — вся логика в одном MU-файле.
 
-### 6.5 Custom code outside theme
+### 6.5 Security
 
-- **Repo root `mu-plugins/`:**  
-  `mnsk7-tools.php` (bootstrap), `staging-safety.php`; `inc/`: constants, loyalty, product-card, delivery, shortcodes, seo, faq, checkout, woo-ux, performance.  
-  **ASSUMPTION:** Deploy syncs this folder to `wp-content/mu-plugins/` on server (see DEPLOY_PLAYBOOK / STAGING_AND_GITHUB). xmlrpc blocked in mu-plugin (P0-03).
-
-### 6.6 Security
-
-- **Observed:** limit-login-attempts-reloaded in docs; xmlrpc blocked in mu-plugin (403 on `XMLRPC_REQUEST`). user-role-editor mentioned. **ASSUMPTION:** Backups (plugin or host), `DISALLOW_FILE_EDIT`, and role review not confirmed in repo.
+- xmlrpc blocked in mu-plugin (403 on XMLRPC_REQUEST). **ASSUMPTION:** limit-login-attempts, backups, DISALLOW_FILE_EDIT — на сервере.
 
 ---
 
-## 7. Report file paths (saved)
+## 7. Вёрстка и CSS (as-is)
+
+Цель: зафиксировать все недочёты по внешнему виду для последующего исправления (в т.ч. «поле поиска меньше слова поиск», «X osób kupiło» незаметно — уже исправлено в коде: trust рядом с CTA).
+
+### 7.1 Наблюдения из кода и отчётов
+
+| Проблема | Где | Приоритет |
+|----------|-----|-----------|
+| **Дубли в header** | В `header.php` внутри `.mnsk7-header__nav` продублированы: второй логотип (site-branding), второе меню (main-navigation), второй блок Moje konto + koszyk (mnsk7-header-actions). Есть лишний `<?php endif; ?>` без пары `if`. В DOM два меню и два набора действий. | P0 (конверсия, доверие, доступность) |
+| Контраст и читаемость | MARKETING_UX_REVIEW: тёмный текст на тёмном фоне в ряде секций (header/listing/single). | P0 |
+| Header выглядит как staging | Красный staging-баннер, слабая иерархия — «не готовый к продаже» вид. | P1 |
+| Нет единого design system | Разные стили секций — эффект «склейки». | P1 |
+| Дубли пунктов меню | «Dostawa i płatności» и «Dostawa i platnosci» (разное написание) в навигации. | P1 |
+| Поле поиска | Агентское требование: «поле для поиска меньше чем слово поиск» — проверить на staging (где выводится поиск). | P2 |
+| Длина заголовка карточки | Исправлено: line-clamp 2 в 05-plp-cards.css. | — |
+| «X osób kupiło» | В коде уже в buybox (priority 32), рядом с CTA; визуальная заметность — на усмотрение UI. | P2 |
+
+### 7.2 Что проверить вручную (staging/prod)
+
+- Размер и читаемость поля поиска vs подпись «Поиск».
+- Контраст текста и цен на всех ключевых экранах (AA).
+- Отсутствие дублей меню/лого/actions после правки header.
+- Мобильный вид: touch targets, порядок блоков на PDP.
+
+---
+
+## 8. Report file paths
 
 | Document | Path |
 |----------|------|
@@ -163,8 +174,9 @@
 
 ---
 
-## 8. Progress (staging, deploy, scripts)
+## 9. Progress (staging, deploy, scripts)
 
-- Staging: https://staging.mnsk7-tools.pl; separate DB; `WP_ENVIRONMENT_TYPE=staging`; staging-safety mu-plugin (no mail, payments off, blog_public=0).
-- Deploy: GitHub Actions push → rsync mu-plugins + themes to staging.
-- Catalog check: `scripts/check-db-catalog.sh` (run with `DB_PASS` or use printed SQL in phpMyAdmin); results used in §2.
+- Staging: https://staging.mnsk7-tools.pl; separate DB; `WP_ENVIRONMENT_TYPE=staging`; staging-safety mu-plugin.
+- Deploy: rsync theme + mu-plugins (Makefile: deploy-files, staging-refresh).
+- Catalog: `scripts/check-db-catalog.sh` (DB_PASS); `scripts/wp-create-pages.py` для SEO-страниц.
+- Weryfikacja w kodzie: [VERIFICATION_CHECKLIST.md](VERIFICATION_CHECKLIST.md).

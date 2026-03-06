@@ -1,44 +1,27 @@
-/* 06-single-product — PDP jak w dobrym sklepie (product_card_visual, UI_SPEC) */
-
-.single-product div.product {
-  margin-top: 0;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 2.5rem;
-  align-items: start;
-  max-width: var(--content-max);
-  margin-left: auto;
-  margin-right: auto;
-  padding: 0 1.5rem 2rem;
-/* 06-single-product — PDP jak w dobrym sklepie (product_card_visual, UI_SPEC_V2) */
+/* 06-single-product — PDP (product_card_visual, UI_SPEC_V2) */
 
 .single-product div.product {
   margin-top: 1.5rem;
   display: flex;
   flex-wrap: wrap;
   gap: 2.5rem;
+  max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 1.5rem 2rem;
 }
 
-@media (max-width: 900px) {
-  .single-product div.product {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-}
-
-/* Lewa kolumna: galeria */
 .single-product div.product .images {
   position: sticky;
   top: 1rem;
   margin-bottom: 0;
+  flex: 1 1 320px;
+  min-width: 280px;
+  max-width: 48%;
 }
 
 .single-product .images .woocommerce-product-gallery__wrapper {
   margin: 0;
-  flex: 1 1 320px;
-  min-width: 280px;
-  max-width: 48%;
-  margin-bottom: 0;
 }
 
 .single-product div.product .summary.mnsk7-pdp-buybox {
@@ -51,7 +34,6 @@
   gap: 0;
 }
 
-/* ——— Galeria ——— */
 .single-product .images img {
   border-radius: var(--r-md);
   width: 100%;
@@ -90,7 +72,6 @@
   border-color: var(--color-primary);
 }
 
-/* Prawa kolumna: buy box */
 .single-product div.product .summary {
   padding: 0;
   display: flex;
@@ -98,31 +79,20 @@
   gap: 0;
 }
 
-/* 1. Tytuł — wyraźna hierarchia */
 .single-product .summary .product_title {
   font-size: clamp(1.25rem, 2.5vw, var(--fs-2xl));
   font-weight: 800;
   color: var(--color-text);
   margin: 0 0 0.5rem;
   line-height: 1.25;
-/* ——— Buy box: hierarchia ——— */
-.single-product .summary .product_title {
-  font-size: var(--fs-xl);
-  font-weight: 800;
-  color: var(--color-text);
-  margin: 0 0 0.5rem;
-  line-height: 1.3;
 }
 
-/* 2. Cena — duża, czytelna */
 .single-product .summary .price {
   font-size: var(--fs-2xl);
   font-weight: 800;
-  color: var(--color-primary);
-  margin: 0 0 1rem;
-  line-height: 1.2;
   color: var(--color-primary-dark);
   margin: 0 0 0.75rem;
+  line-height: 1.2;
 }
 
 .single-product .summary .price del {
@@ -136,7 +106,6 @@
   text-decoration: none;
 }
 
-/* Rating (jeśli jest) */
 .single-product .summary .woocommerce-product-rating {
   margin-bottom: 0.75rem;
 }
@@ -146,42 +115,18 @@
   font-size: var(--fs-base);
 }
 
-/* Dostępność / stock — jedna linia przy CTA */
-.single-product .summary .stock {
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  color: var(--color-success);
-  margin-bottom: 1rem;
-}
-
-.single-product .summary .stock.out-of-stock {
-  color: var(--color-error, #dc2626);
-}
-
-/* Blok „Kluczowe parametry” (tabela / dl z atrybutów) */
-.mnsk7-pdp-key-params {
-  margin-bottom: 1.25rem;
-  padding: 1rem 1.25rem;
-  background: var(--color-surface);
-  border-radius: var(--r-md);
-/* Dostępność — przy CTA */
 .single-product .summary .mnsk7-product-availability {
   margin: 0 0 1rem;
   padding: 0.5rem 0;
   font-size: var(--fs-sm);
   font-weight: 600;
-  color: var(--color-success, #0d9488);
+  color: var(--color-accent);
 }
 
 .single-product .summary .mnsk7-product-availability.out-of-stock {
   color: var(--color-text-muted);
 }
 
-.single-product .summary .mnsk7-product-availability .mnsk7-product-trust__badge-icon {
-  margin-right: 0.35rem;
-}
-
-/* Kluczowe parametry — tabela 2 kolumny */
 .mnsk7-product-key-params {
   margin: 1rem 0;
   padding: 1rem 1.25rem;
@@ -218,7 +163,6 @@
   color: var(--color-text);
 }
 
-/* Zastosowanie — oddzielny blok */
 .mnsk7-product-zastosowanie {
   margin: 1rem 0;
   padding: 1rem 1.25rem;
@@ -241,74 +185,12 @@
   color: var(--color-text-secondary);
 }
 
-/* Quantity + CTA — jeden dominujący przycisk */
-.single-product .summary .quantity {
-  margin-right: 0.75rem;
-}
-
-.single-product .summary .quantity .qty {
-  border: 1px solid var(--color-border);
-}
-
-.mnsk7-pdp-key-params__title {
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  color: var(--color-text-secondary);
-  margin: 0 0 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.02em;
-}
-
-.mnsk7-pdp-key-params table,
-.mnsk7-pdp-key-params dl {
-  margin: 0;
-  font-size: var(--fs-sm);
-}
-
-.mnsk7-pdp-key-params tr,
-.mnsk7-pdp-key-params dt,
-.mnsk7-pdp-key-params dd {
-  margin: 0;
-  padding: 0.35rem 0;
-  border-bottom: 1px solid var(--color-border);
-}
-
-.mnsk7-pdp-key-params tr:last-child td,
-.mnsk7-pdp-key-params dt:last-of-type,
-.mnsk7-pdp-key-params dd:last-of-type {
-  border-bottom: none;
-}
-
-.mnsk7-pdp-key-params th,
-.mnsk7-pdp-key-params td,
-.mnsk7-pdp-key-params dt {
-  padding-right: 1rem;
-  color: var(--color-text-secondary);
-  font-weight: 500;
-}
-
-.mnsk7-pdp-key-params td:last-child,
-.mnsk7-pdp-key-params dd {
-  color: var(--color-text);
-  font-weight: 600;
-}
-
-.mnsk7-pdp-key-params a {
-  color: var(--color-primary);
-  text-decoration: none;
-}
-
-.mnsk7-pdp-key-params a:hover {
-  text-decoration: underline;
-}
-
-/* Formularz: ilość + CTA — jeden dominujący przycisk */
-.single-product .summary .cart {
-  margin: 1rem 0 0;
+.single-product .summary form.cart {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
+  margin: 1rem 0;
 }
 
 .single-product .summary .quantity {
@@ -321,7 +203,6 @@
   padding: 0.5rem 0.75rem;
   font-size: var(--fs-base);
   font-family: var(--font-base);
-  width: 80px;
   width: 72px;
   text-align: center;
 }
@@ -338,8 +219,7 @@
   cursor: pointer;
   transition: background 0.15s ease, transform 0.1s ease;
   min-height: 48px;
-  box-shadow: 0 2px 8px rgba(12, 125, 219, 0.35);
-  box-shadow: 0 2px 8px rgba(12, 125, 219, 0.3);
+  box-shadow: var(--shadow-sm);
 }
 
 .single-product .summary .single_add_to_cart_button:hover {
@@ -348,26 +228,11 @@
   transform: translateY(-1px);
 }
 
-/* Trust strip — jedna linia pod CTA */
-.mnsk7-pdp-trust {
-  margin-top: 1.25rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-border);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  font-size: var(--fs-sm);
-  color: var(--color-text-secondary);
-/* Formularz ATC w jednym rzędzie */
-.single-product .summary form.cart {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.75rem;
-  margin: 1rem 0;
+.single-product .summary .single_add_to_cart_button:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
-/* Trust strip — kompaktowo pod CTA */
 .mnsk7-product-trust {
   display: flex;
   flex-wrap: wrap;
@@ -387,7 +252,7 @@
 }
 
 .mnsk7-product-trust__badge-icon {
-  color: var(--color-success, #0d9488);
+  color: var(--color-accent);
   font-style: normal;
 }
 
@@ -395,31 +260,12 @@
   color: var(--color-warning);
 }
 
-/* Dostawa/VAT z mu-plugin (hook 35) */
 .single-product .summary .mnsk7-dostawa-vat {
   margin: 0.75rem 0 0;
   font-size: var(--fs-xs);
   color: var(--color-text-muted);
 }
 
-/* Rating */
-.single-product .summary .woocommerce-product-rating {
-  margin-bottom: 0.5rem;
-}
-
-.mnsk7-pdp-trust__item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.mnsk7-pdp-trust__item::before {
-  content: "✓";
-  color: var(--color-success);
-  font-weight: 700;
-}
-
-/* Meta (kategorie, tagi) — drugoplanowe */
 .single-product .summary .product_meta {
   margin-top: 1.5rem;
   padding-top: 1rem;
@@ -432,11 +278,6 @@
   color: var(--color-primary);
 }
 
-/* Zakładki (Opis, Dodatkowe, Recenzje) — poniżej */
-.woocommerce-tabs {
-  margin-top: 2.5rem;
-  grid-column: 1 / -1;
-/* Taby (Opis, Dodatkowe, Recenzje) — poniżej folda */
 .woocommerce-tabs {
   margin-top: 2.5rem;
   width: 100%;
@@ -469,6 +310,8 @@
   margin-bottom: -2px;
   transition: color 0.15s ease, border-color 0.15s ease;
   text-decoration: none;
+  min-height: 44px;
+  box-sizing: border-box;
 }
 
 .woocommerce-tabs ul.tabs li a:hover {
@@ -493,17 +336,30 @@
   margin-bottom: 0.75rem;
 }
 
-/* Related / Powiązane — pełna szerokość */
 .single-product .related.products,
 .single-product .upsells.products {
-  grid-column: 1 / -1;
   width: 100%;
   margin-top: 2rem;
-/* Mobile: buy box pełna szerokość, czytelny CTA */
-@media (max-width: 768px) {
-  .single-product div.product .images,
+}
+
+@media (max-width: 900px) {
+  .single-product div.product {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .single-product div.product .images {
+    max-width: 100%;
+  }
+
   .single-product div.product .summary.mnsk7-pdp-buybox {
     max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .single-product div.product {
+    padding: 0 1rem 1.5rem;
   }
 
   .single-product .summary .single_add_to_cart_button {

@@ -1,8 +1,10 @@
 # UI Spec — mnsk7-tools.pl
 
-**⚠️ SUPERSEDED — zastąpiony przez docs/UI_SPEC_V2.md.** Ten plik tylko do odniesienia historycznego. Wszystkie nowe decyzje i implementacja: UI_SPEC_V2.
+**⚠️ SUPERSEDED — zastąpiony przez [docs/UI_SPEC_V2.md](UI_SPEC_V2.md).** Ten plik tylko do odniesienia historycznego. Wszystkie nowe decyzje i implementacja: **UI_SPEC_V2**.
 
 *(Wyjście 09_ui_designer; wejście: REQUIREMENTS, CONTACT_DELIVERY_LOYALTY, skills)*
+
+**Weryfikacja 2026-03-06:** 09_ui_designer potwierdza UI_SPEC_V2 jako aktualną specyfikację. Zawiera: design tokens (§3), komponenty (§4), hierarchię konwersji (§5), spec ekranów (§6: Header, Home, PLP, PDP, Footer, Kontakt, Dostawa), listę do usunięcia (§7), DoD (§8), handoff do 05/04 (§9), mapowanie CONTACT_DELIVERY_LOYALTY (§10).
 
 Specyfikacja układu i treści: header, footer, strona główna, karta produktu. **Priorytet: wygoda użytkownika i standardy e-commerce** — życzenia klienta stosujemy tylko gdy nie kolidują z UX.
 

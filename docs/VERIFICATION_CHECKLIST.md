@@ -3,7 +3,13 @@
 Sprawdzone w repozytorium (main). Po deployu warto zweryfikować na stagingu w przeglądarce.
 
 ## Błąd krytyczny po deployu
-W `wp-config.php` włącz tymczasowo: `define('WP_DEBUG', true);` i `define('WP_DEBUG_LOG', true);` — w `wp-content/debug.log` pojawi się dokładny komunikat (np. brakująca funkcja, parse error). Motyw ma zabezpieczenia: fallback menu jako nazwa funkcji, sprawdzenie `function_exists` przed `mnsk7_get_archive_attribute_filter_chips`, `is_object`/`method_exists` zamiast `instanceof WP_Query`, `is_readable` dla parent theme.
+W `wp-config.php` włącz tymczasowo: `define('WP_DEBUG', true);` i `define('WP_DEBUG_LOG', true);` — w `wp-content/debug.log` pojawi się dokładny komunikat. Zob. też **docs/DEPLOY_PROTOCOL.md**.
+
+## Protokół deployu i weryfikacja (DEPLOY_PROTOCOL)
+- **Przed pushem:** `bash scripts/validate-theme-php.sh` (wymaga php w PATH).
+- **W CI:** workflow uruchamia `php -l` na wszystkich .php motywu przed rsync — przy błędzie deploy się nie wykona.
+- **Na staging po deployzie:** `wc -l header.php`, `php -l header.php`, `nl -ba header.php | tail -30`. Porównanie md5 pliku lokalnie i na serwerze: czy na stagingu jest ten sam plik co w repo.
+- **Źródło prawdy:** origin/main. Deploy = rsync z repo (mu-plugins, themes); staging nie musi być git — ważne, że w main jest poprawny kod i CI go waliduje.
 
 ## Header i footer
 - [x] **header.php** — klasa `mnsk7-header`, `mnsk7-header__inner`, logo + `wp_nav_menu` + Moje konto + koszyk. Nie zależy od `do_action('storefront_header')`.

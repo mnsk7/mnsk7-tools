@@ -22,8 +22,10 @@
   --color-border-strong:  #d4d3b8;
   --color-primary:        #0c7ddb;
   --color-primary-hover:   #0a6bc2;
-  --color-primary-dark:   #0a5a9e;
+  --color-primary-pressed: #09508a;
+  --color-primary-dark:    #0a5a9e;
   --color-accent:         #22c55e;
+  --color-focus:          #93c5fd;
   --color-warning:        #f59e0b;
   --color-danger:         #ef4444;
   --color-white:          #ffffff;
@@ -51,8 +53,17 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.10);
 
-  /* Layout */
+  /* Layout (UI_SPEC_V2 §3.3: mobile padding 16, desktop max 1200) */
   --content-max: 1200px;
   --header-h:    64px;
+  --space-4:  4px;
+  --space-8:  8px;
+  --space-12: 12px;
+  --space-16: 16px;
+  --space-24: 24px;
+  --space-32: 32px;
+  --space-40: 40px;
+  --space-48: 48px;
+  --space-64: 64px;
 }
 

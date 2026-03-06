@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 				<h3 class="mnsk7-footer__title">Kontakt</h3>
 				<p>Email: <a href="mailto:office@mnsk7.pl">office@mnsk7.pl</a></p>
 				<p>Tel: <a href="tel:+48451696511">+48 451696511</a></p>
-				<p>Pn.–pt. 9.00–17.00, sb. 10.00–12.00</p>
+				<p>Pn.–pt. 9.00–17.00, sb. 10.00–12.00, nd. zamknięte</p>
 				<p>Instagram: <a href="<?php echo esc_url( defined( 'MNK7_INSTAGRAM_URL' ) ? MNK7_INSTAGRAM_URL : 'https://www.instagram.com/mnsk7tools/' ); ?>" target="_blank" rel="noopener">@mnsk7tools</a></p>
 			</div>
 			<div class="mnsk7-footer__col">

@@ -13,10 +13,20 @@
 
 ---
 
-## Z QA / 08_qa_security (2026-03-05)
+## Z 06_devops_github + 07_server_ops (2026-03-06)
+
+- [x] Zaktualizować dokumentację: theme w repozytorium = storefront + mnsk7-storefront (DEPLOY_PLAYBOOK, STAGING_AND_GITHUB, SERVER_OPS).
+- [x] Poprawka: deploy trigger = push do `main` (nie staging) w SERVER_OPS_CYBERFOLKS.
+- [x] Rollback w DEPLOY_PLAYBOOK: mnsk7-storefront (zamiast tech-storefront).
+- [x] Po wdrożeniu: dopisać w checklist link do QA_REPORT §5 (weryfikacja UI).
+
+---
+
+## Z QA / 08_qa_security (2026-03-05, 2026-03-06)
 
 - [ ] Przed S1-08 (wyłączenie 3 filtrów): sprawdzić w Search Console, które URL-e filtrów są w indeksie; zaplanować przekierowania (R02).
-- [ ] Po wdrożeniu S1-07: w smoke dodać weryfikację strony pojedynczego produktu (200, brak błędu PHP, hooki Woo).
+- [x] Po wdrożeniu S1-07: w smoke dodać weryfikację strony pojedynczego produktu — w QA_REPORT jako S8.
+- [ ] Po deploy na staging: wykonać smoke S1–S9 oraz weryfikację UI (QA_REPORT §5: UI-1–UI-5 — header, PDP, footer, tap targets, mobile).
 
 ---
 

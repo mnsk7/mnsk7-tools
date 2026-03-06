@@ -35,7 +35,7 @@
 | SEC-1 | Minimum pluginów | Usunięcie duplikatów (filtr, wishlist, builder, GTM, schema, Pixel) — według AS_IS_BACKLOG | ☐ |
 | SEC-2 | Aktualizacje WP i pluginów | Jądro i krytyczne pluginy na aktualnych wersjach; test na staging przed prod | ☐ |
 | SEC-3 | Ograniczenie logowania | limit-login-attempts-reloaded aktywny i skonfigurowany | ☐ |
-| SEC-4 | xmlrpc.php | Zablokowany (403) w mu-plugin mnsk7-tools.php — P0-03 | ☐ (zweryfikować po deploy) |
+| SEC-4 | xmlrpc.php | Zablokowany (403) w mu-plugin mnsk7-tools.php — P0-03 | ✅ w kodzie; ☐ zweryfikować po deploy: `curl -I https://staging.mnsk7-tools.pl/xmlrpc.php` → 403 |
 | SEC-5 | Backupy | Harmonogram backupów BД + plików (UpdraftPlus lub inny) — P0-04 | ☐ |
 | SEC-6 | Uprawnienia plików | Katalogi 755, pliki 644; wp-config poza web root lub z odpowiednimi prawami | ☐ |
 
@@ -68,19 +68,34 @@ Rekomendacja: najpierw S1-02, S1-03, potem pełny smoke (S1–S7) na staging.
 
 ---
 
-## 5. Otwarte punkty / inbox
+## 5. Weryfikacja UI/regresja (po 05+04, 2026-03-06)
+
+Po wdrożeniu zmian z 05_theme_ux_frontend i 04_woo_engineer (tokeny, PDP CSS, footer, tap targets, usunięcie duplikatów w headerze):
+
+| # | Sprawdzenie | Kryterium | Status |
+|---|-------------|-----------|--------|
+| UI-1 | Header | Jedno menu, jedno logo, jeden blok Moje konto + Koszyk; brak zduplikowanych elementów w DOM | ☐ |
+| UI-2 | PDP (karta produktu) | Layout: galeria + buy box; bloki: tytuł, cena, dostępność, key params, zastosowanie, form.cart, trust; brak błędów CSS / brakujących reguł | ☐ |
+| UI-3 | Footer | Trzy kolumny (Kontakt, Dostawa, Informacje); godziny z „nd. zamknięte”; linki Sklep, Dostawa i płatności, Kontakt, Regulamin, Polityka | ☐ |
+| UI-4 | Tap targets (WCAG) | Przyciski Woo min 44px; linki w menu, toggle, Moje konto, Koszyk — min 44px; focus-visible widoczny | ☐ |
+| UI-5 | PDP mobile | CTA pełna szerokość; form.cart w kolumnie; brak overflow | ☐ |
+
+---
+
+## 6. Otwarte punkty / inbox
 
 - Przed wyłączeniem 3 pluginów filtrów (S1-08): sprawdzić w Google Search Console URL-e filtrów w indeksie; zaplanować przekierowania (R02).
-- Po wdrożeniu overrides karty produktu (S1-07): weryfikacja pojedynczego produktu — w checklist powyżej jako S8.
+- Po wdrożeniu overrides karty produktu (S1-07): weryfikacja pojedynczego produktu — w checklist powyżej jako S8. **Zrobione w kodzie** (S1-07); po deploy sprawdzić S8 i sekcję 5 (UI-1–UI-5).
 - Strona „Dostawa i płatności”: utworzyć (jeśli brak) i wstawić `[mnsk7_delivery_rules]` — [HOMEPAGE_AND_PAGES.md](HOMEPAGE_AND_PAGES.md).
 
 W razie znalezionych błędów: opisać w [tasks/000_inbox.md](../tasks/000_inbox.md) i przypisać do sprintu.
 
 ---
 
-## 6. Historia zmian
+## 7. Historia zmian
 
 | Data | Opis |
 |------|------|
 | 2026-03-05 | Utworzenie raportu przez 08_qa_security: checklists smoke, security, performance; powiązanie ze Sprint 01 i AS_IS. |
 | 2026-03-05 | Dodanie S8 (strona produktu), S9 (stopka: kontakt, ETA, Instagram); link do HOMEPAGE_AND_PAGES. |
+| 2026-03-06 | SEC-4: xmlrpc w kodzie zablokowany; do weryfikacji po deploy. Dodana sekcja 5 — weryfikacja UI/regresja po 05+04 (header, PDP, footer, tap targets, mobile). |

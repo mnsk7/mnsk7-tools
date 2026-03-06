@@ -1,8 +1,8 @@
 # Sprint 01
 
-*(Выход агента 01_product_manager)*
+*(Выход агента 01_product_manager; актуализировано 2026-03-06)*
 
-Реально сделать за 1 спринт. Фокус: стабильность (E1), технический задел для каталога и карточки (E7, часть E2/E3).
+Реально сделать за 1 спринт. Фокус: стабильность (E1), технический задел для каталога и карточки (E7, часть E2/E3). Тема: **mnsk7-storefront** (child Storefront).
 
 ---
 
@@ -22,19 +22,19 @@
 | S1-01 | Уточнить плагины оплаты: Przelewy24 и Przelewy24 Raty (рассрочка) — разные приложения, оба оставить. Удалить только реальный дубль (два плагина на один шлюз) (P0-01) | Нет двух плагинов на один и тот же gateway; обычная оплата и рассрочка работают раздельно | Чекаут — оба метода при необходимости; тестовый платёж без дублей |
 | S1-02 | Выбрать один кеш-плагин (LiteSpeed или WP Rocket), отключить остальные (P0-02) | Активен один кеш; Seraphinite и второй отключены | Корзина/чекаут не отдают закешированную страницу другого пользователя |
 | S1-03 | Настроить исключения кеша: cart, checkout, my-account (P1-05) | В настройках кеша эти страницы в exclude | Менять кол-во в корзине, открыть чекаут — контент актуальный |
-| S1-04 | Заблокировать xmlrpc.php (P0-03) | 403 или редирект на запрос к xmlrpc.php | `curl -I https://staging.mnsk7-tools.pl/xmlrpc.php` → 403 |
-
-**Zrobione w kodzie:** w `mnsk7-tools.php` na początku: jeśli `XMLRPC_REQUEST` → `status_header(403); exit;`. Po wdrożeniu MU-plugina xmlrpc zwraca 403.
+| S1-04 | ~~Заблокировать xmlrpc.php (P0-03)~~ | **Zrobione:** mu-plugin `mnsk7-tools.php` — przy `XMLRPC_REQUEST` → `status_header(403); exit;` | Po deploy: `curl -I https://staging.mnsk7-tools.pl/xmlrpc.php` → 403 |
 | S1-05 | Проверить бэкапы; при отсутствии — добавить UpdraftPlus или аналог (P0-04) | Есть расписание бэкапов БД и файлов | Настройки плагина / хостинга |
 
 ### E7 + задел E2/E3. Технический фундамент
 
 | ID | Задача | Критерий готовности | Как тестировать |
 |----|--------|--------------------|-----------------|
-| S1-06 | Создать кастом mini-plugin для бизнес-логики, вынести код из functions.php (P1-06) | Код из child-theme functions.php перенесён в mu-plugin или plugin; тема не ломается | Включить тему, проверить главную и каталог |
-| S1-07 | Добавить Woo overrides для карточки товара в tech-storefront (P1-07) | В child-theme есть копия `single-product/...` или `content-single-product.php`; вывод не сломан | Открыть карточку товара на стейдже |
+| S1-06 | ~~Создать mu-plugin для бизнес-логики (P1-06)~~ | **Zrobione:** `wp-content/mu-plugins/mnsk7-tools.php` — key params, availability, trust, shortcodes, nav filter, xmlrpc block | Tema + MU-plugin działają |
+| S1-07 | ~~Woo overrides карточки в child (P1-07)~~ | **Zrobione:** `mnsk7-storefront/woocommerce/single-product.php`, `content-single-product.php` — buybox, hooki (availability, key params, trust badges) | Karta produktu na stagingu |
 
-**Wykonane (04_woo_engineer / 05_theme_ux_frontend):** S1-06 — utworzono `wp-content/mu-plugins/mnsk7-tools.php`. S1-07 — utworzono `tech-storefront/woocommerce/single-product.php` i `content-single-product.php`. W Sprint 02: rozbudowa content-single-product (blok parametrów, „podstaw dla”).
+**Dodatkowo (2026-03-06):** usunięto duplikaty w headerze (drugie menu, drugi logo, drugi blok Moje konto/Koszyk) — header.php bez zduplikowanego bloku Storefront.
+
+**05_theme_ux_frontend + 04_woo_engineer (2026-03-06):** Wdrożenie zgodnie z UI_SPEC_V2 i ARCHITECTURE: (1) 06-single-product.css — usunięto zduplikowane/obcięte reguły, jedna spójna PDP; (2) 09-footer.css — tylko .mnsk7-footer*, usunięto legacy .site-footer--mnsk7; (3) 01-tokens.css — dodano --color-primary-pressed, --color-focus, skalę spacing (--space-4 … --space-64); (4) 17-buttons.css — min-height 44px (WCAG tap target), :focus-visible; (5) 04-header.css — tap target 44px i focus-visible dla menu, toggle, linków, koszyka; (6) footer.php — godziny „nd. zamknięte”; (7) wersja CSS 3.0.1.
 | S1-08 | Оставить один фильтр-плагин, отключить три остальных (P1-01) | В админке активен один фильтр; перед отключением — проверить Search Console на URL фильтров (R02) | Список плагинов; при необходимости редиректы на новые URL |
 
 ### E2. Каталог — подготовка
@@ -42,7 +42,7 @@
 | ID | Задача | Критерий готовности | Как тестировать |
 |----|--------|--------------------|-----------------|
 | S1-09 | Аудит атрибутов товаров: заполненность материал/Ø/хвостовик/длина/зубья (P1-02) | Отчёт или таблица: какие атрибуты есть, % заполнения по ключевым | WP Admin → Products → Attributes; выборочно товары; при необходимости скрипт по БД |
-| S1-10 | (Опционально) Добавить Woo override страницы категории в child-theme (P3-01) | Если в спринте есть время — копия archive/категории в child для будущей вёрстки | Открыть категорию товаров |
+| S1-10 | ~~Woo override страницы категории (P3-01)~~ | **Zrobione:** `mnsk7-storefront/woocommerce/archive-product.php` — chips podkategorii, chips atrybutów, tabela produktów | Strona kategorii na stagingu |
 
 ---
 

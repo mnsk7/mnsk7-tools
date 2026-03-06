@@ -1,6 +1,6 @@
 # Architecture — mnsk7-tools.pl
 
-*(Выход агента 03_wp_architect)*
+*(Выход агента 03_wp_architect; актуализировано 2026-03-06)*
 
 Подход к теме, шаблоны Woo, данные, плагины, кеш. Только дизайн системы, без кода. Источники: REQUIREMENTS, SEO_PLAN, AS_IS_AUDIT.
 
