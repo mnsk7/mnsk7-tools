@@ -195,6 +195,7 @@
 |-------|-------------|--------|
 | **Header** | Krótszy pasek: mniejsza wysokość, logo, padding, menu/actions. | Zrobione: `--header-h` 48px, padding 0.75rem, logo max 36px, menu/links zwarte (04-header.css, 01-tokens). |
 | **Footer** | Zwarty stop: mniejsze paddingi, nagłówki, bottom bar. | Zrobione: top padding 2rem/1.5rem, grid gap 1.5rem, tytuły fs-base, bottom padding 0.6rem (09-footer.css). |
+| **Karta produktu (PDP)** | Zwarty layout: mniejsze odstępy między blokami, buybox, parametry, CTA, trust. | Zrobione: gap 1.5rem, padding 1rem/1.5rem, key-params/zastosowanie/trust mniejsze marginesy (06-single-product.css). |
 
 ---
 
