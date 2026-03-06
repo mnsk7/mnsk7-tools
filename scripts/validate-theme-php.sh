@@ -7,9 +7,17 @@ ROOT="${1:-.}"
 THEME="${ROOT}/wp-content/themes/mnsk7-storefront"
 FAIL=0
 
-if ! command -v php >/dev/null 2>&1; then
-  echo "Brak php w PATH — pomijam walidację."
-  exit 0
+PHPCMD=""
+if command -v php >/dev/null 2>&1; then
+  PHPCMD="php"
+else
+  for p in /usr/bin/php /usr/local/bin/php /opt/homebrew/bin/php; do
+    if [[ -x "$p" ]]; then PHPCMD="$p"; break; fi
+  done
+fi
+if [[ -z "$PHPCMD" ]]; then
+  echo "Brak php w PATH i w /usr/bin, /usr/local/bin, /opt/homebrew/bin. Zainstaluj PHP (np. brew install php) lub dodaj do PATH."
+  exit 1
 fi
 
 if [[ ! -d "$THEME" ]]; then
@@ -17,11 +25,11 @@ if [[ ! -d "$THEME" ]]; then
   exit 1
 fi
 
-echo "Walidacja PHP: $THEME"
+echo "Walidacja PHP: $THEME (użycie: $PHPCMD)"
 while IFS= read -r -d '' f; do
-  if ! php -l "$f" >/dev/null 2>&1; then
+  if ! "$PHPCMD" -l "$f" >/dev/null 2>&1; then
     echo "FAIL: $f"
-    php -l "$f" 2>&1 || true
+    "$PHPCMD" -l "$f" 2>&1 || true
     FAIL=1
   fi
 done < <(find "$THEME" -name "*.php" -print0)
