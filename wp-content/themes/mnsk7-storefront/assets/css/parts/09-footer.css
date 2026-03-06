@@ -8,17 +8,17 @@
 }
 
 .mnsk7-footer__top {
-  padding: 3rem 0 2rem;
-  border-top: 3px solid var(--color-primary);
+  padding: 2rem 0 1.5rem;
+  border-top: 2px solid var(--color-primary);
 }
 
 .mnsk7-footer__inner {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1rem;
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 2.5rem;
+  gap: 1.5rem 2rem;
 }
 
 .mnsk7-footer__col {
@@ -33,9 +33,9 @@
 
 .mnsk7-footer__title {
   color: #f8fafc;
-  font-size: var(--fs-lg);
+  font-size: var(--fs-base);
   font-weight: 700;
-  margin: 0 0 1rem;
+  margin: 0 0 0.5rem;
 }
 
 .mnsk7-footer__top,
@@ -69,9 +69,9 @@
 
 .mnsk7-footer__bottom {
   background: #020617;
-  padding: 0.875rem 0;
+  padding: 0.6rem 0;
   text-align: center;
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
 }
 
 .mnsk7-footer__copy {
@@ -81,7 +81,7 @@
 @media (max-width: 768px) {
   .mnsk7-footer__inner {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: 1.25rem;
     padding: 0 1rem;
   }
 }

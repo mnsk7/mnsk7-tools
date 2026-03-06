@@ -194,6 +194,7 @@
 | Część | As-is / cel | Status |
 |-------|-------------|--------|
 | **Header** | Krótszy pasek: mniejsza wysokość, logo, padding, menu/actions. | Zrobione: `--header-h` 48px, padding 0.75rem, logo max 36px, menu/links zwarte (04-header.css, 01-tokens). |
+| **Footer** | Zwarty stop: mniejsze paddingi, nagłówki, bottom bar. | Zrobione: top padding 2rem/1.5rem, grid gap 1.5rem, tytuły fs-base, bottom padding 0.6rem (09-footer.css). |
 
 ---
 
