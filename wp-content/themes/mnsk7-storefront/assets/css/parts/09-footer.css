@@ -7,8 +7,31 @@
   background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
   padding: 3.5rem 0 2.5rem;
   border-top: 3px solid var(--color-primary);
-  color: var(--color-white);
+  color: #e2e8f0;
   width: 100%;
+}
+
+/* Force all footer text light — no black on gray */
+.site-footer.site-footer--mnsk7,
+.site-footer.site-footer--mnsk7 *,
+.mnsk7-site-footer-block,
+.mnsk7-site-footer-block *,
+.mnsk7-footer-bottom,
+.mnsk7-footer-bottom * {
+  color: inherit;
+}
+.mnsk7-site-footer-block,
+.mnsk7-footer-bottom {
+  color: #e2e8f0;
+}
+.mnsk7-site-footer-block__col,
+.mnsk7-site-footer-block__col p,
+.mnsk7-site-footer-block__col .mnsk7-contact-info__line {
+  color: #cbd5e1;
+}
+.mnsk7-site-footer-block__col-title,
+.mnsk7-site-footer-block h4.mnsk7-site-footer-block__col-title {
+  color: #f8fafc !important;
 }
 
 .mnsk7-site-footer-block__grid {
@@ -21,7 +44,6 @@
 }
 
 .mnsk7-site-footer-block__col-title {
-  color: var(--color-white);
   font-size: var(--fs-lg);
   font-weight: 700;
   margin: 0 0 1rem;
@@ -30,32 +52,29 @@
 .mnsk7-site-footer-block .footer-column-title,
 .mnsk7-site-footer-block h3,
 .mnsk7-site-footer-block h4:not(.mnsk7-site-footer-block__col-title) {
-  color: var(--color-white);
   font-size: var(--fs-lg);
   font-weight: 700;
   margin-bottom: 1rem;
 }
 
 .mnsk7-site-footer-block__col {
-  color: rgba(255, 255, 255, 0.9);
   font-size: var(--fs-sm);
 }
 
 .mnsk7-site-footer-block__col p,
 .mnsk7-site-footer-block__col .mnsk7-contact-info__line {
-  color: rgba(255, 255, 255, 0.9);
   margin: 0.4rem 0;
   line-height: 1.7;
 }
 
 .mnsk7-site-footer-block__col a {
-  color: var(--color-primary);
+  color: #93c5fd;
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
 .mnsk7-site-footer-block__col a:hover {
-  color: var(--color-beige);
+  color: #f8fafc;
   text-decoration: underline;
 }
 
@@ -64,7 +83,7 @@
 }
 
 .mnsk7-site-footer-block__delivery-note {
-  color: rgba(255, 255, 255, 0.75);
+  color: #94a3b8;
   font-size: var(--fs-xs);
   margin-top: 0.75rem;
 }
@@ -88,12 +107,12 @@
 }
 
 .mnsk7-site-footer-block__links a {
-  color: rgba(255, 255, 255, 0.95);
+  color: #e2e8f0;
   font-size: var(--fs-sm);
 }
 
 .mnsk7-site-footer-block__links a:hover {
-  color: var(--color-beige);
+  color: #f8fafc;
 }
 
 /* Footer bottom bar */
@@ -102,11 +121,11 @@
   padding: 1rem 0;
   text-align: center;
   font-size: var(--fs-xs);
-  color: rgba(255, 255, 255, 0.8);
+  color: #94a3b8;
 }
 
 .mnsk7-footer-copyright {
-  color: rgba(255, 255, 255, 0.9);
+  color: #cbd5e1;
 }
 
 /* Hide Storefront default credit if still rendered */
