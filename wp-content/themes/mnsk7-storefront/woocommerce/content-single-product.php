@@ -24,11 +24,22 @@ if ( post_password_required() ) {
 
 	<?php do_action( 'woocommerce_before_single_product_summary' ); ?>
 
-	<div class="summary entry-summary">
+	<div class="summary entry-summary mnsk7-pdp-buybox">
 		<?php
 		/**
-		 * Kolejność: tytuł, cena, rating, dostępność, kluczowe parametry, CTA, trust strip, meta.
-		 * Hooki mu-plugina (mnsk7_single_product_*) uzupełniają; theme daje fallback.
+		 * Buy box: tytuł → cena → dostępność → parametry → CTA → trust (product_card_visual, WOO_CONVERSION_REWORK_PLAN).
+		 * woocommerce_single_product_summary hooks (priority):
+		 *  5  – rating
+		 *  8  – mnsk7_single_product_availability
+		 * 10  – title
+		 * 15  – price (moved up for above-fold)
+		 * 21  – mnsk7_single_product_key_params
+		 * 23  – mnsk7_single_product_zastosowanie
+		 * 30  – add_to_cart
+		 * 32  – mnsk7_single_product_trust_badges
+		 * 40  – mnsk7_single_product_meta_chips
+		 *
+		 * Removed: excerpt (20), old meta (40) — replaced by structured blocks.
 		 */
 		do_action( 'woocommerce_single_product_summary' );
 		?>

@@ -39,6 +39,33 @@
   color: var(--color-white);
 }
 
+.mnsk7-plp-chips__label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-right: 0.5rem;
+  align-self: center;
+}
+
+.mnsk7-plp-chips--attrs {
+  margin-top: 0.75rem;
+}
+
+@media (max-width: 768px) {
+  .mnsk7-plp-chips {
+    gap: 0.4rem;
+  }
+  .mnsk7-plp-chip {
+    padding: 0.4rem 0.75rem;
+    font-size: var(--fs-xs);
+  }
+  .mnsk7-plp-chips__label {
+    width: 100%;
+    margin-bottom: 0.25rem;
+    margin-right: 0;
+  }
+}
+
 /* Table wrapper */
 .mnsk7-product-table-wrap {
   overflow-x: auto;

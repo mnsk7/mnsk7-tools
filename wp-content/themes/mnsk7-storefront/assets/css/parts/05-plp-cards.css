@@ -5,11 +5,15 @@
    with CSS Grid + !important where necessary.
    ----------------------------------------------------------------- */
 
+/* Jedna siatka dla wszystkich listów produktów (sklep, kategoria, related, bestsellery) */
 .woocommerce ul.products,
-.woocommerce-page ul.products {
+.woocommerce-page ul.products,
+.related.products ul.products,
+.upsells.products ul.products,
+.cross-sells ul.products {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
-  gap: 1.5rem !important;
+  gap: 1.25rem !important;
   margin: 0 !important;
   padding: 0 !important;
   list-style: none;
