@@ -56,7 +56,7 @@ if ( $is_taxonomy ) {
 		echo '</div>';
 	}
 
-	$attribute_filter = mnsk7_get_archive_attribute_filter_chips();
+	$attribute_filter = function_exists( 'mnsk7_get_archive_attribute_filter_chips' ) ? mnsk7_get_archive_attribute_filter_chips() : array( 'label' => '', 'param' => '', 'chips' => array() );
 	if ( ! empty( $attribute_filter['chips'] ) ) {
 		echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="' . esc_attr__( 'Filtruj', 'mnsk7-storefront' ) . '">';
 		echo '<span class="mnsk7-plp-chips__label">' . esc_html( $attribute_filter['label'] ) . '</span>';

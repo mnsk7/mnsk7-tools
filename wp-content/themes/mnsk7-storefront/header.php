@@ -35,14 +35,7 @@ defined( 'ABSPATH' ) || exit;
 				'menu_id'        => 'mnsk7-primary-menu',
 				'menu_class'     => 'mnsk7-header__menu',
 				'container'      => false,
-				'fallback_cb'    => function () {
-					echo '<ul id="mnsk7-primary-menu" class="mnsk7-header__menu">';
-					if ( function_exists( 'wc_get_page_permalink' ) ) {
-						echo '<li><a href="' . esc_url( wc_get_page_permalink( 'shop' ) ) . '">' . esc_html__( 'Sklep', 'mnsk7-storefront' ) . '</a></li>';
-					}
-					echo '<li><a href="' . esc_url( home_url( '/kontakt/' ) ) . '">' . esc_html__( 'Kontakt', 'mnsk7-storefront' ) . '</a></li>';
-					echo '</ul>';
-				},
+				'fallback_cb'    => 'mnsk7_header_fallback_menu',
 			) );
 			?>
 			<div class="site-branding">

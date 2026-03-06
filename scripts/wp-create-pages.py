@@ -36,6 +36,28 @@ def main():
         'Content-Type': 'application/json; charset=utf-8',
     }
 
+    # Sprawdź, czy API rozpoznaje użytkownika (rola, uprawnienia)
+    try:
+        req = urllib.request.Request(
+            f'{base}/wp-json/wp/v2/users/me?context=edit',
+            headers={'Authorization': f'Basic {auth}', 'Accept': 'application/json'}
+        )
+        with urllib.request.urlopen(req) as r:
+            me = json.load(r)
+        roles = me.get('roles', [])
+        name = me.get('name', user)
+        print(f'Zalogowano: {name} (id={me.get("id")}, role: {", ".join(roles) or "brak"})')
+        if 'administrator' not in roles and 'editor' not in roles:
+            print('Uwaga: brak roli Administrator/Editor — tworzenie stron może dać 401.')
+    except urllib.error.HTTPError as e:
+        if e.code == 401:
+            print('401 przy logowaniu. Sprawdź: WP_USER (login), WP_APP_PASSWORD (hasło z WP: Profil → Hasła aplikacji).')
+            print('Użytkownik musi mieć rolę Administrator. Jeśli jest — możliwa blokada REST przez wtyczkę (bezpieczeństwo/cache).')
+        else:
+            print(f'Auth check: {e.code} {e.read().decode()[:150]}')
+    except Exception as e:
+        print(f'Auth check failed: {e}')
+
     def get_page_id(slug):
         try:
             req = urllib.request.Request(
@@ -92,7 +114,7 @@ def main():
             except urllib.error.HTTPError as e:
                 err_body = e.read().decode()
                 if e.code == 401:
-                    print(f'Error {title}: 401 — brak uprawnień. Użytkownik w .env musi być Administrator (Application Password).')
+                    print(f'Error {title}: 401 — REST odrzuca tworzenie. Sprawdź: nowe hasło aplikacji (Profil → Hasła aplikacji), wyłącz wtyczki blokujące REST (bezpieczeństwo/firewall).')
                     return
                 if e.code == 400 and with_template and 'template' in err_body.lower():
                     continue

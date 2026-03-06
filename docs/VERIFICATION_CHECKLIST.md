@@ -2,6 +2,9 @@
 
 Sprawdzone w repozytorium (main). Po deployu warto zweryfikować na stagingu w przeglądarce.
 
+## Błąd krytyczny po deployu
+W `wp-config.php` włącz tymczasowo: `define('WP_DEBUG', true);` i `define('WP_DEBUG_LOG', true);` — w `wp-content/debug.log` pojawi się dokładny komunikat (np. brakująca funkcja, parse error). Motyw ma zabezpieczenia: fallback menu jako nazwa funkcji, sprawdzenie `function_exists` przed `mnsk7_get_archive_attribute_filter_chips`, `is_object`/`method_exists` zamiast `instanceof WP_Query`, `is_readable` dla parent theme.
+
 ## Header i footer
 - [x] **header.php** — klasa `mnsk7-header`, `mnsk7-header__inner`, logo + `wp_nav_menu` + Moje konto + koszyk. Nie zależy od `do_action('storefront_header')`.
 - [x] **footer.php** — klasa `mnsk7-footer`, `mnsk7-footer__top`, `mnsk7-footer__inner`, trzy kolumny (Kontakt, Dostawa, Informacje) + pasek copyright. Stała treść, jasny tekst.

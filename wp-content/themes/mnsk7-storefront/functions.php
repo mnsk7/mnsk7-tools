@@ -13,7 +13,21 @@ defined( 'ABSPATH' ) || exit;
  * When false, child uses its own header fallback and does not enqueue parent styles.
  */
 function mnsk7_parent_storefront_available() {
-	return get_template() === 'storefront' && file_exists( get_template_directory() . '/style.css' );
+	if ( get_template() !== 'storefront' ) {
+		return false;
+	}
+	$parent_style = get_template_directory() . '/style.css';
+	return is_readable( $parent_style );
+}
+
+/** Fallback menu for header when no primary menu set (callable by name for cache-safe wp_nav_menu). */
+function mnsk7_header_fallback_menu() {
+	echo '<ul id="mnsk7-primary-menu" class="mnsk7-header__menu">';
+	if ( function_exists( 'wc_get_page_permalink' ) ) {
+		echo '<li><a href="' . esc_url( wc_get_page_permalink( 'shop' ) ) . '">' . esc_html__( 'Sklep', 'mnsk7-storefront' ) . '</a></li>';
+	}
+	echo '<li><a href="' . esc_url( home_url( '/kontakt/' ) ) . '">' . esc_html__( 'Kontakt', 'mnsk7-storefront' ) . '</a></li>';
+	echo '</ul>';
 }
 
 /* 1. Enqueue styles — many small CSS parts (easier to maintain than one 2000+ line file) */
@@ -275,7 +289,7 @@ add_action( 'after_setup_theme', function () {
 	}
 }, 20 );
 add_action( 'woocommerce_product_query', function ( $q ) {
-	if ( is_admin() || ! $q instanceof WP_Query ) {
+	if ( is_admin() || ! is_object( $q ) || ! method_exists( $q, 'set' ) ) {
 		return;
 	}
 	$attr_taxonomies = array( 'pa_srednica', 'pa_srednica-trzpienia', 'pa_dlugosc-calkowita-l', 'pa_dlugosc-robocza-h' );
