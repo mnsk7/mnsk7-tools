@@ -80,6 +80,19 @@ if ( woocommerce_product_loop() ) {
 	do_action( 'woocommerce_before_shop_loop' );
 
 	if ( $is_taxonomy ) {
+		// FB-05: search over table
+		?>
+		<div class="mnsk7-plp-search col-full">
+			<form role="search" method="get" class="mnsk7-plp-search__form" action="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">
+				<label for="mnsk7-plp-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
+				<input type="search" id="mnsk7-plp-search-input" class="mnsk7-plp-search__input" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php esc_attr_e( 'Szukaj w kategorii…', 'mnsk7-storefront' ); ?>" />
+				<?php if ( isset( $current_term->slug ) ) : ?>
+				<input type="hidden" name="product_cat" value="<?php echo esc_attr( $current_term->slug ); ?>" />
+				<?php endif; ?>
+				<button type="submit" class="mnsk7-plp-search__submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
+			</form>
+		</div>
+		<?php
 		// Table layout (Sandvik-style)
 		?>
 		<div class="mnsk7-product-table-wrap col-full">

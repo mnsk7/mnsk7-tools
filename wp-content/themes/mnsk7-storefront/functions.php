@@ -20,6 +20,40 @@ function mnsk7_parent_storefront_available() {
 	return is_readable( $parent_style );
 }
 
+/**
+ * FB-01: limit primary menu items so header is not flooded with 20+ categories.
+ * Max 7 top-level items; in WP Admin keep menu short (Sklep, Dostawa, Kontakt, etc.).
+ */
+add_filter( 'wp_nav_menu_objects', function ( $items, $args ) {
+	if ( empty( $items ) || ! is_array( $items ) ) {
+		return $items;
+	}
+	$loc = isset( $args->theme_location ) ? $args->theme_location : '';
+	if ( $loc !== 'primary' ) {
+		return $items;
+	}
+	$top_level = array();
+	foreach ( $items as $item ) {
+		if ( empty( $item->menu_item_parent ) || (int) $item->menu_item_parent === 0 ) {
+			$top_level[] = $item;
+		}
+	}
+	if ( count( $top_level ) <= 7 ) {
+		return $items;
+	}
+	$keep_ids = array_slice( array_map( function ( $i ) { return $i->ID; }, $top_level ), 0, 7 );
+	$keep_ids = array_flip( $keep_ids );
+	$filtered = array();
+	foreach ( $items as $item ) {
+		$id = (int) $item->ID;
+		$parent = (int) $item->menu_item_parent;
+		if ( isset( $keep_ids[ $id ] ) || ( $parent > 0 && isset( $keep_ids[ $parent ] ) ) ) {
+			$filtered[] = $item;
+		}
+	}
+	return $filtered;
+}, 20, 2 );
+
 /** Fallback menu for header when no primary menu set (callable by name for cache-safe wp_nav_menu). */
 function mnsk7_header_fallback_menu() {
 	echo '<ul id="mnsk7-primary-menu" class="mnsk7-header__menu">';
@@ -32,7 +66,7 @@ function mnsk7_header_fallback_menu() {
 
 /* 1. Enqueue styles — many small CSS parts (easier to maintain than one 2000+ line file) */
 add_action( 'wp_enqueue_scripts', function () {
-	$v = '3.0.1';
+	$v = '3.0.2';
 	$base = get_stylesheet_directory_uri() . '/assets/css/parts/';
 	$dir = get_stylesheet_directory() . '/assets/css/parts/';
 	if ( mnsk7_parent_storefront_available() ) {
@@ -316,6 +350,66 @@ add_action( 'woocommerce_product_query', function ( $q ) {
 	}
 }, 20 );
 
+/**
+ * Get product IDs in current archive term (category/tag), in stock only, respecting current attribute filters.
+ * Used by FB-03 to show only attribute terms that have products in the current category.
+ *
+ * @param array $attrs_to_try Map of taxonomy => label (to build tax_query from filter_* params).
+ * @return int[] Product IDs, or empty array.
+ */
+function mnsk7_get_archive_product_ids_for_chips( $attrs_to_try ) {
+	$term = get_queried_object();
+	if ( ! $term || ! isset( $term->term_id ) ) {
+		return array();
+	}
+	$tax_query = array(
+		array(
+			'taxonomy' => $term->taxonomy,
+			'field'    => 'term_id',
+			'terms'    => $term->term_id,
+		),
+	);
+	// Add current attribute filters from URL so chips reflect only terms that exist for filtered set.
+	foreach ( $attrs_to_try as $tax => $label ) {
+		$param = 'filter_' . str_replace( 'pa_', '', $tax );
+		if ( empty( $_GET[ $param ] ) || ! taxonomy_exists( $tax ) ) {
+			continue;
+		}
+		$slug = sanitize_text_field( wp_unslash( $_GET[ $param ] ) );
+		if ( $slug === '' ) {
+			continue;
+		}
+		$tax_query[] = array(
+			'taxonomy' => $tax,
+			'field'    => 'slug',
+			'terms'    => $slug,
+		);
+	}
+	$query_args = array(
+		'post_type'      => 'product',
+		'post_status'    => 'publish',
+		'fields'         => 'ids',
+		'posts_per_page' => 800,
+		'no_found_rows'  => true,
+		'tax_query'      => array_merge( array( 'relation' => 'AND' ), $tax_query ),
+		'meta_query'     => array(
+			array(
+				'key'   => '_stock_status',
+				'value' => 'instock',
+			),
+		),
+	);
+	$q = new WP_Query( $query_args );
+	return $q->posts ? array_map( 'intval', $q->posts ) : array();
+}
+
+/**
+ * Attribute filter chips for PLP. Skips Średnica for category "Zestawy" (Sets).
+ * FB-02: when category is Zestawy, diameter filter row is hidden.
+ * FB-03: only terms that have in-stock products in the current category are shown.
+ *
+ * @return array{label: string, param: string, chips: array} First matching attribute row, or empty.
+ */
 function mnsk7_get_archive_attribute_filter_chips() {
 	if ( ! is_product_taxonomy() ) {
 		return array( 'label' => '', 'param' => '', 'chips' => array() );
@@ -323,23 +417,36 @@ function mnsk7_get_archive_attribute_filter_chips() {
 	$attrs_to_try = array(
 		'pa_srednica'             => __( 'Średnica', 'mnsk7-storefront' ),
 		'pa_srednica-trzpienia'   => __( 'Trzpień', 'mnsk7-storefront' ),
-		'pa_dlugosc-calkowita-l' => __( 'Długość L', 'mnsk7-storefront' ),
-		'pa_dlugosc-robocza-h'   => __( 'Długość H', 'mnsk7-storefront' ),
+		'pa_dlugosc-calkowita-l'  => __( 'Długość L', 'mnsk7-storefront' ),
+		'pa_dlugosc-robocza-h'    => __( 'Długość H', 'mnsk7-storefront' ),
 	);
 	$term = get_queried_object();
 	if ( ! $term || ! isset( $term->term_id ) ) {
 		return array( 'label' => '', 'param' => '', 'chips' => array() );
 	}
+	$term_slug = isset( $term->slug ) ? strtolower( (string) $term->slug ) : '';
+	$term_name = isset( $term->name ) ? strtolower( (string) $term->name ) : '';
+	$is_zestawy = ( strpos( $term_slug, 'zestaw' ) !== false || strpos( $term_name, 'zestaw' ) !== false );
+
+	$product_ids = mnsk7_get_archive_product_ids_for_chips( $attrs_to_try );
+
 	foreach ( $attrs_to_try as $tax => $label ) {
+		if ( $is_zestawy && $tax === 'pa_srednica' ) {
+			continue;
+		}
 		if ( ! taxonomy_exists( $tax ) ) {
 			continue;
 		}
-		$terms = get_terms( array(
+		$get_terms_args = array(
 			'taxonomy'   => $tax,
 			'hide_empty' => true,
-			'number'     => 20,
+			'number'     => 24,
 			'orderby'    => 'name',
-		) );
+		);
+		if ( ! empty( $product_ids ) ) {
+			$get_terms_args['object_ids'] = $product_ids;
+		}
+		$terms = get_terms( $get_terms_args );
 		if ( is_wp_error( $terms ) || empty( $terms ) ) {
 			continue;
 		}
