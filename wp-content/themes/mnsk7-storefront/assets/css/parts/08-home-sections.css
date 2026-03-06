@@ -591,40 +591,10 @@
   text-align: center;
 }
 
-/* Bestsellers shortcode — 4 kolumny, ostatni rząd wyśrodkowany (bez pustego miejsca) */
+/* Bestsellers — ta sama siatka co PLP (05-plp-cards + 20/21 responsive) */
 .mnsk7-section--bestsellers .mnsk7-bestsellers,
 .mnsk7-section--bestsellers .col-full > .woocommerce {
   margin: 0;
-}
-
-.mnsk7-section--bestsellers ul.products {
-  display: flex !important;
-  flex-wrap: wrap !important;
-  justify-content: center !important;
-  gap: 1rem !important;
-  list-style: none;
-  margin: 0 !important;
-  padding: 0 !important;
-}
-
-.mnsk7-section--bestsellers ul.products li.product {
-  width: calc(25% - 0.75rem) !important;
-  max-width: 280px !important;
-  margin: 0 !important;
-  flex-shrink: 0;
-}
-
-@media (max-width: 900px) {
-  .mnsk7-section--bestsellers ul.products li.product {
-    width: calc(50% - 0.5rem) !important;
-  }
-}
-
-@media (max-width: 500px) {
-  .mnsk7-section--bestsellers ul.products li.product {
-    width: 100% !important;
-    max-width: none !important;
-  }
 }
 
 .mnsk7-section--bestsellers .mnsk7-bestsellers-title,

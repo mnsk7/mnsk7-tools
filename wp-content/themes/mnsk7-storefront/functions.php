@@ -18,7 +18,7 @@ function mnsk7_parent_storefront_available() {
 
 /* 1. Enqueue styles — many small CSS parts (easier to maintain than one 2000+ line file) */
 add_action( 'wp_enqueue_scripts', function () {
-	$v = '2.3.0';
+	$v = '3.0.0';
 	$base = get_stylesheet_directory_uri() . '/assets/css/parts/';
 	$dir = get_stylesheet_directory() . '/assets/css/parts/';
 	if ( mnsk7_parent_storefront_available() ) {
@@ -44,6 +44,24 @@ add_action( 'wp_enqueue_scripts', function () {
 		wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( $prev ), $v );
 	}
 }, 10 );
+
+/* 1b. Mobile menu toggle (mnsk7-header) */
+add_action( 'wp_footer', function () {
+	?>
+	<script>
+	(function() {
+		var t = document.querySelector('.mnsk7-header__menu-toggle');
+		var n = document.querySelector('.mnsk7-header__nav');
+		if (t && n) {
+			t.addEventListener('click', function() {
+				n.classList.toggle('is-open');
+				t.setAttribute('aria-expanded', n.classList.contains('is-open'));
+			});
+		}
+	})();
+	</script>
+	<?php
+}, 20 );
 
 /* 2. Google Fonts: Inter (replace Storefront default) */
 add_action( 'wp_enqueue_scripts', function () {
@@ -114,3 +132,72 @@ add_filter( 'document_title_parts', function ( $parts ) {
 	}
 	return $parts;
 }, 15 );
+
+add_action( 'woocommerce_product_query', function ( $q ) {
+	if ( is_admin() || ! $q instanceof WP_Query ) {
+		return;
+	}
+	$attr_taxonomies = array( 'pa_srednica', 'pa_srednica-trzpienia', 'pa_dlugosc-calkowita-l', 'pa_dlugosc-robocza-h' );
+	foreach ( $attr_taxonomies as $attr ) {
+		$param = 'filter_' . str_replace( 'pa_', '', $attr );
+		if ( empty( $_GET[ $param ] ) ) {
+			continue;
+		}
+		$slug = sanitize_text_field( wp_unslash( $_GET[ $param ] ) );
+		if ( $slug === '' ) {
+			continue;
+		}
+		$tax = $q->get( 'tax_query' );
+		if ( ! is_array( $tax ) ) {
+			$tax = array();
+		}
+		$tax[] = array(
+			'taxonomy' => $attr,
+			'field'    => 'slug',
+			'terms'    => $slug,
+		);
+		$q->set( 'tax_query', $tax );
+		break;
+	}
+}, 20 );
+
+function mnsk7_get_archive_attribute_filter_chips() {
+	if ( ! is_product_taxonomy() ) {
+		return array( 'label' => '', 'param' => '', 'chips' => array() );
+	}
+	$attrs_to_try = array(
+		'pa_srednica'             => __( 'Średnica', 'mnsk7-storefront' ),
+		'pa_srednica-trzpienia'   => __( 'Trzpień', 'mnsk7-storefront' ),
+		'pa_dlugosc-calkowita-l' => __( 'Długość L', 'mnsk7-storefront' ),
+		'pa_dlugosc-robocza-h'   => __( 'Długość H', 'mnsk7-storefront' ),
+	);
+	$term = get_queried_object();
+	if ( ! $term || ! isset( $term->term_id ) ) {
+		return array( 'label' => '', 'param' => '', 'chips' => array() );
+	}
+	foreach ( $attrs_to_try as $tax => $label ) {
+		if ( ! taxonomy_exists( $tax ) ) {
+			continue;
+		}
+		$terms = get_terms( array(
+			'taxonomy'   => $tax,
+			'hide_empty' => true,
+			'number'     => 20,
+			'orderby'    => 'name',
+		) );
+		if ( is_wp_error( $terms ) || empty( $terms ) ) {
+			continue;
+		}
+		$chips = array();
+		foreach ( $terms as $t ) {
+			$chips[ $t->slug ] = $t->name;
+		}
+		$param = 'filter_' . str_replace( 'pa_', '', $tax );
+		return array(
+			'label' => $label . ': ',
+			'param' => $param,
+			'chips' => $chips,
+		);
+	}
+	return array( 'label' => '', 'param' => '', 'chips' => array() );
+}
