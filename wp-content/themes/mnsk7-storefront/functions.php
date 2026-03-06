@@ -144,7 +144,14 @@ add_action( 'init', function () {
 	if ( ! mnsk7_parent_storefront_available() ) {
 		return;
 	}
+	// Child ma własny header.php — wyłączamy cały output Storefront w headerze, żeby nie było podwójnego.
+	remove_action( 'storefront_header', 'storefront_skip_links', 0 );
+	remove_action( 'storefront_header', 'storefront_site_branding', 20 );
 	remove_action( 'storefront_header', 'storefront_secondary_navigation', 30 );
+	remove_action( 'storefront_header', 'storefront_primary_navigation_wrapper', 42 );
+	remove_action( 'storefront_header', 'storefront_primary_navigation', 50 );
+	remove_action( 'storefront_header', 'storefront_header_cart', 60 );
+	remove_action( 'storefront_header', 'storefront_primary_navigation_wrapper_close', 68 );
 	remove_action( 'storefront_footer', 'storefront_footer_widgets', 10 );
 	remove_action( 'storefront_footer', 'storefront_credit', 20 );
 } );
@@ -177,13 +184,17 @@ add_filter( 'wp_page_menu_args', function ( $args ) {
 /* 7. Override Storefront typography */
 add_filter( 'storefront_google_font_families', '__return_empty_array' );
 
-/* 7b. PLP: nie pokazuj nieobsłużonych shortcodów w opisie kategorii (np. [wpf-filters id=7] gdy plugin wyłączony) */
+/* 7b. PLP: nie pokazuj shortcodów ani artefaktów filtrów w opisie kategorii ([wpf-filters id=7] + blok „Filtruj: Średnica: …”) */
 add_filter( 'term_description', function ( $desc ) {
 	if ( ! function_exists( 'is_product_taxonomy' ) || ! is_product_taxonomy() ) {
 		return $desc;
 	}
-	$desc = preg_replace( '/\[wpf-filters[^\]]*\]/i', '', (string) $desc );
-	return trim( $desc );
+	$desc = (string) $desc;
+	$desc = preg_replace( '/\[wpf-filters[^\]]*\]/i', '', $desc );
+	$desc = preg_replace( '/\[wpf_filters[^\]]*\]/i', '', $desc );
+	// Usuń blok tekstu „Filtruj: Średnica: 0,2 mm … Trzpień: …” (pozostałość po widgecie/shortcode)
+	$desc = preg_replace( '/\s*Filtruj:\s*[^<]*?(?=\n\s*\n|\z)/s', '', $desc );
+	return trim( preg_replace( '/\n\s*\n\s*\n/', "\n\n", $desc ) );
 }, 5 );
 
 /* 8. Front page document title (SEO + zakładka) — fallback gdy brak ustawionej strony głównej */
