@@ -78,21 +78,26 @@ get_header();
 				<?php endforeach; ?>
 			</div>
 			<?php endif; ?>
-			<div class="mnsk7-cats">
+			<div class="mnsk7-cats mnsk7-cats--catalog">
 				<?php foreach ( $cats as $cat ) :
 					$link = get_term_link( $cat );
 					if ( is_wp_error( $link ) ) continue;
 					$img_id = get_term_meta( $cat->term_id, 'thumbnail_id', true );
-					$img    = $img_id ? wp_get_attachment_image( $img_id, 'thumbnail' ) : '';
+					$img    = $img_id ? wp_get_attachment_image( $img_id, 'medium' ) : '';
 					?>
 					<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-cats__item">
-						<?php if ( $img ) : ?>
-						<span class="mnsk7-cats__img"><?php echo $img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
-						<?php else : ?>
-						<span class="mnsk7-cats__icon mnsk7-cats__icon--default" aria-hidden="true"></span>
-						<?php endif; ?>
-						<span class="mnsk7-cats__name"><?php echo esc_html( $cat->name ); ?></span>
-						<span class="mnsk7-cats__count"><?php echo esc_html( $cat->count ); ?> <?php esc_html_e( 'prod.', 'mnsk7-storefront' ); ?></span>
+						<span class="mnsk7-cats__img-wrap">
+							<?php if ( $img ) : ?>
+								<?php echo $img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<?php else : ?>
+								<span class="mnsk7-cats__icon mnsk7-cats__icon--default" aria-hidden="true"></span>
+							<?php endif; ?>
+						</span>
+						<span class="mnsk7-cats__body">
+							<span class="mnsk7-cats__name"><?php echo esc_html( $cat->name ); ?></span>
+							<span class="mnsk7-cats__count"><?php echo esc_html( $cat->count ); ?> <?php esc_html_e( 'prod.', 'mnsk7-storefront' ); ?></span>
+						</span>
+						<span class="mnsk7-cats__arrow" aria-hidden="true">→</span>
 					</a>
 				<?php endforeach; ?>
 			</div>
