@@ -1,0 +1,129 @@
+/* 04-header — extracted from main.css */
+
+   § HEADER (Storefront)
+   ----------------------------------------------------------------- */
+
+.site-header {
+  background: var(--color-white);
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+}
+
+.site-branding {
+  padding: 0.75rem 0;
+}
+
+.site-branding img {
+  max-width: 160px;
+  height: auto;
+}
+
+.site-header .site-title a,
+.site-header .site-description,
+.site-header .site-branding .site-title,
+.site-header .site-branding .site-description {
+  color: var(--color-text);
+  font-family: var(--font-base);
+}
+
+/* Search */
+.site-search .search-field,
+.site-header .search-form input[type="search"],
+.site-header .wc-block-product-search__field,
+.site-header .search-field {
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-pill);
+  background: var(--color-surface);
+  padding: 0.5rem 1rem;
+  font-size: var(--fs-sm);
+  font-family: var(--font-base);
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.site-search .search-field:focus,
+.site-header .search-field:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(12, 125, 219, 0.12);
+  outline: none;
+}
+
+/* Primary navigation */
+.storefront-primary-navigation,
+#site-navigation {
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.main-navigation ul li a {
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  padding: 0.75rem 1rem;
+  transition: color 0.15s ease, background 0.15s ease;
+}
+
+.main-navigation ul li a:hover,
+.main-navigation ul li.current-menu-item > a,
+.main-navigation ul li.current_page_item > a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+/* Sub-menu */
+.main-navigation ul.sub-menu,
+.main-navigation ul ul {
+  background: var(--color-white);
+  box-shadow: var(--shadow-md);
+  border-radius: var(--r-sm);
+  border: 1px solid var(--color-border);
+  padding: 0.25rem 0;
+}
+
+.main-navigation ul.sub-menu li a,
+.main-navigation ul ul li a {
+  padding: 0.5rem 1rem;
+  font-size: var(--fs-sm);
+}
+
+.main-navigation ul.sub-menu li a:hover,
+.main-navigation ul ul li a:hover {
+  background: var(--color-surface);
+}
+
+/* Cart icon */
+.site-header-cart .cart-contents {
+  color: var(--color-text-secondary);
+  font-size: var(--fs-sm);
+  transition: color 0.15s ease;
+}
+
+.site-header-cart .cart-contents:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.site-header-cart .cart-contents .count,
+.woocommerce-cart-form .cart-contents .count,
+.widget_shopping_cart .quantity {
+  background: var(--color-primary) !important;
+  color: var(--color-white) !important;
+  font-size: var(--fs-xs);
+  border-radius: var(--r-pill);
+  min-width: 18px;
+  height: 18px;
+  line-height: 18px;
+  text-align: center;
+  display: inline-block;
+}
+
+.site-header-account a {
+  color: var(--color-text-secondary);
+}
+
+.site-header-account a:hover {
+  color: var(--color-primary);
+}
+

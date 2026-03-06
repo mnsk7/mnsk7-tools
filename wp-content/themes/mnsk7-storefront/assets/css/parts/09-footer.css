@@ -1,0 +1,116 @@
+/* 09-footer — extracted from main.css */
+
+   § FOOTER
+   ----------------------------------------------------------------- */
+
+.mnsk7-site-footer-block {
+  background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+  padding: 3.5rem 0 2.5rem;
+  border-top: 3px solid var(--color-primary);
+  color: var(--color-white);
+  width: 100%;
+}
+
+.mnsk7-site-footer-block__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3rem;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.mnsk7-site-footer-block__col-title {
+  color: var(--color-white);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  margin: 0 0 1rem;
+}
+
+.mnsk7-site-footer-block .footer-column-title,
+.mnsk7-site-footer-block h3,
+.mnsk7-site-footer-block h4:not(.mnsk7-site-footer-block__col-title) {
+  color: var(--color-white);
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.mnsk7-site-footer-block__col {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: var(--fs-sm);
+}
+
+.mnsk7-site-footer-block__col p,
+.mnsk7-site-footer-block__col .mnsk7-contact-info__line {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0.4rem 0;
+  line-height: 1.7;
+}
+
+.mnsk7-site-footer-block__col a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.mnsk7-site-footer-block__col a:hover {
+  color: var(--color-beige);
+  text-decoration: underline;
+}
+
+.mnsk7-site-footer-block__col .mnsk7-contact-info__title {
+  display: none;
+}
+
+.mnsk7-site-footer-block__delivery-note {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: var(--fs-xs);
+  margin-top: 0.75rem;
+}
+
+.mnsk7-site-footer-block__social {
+  margin-top: 1rem;
+}
+
+.mnsk7-site-footer-block__social a {
+  font-weight: 600;
+}
+
+.mnsk7-site-footer-block__links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.mnsk7-site-footer-block__links li {
+  margin-bottom: 0.5rem;
+}
+
+.mnsk7-site-footer-block__links a {
+  color: rgba(255, 255, 255, 0.95);
+  font-size: var(--fs-sm);
+}
+
+.mnsk7-site-footer-block__links a:hover {
+  color: var(--color-beige);
+}
+
+/* Footer bottom bar */
+.mnsk7-footer-bottom {
+  background: #020617;
+  padding: 1rem 0;
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.mnsk7-footer-copyright {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+/* Hide Storefront default credit if still rendered */
+.site-footer .site-info {
+  display: none;
+}
+

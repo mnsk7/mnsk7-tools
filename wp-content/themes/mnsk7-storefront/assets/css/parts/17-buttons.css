@@ -1,0 +1,42 @@
+/* 17-buttons — extracted from main.css */
+
+   § BUTTONS (global)
+   ----------------------------------------------------------------- */
+
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce a.button.alt,
+.woocommerce button.button.alt,
+.woocommerce input.button.alt {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--r-sm);
+  font-family: var(--font-base);
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  padding: 0.625rem 1.25rem;
+  transition: background 0.15s ease;
+  cursor: pointer;
+}
+
+.woocommerce a.button:hover,
+.woocommerce button.button:hover,
+.woocommerce input.button:hover,
+.woocommerce a.button.alt:hover,
+.woocommerce button.button.alt:hover,
+.woocommerce input.button.alt:hover {
+  background: var(--color-primary-hover);
+  color: var(--color-white);
+}
+
+.woocommerce a.button.alt.disabled,
+.woocommerce a.button.alt:disabled,
+.woocommerce button.button.alt.disabled,
+.woocommerce button.button.alt:disabled {
+  background: var(--color-border-strong);
+  color: var(--color-text-muted);
+  cursor: not-allowed;
+}
+

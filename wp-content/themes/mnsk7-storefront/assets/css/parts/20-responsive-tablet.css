@@ -1,0 +1,89 @@
+/* 20-responsive-tablet — extracted from main.css */
+
+   § RESPONSIVE — Tablet (≤ 768px)
+   ----------------------------------------------------------------- */
+
+@media (max-width: 768px) {
+  :root {
+    --fs-3xl: 1.75rem;
+    --fs-2xl: 1.5rem;
+    --fs-xl:  1.25rem;
+  }
+
+  /* Product grids: 2 columns */
+  .woocommerce ul.products,
+  .woocommerce-page ul.products {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+  }
+
+  .related.products ul.products,
+  .upsells.products ul.products,
+  .cross-sells ul.products {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
+  }
+
+  /* Footer: single column */
+  .mnsk7-site-footer-block__grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    padding: 0 1.5rem;
+  }
+
+  /* Hero */
+  .mnsk7-hero {
+    padding: 2.5rem 1rem;
+  }
+
+  .mnsk7-hero__usps {
+    gap: 0.5rem;
+  }
+
+  .mnsk7-hero__usp {
+    font-size: var(--fs-xs);
+    padding: 0.25rem 0.625rem;
+  }
+
+  /* Sections */
+  .mnsk7-section {
+    padding: 2rem 0;
+  }
+
+  /* Trust stats: stack */
+  .mnsk7-trust-stats {
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  /* Loyalty: stack */
+  .mnsk7-loyalty-tiers {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .mnsk7-loyalty-tier {
+    width: 100%;
+    max-width: 300px;
+  }
+
+  /* Allegro reviews: single col */
+  .mnsk7-allegro-reviews__list {
+    grid-template-columns: 1fr;
+  }
+
+  /* SEO page */
+  .mnsk7-seo-hero {
+    padding: 2rem 0 1rem;
+  }
+
+  /* PDP layout: stack images + summary */
+  .single-product div.product .images,
+  .single-product div.product .summary {
+    width: 100%;
+    max-width: 100%;
+    float: none;
+  }
+}
+

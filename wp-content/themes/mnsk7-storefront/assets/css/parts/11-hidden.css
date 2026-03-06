@@ -1,0 +1,23 @@
+/* 11-hidden — extracted from main.css */
+
+   § HIDDEN ELEMENTS
+   ----------------------------------------------------------------- */
+
+.yith-wcwl-add-to-wishlist,
+.yith-wcwl-add-button,
+a.add_to_wishlist,
+.tinv-wishlist,
+[class*="wishlist"],
+[class*="compare"],
+[data-product_id].compare,
+.shopengine-wishlist-trigger,
+.shopengine-quickview-trigger,
+[class*="shopengine-icon-product_compare"],
+[class*="shopengine-badge"],
+.wpc-btn,
+.wooscp-btn,
+.woosc-btn,
+.product_meta {
+  display: none !important;
+}
+

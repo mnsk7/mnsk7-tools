@@ -1,0 +1,57 @@
+/* 01-tokens — extracted from main.css */
+
+/* =================================================================
+   MNK7 Storefront — main.css  (child of WooCommerce Storefront)
+   Production build — 2026-03-05
+   ================================================================= */
+
+/* -----------------------------------------------------------------
+   § DESIGN TOKENS
+   ----------------------------------------------------------------- */
+
+:root {
+  /* Palette: blue #0c7ddb, beige #e9e8cc, white, black */
+  --color-bg:             #ffffff;
+  --color-beige:          #e9e8cc;
+  --color-surface:        #e9e8cc;
+  --color-surface-2:      #e0dfc4;
+  --color-text:           #000000;
+  --color-text-secondary: #333333;
+  --color-text-muted:     #666666;
+  --color-border:         #e9e8cc;
+  --color-border-strong:  #d4d3b8;
+  --color-primary:        #0c7ddb;
+  --color-primary-hover:   #0a6bc2;
+  --color-primary-dark:   #0a5a9e;
+  --color-accent:         #22c55e;
+  --color-warning:        #f59e0b;
+  --color-danger:         #ef4444;
+  --color-white:          #ffffff;
+  --color-black:          #000000;
+
+  /* Typography — Inter */
+  --font-base: "Inter", system-ui, -apple-system, sans-serif;
+  --fs-xs:  0.75rem;   /* 12 px */
+  --fs-sm:  0.8125rem; /* 13 px */
+  --fs-base:0.875rem;  /* 14 px */
+  --fs-lg:  1.125rem;  /* 18 px */
+  --fs-xl:  1.5rem;    /* 24 px */
+  --fs-2xl: 2rem;      /* 32 px */
+  --fs-3xl: 2.5rem;    /* 40 px */
+
+  /* Radii */
+  --r-sm:   8px;
+  --r-md:   12px;
+  --r-lg:   16px;
+  --r-pill: 999px;
+
+  /* Shadows */
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06);
+  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.10);
+
+  /* Layout */
+  --content-max: 1200px;
+  --header-h:    64px;
+}
+

@@ -1,0 +1,26 @@
+/* 22-touch-targets — extracted from main.css */
+
+   § TOUCH TARGETS
+   All interactive elements ≥ 44px for accessibility.
+   ----------------------------------------------------------------- */
+
+.site-header .menu-toggle,
+.site-header-cart .cart-contents,
+.add_to_cart_button,
+.single_add_to_cart_button,
+a.button.alt,
+.mnsk7-faq__q,
+.mnsk7-cookie-bar__btn,
+.mnsk7-hero__btn {
+  min-height: 44px;
+}
+
+.site-header .menu-toggle {
+  min-width: 44px;
+}
+
+/* Keep PLP buttons from expanding horizontally beyond card */
+.woocommerce ul.products li.product .button {
+  min-width: unset;
+}
+

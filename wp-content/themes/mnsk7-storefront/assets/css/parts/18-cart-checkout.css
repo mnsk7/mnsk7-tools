@@ -1,0 +1,49 @@
+/* 18-cart-checkout — extracted from main.css */
+
+   § CART & CHECKOUT
+   ----------------------------------------------------------------- */
+
+.woocommerce-cart table.shop_table {
+  border-color: var(--color-border);
+  border-radius: var(--r-md);
+}
+
+.woocommerce-cart table.shop_table th {
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  background: var(--color-surface);
+}
+
+.woocommerce-cart table.shop_table td {
+  font-size: var(--fs-sm);
+  border-color: var(--color-border);
+}
+
+.woocommerce-checkout .form-row label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.woocommerce-checkout .form-row input,
+.woocommerce-checkout .form-row textarea,
+.woocommerce-checkout .form-row select {
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-sm);
+  padding: 0.5rem 0.75rem;
+  font-family: var(--font-base);
+  font-size: var(--fs-sm);
+}
+
+.woocommerce-checkout .form-row input:focus,
+.woocommerce-checkout .form-row textarea:focus,
+.woocommerce-checkout .form-row select:focus {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(12, 125, 219, 0.12);
+  outline: none;
+}
+
+.woocommerce-checkout #payment {
+  background: var(--color-surface);
+  border-radius: var(--r-md);
+}

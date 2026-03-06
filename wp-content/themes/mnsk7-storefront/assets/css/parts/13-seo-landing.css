@@ -1,0 +1,67 @@
+/* 13-seo-landing — extracted from main.css */
+
+   § SEO LANDING PAGES
+   ----------------------------------------------------------------- */
+
+.mnsk7-seo-page {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.mnsk7-seo-hero {
+  padding: 3rem 0 2rem;
+  text-align: center;
+}
+
+.mnsk7-seo-hero__title {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+}
+
+.mnsk7-seo-hero__sub {
+  font-size: var(--fs-base);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.mnsk7-seo-intro {
+  padding: 1.5rem 0 2rem;
+}
+
+.mnsk7-seo-intro__text {
+  font-size: var(--fs-base);
+  line-height: 1.7;
+  color: var(--color-text);
+  max-width: 800px;
+}
+
+.mnsk7-seo-intro__text h2 {
+  font-size: var(--fs-lg);
+  margin: 1.5rem 0 0.75rem;
+}
+
+.mnsk7-seo-intro__text ul {
+  padding-left: 1.25rem;
+  margin: 0.75rem 0;
+}
+
+.mnsk7-seo-intro__text li {
+  margin-bottom: 0.5rem;
+}
+
+.mnsk7-seo-products {
+  padding: 2rem 0;
+}
+
+.mnsk7-seo-products__title {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  margin: 0 0 1.5rem;
+}
+
+.mnsk7-seo-faq {
+  padding: 2rem 0 3rem;
+}
+

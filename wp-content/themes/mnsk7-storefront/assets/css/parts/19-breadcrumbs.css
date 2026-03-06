@@ -1,0 +1,20 @@
+/* 19-breadcrumbs — extracted from main.css */
+
+   § BREADCRUMBS (Storefront)
+   ----------------------------------------------------------------- */
+
+.woocommerce-breadcrumb {
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+  padding: 0.75rem 0;
+  margin-bottom: 0.5rem;
+}
+
+.woocommerce-breadcrumb a {
+  color: var(--color-text-secondary);
+}
+
+.woocommerce-breadcrumb a:hover {
+  color: var(--color-primary);
+}
+

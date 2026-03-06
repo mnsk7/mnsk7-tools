@@ -1,0 +1,70 @@
+/* 12-related-products — extracted from main.css */
+
+   § RELATED / UPSELL / CROSS-SELL PRODUCTS
+   ----------------------------------------------------------------- */
+
+.related.products,
+.upsells.products,
+.cross-sells {
+  margin-top: 3rem;
+}
+
+.related.products > h2,
+.upsells.products > h2,
+.cross-sells > h2 {
+  font-size: var(--fs-xl);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.related.products ul.products,
+.upsells.products ul.products,
+.cross-sells ul.products {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1.5rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+.related.products ul.products li.product,
+.upsells.products ul.products li.product,
+.cross-sells ul.products li.product {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  float: none !important;
+  clear: none !important;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--r-md);
+  padding: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.related.products ul.products li.product:hover,
+.upsells.products ul.products li.product:hover,
+.cross-sells ul.products li.product:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Related/cross-sells: force Add to cart button horizontal text (fix vertical letter stacking) */
+.related.products .add_to_cart_button,
+.cross-sells .add_to_cart_button,
+.upsells.products .add_to_cart_button {
+  writing-mode: horizontal-tb;
+  display: block !important;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.625rem 0.75rem;
+  white-space: normal;
+  text-align: center;
+  line-height: 1.3;
+}
+

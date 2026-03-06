@@ -90,9 +90,19 @@ img {
   height: auto;
 }
 
-/* Storefront container override */
+/* Storefront container override — centering + horizontal padding (staging layout fix) */
 .col-full {
   max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (min-width: 768px) {
+  .col-full {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 /* -----------------------------------------------------------------
@@ -906,7 +916,7 @@ a {
 }
 .mnsk7-hero__usp-icon:empty::before {
   content: "·";
-  color: var(--color-primary);
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 700;
 }
 

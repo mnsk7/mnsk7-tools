@@ -1,0 +1,54 @@
+/* 02-reset-typography — extracted from main.css */
+
+/* -----------------------------------------------------------------
+   § GLOBAL RESET & TYPOGRAPHY
+   ----------------------------------------------------------------- */
+
+body {
+  font-family: var(--font-base);
+  color: var(--color-text);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+  background: var(--color-bg);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-base);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.25;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+a:hover {
+  color: var(--color-primary-hover);
+  text-decoration: underline;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Storefront container override — centering + horizontal padding (staging layout fix) */
+.col-full {
+  max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (min-width: 768px) {
+  .col-full {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+

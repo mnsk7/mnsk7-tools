@@ -1,0 +1,166 @@
+/* 05-plp-cards — extracted from main.css */
+
+   § PLP PRODUCT CARDS
+   Storefront sets inline CSS widths on li.product — we override
+   with CSS Grid + !important where necessary.
+   ----------------------------------------------------------------- */
+
+.woocommerce ul.products,
+.woocommerce-page ul.products {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1.5rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none;
+}
+
+.woocommerce ul.products li.product,
+.woocommerce-page ul.products li.product {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  float: none !important;
+  clear: none !important;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s ease, transform 0.2s ease;
+}
+
+.woocommerce ul.products li.product:hover,
+.woocommerce-page ul.products li.product:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+/* Product image */
+.woocommerce ul.products li.product a img,
+.woocommerce ul.products li.product .attachment-woocommerce_thumbnail {
+  border-radius: var(--r-md) var(--r-md) 0 0;
+  display: block;
+  width: 100%;
+  margin: 0;
+}
+
+/* Product title */
+.woocommerce ul.products li.product .woocommerce-loop-product__title,
+.woocommerce ul.products li.product h2 {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  padding: 0.75rem 0.75rem 0.25rem;
+  margin: 0;
+  min-height: 2.8em;
+  line-height: 1.4;
+  overflow: visible;
+  white-space: normal;
+  text-overflow: unset;
+}
+
+/* Price */
+.woocommerce ul.products li.product .price {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  padding: 0 0.75rem 0.5rem;
+  margin: 0;
+}
+
+.woocommerce ul.products li.product .price del {
+  color: var(--color-text-muted);
+  font-weight: 400;
+  font-size: var(--fs-sm);
+}
+
+.woocommerce ul.products li.product .price ins {
+  text-decoration: none;
+  font-weight: 700;
+}
+
+/* Add to cart button — prevent vertical text (narrow cards in cart/related) */
+.woocommerce ul.products li.product .button,
+.woocommerce ul.products li.product .add_to_cart_button,
+.woocommerce ul.products li.product a.added_to_cart {
+  display: inline-block;
+  width: calc(100% - 1.5rem);
+  min-width: 120px;
+  margin: auto 0.75rem 0.75rem;
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--r-sm);
+  padding: 0.625rem 1rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  font-family: var(--font-base);
+  text-align: center;
+  cursor: pointer;
+  transition: background 0.15s ease;
+  text-decoration: none;
+  white-space: normal;
+  flex-shrink: 0;
+}
+
+.woocommerce ul.products li.product .button:hover,
+.woocommerce ul.products li.product .add_to_cart_button:hover {
+  background: var(--color-primary-hover);
+  color: var(--color-white);
+  text-decoration: none;
+}
+
+.woocommerce ul.products li.product a.added_to_cart {
+  background: var(--color-accent);
+}
+
+/* Star rating on PLP */
+.woocommerce ul.products li.product .star-rating {
+  margin: 0.25rem 0.75rem;
+  font-size: var(--fs-xs);
+}
+
+/* Sorting / result count */
+.storefront-sorting,
+.woocommerce-result-count,
+.woocommerce-ordering {
+  margin-bottom: 1rem;
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+}
+
+.woocommerce-ordering select {
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-sm);
+  padding: 0.4rem 0.6rem;
+  font-family: var(--font-base);
+  font-size: var(--fs-sm);
+}
+
+/* Pagination */
+.woocommerce nav.woocommerce-pagination ul li a,
+.woocommerce nav.woocommerce-pagination ul li span {
+  border-color: var(--color-border);
+  color: var(--color-text);
+  font-size: var(--fs-sm);
+  border-radius: var(--r-sm);
+  min-width: 36px;
+  min-height: 36px;
+  line-height: 36px;
+}
+
+.woocommerce nav.woocommerce-pagination ul li a:hover {
+  background: var(--color-surface);
+  color: var(--color-primary);
+}
+
+.woocommerce nav.woocommerce-pagination ul li span.current {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+}
+
