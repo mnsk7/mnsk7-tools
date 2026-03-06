@@ -1,20 +1,37 @@
-# Instagram — embed na stronie głównej
+# Instagram na stronie głównej
 
-Sekcja „Obserwuj nas na Instagramie” używa shortcode’u `[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]`.
+Shortcode `[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]` jest zdefiniowany w **mu-plugins/mnsk7-tools.php**.
 
-## Dlaczego posty mogą się nie wyświetlać
+## Jak wyświetlić linki do postów
 
-1. **Shortcode nie jest zarejestrowany** — w repozytorium (theme + mu-plugins) nie ma definicji `mnsk7_instagram_feed`. Prawdopodobnie shortcode pochodzi z zewnętrznego pluginu (np. Social Feed, Instagram Feed). Sprawdź w **Wtyczki** czy jest aktywna wtyczka do Instagrama i czy rejestruje ten shortcode.
-2. **API Instagram / token** — od 2020 Meta ogranicza API Instagram; wiele wtyczek wymaga połączenia z kontem Facebook/Instagram i tokena. Bez poprawnej konfiguracji feed będzie pusty.
-3. **Błąd PHP/JS** — w konsoli przeglądarki lub w logu PHP sprawdź, czy shortcode nie zwraca błędu.
+Shortcode pokazuje siatkę linków do postów Instagram, jeśli w opcjach WP są zapisane URL-e.
 
-## Co zrobić
+**Dodanie linków (np. w wp-admin lub przez WP-CLI):**
 
-- Zainstalować i skonfigurować wtyczkę do Instagram feed (np. „Instagram Feed” by Smash Balloon, „Social Feed Gallery”) i zmapować shortcode w theme na jej shortcode, **albo**
-- W theme zmienić sekcję na zwykły CTA: przycisk „Obserwuj @mnsk7tools” z linkiem do profilu Instagram (obecnie link jest w stopce).
+```php
+// W functions.php theme lub w „Fragmenty kodu” (WPCode):
+update_option( 'mnsk7_instagram_post_urls', array(
+  'https://www.instagram.com/p/ABC123/',
+  'https://www.instagram.com/p/DEF456/',
+  // … do 12 URL-i
+) );
+```
 
-Jeśli chcesz fallback w kodzie: w `front-page.php` można sprawdzić, czy wynik `do_shortcode('[mnsk7_instagram_feed ...]')` jest pusty, i wtedy wyświetlić tylko tytuł + link do profilu.
+Albo przez WP-CLI na serwerze:
 
----
+```bash
+wp option patch insert mnsk7_instagram_post_urls 0 "https://www.instagram.com/p/ABC123/"
+```
 
-**Header — Baza wiedzy / artykuły:** Link do artykułów (baza wiedzy) dodajesz w **Wygląd → Menu**: dodaj pozycję „Baza wiedzy” lub „Wiedza” z adresem np. `/blog/` lub strony z listą artykułów. Po przejściu na Storefront menu jest zarządzane w WordPressie; jeśli wcześniej było w tech-storefront, sprawdź czy strona bloga/artykułów istnieje i ma ten sam slug.
+Jeśli opcja `mnsk7_instagram_post_urls` jest pusta, shortcode i tak wyświetla przycisk CTA „Instagram @mnsk7tools →” do profilu.
+
+## Parent theme (Storefront) i przewodnik
+
+Komunikat **„The parent theme is missing. Please install the Storefront parent theme.”** na np. `https://staging.mnsk7-tools.pl/przewodnik/` oznacza, że na serwerze **nie ma zainstalowanej rodzimej tematy Storefront**.
+
+Zgodnie z zasadami repozytorium: rodzica Storefront należy trzymać w repo (`wp-content/themes/storefront`) i wdrażać razem z dzieckiem. Sprawdź:
+
+1. Czy w repozytorium jest katalog `wp-content/themes/storefront`.
+2. Czy workflow deployu (np. `.github/workflows/deploy-staging.yml`) kopiuje też `storefront` na serwer.
+
+Bez Storefront child theme nie ładuje pełnego layoutu i mogą pojawić się „pływające” strony (np. pusta główna treść, tylko sidebar). Rozwiązanie: dołączyć Storefront do deployu lub zainstalować go na stagingu ręcznie.

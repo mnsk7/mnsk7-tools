@@ -27,18 +27,8 @@ if ( post_password_required() ) {
 	<div class="summary entry-summary">
 		<?php
 		/**
-		 * woocommerce_single_product_summary hooks (priority):
-		 *  5  – rating
-		 *  8  – mnsk7_single_product_availability
-		 * 10  – title
-		 * 15  – price (moved up for above-fold)
-		 * 21  – mnsk7_single_product_key_params
-		 * 23  – mnsk7_single_product_zastosowanie
-		 * 30  – add_to_cart
-		 * 32  – mnsk7_single_product_trust_badges
-		 * 40  – mnsk7_single_product_meta_chips
-		 *
-		 * Removed: excerpt (20), old meta (40) — replaced by structured blocks.
+		 * Kolejność: tytuł, cena, rating, dostępność, kluczowe parametry, CTA, trust strip, meta.
+		 * Hooki mu-plugina (mnsk7_single_product_*) uzupełniają; theme daje fallback.
 		 */
 		do_action( 'woocommerce_single_product_summary' );
 		?>
