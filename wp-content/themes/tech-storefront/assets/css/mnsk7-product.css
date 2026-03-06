@@ -1,9 +1,94 @@
 /**
  * MNK7 Tools — bloki w karcie produktu i shortcode
- * Tech Storefront child theme — v1.6
+ * Tech Storefront child theme — v2.0
+ * Light theme design system for CNC tools B2B e-commerce
  */
 
-/* Top bar: wyłączony — wymuszamy CSS jako fallback jeśli theme_mod nie działa */
+/* =========================================================
+   DESIGN TOKENS
+   ========================================================= */
+
+:root {
+	--color-bg: #ffffff;
+	--color-surface: #f8fafc;
+	--color-surface-2: #f1f5f9;
+	--color-text: #0f172a;
+	--color-text-secondary: #475569;
+	--color-text-muted: #94a3b8;
+	--color-border: #e2e8f0;
+	--color-border-strong: #cbd5e1;
+	--color-primary: #0c7ddb;
+	--color-primary-hover: #0b69ba;
+	--color-primary-dark: #0c3060;
+	--color-accent: #22c55e;
+	--color-warning: #f59e0b;
+	--color-danger: #ef4444;
+	--color-white: #ffffff;
+	--font-base: 'Inter', system-ui, -apple-system, sans-serif;
+	--fs-xs: 0.75rem;
+	--fs-sm: 0.8125rem;
+	--fs-base: 0.9375rem;
+	--fs-lg: 1.125rem;
+	--fs-xl: 1.5rem;
+	--fs-2xl: 2rem;
+	--fs-3xl: 2.5rem;
+	--r-sm: 8px;
+	--r-md: 12px;
+	--r-lg: 16px;
+	--r-pill: 999px;
+	--shadow-sm: 0 1px 3px rgba(0,0,0,.08);
+	--shadow-md: 0 4px 12px rgba(0,0,0,.1);
+	--shadow-lg: 0 8px 24px rgba(0,0,0,.12);
+}
+
+/* =========================================================
+   HEADER
+   ========================================================= */
+
+.site-header {
+	background: var(--color-bg);
+	border-bottom: 1px solid var(--color-border);
+	position: sticky;
+	top: 0;
+	z-index: 1000;
+}
+
+.site-header .site-title a,
+.site-header .site-description,
+.site-header .site-branding p,
+.site-header .site-branding .site-title,
+.site-header .site-branding .site-description {
+	color: var(--color-text) !important;
+}
+
+.site-header .site-branding {
+	color: var(--color-text);
+}
+
+/* Search bar — subtle border, rounded */
+.site-header .search-form input[type="search"],
+.site-header .search-field,
+.site-header .wc-block-product-search__field,
+.site-header .search-form .search-field {
+	border: 1px solid var(--color-border);
+	border-radius: var(--r-sm);
+	background: var(--color-bg);
+}
+
+/* Mobile hamburger — 44px touch target */
+.site-header .menu-toggle,
+.site-header .hamburger,
+.site-header .main-navigation .menu-toggle,
+.site-header button.menu-toggle {
+	min-width: 44px;
+	min-height: 44px;
+	padding: 10px;
+}
+
+/* =========================================================
+   TOP BAR / COPYRIGHT / WISHLIST — hide
+   ========================================================= */
+
 .top-bar,
 .header-top-bar,
 #top-bar,
@@ -11,35 +96,338 @@
 	display: none !important;
 }
 
-/* Copyright: ukrywamy link do GradientThemes */
 .footer-bottom a[href*="gradientthemes"],
 .site-footer a[href*="gradientthemes"] {
 	display: none !important;
 }
 
+.flexible-wishlist-button,
+.flexible-wishlist-wrapper,
+.woosc-btn,
+.woosw-btn,
+.woo-smart-wishlist,
+a[href*="wishlist"],
+.yith-wcwl-add-to-wishlist,
+button.add-to-wishlist,
+.tinv-wishlist,
+.product_meta .posted_in,
+.product_meta .tagged_as {
+	display: none !important;
+}
+
 /* =========================================================
-   KARTA PRODUKTU — ogólne poprawki layoutu
+   P0 READABILITY / BODY
    ========================================================= */
 
-/* Upewniamy się, że blok summary ma odpowiednie odstępy */
+body {
+	color: var(--color-text);
+	font-family: var(--font-base);
+}
+
+/* =========================================================
+   ARCHIVE / CATEGORY — toolbar, sort, filters (S2-02/S2-03)
+   ========================================================= */
+
+.mnsk7-archive-wrap {
+	display: block;
+}
+
+/* Catalog filters (mnsk7-catalog-core): chips above grid */
+.mnsk7-catalog-filters {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.5rem 1rem;
+	margin-bottom: 1rem;
+	padding: 0.75rem 0;
+	border-bottom: 1px solid var(--color-border);
+	font-size: var(--fs-sm);
+}
+.mnsk7-catalog-filters__label {
+	font-weight: 600;
+	color: var(--color-text);
+}
+.mnsk7-catalog-filters__group {
+	display: inline-flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.35rem;
+}
+.mnsk7-catalog-filters__group-label {
+	color: var(--color-text-secondary);
+	margin-right: 0.25rem;
+}
+.mnsk7-catalog-filters__chip {
+	display: inline-block;
+	padding: 0.35rem 0.65rem;
+	border-radius: var(--r-sm);
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	color: var(--color-text);
+	text-decoration: none;
+	transition: background 0.15s, border-color 0.15s;
+}
+.mnsk7-catalog-filters__chip:hover {
+	background: var(--color-surface-2);
+	border-color: var(--color-border-strong);
+}
+.mnsk7-catalog-filters__chip--active {
+	background: var(--color-primary);
+	border-color: var(--color-primary);
+	color: #fff;
+}
+.mnsk7-catalog-filters__chip--active:hover {
+	background: var(--color-primary-hover);
+	border-color: var(--color-primary-hover);
+	color: #fff;
+}
+.mnsk7-catalog-filters__clear {
+	margin-left: 0.5rem;
+	color: var(--color-primary);
+	text-decoration: underline;
+}
+.mnsk7-catalog-filters__clear:hover {
+	color: var(--color-primary-hover);
+}
+
+@media (max-width: 767px) {
+	.mnsk7-catalog-filters {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}
+
+/* Result count + ordering (sort) — one line on desktop, stack on mobile */
+.woocommerce-result-count,
+.woocommerce-ordering {
+	margin: 0 0 0.75rem 0;
+	font-size: var(--fs-sm);
+	color: var(--color-text-secondary);
+}
+
+.woocommerce-ordering select {
+	min-height: 44px;
+	padding: 0.4rem 2rem 0.4rem 0.75rem;
+	border: 1px solid var(--color-border);
+	border-radius: var(--r-sm);
+	background: var(--color-bg);
+	color: var(--color-text);
+	font-size: var(--fs-base);
+	cursor: pointer;
+}
+
+.woocommerce-ordering select:focus {
+	outline: 2px solid var(--color-primary);
+	outline-offset: 2px;
+}
+
+@media (max-width: 767px) {
+	.woocommerce-result-count {
+		display: block;
+		margin-bottom: 0.35rem;
+	}
+	.woocommerce-ordering {
+		margin-bottom: 1rem;
+	}
+	.woocommerce-ordering select {
+		width: 100%;
+		max-width: 280px;
+	}
+}
+
+/* Sidebar filters (plugin output) — avoid layout shift */
+.woocommerce .widget_price_filter,
+.woocommerce .widget_layered_nav,
+.woocommerce .widget_layered_nav_filters {
+	margin-bottom: 1.25rem;
+}
+
+.woocommerce .widget_layered_nav ul li a,
+.woocommerce .widget_price_filter .price_slider_amount .button {
+	min-height: 44px;
+	display: inline-flex;
+	align-items: center;
+}
+
+/* =========================================================
+   PLP — PRODUCT CARDS (CWV: reserve space for images = less CLS)
+   ========================================================= */
+
+/* Reserve aspect-ratio for product thumbnails to prevent CLS */
+.woocommerce ul.products li.product .woocommerce-loop-product__link,
+.woocommerce ul.products li.product .attachment-woocommerce_thumbnail {
+	aspect-ratio: 1 / 1;
+	display: block;
+}
+
+.woocommerce ul.products li.product .attachment-woocommerce_thumbnail img,
+.woocommerce ul.products li.product .woocommerce-loop-product__link img {
+	width: 100%;
+	height: auto;
+	object-fit: contain;
+	vertical-align: top;
+}
+
+.woocommerce ul.products li.product,
+.woocommerce-page ul.products li.product {
+	background: var(--color-bg) !important;
+	border: 1px solid var(--color-border);
+	border-radius: var(--r-md);
+	padding: 0.75rem;
+	box-shadow: var(--shadow-sm);
+	transition: box-shadow 0.2s, border-color 0.2s;
+}
+
+.woocommerce ul.products li.product:hover,
+.woocommerce-page ul.products li.product:hover {
+	box-shadow: var(--shadow-md);
+	border-color: var(--color-border-strong);
+}
+
+/* Key spec line on card (content-product: Image → Title → Spec line → Price → CTA) */
+.mnsk7-card-spec-line {
+	margin: 0.25rem 0 0.5rem;
+	font-size: var(--fs-sm);
+	color: var(--color-text-secondary);
+	line-height: 1.35;
+	min-height: 1.4em;
+}
+.mnsk7-card-cta {
+	margin-top: 0.75rem;
+}
+.mnsk7-card-cta .button,
+.mnsk7-card-cta .add_to_cart_button {
+	min-height: 44px;
+	width: 100%;
+	justify-content: center;
+	text-align: center;
+}
+
+.woocommerce ul.products li.product .product-content,
+.woocommerce ul.products li.product .product-caption,
+.woocommerce ul.products li.product .product-inner {
+	background: var(--color-bg) !important;
+}
+
+/* Image container — overflow hidden, border-radius */
+.woocommerce ul.products li.product .woocommerce-loop-product__link,
+.woocommerce ul.products li.product .attachment-woocommerce_thumbnail,
+.woocommerce ul.products li.product .product-image,
+.woocommerce ul.products li.product img {
+	overflow: hidden;
+	border-radius: var(--r-sm);
+}
+
+.woocommerce ul.products li.product .woocommerce-loop-product__title,
+.woocommerce ul.products li.product h2,
+.woocommerce ul.products li.product a {
+	color: var(--color-text) !important;
+}
+
+.woocommerce ul.products li.product .woocommerce-loop-product__title,
+.woocommerce ul.products li.product h2 {
+	font-size: var(--fs-sm);
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	line-height: 1.4;
+}
+
+.woocommerce ul.products li.product .price,
+.woocommerce ul.products li.product .price .amount {
+	color: var(--color-primary-dark) !important;
+	font-weight: 700;
+	font-size: var(--fs-lg);
+}
+
+.woocommerce ul.products li.product,
+.woocommerce ul.products li.product *:not(.button):not(.added_to_cart) {
+	color: var(--color-text) !important;
+}
+
+.woocommerce ul.products li.product .button,
+.woocommerce ul.products li.product .added_to_cart {
+	background: var(--color-primary) !important;
+	color: var(--color-white) !important;
+	border-radius: var(--r-sm);
+	width: 100%;
+	font-weight: 600;
+	transition: background 0.2s;
+}
+
+.woocommerce ul.products li.product .button:hover,
+.woocommerce ul.products li.product .added_to_cart:hover {
+	background: var(--color-primary-hover) !important;
+}
+
+/* =========================================================
+   CROSS-SELL / RELATED PRODUCTS
+   ========================================================= */
+
+.related.products,
+.up-sells {
+	margin: 2rem 0;
+}
+
+.related.products > h2,
+.up-sells > h2,
+.related.products .woocommerce-loop-product__title,
+.up-sells .woocommerce-loop-product__title {
+	font-size: var(--fs-xl);
+	font-weight: 700;
+	color: var(--color-text);
+	margin-bottom: 1rem;
+}
+
+.related.products ul.products,
+.up-sells ul.products {
+	display: grid;
+	gap: 1rem;
+}
+
+.related.products .woocommerce ul.products li.product,
+.up-sells .woocommerce ul.products li.product,
+.related.products ul.products li.product,
+.up-sells ul.products li.product {
+	background: var(--color-bg) !important;
+	border: 1px solid var(--color-border);
+	border-radius: var(--r-md);
+	box-shadow: var(--shadow-sm);
+	transition: box-shadow 0.2s;
+}
+
+.related.products ul.products li.product:hover,
+.up-sells ul.products li.product:hover {
+	box-shadow: var(--shadow-md);
+}
+
+/* =========================================================
+   SINGLE PRODUCT — summary, cart, trust
+   ========================================================= */
+
+.single-product .summary.entry-summary,
+.single-product .summary.entry-summary p,
+.single-product .summary.entry-summary li,
+.single-product .summary.entry-summary .product_title {
+	color: var(--color-text);
+}
+
 .single-product .summary.entry-summary {
 	padding-top: 0.5rem;
 }
 
-/* Tytuł produktu — lekko zmniejszamy margines */
 .single-product .product_title {
 	margin-bottom: 0.25rem;
 }
 
-/* Cena — wyróżnienie */
 .single-product .price {
-	font-size: 1.5rem;
+	font-size: var(--fs-xl);
 	font-weight: 700;
-	color: #0c3060;
+	color: var(--color-primary-dark);
 	margin: 0.5rem 0;
 }
 
-/* Quantity + button — obok siebie na desktopie */
 .single-product .cart {
 	display: flex;
 	flex-wrap: wrap;
@@ -47,7 +435,6 @@
 	gap: 0.75rem;
 }
 
-/* Badge "X osób kupiło" — wyróżnienie gwiazdką */
 .mnsk7-product-trust__badge--sales {
 	background: #fffbeb;
 	border-color: #fde68a;
@@ -55,7 +442,7 @@
 }
 
 .mnsk7-product-trust__badge--sales .mnsk7-product-trust__badge-icon {
-	color: #f59e0b;
+	color: var(--color-warning);
 }
 
 /* =========================================================
@@ -64,21 +451,21 @@
 
 .mnsk7-product-key-params {
 	margin: 1.25rem 0;
-	border: 1px solid #e2e8f0;
-	border-radius: 8px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--r-sm);
 	overflow: hidden;
 }
 
 .mnsk7-product-key-params__title {
 	margin: 0;
 	padding: 0.55rem 1rem;
-	font-size: 0.75rem;
+	font-size: var(--fs-xs);
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.07em;
-	color: #64748b;
-	background: #f8fafc;
-	border-bottom: 1px solid #e2e8f0;
+	color: var(--color-text-secondary);
+	background: var(--color-surface);
+	border-bottom: 1px solid var(--color-border);
 }
 
 .mnsk7-product-key-params__list {
@@ -91,8 +478,8 @@
 .mnsk7-product-key-params__list dd {
 	margin: 0;
 	padding: 0.5rem 1rem;
-	font-size: 0.88rem;
-	border-bottom: 1px solid #f1f5f9;
+	font-size: var(--fs-base);
+	border-bottom: 1px solid var(--color-surface-2);
 }
 
 .mnsk7-product-key-params__list dt:last-of-type,
@@ -101,14 +488,14 @@
 }
 
 .mnsk7-product-key-params__list dt {
-	color: #64748b;
+	color: var(--color-text-secondary);
 	font-weight: 500;
-	background: #fcfcfd;
+	background: var(--color-surface);
 }
 
 .mnsk7-product-key-params__list dd {
 	font-weight: 700;
-	color: #0f172a;
+	color: var(--color-text);
 }
 
 @media (max-width: 600px) {
@@ -132,13 +519,13 @@
 	margin: 0.75rem 0;
 	padding: 0.65rem 1rem;
 	background: #f0fdf4;
-	border-left: 3px solid #22c55e;
-	border-radius: 0 6px 6px 0;
+	border-left: 3px solid var(--color-accent);
+	border-radius: 0 var(--r-sm) var(--r-sm) 0;
 }
 
 .mnsk7-product-zastosowanie__title {
 	margin: 0 0 0.2rem 0;
-	font-size: 0.72rem;
+	font-size: var(--fs-xs);
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.07em;
@@ -147,8 +534,8 @@
 
 .mnsk7-product-zastosowanie__text {
 	margin: 0;
-	font-size: 0.9rem;
-	color: #1a202c;
+	font-size: var(--fs-base);
+	color: var(--color-text);
 }
 
 /* =========================================================
@@ -161,8 +548,8 @@
 	gap: 0.35rem;
 	margin: 0.2rem 0 0.5rem;
 	padding: 0.28rem 0.8rem;
-	border-radius: 20px;
-	font-size: 0.82rem;
+	border-radius: var(--r-pill);
+	font-size: var(--fs-sm);
 	font-weight: 700;
 	line-height: 1.4;
 }
@@ -175,7 +562,7 @@
 
 .mnsk7-product-availability.out-of-stock {
 	background: #fef2f2;
-	color: #dc2626;
+	color: var(--color-danger);
 	border: 1px solid #fecaca;
 }
 
@@ -201,39 +588,139 @@
 	align-items: center;
 	gap: 0.3rem;
 	padding: 0.3rem 0.7rem;
-	background: #f8fafc;
-	border: 1px solid #e2e8f0;
-	border-radius: 20px;
-	font-size: 0.78rem;
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--r-pill);
+	font-size: var(--fs-xs);
 	font-weight: 600;
-	color: #374151;
+	color: var(--color-text-secondary);
 	white-space: nowrap;
 }
 
 .mnsk7-product-trust__badge-icon {
-	color: #22c55e;
+	color: var(--color-accent);
 	font-style: normal;
 	font-size: 0.85em;
+}
+
+/* =========================================================
+   META CHIPS (kategoria / tagi)
+   ========================================================= */
+
+.mnsk7-product-meta-chips {
+	margin: 0.75rem 0 0.25rem;
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+}
+
+.mnsk7-product-meta-chips__row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+}
+
+.mnsk7-product-meta-chips a,
+.mnsk7-product-meta-chips__row a {
+	display: inline-block;
+	padding: 0.28rem 0.65rem;
+	background: var(--color-surface-2);
+	border: 1px solid var(--color-border);
+	border-radius: var(--r-pill);
+	font-size: var(--fs-xs);
+	font-weight: 600;
+	color: var(--color-text-secondary);
+	text-decoration: none;
+	transition: background 0.15s, border-color 0.15s, color 0.15s;
+}
+
+.mnsk7-product-meta-chips a:hover,
+.mnsk7-product-meta-chips__row a:hover {
+	background: var(--color-primary);
+	border-color: var(--color-primary);
+	color: var(--color-white);
+}
+
+.single-product .product_meta {
+	display: none !important;
+}
+
+/* =========================================================
+   PDP — description structure, tabs, specs (SEO + readability)
+   ========================================================= */
+
+.single-product .woocommerce-tabs,
+.single-product .woocommerce-Tabs-panel {
+	margin-top: 1.5rem;
+}
+
+.single-product .woocommerce-Tabs-panel h2,
+.single-product .woocommerce-Tabs-panel .entry-content h2 {
+	font-size: var(--fs-lg);
+	margin: 0 0 0.75rem 0;
+	color: var(--color-text);
+}
+
+.single-product .woocommerce-Tabs-panel p,
+.single-product .woocommerce-Tabs-panel .entry-content p {
+	margin: 0 0 0.75rem 0;
+	font-size: var(--fs-base);
+	line-height: 1.6;
+	color: var(--color-text-secondary);
+}
+
+/* Additional info / specs table — consistent with key-params */
+.single-product .woocommerce-product-attributes {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0.75rem 0;
+	font-size: var(--fs-base);
+}
+
+.single-product .woocommerce-product-attributes th,
+.single-product .woocommerce-product-attributes td {
+	padding: 0.5rem 1rem;
+	border-bottom: 1px solid var(--color-border);
+	text-align: left;
+}
+
+.single-product .woocommerce-product-attributes th {
+	color: var(--color-text-secondary);
+	font-weight: 600;
+	background: var(--color-surface);
+}
+
+.single-product .woocommerce-product-attributes td {
+	color: var(--color-text);
+}
+
+/* FAQ in PDP (shortcode [mnsk7_faq]) — avoid CLS: reserve space for accordion */
+.mnsk7-faq__item .mnsk7-faq__q {
+	min-height: 44px;
+	display: flex;
+	align-items: center;
 }
 
 /* =========================================================
    DOSTAWA + VAT (shortcode i karta)
    ========================================================= */
 
-/* Dostawa + VAT w karcie i shortcode (S2-11) */
 .mnsk7-dostawa-vat {
 	margin: 0.4rem 0;
-	font-size: 0.88rem;
-	color: #475569;
+	font-size: var(--fs-base);
+	color: var(--color-text-secondary);
 }
 
-/* Stopka — blok MNK7 (kontakt | dostawa | Instagram) */
+/* =========================================================
+   FOOTER — blok MNK7 (kontakt | dostawa | Instagram)
+   ========================================================= */
+
 .mnsk7-site-footer-block {
-	background: #2d3748;
-	color: #e2e8f0;
+	background: #1e293b;
+	color: #cbd5e1;
 	padding: 2rem 0;
 	margin: 0;
-	border-top: 1px solid #4a5568;
+	border-top: 1px solid rgba(255,255,255,0.08);
 }
 
 .mnsk7-site-footer-block__grid {
@@ -242,56 +729,70 @@
 	gap: 2rem;
 	max-width: 1200px;
 	margin: 0 auto;
+	padding: 0 1.5rem;
 }
 
 .mnsk7-site-footer-block__col-title {
 	margin: 0 0 0.5rem 0;
-	font-size: 1rem;
+	font-size: var(--fs-base);
 	font-weight: 600;
-	color: #fff;
+	color: var(--color-white);
 }
 
 .mnsk7-site-footer-block__col--contact .mnsk7-contact-info__title,
 .mnsk7-site-footer-block__col--contact h4 {
-	color: #fff;
+	color: var(--color-white);
 	margin-top: 0;
 }
 
 .mnsk7-site-footer-block__col--contact .mnsk7-contact-info__line,
 .mnsk7-site-footer-block__col--contact p {
 	margin: 0.25rem 0;
-	font-size: 0.9rem;
+	font-size: var(--fs-base);
+	color: #cbd5e1;
 }
 
-.mnsk7-site-footer-block__col--contact a {
-	color: #90cdf4;
+.mnsk7-site-footer-block__col--contact a,
+.mnsk7-site-footer-block__col--instagram a {
+	color: #60a5fa;
 	text-decoration: none;
 }
 
-.mnsk7-site-footer-block__col--contact a:hover {
+.mnsk7-site-footer-block__col--contact a:hover,
+.mnsk7-site-footer-block__col--instagram a:hover {
 	text-decoration: underline;
 }
 
 .mnsk7-site-footer-block__col--delivery .mnsk7-dostawa-vat,
 .mnsk7-site-footer-block__col--delivery .mnsk7-delivery-eta {
 	margin: 0 0 0.5rem 0;
-	font-size: 0.9rem;
-	color: #e2e8f0;
+	font-size: var(--fs-base);
+	color: #cbd5e1;
 }
 
 .mnsk7-site-footer-block__delivery-note {
 	margin: 0.5rem 0 0 0;
-	font-size: 0.85rem;
+	font-size: var(--fs-sm);
 	opacity: 0.9;
+	color: #94a3b8;
 }
 
-.mnsk7-site-footer-block__col--instagram a {
-	color: #90cdf4;
-	text-decoration: none;
+/* Footer bottom — darker, subtle border-top */
+.mnsk7-site-footer-block__bottom,
+.mnsk7-site-footer-block + .footer-bottom,
+.site-footer .footer-bottom {
+	background: #0f172a;
+	border-top: 1px solid rgba(255,255,255,0.06);
+	padding: 1rem 1.5rem;
 }
 
-.mnsk7-site-footer-block__col--instagram a:hover {
-	text-decoration: underline;
+.mnsk7-site-footer-block__copyright,
+.site-footer .footer-bottom .copyright,
+.footer-bottom .copyright {
+	font-size: var(--fs-xs);
+	color: var(--color-text-muted);
+	text-align: center;
+	margin: 0;
 }
 
 @media (max-width: 768px) {
@@ -304,15 +805,18 @@
 	}
 }
 
-/* Cookie consent bar */
+/* =========================================================
+   COOKIE CONSENT BAR
+   ========================================================= */
+
 .mnsk7-cookie-bar {
 	position: fixed;
 	bottom: 0;
 	left: 0;
 	right: 0;
 	z-index: 999999;
-	background: #1a202c;
-	color: #e2e8f0;
+	background: #1e293b;
+	color: #cbd5e1;
 	box-shadow: 0 -4px 20px rgba(0,0,0,0.2);
 }
 
@@ -329,79 +833,93 @@
 
 .mnsk7-cookie-bar__text {
 	margin: 0;
-	font-size: 0.9rem;
+	font-size: var(--fs-base);
 	flex: 1;
 	min-width: 200px;
 }
 
 .mnsk7-cookie-bar__btn {
 	padding: 0.5rem 1.25rem;
-	background: #0c7ddb;
-	color: #fff;
+	background: var(--color-primary);
+	color: var(--color-white);
 	border: none;
-	border-radius: 6px;
+	border-radius: var(--r-sm);
 	font-weight: 600;
 	cursor: pointer;
 	white-space: nowrap;
+	transition: background 0.2s;
 }
 
 .mnsk7-cookie-bar__btn:hover {
-	background: #065a9e;
+	background: var(--color-primary-hover);
 }
 
-/* Strona Dostawa i płatności */
+/* =========================================================
+   STRONY DOSTAWA I KONTAKT
+   ========================================================= */
+
 .mnsk7-page-dostawa .entry-content {
 	margin-top: 1rem;
 }
+
 .mnsk7-page-dostawa__note {
 	margin-top: 1.5rem;
-	font-size: 0.95rem;
-	color: #555;
+	font-size: var(--fs-base);
+	color: var(--color-text-secondary);
 }
 
 .mnsk7-page-kontakt .entry-content {
 	margin-top: 1rem;
 }
+
 .mnsk7-page-kontakt .mnsk7-contact-info {
 	margin-top: 1.5rem;
 }
 
-/* Blok lojalności w Moje konto */
+/* =========================================================
+   BLOK LOJALNOŚCI (Moje konto)
+   ========================================================= */
+
 .mnsk7-loyalty-block {
 	margin: 1.5rem 0;
 	padding: 1.25rem;
 	background: #f0f9ff;
 	border: 1px solid #bae6fd;
-	border-radius: 8px;
+	border-radius: var(--r-sm);
 }
 
 .mnsk7-loyalty-block__title {
 	margin: 0 0 0.75rem 0;
-	font-size: 1.1rem;
+	font-size: var(--fs-lg);
+	color: var(--color-text);
 }
 
 .mnsk7-loyalty-block__sum,
 .mnsk7-loyalty-block__pct,
 .mnsk7-loyalty-block__next {
 	margin: 0.35rem 0;
+	color: var(--color-text-secondary);
 }
 
 .mnsk7-loyalty-block__tiers {
 	margin: 0.75rem 0 0 0;
 	padding-left: 1.25rem;
-	font-size: 0.9rem;
-	color: #555;
+	font-size: var(--fs-base);
+	color: var(--color-text-secondary);
 }
 
-/* Legacy: gdy shortcode używany w treści */
+/* =========================================================
+   LEGACY — shortcode w treści
+   ========================================================= */
+
 .mnsk7-footer-dostawa-vat {
 	margin: 0;
 	padding: 0.75em 1em;
 	text-align: left;
-	font-size: 0.9em;
-	color: #555;
-	background: #f9f9f9;
-	border-top: 1px solid #ececec;
+	font-size: var(--fs-base);
+	color: var(--color-text-secondary);
+	background: var(--color-surface);
+	border-top: 1px solid var(--color-border);
 }
 
 .mnsk7-footer-dostawa-vat .mnsk7-dostawa-vat {
@@ -417,6 +935,7 @@
 .mnsk7-contact-info__title {
 	margin: 0 0 0.35em 0;
 	font-size: 1em;
+	color: var(--color-text);
 }
 
 .mnsk7-contact-info__line {
@@ -428,15 +947,20 @@
 	text-decoration: underline;
 }
 
+/* =========================================================
+   INSTAGRAM FEED
+   ========================================================= */
+
 .mnsk7-instagram-feed {
 	margin-top: 0.75em;
 	padding-top: 0.5em;
-	border-top: 1px dashed #d8d8d8;
+	border-top: 1px dashed var(--color-border);
 }
 
 .mnsk7-instagram-feed__title {
 	margin: 0 0 0.5em 0;
 	font-size: 1em;
+	color: var(--color-text);
 }
 
 .mnsk7-instagram-feed__grid {
@@ -446,9 +970,10 @@
 }
 
 .mnsk7-instagram-feed__item {
-	background: #fff;
-	border: 1px solid #ececec;
+	background: var(--color-bg);
+	border: 1px solid var(--color-border);
 	padding: 0.35em;
+	border-radius: var(--r-sm);
 }
 
 .mnsk7-instagram-feed__fallback,
@@ -456,21 +981,27 @@
 	margin: 0.4em 0 0 0;
 }
 
+/* =========================================================
+   ALLEGRO TRUST / REVIEWS
+   ========================================================= */
+
 .mnsk7-allegro-trust {
 	margin: 1.25em 0;
 	padding: 1em;
 	background: #fffaf0;
 	border: 1px solid #e8d8b3;
-	border-radius: 6px;
+	border-radius: var(--r-sm);
 }
 
 .mnsk7-allegro-trust__title {
 	margin: 0 0 0.35em 0;
-	font-size: 1.05em;
+	font-size: var(--fs-lg);
+	color: var(--color-text);
 }
 
 .mnsk7-allegro-trust__seller {
 	margin: 0 0 0.5em 0;
+	color: var(--color-text-secondary);
 }
 
 .mnsk7-allegro-trust__stats {
@@ -489,7 +1020,8 @@
 
 .mnsk7-allegro-pages__title {
 	margin: 0 0 0.45em 0;
-	font-size: 0.98em;
+	font-size: var(--fs-base);
+	color: var(--color-text);
 }
 
 .mnsk7-allegro-pages__links {
@@ -500,28 +1032,37 @@
 
 .mnsk7-allegro-pages__links a {
 	padding: 0.25em 0.45em;
-	border: 1px solid #d7d7d7;
+	border: 1px solid var(--color-border);
 	border-radius: 4px;
 	text-decoration: none;
+	color: var(--color-primary);
+	transition: background 0.15s, border-color 0.15s;
+}
+
+.mnsk7-allegro-pages__links a:hover {
+	background: var(--color-surface);
+	border-color: var(--color-primary);
 }
 
 .mnsk7-allegro-reviews {
 	margin: 1.25em 0;
 	padding: 1em;
-	background: #f9fafb;
-	border: 1px solid #e5e7eb;
-	border-radius: 6px;
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--r-sm);
 }
 
 .mnsk7-allegro-reviews__title {
 	margin: 0 0 0.6em 0;
+	color: var(--color-text);
 }
 
 .mnsk7-allegro-reviews__item {
 	margin: 0 0 0.8em 0;
 	padding: 0.6em;
-	border-left: 3px solid #0c7ddb;
-	background: #fff;
+	border-left: 3px solid var(--color-primary);
+	background: var(--color-bg);
+	border-radius: 0 var(--r-sm) var(--r-sm) 0;
 }
 
 .mnsk7-allegro-reviews__item p {
@@ -530,61 +1071,76 @@
 
 .mnsk7-allegro-reviews__item cite {
 	font-style: normal;
-	font-size: 0.9em;
-	color: #666;
+	font-size: var(--fs-sm);
+	color: var(--color-text-muted);
 }
+
+/* =========================================================
+   DELIVERY RULES
+   ========================================================= */
 
 .mnsk7-delivery-rules {
 	margin: 1.25em 0;
 	padding: 1em;
-	background: #f5f7fb;
-	border: 1px solid #dfe5ef;
-	border-radius: 6px;
+	background: var(--color-surface);
+	border: 1px solid var(--color-border);
+	border-radius: var(--r-sm);
 }
 
 .mnsk7-delivery-rules__title {
 	margin: 0 0 0.75em 0;
-	font-size: 1.05em;
+	font-size: var(--fs-lg);
+	color: var(--color-text);
 }
 
 .mnsk7-delivery-rules__table {
 	width: 100%;
 	border-collapse: collapse;
-	font-size: 0.95em;
+	font-size: var(--fs-base);
 }
 
 .mnsk7-delivery-rules__table th,
 .mnsk7-delivery-rules__table td {
 	padding: 0.5em 0.6em;
-	border-bottom: 1px solid #dfe5ef;
+	border-bottom: 1px solid var(--color-border);
 	text-align: left;
 }
 
 .mnsk7-delivery-rules__table th {
 	font-weight: 600;
+	color: var(--color-text);
+}
+
+.mnsk7-delivery-rules__table td {
+	color: var(--color-text-secondary);
 }
 
 .mnsk7-delivery-rules__free {
 	margin: 0.75em 0 0 0;
 	font-weight: 600;
+	color: var(--color-accent);
 }
 
-/* Bestsellery (S2-07) */
+/* =========================================================
+   BESTSELLERS / RATING / EXTRA MEDIA
+   ========================================================= */
+
 .mnsk7-bestsellers {
 	margin: 2em 0;
 }
 
 .mnsk7-bestsellers-title {
 	margin-bottom: 1em;
+	font-size: var(--fs-xl);
+	font-weight: 700;
+	color: var(--color-text);
 }
 
-/* Rating (S2-09) */
 .mnsk7-store-rating {
-	font-size: 0.9em;
-	color: #555;
+	font-size: var(--fs-base);
+	color: var(--color-text-secondary);
 }
 
-/* Miejsce na schemat/wideo (S2-06) */
 .mnsk7-product-extra-media {
 	margin: 1em 0;
 	min-height: 80px;
@@ -598,13 +1154,12 @@
 	padding-bottom: 0;
 }
 
-/* SEKCJE — wspólna struktura */
 .mnsk7-section {
 	padding: 3.5rem 0;
 }
 
 .mnsk7-section--light {
-	background: #f8fafc;
+	background: var(--color-surface);
 }
 
 .mnsk7-section__title {
@@ -612,7 +1167,7 @@
 	font-size: clamp(1.25rem, 2.5vw, 1.6rem);
 	text-align: center;
 	font-weight: 700;
-	color: #0f172a;
+	color: var(--color-text);
 }
 
 .mnsk7-section__more {
@@ -621,7 +1176,7 @@
 }
 
 .mnsk7-section__more a {
-	color: #0c7ddb;
+	color: var(--color-primary);
 	font-weight: 600;
 	text-decoration: none;
 }
@@ -632,8 +1187,8 @@
 
 /* HERO */
 .mnsk7-hero {
-	background: linear-gradient(135deg, #0c3060 0%, #0c7ddb 100%);
-	color: #fff;
+	background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+	color: var(--color-white);
 	padding: 4rem 0 3.5rem;
 	text-align: center;
 }
@@ -648,12 +1203,12 @@
 	font-size: clamp(1.7rem, 4.5vw, 2.6rem);
 	font-weight: 800;
 	line-height: 1.2;
-	color: #fff;
+	color: var(--color-white);
 }
 
 .mnsk7-hero__sub {
 	margin: 0 0 2rem;
-	font-size: 1.05rem;
+	font-size: var(--fs-lg);
 	opacity: 0.85;
 	letter-spacing: 0.03em;
 	color: #e2e8f0;
@@ -671,7 +1226,7 @@
 	display: flex;
 	align-items: center;
 	gap: 0.4rem;
-	font-size: 0.95rem;
+	font-size: var(--fs-base);
 	font-weight: 600;
 	color: #e2f5ff;
 }
@@ -690,7 +1245,7 @@
 .mnsk7-hero__btn {
 	display: inline-block;
 	padding: 0.8rem 2rem;
-	border-radius: 8px;
+	border-radius: var(--r-sm);
 	font-weight: 700;
 	font-size: 1rem;
 	text-decoration: none;
@@ -698,13 +1253,13 @@
 }
 
 .mnsk7-hero__btn--primary {
-	background: #fff;
-	color: #0c3060;
+	background: var(--color-white);
+	color: var(--color-primary-dark);
 }
 
 .mnsk7-hero__btn--primary:hover {
 	background: #e2f5ff;
-	color: #0c3060;
+	color: var(--color-primary-dark);
 }
 
 @media (max-width: 600px) {
@@ -731,22 +1286,22 @@
 	align-items: center;
 	gap: 0.4rem;
 	padding: 1.25rem 0.75rem 1rem;
-	background: #fff;
-	border: 1px solid #e2e8f0;
-	border-radius: 10px;
+	background: var(--color-bg);
+	border: 1px solid var(--color-border);
+	border-radius: var(--r-md);
 	text-align: center;
 	text-decoration: none;
-	color: #1e293b;
+	color: var(--color-text);
 	font-weight: 600;
-	font-size: 0.88rem;
+	font-size: var(--fs-sm);
 	transition: border-color 0.18s, box-shadow 0.18s, transform 0.18s;
 }
 
 .mnsk7-cats__item:hover {
-	border-color: #0c7ddb;
+	border-color: var(--color-primary);
 	box-shadow: 0 4px 12px rgba(12,125,219,0.12);
 	transform: translateY(-2px);
-	color: #0c3060;
+	color: var(--color-primary-dark);
 }
 
 .mnsk7-cats__icon {
@@ -766,8 +1321,8 @@
 }
 
 .mnsk7-cats__count {
-	font-size: 0.78rem;
-	color: #94a3b8;
+	font-size: var(--fs-xs);
+	color: var(--color-text-muted);
 	font-weight: 400;
 }
 
@@ -800,26 +1355,26 @@
 	display: block;
 	font-size: clamp(1.8rem, 4vw, 2.6rem);
 	font-weight: 800;
-	color: #0c7ddb;
+	color: var(--color-primary);
 	line-height: 1.1;
 }
 
 .mnsk7-trust-stats__label {
 	display: block;
-	font-size: 0.85rem;
-	color: #64748b;
+	font-size: var(--fs-sm);
+	color: var(--color-text-secondary);
 	margin-top: 0.2rem;
 }
 
 .mnsk7-trust-stats__allegro {
 	text-align: center;
-	font-size: 0.92rem;
-	color: #475569;
+	font-size: var(--fs-base);
+	color: var(--color-text-secondary);
 	margin: 0;
 }
 
 .mnsk7-trust-stats__allegro a {
-	color: #0c7ddb;
+	color: var(--color-primary);
 	font-weight: 600;
 	margin-left: 0.4em;
 	text-decoration: none;
@@ -843,7 +1398,7 @@
 	text-align: center;
 	font-size: clamp(1.25rem, 2.5vw, 1.6rem);
 	font-weight: 700;
-	color: #0f172a;
+	color: var(--color-text);
 }
 
 .mnsk7-allegro-reviews__list {
@@ -854,33 +1409,33 @@
 }
 
 .mnsk7-allegro-reviews__item {
-	background: #fff;
-	border: 1px solid #e2e8f0;
-	border-radius: 10px;
+	background: var(--color-bg);
+	border: 1px solid var(--color-border);
+	border-radius: var(--r-md);
 	padding: 1.1rem 1.25rem;
 	margin: 0;
-	box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+	box-shadow: var(--shadow-sm);
 }
 
 .mnsk7-allegro-reviews__item::before {
 	content: '★★★★★';
 	display: block;
-	color: #f59e0b;
-	font-size: 0.85rem;
+	color: var(--color-warning);
+	font-size: var(--fs-sm);
 	margin-bottom: 0.5rem;
 }
 
 .mnsk7-allegro-reviews__item p {
 	margin: 0 0 0.5rem;
-	font-size: 0.92rem;
-	color: #334155;
+	font-size: var(--fs-base);
+	color: var(--color-text-secondary);
 	line-height: 1.55;
 }
 
 .mnsk7-allegro-reviews__item cite {
 	font-style: normal;
-	font-size: 0.8rem;
-	color: #94a3b8;
+	font-size: var(--fs-xs);
+	color: var(--color-text-muted);
 	font-weight: 600;
 }
 
@@ -892,32 +1447,32 @@
 .mnsk7-allegro-reviews__cta-btn {
 	display: inline-block;
 	padding: 0.65rem 1.5rem;
-	background: #0c7ddb;
-	color: #fff;
-	border-radius: 8px;
+	background: var(--color-primary);
+	color: var(--color-white);
+	border-radius: var(--r-sm);
 	font-weight: 700;
-	font-size: 0.92rem;
+	font-size: var(--fs-base);
 	text-decoration: none;
 	transition: background 0.18s;
 }
 
 .mnsk7-allegro-reviews__cta-btn:hover {
-	background: #065a9e;
-	color: #fff;
+	background: var(--color-primary-hover);
+	color: var(--color-white);
 }
 
 .mnsk7-allegro-reviews__empty {
 	text-align: center;
-	color: #64748b;
-	font-size: 0.92rem;
+	color: var(--color-text-secondary);
+	font-size: var(--fs-base);
 	margin-bottom: 0.75rem;
 }
 
 /* PROGRAM RABATOWY */
 .mnsk7-loyalty-intro {
 	text-align: center;
-	color: #475569;
-	font-size: 0.95rem;
+	color: var(--color-text-secondary);
+	font-size: var(--fs-base);
 	margin: -0.5rem 0 1.5rem;
 }
 
@@ -934,22 +1489,22 @@
 	flex-direction: column;
 	align-items: center;
 	padding: 1.25rem 1.5rem;
-	background: #fff;
-	border: 2px solid #e2e8f0;
-	border-radius: 12px;
+	background: var(--color-bg);
+	border: 2px solid var(--color-border);
+	border-radius: var(--r-md);
 	min-width: 120px;
 	transition: border-color 0.18s;
 }
 
 .mnsk7-loyalty-tier:last-child {
-	border-color: #f59e0b;
+	border-color: var(--color-warning);
 	background: #fffbeb;
 }
 
 .mnsk7-loyalty-tier__pct {
 	font-size: 1.8rem;
 	font-weight: 800;
-	color: #0c7ddb;
+	color: var(--color-primary);
 	line-height: 1;
 }
 
@@ -958,8 +1513,8 @@
 }
 
 .mnsk7-loyalty-tier__from {
-	font-size: 0.8rem;
-	color: #64748b;
+	font-size: var(--fs-xs);
+	color: var(--color-text-secondary);
 	margin-top: 0.4rem;
 	text-align: center;
 }
@@ -980,17 +1535,17 @@
 	gap: 0.6rem;
 	padding: 0.9rem 1.75rem;
 	background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
-	color: #fff;
-	border-radius: 50px;
+	color: var(--color-white);
+	border-radius: var(--r-pill);
 	font-weight: 700;
-	font-size: 0.95rem;
+	font-size: var(--fs-base);
 	text-decoration: none;
 	transition: opacity 0.18s;
 }
 
 .mnsk7-insta-cta__link:hover {
 	opacity: 0.9;
-	color: #fff;
+	color: var(--color-white);
 }
 
 .mnsk7-insta-cta__icon {
@@ -1007,22 +1562,22 @@
 	gap: 1.5rem;
 	margin: 0 0 1.75rem;
 	padding: 1.25rem;
-	background: #f8fafc;
-	border-radius: 10px;
-	border: 1px solid #e2e8f0;
+	background: var(--color-surface);
+	border-radius: var(--r-md);
+	border: 1px solid var(--color-border);
 }
 
 .mnsk7-cat-header__img img {
 	width: 96px;
 	height: 96px;
 	object-fit: contain;
-	border-radius: 6px;
+	border-radius: var(--r-sm);
 	flex-shrink: 0;
 }
 
 .mnsk7-cat-header__desc {
-	font-size: 0.92rem;
-	color: #334155;
+	font-size: var(--fs-base);
+	color: var(--color-text-secondary);
 	line-height: 1.65;
 }
 
@@ -1049,9 +1604,9 @@
 	margin: 0 0 0.75rem;
 	padding: 0.6rem 0.9rem;
 	background: #f0fdf4;
-	border-left: 3px solid #22c55e;
-	border-radius: 0 6px 6px 0;
-	font-size: 0.88rem;
+	border-left: 3px solid var(--color-accent);
+	border-radius: 0 var(--r-sm) var(--r-sm) 0;
+	font-size: var(--fs-sm);
 	color: #166534;
 	font-weight: 500;
 }
@@ -1068,7 +1623,7 @@
 	font-size: clamp(1.15rem, 2.5vw, 1.45rem);
 	font-weight: 700;
 	margin: 0 0 1.25rem;
-	color: #0f172a;
+	color: var(--color-text);
 }
 
 .mnsk7-faq__list {
@@ -1079,8 +1634,8 @@
 }
 
 .mnsk7-faq__item {
-	border: 1px solid #e2e8f0;
-	border-radius: 8px;
+	border: 1px solid var(--color-border);
+	border-radius: var(--r-sm);
 	overflow: hidden;
 }
 
@@ -1088,9 +1643,9 @@
 	margin: 0;
 	padding: 0.9rem 1.1rem;
 	font-weight: 700;
-	font-size: 0.95rem;
-	color: #1e293b;
-	background: #f8fafc;
+	font-size: var(--fs-base);
+	color: var(--color-text);
+	background: var(--color-surface);
 	cursor: pointer;
 	position: relative;
 	padding-right: 2.5rem;
@@ -1103,8 +1658,8 @@
 	right: 1.1rem;
 	top: 50%;
 	transform: translateY(-50%);
-	font-size: 1.2rem;
-	color: #0c7ddb;
+	font-size: var(--fs-lg);
+	color: var(--color-primary);
 	font-weight: 400;
 	line-height: 1;
 	transition: transform 0.2s;
@@ -1120,8 +1675,8 @@
 	max-height: 0;
 	overflow: hidden;
 	transition: max-height 0.25s ease, padding 0.2s;
-	font-size: 0.91rem;
-	color: #334155;
+	font-size: var(--fs-sm);
+	color: var(--color-text-secondary);
 	line-height: 1.65;
 }
 
@@ -1139,8 +1694,8 @@
 }
 
 .mnsk7-seo-hero {
-	background: linear-gradient(135deg, #0c3060 0%, #0c7ddb 100%);
-	color: #fff;
+	background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+	color: var(--color-white);
 	padding: 3rem 0 2.5rem;
 }
 
@@ -1148,7 +1703,7 @@
 	margin: 0 0 0.6rem;
 	font-size: clamp(1.5rem, 4vw, 2.2rem);
 	font-weight: 800;
-	color: #fff;
+	color: var(--color-white);
 }
 
 .mnsk7-seo-hero__sub {
@@ -1160,20 +1715,20 @@
 
 .mnsk7-seo-intro {
 	padding: 2rem 0;
-	background: #f8fafc;
+	background: var(--color-surface);
 }
 
 .mnsk7-seo-intro__text {
 	max-width: 860px;
-	font-size: 0.97rem;
-	color: #334155;
+	font-size: var(--fs-base);
+	color: var(--color-text-secondary);
 	line-height: 1.75;
 }
 
 .mnsk7-seo-intro__text h2 {
-	font-size: 1.2rem;
+	font-size: var(--fs-lg);
 	margin-top: 1.25rem;
-	color: #0f172a;
+	color: var(--color-text);
 }
 
 .mnsk7-seo-products {
@@ -1181,15 +1736,99 @@
 }
 
 .mnsk7-seo-products__title {
-	font-size: 1.35rem;
+	font-size: var(--fs-xl);
 	font-weight: 700;
 	margin: 0 0 1.25rem;
-	color: #0f172a;
+	color: var(--color-text);
 }
 
 .mnsk7-seo-faq {
 	padding: 2rem 0;
-	background: #f8fafc;
+	background: var(--color-surface);
+}
+
+/* =========================================================
+   MOBILE UX — touch targets 44px, sticky PDP CTA (UI_SPEC / qa_smoke_woo)
+   ========================================================= */
+
+/* Buttons and CTAs: min 44px tap target */
+.single-product .single_add_to_cart_button,
+.single-product .quantity input.qty,
+.woocommerce ul.products li.product .button,
+.woocommerce .button.alt {
+	min-height: 44px;
+	min-width: 44px;
+}
+
+.single-product .cart .quantity {
+	display: flex;
+	align-items: center;
+}
+
+.single-product .cart .quantity input.qty {
+	width: 3.5rem;
+	text-align: center;
+}
+
+/* Sticky buy bar on PDP (mobile): add .mnsk7-pdp-sticky-bar in template; toggle .is-visible via JS on scroll */
+.mnsk7-pdp-sticky-bar {
+	display: none;
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	z-index: 100;
+	background: var(--color-bg);
+	border-top: 1px solid var(--color-border);
+	box-shadow: 0 -4px 12px rgba(0,0,0,.08);
+	padding: 0.5rem 1rem;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+}
+
+@media (max-width: 767px) {
+	.mnsk7-pdp-sticky-bar {
+		display: flex;
+	}
+	.mnsk7-pdp-sticky-bar__price {
+		font-size: var(--fs-lg);
+		font-weight: 700;
+		color: var(--color-primary-dark);
+	}
+	.mnsk7-pdp-sticky-bar .button {
+		flex: 0 0 auto;
+		min-height: 44px;
+		padding: 0.6rem 1.25rem;
+	}
+}
+
+@media (min-width: 768px) {
+	.mnsk7-pdp-sticky-bar {
+		display: none !important;
+	}
+}
+
+/* =========================================================
+   CORE WEB VITALS — LCP/CLS (performance_corewebvitals)
+   ========================================================= */
+
+/* PDP: main product image — reserve space to reduce LCP/CLS */
+.single-product .woocommerce-product-gallery__image img,
+.single-product .woocommerce-product-gallery .flex-control-thumbs img {
+	max-width: 100%;
+	height: auto;
+	vertical-align: top;
+}
+
+.single-product .woocommerce-product-gallery {
+	position: relative;
+}
+
+/* Prevent layout shift: font display swap is theme/global; images need dimensions */
+.woocommerce ul.products li.product img[width][height] {
+	height: auto;
+	max-width: 100%;
 }
 
 /* =========================================================
@@ -1204,7 +1843,7 @@
 		grid-template-columns: 1fr;
 	}
 	.mnsk7-delivery-rules__table {
-		font-size: 0.88em;
+		font-size: var(--fs-sm);
 	}
 	.mnsk7-trust-stats {
 		gap: 1rem 2rem;

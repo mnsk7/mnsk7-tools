@@ -1,136 +1,112 @@
-# START HERE — Как запускать пайплайн (mnsk7-tools.pl)
+# START HERE — How to run the pipeline (mnsk7-tools.pl)
 
-Дата: 2026-03-04
+**Date:** 2026-03-05
 
 ---
 
-## Перед первым запуском (один раз)
+## One-time setup
 
-### 1. SSH-ключ (без пароля) — ⚠️ осталась одна команда
-Ключ `~/.ssh/id_ed25519_mnsk7` и `~/.ssh/config` — уже созданы.  
-Скопировать ключ на сервер (последний раз введёшь пароль):
+### 1. SSH key (key-based auth)
+
+Create key and copy to server (one-time):
+
 ```bash
+# If not done yet:
 ssh-copy-id -p 222 -i ~/.ssh/id_ed25519_mnsk7.pub llojjlcemq@s56.cyber-folks.pl
 ```
-После — проверить:
+
+Verify:
+
 ```bash
 ssh mnsk7-staging "echo OK"
 ```
 
-### 2. Поддомен + БД на сервере (один раз в DirectAdmin) — ⚠️ вручную
-- Создать поддомен `staging.mnsk7-tools.pl` (DirectAdmin → Subdomains)
-- Создать БД `mnsk7_stg` + пользователь + права (DirectAdmin → MySQL)
-- Создать `~/domains/staging.mnsk7-tools.pl/public_html/wp-config.php`:
-  ```php
-  define('DB_NAME', 'llojjlcemq_mnsk7stg');
-  define('DB_USER', 'ПОЛЬЗОВАТЕЛЬ_БД');
-  define('DB_PASSWORD', 'ПАРОЛЬ_БД');
-  define('DB_HOST', 'localhost');
-  define('WP_HOME', 'https://staging.mnsk7-tools.pl');
-  define('WP_SITEURL', 'https://staging.mnsk7-tools.pl');
-  define('WP_ENVIRONMENT_TYPE', 'staging');
-  define('DISALLOW_FILE_EDIT', true);
-  ```
+Reference: `.agents/skills/ssh_key_auth_playbook` (and 07_server_ops_cyberfolks for server access).
 
-### 3. SSL для staging (один раз) — ⚠️ вручную
-DirectAdmin → SSL Certificates → Let's Encrypt → staging.mnsk7-tools.pl
+### 2. Staging subdomain and DB (DirectAdmin)
 
-### 4. GitHub репо — ⚠️ добавить remote и push
-git init и первый коммит уже сделаны (commit `bfea9b3`).  
-Осталось: создать репо на GitHub и подключить:
+- Create subdomain `staging.mnsk7-tools.pl` (DirectAdmin → Subdomains).
+- Create MySQL DB and user for staging (e.g. `mnsk7_stg`).
+- Create `wp-config.php` for staging with:
+  - `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`
+  - `WP_HOME`, `WP_SITEURL` = `https://staging.mnsk7-tools.pl`
+  - `WP_ENVIRONMENT_TYPE`, `DISALLOW_FILE_EDIT`, etc. (see `docs/STAGING_PLAYBOOK.md`).
+
+### 3. SSL for staging
+
+- **Shared:** DirectAdmin → SSL → Let’s Encrypt for staging.mnsk7-tools.pl.
+- **VPS:** Use `ssl_certbot_playbook` (or certbot/acme.sh).
+
+### 4. GitHub
+
 ```bash
-git remote add origin https://github.com/ТВОЙ_ЛОГИН/mnsk7-tools.pl.git
+git remote add origin https://github.com/YOUR_USER/mnsk7-tools.pl.git
 git branch -M main
 git push -u origin main
 ```
 
-### 5. WP официальные skills (один раз)
+### 5. WP official skills (once per environment)
+
 ```bash
 npx skills add https://github.com/WordPress/agent-skills --agent cursor \
-  --skill wordpress-router \
-  --skill wp-project-triage \
-  --skill wp-plugin-development \
-  --skill wp-wpcli-and-ops \
-  --skill wp-performance \
-  --skill wp-phpstan \
-  --skill wpds
+  --skill wordpress-router --skill wp-project-triage --skill wp-plugin-development \
+  --skill wp-wpcli-and-ops --skill wp-performance --skill wp-phpstan --skill wpds
 ```
 
 ---
 
-## Пайплайн агентов (порядок)
+## Rules and policy
 
-> Все агенты запускаются вручную в Cursor (@ + имя агента).  
-> Результат каждого — файлы в `docs/` или `tasks/`. Не автоматически.  
-> Файлы-стабы в `docs/` и `tasks/` — **шаблоны**: агент их заполняет. Не удалять до запуска агента.
-
-### Шаг 1 — Дискавери клиента
-Агент: `@00_client_discovery`  
-Запрос: «Сделай дискавери проекта mnsk7-tools.pl по своему промпту»  
-Выход: `docs/DISCOVERY.md`, `docs/REQUIREMENTS.md`
-
-### Шаг 2 — SEO + Контент + GA4
-Агент: `@02_growth_seo`  
-Запрос: «Прочитай REQUIREMENTS.md и сделай SEO_PLAN, CONTENT_PLAN, TRACKING»  
-Выход: `docs/SEO_PLAN.md`, `docs/CONTENT_PLAN.md`, `docs/TRACKING.md`
-
-### Шаг 3 — Архитектура WP
-Агент: `@03_wp_architect`  
-Запрос: «Прочитай REQUIREMENTS.md и SEO_PLAN.md, сделай ARCHITECTURE.md и BACKLOG.md»  
-Выход: `docs/ARCHITECTURE.md`, `docs/BACKLOG.md`
-
-### Шаг 4 — Backlog и спринты
-Агент: `@01_product_manager`  
-Запрос: «Прочитай REQUIREMENTS.md, SEO_PLAN.md, ARCHITECTURE.md, сделай epics и sprint_01»  
-Выход: `tasks/010_epics.md`, `tasks/020_sprint_01.md`, `tasks/030_sprint_02.md`
-
-### Шаг 5 — Разработка (параллельно)
-Агенты: `@05_theme_ux_frontend` + `@04_woo_engineer`  
-По задачам из `tasks/020_sprint_01.md`. Код → ветка `feature/*` → PR.
-
-### Шаг 6 — QA
-Агент: `@08_qa_security`  
-Запрос: «Пройди smoke-тест по qa_smoke_woo, обнови docs/QA_REPORT.md»
-
-### Шаг 7 — Деплой на staging
-```bash
-make staging-full
-```
-Или по шагам:
-```bash
-make deploy-files      # rsync mu-plugins + theme
-make staging-refresh   # dump prod DB → staging + search-replace + flush
-```
-После: проверить https://staging.mnsk7-tools.pl
+- **Code and deploy:** `.cursorrules` — no core/plugin edits; theme and mu-plugins only; staging must use staging-safety (block mail/payments, noindex).
+- **Staging safety and deploy:** `docs/STAGING_PLAYBOOK.md`, `docs/DEPLOY_PLAYBOOK.md` (and rollback if documented there).
+- **Definition of Done:** `docs/DEFINITION_OF_DONE.md`.
+- **Staging vs prod:** `docs/USER_JOURNEY_STAGING_VS_PROD.md` — różnice UX i mapowanie plików. **Zanim zmienisz motyw/opcje na staging:** upewnij się, że staging ma **osobną bazę** (DB_NAME ≠ prod). Bez tego zmiana motywu na staging zmienia prod.
 
 ---
 
-## Обновление staging при новых изменениях
+## Agent pipeline (order)
+
+Run agents **manually** in Cursor (e.g. @agent_name). Each agent writes to `docs/` or `tasks/`. Stub files in `docs/` and `tasks/` are templates; agents fill them. Do not delete stubs before the agent run.
+
+| Step | Agent | Input | Output |
+|------|--------|--------|--------|
+| 0 | _ceo_team_audit | — | TEAM_AUDIT, TEAM_FIX_PLAN, TEAM_READINESS, START_HERE (on demand) |
+| 1 | 00_as_is_audit | Site/docs | AS_IS_AUDIT.md, AS_IS_BACKLOG.md, AS_IS_RISKS.md |
+| 2 | 00_client_discovery | CLIENT_INTERVIEW_SUMMARY.md | DISCOVERY_GAP_ANALYSIS.md, DISCOVERY.md, REQUIREMENTS.md |
+| 3 | 02_growth_seo | REQUIREMENTS.md | SEO_PLAN.md, CONTENT_PLAN.md, TRACKING.md |
+| 4 | 03_wp_architect | REQUIREMENTS.md, SEO_PLAN.md | ARCHITECTURE.md, BACKLOG.md |
+| 5 | 01_product_manager | REQUIREMENTS, SEO_PLAN, ARCHITECTURE | tasks/010_epics.md, 020_sprint_01.md, 030_sprint_02.md |
+| 5b | 09_ui_designer | REQUIREMENTS, CONTACT_DELIVERY_LOYALTY, client notes | UI_SPEC (or UI_SPEC_V2 — see TEAM_FIX_PLAN for canonical choice) |
+| 6 | 05_theme_ux_frontend + 04_woo_engineer | ARCHITECTURE, UI_SPEC, sprint tasks | Code (theme/mu-plugin), PRs |
+| 7 | 08_qa_security | — | QA_REPORT.md, smoke/regression checklist, items in 000_inbox.md |
+| 8 | 06_devops_github + 07_server_ops_cyberfolks | — | Branches, PR template, Actions; deploy playbook, staging refresh |
+
+**Important:** Run 09_ui_designer (5b) before or in parallel with step 5 so UI_SPEC exists before 05/04 implement (see `docs/TEAM_FIX_PLAN.md` F3).
+
+---
+
+## Deploy to staging (after code changes)
 
 ```bash
-git add .
-git commit -m "feat: описание изменений"
-git push origin staging        # или feature/...
-make deploy-files              # залить файлы на staging
-make staging-refresh           # обновить БД (если нужно)
+make deploy-files      # rsync theme + mu-plugins
+make staging-refresh   # dump prod DB → import staging → search-replace → flush
 ```
 
----
+Then check https://staging.mnsk7-tools.pl.
 
-## Определение готовности задачи
-
-→ `docs/DEFINITION_OF_DONE.md`
+Full flow: `make staging-full` (if defined in Makefile).
 
 ---
 
-## Файлы быстрой справки
+## Quick reference
 
-| Что | Где |
-|-----|-----|
-| Порядок агентов | `.agents/orchestrator.md` |
-| Описания агентов | `.agents/agents/*.md` |
+| What | Where |
+|------|--------|
+| Agent order | `.agents/orchestrator.md` |
+| Agent definitions | `.agents/agents/*.md` |
 | Skills | `.agents/skills/*/SKILL.md` |
-| Деплой playbook | `docs/STAGING_PLAYBOOK.md` |
-| DoD | `docs/DEFINITION_OF_DONE.md` |
-| Аудит команды | `docs/TEAM_AUDIT.md` |
-| Статус готовности | `docs/TEAM_READINESS.md` |
+| Deploy / staging | `docs/STAGING_PLAYBOOK.md`, `docs/DEPLOY_PLAYBOOK.md` |
+| Definition of Done | `docs/DEFINITION_OF_DONE.md` |
+| Team audit | `docs/TEAM_AUDIT.md` |
+| Fix plan | `docs/TEAM_FIX_PLAN.md` |
+| Readiness | `docs/TEAM_READINESS.md` |

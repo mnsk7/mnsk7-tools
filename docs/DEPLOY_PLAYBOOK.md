@@ -4,6 +4,9 @@
 
 Procedura wdrożenia, odświeżenia staging, odwołania i backupy. Źródła: cyberfolks_deploy_playbook, staging_bootstrap, ssl_cyberfolks.
 
+**Pełny playbook ops (deploy, rollback, wp-config, backupy, SSL):** [SERVER_OPS_CYBERFOLKS.md](SERVER_OPS_CYBERFOLKS.md).  
+**Bezpieczeństwo (stage vs prod, ścieżki, dry-run, 4 testy):** [DEPLOY_SAFETY.md](DEPLOY_SAFETY.md).
+
 ---
 
 ## 1. Co wdrażamy i skąd
@@ -90,12 +93,15 @@ Wymaga: wp-cli w PATH na serwerze, poprawne ścieżki w `.env` (lub w skrypcie `
 ## 7. Odwołanie (rollback)
 
 **Tylko pliki (theme / mu-plugins):**  
-Wrócić do poprzedniego commita w Git i zrobić push do main (nowy deploy) albo lokalnie `make deploy-files` po `git checkout` poprzedniego stanu.  
-Alternatywa: na serwerze przywrócić kopię katalogu z backupu (np. `tar -xzf backup-theme-....tar.gz` w odpowiednie miejsce).
+- Wrócić do poprzedniego commita w Git i zrobić push (nowy deploy) albo lokalnie `make deploy-files` po `git checkout` poprzedniego stanu.  
+- Alternatywa: na serwerze przywrócić kopię z backupu: `tar -xzf ~/backups/staging-theme-....tar.gz` w katalogu staging (albo `make backup-files` przed deployem, potem przywrócić).  
+- Jeśli używano `DEPLOY_BACKUP_THEME=1 make deploy-files`, na serwerze: `cd .../themes && rm -rf tech-storefront && mv tech-storefront_prev tech-storefront`, potem `wp cache flush` i `wp rewrite flush --hard`.
 
 **Baza danych:**  
 Przy krytycznej zmianie BД na staging: przywrócić z backupu, np.  
 `wp db import /tmp/backup-YYYYMMDD.sql` (w katalogu staging).
+
+Szczegóły: [SERVER_OPS_CYBERFOLKS.md](SERVER_OPS_CYBERFOLKS.md) §2.
 
 ---
 

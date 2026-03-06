@@ -140,7 +140,7 @@ function tech_storefront_enqueue_mnsk7_product_css() {
 		'tech-storefront-mnsk7-product',
 		get_stylesheet_directory_uri() . '/assets/css/mnsk7-product.css',
 		array(),
-		'1.7'
+		'1.9'
 	);
 }
 add_action( 'wp_enqueue_scripts', 'tech_storefront_enqueue_mnsk7_product_css', 15 );
