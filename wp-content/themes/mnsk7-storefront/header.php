@@ -31,15 +31,23 @@ defined( 'ABSPATH' ) || exit;
 		</div>
 		<nav class="mnsk7-header__nav" role="navigation" aria-label="<?php esc_attr_e( 'Menu główne', 'mnsk7-storefront' ); ?>">
 			<button type="button" class="mnsk7-header__menu-toggle" aria-expanded="false" aria-controls="mnsk7-primary-menu"><?php esc_html_e( 'Menu', 'mnsk7-storefront' ); ?></button>
-			<?php
-			wp_nav_menu( array(
-				'theme_location' => 'primary',
-				'menu_id'        => 'mnsk7-primary-menu',
-				'menu_class'     => 'mnsk7-header__menu',
-				'container'      => false,
-				'fallback_cb'    => 'mnsk7_header_fallback_menu',
-			) );
-			?>
+			<ul id="mnsk7-primary-menu" class="mnsk7-header__menu">
+				<?php
+				$shop_url = ( function_exists( 'wc_get_page_permalink' ) ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
+				$nav_links = array(
+					array( $shop_url, __( 'Sklep', 'mnsk7-storefront' ), function() { return function_exists( 'is_shop' ) && is_shop(); } ),
+					array( home_url( '/przewodnik/' ), __( 'Przewodnik', 'mnsk7-storefront' ), function() { return is_page( 'przewodnik' ); } ),
+					array( home_url( '/dostawa-i-platnosci/' ), __( 'Dostawa i płatności', 'mnsk7-storefront' ), function() { return is_page( 'dostawa-i-platnosci' ); } ),
+					array( home_url( '/kontakt/' ), __( 'Kontakt', 'mnsk7-storefront' ), function() { return is_page( 'kontakt' ); } ),
+				);
+				foreach ( $nav_links as $arr ) {
+					list( $href, $label, $is_current ) = array_pad( $arr, 3, null );
+					$current = is_callable( $is_current ) && $is_current();
+					$class = $current ? ' class="current-menu-item"' : '';
+					echo '<li' . $class . '><a href="' . esc_url( $href ) . '">' . esc_html( $label ) . '</a></li>';
+				}
+				?>
+			</ul>
 		</nav>
 		<div class="mnsk7-header__actions">
 			<?php
