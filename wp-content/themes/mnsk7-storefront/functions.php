@@ -66,7 +66,7 @@ function mnsk7_header_fallback_menu() {
 
 /* 1. Enqueue styles — many small CSS parts (easier to maintain than one 2000+ line file) */
 add_action( 'wp_enqueue_scripts', function () {
-	$v = '3.0.2';
+	$v = '3.0.3';
 	$base = get_stylesheet_directory_uri() . '/assets/css/parts/';
 	$dir = get_stylesheet_directory() . '/assets/css/parts/';
 	if ( mnsk7_parent_storefront_available() ) {

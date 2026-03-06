@@ -189,7 +189,15 @@
 
 ---
 
-## 10. Progress (staging, deploy, scripts)
+## 10. Pipeline: as-is + fix (po jednej części → kod → push)
+
+| Część | As-is / cel | Status |
+|-------|-------------|--------|
+| **Header** | Krótszy pasek: mniejsza wysokość, logo, padding, menu/actions. | Zrobione: `--header-h` 48px, padding 0.75rem, logo max 36px, menu/links zwarte (04-header.css, 01-tokens). |
+
+---
+
+## 11. Progress (staging, deploy, scripts)
 
 - Staging: https://staging.mnsk7-tools.pl; separate DB; `WP_ENVIRONMENT_TYPE=staging`; staging-safety mu-plugin.
 - Deploy: rsync theme + mu-plugins (Makefile: deploy-files, staging-refresh).
