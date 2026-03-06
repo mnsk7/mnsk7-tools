@@ -25,3 +25,7 @@ jobs:
       - name: Lint theme (tech-storefront)
         run: |
           find wp-content/themes/tech-storefront -name "*.php" -exec php -l {} \;
+
+      - name: Lint theme (mnsk7-storefront)
+        run: |
+          find wp-content/themes/mnsk7-storefront -name "*.php" -exec php -l {} \;

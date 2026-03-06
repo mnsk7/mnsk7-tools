@@ -4,5 +4,5 @@
 - Не редактировать файлы плагинов и ядра WP. Только theme, mu-plugins и кастом-плагин проекта.
 - Любая кастом-логика Woo: через hooks/filters либо в кастом-плагине.
 - Для staging: обязателен mu-plugin staging-safety (блок почты/платежей, blog_public=0).
-- Из Git деплоим только: wp-content/themes/<theme>, wp-content/mu-plugins, wp-content/plugins/<custom>.
+- Из Git деплоим только: wp-content/themes/<theme>, wp-content/mu-plugins, wp-content/plugins/<custom>. Родительскую тему Storefront тоже держать в репозитории (wp-content/themes/storefront) и деплоить вместе с дочерней mnsk7-storefront, чтобы обновления WP/хостинга её не затирали.
 - Перед изменениями: описать план и какие файлы будут затронуты. После: как протестировать (корзина, чекаут, скорость).

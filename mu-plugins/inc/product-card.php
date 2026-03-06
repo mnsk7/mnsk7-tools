@@ -203,71 +203,46 @@ add_filter( 'woocommerce_get_stock_html', function ( $html ) {
 	return $html;
 } );
 
-/* Hooki WooCommerce summary (priority):
- *  8  → availability
- * 21  → key_params
- * 23  → zastosowanie
- * 32  → trust_badges
- */
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_availability', 8 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_key_params', 21 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_zastosowanie', 23 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_trust_badges', 32 );
+add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_meta_chips', 40 );
 
-/**
- * Jeśli parametry są wyciągane z krótkiego opisu przez nasz fallback parser,
- * zastępujemy wyjście krótkiego opisu (excerpt) aby uniknąć duplikatu "Wymiary: = ..."
- * Tylko gdy parsowanie znalazło ≥2 wiersze "label = value".
- */
-add_filter( 'woocommerce_short_description', 'mnsk7_clean_excerpt_when_params_parsed', 10 );
-function mnsk7_clean_excerpt_when_params_parsed( $excerpt ) {
-	if ( ! is_singular( 'product' ) ) {
-		return $excerpt;
-	}
+add_action( 'woocommerce_before_single_product', function () {
+	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20 );
+	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
+	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_price', 10 );
+	add_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_price', 15 );
+}, 5 );
+
+function mnsk7_single_product_meta_chips() {
 	global $product;
 	if ( ! is_a( $product, 'WC_Product' ) ) {
-		return $excerpt;
+		return;
 	}
-
-	/* Sprawdź czy WC-atrybuty są dostępne — jeśli tak, excerpt pozostaje bez zmian */
-	$labels = mnsk7_get_key_param_attributes();
-	foreach ( array_keys( $labels ) as $slug ) {
-		if ( $product->get_attribute( $slug ) !== '' ) {
-			return $excerpt;
-		}
+	$cats = wc_get_product_category_list( $product->get_id(), '' );
+	$tags = wc_get_product_tag_list( $product->get_id(), '' );
+	if ( ! $cats && ! $tags ) {
+		return;
 	}
-
-	/* Fallback był użyty — sprawdź czy excerpt zawiera głównie linie "X = Y" */
-	$parsed = mnsk7_parse_excerpt_params( $product );
-	if ( count( $parsed ) < 2 ) {
-		return $excerpt;
+	echo '<div class="mnsk7-product-meta-chips">';
+	if ( $cats ) {
+		echo '<div class="mnsk7-product-meta-chips__row">' . $cats . '</div>';
 	}
-
-	/*
-	 * Usuwamy blok wymiarów z excerpta (linie "coś = wartość"),
-	 * zostawiając tylko sekcje takie jak "Kluczowe cechy:" i inne teksty.
-	 */
-	$text  = wp_strip_all_tags( $excerpt );
-	$lines = preg_split( '/[\n\r]+/', $text );
-	$keep  = array();
-	foreach ( $lines as $line ) {
-		$line = trim( $line );
-		if ( $line === '' ) {
-			continue;
-		}
-		/* Opuść linie w stylu "Etykieta = wartość" i "Wymiary:" */
-		if ( preg_match( '/^[^\=]+=\s*.+$/', $line ) ) {
-			continue;
-		}
-		if ( preg_match( '/^Wymiary\s*:?\s*$/i', $line ) ) {
-			continue;
-		}
-		$keep[] = $line;
+	if ( $tags ) {
+		echo '<div class="mnsk7-product-meta-chips__row">' . $tags . '</div>';
 	}
+	echo '</div>';
+}
 
-	if ( empty( $keep ) ) {
+/**
+ * On single product pages, completely suppress the short description (excerpt)
+ * to avoid duplicating info already shown in key_params block and description tab.
+ */
+add_filter( 'woocommerce_short_description', function ( $excerpt ) {
+	if ( is_singular( 'product' ) ) {
 		return '';
 	}
-
-	return '<p>' . implode( '</p><p>', array_map( 'esc_html', $keep ) ) . '</p>';
-}
+	return $excerpt;
+}, 99 );

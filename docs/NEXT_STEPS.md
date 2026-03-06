@@ -57,7 +57,7 @@ Krótki przegląd: co jest zrobione w kodzie, co zostało (admin, konfiguracja, 
 ### 3b. UI według specyfikacji (05/04)
 
 - **[UI_SPEC.md](UI_SPEC.md)** jest gotowy: header (logo, menu z kategoriami, search, konto, koszyk), footer (kontakt, Instagram 1 rząd, linki, skrót dostawy), główna (baner, kategorie, karuzela, loyalty, Instagram), karta produktu (kolejność sekcji, CTA, odstępy).
-- **Zrobione w kodzie:** stopka w **szablonie** (footer.php) — 3 kolumny: kontakt | dostawa+VAT+ETA | Instagram. Główna: **front-page.php**. Szablony stron: **Dostawa i płatności** (page-dostawa.php), **Kontakt** (page-kontakt.php) — utwórz stronę, wybierz szablon. W koszyku i checkout: komunikat o dostawie gratis od 300 zł („Do gratisowej dostawy brakuje Ci X zł” / „Masz darmową dostawę!”). Cookie bar w mu-plugin. Lista pluginów: [PLUGINS_CLEANUP.md](PLUGINS_CLEANUP.md).
+- **Zrobione w kodzie:** stopka w **szablonie** (footer.php) — 3 kolumny: kontakt | dostawa+VAT+ETA | Instagram. Główna: **front-page.php**. Strony **Dostawa i płatności**, **Kontakt** oraz 4 SEO (frezy do aluminium, MDF, stali, CNC) utworzone przez API — skrypt `scripts/wp-create-pages.py` (id 35158, 35161, 35167, 35173, 35176, 35179). W koszyku i checkout: komunikat o dostawie gratis od 300 zł („Do gratisowej dostawy brakuje Ci X zł” / „Masz darmową dostawę!”). Cookie bar w mu-plugin. Lista pluginów: [PLUGINS_CLEANUP.md](PLUGINS_CLEANUP.md).
 
 ### 4. Później (Sprint 03 / backlog)
 

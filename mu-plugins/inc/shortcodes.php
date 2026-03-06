@@ -7,12 +7,62 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Try to fetch latest Instagram post URLs from public profile HTML.
+ * Falls back gracefully when Instagram blocks scraping.
+ */
+function mnsk7_instagram_recent_post_urls( $limit = 3 ) {
+	$limit     = max( 1, min( 6, (int) $limit ) );
+	$cache_key = 'mnsk7_ig_recent_urls';
+	$cached    = get_transient( $cache_key );
+
+	if ( is_array( $cached ) && ! empty( $cached ) ) {
+		return array_slice( $cached, 0, $limit );
+	}
+
+	$profile_url = defined( 'MNK7_INSTAGRAM_URL' ) ? MNK7_INSTAGRAM_URL : 'https://www.instagram.com/mnsk7tools/';
+	$response    = wp_remote_get(
+		$profile_url,
+		array(
+			'timeout'     => 10,
+			'redirection' => 3,
+			'user-agent'  => 'Mozilla/5.0 (compatible; MNK7Bot/1.0; +https://staging.mnsk7-tools.pl)',
+		)
+	);
+
+	if ( is_wp_error( $response ) ) {
+		return array();
+	}
+
+	$body = (string) wp_remote_retrieve_body( $response );
+	if ( '' === $body ) {
+		return array();
+	}
+
+	$matches = array();
+	preg_match_all( '#https://www\.instagram\.com/(?:p|reel)/[A-Za-z0-9_-]+/?#', $body, $matches );
+
+	if ( empty( $matches[0] ) ) {
+		return array();
+	}
+
+	$urls = array_values( array_unique( array_map( 'esc_url_raw', $matches[0] ) ) );
+	if ( empty( $urls ) ) {
+		return array();
+	}
+
+	set_transient( $cache_key, $urls, 30 * MINUTE_IN_SECONDS );
+	return array_slice( $urls, 0, $limit );
+}
+
 function mnsk7_instagram_feed_html( $atts = array() ) {
 	$atts  = shortcode_atts( array( 'posts' => '', 'limit' => 3, 'title' => __( 'Instagram @mnsk7tools', 'mnsk7-tools' ) ), $atts, 'mnsk7_instagram_feed' );
 	$limit = max( 1, min( 6, (int) $atts['limit'] ) );
 	$posts = array_filter( array_map( 'trim', explode( ',', (string) $atts['posts'] ) ) );
 	if ( ! empty( $posts ) ) {
 		$posts = array_slice( $posts, 0, $limit );
+	} else {
+		$posts = mnsk7_instagram_recent_post_urls( $limit );
 	}
 	$html  = '<section class="mnsk7-instagram-feed">';
 	$html .= '<h4 class="mnsk7-instagram-feed__title">' . esc_html( $atts['title'] ) . '</h4>';
