@@ -104,32 +104,53 @@ function mnsk7_single_product_key_params() {
 		return;
 	}
 
-	/* 1. Próbujemy WC-atrybuty (priorytet) */
 	$labels = mnsk7_get_key_param_attributes();
-	$found  = array();
+	$found  = array(); // slug => [ 'label' => long label, 'value' => value ]
 	foreach ( array_keys( $labels ) as $slug ) {
 		$val = $product->get_attribute( $slug );
-		if ( $val !== '' && $val !== null && ! isset( $found[ $labels[ $slug ] ] ) ) {
-			$found[ $labels[ $slug ] ] = $val;
+		if ( $val !== '' && $val !== null && ! isset( $found[ $slug ] ) ) {
+			$found[ $slug ] = array( 'label' => $labels[ $slug ], 'value' => $val );
 		}
 	}
 
-	/* 2. Fallback: parsowanie krótkiego opisu */
 	if ( empty( $found ) ) {
-		$found = mnsk7_parse_excerpt_params( $product );
+		$parsed = mnsk7_parse_excerpt_params( $product );
+		foreach ( $parsed as $label => $value ) {
+			$found[ 'excerpt_' . sanitize_title( $label ) ] = array( 'label' => $label, 'value' => $value );
+		}
 	}
 
 	if ( empty( $found ) ) {
 		return;
 	}
 
+	$is_variable = $product->is_type( 'variable' );
+	$var_attrs   = $is_variable ? $product->get_variation_attributes() : array();
 	$short_labels = function_exists( 'mnsk7_get_key_param_short_labels' ) ? mnsk7_get_key_param_short_labels() : array();
+
 	echo '<div class="mnsk7-product-key-params">';
 	echo '<h4 class="mnsk7-product-key-params__title">' . esc_html__( 'Kluczowe parametry', 'mnsk7-tools' ) . '</h4>';
 	echo '<dl class="mnsk7-product-key-params__list">';
-	foreach ( $found as $label => $value ) {
-		$display_label = isset( $short_labels[ $label ] ) ? $short_labels[ $label ] : $label;
-		echo '<dt>' . esc_html( $display_label ) . '</dt><dd>' . esc_html( $value ) . '</dd>';
+	foreach ( $found as $slug => $item ) {
+		$long_label = $item['label'];
+		$value      = $item['value'];
+		$display_label = isset( $short_labels[ $long_label ] ) ? $short_labels[ $long_label ] : $long_label;
+		echo '<dt>' . esc_html( $display_label ) . '</dt>';
+		$is_var_attr = $is_variable && strpos( $slug, 'excerpt_' ) !== 0 && isset( $var_attrs[ $slug ] );
+		if ( $is_var_attr && ! empty( $var_attrs[ $slug ] ) ) {
+			$name = 'attribute_' . esc_attr( $slug );
+			echo '<dd class="mnsk7-product-key-params__dd--select">';
+			echo '<select name="' . $name . '" data-attribute_name="' . esc_attr( $slug ) . '" class="mnsk7-key-param-select">';
+			echo '<option value="">' . esc_html__( 'Wybierz', 'mnsk7-tools' ) . '</option>';
+			foreach ( $var_attrs[ $slug ] as $opt_val ) {
+				$opt_label = get_term_by( 'slug', $opt_val, $slug ) ? get_term_by( 'slug', $opt_val, $slug )->name : $opt_val;
+				$selected  = ( $opt_val === $value || sanitize_title( $opt_label ) === sanitize_title( $value ) ) ? ' selected' : '';
+				echo '<option value="' . esc_attr( $opt_val ) . '"' . $selected . '>' . esc_html( $opt_label ) . '</option>';
+			}
+			echo '</select></dd>';
+		} else {
+			echo '<dd>' . esc_html( $value ) . '</dd>';
+		}
 	}
 	echo '</dl></div>';
 }
@@ -214,7 +235,14 @@ add_action( 'woocommerce_before_single_product', function () {
 	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_meta', 40 );
 	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_price', 10 );
 	add_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_price', 15 );
+	// Bez listy zakładek (Opis | Opinie) — tylko harmonijka „Pokaż opis”.
+	remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_product_data_tabs', 10 );
+	add_action( 'woocommerce_after_single_product_summary', 'mnsk7_single_product_description_accordion_block', 10 );
 }, 5 );
+
+function mnsk7_single_product_description_accordion_block() {
+	mnsk7_product_description_accordion();
+}
 
 function mnsk7_single_product_meta_chips() {
 	global $product;
@@ -253,9 +281,14 @@ add_filter( 'woocommerce_short_description', function ( $excerpt ) {
 
 /**
  * Ukryj zakładkę "Informacje dodatkowe" (parametry są w bloku Kluczowe parametry przy zdjęciu).
+ * Ukryj zakładkę "Opinie" gdy brak recenzji (0).
  */
 add_filter( 'woocommerce_product_tabs', function ( $tabs ) {
 	unset( $tabs['additional_information'] );
+	$post = get_post();
+	if ( $post && (int) $post->comment_count === 0 && isset( $tabs['reviews'] ) ) {
+		unset( $tabs['reviews'] );
+	}
 	return $tabs;
 }, 20 );
 

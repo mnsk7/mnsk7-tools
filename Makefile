@@ -36,3 +36,23 @@ staging-full: deploy-files staging-refresh
 # FB-04: wyłączenie pluginów filtrów dublujących „Filtruj" na stagingu (wymaga .env, SSH, WP-CLI na serwerze)
 deactivate-filter-plugins:
 	./scripts/staging-deactivate-filter-plugins.sh
+
+# Lista pluginów na stagingu (WP-CLI po SSH, pamięć 512M)
+plugin-list:
+	@./scripts/staging-plugin-list.sh
+
+# Audyt: dezaktywacja zbędnych/ciężkich pluginów (docs/PLUGINS_AUDIT.md)
+deactivate-plugins-audit:
+	./scripts/staging-deactivate-plugins-audit.sh
+
+# Usuń z opisów kategorii shortcode [wpf-filters id=7] (artefakt po wyłączeniu pluginu filtrów)
+clean-category-shortcodes:
+	./scripts/staging-clean-category-description-shortcodes.sh
+
+# Lista widżetów w sidebar-1 (staging)
+widget-list:
+	@./scripts/staging-widget-list.sh
+
+# Usuń widżet filtrów (Filtruj: Średnica: …) z sidebar-1 na stagingu
+remove-filter-widget:
+	./scripts/staging-remove-filter-widget.sh

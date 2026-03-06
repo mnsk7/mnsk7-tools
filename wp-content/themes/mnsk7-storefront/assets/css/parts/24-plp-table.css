@@ -1,5 +1,23 @@
 /* 24-plp-table — Sandvik-style table + chips (чипсы) on category/tag archives */
 
+/* Archiwum sklepu i kategorii: bez sidebaru, pełna szerokość; ukryj duplikat filtrów z wtyczki */
+body.post-type-archive-product #content #primary,
+body.tax-product_cat #content #primary {
+  flex: 1 1 100%;
+}
+body.post-type-archive-product #content #secondary,
+body.tax-product_cat #content #secondary,
+body.post-type-archive-product #content .woocommerce-sidebar,
+body.tax-product_cat #content .woocommerce-sidebar {
+  display: none !important;
+}
+body.post-type-archive-product .wpf-filters,
+body.tax-product_cat .wpf-filters,
+body.post-type-archive-product .mnsk7-catalog-filters,
+body.tax-product_cat .mnsk7-catalog-filters {
+  display: none !important;
+}
+
 /* Chips row (subcategories / filters) */
 .mnsk7-plp-chips {
   display: flex;

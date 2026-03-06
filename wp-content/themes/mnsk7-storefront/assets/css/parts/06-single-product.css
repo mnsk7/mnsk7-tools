@@ -186,6 +186,28 @@ body.single-product #content #secondary {
   color: var(--color-text);
 }
 
+.mnsk7-product-key-params__dd--select .mnsk7-key-param-select {
+  width: 100%;
+  max-width: 140px;
+  padding: 0.35rem 0.5rem;
+  font-size: var(--fs-sm);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-sm);
+  background: var(--color-white);
+  color: var(--color-text);
+  cursor: pointer;
+}
+
+.mnsk7-product-key-params__dd--select .mnsk7-key-param-select:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 1px;
+}
+
+/* Ukryj domyślne dropdowny wariacji — wybór tylko w tabeli Kluczowe parametry */
+.single-product form.cart .variations {
+  display: none !important;
+}
+
 .mnsk7-product-zastosowanie {
   margin: 0.75rem 0;
   padding: 0.75rem 1rem;
@@ -411,6 +433,7 @@ body.single-product #content #secondary {
   grid-template-columns: repeat(4, 1fr) !important;
   gap: 1.25rem !important;
   justify-items: stretch;
+  align-items: start;
 }
 
 @media (max-width: 900px) {

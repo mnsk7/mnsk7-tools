@@ -34,19 +34,29 @@ defined( 'ABSPATH' ) || exit;
 			<ul id="mnsk7-primary-menu" class="mnsk7-header__menu">
 				<?php
 				$shop_url = ( function_exists( 'wc_get_page_permalink' ) ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
-				$nav_links = array(
-					array( $shop_url, __( 'Sklep', 'mnsk7-storefront' ), function() { return function_exists( 'is_shop' ) && is_shop(); } ),
-					array( home_url( '/przewodnik/' ), __( 'Przewodnik', 'mnsk7-storefront' ), function() { return is_page( 'przewodnik' ); } ),
-					array( home_url( '/dostawa-i-platnosci/' ), __( 'Dostawa i płatności', 'mnsk7-storefront' ), function() { return is_page( 'dostawa-i-platnosci' ); } ),
-					array( home_url( '/kontakt/' ), __( 'Kontakt', 'mnsk7-storefront' ), function() { return is_page( 'kontakt' ); } ),
-				);
-				foreach ( $nav_links as $arr ) {
-					list( $href, $label, $is_current ) = array_pad( $arr, 3, null );
-					$current = is_callable( $is_current ) && $is_current();
-					$class = $current ? ' class="current-menu-item"' : '';
-					echo '<li' . $class . '><a href="' . esc_url( $href ) . '">' . esc_html( $label ) . '</a></li>';
-				}
+				$is_shop = function_exists( 'is_shop' ) && is_shop();
+				$sklep_class = $is_shop ? ' class="current-menu-item menu-item-has-children"' : ' class="menu-item-has-children"';
 				?>
+				<li<?php echo $sklep_class; ?>>
+					<a href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Sklep', 'mnsk7-storefront' ); ?></a>
+					<?php
+					if ( taxonomy_exists( 'product_cat' ) ) {
+						$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true, 'number' => 12 ) );
+						if ( ! is_wp_error( $top_cats ) && ! empty( $top_cats ) ) {
+							echo '<ul class="sub-menu">';
+							foreach ( $top_cats as $term ) {
+								$link = get_term_link( $term );
+								if ( is_wp_error( $link ) ) { continue; }
+								echo '<li><a href="' . esc_url( $link ) . '">' . esc_html( $term->name ) . '</a></li>';
+							}
+							echo '</ul>';
+						}
+					}
+					?>
+				</li>
+				<li<?php echo is_page( 'przewodnik' ) ? ' class="current-menu-item"' : ''; ?>><a href="<?php echo esc_url( home_url( '/przewodnik/' ) ); ?>"><?php esc_html_e( 'Przewodnik', 'mnsk7-storefront' ); ?></a></li>
+				<li<?php echo is_page( 'dostawa-i-platnosci' ) ? ' class="current-menu-item"' : ''; ?>><a href="<?php echo esc_url( home_url( '/dostawa-i-platnosci/' ) ); ?>"><?php esc_html_e( 'Dostawa i płatności', 'mnsk7-storefront' ); ?></a></li>
+				<li<?php echo is_page( 'kontakt' ) ? ' class="current-menu-item"' : ''; ?>><a href="<?php echo esc_url( home_url( '/kontakt/' ) ); ?>"><?php esc_html_e( 'Kontakt', 'mnsk7-storefront' ); ?></a></li>
 			</ul>
 		</nav>
 		<div class="mnsk7-header__actions">

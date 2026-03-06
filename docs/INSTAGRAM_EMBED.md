@@ -27,6 +27,10 @@ wp option patch insert mnsk7_instagram_post_urls 0 "https://www.instagram.com/p/
 
 Jeśli opcja i scraping są puste, shortcode używa **domyślnych 3 linków** i CTA do profilu.
 
+## Alternatywa: embed z Instagram (iframe)
+
+Na innych stronach (np. alesyatakun.by) można pokazać posty przez **kod osadzenia** z Instagram: w aplikacji Instagram → post → ⋮ → „Osadź” → skopiować HTML z iframe. Wkleić go w treść strony (blok „Własny kod HTML” w Gutenbergu lub w shortcode, który wyświetla HTML). W ten sposób post jest ładowany bezpośrednio przez Instagram (bez oEmbed WP) i często działa bez tokenu API. Shortcode `[mnsk7_instagram_feed]` tego nie robi automatycznie — można dodać atrybut `embed_html="..."` lub osobny blok „Instagram embed” z ręcznie wklejonym kodem z Instagram.
+
 ## Parent theme (Storefront) i przewodnik
 
 Komunikat **„The parent theme is missing. Please install the Storefront parent theme.”** na np. `https://staging.mnsk7-tools.pl/przewodnik/` oznacza, że na serwerze **nie ma zainstalowanej rodzimej tematy Storefront**.
