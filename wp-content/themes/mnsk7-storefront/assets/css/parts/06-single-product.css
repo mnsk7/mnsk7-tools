@@ -430,21 +430,25 @@ body.single-product #content #secondary {
   margin-bottom: 0.75rem;
 }
 
-/* Strona produktu bez sidebaru — related/upsells na pełną szerokość, 4 kolumny w jednym rzędzie */
+/* Strona produktu bez sidebaru — related/upsells na pełną szerokość */
 .single-product .related.products,
 .single-product .upsells.products {
   width: 100%;
+  min-width: 0;
   margin-top: 2rem;
 }
 
+/* 4 kolumny w jednym rzędzie: minmax(0,1fr) żeby kolumny mogły się ścisnąć i 4. nie zjeżdżało */
 .single-product .related.products ul.products,
 .single-product .upsells.products ul.products {
   display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   grid-auto-flow: row !important;
   gap: 1.25rem !important;
   justify-items: stretch;
   align-items: start !important;
+  width: 100% !important;
+  min-width: 0;
 }
 
 .single-product .related.products ul.products li.product,
@@ -453,6 +457,12 @@ body.single-product #content #secondary {
   grid-column: span 1 !important;
   grid-row: auto !important;
   min-width: 0;
+  overflow: hidden;
+}
+
+/* Upsells z 1 produktem — jedna kolumna (nie 4 z trzema pustymi) */
+.single-product .upsells.products ul.products:has(li:only-child) {
+  grid-template-columns: 1fr !important;
 }
 
 @media (max-width: 900px) {

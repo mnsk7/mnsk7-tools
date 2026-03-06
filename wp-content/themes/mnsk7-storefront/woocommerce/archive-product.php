@@ -77,7 +77,9 @@ if ( is_shop() && ! $is_taxonomy && taxonomy_exists( 'product_cat' ) ) {
 }
 
 if ( woocommerce_product_loop() ) {
+	echo '<div class="mnsk7-plp-toolbar col-full">';
 	do_action( 'woocommerce_before_shop_loop' );
+	echo '</div>';
 
 	if ( $is_taxonomy ) {
 		// FB-05: search over table

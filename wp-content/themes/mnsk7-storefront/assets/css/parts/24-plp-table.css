@@ -1,5 +1,60 @@
 /* 24-plp-table — Sandvik-style table + chips (чипсы) on category/tag archives */
 
+/* Nagłówek kategorii (tytuł) */
+.woocommerce-products-header {
+  margin-bottom: 0.75rem;
+}
+.woocommerce-products-header__title.page-title {
+  margin: 0 0 0.25rem 0;
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  font-weight: 700;
+  line-height: 1.25;
+  color: var(--color-text);
+}
+
+/* Toolbar: wyników + sortowanie (jedna linia) */
+.mnsk7-plp-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+.mnsk7-plp-toolbar .woocommerce-result-count {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+}
+.mnsk7-plp-toolbar .woocommerce-ordering {
+  margin: 0;
+  margin-left: auto;
+}
+.mnsk7-plp-toolbar .woocommerce-ordering .orderby {
+  padding: 0.4rem 2rem 0.4rem 0.5rem;
+  font-size: var(--fs-sm);
+  font-family: var(--font-base);
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+}
+.mnsk7-plp-toolbar .woocommerce-ordering .orderby:focus {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 0;
+  border-color: var(--color-primary);
+}
+@media (max-width: 480px) {
+  .mnsk7-plp-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .mnsk7-plp-toolbar .woocommerce-ordering {
+    margin-left: 0;
+  }
+}
+
 /* Archiwum sklepu i kategorii: bez sidebaru, pełna szerokość; ukryj duplikat filtrów z wtyczki */
 body.post-type-archive-product #content #primary,
 body.tax-product_cat #content #primary {

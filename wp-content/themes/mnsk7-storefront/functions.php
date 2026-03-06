@@ -211,6 +211,13 @@ add_filter( 'term_description', function ( $desc ) {
 	return mnsk7_strip_wpf_filters_from_text( $desc );
 }, 5 );
 add_filter( 'get_the_archive_description', 'mnsk7_strip_wpf_filters_from_text', 5 );
+add_filter( 'get_the_archive_title', function ( $title ) {
+	if ( is_product_taxonomy() && is_string( $title ) ) {
+		$title = mnsk7_strip_wpf_filters_from_text( $title );
+	}
+	return $title;
+}, 5 );
+add_filter( 'woocommerce_page_title', 'mnsk7_strip_wpf_filters_from_text', 5 );
 add_filter( 'the_content', 'mnsk7_strip_wpf_filters_from_text', 1 );
 
 /* 8. Front page document title (SEO + zakładka) — fallback gdy brak ustawionej strony głównej */
