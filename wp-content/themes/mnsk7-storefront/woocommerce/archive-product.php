@@ -39,7 +39,7 @@ if ( $is_taxonomy ) {
 		}
 	}
 	if ( ! is_wp_error( $chips ) && ! empty( $chips ) ) {
-		echo '<div class="mnsk7-plp-chips col-full">';
+		echo '<div class="mnsk7-plp-chips col-full" role="navigation" aria-label="' . esc_attr__( 'Kategorie', 'mnsk7-storefront' ) . '">';
 		foreach ( $chips as $term ) {
 			$link = get_term_link( $term );
 			if ( is_wp_error( $link ) ) {
@@ -51,6 +51,23 @@ if ( $is_taxonomy ) {
 				esc_url( $link ),
 				$active ? 'mnsk7-plp-chip--active' : '',
 				esc_html( $term->name )
+			);
+		}
+		echo '</div>';
+	}
+
+	$attribute_filter = mnsk7_get_archive_attribute_filter_chips();
+	if ( ! empty( $attribute_filter['chips'] ) ) {
+		echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="' . esc_attr__( 'Filtruj', 'mnsk7-storefront' ) . '">';
+		echo '<span class="mnsk7-plp-chips__label">' . esc_html( $attribute_filter['label'] ) . '</span>';
+		foreach ( $attribute_filter['chips'] as $slug => $label ) {
+			$url = add_query_arg( $attribute_filter['param'], $slug );
+			$active = isset( $_GET[ $attribute_filter['param'] ] ) && sanitize_text_field( wp_unslash( $_GET[ $attribute_filter['param'] ] ) ) === $slug;
+			printf(
+				'<a href="%s" class="mnsk7-plp-chip %s">%s</a>',
+				esc_url( $url ),
+				$active ? 'mnsk7-plp-chip--active' : '',
+				esc_html( $label )
 			);
 		}
 		echo '</div>';

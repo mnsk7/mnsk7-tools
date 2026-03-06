@@ -114,3 +114,72 @@ add_filter( 'document_title_parts', function ( $parts ) {
 	}
 	return $parts;
 }, 15 );
+
+add_action( 'woocommerce_product_query', function ( $q ) {
+	if ( is_admin() || ! $q instanceof WP_Query ) {
+		return;
+	}
+	$attr_taxonomies = array( 'pa_srednica', 'pa_srednica-trzpienia', 'pa_dlugosc-calkowita-l', 'pa_dlugosc-robocza-h' );
+	foreach ( $attr_taxonomies as $attr ) {
+		$param = 'filter_' . str_replace( 'pa_', '', $attr );
+		if ( empty( $_GET[ $param ] ) ) {
+			continue;
+		}
+		$slug = sanitize_text_field( wp_unslash( $_GET[ $param ] ) );
+		if ( $slug === '' ) {
+			continue;
+		}
+		$tax = $q->get( 'tax_query' );
+		if ( ! is_array( $tax ) ) {
+			$tax = array();
+		}
+		$tax[] = array(
+			'taxonomy' => $attr,
+			'field'    => 'slug',
+			'terms'    => $slug,
+		);
+		$q->set( 'tax_query', $tax );
+		break;
+	}
+}, 20 );
+
+function mnsk7_get_archive_attribute_filter_chips() {
+	if ( ! is_product_taxonomy() ) {
+		return array( 'label' => '', 'param' => '', 'chips' => array() );
+	}
+	$attrs_to_try = array(
+		'pa_srednica'             => __( 'Średnica', 'mnsk7-storefront' ),
+		'pa_srednica-trzpienia'   => __( 'Trzpień', 'mnsk7-storefront' ),
+		'pa_dlugosc-calkowita-l' => __( 'Długość L', 'mnsk7-storefront' ),
+		'pa_dlugosc-robocza-h'   => __( 'Długość H', 'mnsk7-storefront' ),
+	);
+	$term = get_queried_object();
+	if ( ! $term || ! isset( $term->term_id ) ) {
+		return array( 'label' => '', 'param' => '', 'chips' => array() );
+	}
+	foreach ( $attrs_to_try as $tax => $label ) {
+		if ( ! taxonomy_exists( $tax ) ) {
+			continue;
+		}
+		$terms = get_terms( array(
+			'taxonomy'   => $tax,
+			'hide_empty' => true,
+			'number'     => 20,
+			'orderby'    => 'name',
+		) );
+		if ( is_wp_error( $terms ) || empty( $terms ) ) {
+			continue;
+		}
+		$chips = array();
+		foreach ( $terms as $t ) {
+			$chips[ $t->slug ] = $t->name;
+		}
+		$param = 'filter_' . str_replace( 'pa_', '', $tax );
+		return array(
+			'label' => $label . ': ',
+			'param' => $param,
+			'chips' => $chips,
+		);
+	}
+	return array( 'label' => '', 'param' => '', 'chips' => array() );
+}
