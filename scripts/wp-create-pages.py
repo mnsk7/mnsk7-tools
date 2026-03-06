@@ -37,43 +37,68 @@ def main():
     }
 
     def get_page_id(slug):
-        req = urllib.request.Request(
-            f'{base}/wp-json/wp/v2/pages?slug={slug}&_fields=id',
-            headers={'Authorization': f'Basic {auth}', 'Accept': 'application/json'}
-        )
-        with urllib.request.urlopen(req) as r:
-            data = json.load(r)
-        return data[0]['id'] if data else None
+        try:
+            req = urllib.request.Request(
+                f'{base}/wp-json/wp/v2/pages?slug={slug}&_fields=id',
+                headers={'Authorization': f'Basic {auth}', 'Accept': 'application/json'}
+            )
+            with urllib.request.urlopen(req) as r:
+                data = json.load(r)
+            return data[0]['id'] if data else None
+        except (urllib.error.HTTPError, IndexError, KeyError):
+            return None
 
     def create_page(slug, title, template):
         existing = get_page_id(slug)
         if existing:
             print(f'Page exists: {title} (id={existing}), setting template.')
-            body = json.dumps({'template': template}).encode('utf-8')
+            try:
+                body = json.dumps({'template': template}).encode('utf-8')
+                req = urllib.request.Request(
+                    f'{base}/wp-json/wp/v2/pages/{existing}',
+                    data=body, headers=headers, method='POST'
+                )
+                urllib.request.urlopen(req)
+                print(f'  OK template={template}')
+            except urllib.error.HTTPError as e:
+                err_body = e.read().decode()[:300]
+                if e.code == 400 and 'template' in err_body.lower():
+                    print(f'  Skip template (Elementor/theme whitelist?) — set "{template}" in WP admin.')
+                else:
+                    print(f'  Error {e.code}: {err_body}')
+            return
+        # Create new page: try with template first; if 400 (e.g. Elementor whitelist), retry without
+        for with_template in (True, False):
+            payload = {
+                'title': title,
+                'slug': slug,
+                'status': 'publish',
+                'content': '',
+            }
+            if with_template:
+                payload['template'] = template
+            body = json.dumps(payload).encode('utf-8')
             req = urllib.request.Request(
-                f'{base}/wp-json/wp/v2/pages/{existing}',
+                f'{base}/wp-json/wp/v2/pages',
                 data=body, headers=headers, method='POST'
             )
-            urllib.request.urlopen(req)
-            print(f'  OK template={template}')
-            return
-        body = json.dumps({
-            'title': title,
-            'slug': slug,
-            'status': 'publish',
-            'template': template,
-            'content': '',
-        }).encode('utf-8')
-        req = urllib.request.Request(
-            f'{base}/wp-json/wp/v2/pages',
-            data=body, headers=headers, method='POST'
-        )
-        try:
-            with urllib.request.urlopen(req) as r:
-                data = json.load(r)
-            print(f'Created: {title} id={data["id"]} {data.get("link", "")}')
-        except urllib.error.HTTPError as e:
-            print(f'Error {title}: {e.code}', e.read().decode()[:200])
+            try:
+                with urllib.request.urlopen(req) as r:
+                    data = json.load(r)
+                print(f'Created: {title} id={data["id"]} {data.get("link", "")}')
+                if not with_template:
+                    print(f'  (Template not set — set "{template}" in WP admin if needed.)')
+                return
+            except urllib.error.HTTPError as e:
+                err_body = e.read().decode()
+                if e.code == 401:
+                    print(f'Error {title}: 401 — brak uprawnień. Użytkownik w .env musi być Administrator (Application Password).')
+                    return
+                if e.code == 400 and with_template and 'template' in err_body.lower():
+                    continue
+                print(f'Error {title}: {e.code} {err_body[:200]}')
+                return
+        print(f'Error {title}: could not create (template rejected).')
 
     pages = [
         ('dostawa-i-platnosci', 'Dostawa i płatności', 'page-dostawa.php'),

@@ -4,6 +4,17 @@
    § GLOBAL RESET & TYPOGRAPHY
    ----------------------------------------------------------------- */
 
+/* Zapobiegaj poziomemu przewijaniu (np. gdy jakiś element wymusza 1633px) */
+html {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+body,
+#page {
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 body {
   font-family: var(--font-base);
   color: var(--color-text);

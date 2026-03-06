@@ -5,6 +5,7 @@ import os
 import json
 import base64
 import urllib.request
+import urllib.error
 
 def load_env():
     env_path = os.path.join(os.path.dirname(__file__), '..', '.env')
@@ -33,5 +34,10 @@ for pid in IDS:
     try:
         d = json.load(urllib.request.urlopen(req))
         print(f'OK id={pid} template={d.get("template")}')
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            print(f'Skip id={pid} (not found on this site — update IDS for this env)')
+        else:
+            print(f'FAIL id={pid}', e.code, e.read().decode()[:150])
     except Exception as e:
         print(f'FAIL id={pid}', e)
