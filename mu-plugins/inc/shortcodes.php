@@ -55,14 +55,26 @@ function mnsk7_instagram_recent_post_urls( $limit = 3 ) {
 	return array_slice( $urls, 0, $limit );
 }
 
+/** Domyślne linki do postów Instagram (gdy brak atrybutu posts i scraping zwraca pusty). */
+function mnsk7_instagram_default_post_urls() {
+	return array(
+		'https://www.instagram.com/mnsk7tools/p/DC4agmPtKoy/',
+		'https://www.instagram.com/mnsk7tools/p/DC9J3JjNobj/',
+		'https://www.instagram.com/mnsk7tools/p/DCTybzqtxEi/',
+	);
+}
+
 function mnsk7_instagram_feed_html( $atts = array() ) {
-	$atts  = shortcode_atts( array( 'posts' => '', 'limit' => 3, 'title' => __( 'Instagram @mnsk7tools', 'mnsk7-tools' ) ), $atts, 'mnsk7_instagram_feed' );
-	$limit = max( 1, min( 6, (int) $atts['limit'] ) );
+	$atts  = shortcode_atts( array( 'posts' => '', 'limit' => 6, 'title' => __( 'Instagram @mnsk7tools', 'mnsk7-tools' ) ), $atts, 'mnsk7_instagram_feed' );
+	$limit = max( 1, min( 12, (int) $atts['limit'] ) );
 	$posts = array_filter( array_map( 'trim', explode( ',', (string) $atts['posts'] ) ) );
 	if ( ! empty( $posts ) ) {
-		$posts = array_slice( $posts, 0, $limit );
+		$posts = array_slice( array_map( 'esc_url_raw', $posts ), 0, $limit );
 	} else {
 		$posts = mnsk7_instagram_recent_post_urls( $limit );
+		if ( empty( $posts ) ) {
+			$posts = array_slice( mnsk7_instagram_default_post_urls(), 0, $limit );
+		}
 	}
 	$html  = '<section class="mnsk7-instagram-feed">';
 	$html .= '<h4 class="mnsk7-instagram-feed__title">' . esc_html( $atts['title'] ) . '</h4>';
