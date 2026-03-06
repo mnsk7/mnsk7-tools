@@ -18,7 +18,7 @@ function mnsk7_parent_storefront_available() {
 
 /* 1. Enqueue styles — many small CSS parts (easier to maintain than one 2000+ line file) */
 add_action( 'wp_enqueue_scripts', function () {
-	$v = '2.3.0';
+	$v = '3.0.0';
 	$base = get_stylesheet_directory_uri() . '/assets/css/parts/';
 	$dir = get_stylesheet_directory() . '/assets/css/parts/';
 	if ( mnsk7_parent_storefront_available() ) {
@@ -44,6 +44,24 @@ add_action( 'wp_enqueue_scripts', function () {
 		wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( $prev ), $v );
 	}
 }, 10 );
+
+/* 1b. Mobile menu toggle (mnsk7-header) */
+add_action( 'wp_footer', function () {
+	?>
+	<script>
+	(function() {
+		var t = document.querySelector('.mnsk7-header__menu-toggle');
+		var n = document.querySelector('.mnsk7-header__nav');
+		if (t && n) {
+			t.addEventListener('click', function() {
+				n.classList.toggle('is-open');
+				t.setAttribute('aria-expanded', n.classList.contains('is-open'));
+			});
+		}
+	})();
+	</script>
+	<?php
+}, 20 );
 
 /* 2. Google Fonts: Inter (replace Storefront default) */
 add_action( 'wp_enqueue_scripts', function () {

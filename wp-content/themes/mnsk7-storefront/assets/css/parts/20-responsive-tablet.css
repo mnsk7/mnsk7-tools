@@ -25,7 +25,7 @@
   }
 
   /* Footer: single column */
-  .mnsk7-site-footer-block__grid {
+  .mnsk7-footer__inner {
     grid-template-columns: 1fr;
     gap: 2rem;
     padding: 0 1.5rem;

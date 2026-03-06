@@ -82,6 +82,10 @@ def main():
         ('frezy-mdf', 'Frezy do drewna i MDF', 'page-frezy-mdf.php'),
         ('frezy-do-stali', 'Frezy do stali i metalu', 'page-frezy-stali.php'),
         ('frezy-cnc', 'Frezy CNC', 'page-cnc-frezy.php'),
+        # SEO / treść
+        ('przewodnik', 'Baza wiedzy', 'page-seo.php'),
+        ('regulamin', 'Regulamin', 'page-seo.php'),
+        ('polityka-prywatnosci', 'Polityka prywatności', 'page-seo.php'),
     ]
     for slug, title, template in pages:
         create_page(slug, title, template)
