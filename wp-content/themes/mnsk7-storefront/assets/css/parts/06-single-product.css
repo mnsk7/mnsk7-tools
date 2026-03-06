@@ -1,5 +1,16 @@
 /* 06-single-product — PDP (product_card_visual, UI_SPEC_V2) */
 
+/* PDP: pełna szerokość (bez sidebaru) */
+body.single-product #content #primary {
+  flex: 1 1 100%;
+  max-width: 100%;
+}
+
+body.single-product #content .woocommerce-sidebar,
+body.single-product #content #secondary {
+  display: none !important;
+}
+
 .single-product div.product {
   margin-top: 1rem;
   display: flex;
@@ -115,15 +126,27 @@
   font-size: var(--fs-base);
 }
 
+/* Availability + „X osób kupiło” w jednym rzędzie */
+.mnsk7-product-availability-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.mnsk7-product-availability-row .mnsk7-product-availability {
+  margin: 0;
+  padding: 0;
+}
+
 .single-product .summary .mnsk7-product-availability {
-  margin: 0 0 0.75rem;
-  padding: 0.25rem 0;
   font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--color-accent);
 }
 
-.single-product .summary .mnsk7-product-availability.out-of-stock {
+.mnsk7-product-availability.out-of-stock {
   color: var(--color-text-muted);
 }
 
@@ -331,15 +354,77 @@
   color: var(--color-text);
 }
 
+/* Opis jako harmonijka (domyślnie zwinięty) */
+.mnsk7-product-description-accordion {
+  margin: 0.5rem 0;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-sm);
+  overflow: hidden;
+}
+
+.mnsk7-product-description-accordion__summary {
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+  cursor: pointer;
+  list-style: none;
+  background: var(--color-surface);
+  user-select: none;
+}
+
+.mnsk7-product-description-accordion__summary::-webkit-details-marker {
+  display: none;
+}
+
+.mnsk7-product-description-accordion__summary::before {
+  content: '+ ';
+  margin-right: 0.25rem;
+}
+
+.mnsk7-product-description-accordion[open] .mnsk7-product-description-accordion__summary::before {
+  content: '− ';
+}
+
+.mnsk7-product-description-accordion__content {
+  padding: 1rem;
+  border-top: 1px solid var(--color-border);
+  font-size: var(--fs-sm);
+  line-height: 1.6;
+}
+
 .woocommerce-tabs .panel h2 {
   font-size: var(--fs-lg);
   margin-bottom: 0.75rem;
 }
 
+/* Strona produktu bez sidebaru — related/upsells na pełną szerokość, 4 kolumny bez pustego miejsca */
 .single-product .related.products,
 .single-product .upsells.products {
   width: 100%;
   margin-top: 2rem;
+}
+
+.single-product .related.products ul.products,
+.single-product .upsells.products ul.products {
+  display: grid !important;
+  grid-template-columns: repeat(4, 1fr) !important;
+  gap: 1.25rem !important;
+  justify-items: stretch;
+}
+
+@media (max-width: 900px) {
+  .single-product .related.products ul.products,
+  .single-product .upsells.products ul.products {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .single-product .related.products ul.products,
+  .single-product .upsells.products ul.products {
+    grid-template-columns: 1fr !important;
+  }
 }
 
 @media (max-width: 900px) {

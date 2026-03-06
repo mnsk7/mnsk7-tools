@@ -157,10 +157,19 @@ function mnsk7_single_product_availability() {
 	$availability = $product->get_availability();
 	$class        = ! empty( $availability['class'] ) ? $availability['class'] : ( $product->is_in_stock() ? 'in-stock' : 'out-of-stock' );
 	$text         = ! empty( $availability['availability'] ) ? $availability['availability'] : ( $product->is_in_stock() ? __( 'W magazynie', 'mnsk7-tools' ) : __( 'Na zamówienie', 'mnsk7-tools' ) );
+	echo '<div class="mnsk7-product-availability-row">';
 	echo '<p class="mnsk7-product-availability ' . esc_attr( $class ) . '">'
 		. '<i class="mnsk7-product-trust__badge-icon">&#10003;</i> '
 		. esc_html( $text )
 		. '</p>';
+	$sales = (int) $product->get_total_sales();
+	if ( $sales >= 5 ) {
+		echo '<span class="mnsk7-product-trust__badge mnsk7-product-trust__badge--sales">'
+			. '<i class="mnsk7-product-trust__badge-icon" aria-hidden="true">&#9733;</i> '
+			. sprintf( _n( '%d osoba kupiła', '%d osób kupiło', $sales, 'mnsk7-tools' ), $sales )
+			. '</span>';
+	}
+	echo '</div>';
 }
 
 function mnsk7_single_product_trust_badges() {
@@ -175,15 +184,6 @@ function mnsk7_single_product_trust_badges() {
 	echo '<div class="mnsk7-product-trust">';
 	foreach ( $badges as $badge ) {
 		echo '<span class="mnsk7-product-trust__badge"><i class="mnsk7-product-trust__badge-icon" aria-hidden="true">&#10003;</i>' . esc_html( $badge ) . '</span>';
-	}
-	if ( is_a( $product, 'WC_Product' ) ) {
-		$sales = (int) $product->get_total_sales();
-		if ( $sales >= 5 ) {
-			echo '<span class="mnsk7-product-trust__badge mnsk7-product-trust__badge--sales">'
-				. '<i class="mnsk7-product-trust__badge-icon" aria-hidden="true">&#9733;</i>'
-				. sprintf( _n( '%d osoba kupiła', '%d osób kupiło', $sales, 'mnsk7-tools' ), $sales )
-				. '</span>';
-		}
 	}
 	echo '</div>';
 }
@@ -223,6 +223,10 @@ function mnsk7_single_product_meta_chips() {
 	}
 	$cats = wc_get_product_category_list( $product->get_id(), '' );
 	$tags = wc_get_product_tag_list( $product->get_id(), '' );
+	// Zamień link "Sklep" na "Katalog" (czytelniejsza etykieta)
+	if ( $cats ) {
+		$cats = str_replace( '>Sklep<', '>' . esc_html__( 'Katalog', 'mnsk7-tools' ) . '<', $cats );
+	}
 	if ( ! $cats && ! $tags ) {
 		return;
 	}
@@ -246,3 +250,32 @@ add_filter( 'woocommerce_short_description', function ( $excerpt ) {
 	}
 	return $excerpt;
 }, 99 );
+
+/**
+ * Ukryj zakładkę "Informacje dodatkowe" (parametry są w bloku Kluczowe parametry przy zdjęciu).
+ */
+add_filter( 'woocommerce_product_tabs', function ( $tabs ) {
+	unset( $tabs['additional_information'] );
+	return $tabs;
+}, 20 );
+
+/**
+ * Opis produktu jako harmonijka (domyślnie zwinięty).
+ */
+add_filter( 'woocommerce_product_tabs', function ( $tabs ) {
+	if ( isset( $tabs['description'] ) ) {
+		$tabs['description']['callback'] = 'mnsk7_product_description_accordion';
+	}
+	return $tabs;
+}, 25 );
+
+function mnsk7_product_description_accordion() {
+	$content = get_the_content( null, false, get_the_ID() );
+	if ( trim( $content ) === '' ) {
+		return;
+	}
+	echo '<details class="mnsk7-product-description-accordion">';
+	echo '<summary class="mnsk7-product-description-accordion__summary">' . esc_html__( 'Pokaż opis', 'mnsk7-tools' ) . '</summary>';
+	echo '<div class="mnsk7-product-description-accordion__content">' . apply_filters( 'the_content', $content ) . '</div>';
+	echo '</details>';
+}

@@ -31,7 +31,13 @@ get_header( 'shop' ); ?>
 		do_action( 'woocommerce_after_main_content' );
 	?>
 
-	<?php do_action( 'woocommerce_sidebar' ); ?>
+	<?php
+	// Na stronie produktu pomijamy sidebar (pełna szerokość dla related/upsells, bez „Szukaj / Strony”).
+	// Sidebar tylko na archiwum/sklep.
+	if ( ! is_singular( 'product' ) ) {
+		do_action( 'woocommerce_sidebar' );
+	}
+	?>
 
 <?php
 get_footer( 'shop' );

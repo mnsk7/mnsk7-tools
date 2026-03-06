@@ -54,6 +54,13 @@ add_filter( 'wp_nav_menu_objects', function ( $items, $args ) {
 	return $filtered;
 }, 20, 2 );
 
+/** Ładne okruszki: separator › */
+add_filter( 'woocommerce_breadcrumb_defaults', function ( $args ) {
+	$args['delimiter']   = ' <span class="separator" aria-hidden="true">›</span> ';
+	$args['wrap_before'] = '<nav class="woocommerce-breadcrumb" aria-label="' . esc_attr__( 'Nawigacja okruszków', 'mnsk7-storefront' ) . '">';
+	return $args;
+} );
+
 /** Fallback menu for header when no primary menu set (callable by name for cache-safe wp_nav_menu). */
 function mnsk7_header_fallback_menu() {
 	echo '<ul id="mnsk7-primary-menu" class="mnsk7-header__menu">';
@@ -66,7 +73,7 @@ function mnsk7_header_fallback_menu() {
 
 /* 1. Enqueue styles — many small CSS parts (easier to maintain than one 2000+ line file) */
 add_action( 'wp_enqueue_scripts', function () {
-	$v = '3.0.6';
+	$v = '3.0.7';
 	$base = get_stylesheet_directory_uri() . '/assets/css/parts/';
 	$dir = get_stylesheet_directory() . '/assets/css/parts/';
 	if ( mnsk7_parent_storefront_available() ) {

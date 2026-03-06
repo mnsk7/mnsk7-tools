@@ -197,6 +197,7 @@
 | **Footer** | Zwarty stop: mniejsze paddingi, nagłówki, bottom bar. | Zrobione: top padding 2rem/1.5rem, grid gap 1.5rem, tytuły fs-base, bottom padding 0.6rem (09-footer.css). |
 | **Karta produktu (PDP)** | Zwarty layout: mniejsze odstępy między blokami, buybox, parametry, CTA, trust. | Zrobione: gap 1.5rem, padding 1rem/1.5rem, key-params/zastosowanie/trust mniejsze marginesy (06-single-product.css). |
 | **Strona kategorii (PLP)** | Zwarte chipsy, tabela, search: mniejsze paddingi i marginesy. | Zrobione: chips gap/padding/margin, tabela th/td mniejsze, search/table-wrap margin (24-plp-table.css). |
+| **PDP (feedback 2026-03-06)** | Okruszki ładne (›); „X osób kupiło” przy dostępności; chip „Sklep” → „Katalog”; opis jako harmonijka; ukryta zakładka Informacje dodatkowe; related 4 kolumny bez pustego miejsca; brak sidebaru (Szukaj/Strony). | Zrobione: product-card.php (availability row + sales, meta chips Sklep→Katalog, tabs filter, description accordion); single-product.php bez sidebaru; 06/07/19 CSS. |
 
 ---
 
