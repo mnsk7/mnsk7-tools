@@ -243,8 +243,9 @@ add_action( 'woocommerce_single_product_summary', function () {
 	if ( function_exists( 'mnsk7_single_product_trust_badges' ) ) {
 		return;
 	}
+	$eta_label = function_exists( 'mnsk7_delivery_eta_badge_label' ) ? mnsk7_delivery_eta_badge_label() : __( 'Dostawa jutro', 'mnsk7-storefront' );
 	echo '<div class="mnsk7-pdp-trust">';
-	echo '<span class="mnsk7-pdp-trust__item">' . esc_html__( 'Dostawa jutro', 'mnsk7-storefront' ) . '</span>';
+	echo '<span class="mnsk7-pdp-trust__item">' . esc_html( $eta_label ) . '</span>';
 	echo '<span class="mnsk7-pdp-trust__item">' . esc_html__( 'Faktura VAT', 'mnsk7-storefront' ) . '</span>';
 	echo '<span class="mnsk7-pdp-trust__item">' . esc_html__( 'Darmowa dostawa od 300 zł', 'mnsk7-storefront' ) . '</span>';
 	echo '<span class="mnsk7-pdp-trust__item">' . esc_html__( 'Zwroty 30 dni', 'mnsk7-storefront' ) . '</span>';

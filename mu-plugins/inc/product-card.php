@@ -196,8 +196,9 @@ function mnsk7_single_product_availability() {
 function mnsk7_single_product_trust_badges() {
 	global $product;
 	$min    = number_format_i18n( MNK7_FREE_SHIPPING_MIN, 0 );
+	$eta    = function_exists( 'mnsk7_delivery_eta_badge_label' ) ? mnsk7_delivery_eta_badge_label() : __( 'Dostawa jutro', 'mnsk7-tools' );
 	$badges = array(
-		__( 'Dostawa jutro', 'mnsk7-tools' ),
+		$eta,
 		__( 'Faktura VAT', 'mnsk7-tools' ),
 		sprintf( __( 'Darmowa dostawa od %s zł', 'mnsk7-tools' ), $min ),
 		__( 'Zwroty 30 dni', 'mnsk7-tools' ),

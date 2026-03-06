@@ -25,9 +25,77 @@ function mnsk7_contact_info_html() {
 		. '</div>';
 }
 
+/**
+ * Oblicza najwcześniejszą datę dostawy (InPost + DPD, Polska).
+ * Reguły: InPost pn.–pt. do 15:00 → nast. dzień; sb. do 11:00 → pon.; DPD pn.–czw. do 17:00 → nast. dzień; pt. do 17:00 → pon.
+ *
+ * @return string Etykieta: "Dostawa dziś", "Dostawa jutro", "Dostawa w poniedziałek" itd.
+ */
+function mnsk7_delivery_eta_badge_label() {
+	$tz = new DateTimeZone( 'Europe/Warsaw' );
+	$now = new DateTime( 'now', $tz );
+	$wday = (int) $now->format( 'w' ); // 0 = niedziela, 6 = sobota
+	$hour = (int) $now->format( 'G' );
+	$today = clone $now;
+	$today->setTime( 0, 0, 0 );
+
+	// InPost: pn.–pt. do 15:00 → dostawa dziś; po 15:00 → nast. dzień; pt. po 15:00 → pon.; sb. do 11:00 → pon.; ndz. → pon.
+	$inpost = clone $now;
+	if ( $wday >= 1 && $wday <= 5 ) {
+		if ( $hour < 15 ) {
+			$inpost->setTime( 0, 0, 0 ); // dziś
+		} else {
+			$inpost->modify( $wday === 5 ? '+3 days' : '+1 day' );
+		}
+	} elseif ( $wday === 6 ) {
+		$inpost->modify( '+2 days' ); // sobota → poniedziałek
+	} else {
+		$inpost->modify( '+1 day' ); // niedziela → poniedziałek
+	}
+
+	// DPD: pn.–czw. do 17:00 → nast. dzień; po 17:00 czw. → pt.; pt. (do 17:00 lub po) → pon.; sb. → pon.; ndz. → pon.
+	$dpd = clone $now;
+	if ( $wday >= 1 && $wday <= 4 ) {
+		$dpd->modify( $hour < 17 ? '+1 day' : '+1 day' ); // czw. po 17:00 → piątek (+1)
+	} elseif ( $wday === 5 ) {
+		$dpd->modify( '+3 days' ); // piątek → poniedziałek
+	} elseif ( $wday === 6 ) {
+		$dpd->modify( '+2 days' );
+	} else {
+		$dpd->modify( '+1 day' );
+	}
+
+	$inpost->setTime( 0, 0, 0 );
+	$dpd->setTime( 0, 0, 0 );
+	$earliest = $inpost <= $dpd ? $inpost : $dpd;
+
+	$days = (int) $today->diff( $earliest )->format( '%a' );
+	$earliest_wday = (int) $earliest->format( 'w' );
+
+	if ( $days === 0 ) {
+		return __( 'Dostawa dziś', 'mnsk7-tools' );
+	}
+	if ( $days === 1 ) {
+		return __( 'Dostawa jutro', 'mnsk7-tools' );
+	}
+
+	$weekdays = array(
+		0 => __( 'niedzielę', 'mnsk7-tools' ),
+		1 => __( 'poniedziałek', 'mnsk7-tools' ),
+		2 => __( 'wtorek', 'mnsk7-tools' ),
+		3 => __( 'środę', 'mnsk7-tools' ),
+		4 => __( 'czwartek', 'mnsk7-tools' ),
+		5 => __( 'piątek', 'mnsk7-tools' ),
+		6 => __( 'sobotę', 'mnsk7-tools' ),
+	);
+	$day_name = isset( $weekdays[ $earliest_wday ] ) ? $weekdays[ $earliest_wday ] : $earliest->format( 'd.m' );
+	return sprintf( __( 'Dostawa w %s', 'mnsk7-tools' ), $day_name );
+}
+
 function mnsk7_delivery_rules_table_html() {
 	$rows = array(
-		array( 'courier' => 'InPost', 'order' => __( 'pn.–pt. do 15:00', 'mnsk7-tools' ), 'result' => __( 'dostawa następnego dnia', 'mnsk7-tools' ) ),
+		array( 'courier' => 'InPost', 'order' => __( 'pn.–pt. do 15:00', 'mnsk7-tools' ), 'result' => __( 'dostawa tego samego dnia', 'mnsk7-tools' ) ),
+		array( 'courier' => 'InPost', 'order' => __( 'pn.–pt. po 15:00', 'mnsk7-tools' ), 'result' => __( 'dostawa następnego dnia', 'mnsk7-tools' ) ),
 		array( 'courier' => 'InPost', 'order' => __( 'sb. do 11:00', 'mnsk7-tools' ),    'result' => __( 'dostawa w poniedziałek', 'mnsk7-tools' ) ),
 		array( 'courier' => 'DPD',    'order' => __( 'pn.–czw. do 17:00', 'mnsk7-tools' ), 'result' => __( 'dostawa następnego dnia', 'mnsk7-tools' ) ),
 		array( 'courier' => 'DPD',    'order' => __( 'pt. do 17:00', 'mnsk7-tools' ),    'result' => __( 'dostawa w poniedziałek', 'mnsk7-tools' ) ),
