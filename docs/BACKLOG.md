@@ -10,7 +10,7 @@
 
 | ID | Задача | Связь |
 |----|--------|--------|
-| ARCH-01 | Держать все кастомизации в child-theme `tech-storefront`; не править parent и плагины напрямую | ARCHITECTURE §1, §2 |
+| ARCH-01 | Держать все кастомизации в child-theme `mnsk7-storefront`; не править parent и плагины напрямую | ARCHITECTURE §1, §2 |
 | ARCH-02 | Вынести бизнес-логику из `functions.php` в mu-plugin или плагин проекта (mnsk7-tools) | P1-06, ARCHITECTURE §3 |
 | ARCH-03 | Добавить Woo overrides в child: карточка товара (single product), при необходимости страница категории (archive) | P1-07, P3-01, ARCHITECTURE §2 |
 | ARCH-04 | В child: подключать кастомные CSS/JS из `assets/`; логику в `inc/` или в плагине | wp_theme_architecture |

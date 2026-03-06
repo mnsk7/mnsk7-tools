@@ -3,7 +3,7 @@
  * Template Name: SEO — Frezy CNC (overview)
  * Lądowanie SEO pod zapytanie "frezy CNC", "narzędzia CNC sklep".
  *
- * @package tech-storefront
+ * @package mnsk7-storefront
  */
 
 get_header();

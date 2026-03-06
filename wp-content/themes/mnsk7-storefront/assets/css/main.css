@@ -96,6 +96,81 @@ img {
 }
 
 /* -----------------------------------------------------------------
+   § STOREFRONT OVERRIDES — Inter + palette everywhere
+   Parent theme uses its own font variables; we force one source.
+   ----------------------------------------------------------------- */
+
+.site,
+body .site,
+.site-content,
+#content,
+.main-navigation a,
+.main-navigation .menu li a,
+.storefront-primary-navigation a,
+.site-header .site-title,
+.site-header .site-description,
+.site-header .site-branding a,
+.woocommerce-breadcrumb,
+.woocommerce .product_title,
+.woocommerce .price,
+.woocommerce ul.products li.product .woocommerce-loop-product__title,
+.woocommerce ul.products li.product h2,
+.woocommerce ul.products li.product .price,
+.woocommerce-tabs .panel,
+.woocommerce table.shop_table,
+.woocommerce .cart_totals,
+.woocommerce form .form-row label,
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+input[type="number"],
+input[type="tel"],
+textarea,
+select,
+button,
+.button,
+.widget .widget-title,
+.widget_title,
+.widget a,
+.footer-widgets .widget-title,
+.site-footer,
+.site-info {
+  font-family: var(--font-base) !important;
+}
+
+/* Storefront: цвета ссылок и кнопок в палитру */
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce a.button.alt,
+.main-navigation a:hover,
+.site-header-cart .cart-contents:hover,
+a {
+  color: var(--color-primary);
+}
+
+.woocommerce a.button:hover,
+.woocommerce button.button:hover,
+.woocommerce input.button:hover,
+.single_add_to_cart_button:hover,
+.add_to_cart_button:hover {
+  background: var(--color-primary-hover) !important;
+  color: var(--color-white) !important;
+}
+
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button,
+.single_add_to_cart_button,
+.add_to_cart_button {
+  background: var(--color-primary) !important;
+  color: var(--color-white) !important;
+  border-color: var(--color-primary) !important;
+}
+
+/* -----------------------------------------------------------------
    § HEADER (Storefront)
    ----------------------------------------------------------------- */
 
@@ -825,6 +900,14 @@ img {
 .mnsk7-hero__usp-icon {
   font-size: 1rem;
   line-height: 1;
+}
+.mnsk7-hero__usp-icon:not(:empty) {
+  display: inline-block;
+}
+.mnsk7-hero__usp-icon:empty::before {
+  content: "·";
+  color: var(--color-primary);
+  font-weight: 700;
 }
 
 /* CTA */

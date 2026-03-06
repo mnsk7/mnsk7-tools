@@ -2,7 +2,7 @@
 /**
  * Strona główna sklepu MNK7 Tools.
  *
- * @package tech-storefront
+ * @package mnsk7-storefront
  */
 
 get_header();
@@ -13,30 +13,30 @@ get_header();
 	<!-- HERO -->
 	<section class="mnsk7-hero">
 		<div class="mnsk7-hero__inner col-full">
-			<h1 class="mnsk7-hero__title"><?php esc_html_e( 'Frezy CNC i narzędzia skrawające', 'tech-storefront' ); ?></h1>
-			<p class="mnsk7-hero__sub"><?php esc_html_e( 'Drewno · MDF · Aluminium · Stal · Tworzywa sztuczne', 'tech-storefront' ); ?></p>
+			<h1 class="mnsk7-hero__title"><?php esc_html_e( 'Frezy CNC i narzędzia skrawające', 'mnsk7-storefront' ); ?></h1>
+			<p class="mnsk7-hero__sub"><?php esc_html_e( 'Drewno · MDF · Aluminium · Stal · Tworzywa sztuczne', 'mnsk7-storefront' ); ?></p>
 			<div class="mnsk7-hero__usps">
 				<div class="mnsk7-hero__usp">
-					<span class="mnsk7-hero__usp-icon">🚚</span>
-					<span><?php esc_html_e( 'Dostawa następnego dnia', 'tech-storefront' ); ?></span>
+					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
+					<span><?php esc_html_e( 'Dostawa następnego dnia', 'mnsk7-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-hero__usp">
-					<span class="mnsk7-hero__usp-icon">🧾</span>
-					<span><?php esc_html_e( 'Faktura VAT', 'tech-storefront' ); ?></span>
+					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
+					<span><?php esc_html_e( 'Faktura VAT', 'mnsk7-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-hero__usp">
-					<span class="mnsk7-hero__usp-icon">⭐</span>
-					<span><?php esc_html_e( '100% pozytywnych opinii', 'tech-storefront' ); ?></span>
+					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
+					<span><?php esc_html_e( '100% pozytywnych opinii', 'mnsk7-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-hero__usp">
-					<span class="mnsk7-hero__usp-icon">📦</span>
-					<span><?php esc_html_e( '3 500+ zamówień rocznie', 'tech-storefront' ); ?></span>
+					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
+					<span><?php esc_html_e( '3 500+ zamówień rocznie', 'mnsk7-storefront' ); ?></span>
 				</div>
 			</div>
 			<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
 			<div class="mnsk7-hero__ctas">
 				<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="mnsk7-hero__btn mnsk7-hero__btn--primary">
-					<?php esc_html_e( 'Przejdź do sklepu', 'tech-storefront' ); ?>
+					<?php esc_html_e( 'Przejdź do sklepu', 'mnsk7-storefront' ); ?>
 				</a>
 			</div>
 			<?php endif; ?>
@@ -57,7 +57,7 @@ get_header();
 	?>
 	<section class="mnsk7-section mnsk7-section--cats mnsk7-section--light">
 		<div class="col-full">
-			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Kategorie', 'tech-storefront' ); ?></h2>
+			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Kategorie', 'mnsk7-storefront' ); ?></h2>
 			<div class="mnsk7-cats">
 				<?php foreach ( $cats as $cat ) :
 					$link = get_term_link( $cat );
@@ -69,15 +69,15 @@ get_header();
 						<?php if ( $img ) : ?>
 						<span class="mnsk7-cats__img"><?php echo $img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 						<?php else : ?>
-						<span class="mnsk7-cats__icon" aria-hidden="true">⚙️</span>
+						<span class="mnsk7-cats__icon mnsk7-cats__icon--default" aria-hidden="true"></span>
 						<?php endif; ?>
 						<span class="mnsk7-cats__name"><?php echo esc_html( $cat->name ); ?></span>
-						<span class="mnsk7-cats__count"><?php echo esc_html( $cat->count ); ?> <?php esc_html_e( 'prod.', 'tech-storefront' ); ?></span>
+						<span class="mnsk7-cats__count"><?php echo esc_html( $cat->count ); ?> <?php esc_html_e( 'prod.', 'mnsk7-storefront' ); ?></span>
 					</a>
 				<?php endforeach; ?>
 			</div>
 			<p class="mnsk7-section__more">
-				<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>"><?php esc_html_e( 'Wszystkie produkty →', 'tech-storefront' ); ?></a>
+				<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>"><?php esc_html_e( 'Wszystkie produkty →', 'mnsk7-storefront' ); ?></a>
 			</p>
 		</div>
 	</section>
@@ -141,7 +141,7 @@ get_header();
 					array( 'from' => '1 000', 'pct' => '5%',  'label' => '' ),
 					array( 'from' => '3 000', 'pct' => '10%', 'label' => '' ),
 					array( 'from' => '5 000', 'pct' => '15%', 'label' => '' ),
-					array( 'from' => '10 000', 'pct' => '20%', 'label' => '🏆' ),
+					array( 'from' => '10 000', 'pct' => '20%', 'label' => '' ),
 				);
 				foreach ( $tiers as $tier ) :
 				?>
@@ -153,7 +153,7 @@ get_header();
 			</div>
 			<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
 			<p class="mnsk7-section__more">
-				<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>"><?php esc_html_e( 'Sprawdź swój poziom rabatu w Moje konto →', 'tech-storefront' ); ?></a>
+				<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>"><?php esc_html_e( 'Sprawdź swój poziom rabatu w Moje konto →', 'mnsk7-storefront' ); ?></a>
 			</p>
 			<?php endif; ?>
 		</div>

@@ -3,7 +3,7 @@
  * Template Name: SEO — Frezy do aluminium
  * Lądowanie SEO pod zapytanie "frezy do aluminium CNC".
  *
- * @package tech-storefront
+ * @package mnsk7-storefront
  */
 
 get_header();

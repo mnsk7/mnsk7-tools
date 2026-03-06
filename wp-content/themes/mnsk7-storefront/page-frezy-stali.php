@@ -3,7 +3,7 @@
  * Template Name: SEO — Frezy do stali i metalu
  * Lądowanie SEO pod zapytania "frezy do stali CNC", "frezy do metalu VHM".
  *
- * @package tech-storefront
+ * @package mnsk7-storefront
  */
 
 get_header();

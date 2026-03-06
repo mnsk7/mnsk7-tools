@@ -24,17 +24,17 @@
 				<div class="mnsk7-site-footer-block__col">
 					<h4 class="mnsk7-site-footer-block__col-title">Dostawa</h4>
 					<?php if ( function_exists( 'mnsk7_dostawa_vat_html' ) ) echo mnsk7_dostawa_vat_html(); ?>
-					<p class="mnsk7-site-footer-block__delivery-note">Darmowa dostawa od 300 zl. Tylko Polska.</p>
+					<p class="mnsk7-site-footer-block__delivery-note">Darmowa dostawa od 300 zł. Tylko Polska.</p>
 				</div>
 
 				<div class="mnsk7-site-footer-block__col">
 					<h4 class="mnsk7-site-footer-block__col-title">Informacje</h4>
 					<ul class="mnsk7-site-footer-block__links">
 						<li><a href="<?php echo esc_url( home_url( '/sklep/' ) ); ?>">Sklep</a></li>
-						<li><a href="<?php echo esc_url( home_url( '/dostawa-i-platnosci/' ) ); ?>">Dostawa i platnosci</a></li>
+						<li><a href="<?php echo esc_url( home_url( '/dostawa-i-platnosci/' ) ); ?>">Dostawa i płatności</a></li>
 						<li><a href="<?php echo esc_url( home_url( '/kontakt/' ) ); ?>">Kontakt</a></li>
 						<li><a href="<?php echo esc_url( home_url( '/regulamin/' ) ); ?>">Regulamin</a></li>
-						<li><a href="<?php echo esc_url( home_url( '/polityka-prywatnosci/' ) ); ?>">Polityka prywatnosci</a></li>
+						<li><a href="<?php echo esc_url( home_url( '/polityka-prywatnosci/' ) ); ?>">Polityka prywatności</a></li>
 					</ul>
 					<p class="mnsk7-site-footer-block__social">
 						<a href="<?php echo esc_url( defined( 'MNK7_INSTAGRAM_URL' ) ? MNK7_INSTAGRAM_URL : 'https://www.instagram.com/mnsk7tools/' ); ?>" target="_blank" rel="noopener">Instagram @mnsk7tools</a>

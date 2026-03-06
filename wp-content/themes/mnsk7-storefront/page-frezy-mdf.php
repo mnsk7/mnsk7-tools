@@ -3,7 +3,7 @@
  * Template Name: SEO — Frezy do drewna i MDF
  * Lądowanie SEO pod zapytania "frezy do MDF", "frezy do drewna CNC".
  *
- * @package tech-storefront
+ * @package mnsk7-storefront
  */
 
 get_header();
