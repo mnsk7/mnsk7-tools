@@ -49,15 +49,35 @@ get_header();
 			'taxonomy'   => 'product_cat',
 			'hide_empty' => true,
 			'parent'     => 0,
-			'number'     => 10,
+			'number'     => 12,
 			'orderby'    => 'count',
 			'order'      => 'DESC',
 		) );
+		// Szybkie linki: typ (spiralne) lub materiał (drewno, metal) — slugi do sprawdzenia
+		$quick_slugs = array( 'frez-spiralny', 'frezy-do-drewna-mdf', 'frezy-do-aluminium', 'frezy-do-stali', 'frezy-do-plastiku' );
+		$quick_links = array();
+		foreach ( $quick_slugs as $slug ) {
+			$t = get_term_by( 'slug', $slug, 'product_cat' );
+			if ( $t && ! is_wp_error( get_term_link( $t ) ) ) {
+				$quick_links[] = $t;
+			}
+		}
 		if ( ! is_wp_error( $cats ) && ! empty( $cats ) ) :
 	?>
 	<section class="mnsk7-section mnsk7-section--cats mnsk7-section--light">
 		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Kategorie', 'mnsk7-storefront' ); ?></h2>
+			<?php if ( ! empty( $quick_links ) ) : ?>
+			<div class="mnsk7-cats-quick">
+				<span class="mnsk7-cats-quick__label"><?php esc_html_e( 'Przeglądaj:', 'mnsk7-storefront' ); ?></span>
+				<?php foreach ( $quick_links as $q ) :
+					$q_link = get_term_link( $q );
+					if ( is_wp_error( $q_link ) ) continue;
+				?>
+				<a href="<?php echo esc_url( $q_link ); ?>" class="mnsk7-cats-quick__chip"><?php echo esc_html( $q->name ); ?></a>
+				<?php endforeach; ?>
+			</div>
+			<?php endif; ?>
 			<div class="mnsk7-cats">
 				<?php foreach ( $cats as $cat ) :
 					$link = get_term_link( $cat );

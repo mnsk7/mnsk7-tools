@@ -153,11 +153,46 @@
   color: var(--color-primary-hover);
 }
 
-/* Categories grid */
+/* Categories — quick chips (Przeglądaj: spiralne / drewno / …) + grid Sandvik-style */
+.mnsk7-cats-quick {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+}
+
+.mnsk7-cats-quick__label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
+.mnsk7-cats-quick__chip {
+  display: inline-block;
+  padding: 0.5rem 1rem;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-pill);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+.mnsk7-cats-quick__chip:hover {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+  text-decoration: none;
+}
+
 .mnsk7-cats {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 1.25rem;
 }
 
 .mnsk7-cats__item {
@@ -183,6 +218,22 @@
   transform: translateY(-2px);
 }
 
+.mnsk7-cats__item::after {
+  content: "";
+  width: 0.75rem;
+  height: 0.75rem;
+  border-right: 2px solid var(--color-text-muted);
+  border-bottom: 2px solid var(--color-text-muted);
+  transform: rotate(-45deg);
+  margin-top: 0.25rem;
+  opacity: 0.6;
+}
+
+.mnsk7-cats__item:hover::after {
+  border-color: var(--color-primary);
+  opacity: 1;
+}
+
 .mnsk7-cats__img img {
   width: 48px;
   height: 48px;
@@ -195,13 +246,13 @@
 }
 
 .mnsk7-cats__name {
-  font-size: var(--fs-sm);
+  font-size: var(--fs-base);
   font-weight: 600;
   line-height: 1.3;
 }
 
 .mnsk7-cats__count {
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
   color: var(--color-text-muted);
 }
 
