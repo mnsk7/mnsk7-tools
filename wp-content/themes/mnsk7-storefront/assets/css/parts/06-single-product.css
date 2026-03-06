@@ -443,7 +443,12 @@ body.single-product #content #secondary {
   grid-template-columns: repeat(4, 1fr) !important;
   gap: 1.25rem !important;
   justify-items: stretch;
-  align-items: start;
+  align-items: start !important;
+}
+
+.single-product .related.products ul.products li.product,
+.single-product .upsells.products ul.products li.product {
+  align-self: start;
 }
 
 @media (max-width: 900px) {

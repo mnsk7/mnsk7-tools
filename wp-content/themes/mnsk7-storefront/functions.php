@@ -54,10 +54,11 @@ add_filter( 'wp_nav_menu_objects', function ( $items, $args ) {
 	return $filtered;
 }, 20, 2 );
 
-/** Ładne okruszki: separator › */
+/** Ładne okruszki: separator › + wrapper żeby były zauważalne pod headerem */
 add_filter( 'woocommerce_breadcrumb_defaults', function ( $args ) {
 	$args['delimiter']   = ' <span class="separator" aria-hidden="true">›</span> ';
-	$args['wrap_before'] = '<nav class="woocommerce-breadcrumb" aria-label="' . esc_attr__( 'Nawigacja okruszków', 'mnsk7-storefront' ) . '">';
+	$args['wrap_before'] = '<div class="mnsk7-breadcrumb-wrap"><nav class="woocommerce-breadcrumb" aria-label="' . esc_attr__( 'Nawigacja okruszków', 'mnsk7-storefront' ) . '">';
+	$args['wrap_after']  = '</nav></div>';
 	return $args;
 } );
 
@@ -184,18 +185,23 @@ add_filter( 'wp_page_menu_args', function ( $args ) {
 /* 7. Override Storefront typography */
 add_filter( 'storefront_google_font_families', '__return_empty_array' );
 
-/* 7b. PLP: nie pokazuj shortcodów ani artefaktów filtrów w opisie kategorii ([wpf-filters id=7] + blok „Filtruj: Średnica: …”) */
+/* 7b. PLP: nie pokazuj shortcodów ani artefaktów filtrów ([wpf-filters id=7] + blok „Filtruj: Średnica: …”) */
+function mnsk7_strip_wpf_filters_from_text( $text ) {
+	if ( ! is_string( $text ) || $text === '' ) {
+		return $text;
+	}
+	$text = preg_replace( '/\[wpf-filters[^\]]*\]/i', '', $text );
+	$text = preg_replace( '/\[wpf_filters[^\]]*\]/i', '', $text );
+	$text = preg_replace( '/\s*Filtruj:\s*[^<]*?(?=\n\s*\n|\z)/s', '', $text );
+	return trim( preg_replace( '/\n\s*\n\s*\n/', "\n\n", $text ) );
+}
 add_filter( 'term_description', function ( $desc ) {
 	if ( ! function_exists( 'is_product_taxonomy' ) || ! is_product_taxonomy() ) {
 		return $desc;
 	}
-	$desc = (string) $desc;
-	$desc = preg_replace( '/\[wpf-filters[^\]]*\]/i', '', $desc );
-	$desc = preg_replace( '/\[wpf_filters[^\]]*\]/i', '', $desc );
-	// Usuń blok tekstu „Filtruj: Średnica: 0,2 mm … Trzpień: …” (pozostałość po widgecie/shortcode)
-	$desc = preg_replace( '/\s*Filtruj:\s*[^<]*?(?=\n\s*\n|\z)/s', '', $desc );
-	return trim( preg_replace( '/\n\s*\n\s*\n/', "\n\n", $desc ) );
+	return mnsk7_strip_wpf_filters_from_text( $desc );
 }, 5 );
+add_filter( 'get_the_archive_description', 'mnsk7_strip_wpf_filters_from_text', 5 );
 
 /* 8. Front page document title (SEO + zakładka) — fallback gdy brak ustawionej strony głównej */
 add_filter( 'document_title_parts', function ( $parts ) {
