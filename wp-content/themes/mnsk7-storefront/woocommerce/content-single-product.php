@@ -24,9 +24,10 @@ if ( post_password_required() ) {
 
 	<?php do_action( 'woocommerce_before_single_product_summary' ); ?>
 
-	<div class="summary entry-summary">
+	<div class="summary entry-summary mnsk7-pdp-buybox">
 		<?php
 		/**
+		 * Buy box: tytuł → cena → dostępność → parametry → CTA → trust (product_card_visual, WOO_CONVERSION_REWORK_PLAN).
 		 * woocommerce_single_product_summary hooks (priority):
 		 *  5  – rating
 		 *  8  – mnsk7_single_product_availability
