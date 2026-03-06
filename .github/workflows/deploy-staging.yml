@@ -18,6 +18,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Защита: не деплоить на прод. Путь или хост должны содержать "staging".
+      - name: Verify staging target (do not deploy to production)
+        env:
+          SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
+          REMOTE_PATH: ${{ secrets.STAGING_REMOTE_PATH }}
+        run: |
+          HOST="${SSH_HOST:-}"
+          PATH="${REMOTE_PATH:-}"
+          if ! echo "$HOST $PATH" | grep -qi staging; then
+            echo "::error::STAGING_SSH_HOST or STAGING_REMOTE_PATH must contain 'staging'. Refusing to deploy (production protection)."
+            exit 1
+          fi
+          echo "Target looks like staging, proceeding."
+
       - name: Setup SSH
         env:
           SSH_KEY: ${{ secrets.STAGING_SSH_KEY }}

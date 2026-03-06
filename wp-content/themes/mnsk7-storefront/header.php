@@ -53,11 +53,16 @@ $parent_storefront_ok = function_exists( 'mnsk7_parent_storefront_available' ) &
 				) );
 				?>
 			</nav>
-			<?php if ( function_exists( 'woocommerce_mini_cart' ) ) : ?>
+			<div class="mnsk7-header-actions">
+				<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
+				<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="mnsk7-header-link mnsk7-header-link--account"><?php esc_html_e( 'Moje konto', 'mnsk7-storefront' ); ?></a>
+				<?php endif; ?>
+				<?php if ( function_exists( 'woocommerce_mini_cart' ) ) : ?>
 				<ul class="site-header-cart">
 					<li><?php woocommerce_mini_cart(); ?></li>
 				</ul>
-			<?php endif; ?>
+				<?php endif; ?>
+			</div>
 		<?php endif; ?>
 	</div>
 </header>
