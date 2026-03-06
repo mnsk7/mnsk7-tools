@@ -29,15 +29,16 @@
   --color-white:          #ffffff;
   --color-black:          #000000;
 
-  /* Typography — Inter */
+  /* Typography — Inter (slightly larger for readability, less "thin") */
   --font-base: "Inter", system-ui, -apple-system, sans-serif;
-  --fs-xs:  0.75rem;   /* 12 px */
-  --fs-sm:  0.8125rem; /* 13 px */
-  --fs-base:0.875rem;  /* 14 px */
-  --fs-lg:  1.125rem;  /* 18 px */
-  --fs-xl:  1.5rem;    /* 24 px */
-  --fs-2xl: 2rem;      /* 32 px */
-  --fs-3xl: 2.5rem;    /* 40 px */
+  --fs-xs:  0.8125rem; /* 13 px */
+  --fs-sm:  0.9375rem; /* 15 px */
+  --fs-base: 1rem;     /* 16 px */
+  --fs-lg:  1.25rem;   /* 20 px */
+  --fs-xl:  1.75rem;   /* 28 px */
+  --fs-2xl: 2.25rem;   /* 36 px */
+  --fs-3xl: 3rem;      /* 48 px */
+  --fs-hero: 3.5rem;   /* hero H1 desktop */
 
   /* Radii */
   --r-sm:   8px;
