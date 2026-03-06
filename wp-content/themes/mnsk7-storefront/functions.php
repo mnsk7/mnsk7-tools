@@ -54,12 +54,21 @@ add_filter( 'wp_nav_menu_objects', function ( $items, $args ) {
 	return $filtered;
 }, 20, 2 );
 
-/** Ładne okruszki: separator › + wrapper żeby były zauważalne pod headerem */
+/** Ładne okruszki: separator › + wrapper */
 add_filter( 'woocommerce_breadcrumb_defaults', function ( $args ) {
 	$args['delimiter']   = ' <span class="separator" aria-hidden="true">›</span> ';
 	$args['wrap_before'] = '<div class="mnsk7-breadcrumb-wrap"><nav class="woocommerce-breadcrumb" aria-label="' . esc_attr__( 'Nawigacja okruszków', 'mnsk7-storefront' ) . '">';
 	$args['wrap_after']  = '</nav></div>';
 	return $args;
+} );
+
+/** PDP: okruszki przy tytule produktu, nie pod headerem */
+add_action( 'wp', function () {
+	if ( ! is_singular( 'product' ) ) {
+		return;
+	}
+	remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
+	add_action( 'woocommerce_single_product_summary', 'woocommerce_breadcrumb', 5 );
 } );
 
 /** Fallback menu for header when no primary menu set (callable by name for cache-safe wp_nav_menu). */
@@ -202,6 +211,7 @@ add_filter( 'term_description', function ( $desc ) {
 	return mnsk7_strip_wpf_filters_from_text( $desc );
 }, 5 );
 add_filter( 'get_the_archive_description', 'mnsk7_strip_wpf_filters_from_text', 5 );
+add_filter( 'the_content', 'mnsk7_strip_wpf_filters_from_text', 1 );
 
 /* 8. Front page document title (SEO + zakładka) — fallback gdy brak ustawionej strony głównej */
 add_filter( 'document_title_parts', function ( $parts ) {
@@ -442,11 +452,12 @@ function mnsk7_get_archive_product_ids_for_chips( $attrs_to_try ) {
  * FB-02: when category is Zestawy, diameter filter row is hidden.
  * FB-03: only terms that have in-stock products in the current category are shown.
  *
- * @return array{label: string, param: string, chips: array} First matching attribute row, or empty.
+ * @return array{filters: array<array{label: string, param: string, chips: array}>} Wszystkie atrybuty z termami (Średnica, Trzpień, Długość L/H).
  */
 function mnsk7_get_archive_attribute_filter_chips() {
+	$empty = array( 'filters' => array() );
 	if ( ! is_product_taxonomy() ) {
-		return array( 'label' => '', 'param' => '', 'chips' => array() );
+		return $empty;
 	}
 	$attrs_to_try = array(
 		'pa_srednica'             => __( 'Średnica', 'mnsk7-storefront' ),
@@ -456,13 +467,14 @@ function mnsk7_get_archive_attribute_filter_chips() {
 	);
 	$term = get_queried_object();
 	if ( ! $term || ! isset( $term->term_id ) ) {
-		return array( 'label' => '', 'param' => '', 'chips' => array() );
+		return $empty;
 	}
 	$term_slug = isset( $term->slug ) ? strtolower( (string) $term->slug ) : '';
 	$term_name = isset( $term->name ) ? strtolower( (string) $term->name ) : '';
 	$is_zestawy = ( strpos( $term_slug, 'zestaw' ) !== false || strpos( $term_name, 'zestaw' ) !== false );
 
 	$product_ids = mnsk7_get_archive_product_ids_for_chips( $attrs_to_try );
+	$filters = array();
 
 	foreach ( $attrs_to_try as $tax => $label ) {
 		if ( $is_zestawy && $tax === 'pa_srednica' ) {
@@ -489,11 +501,11 @@ function mnsk7_get_archive_attribute_filter_chips() {
 			$chips[ $t->slug ] = $t->name;
 		}
 		$param = 'filter_' . str_replace( 'pa_', '', $tax );
-		return array(
+		$filters[] = array(
 			'label' => $label . ': ',
 			'param' => $param,
 			'chips' => $chips,
 		);
 	}
-	return array( 'label' => '', 'param' => '', 'chips' => array() );
+	return array( 'filters' => $filters );
 }

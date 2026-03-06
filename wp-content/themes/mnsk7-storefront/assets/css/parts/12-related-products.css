@@ -53,6 +53,8 @@
 .cross-sells ul.products li.product:first-child {
   margin-top: 0 !important;
   align-self: start;
+  grid-column: span 1 !important;
+  grid-row: auto !important;
 }
 
 .related.products ul.products li.product:hover,

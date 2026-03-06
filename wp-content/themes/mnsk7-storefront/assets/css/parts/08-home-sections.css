@@ -615,14 +615,15 @@
   box-shadow: var(--shadow-md);
 }
 
-/* oEmbed iframe (gdy Instagram zwróci embed) */
-.mnsk7-instagram-feed__item iframe {
+/* Miniatura posta (obrazek z opcji lub og:image) */
+.mnsk7-instagram-feed__img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  border: 0;
+  object-fit: cover;
   border-radius: inherit;
+  display: block;
 }
 
 .mnsk7-instagram-feed__icon {

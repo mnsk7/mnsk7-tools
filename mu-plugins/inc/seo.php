@@ -110,8 +110,9 @@ add_action( 'woocommerce_archive_description', function () {
 	}
 	if ( ! empty( $desc ) ) {
 		$desc = preg_replace( '/\[wpf[-_]filters[^\]]*\]/i', '', (string) $desc );
+		$desc = preg_replace( '/\[wpf_filters[^\]]*\]/i', '', $desc );
 		$desc = preg_replace( '/\s*Filtruj:\s*[^<]*?(?=\n\s*\n|\z)/s', '', $desc );
-		$desc = trim( $desc );
+		$desc = trim( preg_replace( '/\n\s*\n\s*\n/', "\n\n", $desc ) );
 		if ( $desc !== '' ) {
 			echo '<div class="mnsk7-cat-header__desc">' . wp_kses_post( $desc ) . '</div>';
 		}

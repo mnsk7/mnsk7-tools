@@ -430,7 +430,7 @@ body.single-product #content #secondary {
   margin-bottom: 0.75rem;
 }
 
-/* Strona produktu bez sidebaru — related/upsells na pełną szerokość, 4 kolumny bez pustego miejsca */
+/* Strona produktu bez sidebaru — related/upsells na pełną szerokość, 4 kolumny w jednym rzędzie */
 .single-product .related.products,
 .single-product .upsells.products {
   width: 100%;
@@ -441,6 +441,7 @@ body.single-product #content #secondary {
 .single-product .upsells.products ul.products {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
+  grid-auto-flow: row !important;
   gap: 1.25rem !important;
   justify-items: stretch;
   align-items: start !important;
@@ -449,6 +450,9 @@ body.single-product #content #secondary {
 .single-product .related.products ul.products li.product,
 .single-product .upsells.products ul.products li.product {
   align-self: start;
+  grid-column: span 1 !important;
+  grid-row: auto !important;
+  min-width: 0;
 }
 
 @media (max-width: 900px) {
