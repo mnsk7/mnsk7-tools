@@ -43,7 +43,7 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 			$link = get_term_link( $term );
 			if ( is_wp_error( $link ) ) { continue; }
 			$active = (int) $current_term->term_id === (int) $term->term_id;
-			printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $link ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $term->name ) );
+			printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $link ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name ) );
 		}
 		echo '</div>';
 	}
@@ -70,7 +70,7 @@ if ( is_shop() && ! $is_taxonomy && taxonomy_exists( 'product_cat' ) ) {
 		foreach ( $top_cats as $term ) {
 			$link = get_term_link( $term );
 			if ( is_wp_error( $link ) ) { continue; }
-			echo '<a href="' . esc_url( $link ) . '" class="mnsk7-plp-chip">' . esc_html( $term->name ) . '</a>';
+			echo '<a href="' . esc_url( $link ) . '" class="mnsk7-plp-chip">' . esc_html( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name ) . '</a>';
 		}
 		echo '</div>';
 	}

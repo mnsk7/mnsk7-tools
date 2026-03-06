@@ -47,7 +47,7 @@ defined( 'ABSPATH' ) || exit;
 							foreach ( $top_cats as $term ) {
 								$link = get_term_link( $term );
 								if ( is_wp_error( $link ) ) { continue; }
-								echo '<li><a href="' . esc_url( $link ) . '">' . esc_html( $term->name ) . '</a></li>';
+								echo '<li><a href="' . esc_url( $link ) . '">' . esc_html( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name ) . '</a></li>';
 							}
 							echo '</ul>';
 						}

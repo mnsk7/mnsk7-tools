@@ -93,29 +93,36 @@ add_filter( 'wpseo_metadesc', function ( $desc ) {
 	);
 }, 21 );
 
-/* Opis kategorii — zastępuje domyślny WooCommerce hook */
+/* Opis archiwum taksonomii (kategoria, tag) — zastępuje domyślny WooCommerce hook */
 remove_action( 'woocommerce_archive_description', 'woocommerce_taxonomy_archive_description', 10 );
 add_action( 'woocommerce_archive_description', function () {
-	if ( ! is_product_category() ) return;
-	$cat = get_queried_object();
-	if ( ! $cat instanceof WP_Term ) return;
-	$img_id = get_term_meta( $cat->term_id, 'thumbnail_id', true );
+	if ( ! function_exists( 'is_product_taxonomy' ) || ! is_product_taxonomy() ) {
+		return;
+	}
+	$term = get_queried_object();
+	if ( ! $term instanceof WP_Term ) {
+		return;
+	}
+	$img_id = get_term_meta( $term->term_id, 'thumbnail_id', true );
 	$desc   = term_description();
-	if ( empty( $img_id ) && empty( $desc ) ) return;
+	if ( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ) {
+		$desc = mnsk7_strip_wpf_filters_from_text( (string) $desc );
+	} else {
+		$desc = preg_replace( '/\[wpf[-_]filters[^\]]*\]/i', '', (string) $desc );
+		$desc = trim( $desc );
+	}
+	if ( empty( $img_id ) && empty( $desc ) ) {
+		return;
+	}
 	echo '<div class="mnsk7-cat-header">';
 	if ( $img_id ) {
+		$alt = ( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name );
 		echo '<div class="mnsk7-cat-header__img">'
-			. wp_get_attachment_image( (int) $img_id, 'medium', false, array( 'alt' => esc_attr( $cat->name ), 'loading' => 'eager' ) )
+			. wp_get_attachment_image( (int) $img_id, 'medium', false, array( 'alt' => esc_attr( $alt ), 'loading' => 'eager' ) )
 			. '</div>';
 	}
-	if ( ! empty( $desc ) ) {
-		$desc = preg_replace( '/\[wpf[-_]filters[^\]]*\]/i', '', (string) $desc );
-		$desc = preg_replace( '/\[wpf_filters[^\]]*\]/i', '', $desc );
-		$desc = preg_replace( '/\s*Filtruj:\s*[^<]*?(?=\n\s*\n|\z)/s', '', $desc );
-		$desc = trim( preg_replace( '/\n\s*\n\s*\n/', "\n\n", $desc ) );
-		if ( $desc !== '' ) {
-			echo '<div class="mnsk7-cat-header__desc">' . wp_kses_post( $desc ) . '</div>';
-		}
+	if ( $desc !== '' ) {
+		echo '<div class="mnsk7-cat-header__desc">' . wp_kses_post( $desc ) . '</div>';
 	}
 	echo '</div>';
 }, 10 );

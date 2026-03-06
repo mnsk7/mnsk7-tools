@@ -43,7 +43,7 @@ $term = get_term_by( 'slug', $cat_slug, 'product_cat' );
 	<section class="mnsk7-seo-products">
 		<div class="col-full">
 			<h2 class="mnsk7-seo-products__title">
-				<?php printf( esc_html__( 'Produkty: %s', 'mnsk7-storefront' ), esc_html( $term->name ) ); ?>
+				<?php printf( esc_html__( 'Produkty: %s', 'mnsk7-storefront' ), esc_html( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name ) ); ?>
 			</h2>
 			<?php echo do_shortcode( sprintf(
 				'[products category="%s" limit="12" columns="4" orderby="popularity"]',

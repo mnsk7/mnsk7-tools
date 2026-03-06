@@ -218,7 +218,25 @@ add_filter( 'get_the_archive_title', function ( $title ) {
 	return $title;
 }, 5 );
 add_filter( 'woocommerce_page_title', 'mnsk7_strip_wpf_filters_from_text', 5 );
+add_filter( 'woocommerce_taxonomy_archive_description_raw', 'mnsk7_strip_wpf_filters_from_text', 5 );
+add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
+	if ( ! is_array( $crumbs ) ) {
+		return $crumbs;
+	}
+	foreach ( $crumbs as $i => $crumb ) {
+		if ( isset( $crumb[1] ) && is_string( $crumb[1] ) ) {
+			$crumbs[ $i ][1] = mnsk7_strip_wpf_filters_from_text( $crumb[1] );
+		}
+	}
+	return $crumbs;
+}, 5 );
 add_filter( 'the_content', 'mnsk7_strip_wpf_filters_from_text', 1 );
+add_filter( 'document_title_parts', function ( $parts ) {
+	if ( function_exists( 'is_product_taxonomy' ) && is_product_taxonomy() && ! empty( $parts['title'] ) && is_string( $parts['title'] ) ) {
+		$parts['title'] = mnsk7_strip_wpf_filters_from_text( $parts['title'] );
+	}
+	return $parts;
+}, 5 );
 
 /* 8. Front page document title (SEO + zakładka) — fallback gdy brak ustawionej strony głównej */
 add_filter( 'document_title_parts', function ( $parts ) {
