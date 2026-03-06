@@ -1,24 +1,26 @@
 <?php
 /**
- * Footer -- mnsk7-tools.pl (mnsk7-storefront child theme)
+ * Footer — mnsk7-tools.pl (mnsk7-storefront child theme).
+ * Closes exactly one wrapper: #content (opened in header.php). #page is closed after footer.
  *
  * @package mnsk7-storefront
  */
 ?>
+	</div><!-- #content -->
 
-	</div>
-</div>
+<footer id="colophon" class="site-footer site-footer--mnsk7" role="contentinfo">
 
-<footer id="colophon" class="site-footer" role="contentinfo">
-
-	<?php if ( function_exists( 'mnsk7_contact_info_html' ) ) : ?>
 	<div class="mnsk7-site-footer-block">
 		<div class="col-full">
 			<div class="mnsk7-site-footer-block__grid">
 
 				<div class="mnsk7-site-footer-block__col">
 					<h4 class="mnsk7-site-footer-block__col-title">Kontakt</h4>
-					<?php echo mnsk7_contact_info_html(); ?>
+					<?php if ( function_exists( 'mnsk7_contact_info_html' ) ) { echo mnsk7_contact_info_html(); } else { ?>
+					<p>Email: <a href="mailto:office@mnsk7.pl">office@mnsk7.pl</a></p>
+					<p>Tel: <a href="tel:+48451696511">+48 451696511</a></p>
+					<p>Pn.–pt. 9.00–17.00, sb. 10.00–12.00</p>
+					<?php } ?>
 				</div>
 
 				<div class="mnsk7-site-footer-block__col">
@@ -44,7 +46,6 @@
 			</div>
 		</div>
 	</div>
-	<?php endif; ?>
 
 	<div class="mnsk7-footer-bottom">
 		<div class="col-full">
@@ -54,7 +55,7 @@
 
 </footer>
 
-</div>
+</div><!-- #page -->
 
 <?php wp_footer(); ?>
 

@@ -4,6 +4,15 @@
 
 ---
 
+## Zrobione (2026-03) — wrappers, tabela PLP, pluginy
+
+- [x] **Обёртки (tech-storefront → Storefront):** header/footer + Woo wrapper sprawdzone i poprawione. Jeden `</div>` zamyka `#content`, drugi `#page` po stopce. Dodane: `woocommerce/global/wrapper-start.php`, `wrapper-end.php` w mnsk7-storefront; dokument `docs/WRAPPERS_LAYOUT.md`.
+- [x] **Tabela w kategoriach + чипсы:** Na archiwum kategorii/tagu (product_cat, product_tag) — tabela towarów (zdjęcie, nazwa, cena, akcja) + rząd чипсов (podkategorie lub top kategorie). Sklep główny = siatka. Pliki: `archive-product.php`, `content-product-table-row.php`, `24-plp-table.css`.
+- [x] **Wyłączenie pluginów:** Product Filter (WBW) i Product Table Lite — wyłączane jednorazowo przez mu-plugin `mnsk7-tools.php` (opcja `mnsk7_plugins_filter_table_deactivated`). Po wejściu w admina pluginy są dezaktywowane.
+- [x] **Terminologia:** W dokumentacji i komentarzach: чипсы (nie „чипы”).
+
+---
+
 ## Z QA / 08_qa_security (2026-03-05)
 
 - [ ] Przed S1-08 (wyłączenie 3 filtrów): sprawdzić w Search Console, które URL-e filtrów są w indeksie; zaplanować przekierowania (R02).

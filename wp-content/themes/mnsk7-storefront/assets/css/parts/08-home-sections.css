@@ -390,14 +390,30 @@
   transform: translateY(-1px);
 }
 
-/* Instagram section — centered content (heading + shortcode output) */
+/* Instagram section — block with background (Sandvik-style), no empty white */
+.mnsk7-section--insta {
+  background: var(--color-surface);
+  padding: 3rem 0;
+}
+
 .mnsk7-section--insta .col-full {
   text-align: center;
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 1.5rem;
 }
 
 .mnsk7-section--insta .col-full > * {
   margin-left: auto;
   margin-right: auto;
+}
+
+.mnsk7-instagram-feed__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1rem;
 }
 
 /* Bestsellers shortcode */

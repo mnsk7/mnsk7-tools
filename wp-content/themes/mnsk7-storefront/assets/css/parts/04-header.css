@@ -50,11 +50,69 @@
   outline: none;
 }
 
-/* Primary navigation */
+/* Primary navigation — compact row (Sandvik-style), submenus as dropdown */
 .storefront-primary-navigation,
 #site-navigation {
   background: var(--color-white);
   border-bottom: 1px solid var(--color-border);
+}
+
+/* Desktop: top-level menu in one row; submenus dropdown, hidden by default */
+@media (min-width: 769px) {
+  .main-navigation .handheld-navigation,
+  .main-navigation .menu-toggle {
+    display: none;
+  }
+  .main-navigation ul.menu,
+  .main-navigation ul {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border: none;
+  }
+  .main-navigation ul.menu > li,
+  .main-navigation ul > li {
+    position: relative;
+    margin: 0;
+  }
+  .main-navigation ul.menu > li > a,
+  .main-navigation ul > li > a {
+    display: block;
+    padding: 0.75rem 1rem;
+    white-space: nowrap;
+  }
+  /* Submenus: absolute dropdown, not inline */
+  .main-navigation ul.menu ul,
+  .main-navigation ul ul {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    min-width: 220px;
+    display: none;
+    flex-direction: column;
+    margin: 0;
+    padding: 0.25rem 0;
+    list-style: none;
+    box-shadow: var(--shadow-md);
+    border-radius: var(--r-sm);
+    border: 1px solid var(--color-border);
+    background: var(--color-white);
+    z-index: 100;
+  }
+  .main-navigation ul.menu li:hover > ul,
+  .main-navigation ul li:hover > ul {
+    display: block;
+  }
+  .main-navigation ul.menu ul li,
+  .main-navigation ul ul li {
+    margin: 0;
+  }
 }
 
 .main-navigation ul li a {
@@ -66,8 +124,8 @@
 }
 
 .main-navigation ul li a:hover,
-.main-navigation ul li.current-menu-item > a,
-.main-navigation ul li.current_page_item > a {
+.main-navigation li.current-menu-item > a,
+.main-navigation li.current_page_item > a {
   color: var(--color-primary);
   text-decoration: none;
 }
@@ -91,6 +149,47 @@
 .main-navigation ul.sub-menu li a:hover,
 .main-navigation ul ul li a:hover {
   background: var(--color-surface);
+}
+
+/* Mobile: menu hidden until toggled (Storefront adds .toggled) */
+@media (max-width: 768px) {
+  .main-navigation ul.menu,
+  .main-navigation ul {
+    display: none;
+    flex-direction: column;
+    padding: 0.5rem 0;
+  }
+  .main-navigation.toggled ul.menu,
+  .main-navigation.toggled ul {
+    display: flex;
+  }
+  .main-navigation ul.menu > li,
+  .main-navigation ul > li {
+    width: 100%;
+  }
+  .main-navigation ul ul {
+    position: static;
+    display: none;
+    padding-left: 1rem;
+  }
+  .main-navigation ul li:hover > ul {
+    display: block;
+  }
+}
+
+/* Cart: compact empty state (no huge "Brak produktów" block) */
+.site-header-cart .widget_shopping_cart_content {
+  font-size: var(--fs-sm);
+}
+.site-header-cart .cart_list {
+  max-height: 280px;
+  overflow-y: auto;
+}
+.site-header-cart .woocommerce-mini-cart__empty-message {
+  padding: 0.5rem 0;
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-muted);
 }
 
 /* Cart icon */

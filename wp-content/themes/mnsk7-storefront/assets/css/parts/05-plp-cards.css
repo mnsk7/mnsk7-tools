@@ -39,12 +39,21 @@
   transform: translateY(-2px);
 }
 
-/* Product image */
+/* Product image — 1:1 aspect (Sandvik-style compact card), no huge cards */
+.woocommerce ul.products li.product .woocommerce-loop-product__link,
+.woocommerce ul.products li.product a:has(img) {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--color-surface);
+}
 .woocommerce ul.products li.product a img,
 .woocommerce ul.products li.product .attachment-woocommerce_thumbnail {
   border-radius: var(--r-md) var(--r-md) 0 0;
   display: block;
   width: 100%;
+  height: 100%;
+  object-fit: contain;
   margin: 0;
 }
 
@@ -166,3 +175,16 @@
   color: var(--color-white);
 }
 
+
+/* Product image container — fixed aspect so cards stay compact (Sandvik ref) */
+.woocommerce ul.products li.product .woocommerce-loop-product__link {
+  display: block;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: var(--color-surface);
+}
+.woocommerce ul.products li.product .woocommerce-loop-product__link img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}

@@ -114,3 +114,20 @@
   display: none;
 }
 
+/* Force dark footer block (no white gap) + full width (fix when parent Storefront wraps content) */
+.site-footer.site-footer--mnsk7 {
+  background: #0f172a;
+  padding: 0;
+  width: 100%;
+  max-width: none;
+  box-sizing: border-box;
+}
+
+/* Footer content grid stays within content-max; footer bar spans full width */
+.mnsk7-site-footer-block {
+  box-sizing: border-box;
+}
+.mnsk7-footer-bottom {
+  width: 100%;
+  box-sizing: border-box;
+}

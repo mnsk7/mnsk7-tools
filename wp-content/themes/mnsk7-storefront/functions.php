@@ -1,6 +1,6 @@
 <?php
 /**
- * MNK7 Storefront child theme functions.
+ * MNSK7 Storefront child theme functions.
  * Parent: Storefront (official WooCommerce theme).
  *
  * @package mnsk7-storefront
@@ -18,7 +18,7 @@ function mnsk7_parent_storefront_available() {
 
 /* 1. Enqueue styles — many small CSS parts (easier to maintain than one 2000+ line file) */
 add_action( 'wp_enqueue_scripts', function () {
-	$v = '2.2.0';
+	$v = '2.3.0';
 	$base = get_stylesheet_directory_uri() . '/assets/css/parts/';
 	$dir = get_stylesheet_directory() . '/assets/css/parts/';
 	if ( mnsk7_parent_storefront_available() ) {
@@ -28,7 +28,7 @@ add_action( 'wp_enqueue_scripts', function () {
 		wp_enqueue_style( 'mnsk7-storefront-style', get_stylesheet_uri(), array(), $v );
 	}
 	$prev = 'mnsk7-storefront-style';
-	$parts = array( '01-tokens', '02-reset-typography', '03-storefront-overrides', '04-header', '05-plp-cards', '06-single-product', '07-mnsk7-blocks', '08-home-sections', '09-footer', '10-cookie-bar', '11-hidden', '12-related-products', '13-seo-landing', '14-faq', '15-delivery-contact', '16-woo-notices', '17-buttons', '18-cart-checkout', '19-breadcrumbs', '20-responsive-tablet', '21-responsive-mobile', '22-touch-targets', '23-print' );
+	$parts = array( '01-tokens', '02-reset-typography', '03-storefront-overrides', '04-header', '05-plp-cards', '06-single-product', '07-mnsk7-blocks', '08-home-sections', '09-footer', '10-cookie-bar', '11-hidden', '12-related-products', '13-seo-landing', '14-faq', '15-delivery-contact', '16-woo-notices', '17-buttons', '18-cart-checkout', '19-breadcrumbs', '20-responsive-tablet', '21-responsive-mobile', '22-touch-targets', '23-print', '24-plp-table' );
 	$parts_loaded = false;
 	foreach ( $parts as $part ) {
 		$path = $dir . $part . '.css';

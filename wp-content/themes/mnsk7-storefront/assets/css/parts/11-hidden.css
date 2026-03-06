@@ -21,3 +21,9 @@ a.add_to_wishlist,
   display: none !important;
 }
 
+/* Watermark overlay on product images */
+[class*="watermark"] {
+  display: none !important;
+}
+
+
