@@ -45,6 +45,38 @@ defined( 'ABSPATH' ) || exit;
 				},
 			) );
 			?>
+			<div class="site-branding">
+				<?php if ( has_custom_logo() ) : ?>
+					<?php the_custom_logo(); ?>
+				<?php else : ?>
+					<p class="site-title"><a href="<?php echo esc_url( home_url( '/' ) ); ?>" rel="home"><?php bloginfo( 'name' ); ?></a></p>
+					<?php if ( get_bloginfo( 'description' ) ) : ?>
+						<p class="site-description"><?php bloginfo( 'description' ); ?></p>
+					<?php endif; ?>
+				<?php endif; ?>
+			</div>
+			<nav id="site-navigation" class="main-navigation storefront-primary-navigation" role="navigation">
+				<button class="menu-toggle" aria-controls="primary-menu" aria-expanded="false"><?php esc_html_e( 'Menu', 'mnsk7-storefront' ); ?></button>
+				<?php
+				wp_nav_menu( array(
+					'theme_location' => 'primary',
+					'menu_id'        => 'primary-menu',
+					'container'      => false,
+					'fallback_cb'    => false,
+				) );
+				?>
+			</nav>
+			<div class="mnsk7-header-actions">
+				<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
+				<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="mnsk7-header-link mnsk7-header-link--account"><?php esc_html_e( 'Moje konto', 'mnsk7-storefront' ); ?></a>
+				<?php endif; ?>
+				<?php if ( function_exists( 'woocommerce_mini_cart' ) ) : ?>
+				<ul class="site-header-cart">
+					<li><?php woocommerce_mini_cart(); ?></li>
+				</ul>
+				<?php endif; ?>
+			</div>
+		<?php endif; ?>
 		</nav>
 		<div class="mnsk7-header__actions">
 			<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
