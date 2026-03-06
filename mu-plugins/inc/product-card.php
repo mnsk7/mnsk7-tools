@@ -8,6 +8,27 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Krótkie etykiety dla tabeli key params (design contract: Średnica robocza, Trzpień).
+ *
+ * @return array [ 'długa etykieta' => 'krótka etykieta' ]
+ */
+function mnsk7_get_key_param_short_labels() {
+	return array(
+		__( 'Średnica części roboczej', 'mnsk7-tools' ) => __( 'Średnica robocza', 'mnsk7-tools' ),
+		__( 'Średnica trzpienia', 'mnsk7-tools' )       => __( 'Trzpień', 'mnsk7-tools' ),
+		__( 'Liczba zębów', 'mnsk7-tools' )             => __( 'Ilość ostrzy', 'mnsk7-tools' ),
+		__( 'Materiał obróbki', 'mnsk7-tools' )         => __( 'Materiał', 'mnsk7-tools' ),
+		__( 'Typ operacji', 'mnsk7-tools' )             => __( 'Typ', 'mnsk7-tools' ),
+		__( 'Chwyt / trzpienie', 'mnsk7-tools' )        => __( 'Trzpień', 'mnsk7-tools' ),
+		__( 'Trzpienie / chwyt', 'mnsk7-tools' )        => __( 'Trzpień', 'mnsk7-tools' ),
+	);
+}
+
+/**
+ * Key product attributes for catalog display (content_catalog_rules).
+ * Min set: material, typ operacji, średnica, długość, chwyt/trzpienia, pokrycie, liczba zębów.
+ */
 function mnsk7_get_key_param_attributes() {
 	return array(
 		'srednica'                => __( 'Średnica części roboczej', 'mnsk7-tools' ),
@@ -26,6 +47,18 @@ function mnsk7_get_key_param_attributes() {
 		'ksztalt'                 => __( 'Kształt', 'mnsk7-tools' ),
 		'zastosowanie'            => __( 'Zastosowanie', 'mnsk7-tools' ),
 		'pa_zastosowanie'         => __( 'Zastosowanie', 'mnsk7-tools' ),
+		'material'                => __( 'Materiał obróbki', 'mnsk7-tools' ),
+		'pa_material'             => __( 'Materiał obróbki', 'mnsk7-tools' ),
+		'typ-operacji'            => __( 'Typ operacji', 'mnsk7-tools' ),
+		'pa_typ-operacji'         => __( 'Typ operacji', 'mnsk7-tools' ),
+		'pokrycie'                => __( 'Pokrycie', 'mnsk7-tools' ),
+		'pa_pokrycie'             => __( 'Pokrycie', 'mnsk7-tools' ),
+		'liczba-zebow'            => __( 'Liczba zębów', 'mnsk7-tools' ),
+		'pa_liczba-zebow'         => __( 'Liczba zębów', 'mnsk7-tools' ),
+		'chwyt'                   => __( 'Chwyt / trzpienie', 'mnsk7-tools' ),
+		'pa_chwyt'                => __( 'Chwyt / trzpienie', 'mnsk7-tools' ),
+		'trzpienie'               => __( 'Trzpienie / chwyt', 'mnsk7-tools' ),
+		'pa_trzpienie'            => __( 'Trzpienie / chwyt', 'mnsk7-tools' ),
 	);
 }
 
@@ -90,11 +123,13 @@ function mnsk7_single_product_key_params() {
 		return;
 	}
 
+	$short_labels = function_exists( 'mnsk7_get_key_param_short_labels' ) ? mnsk7_get_key_param_short_labels() : array();
 	echo '<div class="mnsk7-product-key-params">';
 	echo '<h4 class="mnsk7-product-key-params__title">' . esc_html__( 'Kluczowe parametry', 'mnsk7-tools' ) . '</h4>';
 	echo '<dl class="mnsk7-product-key-params__list">';
 	foreach ( $found as $label => $value ) {
-		echo '<dt>' . esc_html( $label ) . '</dt><dd>' . esc_html( $value ) . '</dd>';
+		$display_label = isset( $short_labels[ $label ] ) ? $short_labels[ $label ] : $label;
+		echo '<dt>' . esc_html( $display_label ) . '</dt><dd>' . esc_html( $value ) . '</dd>';
 	}
 	echo '</dl></div>';
 }
