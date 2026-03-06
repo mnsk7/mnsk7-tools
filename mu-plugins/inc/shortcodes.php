@@ -71,7 +71,13 @@ function mnsk7_instagram_feed_html( $atts = array() ) {
 	if ( ! empty( $posts ) ) {
 		$posts = array_slice( array_map( 'esc_url_raw', $posts ), 0, $limit );
 	} else {
-		$posts = mnsk7_instagram_recent_post_urls( $limit );
+		$from_option = get_option( 'mnsk7_instagram_post_urls', array() );
+		if ( is_array( $from_option ) && ! empty( $from_option ) ) {
+			$posts = array_slice( array_filter( array_map( 'esc_url_raw', $from_option ) ), 0, $limit );
+		}
+		if ( empty( $posts ) ) {
+			$posts = mnsk7_instagram_recent_post_urls( $limit );
+		}
 		if ( empty( $posts ) ) {
 			$posts = array_slice( mnsk7_instagram_default_post_urls(), 0, $limit );
 		}
@@ -80,14 +86,22 @@ function mnsk7_instagram_feed_html( $atts = array() ) {
 	$html .= '<h4 class="mnsk7-instagram-feed__title">' . esc_html( $atts['title'] ) . '</h4>';
 	if ( ! empty( $posts ) ) {
 		$html .= '<div class="mnsk7-instagram-feed__grid">';
-		foreach ( $posts as $post_url ) {
+		foreach ( $posts as $i => $post_url ) {
 			$post_url = esc_url( $post_url );
-			if ( ! $post_url ) continue;
+			if ( ! $post_url ) {
+				continue;
+			}
 			$embed = wp_oembed_get( $post_url );
 			$html .= '<div class="mnsk7-instagram-feed__item">';
-			$html .= $embed
-				? $embed // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-				: '<a href="' . $post_url . '" target="_blank" rel="noopener">' . esc_html__( 'Zobacz post na Instagramie', 'mnsk7-tools' ) . '</a>';
+			if ( $embed ) {
+				$html .= $embed; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+			} else {
+				$aria = sprintf( /* translators: %d: post number */ __( 'Post %d na Instagramie', 'mnsk7-tools' ), $i + 1 );
+				$html .= '<a href="' . esc_url( $post_url ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__link" aria-label="' . esc_attr( $aria ) . '">';
+				$html .= '<span class="mnsk7-instagram-feed__icon" aria-hidden="true"></span>';
+				$html .= '<span class="mnsk7-instagram-feed__link-text">' . esc_html__( 'Zobacz post', 'mnsk7-tools' ) . '</span>';
+				$html .= '</a>';
+			}
 			$html .= '</div>';
 		}
 		$html .= '</div>';

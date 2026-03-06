@@ -50,9 +50,10 @@
   display: flex;
   justify-content: center;
 }
+/* Tylko poziom główny w jednym rzędzie; podmenu = dropdown (hover) */
 .mnsk7-header__menu {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: center;
   gap: 0;
@@ -60,7 +61,8 @@
   margin: 0;
   padding: 0;
 }
-.mnsk7-header__menu li {
+.mnsk7-header__menu > li {
+  position: relative;
   margin: 0;
 }
 .mnsk7-header__menu a {
@@ -78,6 +80,45 @@
 }
 .mnsk7-header__menu a:hover,
 .mnsk7-header__menu li.current-menu-item > a {
+  color: var(--color-primary);
+}
+
+/* Podmenu ukryte domyślnie, dropdown przy hover */
+.mnsk7-header__menu .sub-menu,
+.mnsk7-header__menu ul ul {
+  display: none;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 220px;
+  margin: 0;
+  padding: 0.25rem 0;
+  list-style: none;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+}
+.mnsk7-header__menu > li:hover > .sub-menu,
+.mnsk7-header__menu > li:hover > ul,
+.mnsk7-header__menu > li:focus-within > .sub-menu,
+.mnsk7-header__menu > li:focus-within > ul {
+  display: block;
+}
+.mnsk7-header__menu .sub-menu li,
+.mnsk7-header__menu ul ul li {
+  margin: 0;
+}
+.mnsk7-header__menu .sub-menu a,
+.mnsk7-header__menu ul ul a {
+  padding: 0.5rem 1rem;
+  font-size: var(--fs-sm);
+  white-space: nowrap;
+}
+.mnsk7-header__menu .sub-menu a:hover,
+.mnsk7-header__menu ul ul a:hover {
+  background: var(--color-surface);
   color: var(--color-primary);
 }
 
@@ -175,9 +216,27 @@
     border-bottom: 1px solid var(--color-border);
     padding: 0.5rem 0;
     box-shadow: var(--shadow-md);
+    max-height: 70vh;
+    overflow-y: auto;
   }
   .mnsk7-header__nav.is-open .mnsk7-header__menu {
     display: flex;
+  }
+  /* Na mobile podmenu jako zwykła lista (bez dropdown) */
+  .mnsk7-header__nav .mnsk7-header__menu .sub-menu,
+  .mnsk7-header__nav .mnsk7-header__menu ul ul {
+    position: static;
+    display: block;
+    min-width: 0;
+    padding-left: 1rem;
+    border: none;
+    box-shadow: none;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu > li:hover > .sub-menu,
+  .mnsk7-header__nav .mnsk7-header__menu > li:hover > ul {
+    display: block;
   }
   .mnsk7-header__nav {
     order: 3;

@@ -32,3 +32,7 @@ deploy-mu-plugins: deploy-files
 
 # Pełny flow: najpierw pliki, potem DB
 staging-full: deploy-files staging-refresh
+
+# FB-04: wyłączenie pluginów filtrów dublujących „Filtruj" na stagingu (wymaga .env, SSH, WP-CLI na serwerze)
+deactivate-filter-plugins:
+	./scripts/staging-deactivate-filter-plugins.sh

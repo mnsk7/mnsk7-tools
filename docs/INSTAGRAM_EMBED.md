@@ -1,6 +1,6 @@
 # Instagram na stronie głównej
 
-Shortcode `[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]` jest zdefiniowany w **mu-plugins/mnsk7-tools.php**.
+Shortcode `[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]` jest zdefiniowany w **mu-plugins/inc/shortcodes.php** (ładowany przez mnsk7-tools.php).
 
 ## Jak wyświetlić linki do postów
 
@@ -23,7 +23,9 @@ Albo przez WP-CLI na serwerze:
 wp option patch insert mnsk7_instagram_post_urls 0 "https://www.instagram.com/p/ABC123/"
 ```
 
-Jeśli opcja `mnsk7_instagram_post_urls` jest pusta, shortcode i tak wyświetla przycisk CTA „Instagram @mnsk7tools →” do profilu.
+**Dlaczego posty mogą się nie wyświetlać:** (1) Źródła: atrybut `posts="..."`, opcja `mnsk7_instagram_post_urls`, scraping profilu (Instagram często blokuje), wreszcie lista domyślna (3 linki) — więc **zawsze** powinna być widoczna co najmniej siatka 3 kart. (2) Osadzenia: `wp_oembed_get()` dla Instagram często zwraca pusty wynik bez tokenu API; wtedy shortcode pokazuje karty z linkami (ikona IG + „Zobacz post") zamiast embedów — to normalne. Jeśli chcesz własną listę, ustaw opcję (WP-CLI: `wp option update mnsk7_instagram_post_urls '["url1","url2"]' --format=json`).
+
+Jeśli opcja i scraping są puste, shortcode używa **domyślnych 3 linków** i CTA do profilu.
 
 ## Parent theme (Storefront) i przewodnik
 

@@ -174,7 +174,22 @@
 
 ---
 
-## 9. Progress (staging, deploy, scripts)
+## 9. Feedback ze zrzutów ekranu (2026-03-06)
+
+Źródło: 5 zrzutów stagingu + komentarze użytkownika.
+
+| Problem | Opis | Działanie |
+|--------|------|-----------|
+| **Header wygląda okropnie** | Brak wyraźnego paska nagłówka; menu rozwalone — ogromna lista kategorii (Frez do drewna, do metalu, do kamienia…), logo „MNSK7 tools” w dziwnym miejscu, „Moje konto” i „Brak produktów w koszyku” wtopione w treść. Na innym ekranie w headerze tylko pole wyszukiwania i pusta przestrzeń. | Kompaktowy header: logo góra-lewo, zwarte menu (np. Sklep, Dostawa, Kontakt — bez wylewania całego drzewa kategorii), search, konto, koszyk. W WP: nie dodawać wszystkich kategorii do menu głównego. |
+| **Chipsy OK, ale kontekst** | Np. przy wyborze **Zestawy** (Sets) filtr **Średnica** nie ma sensu — ma całkiem znikać. | Logika warunkowa: dla kategorii typu „Zestawy” nie pokazywać rzędu chipów Średnica (w kodzie: pominąć `pa_srednica` dla termu zestawy). |
+| **Atrybuty tylko w wybranej kategorii** | Tagi i atrybuty (Średnica, Trzpień itd.) przy wybranej kategorii mają być **tylko te, które są w ofercie** (w tej kategorii). Nie wypisywać wszystkich możliwych wartości z bazy. | *Zrobione:* `mnsk7_get_archive_product_ids_for_chips()` pobiera ID produktów w kategorii (w magazynie, z uwzgl. bieżących filtrów); `get_terms( object_ids )` zwraca tylko termy przypisane do tych produktów. |
+| **Wszystko się duplikuje** | Trzeci ekran: pod chipami długa linia tekstu „Filtruj: Średnica: … Trzpień: …” z listą wszystkich wartości; powtórzenia linków (Sklep, Dostawa i płatności, Kontakt w wielu miejscach). | Wyłączyć pluginy filtrów, które dublują UI (np. drugi blok „Filtruj”, drugi zestaw chipów). Zostawić jeden mechanizm filtrów (np. tylko chipsy w temacie). Sprawdzić w WP listę aktywnych pluginów filtrów. |
+| **Tabela + filtr + wyszukiwarka** | Tabelę produktów zrobić lepiej; dodać filtr i **wyszukiwarkę** (np. nad tabelą). | Ulepszyć tabelę (style, czytelność); dodać pole wyszukiwania produktów nad tabelą (np. formularz ?s= lub parametr w URL sklepu). |
+| **Header na ostatnim ekranie** | Na jednym z ekranów w headerze „coś nie tak” — minimalny header (tylko Szukaj), reszta pusta. | Jednolity header na wszystkich szablonach (shop, archiwum, strona, wyszukiwarka); unikać szablonów, które nie wywołują pełnego header.php lub nadpisują go. |
+
+---
+
+## 10. Progress (staging, deploy, scripts)
 
 - Staging: https://staging.mnsk7-tools.pl; separate DB; `WP_ENVIRONMENT_TYPE=staging`; staging-safety mu-plugin.
 - Deploy: rsync theme + mu-plugins (Makefile: deploy-files, staging-refresh).

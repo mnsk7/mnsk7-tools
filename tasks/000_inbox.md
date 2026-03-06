@@ -13,6 +13,19 @@
 
 ---
 
+## Z feedbacku 2026-03-06 (zrzuty, as_is)
+
+- [x] **FB-02 (chipsy):** dla kategorii „Zestawy” ukryty rząd Średnica — w `mnsk7_get_archive_attribute_filter_chips()` pomijamy `pa_srednica`, gdy slug/nazwa termu zawiera „zestaw”.
+- [x] **FB-01 (header):** w menu głównym max 7 pozycji najwyższego poziomu (+ dzieci) — filtr `wp_nav_menu_objects` w theme.
+- [x] **FB-05 (tabela + szukaj):** nad tabelą PLP dodany formularz wyszukiwarki (input + przycisk Szukaj); style w 24-plp-table.css.
+- [x] **FB-03:** chipy atrybutów — tylko wartości mające produkty w bieżącej kategorii (w magazynie); `mnsk7_get_archive_product_ids_for_chips()` + get_terms z object_ids.
+- [ ] **FB-04:** na stagingu wyłączyć wtyczki filtrów dublujące blok „Filtruj” — skrypt: `make deactivate-filter-plugins` lub `./scripts/staging-deactivate-filter-plugins.sh` (SSH + WP-CLI z .env).
+- [ ] **FB-06:** sprawdzić na stagingu, że header jest taki sam na shop/archiwum/wynik wyszukiwania — w temacie tylko header.php, get_header() i get_header('shop') ładują ten sam plik.
+
+**Instagram (posty się nie wyświetlają):** shortcode teraz (1) używa opcji `mnsk7_instagram_post_urls` przed scrapingiem, (2) zawsze ma fallback na domyślne 3 linki, (3) gdy oEmbed nie działa — pokazuje karty z linkiem (ikona IG + „Zobacz post"). Style w 08-home-sections.css dla `.mnsk7-instagram-feed__link`. Doc: INSTAGRAM_EMBED.md.
+
+---
+
 ## Z 06_devops_github + 07_server_ops (2026-03-06)
 
 - [x] Zaktualizować dokumentację: theme w repozytorium = storefront + mnsk7-storefront (DEPLOY_PLAYBOOK, STAGING_AND_GITHUB, SERVER_OPS).

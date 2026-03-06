@@ -74,7 +74,20 @@
 
 ---
 
-## После запуска агента 00_as_is_audit (2026-03-06)
+## Feedback 2026-03-06 (zrzuty ekranu)
+
+| ID | Zadanie | Priorytet |
+|----|---------|-----------|
+| FB-01 | **Header:** kompaktowy pasek — logo góra-lewo, menu bez całego drzewa kategorii (tylko np. Sklep, Dostawa, Kontakt); search, konto, koszyk. W WP: nie wrzucać wszystkich kategorii do menu głównego. | P1 |
+| FB-02 | **Chipsy:** dla kategorii „Zestawy” (i podobnych) całkiem ukryć rząd filtrów „Średnica”. | P1 |
+| FB-03 | **Atrybuty w chipach:** pokazywać tylko wartości atrybutów, które mają produkty w bieżącej kategorii. *(Zrobione 2026-03-06: zapytanie po ID produktów w kategorii, w magazynie; get_terms z object_ids.)* | P1 |
+| FB-04 | **Duplikaty:** wyłączyć pluginy filtrów dublujące blok „Filtruj”/chipy; zostawić jeden mechanizm (chipsy w temacie). W WP Admin → Wtyczki: zidentyfikować które z (filter-everything, woo-product-filter, woocommerce-products-filter, woof-by-category) wyświetlają drugi blok „Filtruj: Średnica: … Trzpień: …” i je dezaktywować. | P1 |
+| FB-05 | **Tabela PLP:** ulepszyć wygląd; dodać wyszukiwarkę produktów nad tabelą. | P1 |
+| FB-06 | **Header wszędzie:** ten sam header na wszystkich szablonach (shop, archiwum, wyszukiwarka). | P2 |
+
+---
+
+## Po uruchomieniu agenta 00_as_is_audit (2026-03-06)
 
 - AS_IS_AUDIT актуализирован под Storefront + mnsk7-storefront; добавлена секция «Вёрстка и CSS» (дубли в header, контраст, design system).
 - В header.php убран дублирующий блок (два меню, два логотипа, два блока Moje konto/Koszyk).
