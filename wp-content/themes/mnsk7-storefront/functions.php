@@ -123,6 +123,10 @@ add_action( 'template_redirect', function () {
 	if ( ! isset( $_POST['mnsk7_newsletter'] ) || empty( $_POST['mnsk7_newsletter_email'] ) ) {
 		return;
 	}
+	if ( ! isset( $_POST['mnsk7_newsletter_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['mnsk7_newsletter_nonce'] ) ), 'mnsk7_newsletter' ) ) {
+		wp_safe_redirect( add_query_arg( 'mnsk7_newsletter', 'invalid', wp_get_referer() ?: home_url( '/' ) ) );
+		exit;
+	}
 	$email = sanitize_email( wp_unslash( $_POST['mnsk7_newsletter_email'] ) );
 	if ( ! is_email( $email ) ) {
 		wp_safe_redirect( add_query_arg( 'mnsk7_newsletter', 'invalid', wp_get_referer() ?: home_url( '/' ) ) );
@@ -142,7 +146,8 @@ add_action( 'wp_footer', function () {
 	if ( ! isset( $_GET['mnsk7_newsletter'] ) ) {
 		return;
 	}
-	$msg = ( $_GET['mnsk7_newsletter'] === 'ok' )
+	$status = sanitize_key( wp_unslash( $_GET['mnsk7_newsletter'] ) );
+	$msg    = ( $status === 'ok' )
 		? __( 'Dziękujemy za zapis do newslettera.', 'mnsk7-storefront' )
 		: __( 'Podaj poprawny adres e-mail.', 'mnsk7-storefront' );
 	echo '<script>document.addEventListener("DOMContentLoaded",function(){if(typeof wc_add_to_cart_params!=="undefined"){alert("' . esc_js( $msg ) . '");}else{alert("' . esc_js( $msg ) . '");}});</script>';
@@ -170,7 +175,7 @@ add_action( 'wp_enqueue_scripts', function () {
 		wp_enqueue_style( 'mnsk7-storefront-style', get_stylesheet_uri(), array(), $v );
 	}
 	$prev = 'mnsk7-storefront-style';
-	$parts = array( '01-tokens', '02-reset-typography', '03-storefront-overrides', '04-header', '05-plp-cards', '06-single-product', '07-mnsk7-blocks', '08-home-sections', '09-footer', '10-cookie-bar', '11-hidden', '12-related-products', '13-seo-landing', '14-faq', '15-delivery-contact', '16-woo-notices', '17-buttons', '18-cart-checkout', '19-breadcrumbs', '20-responsive-tablet', '21-responsive-mobile', '22-touch-targets', '23-print', '24-plp-table' );
+	$parts = array( '00-fonts-inter', '01-tokens', '02-reset-typography', '03-storefront-overrides', '04-header', '05-plp-cards', '06-single-product', '07-mnsk7-blocks', '08-home-sections', '09-footer', '10-cookie-bar', '11-hidden', '12-related-products', '13-seo-landing', '14-faq', '15-delivery-contact', '16-woo-notices', '17-buttons', '18-cart-checkout', '19-breadcrumbs', '20-responsive-tablet', '21-responsive-mobile', '22-touch-targets', '23-print', '24-plp-table' );
 	$parts_loaded = false;
 	foreach ( $parts as $part ) {
 		$path = $dir . $part . '.css';
@@ -184,12 +189,12 @@ add_action( 'wp_enqueue_scripts', function () {
 	}
 	if ( ! $parts_loaded ) {
 		wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( $prev ), $v );
+		$prev = 'mnsk7-main';
 	}
-	/* Krytyczne style inline — footer ciemny i Instagram karta — działają nawet przy cache/starym deployu */
+	/* Krytyczne style inline — footer ciemny i Instagram karta; przywiązane do ostatniego handle, żeby działały nawet gdy brak pliku parts/09 lub 08 */
 	$footer_inline = 'footer.mnsk7-footer,#colophon.mnsk7-footer,.site-footer.mnsk7-footer{background:#1e293b!important;color:#e2e8f0}.mnsk7-footer__top,.mnsk7-footer__col,.mnsk7-footer__title,.mnsk7-footer__top p,.mnsk7-footer__col p,.mnsk7-footer__col li{color:#e2e8f0!important}.mnsk7-footer__top a{color:#93c5fd}';
-	wp_add_inline_style( 'mnsk7-parts-09-footer', $footer_inline );
-	$insta_inline = '.mnsk7-instagram-feed--card{width:100%;max-width:560px;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.08)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__carousel{aspect-ratio:1;overflow:hidden;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__track{display:flex;height:100%;transition:transform .3s ease}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide{flex:0 0 100%;width:100%;height:100%;position:relative}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide .mnsk7-instagram-feed__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dots{display:flex;justify-content:center;gap:6px;padding:10px 0}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot{width:8px;height:8px;border-radius:50%;border:none;background:#c4c4c4;cursor:pointer}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot.is-active{background:#0d6efd;transform:scale(1.15)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile{display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border-top:1px solid #eee}';
-	wp_add_inline_style( 'mnsk7-parts-08-home-sections', $insta_inline );
+	$insta_inline  = '.mnsk7-instagram-feed--card{width:100%;max-width:560px;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.08)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__carousel{aspect-ratio:1;overflow:hidden;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__track{display:flex;height:100%;transition:transform .3s ease}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide{flex:0 0 100%;width:100%;height:100%;position:relative}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide .mnsk7-instagram-feed__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dots{display:flex;justify-content:center;gap:6px;padding:10px 0}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot{width:8px;height:8px;border-radius:50%;border:none;background:#c4c4c4;cursor:pointer}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot.is-active{background:#0d6efd;transform:scale(1.15)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile{display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border-top:1px solid #eee}';
+	wp_add_inline_style( $prev, $footer_inline . "\n" . $insta_inline );
 }, 10 );
 
 /**
@@ -251,7 +256,7 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( $fragments ) {
 	ob_start();
 	?>
 	<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php esc_attr_e( 'Koszyk', 'mnsk7-storefront' ); ?>">
-		<span class="mnsk7-header__cart-icon" aria-hidden="true"></span>
+		<span class="mnsk7-header__cart-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
 		<?php if ( $cart_count > 0 ) { ?>
 			<span class="mnsk7-header__cart-count"><?php echo absint( $cart_count ); ?></span>
 		<?php } ?>
@@ -381,12 +386,12 @@ add_action( 'wp_footer', function () {
 	<?php
 }, 25 );
 
-/* 2. Google Fonts: Inter (replace Storefront default) */
+/* 2. Inter: local woff2 via @font-face (00-fonts-inter.css), no Google Fonts */
 add_action( 'wp_enqueue_scripts', function () {
 	if ( mnsk7_parent_storefront_available() ) {
 		wp_dequeue_style( 'storefront-fonts' );
 	}
-	wp_enqueue_style( 'mnsk7-inter', 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap', array(), null );
+	/* Inter loaded from assets/css/parts/00-fonts-inter.css (first in parts list) */
 }, 20 );
 
 /* 3. Theme support */
@@ -691,6 +696,10 @@ add_action( 'woocommerce_product_query', function ( $q ) {
 		return;
 	}
 	$attr_taxonomies = array( 'pa_srednica', 'pa_srednica-trzpienia', 'pa_dlugosc-calkowita-l', 'pa_dlugosc-robocza-h' );
+	$tax            = $q->get( 'tax_query' );
+	if ( ! is_array( $tax ) ) {
+		$tax = array();
+	}
 	foreach ( $attr_taxonomies as $attr ) {
 		$param = 'filter_' . str_replace( 'pa_', '', $attr );
 		if ( empty( $_GET[ $param ] ) ) {
@@ -700,17 +709,14 @@ add_action( 'woocommerce_product_query', function ( $q ) {
 		if ( $slug === '' ) {
 			continue;
 		}
-		$tax = $q->get( 'tax_query' );
-		if ( ! is_array( $tax ) ) {
-			$tax = array();
-		}
 		$tax[] = array(
 			'taxonomy' => $attr,
 			'field'    => 'slug',
 			'terms'    => $slug,
 		);
-		$q->set( 'tax_query', $tax );
-		break;
+	}
+	if ( ! empty( $tax ) ) {
+		$q->set( 'tax_query', array_merge( array( 'relation' => 'AND' ), $tax ) );
 	}
 }, 20 );
 

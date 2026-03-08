@@ -62,6 +62,7 @@ $min_qty     = $product->get_min_purchase_quantity();
 		if ( $product->is_purchasable() && $product->is_in_stock() ) {
 			?>
 			<form id="<?php echo esc_attr( $form_id ); ?>" method="post" action="" class="mnsk7-table-addcart-form">
+				<?php wp_nonce_field( 'woocommerce-add-to-cart', 'woocommerce-add-to-cart-nonce' ); ?>
 				<input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" />
 				<?php if ( $product->is_sold_individually() ) : ?>
 					<input type="hidden" name="quantity" value="1" />
