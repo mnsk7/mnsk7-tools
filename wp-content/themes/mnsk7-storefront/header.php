@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 <?php wp_body_open(); ?>
 <div id="page" class="hfeed site">
 
-<header id="masthead" class="site-header mnsk7-header" role="banner">
+<header id="masthead" class="site-header mnsk7-header mnsk7-header--sticky" role="banner">
 	<div class="mnsk7-header__inner">
 		<div class="mnsk7-header__brand">
 			<?php
@@ -30,7 +30,9 @@ defined( 'ABSPATH' ) || exit;
 			?>
 		</div>
 		<nav class="mnsk7-header__nav" role="navigation" aria-label="<?php esc_attr_e( 'Menu główne', 'mnsk7-storefront' ); ?>">
-			<button type="button" class="mnsk7-header__menu-toggle" aria-expanded="false" aria-controls="mnsk7-primary-menu"><?php esc_html_e( 'Menu', 'mnsk7-storefront' ); ?></button>
+			<button type="button" class="mnsk7-header__menu-toggle" aria-expanded="false" aria-controls="mnsk7-primary-menu" aria-label="<?php esc_attr_e( 'Otwórz menu', 'mnsk7-storefront' ); ?>">
+				<span class="mnsk7-header__hamburger" aria-hidden="true"></span>
+			</button>
 			<ul id="mnsk7-primary-menu" class="mnsk7-header__menu">
 				<?php
 				$shop_url = ( function_exists( 'wc_get_page_permalink' ) ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
@@ -61,13 +63,50 @@ defined( 'ABSPATH' ) || exit;
 		</nav>
 		<div class="mnsk7-header__actions">
 			<?php
+			// Search: icon + overlay form
+			?>
+			<div class="mnsk7-header__search-wrap">
+				<button type="button" class="mnsk7-header__search-toggle" aria-expanded="false" aria-controls="mnsk7-header-search" aria-label="<?php esc_attr_e( 'Szukaj', 'mnsk7-storefront' ); ?>">
+					<span class="mnsk7-header__search-icon" aria-hidden="true"></span>
+				</button>
+				<div id="mnsk7-header-search" class="mnsk7-header__search-dropdown" hidden>
+					<form role="search" method="get" class="mnsk7-header__search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+						<label for="mnsk7-header-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></label>
+						<input type="search" id="mnsk7-header-search-input" class="mnsk7-header__search-input" placeholder="<?php esc_attr_e( 'Szukaj w sklepie…', 'mnsk7-storefront' ); ?>" value="<?php echo get_search_query(); ?>" name="s" />
+						<input type="hidden" name="post_type" value="product" />
+						<button type="submit" class="mnsk7-header__search-submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
+					</form>
+				</div>
+			</div>
+			<?php
 			if ( function_exists( 'wc_get_page_permalink' ) ) {
-				?><a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="mnsk7-header__link"><?php esc_html_e( 'Moje konto', 'mnsk7-storefront' ); ?></a><?php
+				$account_url = wc_get_page_permalink( 'myaccount' );
+				$account_label = is_user_logged_in() ? wp_get_current_user()->display_name : __( 'Moje konto', 'mnsk7-storefront' );
+				if ( $account_label === '' && is_user_logged_in() ) {
+					$account_label = wp_get_current_user()->user_login;
+				}
+				?><a href="<?php echo esc_url( $account_url ); ?>" class="mnsk7-header__link mnsk7-header__link--account">
+				<span class="mnsk7-header__account-icon" aria-hidden="true"></span>
+				<span class="mnsk7-header__link-text"><?php echo esc_html( $account_label ); ?></span>
+			</a><?php
 			}
-			if ( function_exists( 'woocommerce_mini_cart' ) ) {
-				echo '<div class="mnsk7-header__cart">';
-				woocommerce_mini_cart();
-				echo '</div>';
+			if ( function_exists( 'wc_get_cart_url' ) && function_exists( 'woocommerce_mini_cart' ) ) {
+				$cart_count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
+				?>
+				<div class="mnsk7-header__cart">
+					<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php esc_attr_e( 'Koszyk', 'mnsk7-storefront' ); ?>">
+						<span class="mnsk7-header__cart-icon" aria-hidden="true"></span>
+						<?php if ( $cart_count > 0 ) { ?>
+							<span class="count"><?php echo absint( $cart_count ); ?></span>
+						<?php } ?>
+					</a>
+					<div class="mnsk7-header__cart-dropdown">
+						<div class="widget_shopping_cart_content">
+							<?php woocommerce_mini_cart(); ?>
+						</div>
+					</div>
+				</div>
+				<?php
 			}
 			?>
 		</div>

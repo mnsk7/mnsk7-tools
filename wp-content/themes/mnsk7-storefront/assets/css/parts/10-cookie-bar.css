@@ -1,7 +1,4 @@
-/* 10-cookie-bar — extracted from main.css */
-
-   § COOKIE BAR
-   ----------------------------------------------------------------- */
+/* 10-cookie-bar — widoczny pasek, Ustawienia (GDPR), nie zasłania treści */
 
 .mnsk7-cookie-bar {
   position: fixed;
@@ -10,41 +7,95 @@
   right: 0;
   background: #0f172a;
   color: var(--color-white);
-  padding: 1rem 1.5rem;
+  padding: 0.75rem 1.25rem;
   z-index: 9999;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 1rem;
-  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.15);
+  gap: 0.75rem 1rem;
+  box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.2);
   font-size: var(--fs-sm);
-}
-
-.mnsk7-cookie-bar__text {
-  flex: 1 1 300px;
   line-height: 1.5;
 }
 
-.mnsk7-cookie-bar__text a {
-  color: #60a5fa;
+.mnsk7-cookie-bar[hidden] {
+  display: none !important;
 }
 
-.mnsk7-cookie-bar .mnsk7-cookie-bar__btn {
-  background: var(--color-primary);
-  color: var(--color-white);
-  border: none;
-  padding: 0.5rem 1.25rem;
+/* Gdy pasek widoczny — odsunięcie treści od dołu, żeby nie zasłaniał przycisków */
+body.mnsk7-cookie-bar-visible #page {
+  padding-bottom: 56px;
+}
+
+.mnsk7-cookie-bar__inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.75rem 1rem;
+  width: 100%;
+  max-width: var(--content-max, 1200px);
+  margin: 0 auto;
+}
+
+.mnsk7-cookie-bar__text {
+  flex: 1 1 260px;
+  margin: 0;
+}
+
+.mnsk7-cookie-bar__text a,
+.mnsk7-cookie-bar__link {
+  color: #93c5fd;
+  text-decoration: underline;
+}
+
+.mnsk7-cookie-bar__text a:hover,
+.mnsk7-cookie-bar__link:hover {
+  color: #f8fafc;
+}
+
+.mnsk7-cookie-bar__buttons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.mnsk7-cookie-bar__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
   border-radius: var(--r-sm);
   font-size: var(--fs-sm);
   font-weight: 600;
   font-family: var(--font-base);
   cursor: pointer;
-  transition: background 0.15s ease;
+  transition: background 0.15s ease, color 0.15s ease;
   min-height: 44px;
+  box-sizing: border-box;
+  text-decoration: none;
+  border: none;
 }
 
-.mnsk7-cookie-bar .mnsk7-cookie-bar__btn:hover {
+.mnsk7-cookie-bar__btn {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.mnsk7-cookie-bar__btn:hover {
   background: var(--color-primary-hover);
+}
+
+.mnsk7-cookie-bar__btn--secondary {
+  background: transparent;
+  color: #e2e8f0;
+  border: 1px solid #475569;
+}
+
+.mnsk7-cookie-bar__btn--secondary:hover {
+  background: rgba(255,255,255,0.08);
+  color: #f8fafc;
 }
 

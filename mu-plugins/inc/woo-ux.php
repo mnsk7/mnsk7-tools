@@ -17,14 +17,19 @@ add_filter( 'woocommerce_output_related_products_args', function ( $args ) {
 add_filter( 'woocommerce_upsells_total',   fn() => 4 );
 add_filter( 'woocommerce_upsells_columns', fn() => 4 );
 
-/* Cookie consent bar */
+/* Cookie consent bar — widoczny, z przyciskiem Ustawienia (GDPR) */
 add_action( 'wp_footer', function () {
 	if ( is_admin() ) return;
+	$privacy_url = home_url( '/polityka-prywatnosci/' );
+	$settings_url = add_query_arg( 'cookies', '1', $privacy_url ) . '#cookies';
 	?>
-	<div id="mnsk7-cookie-bar" class="mnsk7-cookie-bar" role="dialog" aria-label="<?php esc_attr_e( 'Informacja o cookies', 'mnsk7-tools' ); ?>" hidden>
+	<div id="mnsk7-cookie-bar" class="mnsk7-cookie-bar" role="dialog" aria-label="<?php esc_attr_e( 'Informacja o cookies', 'mnsk7-tools' ); ?>" aria-hidden="true" hidden>
 		<div class="mnsk7-cookie-bar__inner">
-			<p class="mnsk7-cookie-bar__text"><?php esc_html_e( 'Ta strona używa plików cookie. Kliknij „Przyjmuję", aby kontynuować.', 'mnsk7-tools' ); ?></p>
-			<button type="button" class="mnsk7-cookie-bar__btn" id="mnsk7-cookie-bar-accept"><?php esc_html_e( 'Przyjmuję', 'mnsk7-tools' ); ?></button>
+			<p class="mnsk7-cookie-bar__text"><?php esc_html_e( 'Ta strona używa plików cookie. Kliknij „Przyjmuję", aby kontynuować.', 'mnsk7-tools' ); ?> <a href="<?php echo esc_url( $privacy_url ); ?>#cookies" class="mnsk7-cookie-bar__link"><?php esc_html_e( 'Więcej informacji', 'mnsk7-tools' ); ?></a></p>
+			<div class="mnsk7-cookie-bar__buttons">
+				<a href="<?php echo esc_url( $settings_url ); ?>" class="mnsk7-cookie-bar__btn mnsk7-cookie-bar__btn--secondary" id="mnsk7-cookie-bar-settings"><?php esc_html_e( 'Ustawienia', 'mnsk7-tools' ); ?></a>
+				<button type="button" class="mnsk7-cookie-bar__btn" id="mnsk7-cookie-bar-accept"><?php esc_html_e( 'Przyjmuję', 'mnsk7-tools' ); ?></button>
+			</div>
 		</div>
 	</div>
 	<script>
@@ -35,8 +40,9 @@ add_action( 'wp_footer', function () {
 		var bar=document.getElementById('mnsk7-cookie-bar');
 		if(!bar)return;
 		if(get(key)){bar.remove();return;}
-		bar.removeAttribute('hidden');
-		document.getElementById('mnsk7-cookie-bar-accept').addEventListener('click',function(){set(key,'1',365);bar.remove();});
+		bar.removeAttribute('hidden');bar.setAttribute('aria-hidden','false');
+		document.body.classList.add('mnsk7-cookie-bar-visible');
+		document.getElementById('mnsk7-cookie-bar-accept').addEventListener('click',function(){set(key,'1',365);bar.remove();document.body.classList.remove('mnsk7-cookie-bar-visible');});
 	})();
 	</script>
 	<?php
