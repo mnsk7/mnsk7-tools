@@ -1,5 +1,15 @@
 /* 18-cart-checkout — cart, empty cart, checkout (backlog 4.x) */
 
+/* --- Kontynuuj zakupy (UX audit) --- */
+.mnsk7-cart-continue {
+  margin: 0 0 1rem;
+}
+.mnsk7-cart-continue .mnsk7-btn-back {
+  display: inline-block;
+  min-height: 44px;
+  line-height: 42px;
+}
+
 /* --- Loyalty block in cart --- */
 .mnsk7-cart-loyalty {
   background: var(--color-surface);

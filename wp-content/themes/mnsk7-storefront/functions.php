@@ -88,6 +88,14 @@ add_filter( 'wc_empty_cart_message', function () {
 	return __( 'Twój koszyk jest pusty — wróć do sklepu', 'mnsk7-storefront' );
 }, 10 );
 
+/** 4.0 UX: domyślny tekst promocyjny w headerze (darmowa dostawa) */
+add_filter( 'mnsk7_header_promo_text', function ( $text ) {
+	if ( $text !== '' ) {
+		return $text;
+	}
+	return __( 'Darmowa dostawa od 300 zł. Tylko Polska.', 'mnsk7-storefront' );
+}, 5 );
+
 /** 4.1 Korzyń: fallback — jeśli strona koszyka pusta lub bez shortcode, wyświetl [woocommerce_cart] */
 add_filter( 'the_content', function ( $content ) {
 	if ( ! function_exists( 'is_cart' ) || ! is_cart() ) {
@@ -99,6 +107,16 @@ add_filter( 'the_content', function ( $content ) {
 	}
 	return $content;
 }, 3 );
+
+/** 4.2 UX: przycisk „Kontynuuj zakupy” na stronie koszyka */
+add_action( 'woocommerce_before_cart', function () {
+	if ( ! function_exists( 'wc_get_page_permalink' ) ) {
+		return;
+	}
+	echo '<p class="mnsk7-cart-continue">';
+	echo '<a href="' . esc_url( wc_get_page_permalink( 'shop' ) ) . '" class="button mnsk7-btn-back">' . esc_html__( 'Kontynuuj zakupy', 'mnsk7-storefront' ) . '</a>';
+	echo '</p>';
+}, 5 );
 
 /* Newsletter: zapis e-mail do opcji (można później podłączyć Mailchimp / integrację) */
 add_action( 'template_redirect', function () {
@@ -142,7 +160,7 @@ function mnsk7_header_fallback_menu() {
 
 /* 1. Enqueue styles — many small CSS parts (easier to maintain than one 2000+ line file) */
 add_action( 'wp_enqueue_scripts', function () {
-	$v = '3.0.8';
+	$v = defined( 'MNSK7_THEME_VERSION' ) ? MNSK7_THEME_VERSION : '3.0.9';
 	$base = get_stylesheet_directory_uri() . '/assets/css/parts/';
 	$dir = get_stylesheet_directory() . '/assets/css/parts/';
 	if ( mnsk7_parent_storefront_available() ) {
@@ -167,6 +185,11 @@ add_action( 'wp_enqueue_scripts', function () {
 	if ( ! $parts_loaded ) {
 		wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( $prev ), $v );
 	}
+	/* Krytyczne style inline — footer ciemny i Instagram karta — działają nawet przy cache/starym deployu */
+	$footer_inline = 'footer.mnsk7-footer,#colophon.mnsk7-footer,.site-footer.mnsk7-footer{background:#1e293b!important;color:#e2e8f0}.mnsk7-footer__top,.mnsk7-footer__col,.mnsk7-footer__title,.mnsk7-footer__top p,.mnsk7-footer__col p,.mnsk7-footer__col li{color:#e2e8f0!important}.mnsk7-footer__top a{color:#93c5fd}';
+	wp_add_inline_style( 'mnsk7-parts-09-footer', $footer_inline );
+	$insta_inline = '.mnsk7-instagram-feed--card{width:100%;max-width:560px;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.08)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__carousel{aspect-ratio:1;overflow:hidden;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__track{display:flex;height:100%;transition:transform .3s ease}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide{flex:0 0 100%;width:100%;height:100%;position:relative}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide .mnsk7-instagram-feed__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dots{display:flex;justify-content:center;gap:6px;padding:10px 0}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot{width:8px;height:8px;border-radius:50%;border:none;background:#c4c4c4;cursor:pointer}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot.is-active{background:#0d6efd;transform:scale(1.15)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile{display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border-top:1px solid #eee}';
+	wp_add_inline_style( 'mnsk7-parts-08-home-sections', $insta_inline );
 }, 10 );
 
 /**
@@ -449,6 +472,13 @@ add_filter( 'get_the_archive_title', function ( $title ) {
 }, 5 );
 add_filter( 'woocommerce_page_title', 'mnsk7_strip_wpf_filters_from_text', 5 );
 add_filter( 'woocommerce_taxonomy_archive_description_raw', 'mnsk7_strip_wpf_filters_from_text', 5 );
+
+/* Nie pokazuj zdjęcia kategorii u góry archiwum (kwadrat z lewej) — Storefront/snippety */
+add_action( 'init', function () {
+	remove_action( 'storefront_before_content', 'woocommerce_category_image', 2 );
+	remove_action( 'woocommerce_archive_description', 'woocommerce_category_image', 15 );
+}, 20 );
+
 add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 	if ( ! is_array( $crumbs ) ) {
 		return $crumbs;

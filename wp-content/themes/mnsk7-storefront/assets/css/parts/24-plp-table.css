@@ -1,5 +1,14 @@
 /* 24-plp-table — Sandvik-style table + chips (чипсы) on category/tag archives */
 
+/* Bez zdjęcia kategorii u góry — ukrywamy kwadrat z lewej (Storefront/snippety) */
+body.tax-product_cat .woocommerce-products-header img,
+body.tax-product_cat .woocommerce-products-header .wp-post-image,
+body.tax-product_cat .woocommerce-products-header .attachment-woocommerce_thumbnail,
+body.tax-product_cat .woocommerce_category_image,
+body.tax-product_cat [class*="category-image"] {
+  display: none !important;
+}
+
 /* Nagłówek kategorii (tytuł) */
 .woocommerce-products-header {
   margin-bottom: 0.75rem;
@@ -71,7 +80,7 @@ body.tax-product_cat .mnsk7-catalog-filters {
   display: none !important;
 }
 
-/* Chips row (subcategories / filters) */
+/* Chips row (subcategories / filters) — UX: min 44px touch, horizontal scroll on mobile */
 .mnsk7-plp-chips {
   display: flex;
   flex-wrap: wrap;
@@ -79,8 +88,30 @@ body.tax-product_cat .mnsk7-catalog-filters {
   margin-bottom: 1rem;
 }
 
+@media (max-width: 768px) {
+  .mnsk7-plp-chips {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 0.25rem;
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .mnsk7-plp-chips__label {
+    flex-shrink: 0;
+  }
+}
+
 .mnsk7-plp-chip {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
   padding: 0.35rem 0.75rem;
   font-size: var(--fs-xs);
   font-weight: 500;
@@ -90,6 +121,7 @@ body.tax-product_cat .mnsk7-catalog-filters {
   border-radius: var(--r-pill);
   text-decoration: none;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+  flex-shrink: 0;
 }
 
 .mnsk7-plp-chip:hover {
@@ -120,6 +152,33 @@ body.tax-product_cat .mnsk7-catalog-filters {
 
 .mnsk7-plp-chips--attrs {
   margin-top: 0.5rem;
+}
+
+/* Wybrane filtry + przycisk Wyczyść wszystkie (UX audit) */
+.mnsk7-plp-selected {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.5rem;
+  margin-bottom: 1rem;
+  font-size: var(--fs-sm);
+}
+.mnsk7-plp-selected__label {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin-right: 0.25rem;
+}
+.mnsk7-plp-chip--remove:hover {
+  opacity: 0.9;
+}
+.mnsk7-plp-reset {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 0.25rem;
+}
+.mnsk7-plp-reset:hover {
+  text-decoration: underline;
 }
 
 /* FB-05: search over table */

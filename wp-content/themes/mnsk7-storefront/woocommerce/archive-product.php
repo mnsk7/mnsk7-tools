@@ -61,6 +61,27 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 			echo '</div>';
 		}
 	}
+	/* Wybrane filtry: pokaż aktywne i link „Reset” (UX audit) */
+	$filter_params = array( 'filter_srednica', 'filter_srednica-trzpienia', 'filter_dlugosc-calkowita-l', 'filter_dlugosc-robocza-h' );
+	$active_filters = array();
+	foreach ( $filter_params as $param ) {
+		if ( ! empty( $_GET[ $param ] ) ) {
+			$val = sanitize_text_field( wp_unslash( $_GET[ $param ] ) );
+			$active_filters[ $param ] = $val;
+		}
+	}
+	if ( ! empty( $active_filters ) ) {
+		$term_link = get_term_link( $current_term );
+		$clear_url = is_wp_error( $term_link ) ? wc_get_page_permalink( 'shop' ) : $term_link;
+		echo '<div class="mnsk7-plp-selected col-full">';
+		echo '<span class="mnsk7-plp-selected__label">' . esc_html__( 'Wybrane:', 'mnsk7-storefront' ) . '</span>';
+		foreach ( $active_filters as $param => $val ) {
+			$without = remove_query_arg( $param );
+			echo '<a href="' . esc_url( $without ) . '" class="mnsk7-plp-chip mnsk7-plp-chip--active mnsk7-plp-chip--remove" aria-label="' . esc_attr__( 'Usuń filtr', 'mnsk7-storefront' ) . '">' . esc_html( $val ) . ' ×</a>';
+		}
+		echo ' <a href="' . esc_url( $clear_url ) . '" class="mnsk7-plp-reset">' . esc_html__( 'Wyczyść wszystkie', 'mnsk7-storefront' ) . '</a>';
+		echo '</div>';
+	}
 }
 
 if ( is_shop() && ! $is_taxonomy && taxonomy_exists( 'product_cat' ) ) {

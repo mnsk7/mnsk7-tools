@@ -18,6 +18,10 @@ get_header();
 			<div class="mnsk7-hero__usps">
 				<div class="mnsk7-hero__usp">
 					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
+					<span><?php esc_html_e( 'Darmowa dostawa od 300 zł', 'mnsk7-storefront' ); ?></span>
+				</div>
+				<div class="mnsk7-hero__usp">
+					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
 					<span><?php esc_html_e( 'Dostawa następnego dnia', 'mnsk7-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-hero__usp">
@@ -33,6 +37,9 @@ get_header();
 					<span><?php esc_html_e( '3 500+ zamówień rocznie', 'mnsk7-storefront' ); ?></span>
 				</div>
 			</div>
+			<?php if ( is_user_logged_in() ) : $u = wp_get_current_user(); ?>
+			<p class="mnsk7-hero__welcome"><?php printf( esc_html__( 'Witaj, %s!', 'mnsk7-storefront' ), esc_html( $u->display_name ?: $u->user_login ) ); ?></p>
+			<?php endif; ?>
 			<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
 			<div class="mnsk7-hero__ctas">
 				<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="mnsk7-hero__btn mnsk7-hero__btn--primary">

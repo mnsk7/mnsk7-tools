@@ -95,8 +95,9 @@
   background: var(--color-primary-hover);
 }
 
+/* UX: czytelność — font nie mniejszy od podstawowego (NN/G) */
 .mnsk7-footer__col {
-  font-size: var(--fs-sm);
+  font-size: 1rem;
 }
 
 .mnsk7-footer__col p,

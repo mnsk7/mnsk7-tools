@@ -77,6 +77,12 @@
   font-size: 1rem;
   line-height: 1;
 }
+.mnsk7-hero__welcome {
+  margin: 0 0 1rem;
+  font-size: var(--fs-base);
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
 .mnsk7-hero__usp-icon:not(:empty) {
   display: inline-block;
 }
