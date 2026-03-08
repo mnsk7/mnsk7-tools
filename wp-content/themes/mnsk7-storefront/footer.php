@@ -17,6 +17,7 @@ if ( taxonomy_exists( 'product_cat' ) ) {
 ?>
 	</div><!-- #content -->
 
+<div id="mnsk7-shipping-zone-notice-placeholder" class="mnsk7-shipping-zone-placeholder" aria-live="polite"></div>
 <footer id="colophon" class="mnsk7-footer" role="contentinfo">
 	<div class="mnsk7-footer__top">
 		<div class="mnsk7-footer__inner">

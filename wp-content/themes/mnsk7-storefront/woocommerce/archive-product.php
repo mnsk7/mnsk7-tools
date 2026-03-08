@@ -76,26 +76,26 @@ if ( is_shop() && ! $is_taxonomy && taxonomy_exists( 'product_cat' ) ) {
 	}
 }
 
+$use_table = is_shop() || $is_taxonomy;
+
 if ( woocommerce_product_loop() ) {
 	echo '<div class="mnsk7-plp-toolbar col-full">';
 	do_action( 'woocommerce_before_shop_loop' );
 	echo '</div>';
 
-	if ( $is_taxonomy ) {
-		// FB-05: search over table
-		?>
-		<div class="mnsk7-plp-search col-full">
-			<form role="search" method="get" class="mnsk7-plp-search__form" action="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">
-				<label for="mnsk7-plp-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
-				<input type="search" id="mnsk7-plp-search-input" class="mnsk7-plp-search__input" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php esc_attr_e( 'Szukaj w kategorii…', 'mnsk7-storefront' ); ?>" />
-				<?php if ( isset( $current_term->slug ) ) : ?>
-				<input type="hidden" name="product_cat" value="<?php echo esc_attr( $current_term->slug ); ?>" />
-				<?php endif; ?>
-				<button type="submit" class="mnsk7-plp-search__submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
-			</form>
-		</div>
-		<?php
-		// Table layout (Sandvik-style)
+	if ( $use_table ) {
+		if ( $is_taxonomy && $current_term && isset( $current_term->slug ) ) {
+			?>
+			<div class="mnsk7-plp-search col-full">
+				<form role="search" method="get" class="mnsk7-plp-search__form" action="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">
+					<label for="mnsk7-plp-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
+					<input type="search" id="mnsk7-plp-search-input" class="mnsk7-plp-search__input" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php esc_attr_e( 'Szukaj w kategorii…', 'mnsk7-storefront' ); ?>" />
+					<input type="hidden" name="product_cat" value="<?php echo esc_attr( $current_term->slug ); ?>" />
+					<button type="submit" class="mnsk7-plp-search__submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
+				</form>
+			</div>
+			<?php
+		}
 		?>
 		<div class="mnsk7-product-table-wrap col-full">
 			<table class="mnsk7-product-table shop_table">
@@ -104,6 +104,8 @@ if ( woocommerce_product_loop() ) {
 						<th class="mnsk7-table-cell--thumb"><?php esc_html_e( 'Zdjęcie', 'mnsk7-storefront' ); ?></th>
 						<th class="mnsk7-table-cell--title"><?php esc_html_e( 'Produkt', 'mnsk7-storefront' ); ?></th>
 						<th class="mnsk7-table-cell--price"><?php esc_html_e( 'Cena', 'mnsk7-storefront' ); ?></th>
+						<th class="mnsk7-table-cell--stock"><?php esc_html_e( 'Na stanie', 'mnsk7-storefront' ); ?></th>
+						<th class="mnsk7-table-cell--qty"><?php esc_html_e( 'Ilość', 'mnsk7-storefront' ); ?></th>
 						<th class="mnsk7-table-cell--action"><?php esc_html_e( 'Akcja', 'mnsk7-storefront' ); ?></th>
 					</tr>
 				</thead>
@@ -123,7 +125,6 @@ if ( woocommerce_product_loop() ) {
 		</div>
 		<?php
 	} else {
-		// Default grid
 		woocommerce_product_loop_start();
 		if ( wc_get_loop_prop( 'total' ) ) {
 			while ( have_posts() ) {
@@ -156,7 +157,7 @@ if ( woocommerce_product_loop() ) {
 }
 
 do_action( 'woocommerce_after_main_content' );
-if ( ! $is_taxonomy ) {
+if ( ! $use_table ) {
 	do_action( 'woocommerce_sidebar' );
 }
 

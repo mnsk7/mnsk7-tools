@@ -21,9 +21,7 @@
   margin-bottom: 1rem;
 }
 .mnsk7-plp-toolbar .woocommerce-result-count {
-  margin: 0;
-  font-size: var(--fs-sm);
-  color: var(--color-text-secondary);
+  display: none !important;
 }
 .mnsk7-plp-toolbar .woocommerce-ordering {
   margin: 0;
@@ -278,8 +276,34 @@ body.tax-product_cat .mnsk7-catalog-filters {
   color: var(--color-primary-dark);
 }
 
+.mnsk7-product-table .mnsk7-table-cell--stock {
+  white-space: nowrap;
+}
+.mnsk7-product-table .mnsk7-table-outofstock {
+  color: var(--color-text-secondary);
+  font-style: italic;
+}
+.mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-input {
+  width: 4rem;
+  padding: 0.35rem 0.5rem;
+  font-size: var(--fs-sm);
+  text-align: center;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-sm);
+}
+.mnsk7-product-table .mnsk7-table-cell--title .mnsk7-table-sold {
+  display: block;
+  font-size: 0.75rem;
+  color: var(--color-text-secondary);
+  font-weight: 400;
+  margin-top: 0.15rem;
+}
+.mnsk7-product-table .mnsk7-table-addcart-form {
+  display: inline-block;
+}
 .mnsk7-product-table .mnsk7-table-cell--action .button,
-.mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button {
+.mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button,
+.mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn {
   padding: 0.5rem 1rem;
   font-size: var(--fs-sm);
   white-space: nowrap;

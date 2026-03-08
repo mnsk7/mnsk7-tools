@@ -72,10 +72,12 @@
   min-height: 44px;
 }
 
-.mnsk7-header--sticky {
-  position: sticky;
+.mnsk7-header--sticky,
+.site-header.mnsk7-header.mnsk7-header--sticky {
+  position: sticky !important;
+  top: 0;
 }
-body.mnsk7-has-promo .mnsk7-header {
+body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   top: var(--mnsk7-promo-h, 2.5rem);
 }
 
@@ -236,25 +238,14 @@ body.mnsk7-has-promo .mnsk7-header {
   flex-shrink: 0;
 }
 
-/* Search: desktop — visible inline bar; mobile — icon + dropdown (audit: "Keep search bar visible on desktop") */
+/* Search: один поиск — только иконка, по клику открывается dropdown */
 .mnsk7-header__search-wrap {
   position: relative;
   display: flex;
   align-items: center;
 }
 .mnsk7-header__search-form--inline {
-  display: none;
-}
-@media (min-width: 769px) {
-  .mnsk7-header__search-form--inline {
-    display: flex;
-    min-width: 200px;
-    max-width: 280px;
-  }
-  .mnsk7-header__search-toggle,
-  .mnsk7-header__search-dropdown {
-    display: none !important;
-  }
+  display: none !important;
 }
 .mnsk7-header__search-toggle {
   display: inline-flex;
@@ -483,24 +474,26 @@ body.mnsk7-has-promo .mnsk7-header {
   border: none !important;
 }
 .mnsk7-header__cart-summary {
-  font-size: var(--fs-sm);
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--color-text);
   margin: 0 0 0.75rem;
-  padding-bottom: 0.75rem;
+  padding: 0.25rem 0 0.75rem;
   border-bottom: 1px solid var(--color-border);
   min-width: 0;
   overflow: visible;
+  line-height: 1.35;
 }
 .mnsk7-header__cart-summary__main {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
 }
 .mnsk7-header__cart-summary__count {
   flex-shrink: 0;
+  white-space: nowrap;
 }
 .mnsk7-header__cart-summary__total {
   flex-shrink: 0;
@@ -508,9 +501,9 @@ body.mnsk7-has-promo .mnsk7-header {
 }
 .mnsk7-header__cart-summary__discount {
   display: block;
-  margin-top: 0.25rem;
+  margin-top: 0.35rem;
   font-size: 0.8125rem;
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-primary, #0d6efd);
 }
 .mnsk7-header__cart-dropdown .woocommerce-mini-cart__total {

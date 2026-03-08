@@ -315,6 +315,27 @@ add_action( 'wp_footer', function () {
 	<?php
 }, 20 );
 
+/* 1e. Strefa wysyłki: przenieś powiadomienie nad footer (nie w treści sklepu) */
+add_action( 'wp_footer', function () {
+	?>
+	<script>
+	(function() {
+		var placeholder = document.getElementById('mnsk7-shipping-zone-notice-placeholder');
+		if (!placeholder) return;
+		var notices = document.querySelectorAll('.woocommerce-info, .woocommerce-message');
+		for (var i = 0; i < notices.length; i++) {
+			var text = (notices[i].textContent || '').trim();
+			if (text.indexOf('Strefa wysyłki') !== -1 || text.indexOf('dopasowana') !== -1) {
+				placeholder.appendChild(notices[i]);
+				placeholder.classList.add('has-notice');
+				break;
+			}
+		}
+	})();
+	</script>
+	<?php
+}, 25 );
+
 /* 2. Google Fonts: Inter (replace Storefront default) */
 add_action( 'wp_enqueue_scripts', function () {
 	if ( mnsk7_parent_storefront_available() ) {
