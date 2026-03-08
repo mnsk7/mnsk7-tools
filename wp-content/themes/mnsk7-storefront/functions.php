@@ -310,6 +310,28 @@ add_action( 'wp_footer', function () {
 			onScroll();
 			window.addEventListener('scroll', onScroll, { passive: true });
 		}
+		// Instagram card carousel (alesyatakun.by style)
+		var carousel = document.querySelector('.mnsk7-instagram-feed--card .mnsk7-instagram-feed__carousel');
+		if (carousel) {
+			var track = carousel.querySelector('.mnsk7-instagram-feed__track');
+			var dots = carousel.querySelectorAll('.mnsk7-instagram-feed__dot');
+			var slides = carousel.querySelectorAll('.mnsk7-instagram-feed__slide');
+			var n = slides.length;
+			if (n > 1 && track && dots.length === n) {
+				function goTo(idx) {
+					idx = Math.max(0, Math.min(idx, n - 1));
+					track.style.transform = 'translateX(-' + idx * 100 + '%)';
+					slides.forEach(function(s, i) { s.classList.toggle('is-active', i === idx); });
+					dots.forEach(function(d, i) {
+						d.classList.toggle('is-active', i === idx);
+						d.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+					});
+				}
+				dots.forEach(function(dot, i) {
+					dot.addEventListener('click', function() { goTo(i); });
+				});
+			}
+		}
 	})();
 	</script>
 	<?php
