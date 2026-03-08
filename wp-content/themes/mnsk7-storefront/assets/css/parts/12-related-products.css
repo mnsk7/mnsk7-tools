@@ -21,11 +21,19 @@
 .upsells.products ul.products,
 .cross-sells ul.products {
   display: grid !important;
-  grid-template-columns: repeat(4, 1fr) !important;
+  grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr)) !important;
   gap: 1.5rem !important;
   margin: 0 !important;
   padding: 0 !important;
-  align-items: start !important;
+  align-items: stretch !important;
+  width: 100% !important;
+}
+.woocommerce-cart .cross-sells {
+  width: 100%;
+  max-width: 100%;
+}
+.woocommerce-cart .cross-sells ul.products {
+  grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)) !important;
 }
 
 .related.products ul.products li.product,
@@ -33,6 +41,7 @@
 .cross-sells ul.products li.product {
   width: 100% !important;
   max-width: 100% !important;
+  min-width: 0 !important;
   margin: 0 !important;
   float: none !important;
   clear: none !important;
@@ -42,10 +51,18 @@
   border-radius: var(--r-md);
   padding: 0;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  display: flex !important;
+  flex-direction: column !important;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
-  align-self: start;
+  align-self: stretch !important;
+}
+.cross-sells ul.products li.product .woocommerce-loop-product__link,
+.cross-sells ul.products li.product img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
 }
 
 .related.products ul.products li.product:first-child,

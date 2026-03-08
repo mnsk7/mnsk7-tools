@@ -77,10 +77,10 @@ endif;
 		</nav>
 		<div class="mnsk7-header__actions">
 			<?php
-			// Search: on desktop — visible inline bar; on mobile — icon opens dropdown (audit: "Keep search bar visible on desktop")
+			// Search: один поиск — только иконка, по клику dropdown (inline form скрыт)
 			?>
 			<div class="mnsk7-header__search-wrap">
-				<form role="search" method="get" class="mnsk7-header__search-form mnsk7-header__search-form--inline" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+				<form role="search" method="get" class="mnsk7-header__search-form mnsk7-header__search-form--inline" action="<?php echo esc_url( home_url( '/' ) ); ?>" hidden aria-hidden="true">
 					<label for="mnsk7-header-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
 					<input type="search" id="mnsk7-header-search-input" class="mnsk7-header__search-input" placeholder="<?php esc_attr_e( 'Szukaj produktów…', 'mnsk7-storefront' ); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off" />
 					<input type="hidden" name="post_type" value="product" />
