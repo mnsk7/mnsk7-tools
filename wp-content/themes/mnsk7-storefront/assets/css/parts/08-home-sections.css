@@ -691,6 +691,23 @@
   flex-shrink: 0;
 }
 
+/* 1.1 Cena wyraźna: pod nazwą, kolor, zł */
+.mnsk7-section--bestsellers .woocommerce-loop-product__title {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.mnsk7-section--bestsellers .price {
+  display: block;
+  font-weight: 700;
+  font-size: var(--fs-base);
+  color: var(--color-primary-dark, #0a5a9e);
+  margin-bottom: 0.5rem;
+}
+.mnsk7-section--bestsellers .woocommerce-price-suffix {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+
 @media (max-width: 900px) {
   .mnsk7-section--bestsellers ul.products li.product {
     width: calc(50% - 0.5rem) !important;

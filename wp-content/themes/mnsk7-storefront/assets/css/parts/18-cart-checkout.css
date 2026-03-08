@@ -1,8 +1,74 @@
-/* 18-cart-checkout — extracted from main.css */
+/* 18-cart-checkout — cart, empty cart, checkout (backlog 4.x) */
 
-   § CART & CHECKOUT
-   ----------------------------------------------------------------- */
+/* --- Loyalty block in cart --- */
+.mnsk7-cart-loyalty {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.mnsk7-cart-loyalty__title {
+  margin: 0 0 0.5rem;
+  font-size: var(--fs-base);
+  font-weight: 700;
+  color: var(--color-text);
+}
+.mnsk7-cart-loyalty__sum,
+.mnsk7-cart-loyalty__pct,
+.mnsk7-cart-loyalty__next {
+  margin: 0.25rem 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+}
+.mnsk7-cart-loyalty__pct--active {
+  color: var(--color-primary-dark, #0a5a9e);
+  font-weight: 700;
+}
+.mnsk7-cart-loyalty__tiers {
+  list-style: none;
+  margin: 0.5rem 0 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-size: var(--fs-xs);
+  color: var(--color-text-muted);
+}
+.mnsk7-cart-loyalty__tier--reached {
+  color: var(--color-primary);
+  font-weight: 600;
+}
 
+/* --- Empty cart (4.6) --- */
+.mnsk7-cart-empty {
+  text-align: center;
+  padding: 2rem 1rem 3rem;
+  max-width: 360px;
+  margin: 0 auto;
+}
+.mnsk7-cart-empty__icon {
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}
+.mnsk7-cart-empty__icon svg {
+  display: block;
+  margin: 0 auto;
+}
+.mnsk7-cart-empty .woocommerce-info,
+.mnsk7-cart-empty .cart-empty {
+  margin-bottom: 1.25rem;
+  font-size: var(--fs-base);
+}
+.mnsk7-cart-empty__actions {
+  margin: 0;
+}
+.mnsk7-cart-empty__button {
+  display: inline-block;
+  min-width: 200px;
+}
+
+/* --- Cart table --- */
 .woocommerce-cart table.shop_table {
   border-color: var(--color-border);
   border-radius: var(--r-md);
@@ -17,6 +83,44 @@
 .woocommerce-cart table.shop_table td {
   font-size: var(--fs-sm);
   border-color: var(--color-border);
+}
+
+.woocommerce-cart .product-remove .remove {
+  font-size: 1.25rem;
+  line-height: 1;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  padding: 0.25rem;
+  border-radius: var(--r-sm);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.woocommerce-cart .product-remove .remove:hover {
+  color: var(--color-error, #b32d2e);
+  background: var(--color-surface);
+}
+
+.woocommerce-cart .quantity input {
+  width: 3rem;
+  text-align: center;
+  padding: 0.4rem 0.25rem;
+}
+
+/* Checkout CTA — wyraźna (4.4) */
+.woocommerce-cart .wc-proceed-to-checkout a.checkout-button,
+.woocommerce-cart .cart_totals .checkout-button {
+  display: block;
+  width: 100%;
+  text-align: center;
+  padding: 0.875rem 1.5rem;
+  font-size: var(--fs-base);
+  font-weight: 700;
+  background: var(--color-primary) !important;
+  color: var(--color-white) !important;
+}
+.woocommerce-cart .wc-proceed-to-checkout a.checkout-button:hover,
+.woocommerce-cart .cart_totals .checkout-button:hover {
+  background: var(--color-primary-hover) !important;
+  color: var(--color-white) !important;
 }
 
 .woocommerce-checkout .form-row label {
