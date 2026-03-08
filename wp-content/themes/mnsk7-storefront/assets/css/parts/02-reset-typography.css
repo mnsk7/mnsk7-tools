@@ -25,6 +25,16 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Kolor zaznaczenia tekstu — primary (bez fioletu z domyślnych stylów przeglądarki) */
+::selection {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+::-moz-selection {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
 h1, h2, h3, h4, h5, h6 {
   font-family: var(--font-base);
   font-weight: 700;
