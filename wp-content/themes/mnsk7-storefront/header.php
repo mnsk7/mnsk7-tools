@@ -123,20 +123,12 @@ endif;
 						<?php } ?>
 					</a>
 					<div class="mnsk7-header__cart-dropdown">
-						<div class="mnsk7-header__cart-summary">
-							<?php
-							if ( $cart_count > 0 && $cart_total ) {
-								printf(
-									/* translators: 1: number of items, 2: cart total */
-									esc_html( _n( '%1$d produkt · %2$s', '%1$d produktów · %2$s', $cart_count, 'mnsk7-storefront' ) ),
-									$cart_count,
-									wp_kses_post( $cart_total )
-								);
-							} else {
-								esc_html_e( 'Koszyk jest pusty', 'mnsk7-storefront' );
-							}
-							?>
-						</div>
+						<?php
+						$loyalty_discount = function_exists( 'mnsk7_header_cart_loyalty_discount' ) ? mnsk7_header_cart_loyalty_discount() : 0.0;
+						echo function_exists( 'mnsk7_header_cart_summary_html' )
+							? mnsk7_header_cart_summary_html( $cart_count, $cart_total, $loyalty_discount )
+							: '<div class="mnsk7-header__cart-summary">' . ( $cart_count > 0 && $cart_total ? sprintf( _n( '%1$d produkt · %2$s', '%1$d produktów · %2$s', $cart_count, 'mnsk7-storefront' ), $cart_count, wp_kses_post( $cart_total ) ) : esc_html__( 'Koszyk jest pusty', 'mnsk7-storefront' ) ) . '</div>';
+						?>
 						<div class="widget_shopping_cart_content">
 							<?php woocommerce_mini_cart(); ?>
 						</div>
