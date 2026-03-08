@@ -527,11 +527,8 @@ add_action( 'woocommerce_single_product_summary', function () {
 	echo '</div>';
 }, 35 );
 
-/* 11. Instagram shortcode — karta karuzela (jak alesyatakun.by), działa bez mu-plugina */
+/* 11. Instagram shortcode — ZAWSZE karta karuzela (nadpisuje mu-plugin, żeby na staging/prod był ten sam widok) */
 add_action( 'init', function () {
-	if ( shortcode_exists( 'mnsk7_instagram_feed' ) ) {
-		return;
-	}
 	add_shortcode( 'mnsk7_instagram_feed', function ( $atts ) {
 		$atts = shortcode_atts( array(
 			'limit' => 6,
@@ -596,7 +593,7 @@ add_action( 'init', function () {
 		$out .= '</div>';
 		return $out;
 	} );
-}, 5 );
+}, 99 );
 
 /* 12. Menu główne — uzupełnienie linkami (Sklep, Kontakt, Dostawa, Przewodnik) przy pierwszym ładowaniu */
 add_action( 'after_setup_theme', function () {

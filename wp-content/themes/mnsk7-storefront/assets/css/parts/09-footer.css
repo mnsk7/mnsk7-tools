@@ -16,9 +16,10 @@
   border-radius: var(--r-sm);
 }
 
-/* Ciemny, kontrastowy footer — tekst dobrze widoczny (jak na typowych stronach) */
+/* Ciemny, kontrastowy footer — tekst dobrze widoczny (jak na typowych stronach). !important nadpisuje tokeny/Storefront. */
+#colophon.mnsk7-footer,
 .mnsk7-footer {
-  background: #1e293b;
+  background: #1e293b !important;
   width: 100%;
   box-sizing: border-box;
   margin: 0;
