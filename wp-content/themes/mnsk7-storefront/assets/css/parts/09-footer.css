@@ -16,10 +16,10 @@
   border-radius: var(--r-sm);
 }
 
-/* Ciemny, kontrastowy footer — tekst dobrze widoczny (jak na typowych stronach). !important nadpisuje tokeny/Storefront. */
+/* Ciemny, kontrastowy footer — tokeny dla spójności z cookie barem. !important nadpisuje Storefront. */
 #colophon.mnsk7-footer,
 .mnsk7-footer {
-  background: #1e293b !important;
+  background: var(--color-footer-bg) !important;
   width: 100%;
   box-sizing: border-box;
   margin: 0;
@@ -44,10 +44,10 @@
 .mnsk7-footer__newsletter-privacy {
   margin: 0.5rem 0 0;
   font-size: var(--fs-xs);
-  color: #94a3b8;
+  color: var(--color-footer-muted);
 }
 .mnsk7-footer__newsletter-privacy a {
-  color: var(--color-primary-light, #93c5fd);
+  color: var(--color-footer-link);
 }
 
 .mnsk7-footer__newsletter-desc {
@@ -68,7 +68,7 @@
   border: 1px solid var(--color-border);
   border-radius: var(--r-sm);
   background: rgba(255,255,255,0.06);
-  color: #f8fafc;
+  color: var(--color-footer-text);
 }
 .mnsk7-footer__newsletter-input:focus {
   outline: 2px solid var(--color-primary);
@@ -76,7 +76,7 @@
   border-color: var(--color-primary);
 }
 .mnsk7-footer__newsletter-input::placeholder {
-  color: #94a3b8;
+  color: var(--color-footer-muted);
 }
 .mnsk7-footer__newsletter-btn {
   padding: 0.5rem 1rem;
@@ -107,7 +107,7 @@
 }
 
 .mnsk7-footer__title {
-  color: #f8fafc;
+  color: var(--color-footer-text);
   font-size: var(--fs-base);
   font-weight: 700;
   margin: 0 0 0.75rem;
@@ -120,17 +120,17 @@
 .mnsk7-footer__col,
 .mnsk7-footer__col p,
 .mnsk7-footer__col li {
-  color: #e2e8f0;
+  color: var(--color-footer-text);
 }
 
 .mnsk7-footer__top a {
-  color: var(--color-primary-light, #93c5fd);
+  color: var(--color-footer-link);
   text-decoration: none;
   transition: color 0.15s ease;
 }
 
 .mnsk7-footer__top a:hover {
-  color: var(--color-white, #f8fafc);
+  color: var(--color-white);
 }
 
 /* Lista kontaktów z ikonami */
@@ -174,13 +174,13 @@
   margin-bottom: 0.4rem;
 }
 
-/* Dolny pasek: ten sam ton co górna część (bez „pływającego” koloru) */
+/* Dolny pasek: ciemny, spójny z footerem (nie beż) */
 .mnsk7-footer__bottom {
-  background: var(--color-border-strong, #d4d3b8);
+  background: var(--color-footer-bottom);
   padding: 0.75rem 0;
   text-align: center;
   font-size: var(--fs-xs);
-  border-top: 1px solid var(--color-border-strong, #d4d3b8);
+  border-top: 1px solid rgba(255,255,255,0.08);
 }
 
 .mnsk7-footer__bottom-inner {
@@ -190,7 +190,7 @@
 }
 
 .mnsk7-footer__copy {
-  color: #94a3b8;
+  color: var(--color-footer-muted);
 }
 
 /* Mobile: accordion sections (audit: "Use accordions for each column") */
@@ -209,6 +209,10 @@
   .mnsk7-footer__title {
     margin: 0;
     padding: 0.75rem 0;
+    min-height: 44px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
     cursor: pointer;
     position: relative;
     padding-right: 2.5rem;

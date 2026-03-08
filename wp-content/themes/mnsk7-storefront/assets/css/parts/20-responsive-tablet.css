@@ -1,6 +1,7 @@
 /* 20-responsive-tablet — extracted from main.css */
 
-   § RESPONSIVE — Tablet (≤ 768px)
+/* -----------------------------------------------------------------
+   § RESPONSIVE — Tablet / Mobile (≤ 768px)
    ----------------------------------------------------------------- */
 
 @media (max-width: 768px) {

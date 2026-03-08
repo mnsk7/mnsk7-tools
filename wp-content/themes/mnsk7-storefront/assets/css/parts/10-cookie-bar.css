@@ -5,7 +5,7 @@
   bottom: 0;
   left: 0;
   right: 0;
-  background: #0f172a;
+  background: var(--color-dark-bg);
   color: var(--color-white);
   padding: 0.75rem 1.25rem;
   z-index: 9999;
@@ -46,13 +46,13 @@ body.mnsk7-cookie-bar-visible #page {
 
 .mnsk7-cookie-bar__text a,
 .mnsk7-cookie-bar__link {
-  color: #93c5fd;
+  color: var(--color-footer-link);
   text-decoration: underline;
 }
 
 .mnsk7-cookie-bar__text a:hover,
 .mnsk7-cookie-bar__link:hover {
-  color: #f8fafc;
+  color: var(--color-footer-text);
 }
 
 .mnsk7-cookie-bar__buttons {
@@ -90,12 +90,12 @@ body.mnsk7-cookie-bar-visible #page {
 
 .mnsk7-cookie-bar__btn--secondary {
   background: transparent;
-  color: #e2e8f0;
-  border: 1px solid #475569;
+  color: var(--color-footer-text);
+  border: 1px solid var(--color-dark-border);
 }
 
 .mnsk7-cookie-bar__btn--secondary:hover {
   background: rgba(255,255,255,0.08);
-  color: #f8fafc;
+  color: var(--color-white);
 }
 

@@ -16,7 +16,7 @@
     grid-template-columns: 1fr !important;
   }
 
-  /* Categories: single column */
+  /* Categories: 2 columns (compact on small screens) */
   .mnsk7-cats {
     grid-template-columns: repeat(2, 1fr);
     gap: 0.75rem;

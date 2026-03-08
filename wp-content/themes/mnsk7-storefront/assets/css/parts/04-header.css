@@ -58,18 +58,18 @@
   z-index: 999;
   border-bottom: 1px solid var(--color-border);
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  min-height: 52px;
+  min-height: var(--header-h);
   box-sizing: border-box;
   transition: min-height 0.2s ease, box-shadow 0.2s ease;
 }
 
 /* Shrink header when page scrolled (audit: "header shrinks slightly but remains visible") */
 .mnsk7-header--scrolled {
-  min-height: 44px;
+  min-height: var(--header-h-scrolled);
   box-shadow: 0 1px 6px rgba(0,0,0,0.08);
 }
 .mnsk7-header--scrolled .mnsk7-header__inner {
-  min-height: 44px;
+  min-height: var(--header-h-scrolled);
 }
 
 .mnsk7-header--sticky,
@@ -87,7 +87,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  min-height: 52px;
+  min-height: var(--header-h);
   max-width: var(--content-max, 1200px);
   margin: 0 auto;
   padding: 0 1rem;
@@ -145,7 +145,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   color: var(--color-text);
   text-decoration: none;
   white-space: nowrap;
-  border-radius: var(--r-sm, 4px);
+  border-radius: var(--r-sm);
   transition: color 0.15s ease, background 0.15s ease;
 }
 .mnsk7-header__menu a:hover,
@@ -180,7 +180,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   max-width: 420px;
   background: var(--color-white);
   border: 1px solid var(--color-border);
-  border-radius: var(--r-sm, 4px);
+  border-radius: var(--r-sm);
   box-shadow: var(--shadow-md);
   opacity: 0;
   visibility: hidden;
@@ -204,7 +204,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   display: block;
   padding: 0.4rem 0.75rem;
   font-size: 0.8125rem;
-  border-radius: var(--r-sm, 4px);
+  border-radius: var(--r-sm);
 }
 .mnsk7-header__menu .sub-menu a:hover {
   background: rgba(0,0,0,0.06);
@@ -360,7 +360,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   color: var(--color-text);
   text-decoration: none;
   white-space: nowrap;
-  border-radius: var(--r-sm, 4px);
+  border-radius: var(--r-sm);
   transition: color 0.15s ease, background 0.15s ease;
   letter-spacing: 0.01em;
 }
@@ -402,7 +402,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   font-weight: 600;
   color: var(--color-text);
   text-decoration: none;
-  border-radius: var(--r-sm, 4px);
+  border-radius: var(--r-sm);
   transition: color 0.15s ease, background 0.15s ease;
   min-width: 44px;
   min-height: 44px;
@@ -570,7 +570,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     align-items: center;
     justify-content: space-between;
     gap: 0.5rem;
-    min-height: 52px;
+    min-height: var(--header-h);
     padding: 0 0.75rem 0 0.5rem;
   }
   .mnsk7-header__brand {

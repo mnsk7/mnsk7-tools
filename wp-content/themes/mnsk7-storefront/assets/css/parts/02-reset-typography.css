@@ -58,13 +58,13 @@ img {
   height: auto;
 }
 
-/* Storefront container override — centering + horizontal padding (staging layout fix) */
+/* Storefront container override — centering + horizontal padding (UI_SPEC: mobile 16px) */
 .col-full {
   max-width: var(--content-max);
   margin-left: auto;
   margin-right: auto;
-  padding-left: 1.5rem;
-  padding-right: 1.5rem;
+  padding-left: var(--space-16, 1rem);
+  padding-right: var(--space-16, 1rem);
 }
 @media (min-width: 768px) {
   .col-full {
