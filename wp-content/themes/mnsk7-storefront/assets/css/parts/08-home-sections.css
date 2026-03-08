@@ -571,7 +571,9 @@
 
 /* Wariant „karta” jak na alesyatakun.by: jedna duża karuzela + profil + przycisk */
 .mnsk7-instagram-feed--card {
-  max-width: 400px;
+  width: 100%;
+  max-width: 560px;
+  min-width: 0;
   padding: 0;
   background: var(--color-surface, #fff);
   border-radius: 12px;
@@ -600,6 +602,11 @@
   position: relative;
   text-decoration: none;
   overflow: hidden;
+  transition: none;
+}
+
+.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide:hover {
+  transform: none;
 }
 
 .mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide .mnsk7-instagram-feed__img {
