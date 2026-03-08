@@ -55,13 +55,85 @@ function mnsk7_instagram_recent_post_urls( $limit = 3 ) {
 	return array_slice( $urls, 0, $limit );
 }
 
-/** Domyślne linki do postów Instagram (gdy brak atrybutu posts i scraping zwraca pusty). */
+/**
+ * Domyślne linki do postów Instagram (kolejność = wyświetlanie: 1 lewo, 2 środek, 3 prawo).
+ */
 function mnsk7_instagram_default_post_urls() {
 	return array(
-		'https://www.instagram.com/mnsk7tools/p/DC4agmPtKoy/',
-		'https://www.instagram.com/mnsk7tools/p/DC9J3JjNobj/',
-		'https://www.instagram.com/mnsk7tools/p/DCTybzqtxEi/',
+		'https://www.instagram.com/mnsk7tools/p/DC4agmPtKoy/',  // 1 — lewo
+		'https://www.instagram.com/mnsk7tools/p/DC9J3JjNobj/',  // 2 — środek
+		'https://www.instagram.com/mnsk7tools/p/DCTybzqtxEi/',  // 3 — prawo
 	);
+}
+
+/** Jednorazowo zapisz w opcji mnsk7_instagram_post_urls trzy wskazane posty (żeby nie polegać na scrapingu). */
+add_action( 'init', function () {
+	if ( get_option( 'mnsk7_instagram_post_urls_seeded', 0 ) ) {
+		return;
+	}
+	$current = get_option( 'mnsk7_instagram_post_urls', array() );
+	if ( is_array( $current ) && ! empty( $current ) ) {
+		update_option( 'mnsk7_instagram_post_urls_seeded', 1 );
+		return;
+	}
+	$default = mnsk7_instagram_default_post_urls();
+	update_option( 'mnsk7_instagram_post_urls', $default );
+	update_option( 'mnsk7_instagram_post_urls_seeded', 1 );
+}, 8 );
+
+/**
+ * Pobierz URL obrazka og:image dla strony (np. posta Instagram). Cache w transient 7 dni.
+ *
+ * @param string $url URL strony.
+ * @return string URL obrazka lub pusty string.
+ */
+function mnsk7_instagram_og_image_for_url( $url ) {
+	$cache_key = 'mnsk7_ig_thumb_' . md5( $url );
+	$cached    = get_transient( $cache_key );
+	if ( is_string( $cached ) && $cached !== '' ) {
+		return $cached;
+	}
+	$response = wp_remote_get( $url, array( 'timeout' => 5, 'user-agent' => 'Mozilla/5.0 (compatible; WordPress)' ) );
+	if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
+		set_transient( $cache_key, '', 1 * HOUR_IN_SECONDS );
+		return '';
+	}
+	$body = wp_remote_retrieve_body( $response );
+	if ( preg_match( '/<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']/', $body, $m ) || preg_match( '/<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']/', $body, $m ) ) {
+		$img = esc_url_raw( $m[1] );
+		if ( $img ) {
+			set_transient( $cache_key, $img, 7 * DAY_IN_SECONDS );
+			return $img;
+		}
+	}
+	set_transient( $cache_key, '', 1 * HOUR_IN_SECONDS );
+	return '';
+}
+
+/**
+ * Normalizuje listę postów z opcji/shortcode: zwraca array of [ 'url' => ..., 'image' => ... ].
+ * Opcja może być: array of string (URL) lub array of array( 'url' => ..., 'image' => ... ).
+ */
+function mnsk7_instagram_normalize_posts( $raw, $limit ) {
+	$out = array();
+	foreach ( $raw as $item ) {
+		if ( is_array( $item ) ) {
+			$url   = isset( $item['url'] ) ? esc_url_raw( $item['url'] ) : '';
+			$image = isset( $item['image'] ) ? esc_url_raw( $item['image'] ) : '';
+			if ( $url ) {
+				$out[] = array( 'url' => $url, 'image' => $image );
+			}
+		} else {
+			$url = esc_url_raw( $item );
+			if ( $url ) {
+				$out[] = array( 'url' => $url, 'image' => '' );
+			}
+		}
+		if ( count( $out ) >= $limit ) {
+			break;
+		}
+	}
+	return $out;
 }
 
 function mnsk7_instagram_feed_html( $atts = array() ) {
@@ -69,27 +141,30 @@ function mnsk7_instagram_feed_html( $atts = array() ) {
 	$limit = max( 1, min( 12, (int) $atts['limit'] ) );
 	$posts = array_filter( array_map( 'trim', explode( ',', (string) $atts['posts'] ) ) );
 	if ( ! empty( $posts ) ) {
-		$posts = array_slice( array_map( 'esc_url_raw', $posts ), 0, $limit );
+		$posts = mnsk7_instagram_normalize_posts( array_map( 'esc_url_raw', $posts ), $limit );
 	} else {
 		$from_option = get_option( 'mnsk7_instagram_post_urls', array() );
 		if ( is_array( $from_option ) && ! empty( $from_option ) ) {
-			$posts = array_slice( array_filter( array_map( 'esc_url_raw', $from_option ) ), 0, $limit );
+			$posts = mnsk7_instagram_normalize_posts( $from_option, $limit );
 		}
 		if ( empty( $posts ) ) {
-			$posts = mnsk7_instagram_recent_post_urls( $limit );
+			$urls = mnsk7_instagram_recent_post_urls( $limit );
+			$posts = mnsk7_instagram_normalize_posts( $urls, $limit );
 		}
 		if ( empty( $posts ) ) {
-			$posts = array_slice( mnsk7_instagram_default_post_urls(), 0, $limit );
+			$posts = mnsk7_instagram_normalize_posts( mnsk7_instagram_default_post_urls(), $limit );
 		}
 	}
 	$html  = '<section class="mnsk7-instagram-feed">';
 	$html .= '<h4 class="mnsk7-instagram-feed__title">' . esc_html( $atts['title'] ) . '</h4>';
 	if ( ! empty( $posts ) ) {
 		$html .= '<div class="mnsk7-instagram-feed__grid">';
-		foreach ( $posts as $i => $post_url ) {
-			$post_url = esc_url( $post_url );
-			if ( ! $post_url ) {
-				continue;
+		$manual_images = apply_filters( 'mnsk7_instagram_post_images', array() );
+		foreach ( $posts as $i => $item ) {
+			$post_url = $item['url'];
+			$thumb_url = ! empty( $item['image'] ) ? $item['image'] : ( isset( $manual_images[ $post_url ] ) ? $manual_images[ $post_url ] : '' );
+			if ( ! $thumb_url ) {
+				$thumb_url = mnsk7_instagram_og_image_for_url( $post_url );
 			}
 			$embed = wp_oembed_get( $post_url );
 			$html .= '<div class="mnsk7-instagram-feed__item">';
@@ -98,8 +173,12 @@ function mnsk7_instagram_feed_html( $atts = array() ) {
 			} else {
 				$aria = sprintf( /* translators: %d: post number */ __( 'Post %d na Instagramie', 'mnsk7-tools' ), $i + 1 );
 				$html .= '<a href="' . esc_url( $post_url ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__link" aria-label="' . esc_attr( $aria ) . '">';
-				$html .= '<span class="mnsk7-instagram-feed__icon" aria-hidden="true"></span>';
-				$html .= '<span class="mnsk7-instagram-feed__link-text">' . esc_html__( 'Zobacz post', 'mnsk7-tools' ) . '</span>';
+				if ( $thumb_url ) {
+					$html .= '<img src="' . esc_url( $thumb_url ) . '" alt="" loading="lazy" width="320" height="320" class="mnsk7-instagram-feed__img">';
+				} else {
+					$html .= '<span class="mnsk7-instagram-feed__icon" aria-hidden="true"></span>';
+					$html .= '<span class="mnsk7-instagram-feed__link-text">' . esc_html__( 'Zobacz post', 'mnsk7-tools' ) . '</span>';
+				}
 				$html .= '</a>';
 			}
 			$html .= '</div>';
@@ -108,7 +187,8 @@ function mnsk7_instagram_feed_html( $atts = array() ) {
 	} else {
 		$html .= '<p class="mnsk7-instagram-feed__fallback">' . esc_html__( 'Najświeższe posty znajdziesz na naszym profilu Instagram.', 'mnsk7-tools' ) . '</p>';
 	}
-	$html .= '<p class="mnsk7-instagram-feed__cta"><a href="' . esc_url( MNK7_INSTAGRAM_URL ) . '" target="_blank" rel="noopener">@mnsk7tools</a></p>';
+	$profile_url = defined( 'MNK7_INSTAGRAM_URL' ) ? MNK7_INSTAGRAM_URL : 'https://www.instagram.com/mnsk7tools/';
+	$html .= '<p class="mnsk7-instagram-feed__cta"><a href="' . esc_url( $profile_url ) . '" target="_blank" rel="noopener">@mnsk7tools</a></p>';
 	$html .= '</section>';
 	return $html;
 }

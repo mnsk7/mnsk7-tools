@@ -251,8 +251,9 @@ body.mnsk7-has-promo .mnsk7-header {
     min-width: 200px;
     max-width: 280px;
   }
-  .mnsk7-header__search-toggle {
-    display: none;
+  .mnsk7-header__search-toggle,
+  .mnsk7-header__search-dropdown {
+    display: none !important;
   }
 }
 .mnsk7-header__search-toggle {
