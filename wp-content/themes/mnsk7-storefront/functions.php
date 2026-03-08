@@ -71,6 +71,35 @@ add_action( 'wp', function () {
 	add_action( 'woocommerce_single_product_summary', 'woocommerce_breadcrumb', 5 );
 } );
 
+/** 1.1 Bestsellery na głównej: wyraźna cena (zł, pod nazwą, kolor) */
+add_filter( 'woocommerce_get_price_html', function ( $html, $product ) {
+	if ( ! $html || ! is_front_page() || ! in_the_loop() ) {
+		return $html;
+	}
+	$h = (string) $html;
+	if ( strpos( $h, 'zł' ) !== false || strpos( $h, 'PLN' ) !== false ) {
+		return $html;
+	}
+	return $html . ' <span class="woocommerce-price-suffix">zł</span>';
+}, 10, 2 );
+
+/** 4.6 Tekst pustego koszyka (do wyświetlenia w cart-empty.php) */
+add_filter( 'wc_empty_cart_message', function () {
+	return __( 'Twój koszyk jest pusty — wróć do sklepu', 'mnsk7-storefront' );
+}, 10 );
+
+/** 4.1 Korzyń: fallback — jeśli strona koszyka pusta lub bez shortcode, wyświetl [woocommerce_cart] */
+add_filter( 'the_content', function ( $content ) {
+	if ( ! function_exists( 'is_cart' ) || ! is_cart() ) {
+		return $content;
+	}
+	$trimmed = trim( (string) $content );
+	if ( $trimmed === '' || strpos( $content, 'woocommerce_cart' ) === false ) {
+		return do_shortcode( '[woocommerce_cart]' );
+	}
+	return $content;
+}, 3 );
+
 /* Newsletter: zapis e-mail do opcji (można później podłączyć Mailchimp / integrację) */
 add_action( 'template_redirect', function () {
 	if ( ! isset( $_POST['mnsk7_newsletter'] ) || empty( $_POST['mnsk7_newsletter_email'] ) ) {
@@ -147,26 +176,32 @@ add_action( 'wp_enqueue_scripts', function () {
 	}
 }, 5 );
 
-/* 1c. Cart fragments: update header cart trigger (icon + count) on add/remove */
+/* 1c. Cart fragments: trigger (icon + count) + summary in dropdown */
 add_filter( 'woocommerce_add_to_cart_fragments', function ( $fragments ) {
 	if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
 		return $fragments;
 	}
 	$cart_count = WC()->cart->get_cart_contents_count();
+	$cart_total = WC()->cart->get_cart_total();
 	ob_start();
 	?>
 	<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php esc_attr_e( 'Koszyk', 'mnsk7-storefront' ); ?>">
 		<span class="mnsk7-header__cart-icon" aria-hidden="true"></span>
 		<?php if ( $cart_count > 0 ) { ?>
-			<span class="count"><?php echo absint( $cart_count ); ?></span>
+			<span class="mnsk7-header__cart-count"><?php echo absint( $cart_count ); ?></span>
 		<?php } ?>
 	</a>
 	<?php
 	$fragments['a.mnsk7-header__cart-trigger'] = ob_get_clean();
+	if ( $cart_count > 0 && $cart_total ) {
+		$fragments['.mnsk7-header__cart-summary'] = '<div class="mnsk7-header__cart-summary">' . sprintf( _n( '%1$d produkt · %2$s', '%1$d produktów · %2$s', $cart_count, 'mnsk7-storefront' ), $cart_count, $cart_total ) . '</div>';
+	} else {
+		$fragments['.mnsk7-header__cart-summary'] = '<div class="mnsk7-header__cart-summary">' . esc_html__( 'Koszyk jest pusty', 'mnsk7-storefront' ) . '</div>';
+	}
 	return $fragments;
 }, 20 );
 
-/* 1d. Header: mobile menu, search toggle, cart dropdown */
+/* 1d. Header: mobile menu, search toggle, cart dropdown, promo bar dismiss, sticky shrink on scroll */
 add_action( 'wp_footer', function () {
 	?>
 	<script>
@@ -187,7 +222,7 @@ add_action( 'wp_footer', function () {
 				searchDropdown.hidden = !open;
 				searchToggle.setAttribute('aria-expanded', open);
 				if (open) {
-					var inp = document.querySelector('#mnsk7-header-search-input');
+					var inp = document.getElementById('mnsk7-header-search-input-mobile') || document.querySelector('#mnsk7-header-search input[type="search"]');
 					if (inp) { inp.focus(); }
 				}
 			});
@@ -207,6 +242,33 @@ add_action( 'wp_footer', function () {
 					if (!cartWrap.contains(e.target)) cartWrap.classList.remove('is-open');
 				});
 			}
+		}
+		// Promo bar: dismissible (sessionStorage), header sticks below when visible
+		var promoBar = document.getElementById('mnsk7-promo-bar');
+		if (promoBar) {
+			try {
+				if (sessionStorage.getItem('mnsk7_promo_dismissed') === '1') { promoBar.remove(); }
+			} catch (e) {}
+			document.body.classList.add('mnsk7-has-promo');
+			document.body.style.setProperty('--mnsk7-promo-h', promoBar.offsetHeight + 'px');
+			var closeBtn = promoBar.querySelector('.mnsk7-promo-bar__close');
+			if (closeBtn) {
+				closeBtn.addEventListener('click', function() {
+					try { sessionStorage.setItem('mnsk7_promo_dismissed', '1'); } catch (e) {}
+					document.body.classList.remove('mnsk7-has-promo');
+					document.body.style.removeProperty('--mnsk7-promo-h');
+					promoBar.remove();
+				});
+			}
+		}
+		// Header shrink when scrolled (Visual Audit)
+		var header = document.getElementById('masthead');
+		if (header && header.classList.contains('mnsk7-header')) {
+			function onScroll() {
+				header.classList.toggle('mnsk7-header--scrolled', window.scrollY > 50);
+			}
+			onScroll();
+			window.addEventListener('scroll', onScroll, { passive: true });
 		}
 	})();
 	</script>

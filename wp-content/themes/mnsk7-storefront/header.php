@@ -18,6 +18,20 @@ defined( 'ABSPATH' ) || exit;
 <?php wp_body_open(); ?>
 <div id="page" class="hfeed site">
 
+<?php
+$promo_text = apply_filters( 'mnsk7_header_promo_text', '' );
+if ( $promo_text !== '' ) :
+	?>
+	<div id="mnsk7-promo-bar" class="mnsk7-promo-bar" role="complementary" aria-label="<?php esc_attr_e( 'Promocja', 'mnsk7-storefront' ); ?>">
+		<div class="mnsk7-promo-bar__inner">
+			<span class="mnsk7-promo-bar__text"><?php echo wp_kses_post( $promo_text ); ?></span>
+			<button type="button" class="mnsk7-promo-bar__close" aria-label="<?php esc_attr_e( 'Zamknij', 'mnsk7-storefront' ); ?>">&times;</button>
+		</div>
+	</div>
+	<?php
+endif;
+?>
+
 <header id="masthead" class="site-header mnsk7-header mnsk7-header--sticky" role="banner">
 	<div class="mnsk7-header__inner">
 		<div class="mnsk7-header__brand">
@@ -63,16 +77,23 @@ defined( 'ABSPATH' ) || exit;
 		</nav>
 		<div class="mnsk7-header__actions">
 			<?php
-			// Search: icon + overlay form
+			// Search: on desktop — visible inline bar; on mobile — icon opens dropdown (audit: "Keep search bar visible on desktop")
 			?>
 			<div class="mnsk7-header__search-wrap">
+				<form role="search" method="get" class="mnsk7-header__search-form mnsk7-header__search-form--inline" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+					<label for="mnsk7-header-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
+					<input type="search" id="mnsk7-header-search-input" class="mnsk7-header__search-input" placeholder="<?php esc_attr_e( 'Szukaj produktów…', 'mnsk7-storefront' ); ?>" value="<?php echo get_search_query(); ?>" name="s" autocomplete="off" />
+					<input type="hidden" name="post_type" value="product" />
+					<button type="submit" class="mnsk7-header__search-submit" aria-label="<?php esc_attr_e( 'Szukaj', 'mnsk7-storefront' ); ?>"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
+				</form>
 				<button type="button" class="mnsk7-header__search-toggle" aria-expanded="false" aria-controls="mnsk7-header-search" aria-label="<?php esc_attr_e( 'Szukaj', 'mnsk7-storefront' ); ?>">
 					<span class="mnsk7-header__search-icon" aria-hidden="true"></span>
+					<span class="mnsk7-header__search-label"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></span>
 				</button>
 				<div id="mnsk7-header-search" class="mnsk7-header__search-dropdown" hidden>
 					<form role="search" method="get" class="mnsk7-header__search-form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-						<label for="mnsk7-header-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></label>
-						<input type="search" id="mnsk7-header-search-input" class="mnsk7-header__search-input" placeholder="<?php esc_attr_e( 'Szukaj w sklepie…', 'mnsk7-storefront' ); ?>" value="<?php echo get_search_query(); ?>" name="s" />
+						<label for="mnsk7-header-search-input-mobile" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
+						<input type="search" id="mnsk7-header-search-input-mobile" class="mnsk7-header__search-input" placeholder="<?php esc_attr_e( 'Szukaj produktów…', 'mnsk7-storefront' ); ?>" value="<?php echo get_search_query(); ?>" name="s" />
 						<input type="hidden" name="post_type" value="product" />
 						<button type="submit" class="mnsk7-header__search-submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
 					</form>
@@ -92,15 +113,30 @@ defined( 'ABSPATH' ) || exit;
 			}
 			if ( function_exists( 'wc_get_cart_url' ) && function_exists( 'woocommerce_mini_cart' ) ) {
 				$cart_count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
+				$cart_total = WC()->cart ? WC()->cart->get_cart_total() : '';
 				?>
 				<div class="mnsk7-header__cart">
 					<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php esc_attr_e( 'Koszyk', 'mnsk7-storefront' ); ?>">
 						<span class="mnsk7-header__cart-icon" aria-hidden="true"></span>
 						<?php if ( $cart_count > 0 ) { ?>
-							<span class="count"><?php echo absint( $cart_count ); ?></span>
+							<span class="mnsk7-header__cart-count"><?php echo absint( $cart_count ); ?></span>
 						<?php } ?>
 					</a>
 					<div class="mnsk7-header__cart-dropdown">
+						<div class="mnsk7-header__cart-summary">
+							<?php
+							if ( $cart_count > 0 && $cart_total ) {
+								printf(
+									/* translators: 1: number of items, 2: cart total */
+									esc_html( _n( '%1$d produkt · %2$s', '%1$d produktów · %2$s', $cart_count, 'mnsk7-storefront' ) ),
+									$cart_count,
+									wp_kses_post( $cart_total )
+								);
+							} else {
+								esc_html_e( 'Koszyk jest pusty', 'mnsk7-storefront' );
+							}
+							?>
+						</div>
 						<div class="widget_shopping_cart_content">
 							<?php woocommerce_mini_cart(); ?>
 						</div>
