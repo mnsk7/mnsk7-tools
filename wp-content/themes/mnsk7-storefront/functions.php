@@ -169,6 +169,47 @@ add_action( 'wp_enqueue_scripts', function () {
 	}
 }, 10 );
 
+/**
+ * Zwraca kwotę rabatu lojalnościowego w koszyku (ujemna liczba lub 0).
+ * Używane w headerze i fragmentach do wyświetlenia "Rabat: -X zł".
+ */
+function mnsk7_header_cart_loyalty_discount() {
+	if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
+		return 0.0;
+	}
+	$fees = WC()->cart->get_fees();
+	foreach ( $fees as $fee ) {
+		if ( isset( $fee->name ) && strpos( (string) $fee->name, 'Rabat lojalnościowy' ) !== false ) {
+			$amount = isset( $fee->total ) ? (float) $fee->total : (float) $fee->amount;
+			return $amount <= 0 ? $amount : 0.0;
+		}
+	}
+	return 0.0;
+}
+
+/**
+ * Zwraca HTML bloku podsumowania mini-koszyka (liczba produktów, suma, rabat).
+ */
+function mnsk7_header_cart_summary_html( $cart_count, $cart_total, $loyalty_discount ) {
+	$out = '<div class="mnsk7-header__cart-summary">';
+	if ( $cart_count > 0 && $cart_total ) {
+		$count_text = sprintf( _n( '%d produkt', '%d produktów', $cart_count, 'mnsk7-storefront' ), $cart_count );
+		$out .= '<div class="mnsk7-header__cart-summary__main">';
+		$out .= '<span class="mnsk7-header__cart-summary__count">' . esc_html( $count_text ) . '</span>';
+		$out .= '<span class="mnsk7-header__cart-summary__total">' . wp_kses_post( $cart_total ) . '</span>';
+		$out .= '</div>';
+		if ( $loyalty_discount < 0 && function_exists( 'wc_price' ) ) {
+			$out .= '<div class="mnsk7-header__cart-summary__discount">';
+			$out .= esc_html__( 'Rabat:', 'mnsk7-storefront' ) . ' ' . wc_price( abs( $loyalty_discount ) );
+			$out .= '</div>';
+		}
+	} else {
+		$out .= esc_html__( 'Koszyk jest pusty', 'mnsk7-storefront' );
+	}
+	$out .= '</div>';
+	return $out;
+}
+
 /* 1b. Enqueue cart fragments so header cart count updates via AJAX (na wszystkich stronach z headerem) */
 add_action( 'wp_enqueue_scripts', function () {
 	if ( ! is_admin() && function_exists( 'WC' ) ) {
@@ -183,6 +224,7 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( $fragments ) {
 	}
 	$cart_count = WC()->cart->get_cart_contents_count();
 	$cart_total = WC()->cart->get_cart_total();
+	$loyalty_discount = function_exists( 'mnsk7_header_cart_loyalty_discount' ) ? mnsk7_header_cart_loyalty_discount() : 0.0;
 	ob_start();
 	?>
 	<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php esc_attr_e( 'Koszyk', 'mnsk7-storefront' ); ?>">
@@ -193,11 +235,9 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( $fragments ) {
 	</a>
 	<?php
 	$fragments['a.mnsk7-header__cart-trigger'] = ob_get_clean();
-	if ( $cart_count > 0 && $cart_total ) {
-		$fragments['.mnsk7-header__cart-summary'] = '<div class="mnsk7-header__cart-summary">' . sprintf( _n( '%1$d produkt · %2$s', '%1$d produktów · %2$s', $cart_count, 'mnsk7-storefront' ), $cart_count, $cart_total ) . '</div>';
-	} else {
-		$fragments['.mnsk7-header__cart-summary'] = '<div class="mnsk7-header__cart-summary">' . esc_html__( 'Koszyk jest pusty', 'mnsk7-storefront' ) . '</div>';
-	}
+	$fragments['.mnsk7-header__cart-summary'] = function_exists( 'mnsk7_header_cart_summary_html' )
+		? mnsk7_header_cart_summary_html( $cart_count, $cart_total, $loyalty_discount )
+		: '<div class="mnsk7-header__cart-summary">' . ( $cart_count > 0 && $cart_total ? sprintf( _n( '%1$d produkt · %2$s', '%1$d produktów · %2$s', $cart_count, 'mnsk7-storefront' ), $cart_count, $cart_total ) : esc_html__( 'Koszyk jest pusty', 'mnsk7-storefront' ) ) . '</div>';
 	return $fragments;
 }, 20 );
 
