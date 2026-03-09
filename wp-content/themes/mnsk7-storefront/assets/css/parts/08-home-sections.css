@@ -729,7 +729,8 @@
 
 /* Wariant embed (jak alesyatakun.by): blockquote + embed.js → iframe od Instagram */
 .mnsk7-instagram-feed--embed {
-  max-width: 900px;
+  max-width: 1200px;
+  width: 100%;
 }
 
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__more {
@@ -739,20 +740,39 @@
 
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 1rem;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
   width: 100%;
   margin-bottom: 1rem;
 }
 
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post {
-  min-width: 0;
+@media (min-width: 600px) {
+  .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
 
+@media (min-width: 1200px) {
+  .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post {
+  min-width: 0;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Pełny rozmiar embedu — Instagram iframe standardowo 540px, nie ściskać */
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media,
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post iframe {
-  max-width: 100%;
-  min-width: 0;
+  width: 100% !important;
+  min-width: 320px !important;
+  max-width: 540px !important;
+  margin: 0 auto;
+  display: block;
 }
 
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile {
