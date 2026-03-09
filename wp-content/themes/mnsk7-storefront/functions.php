@@ -1105,6 +1105,21 @@ add_action( 'woocommerce_single_product_summary', function () {
 }, 35 );
 
 /* 11. Instagram shortcode — oficjalny embed (jak na alesyatakun.by: blockquote + embed.js) */
+/* WP Rocket Delay JS: embed musi się załadować od razu, inaczej iframe nie powstanie. */
+add_filter( 'rocket_delay_js_exclusions', function ( $exclusions ) {
+	if ( ! is_array( $exclusions ) ) {
+		$exclusions = array();
+	}
+	$exclusions[] = 'embed.js';
+	$exclusions[] = 'instagram.com';
+	return $exclusions;
+} );
+add_filter( 'script_loader_tag', function ( $tag, $handle, $src ) {
+	if ( $handle === 'mnsk7-instagram-embed' ) {
+		$tag = str_replace( ' src=', ' nowprocket src=', $tag );
+	}
+	return $tag;
+}, 10, 3 );
 add_action( 'init', function () {
 	add_shortcode( 'mnsk7_instagram_feed', function ( $atts ) {
 		$atts = shortcode_atts( array(
@@ -1139,15 +1154,14 @@ add_action( 'init', function () {
 		$handle = preg_replace( '#^https?://(www\.)?instagram\.com/#', '', untrailingslashit( $profile ) );
 		$handle = $handle !== '' ? $handle : 'mnsk7tools';
 
-		// Jeden skrypt w footer na wszystkich stronach z shortcode (unika konfliktu z preload i race).
-		static $footer_done = false;
-		if ( ! $footer_done ) {
-			$footer_done = true;
-			add_action( 'wp_footer', function () {
-				// Zwykły <script src>, bez preload — process() po załadowaniu + retry (embed bywa opóźniony).
-				echo '<script src="https://www.instagram.com/embed.js"></script>' . "\n";
-				echo '<script>(function(){function run(){if(window.instgrm&&window.instgrm.Embeds)window.instgrm.Embeds.process();}run();if(document.readyState!=="complete")window.addEventListener("load",run);setTimeout(run,2500);})();</script>' . "\n";
-			}, 5 );
+		// Skrypt przez wp_enqueue_script — WP Rocket/optymalizatory go nie opóźnią (exclusion), kolejność gwarantowana.
+		static $enqueue_done = false;
+		if ( ! $enqueue_done ) {
+			$enqueue_done = true;
+			$embed_url = 'https://www.instagram.com/embed.js';
+			wp_enqueue_script( 'mnsk7-instagram-embed', $embed_url, array(), null, true );
+			$inline = "function mnsk7InstgrmRun(){if(window.instgrm&&window.instgrm.Embeds)window.instgrm.Embeds.process();}mnsk7InstgrmRun();if(document.readyState!=='complete')window.addEventListener('load',mnsk7InstgrmRun);setTimeout(mnsk7InstgrmRun,2500);";
+			wp_add_inline_script( 'mnsk7-instagram-embed', $inline, 'after' );
 		}
 		$out = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--embed">';
 		$out .= '<p class="mnsk7-instagram-feed__more"><a href="' . esc_url( $profile ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__more-link">' . esc_html( $atts['title'] ) . '</a></p>';
