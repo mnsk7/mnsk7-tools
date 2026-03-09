@@ -32,13 +32,29 @@
   border-top: 3px solid var(--color-primary);
 }
 
+/* Audit 2026-03: 4 kolumny — Klient, Kategorie, Kontakt, Newsletter (bez osobnej kolumny Dostawa) */
 .mnsk7-footer__inner {
   max-width: var(--content-max);
   margin: 0 auto;
   padding: 0 1rem;
   display: grid;
-  grid-template-columns: 1.2fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1.2fr 1fr;
   gap: 1.5rem 2rem;
+}
+.mnsk7-footer__dostawa-line {
+  margin: 0.75rem 0 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+.mnsk7-footer__dostawa-line a {
+  color: var(--color-footer-link);
+}
+.mnsk7-footer__contact-page-link {
+  margin: 0 0 0.5rem;
+  font-size: 0.9375rem;
+}
+.mnsk7-footer__contact-page-link a {
+  color: var(--color-footer-link);
 }
 
 .mnsk7-footer__newsletter-privacy {
@@ -105,11 +121,10 @@
   margin: 0.35rem 0;
   line-height: 1.6;
 }
-/* Audit: brak obcięcia tekstu w kolumnie Dostawa (np. "Tylko Polska") */
-.mnsk7-footer__col--dostawa p {
-  overflow: visible;
-  white-space: normal;
+/* Audit: adres i KRS/NIP/REGON — zawijanie na wąskich ekranach */
+.mnsk7-footer__address {
   word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .mnsk7-footer__title {
@@ -240,10 +255,24 @@
   max-width: var(--content-max);
   margin: 0 auto;
   padding: 0 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem 1rem;
 }
 
 .mnsk7-footer__copy {
   color: var(--color-footer-muted);
+}
+
+.mnsk7-footer__cookie-link {
+  color: var(--color-footer-muted);
+  font-size: inherit;
+  text-decoration: none;
+}
+.mnsk7-footer__cookie-link:hover {
+  color: var(--color-footer-link);
 }
 
 /* Mobile: accordion sections (audit: "Use accordions for each column") */
@@ -317,4 +346,10 @@
   .mnsk7-footer__col--newsletter .mnsk7-footer__newsletter-form,
   .mnsk7-footer__col--newsletter .mnsk7-footer__newsletter-privacy { display: block; }
   .mnsk7-footer__col--newsletter .mnsk7-footer__newsletter-form { display: flex; }
+}
+
+@media (max-width: 360px) {
+  .mnsk7-footer__inner {
+    padding: 0 0.75rem;
+  }
 }
