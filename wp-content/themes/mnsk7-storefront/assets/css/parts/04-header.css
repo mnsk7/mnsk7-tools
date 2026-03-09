@@ -1,6 +1,6 @@
 /* 04-header — sticky, shrink on scroll, promo bar, visible search desktop, megamenu (Visual Audit) */
 
-/* Promo bar above header — dismissible */
+/* Promo bar: zawsze nad treścią; warstwa nad headerem (jak na normalnych stronach) */
 .mnsk7-promo-bar {
   background: var(--color-primary);
   color: var(--color-white);
@@ -9,7 +9,7 @@
   padding: 0.35rem 1rem;
   position: sticky;
   top: 0;
-  z-index: 1000;
+  z-index: 1001;
   box-sizing: border-box;
 }
 .mnsk7-promo-bar__inner {
@@ -50,12 +50,13 @@
   opacity: 1;
 }
 
+/* Header + dropdowny zawsze nad treścią strony (menu i koszyk nie chowają się za hero/banerem) */
 .mnsk7-header,
 .site-header.mnsk7-header {
   background: var(--color-white);
   position: sticky;
   top: 0;
-  z-index: 999;
+  z-index: 1000;
   border-bottom: 1px solid var(--color-border);
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   min-height: var(--header-h);
@@ -317,7 +318,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   right: 0;
   margin-top: 4px;
   padding: 0.75rem;
-  background: var(--color-surface);
+  background: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: var(--r-sm);
   box-shadow: 0 8px 24px rgba(0,0,0,0.1);
@@ -327,7 +328,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   z-index: 101;
 }
 
-/* Desktop ≥900px: pasek wyszukiwania W JEDNEJ LINII z headerem (nie dropdown pod spodem) */
+/* Desktop ≥900px: wyszukiwarka w jednej linii z headerem, w jednym stylu (białe tło, jak reszta) */
 @media (min-width: 900px) {
   .mnsk7-header__search-toggle {
     display: none;
@@ -342,9 +343,9 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     opacity: 1;
     visibility: visible;
     margin: 0;
-    min-width: 180px;
-    width: 220px;
-    max-width: 240px;
+    min-width: 200px;
+    width: 240px;
+    max-width: 280px;
     box-shadow: none;
     border: 1px solid var(--color-border);
     border-radius: var(--r-sm);
@@ -352,6 +353,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     margin-top: 0;
     top: auto;
     right: auto;
+    background: var(--color-white);
   }
   .mnsk7-header__search-dropdown .mnsk7-header__search-form {
     flex: 1;
@@ -361,6 +363,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__search-dropdown .mnsk7-header__search-input {
     flex: 1;
     min-width: 0;
+    background: var(--color-white);
   }
 }
 .mnsk7-header__search-form {
@@ -782,6 +785,13 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__brand img {
     max-height: 36px;
   }
+}
+
+/* Warstwa treści pod headerem (menu i dropdowny zawsze na wierzchu) */
+#content.site-content,
+body .site .site-content {
+  position: relative;
+  z-index: 0;
 }
 
 /* Audit: dropdown Sklep nie może przycinać się ani zakrywać paska promocyjnego i koszyka */
