@@ -782,7 +782,7 @@ add_action( 'wp_footer', function () {
 	<?php
 }, 20 );
 
-/* 1e bis. PLP chips „Więcej”: pokaż/ukryj dodatkowe chipy filtrów (Średnica, Długość L/H) */
+/* 1e bis. PLP chips „Więcej” / „Więcej filtrów”: pokaż/ukryj dodatkowe chipy i blok filtrów */
 add_action( 'wp_footer', function () {
 	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_category() && ! is_product_tag() ) ) {
 		return;
@@ -792,23 +792,30 @@ add_action( 'wp_footer', function () {
 	?>
 	<script>
 	(function() {
-		var toggles = document.querySelectorAll('.mnsk7-plp-chips-toggle');
-		var moreLabel = <?php echo json_encode( $more_text ); ?>;
-		var lessLabel = <?php echo json_encode( $less_text ); ?>;
-		toggles.forEach(function(btn) {
-			var id = btn.getAttribute('data-controls');
-			if (!id) return;
-			var target = document.getElementById(id);
-			if (!target) return;
-			var btnMore = btn.getAttribute('data-more-text') || moreLabel;
-			var btnLess = btn.getAttribute('data-less-text') || lessLabel;
-			btn.addEventListener('click', function() {
-				var expanded = btn.getAttribute('aria-expanded') === 'true';
-				btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-				target.hidden = expanded;
-				btn.textContent = expanded ? btnMore : btnLess;
+		function initPlpToggles() {
+			var toggles = document.querySelectorAll('.mnsk7-plp-chips-toggle');
+			var moreLabel = <?php echo json_encode( $more_text ); ?>;
+			var lessLabel = <?php echo json_encode( $less_text ); ?>;
+			toggles.forEach(function(btn) {
+				var id = btn.getAttribute('data-controls');
+				if (!id) return;
+				var target = document.getElementById(id);
+				if (!target) return;
+				var btnMore = btn.getAttribute('data-more-text') || moreLabel;
+				var btnLess = btn.getAttribute('data-less-text') || lessLabel;
+				btn.addEventListener('click', function() {
+					var expanded = btn.getAttribute('aria-expanded') === 'true';
+					btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+					target.hidden = expanded;
+					btn.textContent = expanded ? btnMore : btnLess;
+				});
 			});
-		});
+		}
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initPlpToggles);
+		} else {
+			initPlpToggles();
+		}
 	})();
 	</script>
 	<?php

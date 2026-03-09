@@ -286,12 +286,16 @@ body.tax-product_tag .mnsk7-catalog-filters {
   align-self: center;
 }
 
-/* PLP-07: drugi rząd chipów (atrybuty) — wizualnie drugorzędne względem kategorii */
+/* PLP-07: drugi rząd chipów (atrybuty) — wizualnie drugorzędne względem kategorii; każdy wiersz z etykietą + chipy z zawijaniem */
 .mnsk7-plp-chips--attrs {
   margin-top: 0.5rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.5rem;
   width: 100%;
   gap: 0.35rem;
+  align-items: center;
+}
+.mnsk7-plp-chips--attrs + .mnsk7-plp-chips--attrs {
+  margin-top: 0.25rem;
 }
 .mnsk7-plp-chips--attrs .mnsk7-plp-chip {
   font-size: 0.8125rem;
@@ -315,7 +319,10 @@ body.tax-product_tag .mnsk7-catalog-filters {
   margin-right: 0.25rem;
 }
 
-/* Rozwinięty blok „Więcej”: chipy biorą udział w flexie rodzica */
+/* Rozwinięty blok „Więcej”: chipy biorą udział w flexie rodzica; gdy hidden — nie pokazuj */
+.mnsk7-plp-chips-more[hidden] {
+  display: none !important;
+}
 .mnsk7-plp-chips-more:not([hidden]) {
   display: contents;
 }
@@ -362,10 +369,13 @@ body.tax-product_tag .mnsk7-catalog-filters {
   margin-top: 0.25rem;
   margin-bottom: 0.5rem;
 }
+.mnsk7-plp-filters-more[hidden] {
+  display: none !important;
+}
 .mnsk7-plp-filters-more {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 0.25rem;
   margin-top: 0.25rem;
 }
 .mnsk7-plp-filters-more:not([hidden]) {
