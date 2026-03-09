@@ -27,7 +27,7 @@ wp option patch insert mnsk7_instagram_post_urls 0 "https://www.instagram.com/p/
 
 ### Motyw mnsk7-storefront: oficjalny embed (blockquote + embed.js)
 
-W **dziecięcej temacie** shortcode jest nadpisywany: zamiast siatki z mu-plugina wyświetlane są `blockquote.instagram-media` z `data-instgrm-permalink`. Skrypt `https://www.instagram.com/embed.js` jest wstrzykiwany w `wp_footer` i po załadowaniu zamienia blockquote na iframe z postem.
+W **dziecięcej temacie** shortcode jest nadpisywany: zamiast siatki z mu-plugina wyświetlane są `blockquote.instagram-media` z `data-instgrm-permalink`. Skrypt `embed.js` jest ładowany **w szablonie front-page.php zaraz za sekcją** (nie w footer), żeby pluginy do optymalizacji nie odkładały go i nie psuły kolejności; na innych stronach — w `wp_footer`. Po załadowaniu skrypt zamienia blockquote na pełny iframe z postem (profil, zdjęcie, lajki).
 
 **Jeśli posty dalej się nie pokazują:**
 
@@ -35,6 +35,7 @@ W **dziecięcej temacie** shortcode jest nadpisywany: zamiast siatki z mu-plugin
 - **embed.js zablokowany:** Sprawdź w DevTools → Network, czy `embed.js` z instagram.com ładuje się (200). Blokery reklam często blokują skrypty z Instagram/Facebook.
 - **Brak iframe po chwili:** Otwórz konsolę (F12) — błędy CORS lub Content Security Policy mogą uniemożliwić wstawienie iframe. Tymczasowo wyłącz optymalizację/łączenie skryptów (np. WP Rocket, LiteSpeed).
 - **Fallback:** Pod każdym postem jest link „Zobacz post”; jeśli embed się nie załaduje, link i tak prowadzi na Instagram.
+- **Nadal tylko linki:** Wyłącz na chwilę pluginy defer/optymalizacji (WP Rocket, LiteSpeed). Sprawdź konsolę (F12). Ostatecznie: blok „Własny kod HTML” z kodem z Instagram (post → ⋮ → Osadź).
 
 Jeśli opcja i scraping są puste, shortcode używa **domyślnych 3 linków** i CTA do profilu.
 

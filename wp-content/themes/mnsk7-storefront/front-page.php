@@ -186,11 +186,19 @@ get_header();
 		</div>
 	</section>
 
-	<!-- INSTAGRAM -->
+	<!-- INSTAGRAM — skrypt od razu za blockquote, żeby pluginy nie odkładały go do footer i embedy się narysowały -->
 	<section class="mnsk7-section mnsk7-section--insta">
 		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Obserwuj nas na Instagramie', 'mnsk7-storefront' ); ?></h2>
 			<?php echo do_shortcode( '[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]' ); ?>
+			<script src="https://www.instagram.com/embed.js"></script>
+			<script>
+			(function(){
+				function run(){ if(window.instgrm&&window.instgrm.Embeds) window.instgrm.Embeds.process(); }
+				run();
+				if(document.readyState!=='complete') window.addEventListener('load',run);
+			})();
+			</script>
 		</div>
 	</section>
 

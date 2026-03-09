@@ -706,17 +706,15 @@ add_action( 'init', function () {
 		$handle = preg_replace( '#^https?://(www\.)?instagram\.com/#', '', untrailingslashit( $profile ) );
 		$handle = $handle !== '' ? $handle : 'mnsk7tools';
 
-		// Pełne embedy (jak 2. skrin): embed.js BEZ async — synchronicznie w footer, żeby na pewno zamienił blockquote na iframe z profilem/zdjęciem/lajkami.
+		// Na front-page skrypt jest w szablonie (za sekcją). Gdzie indziej — w footer.
 		static $footer_done = false;
-		if ( ! $footer_done ) {
+		if ( ! is_front_page() && ! $footer_done ) {
 			$footer_done = true;
 			add_action( 'wp_footer', function () {
-				// Skrypt bez async/defer — ładuje się po kolei, blockquote są już w DOM, embed.js je zamienia na pełny widget.
 				echo '<script src="https://www.instagram.com/embed.js"></script>' . "\n";
-				echo '<script>if(window.instgrm&&window.instgrm.Embeds)window.instgrm.Embeds.process();</script>' . "\n";
+				echo '<script>(function(){function r(){if(window.instgrm&&window.instgrm.Embeds)window.instgrm.Embeds.process();}r();if(document.readyState!=="complete")window.addEventListener("load",r);})();</script>' . "\n";
 			}, 5 );
 		}
-
 		$out = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--embed">';
 		$out .= '<p class="mnsk7-instagram-feed__more"><a href="' . esc_url( $profile ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__more-link">' . esc_html( $atts['title'] ) . '</a></p>';
 		if ( ! empty( $urls ) ) {
