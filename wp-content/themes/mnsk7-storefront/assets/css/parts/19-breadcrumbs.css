@@ -64,3 +64,19 @@ nav.woocommerce-breadcrumb {
   }
 }
 
+/* Audit task 15: na mobile breadcrumbs czytelne, bez nadmiernego obcięcia */
+@media (max-width: 480px) {
+  .mnsk7-breadcrumb-wrap {
+    padding: 0.5rem 0;
+  }
+  .woocommerce-breadcrumb {
+    min-width: 0;
+  }
+  .woocommerce-breadcrumb .last-item {
+    max-width: 100%;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+  }
+}
+
