@@ -65,3 +65,108 @@
   padding: 2rem 0 3rem;
 }
 
+/* Przewodnik — single post (SEO artykuły) */
+.mnsk7-guide-single {
+  max-width: var(--content-max);
+  margin: 0 auto;
+  padding: 0 1rem 2rem;
+}
+
+.mnsk7-guide-single .col-full {
+  max-width: 100%;
+}
+
+.mnsk7-guide-article__header {
+  padding: 1.5rem 0 1rem;
+}
+
+.mnsk7-guide-article__title {
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  margin: 0 0 0.5rem;
+  line-height: 1.25;
+}
+
+.mnsk7-guide-article__meta {
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+}
+
+.mnsk7-guide-article__body {
+  font-size: var(--fs-base);
+  line-height: 1.7;
+  color: var(--color-text);
+  padding: 1rem 0 2rem;
+}
+
+.mnsk7-guide-article__body h2 {
+  font-size: var(--fs-lg);
+  margin: 1.5rem 0 0.75rem;
+}
+
+.mnsk7-guide-article__body h3 {
+  font-size: var(--fs-base);
+  font-weight: 700;
+  margin: 1.25rem 0 0.5rem;
+}
+
+.mnsk7-guide-article__body ul,
+.mnsk7-guide-article__body ol {
+  padding-left: 1.25rem;
+  margin: 0.75rem 0;
+}
+
+.mnsk7-guide-article__body li {
+  margin-bottom: 0.5rem;
+}
+
+.mnsk7-guide-article__body a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.mnsk7-guide-article__body a:hover {
+  text-decoration: underline;
+}
+
+/* Blok linków do produktów/kategorii w artykule (shortcode [mnsk7_guide_products]) */
+.mnsk7-guide-products {
+  margin: 2rem 0;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--color-border);
+}
+
+.mnsk7-guide-products__title {
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  margin: 0 0 0.75rem;
+}
+
+.mnsk7-guide-products__intro {
+  margin: 0 0 1rem;
+}
+
+.mnsk7-guide-products__list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.mnsk7-guide-products__list li {
+  margin-bottom: 0.5rem;
+}
+
+.mnsk7-guide-products__list a {
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.mnsk7-guide-products__list a:hover {
+  text-decoration: underline;
+}
+
+.mnsk7-guide-faq {
+  border-top: 1px solid var(--color-border);
+}
+

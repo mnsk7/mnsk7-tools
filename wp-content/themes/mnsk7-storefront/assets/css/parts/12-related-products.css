@@ -72,6 +72,9 @@ ul.products.columns-3::before {
   width: 100%;
   max-width: 100%;
 }
+.woocommerce-cart .cross-sells > h2 {
+  margin-bottom: 1rem;
+}
 .woocommerce-cart .cross-sells ul.products {
   grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)) !important;
 }

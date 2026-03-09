@@ -880,11 +880,40 @@
   width: 100%;
 }
 
+/* Wariant profile: jeden iframe z embed profilu (jak kayer.pl) — ładuje się stabilnie bez embed.js */
+.mnsk7-instagram-feed--profile {
+  max-width: 1200px;
+  width: 100%;
+}
+.mnsk7-instagram-feed--profile .mnsk7-instagram-feed__more {
+  margin: 0 0 1rem;
+  text-align: center;
+}
+.mnsk7-instagram-profile-embed {
+  width: 100%;
+  margin-bottom: 1rem;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fafafa;
+}
+.mnsk7-instagram-profile-embed iframe {
+  display: block;
+  width: 100%;
+  min-height: 480px;
+  border: 0;
+}
+.mnsk7-instagram-feed-note {
+  margin: 0 0 1rem;
+  font-size: 0.9rem;
+  color: var(--color-text-muted, #666);
+}
+
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__more {
   margin: 0 0 1rem;
   text-align: center;
 }
 
+/* Siatka: 1 kol. mobilka, 2 od 600px, 2 na desktop — większe posty (nie 3 małe) */
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts {
   display: grid;
   grid-template-columns: 1fr;
@@ -901,7 +930,8 @@
 
 @media (min-width: 1200px) {
   .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
   }
 }
 
@@ -914,11 +944,17 @@
   position: relative;
 }
 
-/* Placeholder pod embed — minimalna wysokość, żeby nie było pustego prostokąta */
+/* Placeholder pod embed — wyraźna wysokość (posty nie „mikro”) */
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media {
-  min-height: 320px;
+  min-height: 380px;
   background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
   border-radius: 12px;
+}
+
+@media (min-width: 600px) {
+  .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media {
+    min-height: 420px;
+  }
 }
 
 /* Fallback link gdy embed.js nie załaduje iframe — widoczna karta z linkiem */
@@ -945,14 +981,22 @@
   display: none;
 }
 
-/* Pełny rozmiar embedu — Instagram iframe standardowo 540px, nie ściskać */
+/* Większe embedy — pełna szerokość komórki, min 320px, max 560px (Instagram ładuje w dobrej skali) */
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media,
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post iframe {
   width: 100% !important;
   min-width: 320px !important;
-  max-width: 540px !important;
+  max-width: 560px !important;
   margin: 0 auto;
   display: block;
+}
+
+@media (min-width: 600px) {
+  .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media,
+  .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post iframe {
+    min-width: 360px;
+    max-width: 100%;
+  }
 }
 
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile {

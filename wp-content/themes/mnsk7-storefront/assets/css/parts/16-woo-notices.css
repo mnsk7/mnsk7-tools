@@ -25,7 +25,7 @@
   color: var(--color-text);
 }
 
-/* Cart/checkout notice — w stylu sklepu (surface, nie zielony/niebieski) */
+/* Cart/checkout notice — w stylu sklepu (surface, nie zielony/niebieski); padding-left żeby ikona nie napełzała na tekst */
 .woocommerce-info.darmowa-dostawa,
 .woocommerce .cart-subtotal + .woocommerce-info,
 .woocommerce-cart .woocommerce-info,
@@ -35,7 +35,7 @@
   border: 1px solid var(--color-border);
   border-left: 4px solid var(--color-primary);
   border-radius: var(--r-sm);
-  padding: 0.75rem 1.25rem;
+  padding: 0.75rem 1.25rem 0.75rem 2.5rem;
 }
 
 .woocommerce-cart .woocommerce-info a,
@@ -43,5 +43,11 @@
 .woocommerce .woocommerce-info a {
   color: var(--color-primary);
   text-decoration: underline;
+}
+
+/* Wyłączenie ewentualnej ikony z rodzica (Storefront) — unikamy nałożenia na tekst */
+.woocommerce-cart .woocommerce-notices-wrapper .woocommerce-message::before,
+.woocommerce-cart .woocommerce-notices-wrapper .woocommerce-info::before {
+  display: none;
 }
 

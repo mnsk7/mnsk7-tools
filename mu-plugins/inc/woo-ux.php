@@ -25,6 +25,11 @@ add_filter( 'woocommerce_output_related_products_args', function ( $args ) {
 add_filter( 'woocommerce_upsells_total',   fn() => 4 );
 add_filter( 'woocommerce_upsells_columns', fn() => 4 );
 
+/* Cross-sells na koszyku: czytelny tytuł zamiast „Zobacz inne równie interesujące…” */
+add_filter( 'woocommerce_product_cross_sells_products_heading', function () {
+	return __( 'Dopasowane do Twojego koszyka', 'mnsk7-tools' );
+} );
+
 /* Cookie consent bar — widoczny, z przyciskiem Ustawienia (GDPR) */
 add_action( 'wp_footer', function () {
 	if ( is_admin() ) return;

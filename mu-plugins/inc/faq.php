@@ -73,9 +73,11 @@ add_action( 'init', function () {
 	} );
 }, 6 );
 
-/* Akordeon FAQ (vanilla JS) */
+/* Akordeon FAQ (vanilla JS) — strony, kategorie produktów, artykuły Przewodnik */
 add_action( 'wp_footer', function () {
-	if ( ! is_singular( 'page' ) && ! is_product_category() ) return;
+	if ( ! is_singular( 'page' ) && ! is_product_category() && ! is_singular( 'post' ) ) {
+		return;
+	}
 	?>
 	<script>
 	(function(){

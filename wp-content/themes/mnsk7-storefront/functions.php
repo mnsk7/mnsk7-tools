@@ -1157,8 +1157,10 @@ add_filter( 'rocket_delay_js_exclusions', function ( $exclusions ) {
 add_filter( 'script_loader_tag', function ( $tag, $handle, $src ) {
 	if ( $handle === 'mnsk7-instagram-embed' ) {
 		$tag = str_replace( ' src=', ' nowprocket src=', $tag );
-		// Bez defer: inline z process() jest w następnym <script> — przy defer inline leci przed załadowaniem embed.js (jak na alesyatakun.by skrypt bez defer).
 		$tag = preg_replace( '#\s(defer|async)=["\']?[^"\']*["\']?#i', '', $tag );
+		// process() dopiero po załadowaniu embed.js — inaczej instgrm jeszcze nie istnieje i iframe nie powstanie
+		$tag = str_replace( '</script>', '', $tag );
+		$tag .= " onload=\"if(typeof mnsk7InstgrmRun==='function')mnsk7InstgrmRun();\"></script>\n";
 	}
 	return $tag;
 }, 10, 3 );
@@ -1167,9 +1169,30 @@ add_action( 'init', function () {
 		$atts = shortcode_atts( array(
 			'limit' => 6,
 			'title' => 'Instagram @mnsk7tools',
+			'type'  => 'profile', // profile = jeden iframe z embed profilu (ładuje się stabilnie); posts = blockquote + embed.js
 		), $atts, 'mnsk7_instagram_feed' );
-		$limit = max( 1, min( 12, (int) $atts['limit'] ) );
 		$profile = defined( 'MNK7_INSTAGRAM_URL' ) ? MNK7_INSTAGRAM_URL : 'https://www.instagram.com/mnsk7tools/';
+		$handle  = preg_replace( '#^https?://(www\.)?instagram\.com/#', '', untrailingslashit( $profile ) );
+		$handle  = $handle !== '' ? $handle : 'mnsk7tools';
+		$embed_profile_url = 'https://www.instagram.com/' . $handle . '/embed/';
+
+		if ( $atts['type'] === 'profile' ) {
+			$out  = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--profile">';
+			$out .= '<p class="mnsk7-instagram-feed__more"><a href="' . esc_url( $profile ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__more-link">' . esc_html( $atts['title'] ) . '</a></p>';
+			$out .= '<div class="mnsk7-instagram-profile-embed">';
+			$out .= '<iframe src="' . esc_url( $embed_profile_url ) . '" title="' . esc_attr( $atts['title'] ) . '" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>';
+			$out .= '</div>';
+			$out .= '<p class="mnsk7-instagram-feed-note">' . esc_html__( 'Najnowsze posty z profilu', 'mnsk7-storefront' ) . ' @' . esc_html( $handle ) . '.</p>';
+			$out .= '<div class="mnsk7-instagram-feed__profile">';
+			$out .= '<span class="mnsk7-instagram-feed__profile-icon" aria-hidden="true"></span>';
+			$out .= '<span class="mnsk7-instagram-feed__profile-handle">@' . esc_html( $handle ) . '</span>';
+			$out .= '<a href="' . esc_url( $profile ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__profile-btn">' . esc_html__( 'Zobacz profil', 'mnsk7-storefront' ) . '</a>';
+			$out .= '</div>';
+			$out .= '</div>';
+			return $out;
+		}
+
+		$limit = max( 1, min( 12, (int) $atts['limit'] ) );
 		$raw = get_option( 'mnsk7_instagram_post_urls', array() );
 		if ( ! is_array( $raw ) ) {
 			$raw = array();
@@ -1193,8 +1216,6 @@ add_action( 'init', function () {
 				$urls[] = $url;
 			}
 		}
-		$handle = preg_replace( '#^https?://(www\.)?instagram\.com/#', '', untrailingslashit( $profile ) );
-		$handle = $handle !== '' ? $handle : 'mnsk7tools';
 
 		// Skrypt przez wp_enqueue_script — WP Rocket/optymalizatory go nie opóźnią (exclusion), kolejność gwarantowana.
 		static $enqueue_done = false;
@@ -1202,7 +1223,8 @@ add_action( 'init', function () {
 			$enqueue_done = true;
 			$embed_url = 'https://www.instagram.com/embed.js';
 			wp_enqueue_script( 'mnsk7-instagram-embed', $embed_url, array(), null, true );
-			$inline = "function mnsk7InstgrmRun(){if(window.instgrm&&window.instgrm.Embeds)window.instgrm.Embeds.process();}mnsk7InstgrmRun();if(document.readyState!=='complete')window.addEventListener('load',mnsk7InstgrmRun);setTimeout(mnsk7InstgrmRun,2500);";
+			// process() wywołane w onload skryptu embed.js; retry 2s i 5s gdy skrypt ładuje się wolno lub DOM się opóźnia
+			$inline = "function mnsk7InstgrmRun(){try{if(window.instgrm&&window.instgrm.Embeds)window.instgrm.Embeds.process();}catch(e){}}setTimeout(mnsk7InstgrmRun,2000);setTimeout(mnsk7InstgrmRun,5000);if(document.readyState!=='complete')window.addEventListener('load',mnsk7InstgrmRun);";
 			wp_add_inline_script( 'mnsk7-instagram-embed', $inline, 'after' );
 		}
 		$out = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--embed">';
@@ -1216,8 +1238,8 @@ add_action( 'init', function () {
 				$out .= '</div>';
 			}
 			$out .= '</div>';
-			// Gdy iframe nie załaduje się (np. blokada połączenia z instagram.com), ukryj zepsuty blok i pokaż fallback po 5 s.
-			$out .= '<script>(function(){var posts=document.querySelectorAll(".mnsk7-instagram-feed__post");if(!posts.length)return;setTimeout(function(){posts.forEach(function(el){var ifr=el.querySelector("iframe");var fallback=el.querySelector(".mnsk7-instagram-feed__post-fallback");if(!fallback)return;if(!ifr||ifr.offsetHeight<100){var wrap=el.querySelector(".instagram-media")||el.querySelector("iframe");if(wrap)wrap.style.display="none";fallback.style.display="inline-flex";}});},5000);})();</script>';
+			// Gdy iframe nie załaduje się — po 3 s pokaż link „Zobacz post” (blokada embed, CSP, brak sieci).
+			$out .= '<script>(function(){var posts=document.querySelectorAll(".mnsk7-instagram-feed__post");if(!posts.length)return;setTimeout(function(){posts.forEach(function(el){var ifr=el.querySelector("iframe");var fallback=el.querySelector(".mnsk7-instagram-feed__post-fallback");if(!fallback)return;if(!ifr||ifr.offsetHeight<100){var wrap=el.querySelector(".instagram-media")||el.querySelector("iframe");if(wrap)wrap.style.display="none";fallback.style.display="inline-flex";}});},3000);})();</script>';
 		}
 		$out .= '<div class="mnsk7-instagram-feed__profile">';
 		$out .= '<span class="mnsk7-instagram-feed__profile-icon" aria-hidden="true"></span>';

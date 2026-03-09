@@ -46,19 +46,21 @@
   cursor: not-allowed;
 }
 
-/* --- Loyalty block in cart --- */
+/* --- Loyalty block in cart — wyraźny, sprzedażowy --- */
 .mnsk7-cart-loyalty {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
+  background: linear-gradient(135deg, rgba(12, 125, 219, 0.06) 0%, var(--color-surface) 100%);
+  border: 1px solid var(--color-primary);
   border-radius: var(--r-md);
-  padding: 1rem 1.25rem;
+  padding: 1.25rem 1.5rem;
   margin-bottom: 1.25rem;
+  box-shadow: 0 1px 3px rgba(12, 125, 219, 0.08);
 }
 .mnsk7-cart-loyalty__title {
   margin: 0 0 0.5rem;
-  font-size: var(--fs-base);
+  font-size: var(--fs-lg, 1.125rem);
   font-weight: 700;
-  color: var(--color-text);
+  color: var(--color-primary-dark, #0a5a9e);
+  line-height: 1.3;
 }
 .mnsk7-cart-loyalty__sum,
 .mnsk7-cart-loyalty__pct,
@@ -70,6 +72,23 @@
 .mnsk7-cart-loyalty__pct--active {
   color: var(--color-primary-dark, #0a5a9e);
   font-weight: 700;
+  font-size: var(--fs-base);
+}
+.mnsk7-cart-loyalty__guest-cta {
+  margin: 0.75rem 0 0.25rem;
+}
+.mnsk7-cart-loyalty__cta-link {
+  display: inline-block;
+  font-weight: 600;
+  color: var(--color-primary) !important;
+  text-decoration: none;
+  padding: 0.5rem 0;
+  border-radius: var(--r-sm);
+  transition: color 0.15s ease, background 0.15s ease;
+}
+.mnsk7-cart-loyalty__cta-link:hover {
+  color: var(--color-primary-dark, #0a5a9e) !important;
+  text-decoration: underline;
 }
 .mnsk7-cart-loyalty__tiers {
   list-style: none;

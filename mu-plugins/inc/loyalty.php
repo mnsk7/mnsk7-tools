@@ -174,7 +174,7 @@ function mnsk7_loyalty_cart_block_html() {
 	$year           = date( 'Y' );
 
 	$html = '<div class="mnsk7-cart-loyalty">';
-	$html .= '<h3 class="mnsk7-cart-loyalty__title">' . esc_html__( 'Program rabatowy', 'mnsk7-tools' ) . '</h3>';
+	$html .= '<h3 class="mnsk7-cart-loyalty__title">' . esc_html__( 'Rabaty dla stałych klientów — oszczędzaj przy każdym zamówieniu', 'mnsk7-tools' ) . '</h3>';
 	if ( $user_id && $year_total > 0 ) {
 		$html .= '<p class="mnsk7-cart-loyalty__sum">' . sprintf(
 			__( 'W %1$s zamówiłeś za %2$s zł. Wartość tego koszyka: %3$s zł.', 'mnsk7-tools' ),
@@ -188,10 +188,12 @@ function mnsk7_loyalty_cart_block_html() {
 			number_format_i18n( $subtotal, 2 )
 		) . '</p>';
 	} else {
+		$myaccount_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/moje-konto/' );
 		$html .= '<p class="mnsk7-cart-loyalty__sum">' . sprintf(
-			__( 'Wartość koszyka: %s zł. Zaloguj się, aby suma Twoich zamówień z bieżącego roku była liczona do rabatu.', 'mnsk7-tools' ),
+			__( 'Wartość koszyka: %s zł.', 'mnsk7-tools' ),
 			number_format_i18n( $subtotal, 2 )
 		) . '</p>';
+		$html .= '<p class="mnsk7-cart-loyalty__guest-cta"><a href="' . esc_url( $myaccount_url ) . '" class="mnsk7-cart-loyalty__cta-link">' . esc_html__( 'Zaloguj się i zacznij oszczędzać — Twoje zamówienia będą liczone do rabatu do 20%.', 'mnsk7-tools' ) . '</a></p>';
 	}
 	if ( $tier['percent'] > 0 ) {
 		$html .= '<p class="mnsk7-cart-loyalty__pct mnsk7-cart-loyalty__pct--active">' . sprintf(
