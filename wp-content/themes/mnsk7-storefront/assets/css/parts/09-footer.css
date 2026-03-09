@@ -197,7 +197,7 @@
 .mnsk7-footer__hours dd {
   margin: 0;
   color: var(--color-footer-text);
-  text-align: right;
+  text-align: left;
   white-space: nowrap;
 }
 
