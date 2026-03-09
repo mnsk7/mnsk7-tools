@@ -888,13 +888,8 @@
   max-width: 1200px;
   width: 100%;
 }
-.mnsk7-instagram-feed--profile .mnsk7-instagram-feed__more {
-  margin: 0 0 1rem;
-  text-align: center;
-}
 .mnsk7-instagram-profile-embed {
   width: 100%;
-  margin-bottom: 1rem;
   border-radius: 12px;
   overflow: hidden;
   background: #fafafa;
@@ -902,14 +897,26 @@
 .mnsk7-instagram-profile-embed iframe {
   display: block;
   width: 100%;
-  min-height: 720px;
-  height: 80vh;
+  min-height: 900px;
+  height: 95vh;
   border: 0;
 }
-.mnsk7-instagram-feed-note {
-  margin: 0 0 1rem;
-  font-size: 0.9rem;
-  color: var(--color-text-muted, #666);
+
+@media (max-width: 767px) {
+  .mnsk7-section--insta {
+    padding: 2rem 0;
+  }
+  .mnsk7-section--insta .col-full {
+    padding: 0 1rem;
+  }
+  .mnsk7-instagram-profile-embed {
+    border-radius: 8px;
+    margin: 0;
+  }
+  .mnsk7-instagram-profile-embed iframe {
+    min-height: 70vh;
+    height: 85vh;
+  }
 }
 
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__more {

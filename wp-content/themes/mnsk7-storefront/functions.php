@@ -1178,15 +1178,8 @@ add_action( 'init', function () {
 
 		if ( $atts['type'] === 'profile' ) {
 			$out  = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--profile">';
-			$out .= '<p class="mnsk7-instagram-feed__more"><a href="' . esc_url( $profile ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__more-link">' . esc_html( $atts['title'] ) . '</a></p>';
 			$out .= '<div class="mnsk7-instagram-profile-embed">';
 			$out .= '<iframe src="' . esc_url( $embed_profile_url ) . '" title="' . esc_attr( $atts['title'] ) . '" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>';
-			$out .= '</div>';
-			$out .= '<p class="mnsk7-instagram-feed-note">' . esc_html__( 'Najnowsze posty z profilu', 'mnsk7-storefront' ) . ' @' . esc_html( $handle ) . '.</p>';
-			$out .= '<div class="mnsk7-instagram-feed__profile">';
-			$out .= '<span class="mnsk7-instagram-feed__profile-icon" aria-hidden="true"></span>';
-			$out .= '<span class="mnsk7-instagram-feed__profile-handle">@' . esc_html( $handle ) . '</span>';
-			$out .= '<a href="' . esc_url( $profile ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__profile-btn">' . esc_html__( 'Zobacz profil', 'mnsk7-storefront' ) . '</a>';
 			$out .= '</div>';
 			$out .= '</div>';
 			return $out;
