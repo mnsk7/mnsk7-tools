@@ -1,13 +1,49 @@
 /* 18-cart-checkout — cart, empty cart, checkout (backlog 4.x) */
 
-/* --- Kontynuuj zakupy (UX audit) --- */
+/* --- Przyciski koszyka: jeden styl (Kontynuuj, Kupon, Zaktualizuj) --- */
 .mnsk7-cart-continue {
   margin: 0 0 1rem;
 }
-.mnsk7-cart-continue .mnsk7-btn-back {
+
+/* Wspólny styl dla wszystkich przycisków akcji na stronie koszyka */
+.woocommerce-cart .mnsk7-cart-continue .button.mnsk7-btn-back,
+.woocommerce-cart .woocommerce-cart-form .coupon .button,
+.woocommerce-cart .woocommerce-cart-form button[name="update_cart"] {
   display: inline-block;
   min-height: 44px;
-  line-height: 42px;
+  padding: 0.625rem 1.25rem;
+  line-height: 1.25;
+  font-family: var(--font-base);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-white) !important;
+  background: var(--color-primary) !important;
+  border: none;
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  text-decoration: none;
+  box-sizing: border-box;
+  transition: background 0.15s ease;
+}
+
+.woocommerce-cart .mnsk7-cart-continue .button.mnsk7-btn-back:hover,
+.woocommerce-cart .woocommerce-cart-form .coupon .button:hover,
+.woocommerce-cart .woocommerce-cart-form button[name="update_cart"]:hover {
+  background: var(--color-primary-hover) !important;
+  color: var(--color-white) !important;
+}
+
+.woocommerce-cart .mnsk7-cart-continue .button.mnsk7-btn-back:focus-visible,
+.woocommerce-cart .woocommerce-cart-form .coupon .button:focus-visible,
+.woocommerce-cart .woocommerce-cart-form button[name="update_cart"]:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
+}
+
+.woocommerce-cart .woocommerce-cart-form button[name="update_cart"]:disabled {
+  background: var(--color-border-strong) !important;
+  color: var(--color-text-muted) !important;
+  cursor: not-allowed;
 }
 
 /* --- Loyalty block in cart --- */
