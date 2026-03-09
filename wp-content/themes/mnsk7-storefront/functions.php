@@ -1117,6 +1117,8 @@ add_filter( 'rocket_delay_js_exclusions', function ( $exclusions ) {
 add_filter( 'script_loader_tag', function ( $tag, $handle, $src ) {
 	if ( $handle === 'mnsk7-instagram-embed' ) {
 		$tag = str_replace( ' src=', ' nowprocket src=', $tag );
+		// Bez defer: inline z process() jest w następnym <script> — przy defer inline leci przed załadowaniem embed.js (jak na alesyatakun.by skrypt bez defer).
+		$tag = preg_replace( '#\s(defer|async)=["\']?[^"\']*["\']?#i', '', $tag );
 	}
 	return $tag;
 }, 10, 3 );
