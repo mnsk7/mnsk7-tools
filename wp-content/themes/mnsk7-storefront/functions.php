@@ -54,19 +54,22 @@ add_filter( 'wp_nav_menu_objects', function ( $items, $args ) {
 	return $filtered;
 }, 20, 2 );
 
-/** PLP: u góry — sortowanie + paginacja; u dołu — tylko wyników + paginacja (bez duplikatu).
- * Storefront parent dodaje do after_shop_loop: storefront_sorting_wrapper (9), woocommerce_catalog_ordering (10),
- * woocommerce_result_count (20), woocommerce_pagination (30), storefront_sorting_wrapper_close (31).
- * Usuwamy sortowanie i wrapper z dołu, result_count zostawiamy raz (nasz na 5). */
+/** PLP audit task 10: jeden selekt sortowania, jedna paginacja — bez duplikatów.
+ * Storefront dodaje sortowanie/result_count i przed, i po pętli. Usuwamy z before_shop_loop,
+ * zostawiamy tylko w after_shop_loop (toolbar na dole). */
 add_action( 'wp', function () {
 	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_category() && ! is_product_tag() ) ) {
 		return;
 	}
+	/* Z góry (before_shop_loop) — usuń, żeby nie było drugiego toolbara */
+	remove_action( 'woocommerce_before_shop_loop', 'storefront_sorting_wrapper', 9 );
+	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 10 );
 	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', 20 );
+	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_pagination', 30 );
+	remove_action( 'woocommerce_before_shop_loop', 'storefront_sorting_wrapper_close', 31 );
+	/* Na dół (after_shop_loop) — jeden result_count (5), jeden ordering, jedna paginacja; bez wrappera Storefront */
 	add_action( 'woocommerce_after_shop_loop', 'woocommerce_result_count', 5 );
-	// Storefront: zdublowane sortowanie i result_count na dole — usuwamy.
 	remove_action( 'woocommerce_after_shop_loop', 'storefront_sorting_wrapper', 9 );
-	remove_action( 'woocommerce_after_shop_loop', 'woocommerce_catalog_ordering', 10 );
 	remove_action( 'woocommerce_after_shop_loop', 'woocommerce_result_count', 20 );
 	remove_action( 'woocommerce_after_shop_loop', 'storefront_sorting_wrapper_close', 31 );
 }, 25 );
