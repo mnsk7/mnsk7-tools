@@ -207,6 +207,43 @@
   color: var(--color-white);
   text-decoration: none;
 }
+.mnsk7-cats-quick__chip:focus,
+.mnsk7-cats-quick__chip:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Tagi produktów na głównej — chipy do stron /tag-produktu/... */
+.mnsk7-section__sub.mnsk7-tags-intro {
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  margin: -0.5rem 0 1rem;
+  max-width: 42rem;
+}
+.mnsk7-tags-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  margin-bottom: 1rem;
+}
+.mnsk7-tags-chip {
+  display: inline-block;
+  padding: 0.4rem 0.9rem;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-pill);
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  color: var(--color-text);
+  text-decoration: none;
+  transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.mnsk7-tags-chip:hover {
+  background: var(--color-surface);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  text-decoration: none;
+}
 
 /* Katalog kategorii (jak Sandvik) — karta: obrazek po lewej, nazwa + liczba, strzałka */
 .mnsk7-cats--catalog {

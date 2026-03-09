@@ -1,11 +1,16 @@
 /* 24-plp-table — Sandvik-style table + chips (чипсы) on category/tag archives */
 
-/* Bez zdjęcia kategorii u góry — ukrywamy kwadrat z lewej (Storefront/snippety) */
+/* Bez zdjęcia kategorii/tagu u góry — ukrywamy kwadrat z lewej (kategoria/tag w jednym stylu) */
 body.tax-product_cat .woocommerce-products-header img,
 body.tax-product_cat .woocommerce-products-header .wp-post-image,
 body.tax-product_cat .woocommerce-products-header .attachment-woocommerce_thumbnail,
 body.tax-product_cat .woocommerce_category_image,
-body.tax-product_cat [class*="category-image"] {
+body.tax-product_cat [class*="category-image"],
+body.tax-product_tag .woocommerce-products-header img,
+body.tax-product_tag .woocommerce-products-header .wp-post-image,
+body.tax-product_tag .woocommerce-products-header .attachment-woocommerce_thumbnail,
+body.tax-product_tag .woocommerce_category_image,
+body.tax-product_tag [class*="category-image"] {
   display: none !important;
 }
 
@@ -21,7 +26,7 @@ body.tax-product_cat [class*="category-image"] {
   color: var(--color-text);
 }
 
-/* Toolbar: wyników + sortowanie (jedna linia) */
+/* Toolbar: sortowanie + (opcjonalnie wyników) + paginacja — ten sam styl u góry i u dołu */
 .mnsk7-plp-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -29,11 +34,32 @@ body.tax-product_cat [class*="category-image"] {
   gap: 1rem;
   margin-bottom: 1rem;
 }
+/* U góry: tylko sortowanie + paginacja (wyników nie pokazujemy) */
 .mnsk7-plp-toolbar .woocommerce-result-count {
   display: none !important;
 }
+/* U dołu: sortowanie + wyników + paginacja */
+.mnsk7-plp-toolbar--bottom .woocommerce-result-count {
+  display: block !important;
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+}
 .mnsk7-plp-toolbar .woocommerce-ordering {
   margin: 0;
+}
+.mnsk7-plp-toolbar--bottom {
+  margin-top: 1rem;
+  margin-left: 0;
+}
+.mnsk7-plp-toolbar--bottom .woocommerce-ordering {
+  margin-left: 0;
+}
+.mnsk7-plp-toolbar .woocommerce-pagination {
+  margin: 0;
+  margin-left: auto;
+}
+.mnsk7-plp-toolbar--bottom .woocommerce-pagination {
   margin-left: auto;
 }
 .mnsk7-plp-toolbar .woocommerce-ordering .orderby {
@@ -62,21 +88,26 @@ body.tax-product_cat [class*="category-image"] {
   }
 }
 
-/* Archiwum sklepu i kategorii: bez sidebaru, pełna szerokość; ukryj duplikat filtrów z wtyczki */
+/* Archiwum sklepu, kategorii i tagów: bez sidebaru, pełna szerokość; ukryj duplikat filtrów z wtyczki */
 body.post-type-archive-product #content #primary,
-body.tax-product_cat #content #primary {
+body.tax-product_cat #content #primary,
+body.tax-product_tag #content #primary {
   flex: 1 1 100%;
 }
 body.post-type-archive-product #content #secondary,
 body.tax-product_cat #content #secondary,
+body.tax-product_tag #content #secondary,
 body.post-type-archive-product #content .woocommerce-sidebar,
-body.tax-product_cat #content .woocommerce-sidebar {
+body.tax-product_cat #content .woocommerce-sidebar,
+body.tax-product_tag #content .woocommerce-sidebar {
   display: none !important;
 }
 body.post-type-archive-product .wpf-filters,
 body.tax-product_cat .wpf-filters,
+body.tax-product_tag .wpf-filters,
 body.post-type-archive-product .mnsk7-catalog-filters,
-body.tax-product_cat .mnsk7-catalog-filters {
+body.tax-product_cat .mnsk7-catalog-filters,
+body.tax-product_tag .mnsk7-catalog-filters {
   display: none !important;
 }
 
@@ -128,6 +159,11 @@ body.tax-product_cat .mnsk7-catalog-filters {
   background: var(--color-surface-2);
   border-color: var(--color-primary);
   color: var(--color-primary);
+}
+.mnsk7-plp-chip:focus,
+.mnsk7-plp-chip:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .mnsk7-plp-chip--active {
