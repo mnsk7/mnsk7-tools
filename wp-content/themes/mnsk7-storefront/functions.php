@@ -623,7 +623,7 @@ add_action( 'woocommerce_single_product_summary', function () {
 	echo '</div>';
 }, 35 );
 
-/* 11. Instagram shortcode — ZAWSZE karta karuzela (nadpisuje mu-plugin, żeby na staging/prod był ten sam widok) */
+/* 11. Instagram shortcode — oficjalny embed (jak na alesyatakun.by: blockquote + embed.js) */
 add_action( 'init', function () {
 	add_shortcode( 'mnsk7_instagram_feed', function ( $atts ) {
 		$atts = shortcode_atts( array(
@@ -643,47 +643,38 @@ add_action( 'init', function () {
 				'https://www.instagram.com/mnsk7tools/p/DCTybzqtxEi/',
 			);
 		}
-		$items = array();
+		$urls = array();
 		foreach ( array_slice( $raw, 0, $limit ) as $entry ) {
 			$url = is_array( $entry ) ? ( isset( $entry['url'] ) ? $entry['url'] : '' ) : $entry;
 			$url = esc_url_raw( $url );
-			if ( $url === '' ) {
-				continue;
+			if ( $url !== '' ) {
+				$urls[] = $url;
 			}
-			$image = '';
-			if ( is_array( $entry ) && ! empty( $entry['image'] ) ) {
-				$img = $entry['image'];
-				$image = is_numeric( $img ) ? wp_get_attachment_image_url( (int) $img, 'medium' ) : esc_url_raw( $img );
-			}
-			if ( ( $image === '' || ! is_string( $image ) ) && function_exists( 'mnsk7_instagram_og_image_for_url' ) ) {
-				$image = mnsk7_instagram_og_image_for_url( $url );
-			}
-			$items[] = array( 'url' => $url, 'image' => is_string( $image ) ? $image : '' );
 		}
 		$handle = preg_replace( '#^https?://(www\.)?instagram\.com/#', '', untrailingslashit( $profile ) );
 		$handle = $handle !== '' ? $handle : 'mnsk7tools';
-		$out = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--card">';
-		if ( ! empty( $items ) ) {
-			$out .= '<div class="mnsk7-instagram-feed__carousel" role="region" aria-label="' . esc_attr__( 'Posty z Instagrama', 'mnsk7-storefront' ) . '">';
-			$out .= '<div class="mnsk7-instagram-feed__track">';
-			foreach ( $items as $i => $item ) {
-				$out .= '<a href="' . esc_url( $item['url'] ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__slide' . ( $i === 0 ? ' is-active' : '' ) . '" aria-label="' . esc_attr( sprintf( __( 'Post %d na Instagramie', 'mnsk7-storefront' ), $i + 1 ) ) . '" data-index="' . $i . '">';
-				if ( $item['image'] !== '' ) {
-					$out .= '<img src="' . esc_url( $item['image'] ) . '" alt="" loading="' . ( $i === 0 ? 'eager' : 'lazy' ) . '" width="560" height="560" class="mnsk7-instagram-feed__img">';
-				} else {
-					$out .= '<span class="mnsk7-instagram-feed__icon mnsk7-instagram-feed__icon--placeholder" aria-hidden="true"></span>';
-				}
-				$out .= '</a>';
+
+		// Załaduj oficjalny skrypt Instagram (embed.js zamienia blockquote na iframe).
+		wp_enqueue_script(
+			'mnsk7-instagram-embed',
+			'https://www.instagram.com/embed.js',
+			array(),
+			null,
+			true
+		);
+		wp_script_add_data( 'mnsk7-instagram-embed', 'async', true );
+
+		$out = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--embed">';
+		$out .= '<p class="mnsk7-instagram-feed__more"><a href="' . esc_url( $profile ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__more-link">' . esc_html( $atts['title'] ) . '</a></p>';
+		if ( ! empty( $urls ) ) {
+			$out .= '<div class="mnsk7-instagram-feed__posts" role="region" aria-label="' . esc_attr__( 'Posty z Instagrama', 'mnsk7-storefront' ) . '">';
+			foreach ( $urls as $url ) {
+				$out .= '<div class="mnsk7-instagram-feed__post">';
+				$out .= '<blockquote class="instagram-media" data-instgrm-permalink="' . esc_url( $url ) . '" data-instgrm-version="14"></blockquote>';
+				$out .= '</div>';
 			}
-			$out .= '</div>';
-			$out .= '<div class="mnsk7-instagram-feed__dots" role="tablist" aria-label="' . esc_attr__( 'Wybierz slajd', 'mnsk7-storefront' ) . '">';
-			foreach ( $items as $i => $item ) {
-				$out .= '<button type="button" class="mnsk7-instagram-feed__dot' . ( $i === 0 ? ' is-active' : '' ) . '" role="tab" aria-selected="' . ( $i === 0 ? 'true' : 'false' ) . '" aria-label="' . esc_attr( sprintf( __( 'Slajd %d', 'mnsk7-storefront' ), $i + 1 ) ) . '" data-index="' . $i . '"></button>';
-			}
-			$out .= '</div>';
 			$out .= '</div>';
 		}
-		$out .= '<p class="mnsk7-instagram-feed__more"><a href="' . esc_url( $profile ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__more-link">' . esc_html( $atts['title'] ) . '</a></p>';
 		$out .= '<div class="mnsk7-instagram-feed__profile">';
 		$out .= '<span class="mnsk7-instagram-feed__profile-icon" aria-hidden="true"></span>';
 		$out .= '<span class="mnsk7-instagram-feed__profile-handle">@' . esc_html( $handle ) . '</span>';
