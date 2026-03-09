@@ -419,8 +419,26 @@ add_action( 'wp_enqueue_scripts', function () {
 	/* Krytyczne style inline — footer ciemny i Instagram karta; przywiązane do ostatniego handle, żeby działały nawet gdy brak pliku parts/09 lub 08 */
 	$footer_inline = 'footer.mnsk7-footer,#colophon.mnsk7-footer,.site-footer.mnsk7-footer{background:#1e293b!important;color:#e2e8f0}.mnsk7-footer__top,.mnsk7-footer__col,.mnsk7-footer__title,.mnsk7-footer__top p,.mnsk7-footer__col p,.mnsk7-footer__col li{color:#e2e8f0!important}.mnsk7-footer__top a{color:#60a5fa}';
 	$insta_inline  = '.mnsk7-instagram-feed--card{width:100%;max-width:560px;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.08)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__carousel{aspect-ratio:1;overflow:hidden;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__track{display:flex;height:100%;transition:transform .3s ease}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide{flex:0 0 100%;width:100%;height:100%;position:relative}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide .mnsk7-instagram-feed__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dots{display:flex;justify-content:center;gap:6px;padding:10px 0}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot{width:8px;height:8px;border-radius:50%;border:none;background:#c4c4c4;cursor:pointer}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot.is-active{background:#0d6efd;transform:scale(1.15)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile{display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border-top:1px solid #eee}';
-	wp_add_inline_style( $prev, $footer_inline . "\n" . $insta_inline );
+	/* Clearfix ::before w gridzie — na końcu cascade, żeby zawsze wygrać z Storefront/pluginami (Bestsellery, Podobne produkty, sklep) */
+	$clearfix_inline = 'ul.products::before,.woocommerce ul.products::before,.woocommerce-page ul.products::before,ul.products.columns-3::before,ul.products.columns-4::before{content:none!important;display:none!important}';
+	wp_add_inline_style( $prev, $footer_inline . "\n" . $insta_inline . "\n" . $clearfix_inline );
 }, 10 );
+
+/* Override WooCommerce clearfix: woocommerce-layout.css ładuje się PO naszej temie i ustawia .woocommerce ul.products::before{display:table}, co daje pustą pierwszą „komórkę” w gridzie. Dodajemy inline do handle WooCommerce, żeby nasze display:none było po ich regule. */
+add_action( 'wp_enqueue_scripts', function () {
+	if ( ! wp_style_is( 'woocommerce-layout', 'registered' ) ) {
+		return;
+	}
+	$css = 'ul.products::before,.woocommerce ul.products::before,.woocommerce-page ul.products::before,ul.products.columns-3::before,ul.products.columns-4::before{content:none!important;display:none!important}';
+	wp_add_inline_style( 'woocommerce-layout', $css );
+}, 20 );
+
+/* Ostateczne nadpisanie: theme.css (lub inny plik) ładuje się jeszcze później i ustawia ul.products.columns-4::before{display:table}. Style w wp_footer są na końcu strony — wygrywają w cascade. */
+add_action( 'wp_footer', function () {
+	echo "<style id=\"mnsk7-products-before-fix\">";
+	echo "ul.products::before,ul.products.columns-3::before,ul.products.columns-4::before,.woocommerce ul.products::before,.woocommerce-page ul.products::before{content:none!important;display:none!important}";
+	echo "</style>\n";
+}, 999 );
 
 /**
  * Zwraca kwotę rabatu lojalnościowego w koszyku (ujemna liczba lub 0).
