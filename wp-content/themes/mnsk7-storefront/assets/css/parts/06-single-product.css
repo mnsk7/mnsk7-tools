@@ -453,8 +453,9 @@ body.single-product #content #secondary {
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   grid-auto-flow: row !important;
   gap: 1.25rem !important;
+  justify-content: start !important;
   justify-items: stretch;
-  align-items: start !important;
+  align-items: stretch !important;
   width: 100% !important;
   min-width: 0;
 }
@@ -462,7 +463,7 @@ body.single-product #content #secondary {
 .single-product .related.products ul.products li.product,
 .single-product .upsells.products ul.products li.product,
 .single-product .up-sells.products ul.products li.product {
-  align-self: start;
+  align-self: stretch;
   grid-column: span 1 !important;
   grid-row: auto !important;
   min-width: 0;

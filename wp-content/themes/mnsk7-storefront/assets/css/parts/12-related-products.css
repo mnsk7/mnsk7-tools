@@ -33,6 +33,8 @@
   margin: 0 !important;
   padding: 0 !important;
   align-items: stretch !important;
+  justify-content: start !important;
+  justify-items: stretch !important;
   width: 100% !important;
 }
 .woocommerce-cart .cross-sells {
@@ -62,6 +64,21 @@
   flex-direction: column !important;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
   align-self: stretch !important;
+}
+
+/* Tytuł w related/upsells — stała wysokość (max 2 linie), żeby karty w rzędzie były równe */
+.related.products ul.products li.product .woocommerce-loop-product__title,
+.related.products ul.products li.product h2,
+.upsells.products ul.products li.product .woocommerce-loop-product__title,
+.upsells.products ul.products li.product h2,
+.cross-sells ul.products li.product .woocommerce-loop-product__title,
+.cross-sells ul.products li.product h2 {
+  min-height: 2.8em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .cross-sells ul.products li.product .woocommerce-loop-product__link,
 .cross-sells ul.products li.product img,

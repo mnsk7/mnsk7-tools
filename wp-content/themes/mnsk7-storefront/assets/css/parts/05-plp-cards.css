@@ -62,7 +62,7 @@ body.woocommerce #content h1.page-title {
    § PLP PRODUCT CARDS
    ----------------------------------------------------------------- */
 
-/* Jedna siatka dla wszystkich listów produktów (sklep, kategoria, related, bestsellery) */
+/* Jedna siatka dla wszystkich listów produktów (sklep, kategoria, related, bestsellery); start — bez pustych slotów z boku */
 .woocommerce ul.products,
 .woocommerce-page ul.products,
 .related.products ul.products,
@@ -74,6 +74,8 @@ body.woocommerce #content h1.page-title {
   margin: 0 !important;
   padding: 0 !important;
   list-style: none;
+  justify-content: start !important;
+  justify-items: stretch !important;
 }
 
 .woocommerce ul.products li.product,
