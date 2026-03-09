@@ -189,6 +189,7 @@ body.tax-product_tag .mnsk7-catalog-filters {
 }
 .mnsk7-plp-content .mnsk7-plp-chips,
 .mnsk7-plp-content .mnsk7-plp-selected,
+.mnsk7-plp-content .mnsk7-plp-trust-wrap,
 .mnsk7-plp-content .mnsk7-plp-search,
 .mnsk7-plp-content .mnsk7-product-table-wrap,
 .mnsk7-plp-content .mnsk7-plp-grid-mobile {
@@ -568,6 +569,20 @@ body.tax-product_tag .woocommerce-no-products-found:not(.mnsk7-plp-empty) {
 /* Trust badges przy tabeli (jak w kartce: Dostawa jutro, Faktura VAT, dostawa 300 zł, Zwroty 30 dni) */
 .mnsk7-plp-trust-wrap {
   margin-bottom: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.mnsk7-plp-trust-wrap .mnsk7-plp-trust {
+  display: flex !important;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1.25rem;
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 .mnsk7-plp-trust,
 .mnsk7-pdp-trust {
@@ -581,6 +596,16 @@ body.tax-product_tag .woocommerce-no-products-found:not(.mnsk7-plp-empty) {
   margin: 0;
   padding: 0;
 }
+.mnsk7-plp-trust-wrap .mnsk7-plp-trust__item {
+  display: inline-flex !important;
+  align-items: center;
+  gap: 0.35rem;
+  margin-inline-end: 1.25rem;
+  white-space: nowrap;
+}
+.mnsk7-plp-trust-wrap .mnsk7-plp-trust__item:last-child {
+  margin-inline-end: 0;
+}
 .mnsk7-plp-trust__item,
 .mnsk7-pdp-trust__item {
   display: inline-flex;
@@ -589,7 +614,7 @@ body.tax-product_tag .woocommerce-no-products-found:not(.mnsk7-plp-empty) {
 }
 .mnsk7-plp-trust__item::before,
 .mnsk7-pdp-trust__item::before {
-  content: '✓';
+  content: '✓ ';
   color: var(--color-accent, #22c55e);
   font-weight: 700;
   font-size: 1em;
