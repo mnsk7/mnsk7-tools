@@ -912,13 +912,32 @@
   position: relative;
 }
 
-/* Fallback link gdy embed.js nie załaduje iframe — ukryj gdy jest iframe */
+/* Placeholder pod embed — minimalna wysokość, żeby nie było pustego prostokąta */
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media {
+  min-height: 320px;
+  background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+  border-radius: 12px;
+}
+
+/* Fallback link gdy embed.js nie załaduje iframe — widoczna karta z linkiem */
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post-fallback {
-  display: block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.5rem 1rem;
   margin-top: 0.5rem;
   font-size: var(--fs-sm);
+  font-weight: 600;
   color: var(--color-primary, #0d6efd);
   text-decoration: none;
+  border: 2px solid var(--color-primary, #0d6efd);
+  border-radius: 8px;
+  background: #fff;
+}
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post-fallback:hover {
+  background: var(--color-primary, #0d6efd);
+  color: #fff;
 }
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post:has(iframe) .mnsk7-instagram-feed__post-fallback {
   display: none;
@@ -1076,21 +1095,18 @@
   text-align: center;
 }
 
-/* Bestsellers — pełna szerokość viewport (breakout z #content / .col-full), bez pustych pasów */
+/* Bestsellers — w obrębie content-max (bez breakout), żeby wszystkie 4 kolumny × 2 rzędy (8 prod.) były widoczne */
 .mnsk7-front-page .mnsk7-section--bestsellers {
-  width: 100vw;
-  max-width: 100vw;
-  margin-left: calc(-50vw + 50%);
   box-sizing: border-box;
   padding-top: 1.5rem;
   padding-bottom: 1.5rem;
 }
 .mnsk7-section--bestsellers .col-full {
-  max-width: 100%;
+  max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
   padding-left: var(--space-16, 1rem);
   padding-right: var(--space-16, 1rem);
-  margin-left: 0;
-  margin-right: 0;
 }
 @media (min-width: 768px) {
   .mnsk7-section--bestsellers .col-full {
@@ -1112,7 +1128,8 @@
   padding: 0 !important;
   width: 100%;
   justify-content: start !important;
-  justify-items: start !important;
+  justify-items: stretch !important;
+  align-items: stretch !important;
 }
 
 .mnsk7-section--bestsellers ul.products li.product {
@@ -1120,17 +1137,22 @@
   max-width: 100% !important;
   margin: 0 !important;
   min-width: 0;
+  align-self: stretch !important;
 }
 
-/* 1.1 Nazwa i cena zawsze widoczne w bestsellerach (desktop + mobile) */
+/* 1.1 Nazwa i cena zawsze widoczne; tytuł max 2 linie — równe wysokości kart w rzędzie */
 .mnsk7-section--bestsellers .woocommerce-loop-product__title,
 .mnsk7-section--bestsellers ul.products li.product h2 {
-  display: block !important;
+  display: -webkit-box !important;
   visibility: visible !important;
   opacity: 1 !important;
   margin-bottom: 0.25rem;
-  min-height: 0;
+  min-height: 2.8em;
+  line-height: 1.4;
   -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .mnsk7-section--bestsellers .price,
 .mnsk7-section--bestsellers ul.products li.product .price {
