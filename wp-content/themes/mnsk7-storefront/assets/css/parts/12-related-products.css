@@ -24,12 +24,13 @@
   margin: 0 0 1.25rem;
 }
 
-/* Clearfix ::before (z rodzica/Storefront) w gridzie staje się pierwszą „komórką” i daje pusty odступ — wyłączamy (też Podobne produkty: ul.products.columns-3) */
+/* Clearfix ::before (Storefront) w gridzie = pierwsza pusta „komórka” — wyłączamy (Podobne produkty, upsells, cross-sells) */
 .related.products ul.products::before,
 .upsells.products ul.products::before,
 .cross-sells ul.products::before,
 .single-product .related.products ul.products::before,
-.single-product .upsells.products ul.products::before {
+.single-product .upsells.products ul.products::before,
+ul.products.columns-3::before {
   content: none !important;
   display: none !important;
 }

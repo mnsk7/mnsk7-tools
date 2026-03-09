@@ -62,6 +62,15 @@ body.woocommerce #content h1.page-title {
    § PLP PRODUCT CARDS
    ----------------------------------------------------------------- */
 
+/* Clearfix ::before (Storefront) w gridzie = pierwsza pusta „komórka” — wyłączamy wszędzie (główna, sklep, kategoria, Podobne produkty) */
+.woocommerce ul.products::before,
+.woocommerce-page ul.products::before,
+ul.products.columns-3::before,
+ul.products.columns-4::before {
+  content: none !important;
+  display: none !important;
+}
+
 /* Jedna siatka dla wszystkich listów produktów (sklep, kategoria, related, bestsellery); start — bez pustych slotów z boku */
 .woocommerce ul.products,
 .woocommerce-page ul.products,
