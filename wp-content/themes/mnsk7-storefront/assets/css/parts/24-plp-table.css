@@ -154,7 +154,15 @@ body.post-type-archive-product #content #primary,
 body.tax-product_cat #content #primary,
 body.tax-product_tag #content #primary {
   flex: 1 1 100%;
+  width: 100%;
+  min-width: 0;
   padding-top: 1.75rem;
+}
+/* Kolumna główna i site-main — zawsze pełna szerokość (bez kurczenia przy 1 wierszu w tabeli) */
+body.post-type-archive-product #content #primary .site-main,
+body.tax-product_cat #content #primary .site-main,
+body.tax-product_tag #content #primary .site-main {
+  width: 100%;
 }
 body.post-type-archive-product #content #secondary,
 body.tax-product_cat #content #secondary,
