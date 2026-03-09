@@ -71,6 +71,13 @@ add_action( 'wp', function () {
 	remove_action( 'woocommerce_after_shop_loop', 'storefront_sorting_wrapper_close', 31 );
 }, 25 );
 
+/* PLP-10: przy tabeli (shop/category/tag) nie pokazuj numerów paginacji — tylko przycisk „Pokaż więcej” */
+add_action( 'woocommerce_after_shop_loop', function () {
+	if ( ! empty( $GLOBALS['mnsk7_plp_use_table'] ) ) {
+		remove_action( 'woocommerce_after_shop_loop', 'woocommerce_pagination', 10 );
+	}
+}, 1 );
+
 /**
  * PLP „Pokaż więcej”: AJAX — zwraca HTML wierszy tabeli dla następnej strony (bez przejścia na page/2).
  */

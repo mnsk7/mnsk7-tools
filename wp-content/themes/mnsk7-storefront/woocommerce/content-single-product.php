@@ -62,4 +62,16 @@ if ( post_password_required() ) {
 	<?php do_action( 'woocommerce_after_single_product_summary' ); ?>
 </div>
 
+<?php
+// Sticky CTA na mobile (PDP): cena + przycisk przewijający do formularza.
+if ( isset( $product ) && is_a( $product, 'WC_Product' ) && $product->is_purchasable() && $product->is_in_stock() ) {
+	?>
+	<div id="mnsk7-pdp-sticky-cta" class="mnsk7-pdp-sticky-cta" aria-hidden="true" hidden>
+		<span class="mnsk7-pdp-sticky-cta__price"><?php echo $product->get_price_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+		<button type="button" class="mnsk7-pdp-sticky-cta__btn" aria-label="<?php esc_attr_e( 'Dodaj do koszyka — przewiń do formularza', 'mnsk7-storefront' ); ?>"><?php esc_html_e( 'Dodaj do koszyka', 'mnsk7-storefront' ); ?></button>
+	</div>
+	<?php
+}
+?>
+
 <?php do_action( 'woocommerce_after_single_product' ); ?>
