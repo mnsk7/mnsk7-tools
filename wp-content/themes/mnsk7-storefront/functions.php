@@ -200,6 +200,11 @@ add_action( 'wp', function () {
 	add_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 25 );
 }, 25 );
 
+/** PDP: upsells — polski nagłówek (szablon w woocommerce/single-product/up-sells.php z podtytułem) */
+add_filter( 'woocommerce_product_upsells_products_heading', function ( $heading ) {
+	return __( 'Może spodoba się również…', 'mnsk7-storefront' );
+}, 10 );
+
 /** 1.1 Bestsellery na głównej: wyraźna cena (zł, pod nazwą, kolor) */
 add_filter( 'woocommerce_get_price_html', function ( $html, $product ) {
 	if ( ! $html || ! is_front_page() || ! in_the_loop() ) {

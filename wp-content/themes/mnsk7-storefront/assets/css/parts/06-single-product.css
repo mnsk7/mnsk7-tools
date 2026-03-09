@@ -438,7 +438,8 @@ body.single-product #content #secondary {
 
 /* Strona produktu bez sidebaru — related/upsells na pełną szerokość */
 .single-product .related.products,
-.single-product .upsells.products {
+.single-product .upsells.products,
+.single-product .up-sells.products {
   width: 100%;
   min-width: 0;
   margin-top: 2rem;
@@ -446,7 +447,8 @@ body.single-product #content #secondary {
 
 /* 4 kolumny w jednym rzędzie: minmax(0,1fr) żeby kolumny mogły się ścisnąć i 4. nie zjeżdżało */
 .single-product .related.products ul.products,
-.single-product .upsells.products ul.products {
+.single-product .upsells.products ul.products,
+.single-product .up-sells.products ul.products {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
   grid-auto-flow: row !important;
@@ -458,7 +460,8 @@ body.single-product #content #secondary {
 }
 
 .single-product .related.products ul.products li.product,
-.single-product .upsells.products ul.products li.product {
+.single-product .upsells.products ul.products li.product,
+.single-product .up-sells.products ul.products li.product {
   align-self: start;
   grid-column: span 1 !important;
   grid-row: auto !important;
@@ -467,20 +470,23 @@ body.single-product #content #secondary {
 }
 
 /* Upsells z 1 produktem — jedna kolumna (nie 4 z trzema pustymi) */
-.single-product .upsells.products ul.products:has(li:only-child) {
+.single-product .upsells.products ul.products:has(li:only-child),
+.single-product .up-sells.products ul.products:has(li:only-child) {
   grid-template-columns: 1fr !important;
 }
 
 @media (max-width: 900px) {
   .single-product .related.products ul.products,
-  .single-product .upsells.products ul.products {
+  .single-product .upsells.products ul.products,
+  .single-product .up-sells.products ul.products {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 }
 
 @media (max-width: 480px) {
   .single-product .related.products ul.products,
-  .single-product .upsells.products ul.products {
+  .single-product .upsells.products ul.products,
+  .single-product .up-sells.products ul.products {
     grid-template-columns: 1fr !important;
   }
 }

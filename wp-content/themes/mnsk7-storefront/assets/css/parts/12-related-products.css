@@ -17,7 +17,8 @@
   margin-bottom: 0.25rem;
 }
 
-.related.products .related-products__subtitle {
+.related.products .related-products__subtitle,
+.upsells.products .related-products__subtitle {
   font-size: var(--fs-sm);
   color: var(--color-text-secondary);
   margin: 0 0 1.25rem;
