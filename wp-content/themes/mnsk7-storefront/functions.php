@@ -862,9 +862,11 @@ add_action( 'init', function () {
 	remove_action( 'woocommerce_archive_description', 'woocommerce_category_image', 15 );
 }, 20 );
 
-/* PLP-02: breadcrumbs na archive (sklep, kategoria, tag) — przywrócone tylko na PLP */
+/* PLP-02: breadcrumbs na archive (sklep, kategoria, tag, wyniki wyszukiwania produktów) */
 add_action( 'woocommerce_before_main_content', function () {
-	if ( function_exists( 'is_shop' ) && ( is_shop() || ( function_exists( 'is_product_category' ) && is_product_category() ) || ( function_exists( 'is_product_tag' ) && is_product_tag() ) ) ) {
+	$is_plp = function_exists( 'is_shop' ) && ( is_shop() || ( function_exists( 'is_product_category' ) && is_product_category() ) || ( function_exists( 'is_product_tag' ) && is_product_tag() ) );
+	$is_product_search = is_search() && get_query_var( 'post_type' ) === 'product';
+	if ( $is_plp || $is_product_search ) {
 		woocommerce_breadcrumb();
 	}
 }, 19 );

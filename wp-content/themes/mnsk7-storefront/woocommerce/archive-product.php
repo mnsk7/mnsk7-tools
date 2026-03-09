@@ -19,6 +19,16 @@ $current_term = $is_taxonomy ? get_queried_object() : null;
 
 do_action( 'woocommerce_shop_loop_header' );
 
+/* PLP-12: na stronie wyników wyszukiwania — link „Wyczyść wyszukiwanie" */
+if ( is_search() && get_query_var( 'post_type' ) === 'product' ) {
+	$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : get_permalink( wc_get_page_id( 'shop' ) );
+	if ( $shop_url ) {
+		echo '<p class="mnsk7-plp-search-clear col-full">';
+		echo '<a href="' . esc_url( $shop_url ) . '" class="mnsk7-plp-search-clear__link">' . esc_html__( 'Wyczyść wyszukiwanie', 'mnsk7-storefront' ) . '</a>';
+		echo '</p>';
+	}
+}
+
 /* Чипсы pod nazwą kategorii (breadcrumb → tytuł → chips) */
 if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 	$chips = array();
@@ -214,10 +224,11 @@ if ( woocommerce_product_loop() ) {
 	}
 	if ( $is_taxonomy && $has_filter ) {
 		$clear_url = remove_query_arg( $filter_params );
-		echo '<p class="mnsk7-plp-no-results col-full">';
-		echo esc_html__( 'Brak produktów dla wybranego filtra.', 'mnsk7-storefront' );
-		echo ' <a href="' . esc_url( $clear_url ) . '">' . esc_html__( 'Wyczyść filtr i pokaż wszystkie', 'mnsk7-storefront' ) . '</a>';
-		echo '</p>';
+		echo '<div class="mnsk7-plp-empty col-full" role="status">';
+		echo '<p class="mnsk7-plp-empty__text">' . esc_html__( 'Brak produktów dla wybranych filtrów.', 'mnsk7-storefront' ) . '</p>';
+		echo '<p class="mnsk7-plp-empty__hint">' . esc_html__( 'Zmień kryteria lub zobacz całą kategorię.', 'mnsk7-storefront' ) . '</p>';
+		echo '<a href="' . esc_url( $clear_url ) . '" class="button mnsk7-plp-empty__cta">' . esc_html__( 'Wyczyść filtry', 'mnsk7-storefront' ) . '</a>';
+		echo '</div>';
 	}
 	do_action( 'woocommerce_no_products_found' );
 }
