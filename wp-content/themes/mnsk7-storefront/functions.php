@@ -93,13 +93,39 @@ add_filter( 'mnsk7_show_cookie_bar', function ( $show ) {
 	return $show;
 }, 5 );
 
-/** 4.0 UX: domyślny tekst promocyjny w headerze (darmowa dostawa) */
+/** 4.0 UX: domyślny tekst promocyjny w headerze (darmowa dostawa) + CTA do Dostawa (audit Zad.11) */
 add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	if ( $text !== '' ) {
 		return $text;
 	}
-	return __( 'Darmowa dostawa od 300 zł. Tylko Polska.', 'mnsk7-storefront' );
+	$dostawa_url = home_url( '/dostawa-i-platnosci/' );
+	$link = '<a href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Warunki dostawy', 'mnsk7-storefront' ) . ' &rarr;</a>';
+	return sprintf(
+		/* translators: 1: promo text, 2: link HTML to delivery page */
+		__( 'Darmowa dostawa od 300 zł. Tylko Polska. %1$s', 'mnsk7-storefront' ),
+		$link
+	);
 }, 5 );
+
+/** Audit: H1 na stronie Moje konto (task Account H1) */
+add_action( 'woocommerce_before_account_navigation', function () {
+	if ( ! function_exists( 'is_account_page' ) || ! is_account_page() ) {
+		return;
+	}
+	echo '<h1 class="mnsk7-account-title entry-title">' . esc_html__( 'Moje konto', 'mnsk7-storefront' ) . '</h1>';
+}, 5 );
+
+/** Audit: po logowaniu z checkout — przekierowanie z powrotem na zamówienie */
+add_filter( 'woocommerce_login_redirect', function ( $redirect, $user ) {
+	$to = null;
+	if ( ! empty( $_GET['redirect_to'] ) && strpos( $_GET['redirect_to'], 'zamowienie' ) !== false ) {
+		$to = wp_validate_redirect( esc_url_raw( wp_unslash( $_GET['redirect_to'] ) ), $redirect );
+	}
+	if ( ! $to && ! empty( $_SERVER['HTTP_REFERER'] ) && strpos( $_SERVER['HTTP_REFERER'], 'zamowienie' ) !== false && function_exists( 'wc_get_checkout_url' ) ) {
+		$to = wc_get_checkout_url();
+	}
+	return $to ?: $redirect;
+}, 10, 2 );
 
 /** Footer: dane firmy (jur. adres, KRS, NIP, REGON) — nadpisuj przez filtr mnsk7_footer_legal_address */
 add_filter( 'mnsk7_footer_legal_address', function ( $address ) {
@@ -272,9 +298,7 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( $fragments ) {
 	?>
 	<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php esc_attr_e( 'Koszyk', 'mnsk7-storefront' ); ?>">
 		<span class="mnsk7-header__cart-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
-		<?php if ( $cart_count > 0 ) { ?>
-			<span class="mnsk7-header__cart-count"><?php echo absint( $cart_count ); ?></span>
-		<?php } ?>
+		<span class="mnsk7-header__cart-count" aria-hidden="true"><?php echo absint( $cart_count ); ?></span>
 	</a>
 	<?php
 	$fragments['a.mnsk7-header__cart-trigger'] = ob_get_clean();
@@ -297,6 +321,21 @@ add_action( 'wp_footer', function () {
 				menuToggle.setAttribute('aria-expanded', nav.classList.contains('is-open'));
 			});
 		}
+		// Mobile: accordion submenu Sklep (audit Zad.4); klik na „Sklep” tylko rozwija/zwija, przejście przez podkategorie
+		var menu = document.getElementById('mnsk7-primary-menu');
+		if (menu) {
+			var parentItems = menu.querySelectorAll('li.menu-item-has-children');
+			parentItems.forEach(function(li) {
+				var a = li.querySelector(':scope > a');
+				if (!a) return;
+				a.addEventListener('click', function(e) {
+					if (window.innerWidth > 768) return;
+					e.preventDefault();
+					li.classList.toggle('is-open');
+					a.setAttribute('aria-expanded', li.classList.contains('is-open'));
+				});
+			});
+		}
 		var searchToggle = document.querySelector('.mnsk7-header__search-toggle');
 		var searchDropdown = document.getElementById('mnsk7-header-search');
 		if (searchToggle && searchDropdown) {
@@ -304,23 +343,36 @@ add_action( 'wp_footer', function () {
 				searchDropdown.hidden = !open;
 				searchToggle.setAttribute('aria-expanded', open);
 			}
+			function updateSearchDesktop() {
+				if (window.innerWidth >= 1024) {
+					searchDropdown.removeAttribute('hidden');
+					searchToggle.setAttribute('aria-expanded', 'true');
+				} else {
+					searchDropdown.hidden = true;
+				}
+			}
+			window.addEventListener('resize', updateSearchDesktop);
+			updateSearchDesktop();
 			searchToggle.addEventListener('click', function() {
+				if (window.innerWidth >= 1024) return;
 				var open = searchDropdown.hidden;
 				setSearchOpen(open);
 				if (open) {
-					var inp = document.getElementById('mnsk7-header-search-input-mobile') || document.querySelector('#mnsk7-header-search input[type="search"]');
+					var inp = document.getElementById('mnsk7-header-search-input') || document.querySelector('#mnsk7-header-search input[type="search"]');
 					if (inp) { inp.focus(); }
 				}
 			});
 			document.addEventListener('keydown', function(e) {
 				if (e.key === 'Escape' && !searchDropdown.hidden) {
 					setSearchOpen(false);
-					searchToggle.focus();
+					if (searchToggle.offsetParent !== null) searchToggle.focus();
 				}
 			});
 			var searchForm = searchDropdown.querySelector('form');
 			if (searchForm) {
-				searchForm.addEventListener('submit', function() { setSearchOpen(false); });
+				searchForm.addEventListener('submit', function() {
+					if (window.innerWidth < 1024) setSearchOpen(false);
+				});
 			}
 		}
 		var cartWrap = document.querySelector('.mnsk7-header__cart');

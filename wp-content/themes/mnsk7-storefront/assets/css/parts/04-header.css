@@ -322,6 +322,36 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   overflow-y: auto;
   z-index: 101;
 }
+
+/* Desktop ≥1024px: widoczny pasek wyszukiwania w headerze (audit Zad.12) — jeden formularz */
+@media (min-width: 1024px) {
+  .mnsk7-header__search-toggle {
+    display: none;
+  }
+  .mnsk7-header__search-dropdown,
+  .mnsk7-header__search-dropdown[hidden] {
+    position: static;
+    display: flex !important;
+    opacity: 1;
+    visibility: visible;
+    margin: 0;
+    min-width: 220px;
+    width: 260px;
+    max-width: 280px;
+    box-shadow: none;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+    padding: 0.35rem 0.5rem;
+  }
+  .mnsk7-header__search-dropdown .mnsk7-header__search-form {
+    flex: 1;
+    min-width: 0;
+  }
+  .mnsk7-header__search-dropdown .mnsk7-header__search-input {
+    flex: 1;
+    min-width: 0;
+  }
+}
 .mnsk7-header__search-form {
   display: flex;
   gap: 0.5rem;
@@ -479,18 +509,38 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   box-sizing: border-box;
   vertical-align: middle;
 }
-/* W dropdownie tylko podsumowanie + suma + przyciski, bez listy produktów */
-.mnsk7-header__cart-dropdown .woocommerce-mini-cart,
+/* Mini-cart: pokazać do 3 ostatnich pozycji (audit Zad.10); podsumowanie i przyciski zawsze */
 .mnsk7-header__cart-dropdown .cart_list,
 .mnsk7-header__cart-dropdown .product_list_widget,
 .mnsk7-header__cart-dropdown ul.cart_list {
-  display: none !important;
-  visibility: hidden !important;
-  height: 0 !important;
-  overflow: hidden !important;
-  margin: 0 !important;
+  display: block !important;
+  visibility: visible !important;
+  margin: 0 0 0.5rem !important;
   padding: 0 !important;
-  border: none !important;
+  list-style: none !important;
+  max-height: 10rem;
+  overflow-y: auto;
+}
+.mnsk7-header__cart-dropdown .cart_list li,
+.mnsk7-header__cart-dropdown .product_list_widget li {
+  display: flex !important;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.35rem 0 !important;
+  border-bottom: 1px solid var(--color-border);
+  font-size: 0.8125rem;
+}
+.mnsk7-header__cart-dropdown .cart_list li:last-child,
+.mnsk7-header__cart-dropdown .product_list_widget li:last-child {
+  border-bottom: none;
+}
+/* Pokazać max 3 pozycje; reszta ukryta */
+.mnsk7-header__cart-dropdown .cart_list li:nth-child(n+4),
+.mnsk7-header__cart-dropdown .product_list_widget li:nth-child(n+4) {
+  display: none !important;
+}
+.mnsk7-header__cart-dropdown .woocommerce-mini-cart .woocommerce-mini-cart__total {
+  margin-top: 0.5rem;
 }
 .mnsk7-header__cart-summary {
   font-size: 0.9375rem;
@@ -664,6 +714,26 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
   .mnsk7-header__nav .mnsk7-header__menu a {
     padding: 0.75rem 1rem;
+  }
+  /* Mobile: submenu Sklep — accordion (audit Zad.4); domyślnie ukryte */
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu {
+    display: none;
+    padding-left: 1rem;
+    margin: 0;
+    list-style: none;
+    border-left: 2px solid var(--color-border);
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children.is-open .sub-menu {
+    display: block;
+    padding-top: 0.25rem;
+    padding-bottom: 0.5rem;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children > a {
+    position: relative;
+    padding-right: 2rem;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children.is-open > a::after {
+    transform: rotate(-135deg);
   }
   .mnsk7-header__link-text {
     display: none;
