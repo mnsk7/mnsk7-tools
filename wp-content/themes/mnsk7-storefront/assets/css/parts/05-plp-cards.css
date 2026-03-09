@@ -100,9 +100,9 @@ body.woocommerce #content h1.page-title {
   transform: translateY(-2px);
 }
 
-/* Product image — 1:1 aspect (Sandvik-style compact card), no huge cards */
-.woocommerce ul.products li.product .woocommerce-loop-product__link,
-.woocommerce ul.products li.product a:has(img) {
+/* Product image — 1:1 aspect (Sandvik-style compact card); tylko link z miniatury (z :has(> img)), żeby nie obcinać nazwy/ceny */
+.woocommerce ul.products li.product .woocommerce-loop-product__link:has(> img),
+.woocommerce ul.products li.product a.woocommerce-loop-product__link:first-of-type {
   display: block;
   aspect-ratio: 1;
   overflow: hidden;
@@ -237,8 +237,9 @@ body.woocommerce #content h1.page-title {
 }
 
 
-/* Product image container — fixed aspect so cards stay compact (Sandvik ref) */
-.woocommerce ul.products li.product .woocommerce-loop-product__link {
+/* Product image container — fixed aspect so cards stay compact (Sandvik ref); tylko link z miniatury */
+.woocommerce ul.products li.product .woocommerce-loop-product__link:has(> img),
+.woocommerce ul.products li.product a.woocommerce-loop-product__link:first-of-type {
   display: block;
   aspect-ratio: 1;
   overflow: hidden;

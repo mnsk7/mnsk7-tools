@@ -231,6 +231,17 @@ add_action( 'init', function () {
 	}, 10 );
 }, 20 );
 
+/** Link produktu tylko wokół miniatury — nazwa i cena na zewnątrz (inaczej aspect-ratio 1 + overflow:hidden na .woocommerce-loop-product__link obcina tekst). Tytuł w osobnej linku — klikalny. */
+add_action( 'init', function () {
+	if ( ! function_exists( 'woocommerce_template_loop_product_link_close' ) || ! function_exists( 'woocommerce_template_loop_product_link_open' ) ) {
+		return;
+	}
+	remove_action( 'woocommerce_after_shop_loop_item', 'woocommerce_template_loop_product_link_close', 5 );
+	add_action( 'woocommerce_before_shop_loop_item_title', 'woocommerce_template_loop_product_link_close', 15 );
+	add_action( 'woocommerce_shop_loop_item_title', 'woocommerce_template_loop_product_link_open', 0 );
+	add_action( 'woocommerce_shop_loop_item_title', 'woocommerce_template_loop_product_link_close', 15 );
+}, 25 );
+
 /** 4.6 Tekst pustego koszyka (do wyświetlenia w cart-empty.php) */
 add_filter( 'wc_empty_cart_message', function () {
 	return __( 'Twój koszyk jest pusty — wróć do sklepu', 'mnsk7-storefront' );
@@ -1193,12 +1204,52 @@ add_action( 'after_setup_theme', function () {
 		update_option( 'mnsk7_primary_menu_seeded', 1 );
 	}
 }, 20 );
+/**
+ * Product attribute taxonomies (pa_*) registered in WooCommerce. Used for PLP filter chips and query.
+ *
+ * @return string[] List of taxonomy names (e.g. pa_srednica, pa_dlugosc-robocza-h).
+ */
+function mnsk7_get_product_attribute_taxonomy_names() {
+	if ( ! function_exists( 'wc_get_attribute_taxonomies' ) ) {
+		return array();
+	}
+	$attrs = wc_get_attribute_taxonomies();
+	if ( ! is_array( $attrs ) ) {
+		return array();
+	}
+	$list = array();
+	foreach ( $attrs as $a ) {
+		$name = isset( $a->attribute_name ) ? $a->attribute_name : null;
+		if ( $name !== null && $name !== '' ) {
+			$tax = 'pa_' . $name;
+			if ( taxonomy_exists( $tax ) ) {
+				$list[] = $tax;
+			}
+		}
+	}
+	return $list;
+}
+
+/**
+ * All filter_* query param names for product attributes (for clearing filters / detecting active filter).
+ *
+ * @return string[]
+ */
+function mnsk7_get_all_attribute_filter_param_names() {
+	$taxonomies = function_exists( 'mnsk7_get_product_attribute_taxonomy_names' ) ? mnsk7_get_product_attribute_taxonomy_names() : array();
+	$params     = array();
+	foreach ( $taxonomies as $tax ) {
+		$params[] = 'filter_' . str_replace( 'pa_', '', $tax );
+	}
+	return $params;
+}
+
 add_action( 'woocommerce_product_query', function ( $q ) {
 	if ( is_admin() || ! is_object( $q ) || ! method_exists( $q, 'set' ) ) {
 		return;
 	}
-	$attr_taxonomies = array( 'pa_srednica', 'pa_srednica-trzpienia', 'pa_dlugosc-calkowita-l', 'pa_dlugosc-robocza-h' );
-	$tax            = $q->get( 'tax_query' );
+	$attr_taxonomies = function_exists( 'mnsk7_get_product_attribute_taxonomy_names' ) ? mnsk7_get_product_attribute_taxonomy_names() : array();
+	$tax             = $q->get( 'tax_query' );
 	if ( ! is_array( $tax ) ) {
 		$tax = array();
 	}
@@ -1276,40 +1327,42 @@ function mnsk7_get_archive_product_ids_for_chips( $attrs_to_try ) {
 }
 
 /**
- * Attribute filter chips for PLP. Skips Średnica for category "Zestawy" (Sets).
+ * Attribute filter chips for PLP. Only attributes that have terms in the current archive's products are shown.
  * FB-02: when category is Zestawy, diameter filter row is hidden.
- * FB-03: only terms that have in-stock products in the current category are shown.
+ * FB-03: only terms that have in-stock products in the current category are shown (no fallback to global terms).
+ * Labels from WooCommerce (e.g. Średnica robocza, Dł. robocza, Dł. całkowita, Promień R).
  *
- * @return array{filters: array<array{label: string, param: string, chips: array}>} Wszystkie atrybuty z termami (Średnica, Trzpień, Długość L/H).
+ * @return array{filters: array<array{label: string, param: string, chips: array}>, filter_params: string[]}
  */
 function mnsk7_get_archive_attribute_filter_chips() {
-	$empty = array( 'filters' => array() );
+	$empty = array( 'filters' => array(), 'filter_params' => array() );
 	if ( ! is_product_taxonomy() ) {
 		return $empty;
 	}
-	$attrs_to_try = array(
-		'pa_srednica'             => __( 'Średnica', 'mnsk7-storefront' ),
-		'pa_srednica-trzpienia'   => __( 'Trzpień', 'mnsk7-storefront' ),
-		'pa_dlugosc-calkowita-l'  => __( 'Długość L', 'mnsk7-storefront' ),
-		'pa_dlugosc-robocza-h'    => __( 'Długość H', 'mnsk7-storefront' ),
-	);
-	$term = get_queried_object();
+	$attr_taxonomies = function_exists( 'mnsk7_get_product_attribute_taxonomy_names' ) ? mnsk7_get_product_attribute_taxonomy_names() : array();
+	$attrs_to_try   = array_fill_keys( $attr_taxonomies, '' );
+	$term           = get_queried_object();
 	if ( ! $term || ! isset( $term->term_id ) ) {
 		return $empty;
 	}
-	$term_slug = isset( $term->slug ) ? strtolower( (string) $term->slug ) : '';
-	$term_name = isset( $term->name ) ? strtolower( (string) $term->name ) : '';
+	$term_slug  = isset( $term->slug ) ? strtolower( (string) $term->slug ) : '';
+	$term_name  = isset( $term->name ) ? strtolower( (string) $term->name ) : '';
 	$is_zestawy = ( strpos( $term_slug, 'zestaw' ) !== false || strpos( $term_name, 'zestaw' ) !== false );
 
 	$product_ids = mnsk7_get_archive_product_ids_for_chips( $attrs_to_try );
-	$filters = array();
+	$filters     = array();
 
-	foreach ( $attrs_to_try as $tax => $label ) {
+	foreach ( $attrs_to_try as $tax => $_ ) {
 		if ( $is_zestawy && $tax === 'pa_srednica' ) {
 			continue;
 		}
 		if ( ! taxonomy_exists( $tax ) ) {
 			continue;
+		}
+		$attr_name = str_replace( 'pa_', '', $tax );
+		$label     = function_exists( 'wc_attribute_label' ) ? wc_attribute_label( $attr_name ) : $attr_name;
+		if ( $label === '' ) {
+			$label = $attr_name;
 		}
 		$get_terms_args = array(
 			'taxonomy'   => $tax,
@@ -1321,11 +1374,7 @@ function mnsk7_get_archive_attribute_filter_chips() {
 			$get_terms_args['object_ids'] = $product_ids;
 		}
 		$terms = get_terms( $get_terms_args );
-		// FB-03 bis: jeśli z object_ids wyszło pusto, pokaż wiersz atrybutu z wszystkimi termami (np. Trzpień — żeby był wszędzie, gdzie atrybut istnieje).
-		if ( ( is_wp_error( $terms ) || empty( $terms ) ) && ! empty( $product_ids ) ) {
-			unset( $get_terms_args['object_ids'] );
-			$terms = get_terms( $get_terms_args );
-		}
+		// Only show this attribute row if there are terms in the current archive's products (no fallback to all terms).
 		if ( is_wp_error( $terms ) || empty( $terms ) ) {
 			continue;
 		}
@@ -1333,12 +1382,13 @@ function mnsk7_get_archive_attribute_filter_chips() {
 		foreach ( $terms as $t ) {
 			$chips[ $t->slug ] = $t->name;
 		}
-		$param = 'filter_' . str_replace( 'pa_', '', $tax );
+		$param    = 'filter_' . str_replace( 'pa_', '', $tax );
 		$filters[] = array(
 			'label' => $label . ': ',
 			'param' => $param,
 			'chips' => $chips,
 		);
 	}
-	return array( 'filters' => $filters );
+	$filter_params = array_column( $filters, 'param' );
+	return array( 'filters' => $filters, 'filter_params' => $filter_params );
 }
