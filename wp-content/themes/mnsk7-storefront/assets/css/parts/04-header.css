@@ -389,9 +389,16 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   background: rgba(0,0,0,0.04);
 }
 
-/* Cart: icon + count, dropdown */
+/* Cart: icon + count, dropdown — tylko nasza SVG, bez ikony z Storefront/Woo */
 .mnsk7-header__cart {
   position: relative;
+}
+.mnsk7-header__cart .cart-contents::before,
+.mnsk7-header__cart .cart-contents::after,
+.mnsk7-header__cart-trigger::before,
+.mnsk7-header__cart-trigger::after {
+  content: none;
+  display: none;
 }
 .mnsk7-header__cart .cart-contents,
 .mnsk7-header__cart-trigger {
