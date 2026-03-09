@@ -8,13 +8,14 @@
 }
 
 /* Hero — czytelny, wyrazisty (nie „biednie”) */
+/* Audit task 6: brak obcięcia ostatniego chipa (np. „3 500+ zamówień rocznie”) — overflow visible */
 .mnsk7-hero {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: var(--color-white);
   text-align: center;
   padding: 4rem 1.5rem 4.5rem;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .mnsk7-hero::before {
@@ -30,6 +31,7 @@
   z-index: 1;
   max-width: var(--content-max);
   margin: 0 auto;
+  overflow: visible;
 }
 
 .mnsk7-hero__title {
