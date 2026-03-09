@@ -67,16 +67,17 @@ body.single-product #content #secondary {
   min-width: 200px;
 }
 
+/* Audit task 8: miniaturki bez obcięcia po brzegach — overflow hidden lub pełne w kontenerze */
 .single-product .images .flex-control-thumbs {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 0.75rem;
   max-width: 100%;
-  overflow-x: auto;
+  overflow-x: hidden;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
-  padding-bottom: 2px; /* miejsce na ewentualny pasek przewijania */
+  padding-bottom: 2px;
 }
 
 .single-product .images .flex-control-thumbs li {
