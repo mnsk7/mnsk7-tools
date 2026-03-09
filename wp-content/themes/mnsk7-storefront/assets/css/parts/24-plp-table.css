@@ -573,16 +573,24 @@ body.tax-product_tag .woocommerce-no-products-found:not(.mnsk7-plp-empty) {
   max-width: 100%;
   box-sizing: border-box;
 }
+/* Nadpisanie ewentualnych stylów [role="list"] z normalizacji / a11y */
+.mnsk7-plp-trust-wrap [role="list"].mnsk7-plp-trust {
+  display: flex !important;
+}
+/* Wyższa specyficzność na archiwum (sklep/kategoria/tag), żeby wygrać z .woocommerce div / Storefront */
+body.post-type-archive-product .mnsk7-plp-trust-wrap .mnsk7-plp-trust,
+body.tax-product_cat .mnsk7-plp-trust-wrap .mnsk7-plp-trust,
+body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust,
 .mnsk7-plp-trust-wrap .mnsk7-plp-trust {
   display: flex !important;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 1.25rem;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 0.75rem 1.25rem !important;
   font-size: var(--fs-sm);
   color: var(--color-text-secondary);
-  list-style: none;
-  margin: 0;
-  padding: 0;
+  list-style: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
 }
 .mnsk7-plp-trust,
 .mnsk7-pdp-trust {
@@ -596,15 +604,29 @@ body.tax-product_tag .woocommerce-no-products-found:not(.mnsk7-plp-empty) {
   margin: 0;
   padding: 0;
 }
+body.post-type-archive-product .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
+body.tax-product_cat .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
+body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
 .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item {
   display: inline-flex !important;
   align-items: center;
   gap: 0.35rem;
-  margin-inline-end: 1.25rem;
+  margin-right: 1.25rem !important;
+  margin-inline-end: 1.25rem !important;
+  margin-left: 0 !important;
+  margin-inline-start: 0 !important;
   white-space: nowrap;
 }
 .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item:last-child {
-  margin-inline-end: 0;
+  margin-right: 0 !important;
+  margin-inline-end: 0 !important;
+}
+/* Separator między badge’ami, gdy gap nie działa (fallback) */
+.mnsk7-plp-trust-wrap .mnsk7-plp-trust__item:not(:last-child)::after {
+  content: ' · ';
+  margin-left: 0.5rem;
+  color: var(--color-text-muted);
+  font-weight: 400;
 }
 .mnsk7-plp-trust__item,
 .mnsk7-pdp-trust__item {
