@@ -115,9 +115,15 @@
   padding: 0.4rem 0.25rem;
 }
 
-/* Checkout CTA — wyraźna (4.4) */
+/* Checkout CTA — wyraźna (4.4); audit: zawsze klikalna, nad innymi elementami */
+.woocommerce-cart .wc-proceed-to-checkout,
+.woocommerce-cart .cart_totals .wc-proceed-to-checkout {
+  position: relative;
+  z-index: 2;
+}
 .woocommerce-cart .wc-proceed-to-checkout a.checkout-button,
-.woocommerce-cart .cart_totals .checkout-button {
+.woocommerce-cart .cart_totals a.checkout-button,
+#mnsk7-cart-checkout-button {
   display: block;
   width: 100%;
   text-align: center;
@@ -126,6 +132,8 @@
   font-weight: 700;
   background: var(--color-primary) !important;
   color: var(--color-white) !important;
+  text-decoration: none;
+  pointer-events: auto;
 }
 .woocommerce-cart .wc-proceed-to-checkout a.checkout-button:hover,
 .woocommerce-cart .cart_totals .checkout-button:hover {
@@ -160,4 +168,15 @@
 .woocommerce-checkout #payment {
   background: var(--color-surface);
   border-radius: var(--r-md);
+}
+
+/* Audit: pełna nazwa produktu w "Twoje zamówienie" — bez obcięcia */
+.woocommerce-checkout-review-order-table .product-name {
+  white-space: normal;
+  word-wrap: break-word;
+  max-width: 100%;
+}
+.woocommerce-checkout-review-order-table .product-name a {
+  white-space: normal;
+  word-wrap: break-word;
 }

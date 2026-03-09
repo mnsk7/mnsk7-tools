@@ -88,6 +88,11 @@ add_filter( 'wc_empty_cart_message', function () {
 	return __( 'Twój koszyk jest pusty — wróć do sklepu', 'mnsk7-storefront' );
 }, 10 );
 
+/** Audit: jeden bank cookie — wyłącz bank temy, jeśli używany jest plugin (add_filter( 'mnsk7_show_cookie_bar', __return_false' ); w mu-pluginie) */
+add_filter( 'mnsk7_show_cookie_bar', function ( $show ) {
+	return $show;
+}, 5 );
+
 /** 4.0 UX: domyślny tekst promocyjny w headerze (darmowa dostawa) */
 add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	if ( $text !== '' ) {
@@ -374,6 +379,35 @@ add_action( 'wp_footer', function () {
 	</script>
 	<?php
 }, 20 );
+
+/* Audit: pewne przejście z koszyka na checkout — fallback przy przechwyconym kliku */
+add_action( 'wp_footer', function () {
+	if ( ! function_exists( 'is_cart' ) || ! is_cart() ) {
+		return;
+	}
+	$url = function_exists( 'wc_get_checkout_url' ) ? wc_get_checkout_url() : '';
+	if ( ! $url ) {
+		return;
+	}
+	?>
+	<script>
+	(function() {
+		var btn = document.getElementById('mnsk7-cart-checkout-button') || document.querySelector('.woocommerce-cart a.checkout-button');
+		if (!btn || !btn.href) return;
+		btn.addEventListener('click', function(e) {
+			var href = this.getAttribute('href');
+			if (href && href.indexOf('zamowienie') !== -1) {
+				setTimeout(function() {
+					if (window.location.pathname.indexOf('koszyk') !== -1) {
+						window.location.href = href;
+					}
+				}, 100);
+			}
+		}, true);
+	})();
+	</script>
+	<?php
+}, 5 );
 
 /* 1e. Strefa wysyłki: przenieś powiadomienie nad footer (nie w treści sklepu) */
 add_action( 'wp_footer', function () {

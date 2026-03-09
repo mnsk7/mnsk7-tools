@@ -105,6 +105,12 @@
   margin: 0.35rem 0;
   line-height: 1.6;
 }
+/* Audit: brak obcięcia tekstu w kolumnie Dostawa (np. "Tylko Polska") */
+.mnsk7-footer__col--dostawa p {
+  overflow: visible;
+  white-space: normal;
+  word-wrap: break-word;
+}
 
 .mnsk7-footer__title {
   color: var(--color-footer-text);

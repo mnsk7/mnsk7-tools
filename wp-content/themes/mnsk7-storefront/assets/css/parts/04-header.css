@@ -93,6 +93,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   padding: 0 1rem;
   box-sizing: border-box;
   min-width: 0;
+  overflow: visible;
 }
 
 .mnsk7-header__brand {
@@ -352,6 +353,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 
 /* Account link + icon */
+/* Guest vs logged-in: stała szerokość etykiety konta — brak przesunięcia ikon */
 .mnsk7-header__link {
   display: inline-flex;
   align-items: center;
@@ -365,6 +367,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   border-radius: var(--r-sm);
   transition: color 0.15s ease, background 0.15s ease;
   letter-spacing: 0.01em;
+}
+.mnsk7-header__link--account .mnsk7-header__link-text {
+  max-width: 8em;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .mnsk7-header__account-icon {
   display: inline-flex;
@@ -571,7 +578,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 
-/* Mobile: burger w jednej linii z logo i ikonami, bez rozciągania */
+/* Mobile: burger w jednej linii z logo i ikonami, bez rozciągania (audit: brak overflow w headerze) */
 @media (max-width: 768px) {
   .mnsk7-header__inner {
     display: flex;
@@ -581,6 +588,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     gap: 0.5rem;
     min-height: var(--header-h);
     padding: 0 0.75rem 0 0.5rem;
+    overflow: visible;
   }
   .mnsk7-header__brand {
     order: 0;
@@ -674,6 +682,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 
 .mnsk7-header {
   overflow-x: hidden;
+  overflow-y: visible;
 }
 
 /* Legacy: Storefront header actions (when parent outputs them) */

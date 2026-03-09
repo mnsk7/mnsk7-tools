@@ -50,13 +50,15 @@
   letter-spacing: 0.01em;
 }
 
-/* USP pills */
+/* USP pills — audit: brak obcięcia ostatniego chipa (flex-wrap, bez overflow) */
 .mnsk7-hero__usps {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   gap: 0.75rem;
   margin-bottom: 2rem;
+  overflow: visible;
+  min-height: 2.5rem;
 }
 
 .mnsk7-hero__usp {
@@ -90,6 +92,12 @@
   content: "·";
   color: rgba(255, 255, 255, 0.9);
   font-weight: 700;
+}
+
+/* Guest vs logged-in: stała wysokość bloku "Witaj" — spójna wysokość hero */
+.mnsk7-hero__welcome {
+  min-height: 1.5em;
+  margin-bottom: 0.5rem;
 }
 
 /* CTA */

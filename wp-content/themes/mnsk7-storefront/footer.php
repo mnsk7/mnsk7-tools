@@ -106,6 +106,8 @@ if ( taxonomy_exists( 'product_cat' ) ) {
 <?php
 $privacy_url = get_privacy_policy_url();
 $cookie_settings_url = $privacy_url ? $privacy_url . '#cookies' : home_url( '/polityka-prywatnosci/#cookies' );
+$show_theme_cookie_bar = apply_filters( 'mnsk7_show_cookie_bar', true );
+if ( $show_theme_cookie_bar ) :
 ?>
 <div id="mnsk7-cookie-bar" class="mnsk7-cookie-bar" hidden role="dialog" aria-label="<?php esc_attr_e( 'Informacja o plikach cookie', 'mnsk7-storefront' ); ?>" aria-hidden="true">
 	<div class="mnsk7-cookie-bar__inner">
@@ -133,6 +135,8 @@ $cookie_settings_url = $privacy_url ? $privacy_url . '#cookies' : home_url( '/po
 	show();
 	bar.querySelector('.mnsk7-cookie-bar-accept').addEventListener('click', function() { accepted(); hide(); });
 })();
+<?php endif; ?>
+<script>
 (function() {
 	var cols = document.querySelectorAll('.mnsk7-footer__col');
 	if (!cols.length || window.innerWidth > 768) return;
