@@ -1099,13 +1099,15 @@
   flex-shrink: 0;
 }
 
-/* 1.1 Cena wyraźna: pod nazwą, kolor, zł */
+/* 1.1 Cena wyraźna: pod nazwą, kolor, zł — zawsze widoczna w bestsellerach */
 .mnsk7-section--bestsellers .woocommerce-loop-product__title {
   display: block;
   margin-bottom: 0.25rem;
 }
-.mnsk7-section--bestsellers .price {
-  display: block;
+.mnsk7-section--bestsellers .price,
+.mnsk7-section--bestsellers ul.products li.product .price {
+  display: block !important;
+  visibility: visible !important;
   font-weight: 700;
   font-size: var(--fs-base);
   color: var(--color-primary-dark, #0a5a9e);

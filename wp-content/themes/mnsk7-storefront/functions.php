@@ -191,13 +191,13 @@ add_filter( 'woocommerce_quantity_input_args', function ( $args, $product ) {
 	return $args;
 }, 10, 2 );
 
-/** PDP: related products przed opisem (wyżej na stronie) + podtytuł w szablonie */
+/** PDP: related products pod opisem (po zakładkach), podtytuł w szablonie related.php */
 add_action( 'wp', function () {
 	if ( ! is_singular( 'product' ) ) {
 		return;
 	}
 	remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
-	add_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 5 );
+	add_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 25 );
 }, 25 );
 
 /** 1.1 Bestsellery na głównej: wyraźna cena (zł, pod nazwą, kolor) */
@@ -1239,6 +1239,11 @@ function mnsk7_get_archive_attribute_filter_chips() {
 			$get_terms_args['object_ids'] = $product_ids;
 		}
 		$terms = get_terms( $get_terms_args );
+		// FB-03 bis: jeśli z object_ids wyszło pusto, pokaż wiersz atrybutu z wszystkimi termami (np. Trzpień — żeby był wszędzie, gdzie atrybut istnieje).
+		if ( ( is_wp_error( $terms ) || empty( $terms ) ) && ! empty( $product_ids ) ) {
+			unset( $get_terms_args['object_ids'] );
+			$terms = get_terms( $get_terms_args );
+		}
 		if ( is_wp_error( $terms ) || empty( $terms ) ) {
 			continue;
 		}

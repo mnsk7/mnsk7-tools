@@ -87,6 +87,18 @@
   transform: translateY(-2px);
 }
 
+/* Cena w bloku Podobne produkty / Z tej samej kategorii — zawsze widoczna */
+.related.products ul.products li.product .price,
+.upsells.products ul.products li.product .price,
+.cross-sells ul.products li.product .price {
+  display: block !important;
+  visibility: visible;
+  font-weight: 700;
+  font-size: var(--fs-base);
+  color: var(--color-primary-dark, #0a5a9e);
+  margin: 0.25rem 0 0.5rem;
+}
+
 /* Related/cross-sells: force Add to cart button horizontal text (fix vertical letter stacking) */
 .related.products .add_to_cart_button,
 .cross-sells .add_to_cart_button,
