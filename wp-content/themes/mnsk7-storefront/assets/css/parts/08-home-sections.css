@@ -1107,12 +1107,14 @@
   max-width: var(--content-max);
   margin-left: auto;
   margin-right: auto;
-  padding-left: 0;
-  padding-right: 0;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 .mnsk7-section--bestsellers .mnsk7-bestsellers,
 .mnsk7-section--bestsellers .col-full > .woocommerce {
-  margin: 0;
+  margin: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
   width: 100%;
   max-width: 100%;
 }
@@ -1125,13 +1127,19 @@
   display: none !important;
 }
 
+/* Clearfix ::before (z rodzica/Storefront) w gridzie staje się pierwszą „komórką” i daje ~285px pustego miejsca — wyłączamy */
+.mnsk7-section--bestsellers ul.products::before {
+  content: none !important;
+  display: none !important;
+}
+
 /* Pusty pierwszy li (clear/placeholder) — nie zajmuje miejsca w siatce */
 .mnsk7-section--bestsellers ul.products li.clear,
 .mnsk7-section--bestsellers ul.products > li:first-child:empty {
   display: none !important;
 }
 
-/* 4 kolumny: 8 prod. = 2×4 */
+/* 4 kolumny: 8 prod. = 2×4; bez pustego miejsca przed pierwszym — siatka od lewej */
 .mnsk7-section--bestsellers ul.products {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
@@ -1140,7 +1148,7 @@
   margin: 0 !important;
   padding: 0 !important;
   width: 100% !important;
-  max-width: 100% !important;
+  max-width: none !important;
   justify-content: start !important;
   justify-items: stretch !important;
   align-items: stretch !important;
