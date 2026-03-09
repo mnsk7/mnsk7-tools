@@ -50,7 +50,7 @@ get_header();
 	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
 	<section class="mnsk7-section mnsk7-section--bestsellers">
 		<div class="col-full">
-			<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title="Bestsellery i polecane"]' ); ?>
+			<?php echo do_shortcode( '[mnsk7_bestsellers limit="8" title="Bestsellery i polecane"]' ); ?>
 			<p class="mnsk7-section__more mnsk7-bestsellers-more">
 				<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie bestsellery →', 'mnsk7-storefront' ); ?></a>
 			</p>
@@ -209,19 +209,11 @@ get_header();
 		</div>
 	</section>
 
-	<!-- INSTAGRAM — skrypt od razu za blockquote, żeby pluginy nie odkładały go do footer i embedy się narysowały -->
+	<!-- INSTAGRAM — embed.js ładujemy w footer (shortcode rejestruje skrypt), process() po load + retry -->
 	<section class="mnsk7-section mnsk7-section--insta">
 		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Obserwuj nas na Instagramie', 'mnsk7-storefront' ); ?></h2>
 			<?php echo do_shortcode( '[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]' ); ?>
-			<script src="https://www.instagram.com/embed.js"></script>
-			<script>
-			(function(){
-				function run(){ if(window.instgrm&&window.instgrm.Embeds) window.instgrm.Embeds.process(); }
-				run();
-				if(document.readyState!=='complete') window.addEventListener('load',run);
-			})();
-			</script>
 		</div>
 	</section>
 

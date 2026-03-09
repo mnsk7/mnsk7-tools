@@ -1129,19 +1129,24 @@ add_action( 'init', function () {
 			$url = is_array( $entry ) ? ( isset( $entry['url'] ) ? $entry['url'] : '' ) : $entry;
 			$url = esc_url_raw( $url );
 			if ( $url !== '' ) {
+				// Format bez /username/ (instagram.com/p/CODE) — lepsza kompatybilność z embed w 2024+
+				if ( preg_match( '#instagram\.com/p/([A-Za-z0-9_-]+)/?#', $url, $m ) ) {
+					$url = 'https://www.instagram.com/p/' . $m[1] . '/';
+				}
 				$urls[] = $url;
 			}
 		}
 		$handle = preg_replace( '#^https?://(www\.)?instagram\.com/#', '', untrailingslashit( $profile ) );
 		$handle = $handle !== '' ? $handle : 'mnsk7tools';
 
-		// Na front-page skrypt jest w szablonie (za sekcją). Gdzie indziej — w footer.
+		// Jeden skrypt w footer na wszystkich stronach z shortcode (unika konfliktu z preload i race).
 		static $footer_done = false;
-		if ( ! is_front_page() && ! $footer_done ) {
+		if ( ! $footer_done ) {
 			$footer_done = true;
 			add_action( 'wp_footer', function () {
+				// Zwykły <script src>, bez preload — process() po załadowaniu + retry (embed bywa opóźniony).
 				echo '<script src="https://www.instagram.com/embed.js"></script>' . "\n";
-				echo '<script>(function(){function r(){if(window.instgrm&&window.instgrm.Embeds)window.instgrm.Embeds.process();}r();if(document.readyState!=="complete")window.addEventListener("load",r);})();</script>' . "\n";
+				echo '<script>(function(){function run(){if(window.instgrm&&window.instgrm.Embeds)window.instgrm.Embeds.process();}run();if(document.readyState!=="complete")window.addEventListener("load",run);setTimeout(run,2500);})();</script>' . "\n";
 			}, 5 );
 		}
 		$out = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--embed">';
