@@ -58,31 +58,16 @@ endif;
 					<a href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Sklep', 'mnsk7-storefront' ); ?></a>
 					<?php
 					$has_submenu = false;
-					if ( taxonomy_exists( 'product_cat' ) || taxonomy_exists( 'product_tag' ) ) {
-						$top_cats = array();
-						if ( taxonomy_exists( 'product_cat' ) ) {
-							$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true, 'number' => 12 ) );
-							$top_cats = is_wp_error( $top_cats ) ? array() : $top_cats;
-						}
-						$top_tags = array();
-						if ( taxonomy_exists( 'product_tag' ) ) {
-							$top_tags = get_terms( array( 'taxonomy' => 'product_tag', 'hide_empty' => true, 'number' => 12, 'orderby' => 'count', 'order' => 'DESC' ) );
-							$top_tags = is_wp_error( $top_tags ) ? array() : $top_tags;
-						}
-						if ( ! empty( $top_cats ) || ! empty( $top_tags ) ) {
+					if ( taxonomy_exists( 'product_cat' ) ) {
+						$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true, 'number' => 12, 'orderby' => 'name' ) );
+						$top_cats = is_wp_error( $top_cats ) ? array() : $top_cats;
+						if ( ! empty( $top_cats ) ) {
 							$has_submenu = true;
 							echo '<ul class="sub-menu">';
 							foreach ( $top_cats as $term ) {
 								$link = get_term_link( $term );
 								if ( is_wp_error( $link ) ) { continue; }
 								echo '<li><a href="' . esc_url( $link ) . '">' . esc_html( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name ) . '</a></li>';
-							}
-							if ( ! empty( $top_tags ) ) {
-								foreach ( $top_tags as $term ) {
-									$link = get_term_link( $term );
-									if ( is_wp_error( $link ) ) { continue; }
-									echo '<li><a href="' . esc_url( $link ) . '">' . esc_html( $term->name ) . '</a></li>';
-								}
 							}
 							echo '</ul>';
 						}

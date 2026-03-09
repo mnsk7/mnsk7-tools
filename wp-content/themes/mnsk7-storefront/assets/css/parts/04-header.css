@@ -187,18 +187,18 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   transform: rotate(45deg);
   vertical-align: 0.15em;
 }
+/* Megamenu: 4 kolumny, bez przewijania (max 12 kategorii) */
 .mnsk7-header__menu .sub-menu {
   list-style: none;
   margin: 0;
-  padding: 0.75rem 0.5rem;
+  padding: 0.75rem 1rem;
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 260px;
-  max-width: min(380px, calc(100vw - 2rem));
-  max-height: min(70vh, 420px);
-  overflow-x: hidden;
-  overflow-y: auto;
+  min-width: 320px;
+  max-width: min(480px, calc(100vw - 2rem));
+  max-height: 220px;
+  overflow: hidden;
   background: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: var(--r-sm);
@@ -209,8 +209,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   transition: opacity 0.15s ease, visibility 0.15s ease, transform 0.15s ease;
   z-index: 100;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 0 0.75rem;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.25rem 1rem;
   pointer-events: auto;
 }
 .mnsk7-header__menu li.menu-item-has-children:hover .sub-menu,
@@ -230,11 +230,12 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 .mnsk7-header__menu .sub-menu a {
   display: block;
-  padding: 0.4rem 0.6rem;
+  padding: 0.35rem 0.5rem;
   font-size: 0.8125rem;
   border-radius: var(--r-sm);
-  white-space: normal;
-  word-break: break-word;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   min-width: 0;
 }
 .mnsk7-header__menu .sub-menu a:hover {
@@ -356,9 +357,9 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     opacity: 1;
     visibility: visible;
     margin: 0;
-    min-width: 180px;
-    width: 200px;
-    max-width: 240px;
+    min-width: 240px;
+    width: 260px;
+    max-width: 320px;
     box-shadow: none;
     border: none;
     border-radius: 0;
@@ -378,7 +379,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
   .mnsk7-header__search-dropdown .mnsk7-header__search-input {
     flex: 1;
-    min-width: 0;
+    min-width: 11.5em; /* placeholder "Szukaj produktów…" */
     min-height: 40px;
     height: 40px;
     background: var(--color-white);
@@ -598,12 +599,49 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 .mnsk7-header__cart-dropdown .cart_list li,
 .mnsk7-header__cart-dropdown .product_list_widget li {
-  display: flex !important;
-  align-items: flex-start;
+  display: grid !important;
+  grid-template-columns: 48px 1fr auto;
+  align-items: center;
   gap: 0.5rem;
-  padding: 0.35rem 0 !important;
+  padding: 0.35rem 0 0.35rem 0 !important;
+  padding-right: 1.5rem !important; /* miejsce na remove */
   border-bottom: 1px solid var(--color-border);
   font-size: 0.8125rem;
+  min-width: 0;
+  position: relative;
+}
+.mnsk7-header__cart-dropdown .cart_list li .remove,
+.mnsk7-header__cart-dropdown .product_list_widget li .remove {
+  position: absolute;
+  right: 0;
+  top: 0.35rem;
+  grid-column: unset;
+}
+.mnsk7-header__cart-dropdown .cart_list li > a:not(.remove),
+.mnsk7-header__cart-dropdown .product_list_widget li > a:not(.remove) {
+  display: flex !important;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  grid-column: 1 / 3;
+}
+.mnsk7-header__cart-dropdown .cart_list li > a:not(.remove) img,
+.mnsk7-header__cart-dropdown .product_list_widget li > a:not(.remove) img {
+  width: 48px;
+  height: 48px;
+  object-fit: cover;
+  border-radius: var(--r-sm);
+  flex-shrink: 0;
+}
+.mnsk7-header__cart-dropdown .cart_list li .quantity,
+.mnsk7-header__cart-dropdown .product_list_widget li .quantity {
+  white-space: nowrap;
+  flex-shrink: 0;
+  grid-column: 3;
+  text-align: right;
 }
 .mnsk7-header__cart-dropdown .cart_list li:last-child,
 .mnsk7-header__cart-dropdown .product_list_widget li:last-child {
@@ -684,9 +722,9 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   visibility: visible;
   transform: translateY(0);
 }
-/* Desktop: podgląd koszyka na hover (klik = nawigacja do /koszyk/) */
+/* Desktop: dropdown tylko przy hover na triggerze lub samym dropdownie (JS dodaje .is-open) */
 @media (min-width: 769px) {
-  .mnsk7-header__cart:hover .mnsk7-header__cart-dropdown {
+  .mnsk7-header__cart.is-open .mnsk7-header__cart-dropdown {
     opacity: 1;
     visibility: visible;
     transform: translateY(0);

@@ -517,7 +517,6 @@ add_action( 'wp_footer', function () {
 			var trigger = cartWrap.querySelector('.mnsk7-header__cart-trigger');
 			var dropdown = cartWrap.querySelector('.mnsk7-header__cart-dropdown');
 			if (trigger && dropdown) {
-				// Audit: klik zawsze prowadzi do /koszyk/; na desktop dropdown tylko na hover (CSS)
 				document.addEventListener('click', function(e) {
 					if (!cartWrap.contains(e.target)) cartWrap.classList.remove('is-open');
 				});
@@ -527,6 +526,23 @@ add_action( 'wp_footer', function () {
 						trigger.focus();
 					}
 				});
+				// Desktop: dropdown tylko przy hover na triggerze lub dropdownie (nie na całym headerze/bannerze)
+				var cartOpenTimer;
+				function openCart() {
+					clearTimeout(cartOpenTimer);
+					if (window.innerWidth >= 769) cartWrap.classList.add('is-open');
+				}
+				function closeCart() {
+					cartOpenTimer = setTimeout(function() {
+						cartWrap.classList.remove('is-open');
+					}, 120);
+				}
+				function cancelClose() { clearTimeout(cartOpenTimer); }
+				trigger.addEventListener('mouseenter', openCart);
+				trigger.addEventListener('mouseleave', closeCart);
+				dropdown.addEventListener('mouseenter', cancelClose);
+				dropdown.addEventListener('mouseenter', openCart);
+				dropdown.addEventListener('mouseleave', closeCart);
 			}
 		}
 		// Promo bar: dismissible (sessionStorage), header sticks below when visible
