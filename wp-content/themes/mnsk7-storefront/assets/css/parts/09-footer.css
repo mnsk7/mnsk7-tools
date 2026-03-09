@@ -113,7 +113,7 @@ body.page #colophon.mnsk7-footer {
   background: var(--color-primary);
   color: var(--color-white);
   border: none;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md);
   cursor: pointer;
   transition: background 0.15s ease;
   white-space: nowrap;

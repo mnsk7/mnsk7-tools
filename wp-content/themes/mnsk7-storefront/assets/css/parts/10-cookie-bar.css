@@ -67,7 +67,7 @@ body.mnsk7-cookie-bar-visible #page {
   align-items: center;
   justify-content: center;
   padding: 0.5rem 1rem;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md);
   font-size: var(--fs-sm);
   font-weight: 600;
   font-family: var(--font-base);

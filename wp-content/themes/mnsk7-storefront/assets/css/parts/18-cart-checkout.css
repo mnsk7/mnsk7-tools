@@ -19,7 +19,7 @@
   color: var(--color-white) !important;
   background: var(--color-primary) !important;
   border: none;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md);
   cursor: pointer;
   text-decoration: none;
   box-sizing: border-box;
@@ -170,6 +170,7 @@
   color: var(--color-white) !important;
   text-decoration: none;
   pointer-events: auto;
+  border-radius: var(--r-md);
 }
 .woocommerce-cart .wc-proceed-to-checkout a.checkout-button:hover,
 .woocommerce-cart .cart_totals .checkout-button:hover {

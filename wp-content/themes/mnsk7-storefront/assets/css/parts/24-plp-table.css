@@ -767,7 +767,7 @@ body.tax-product_tag .woocommerce-no-products-found:not(.mnsk7-plp-empty) {
   color: var(--color-white);
   background: var(--color-primary);
   border: none;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md);
   white-space: nowrap;
   cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;

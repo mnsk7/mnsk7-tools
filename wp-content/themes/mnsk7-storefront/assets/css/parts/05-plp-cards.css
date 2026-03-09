@@ -166,7 +166,7 @@ body.woocommerce #content h1.page-title {
   background: var(--color-primary);
   color: var(--color-white);
   border: none;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md);
   padding: 0.625rem 1rem;
   font-size: var(--fs-sm);
   font-weight: 600;

@@ -448,7 +448,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   background: var(--color-primary);
   color: var(--color-white);
   border: none;
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md);
   cursor: pointer;
   font-family: var(--font-base);
   transition: background 0.15s ease;
