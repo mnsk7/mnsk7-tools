@@ -591,6 +591,13 @@ add_action( 'wp_footer', function () {
 						trigger.focus();
 					}
 				});
+				// Mobile: klik na trigger otwiera/zamyka dropdown (na desktop tylko hover)
+				trigger.addEventListener('click', function(e) {
+					if (window.innerWidth < 769) {
+						e.preventDefault();
+						cartWrap.classList.toggle('is-open');
+					}
+				});
 				// Desktop: dropdown tylko przy hover na triggerze lub dropdownie (nie na całym headerze/bannerze)
 				var cartOpenTimer;
 				function openCart() {
@@ -684,14 +691,11 @@ add_action( 'wp_footer', function () {
 		btn.addEventListener('click', function(e) {
 			var href = this.getAttribute('href');
 			if (href && href.indexOf('zamowienie') !== -1) {
-				setTimeout(function() {
-					if (window.location.pathname.indexOf('koszyk') !== -1) {
-						window.location.href = href;
-					}
-				}, 100);
+				e.preventDefault();
+				window.location.href = href;
 			}
-	}, true);
-		})();
+		}, true);
+	})();
 	</script>
 	<?php
 }, 5 );

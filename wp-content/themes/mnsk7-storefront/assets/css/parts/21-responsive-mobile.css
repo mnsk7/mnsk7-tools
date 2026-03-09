@@ -1,7 +1,4 @@
-/* 21-responsive-mobile — extracted from main.css */
-
-   § RESPONSIVE — Mobile (≤ 480px)
-   ----------------------------------------------------------------- */
+/* 21-responsive-mobile — Mobile (≤ 480px) */
 
 @media (max-width: 480px) {
   /* Product grids: single column */
