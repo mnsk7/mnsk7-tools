@@ -28,7 +28,7 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 ?>
 	</div><!-- #content -->
 
-<div id="mnsk7-shipping-zone-notice-placeholder" class="mnsk7-shipping-zone-placeholder" aria-live="polite"></div>
+<div id="mnsk7-shipping-zone-notice-placeholder" class="mnsk7-shipping-zone-placeholder"></div>
 <footer id="colophon" class="mnsk7-footer" role="contentinfo">
 	<div class="mnsk7-footer__top">
 		<div class="mnsk7-footer__inner">

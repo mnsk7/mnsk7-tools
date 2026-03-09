@@ -719,7 +719,22 @@ add_action( 'wp_footer', function () {
 	<?php
 }, 20 );
 
-/* 1f. Strefa wysyłki: przenieś powiadomienie nad footer (nie w treści sklepu) */
+/* 1f. Strefa wysyłki: nie pokazuj powiadomienia "Customer matched zone" / "Strefa wysyłki dopasowana" — zbędne na froncie, powodowało skok strony w dół */
+function mnsk7_suppress_shipping_zone_matched_notice( $message ) {
+	if ( ! is_string( $message ) || $message === '' ) {
+		return $message;
+	}
+	$lower = function_exists( 'mb_strtolower' ) ? mb_strtolower( $message, 'UTF-8' ) : strtolower( $message );
+	if ( strpos( $lower, 'strefa wysyłki' ) !== false || strpos( $lower, 'dopasowana' ) !== false
+		|| strpos( $message, 'Customer matched zone' ) !== false ) {
+		return '';
+	}
+	return $message;
+}
+add_filter( 'woocommerce_add_success', 'mnsk7_suppress_shipping_zone_matched_notice', 10, 1 );
+add_filter( 'woocommerce_add_notice', 'mnsk7_suppress_shipping_zone_matched_notice', 10, 1 );
+
+/* 1f bis. Na wypadek gdyby powiadomienie jednak się pojawiło: przenieś nad footer bez przewijania strony */
 add_action( 'wp_footer', function () {
 	?>
 	<script>
@@ -727,11 +742,13 @@ add_action( 'wp_footer', function () {
 		var placeholder = document.getElementById('mnsk7-shipping-zone-notice-placeholder');
 		if (!placeholder) return;
 		var notices = document.querySelectorAll('.woocommerce-info, .woocommerce-message');
+		var scrollY = window.scrollY;
 		for (var i = 0; i < notices.length; i++) {
 			var text = (notices[i].textContent || '').trim();
 			if (text.indexOf('Strefa wysyłki') !== -1 || text.indexOf('dopasowana') !== -1) {
 				placeholder.appendChild(notices[i]);
 				placeholder.classList.add('has-notice');
+				requestAnimationFrame(function() { window.scrollTo(0, scrollY); });
 				break;
 			}
 		}
