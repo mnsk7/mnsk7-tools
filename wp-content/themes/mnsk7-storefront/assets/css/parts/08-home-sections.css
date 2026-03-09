@@ -728,6 +728,13 @@
 }
 
 /* Wariant embed (jak alesyatakun.by): blockquote + embed.js → iframe od Instagram */
+/* Zapobiegaj ukryciu przez pluginy — kontener z postami musi być widoczny (display:none na script#...-js nie blokuje wykonania skryptu, ale np. lazy load może ukryć rodziców) */
+.mnsk7-section--insta .mnsk7-instagram-feed--embed {
+  display: flex !important;
+}
+.mnsk7-section--insta .mnsk7-instagram-feed__posts {
+  display: grid !important;
+}
 .mnsk7-instagram-feed--embed {
   max-width: 1200px;
   width: 100%;
@@ -761,8 +768,22 @@
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post {
   min-width: 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
+  align-items: center;
+  position: relative;
+}
+
+/* Fallback link gdy embed.js nie załaduje iframe — ukryj gdy jest iframe */
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post-fallback {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: var(--fs-sm);
+  color: var(--color-primary, #0d6efd);
+  text-decoration: none;
+}
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post:has(iframe) .mnsk7-instagram-feed__post-fallback {
+  display: none;
 }
 
 /* Pełny rozmiar embedu — Instagram iframe standardowo 540px, nie ściskać */

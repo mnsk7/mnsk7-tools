@@ -706,15 +706,16 @@ add_action( 'init', function () {
 		$handle = preg_replace( '#^https?://(www\.)?instagram\.com/#', '', untrailingslashit( $profile ) );
 		$handle = $handle !== '' ? $handle : 'mnsk7tools';
 
-		// Załaduj oficjalny skrypt Instagram (embed.js zamienia blockquote na iframe).
-		wp_enqueue_script(
-			'mnsk7-instagram-embed',
-			'https://www.instagram.com/embed.js',
-			array(),
-			null,
-			true
-		);
-		wp_script_add_data( 'mnsk7-instagram-embed', 'async', true );
+		// Załaduj embed.js jak na alesyatakun.by: wstrzyknięcie w footer + process() po load (nie zależymy od jQuery).
+		static $footer_done = false;
+		if ( ! $footer_done ) {
+			$footer_done = true;
+			add_action( 'wp_footer', function () {
+				?>
+<script>(function(){function p(){if(window.instgrm&&window.instgrm.Embeds){window.instgrm.Embeds.process();}else{setTimeout(p,80);}}function go(){if(document.querySelector('script[src*="instagram.com/embed.js"]')){p();return;}var s=document.createElement('script');s.async=true;s.src='https://www.instagram.com/embed.js';s.onload=p;document.body.appendChild(s);}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',go);}else{go();}})();</script>
+				<?php
+			}, 25 );
+		}
 
 		$out = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--embed">';
 		$out .= '<p class="mnsk7-instagram-feed__more"><a href="' . esc_url( $profile ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__more-link">' . esc_html( $atts['title'] ) . '</a></p>';
@@ -723,6 +724,7 @@ add_action( 'init', function () {
 			foreach ( $urls as $url ) {
 				$out .= '<div class="mnsk7-instagram-feed__post">';
 				$out .= '<blockquote class="instagram-media" data-instgrm-permalink="' . esc_url( $url ) . '" data-instgrm-version="14"></blockquote>';
+				$out .= '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__post-fallback">' . esc_html__( 'Zobacz post', 'mnsk7-storefront' ) . '</a>';
 				$out .= '</div>';
 			}
 			$out .= '</div>';
