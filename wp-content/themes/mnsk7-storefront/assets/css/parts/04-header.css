@@ -219,6 +219,12 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   visibility: visible;
   transform: translateY(0);
 }
+/* Submenu nie wychodzi w prawo poza ekran (Sklep jest pierwszy, dropdown pod nim) */
+@media (max-width: 480px) {
+  .mnsk7-header__menu .sub-menu {
+    max-width: calc(100vw - 1.5rem);
+  }
+}
 .mnsk7-header__menu .sub-menu li {
   margin: 0;
 }

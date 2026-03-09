@@ -453,7 +453,7 @@ add_action( 'wp_footer', function () {
 				menuToggle.setAttribute('aria-expanded', nav.classList.contains('is-open'));
 			});
 		}
-		// Mobile: accordion submenu Sklep (audit Zad.4); klik na „Sklep” tylko rozwija/zwija, przejście przez podkategorie
+		// Mobile (≤768px): link „Sklep” prowadzi do sklepu (submenu ukryte w CSS)
 		var menu = document.getElementById('mnsk7-primary-menu');
 		if (menu) {
 			var parentItems = menu.querySelectorAll('li.menu-item-has-children');
@@ -461,7 +461,7 @@ add_action( 'wp_footer', function () {
 				var a = li.querySelector(':scope > a');
 				if (!a) return;
 				a.addEventListener('click', function(e) {
-					if (window.innerWidth > 768) return;
+					if (window.innerWidth <= 768) return;
 					e.preventDefault();
 					li.classList.toggle('is-open');
 					a.setAttribute('aria-expanded', li.classList.contains('is-open'));

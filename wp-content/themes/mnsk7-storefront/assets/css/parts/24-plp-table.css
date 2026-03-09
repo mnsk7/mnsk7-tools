@@ -335,11 +335,11 @@ body.tax-product_tag .mnsk7-catalog-filters {
   pointer-events: none;
 }
 
-/* PLP-09: na desktop grid-mobile ukryty, na mobile tabela ukryta — pokazujemy grid kart */
+/* PLP-09: komputer i tablet (≥768px) — zawsze tabela; tylko mobile (≤767px) — wygodna siatka kart */
 .mnsk7-plp-grid-mobile {
   display: none;
 }
-@media (max-width: 768px) {
+@media (max-width: 767px) {
   .mnsk7-product-table-wrap {
     display: none !important;
   }
