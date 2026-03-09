@@ -217,3 +217,18 @@
   white-space: normal;
   word-wrap: break-word;
 }
+
+/* Audit task 2–3: na mobile przycisk „Przejdź do płatności” sticky u dołu — zawsze widoczny i klikalny */
+@media (max-width: 768px) {
+  .woocommerce-cart .wc-proceed-to-checkout,
+  .woocommerce-cart .cart_totals .wc-proceed-to-checkout {
+    position: sticky;
+    bottom: 0;
+    z-index: 100;
+    margin: 0 -1rem;
+    padding: 0.75rem 1rem;
+    background: var(--color-white);
+    border-top: 1px solid var(--color-border);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
+  }
+}
