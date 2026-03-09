@@ -264,16 +264,17 @@ body.tax-product_tag .mnsk7-catalog-filters {
   outline-offset: 2px;
 }
 
+/* Wybrane/aktywne chipy — zawsze czytelny kontrast (ciemne tło + biały tekst) */
 .mnsk7-plp-chip--active {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-white);
+  background: var(--color-primary, #0c7ddb) !important;
+  border-color: var(--color-primary, #0c7ddb) !important;
+  color: #fff !important;
 }
 
 .mnsk7-plp-chip--active:hover {
-  background: var(--color-primary-hover);
-  border-color: var(--color-primary-hover);
-  color: var(--color-white);
+  background: var(--color-primary-hover, #0a6bc2) !important;
+  border-color: var(--color-primary-hover, #0a6bc2) !important;
+  color: #fff !important;
 }
 
 .mnsk7-plp-chips__label {
@@ -296,16 +297,16 @@ body.tax-product_tag .mnsk7-catalog-filters {
   background: var(--color-bg-subtle, #f8f8f8);
   border-color: var(--color-border);
 }
-/* Wybrany chip atrybutu — ten sam styl co kategorie (niebiały) */
+/* Wybrany chip atrybutu — zawsze biały tekst na primary (kontrast) */
 .mnsk7-plp-chips--attrs .mnsk7-plp-chip.mnsk7-plp-chip--active {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-white);
+  background: var(--color-primary, #0c7ddb) !important;
+  border-color: var(--color-primary, #0c7ddb) !important;
+  color: #fff !important;
 }
 .mnsk7-plp-chips--attrs .mnsk7-plp-chip.mnsk7-plp-chip--active:hover {
-  background: var(--color-primary-hover);
-  border-color: var(--color-primary-hover);
-  color: var(--color-white);
+  background: var(--color-primary-hover, #0a6bc2) !important;
+  border-color: var(--color-primary-hover, #0a6bc2) !important;
+  color: #fff !important;
 }
 .mnsk7-plp-chips--attrs .mnsk7-plp-chips__label {
   color: var(--color-text-muted, #666);
@@ -355,6 +356,21 @@ body.tax-product_tag .mnsk7-catalog-filters {
   border-color: var(--color-primary);
 }
 
+/* Blok „Więcej filtrów” — dodatkowe wiersze atrybutów (Średnica, Kąt skosu…) */
+.mnsk7-plp-filters-toggle-wrap {
+  margin-top: 0.25rem;
+  margin-bottom: 0.5rem;
+}
+.mnsk7-plp-filters-more {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  margin-top: 0.25rem;
+}
+.mnsk7-plp-filters-more:not([hidden]) {
+  display: flex;
+}
+
 /* Opakowanie PLP: empty state nad chipsami (order:-1) */
 .mnsk7-plp-archive-wrap {
   display: flex;
@@ -381,8 +397,17 @@ body.tax-product_tag .mnsk7-catalog-filters {
   color: var(--color-text-secondary);
   margin-right: 0.25rem;
 }
-.mnsk7-plp-chip--remove:hover {
-  opacity: 0.9;
+/* Chipy „Wybrane” (85 mm ×, 8 mm ×…) — zawsze czytelne: biały tekst na primary */
+.mnsk7-plp-selected .mnsk7-plp-chip.mnsk7-plp-chip--remove {
+  background: var(--color-primary, #0c7ddb) !important;
+  border-color: var(--color-primary, #0c7ddb) !important;
+  color: #fff !important;
+}
+.mnsk7-plp-selected .mnsk7-plp-chip.mnsk7-plp-chip--remove:hover {
+  background: var(--color-primary-hover, #0a6bc2) !important;
+  border-color: var(--color-primary-hover, #0a6bc2) !important;
+  color: #fff !important;
+  opacity: 0.95;
 }
 .mnsk7-plp-reset.button {
   display: inline-flex;
