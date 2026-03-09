@@ -154,13 +154,24 @@ if ( woocommerce_product_loop() ) {
 			</table>
 		</div>
 		<?php
-		/* Przy kilku stronach: przycisk „Pokaż więcej” (link do następnej strony) */
+		/* Przy kilku stronach: przycisk „Pokaż więcej” — JS ładuje następne wiersze w tabelę (AJAX), bez przejścia na page/2 */
 		if ( $use_table ) {
 			$paged = max( 1, get_query_var( 'paged' ) );
 			$total_pages = $GLOBALS['wp_query']->max_num_pages;
+			$total = (int) $GLOBALS['wp_query']->found_posts;
+			$per_page = (int) $GLOBALS['wp_query']->get( 'posts_per_page' );
+			if ( $per_page < 1 ) {
+				$per_page = 12;
+			}
 			if ( $total_pages > 1 && $paged < $total_pages ) {
 				$next_url = add_query_arg( 'paged', $paged + 1 );
-				echo '<div class="mnsk7-plp-load-more-wrap col-full">';
+				$taxonomy = '';
+				$term_slug = '';
+				if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy, $current_term->slug ) ) {
+					$taxonomy  = $current_term->taxonomy;
+					$term_slug = $current_term->slug;
+				}
+				echo '<div class="mnsk7-plp-load-more-wrap col-full" data-current-page="' . esc_attr( (string) $paged ) . '" data-total-pages="' . esc_attr( (string) $total_pages ) . '" data-taxonomy="' . esc_attr( $taxonomy ) . '" data-term="' . esc_attr( $term_slug ) . '" data-per-page="' . esc_attr( (string) $per_page ) . '" data-total="' . esc_attr( (string) $total ) . '">';
 				echo '<a href="' . esc_url( $next_url ) . '" class="mnsk7-plp-load-more button">' . esc_html__( 'Pokaż więcej', 'mnsk7-storefront' ) . '</a>';
 				echo '</div>';
 			}

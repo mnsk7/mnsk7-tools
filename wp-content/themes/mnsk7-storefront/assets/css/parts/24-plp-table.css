@@ -330,6 +330,10 @@ body.tax-product_tag .mnsk7-catalog-filters {
   color: var(--color-white);
   text-decoration: none;
 }
+.mnsk7-plp-load-more.loading {
+  opacity: 0.7;
+  pointer-events: none;
+}
 
 /* Table wrapper */
 .mnsk7-product-table-wrap {

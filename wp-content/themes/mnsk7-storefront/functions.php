@@ -71,6 +71,94 @@ add_action( 'wp', function () {
 	remove_action( 'woocommerce_after_shop_loop', 'storefront_sorting_wrapper_close', 31 );
 }, 25 );
 
+/**
+ * PLP „Pokaż więcej”: AJAX — zwraca HTML wierszy tabeli dla następnej strony (bez przejścia na page/2).
+ */
+function mnsk7_plp_load_more_handler() {
+	if ( ! function_exists( 'wc_get_product' ) ) {
+		wp_send_json_error( array( 'message' => 'WooCommerce not active' ) );
+	}
+	$page   = max( 1, isset( $_POST['page'] ) ? (int) $_POST['page'] : 0 );
+	$tax    = isset( $_POST['taxonomy'] ) ? sanitize_text_field( wp_unslash( $_POST['taxonomy'] ) ) : '';
+	$term   = isset( $_POST['term'] ) ? sanitize_text_field( wp_unslash( $_POST['term'] ) ) : '';
+	$orderby = isset( $_POST['orderby'] ) ? sanitize_text_field( wp_unslash( $_POST['orderby'] ) ) : 'menu_order';
+	$order   = isset( $_POST['order'] ) ? sanitize_text_field( wp_unslash( $_POST['order'] ) ) : 'asc';
+
+	$per_page = absint( apply_filters( 'loop_shop_per_page', wc_get_default_products_per_row() * wc_get_default_product_rows_per_page() ) );
+	if ( $per_page < 1 ) {
+		$per_page = 12;
+	}
+
+	$args = array(
+		'post_type'      => 'product',
+		'post_status'    => 'publish',
+		'posts_per_page' => $per_page,
+		'paged'          => $page,
+		'fields'         => 'ids',
+	);
+
+	if ( in_array( $tax, array( 'product_cat', 'product_tag' ), true ) && $term !== '' ) {
+		$args['tax_query'] = array(
+			array(
+				'taxonomy' => $tax,
+				'field'    => 'slug',
+				'terms'    => $term,
+			),
+		);
+	}
+
+	if ( function_exists( 'wc_get_query' ) ) {
+		$ordering = WC()->query->get_catalog_ordering_args( $orderby, $order );
+		if ( ! empty( $ordering['orderby'] ) ) {
+			$args['orderby'] = $ordering['orderby'];
+			$args['order']   = isset( $ordering['order'] ) ? $ordering['order'] : 'ASC';
+		}
+		if ( ! empty( $ordering['meta_key'] ) ) {
+			$args['meta_key'] = $ordering['meta_key'];
+		}
+	}
+
+	$query = new WP_Query( $args );
+	$ids   = $query->posts;
+	$total = (int) $query->found_posts;
+	$max_pages = (int) $query->max_num_pages;
+
+	$rows_html = '';
+	foreach ( $ids as $id ) {
+		$product = wc_get_product( $id );
+		if ( ! $product || ! $product->is_visible() ) {
+			continue;
+		}
+		global $post;
+		$post = get_post( $id );
+		setup_postdata( $post );
+		ob_start();
+		wc_get_template_part( 'content', 'product-table-row' );
+		$rows_html .= ob_get_clean();
+	}
+	wp_reset_postdata();
+
+	// Po załadowaniu kolejnej strony: zakres 1–N z total (np. „Wyświetlanie 1–24 z 54 wyników”).
+	$first = 1;
+	$last  = min( $total, $page * $per_page );
+	$result_count = sprintf(
+		/* translators: 1: first result, 2: last result, 3: total results */
+		_n( 'Wyświetlanie %1$d–%2$d z %3$d wyniku', 'Wyświetlanie %1$d–%2$d z %3$d wyników', $total, 'mnsk7-storefront' ),
+		$first,
+		$last,
+		$total
+	);
+
+	wp_send_json_success( array(
+		'html'        => $rows_html,
+		'has_next'    => $page < $max_pages,
+		'result_count' => $result_count,
+		'next_page'   => $page + 1,
+	) );
+}
+add_action( 'wp_ajax_mnsk7_plp_load_more', 'mnsk7_plp_load_more_handler' );
+add_action( 'wp_ajax_nopriv_mnsk7_plp_load_more', 'mnsk7_plp_load_more_handler' );
+
 /** Ładne okruszki: separator › + wrapper */
 add_filter( 'woocommerce_breadcrumb_defaults', function ( $args ) {
 	$args['delimiter']   = ' <span class="separator" aria-hidden="true">›</span> ';
@@ -87,6 +175,23 @@ add_action( 'wp', function () {
 	remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
 	add_action( 'woocommerce_single_product_summary', 'woocommerce_breadcrumb', 5 );
 } );
+
+/** PDP a11y: etykieta pola Ilość bez nazwy produktu (tylko „Ilość”) */
+add_filter( 'woocommerce_quantity_input_args', function ( $args, $product ) {
+	if ( is_singular( 'product' ) ) {
+		$args['product_name'] = '';
+	}
+	return $args;
+}, 10, 2 );
+
+/** PDP: related products przed opisem (wyżej na stronie) + podtytuł w szablonie */
+add_action( 'wp', function () {
+	if ( ! is_singular( 'product' ) ) {
+		return;
+	}
+	remove_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 20 );
+	add_action( 'woocommerce_after_single_product_summary', 'woocommerce_output_related_products', 5 );
+}, 25 );
 
 /** 1.1 Bestsellery na głównej: wyraźna cena (zł, pod nazwą, kolor) */
 add_filter( 'woocommerce_get_price_html', function ( $html, $product ) {
@@ -492,13 +597,117 @@ add_action( 'wp_footer', function () {
 					}
 				}, 100);
 			}
-		}, true);
-	})();
+	}, true);
+		})();
 	</script>
 	<?php
 }, 5 );
 
-/* 1e. Strefa wysyłki: przenieś powiadomienie nad footer (nie w treści sklepu) */
+/* PDP: sticky CTA na mobile — pokaż gdy formularz poza viewport, klik przewija i uruchamia główny przycisk */
+add_action( 'wp_footer', function () {
+	if ( ! is_singular( 'product' ) ) {
+		return;
+	}
+	?>
+	<script>
+	(function() {
+		var sticky = document.getElementById('mnsk7-pdp-sticky-cta');
+		var form = document.querySelector('.single-product .summary form.cart');
+		var mainBtn = form ? form.querySelector('.single_add_to_cart_button') : null;
+		if (!sticky || !form || !mainBtn) return;
+		var stickyPrice = sticky.querySelector('.mnsk7-pdp-sticky-cta__price');
+		var stickyBtn = sticky.querySelector('.mnsk7-pdp-sticky-cta__btn');
+		function isMobile() { return window.matchMedia('(max-width: 768px)').matches; }
+		function setStickyVisible(visible) {
+			if (!isMobile()) { sticky.setAttribute('hidden', ''); sticky.classList.remove('is-visible'); return; }
+			if (visible) { sticky.removeAttribute('hidden'); sticky.classList.add('is-visible'); sticky.setAttribute('aria-hidden', 'false'); }
+			else { sticky.setAttribute('hidden', ''); sticky.classList.remove('is-visible'); sticky.setAttribute('aria-hidden', 'true'); }
+		}
+		var observer = new IntersectionObserver(function(entries) {
+			if (!isMobile()) return;
+			var e = entries[0];
+			setStickyVisible(!e.isIntersecting);
+		}, { root: null, rootMargin: '0px', threshold: 0.1 });
+		observer.observe(form);
+		stickyBtn.addEventListener('click', function() {
+			form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+			setTimeout(function() { mainBtn.focus(); }, 400);
+		});
+		// Sync ceny przy wariacjach (variable product)
+		var summaryPrice = document.querySelector('.single-product .summary .price');
+		if (summaryPrice && stickyPrice && document.querySelector('.single-product form.variations_form')) {
+			document.body.addEventListener('show_variation', function(ev) {
+				if (ev.target && ev.target.closest && ev.target.closest('.single-product') && ev.data && ev.data.display_price) {
+					stickyPrice.innerHTML = ev.data.price_html || summaryPrice.innerHTML;
+				}
+			});
+		}
+	})();
+	</script>
+	<?php
+}, 6 );
+
+/* 1e. PLP „Pokaż więcej”: podгрузка następnych wierszy tabeli bez przejścia na page/2 */
+add_action( 'wp_footer', function () {
+	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_category() && ! is_product_tag() ) ) {
+		return;
+	}
+	$ajax_url = admin_url( 'admin-ajax.php' );
+	?>
+	<script>
+	(function() {
+		var wrap = document.querySelector('.mnsk7-plp-load-more-wrap');
+		if (!wrap) return;
+		var btn = wrap.querySelector('.mnsk7-plp-load-more');
+		var tbody = document.querySelector('.mnsk7-product-table tbody');
+		if (!btn || !tbody) return;
+		var ajaxUrl = <?php echo json_encode( $ajax_url ); ?>;
+		btn.addEventListener('click', function(e) {
+			e.preventDefault();
+			if (btn.disabled) return;
+			var currentPage = parseInt(wrap.dataset.currentPage || '1', 10);
+			var nextPage = currentPage + 1;
+			var taxonomy = wrap.dataset.taxonomy || '';
+			var term = wrap.dataset.term || '';
+			var orderbyEl = document.querySelector('.mnsk7-plp-toolbar select[name="orderby"], .woocommerce-ordering select[name="orderby"]');
+			var orderby = orderbyEl ? orderbyEl.value : 'menu_order';
+			var order = (orderby === 'price-desc' || orderby === 'rating') ? 'desc' : 'asc';
+			btn.disabled = true;
+			btn.classList.add('loading');
+			var form = new FormData();
+			form.append('action', 'mnsk7_plp_load_more');
+			form.append('page', nextPage);
+			form.append('taxonomy', taxonomy);
+			form.append('term', term);
+			form.append('orderby', orderby);
+			form.append('order', order);
+			fetch(ajaxUrl, { method: 'POST', body: form, credentials: 'same-origin' })
+				.then(function(r) { return r.json(); })
+				.then(function(data) {
+					if (data.success && data.data && data.data.html) {
+						tbody.insertAdjacentHTML('beforeend', data.data.html);
+						var rc = document.querySelectorAll('.woocommerce-result-count');
+						if (data.data.result_count && rc.length) {
+							rc.forEach(function(el) { el.textContent = data.data.result_count; });
+						}
+						wrap.dataset.currentPage = String(nextPage);
+						if (!data.data.has_next) {
+							wrap.style.display = 'none';
+						}
+					}
+				})
+				.catch(function() {})
+				.finally(function() {
+					btn.disabled = false;
+					btn.classList.remove('loading');
+				});
+		});
+	})();
+	</script>
+	<?php
+}, 20 );
+
+/* 1f. Strefa wysyłki: przenieś powiadomienie nad footer (nie w treści sklepu) */
 add_action( 'wp_footer', function () {
 	?>
 	<script>
@@ -611,19 +820,68 @@ add_filter( 'get_the_archive_title', function ( $title ) {
 add_filter( 'woocommerce_page_title', 'mnsk7_strip_wpf_filters_from_text', 5 );
 add_filter( 'woocommerce_taxonomy_archive_description_raw', 'mnsk7_strip_wpf_filters_from_text', 5 );
 
+/* PLP-01: opis strony Sklep — usuń shortcode [wpf-filters] z treści (WooCommerce wyświetla post_content bez filtra) */
+add_action( 'init', function () {
+	remove_action( 'woocommerce_archive_description', 'woocommerce_product_archive_description', 10 );
+	add_action( 'woocommerce_archive_description', 'mnsk7_shop_archive_description_stripped', 10 );
+}, 20 );
+function mnsk7_shop_archive_description_stripped() {
+	if ( is_search() ) {
+		return;
+	}
+	if ( ! is_post_type_archive( 'product' ) || ! in_array( absint( get_query_var( 'paged' ) ), array( 0, 1 ), true ) ) {
+		return;
+	}
+	$shop_page = get_post( wc_get_page_id( 'shop' ) );
+	if ( ! $shop_page || empty( $shop_page->post_content ) ) {
+		return;
+	}
+	$desc = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $shop_page->post_content ) : $shop_page->post_content;
+	$desc = preg_replace( '/\[wpf[-_]filters[^\]]*\]/i', '', (string) $desc );
+	$desc = trim( (string) $desc );
+	if ( $desc === '' ) {
+		return;
+	}
+	$allowed_html = wp_kses_allowed_html( 'post' );
+	$description  = wc_format_content( wp_kses( $desc, $allowed_html ) );
+	if ( $description ) {
+		echo '<div class="page-description">' . $description . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+}
+
 /* Nie pokazuj zdjęcia kategorii u góry archiwum (kwadrat z lewej) — Storefront/snippety */
 add_action( 'init', function () {
 	remove_action( 'storefront_before_content', 'woocommerce_category_image', 2 );
 	remove_action( 'woocommerce_archive_description', 'woocommerce_category_image', 15 );
 }, 20 );
 
+/* PLP-02: breadcrumbs na archive (sklep, kategoria, tag) — przywrócone tylko na PLP */
+add_action( 'woocommerce_before_main_content', function () {
+	if ( function_exists( 'is_shop' ) && ( is_shop() || ( function_exists( 'is_product_category' ) && is_product_category() ) || ( function_exists( 'is_product_tag' ) && is_product_tag() ) ) ) {
+		woocommerce_breadcrumb();
+	}
+}, 19 );
+
 add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 	if ( ! is_array( $crumbs ) ) {
 		return $crumbs;
 	}
-	// Na PDP bez nazwy produktu w okruszkach (Strona główna › Sklep › Kategoria).
+	// Na PDP bez nazwy produktu w okruszkach: Strona główna › Sklep › Kategoria.
 	if ( is_singular( 'product' ) && count( $crumbs ) > 1 ) {
 		array_pop( $crumbs );
+		// Upewnij się, że kategoria produktu jest w okruszkach (WC czasem jej nie dodaje).
+		$product_id = get_queried_object_id();
+		$terms      = $product_id ? wc_get_product_terms( $product_id, 'product_cat', array( 'orderby' => 'parent', 'order' => 'DESC' ) ) : array();
+		if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+			$main_term = apply_filters( 'woocommerce_breadcrumb_main_term', $terms[0], $terms );
+			$term_link = get_term_link( $main_term );
+			if ( ! is_wp_error( $term_link ) ) {
+				$last_url = ! empty( $crumbs[ count( $crumbs ) - 1 ][1] ) ? $crumbs[ count( $crumbs ) - 1 ][1] : '';
+				if ( $last_url !== $term_link ) {
+					$crumbs[] = array( $main_term->name, $term_link );
+				}
+			}
+		}
 	}
 	foreach ( $crumbs as $i => $crumb ) {
 		if ( isset( $crumb[1] ) && is_string( $crumb[1] ) ) {
@@ -639,6 +897,32 @@ add_filter( 'document_title_parts', function ( $parts ) {
 	}
 	return $parts;
 }, 5 );
+
+/* PLP-04: title zakładki przy filtracji GET ?product_cat= / ?product_tag= (gdy is_shop() ale wybrana kategoria/tag) */
+add_filter( 'document_title_parts', function ( $parts ) {
+	if ( ! function_exists( 'is_shop' ) || ! is_shop() ) {
+		return $parts;
+	}
+	$slug = null;
+	$tax  = null;
+	if ( ! empty( $_GET['product_cat'] ) ) {
+		$slug = sanitize_text_field( wp_unslash( $_GET['product_cat'] ) );
+		$tax  = 'product_cat';
+	} elseif ( ! empty( $_GET['product_tag'] ) ) {
+		$slug = sanitize_text_field( wp_unslash( $_GET['product_tag'] ) );
+		$tax  = 'product_tag';
+	}
+	if ( ! $slug || ! $tax || ! taxonomy_exists( $tax ) ) {
+		return $parts;
+	}
+	$term = get_term_by( 'slug', $slug, $tax );
+	if ( ! $term || is_wp_error( $term ) ) {
+		return $parts;
+	}
+	$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
+	$parts['title'] = $name;
+	return $parts;
+}, 8 );
 
 /* 8. Front page document title (SEO + zakładka) — fallback gdy brak ustawionej strony głównej */
 add_filter( 'document_title_parts', function ( $parts ) {
