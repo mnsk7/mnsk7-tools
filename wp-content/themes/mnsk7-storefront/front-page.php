@@ -158,6 +158,40 @@ get_header();
 	</section>
 	<?php endif; endif; ?>
 
+	<!-- TAGI PRODUKTÓW (nawigacja do stron /tag-produktu/...) -->
+	<?php
+	if ( taxonomy_exists( 'product_tag' ) ) {
+		$tags = get_terms( array(
+			'taxonomy'   => 'product_tag',
+			'hide_empty' => true,
+			'number'     => 16,
+			'orderby'    => 'count',
+			'order'      => 'DESC',
+		) );
+		if ( ! is_wp_error( $tags ) && ! empty( $tags ) ) :
+	?>
+	<section class="mnsk7-section mnsk7-section--tags mnsk7-section--light">
+		<div class="col-full">
+			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Tagi produktów', 'mnsk7-storefront' ); ?></h2>
+			<p class="mnsk7-section__sub mnsk7-tags-intro"><?php esc_html_e( 'Przeglądaj asortyment według tagów — np. typ frezu, liczba ostrzy.', 'mnsk7-storefront' ); ?></p>
+			<div class="mnsk7-tags-chips">
+				<?php foreach ( $tags as $tag ) :
+					$t_link = get_term_link( $tag );
+					if ( is_wp_error( $t_link ) ) continue;
+				?>
+				<a href="<?php echo esc_url( $t_link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $tag->name ); ?></a>
+				<?php endforeach; ?>
+			</div>
+			<p class="mnsk7-section__more">
+				<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Wszystkie produkty →', 'mnsk7-storefront' ); ?></a>
+			</p>
+		</div>
+	</section>
+	<?php
+		endif;
+	}
+	?>
+
 	<!-- SYSTEM RABATÓW -->
 	<section class="mnsk7-section mnsk7-section--loyalty mnsk7-section--light">
 		<div class="col-full">

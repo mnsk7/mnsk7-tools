@@ -100,18 +100,27 @@ if ( is_shop() && ! $is_taxonomy && taxonomy_exists( 'product_cat' ) ) {
 $use_table = is_shop() || $is_taxonomy;
 
 if ( woocommerce_product_loop() ) {
-	echo '<div class="mnsk7-plp-toolbar col-full">';
+	echo '<div class="mnsk7-plp-toolbar mnsk7-plp-toolbar--top col-full">';
 	do_action( 'woocommerce_before_shop_loop' );
+	if ( function_exists( 'woocommerce_pagination' ) ) {
+		woocommerce_pagination();
+	}
 	echo '</div>';
 
 	if ( $use_table ) {
 		if ( $is_taxonomy && $current_term && isset( $current_term->slug ) ) {
+			$is_tag = isset( $current_term->taxonomy ) && $current_term->taxonomy === 'product_tag';
+			$search_placeholder = $is_tag ? __( 'Szukaj w tagu…', 'mnsk7-storefront' ) : __( 'Szukaj w kategorii…', 'mnsk7-storefront' );
 			?>
 			<div class="mnsk7-plp-search col-full">
 				<form role="search" method="get" class="mnsk7-plp-search__form" action="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">
 					<label for="mnsk7-plp-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
-					<input type="search" id="mnsk7-plp-search-input" class="mnsk7-plp-search__input" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php esc_attr_e( 'Szukaj w kategorii…', 'mnsk7-storefront' ); ?>" />
-					<input type="hidden" name="product_cat" value="<?php echo esc_attr( $current_term->slug ); ?>" />
+					<input type="search" id="mnsk7-plp-search-input" class="mnsk7-plp-search__input" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php echo esc_attr( $search_placeholder ); ?>" />
+					<?php if ( $is_tag ) : ?>
+						<input type="hidden" name="product_tag" value="<?php echo esc_attr( $current_term->slug ); ?>" />
+					<?php else : ?>
+						<input type="hidden" name="product_cat" value="<?php echo esc_attr( $current_term->slug ); ?>" />
+					<?php endif; ?>
 					<button type="submit" class="mnsk7-plp-search__submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
 				</form>
 			</div>
@@ -157,7 +166,9 @@ if ( woocommerce_product_loop() ) {
 		woocommerce_product_loop_end();
 	}
 
+	echo '<div class="mnsk7-plp-toolbar mnsk7-plp-toolbar--bottom col-full">';
 	do_action( 'woocommerce_after_shop_loop' );
+	echo '</div>';
 } else {
 	$filter_params = array( 'filter_srednica', 'filter_srednica-trzpienia', 'filter_dlugosc-calkowita-l', 'filter_dlugosc-robocza-h' );
 	$has_filter = false;

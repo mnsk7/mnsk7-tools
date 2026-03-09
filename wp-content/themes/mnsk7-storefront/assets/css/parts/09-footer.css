@@ -1,12 +1,16 @@
 /* 09-footer — jeden styl z resztą strony: primary, zaokrąglenia, typografia */
 
-/* Strefa wysyłki: powiadomienie przeniesione z treści nad footer */
+/* Strefa wysyłki: powiadomienie przeniesione z treści nad footer (bez zsuwania strony) */
 .mnsk7-shipping-zone-placeholder {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem 1rem;
+  min-height: 0;
   font-size: var(--fs-xs);
   color: var(--color-text-secondary);
+}
+.mnsk7-shipping-zone-placeholder:empty {
+  display: none;
 }
 .mnsk7-shipping-zone-placeholder.has-notice .woocommerce-info,
 .mnsk7-shipping-zone-placeholder.has-notice .woocommerce-message {

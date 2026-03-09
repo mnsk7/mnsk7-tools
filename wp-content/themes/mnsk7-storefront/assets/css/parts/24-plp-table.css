@@ -14,9 +14,11 @@ body.tax-product_tag [class*="category-image"] {
   display: none !important;
 }
 
-/* Nagłówek kategorii (tytuł) */
+/* Nagłówek kategorii/tagu: odstęp od headera i od chipów (design) */
 .woocommerce-products-header {
-  margin-bottom: 0.75rem;
+  margin-top: 1.25rem;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
 }
 .woocommerce-products-header__title.page-title {
   margin: 0 0 0.25rem 0;
@@ -24,6 +26,13 @@ body.tax-product_tag [class*="category-image"] {
   font-weight: 700;
   line-height: 1.25;
   color: var(--color-text);
+}
+
+/* Strefa wysyłki: w treści nie pokazujemy (przenoszone do footera przez JS), żeby nie zsuwało strony */
+body.post-type-archive-product .mnsk7-plp-toolbar .woocommerce-info,
+body.tax-product_cat .mnsk7-plp-toolbar .woocommerce-info,
+body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
+  display: none !important;
 }
 
 /* Toolbar: sortowanie + (opcjonalnie wyników) + paginacja — ten sam styl u góry i u dołu */
@@ -38,12 +47,13 @@ body.tax-product_tag [class*="category-image"] {
 .mnsk7-plp-toolbar .woocommerce-result-count {
   display: none !important;
 }
-/* U dołu: sortowanie + wyników + paginacja */
+/* U dołu: jedna linia — sortowanie + wyników + paginacja (wyrównane) */
 .mnsk7-plp-toolbar--bottom .woocommerce-result-count {
   display: block !important;
   margin: 0;
   font-size: var(--fs-sm);
   color: var(--color-text-secondary);
+  flex: 0 0 auto;
 }
 .mnsk7-plp-toolbar .woocommerce-ordering {
   margin: 0;
@@ -51,6 +61,10 @@ body.tax-product_tag [class*="category-image"] {
 .mnsk7-plp-toolbar--bottom {
   margin-top: 1rem;
   margin-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
 }
 .mnsk7-plp-toolbar--bottom .woocommerce-ordering {
   margin-left: 0;
@@ -88,11 +102,12 @@ body.tax-product_tag [class*="category-image"] {
   }
 }
 
-/* Archiwum sklepu, kategorii i tagów: bez sidebaru, pełna szerokość; ukryj duplikat filtrów z wtyczki */
+/* Archiwum sklepu, kategorii i tagów: bez sidebaru, pełna szerokość; odstęp od headera */
 body.post-type-archive-product #content #primary,
 body.tax-product_cat #content #primary,
 body.tax-product_tag #content #primary {
   flex: 1 1 100%;
+  padding-top: 1rem;
 }
 body.post-type-archive-product #content #secondary,
 body.tax-product_cat #content #secondary,
