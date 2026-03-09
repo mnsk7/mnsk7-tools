@@ -13,6 +13,17 @@ defined( 'ABSPATH' ) || exit;
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 	<?php wp_head(); ?>
+	<?php
+	// Krytyczne style nagłówka inline — gwarantują ten sam wygląd także gdy URL ma parametry ?filter_*
+	// (cache/CDN może serwować stronę bez pełnego CSS; te reguły zapobiegają „złamaniu” headera).
+	?>
+	<style id="mnsk7-header-critical">
+	#masthead.mnsk7-header{background:#fff;position:sticky;top:0;z-index:1000;border-bottom:1px solid #e9e8cc;box-shadow:0 1px 3px rgba(0,0,0,.06);min-height:64px;box-sizing:border-box}
+	.mnsk7-header__inner{display:flex;align-items:center;gap:1rem;max-width:1200px;margin:0 auto;padding:0 1rem;min-height:64px;box-sizing:border-box}
+	.mnsk7-header__brand{flex-shrink:0;min-width:0}
+	.mnsk7-header__brand a{display:flex;align-items:center;font-size:1.125rem;font-weight:700;color:#000;text-decoration:none}
+	.mnsk7-header__brand img{max-height:42px;width:auto;max-width:100%;display:block;vertical-align:middle}
+	</style>
 </head>
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
@@ -74,7 +85,7 @@ endif;
 					}
 					?>
 				</li>
-				<li<?php echo is_page( 'przewodnik' ) ? ' class="current-menu-item"' : ''; ?>><a href="<?php echo esc_url( home_url( '/przewodnik/' ) ); ?>"><?php esc_html_e( 'Przewodnik', 'mnsk7-storefront' ); ?></a></li>
+				<li<?php echo ( is_page( 'przewodnik' ) || is_home() || is_singular( 'post' ) ) ? ' class="current-menu-item"' : ''; ?>><a href="<?php echo esc_url( home_url( '/przewodnik/' ) ); ?>"><?php esc_html_e( 'Przewodnik', 'mnsk7-storefront' ); ?></a></li>
 				<li<?php echo is_page( 'dostawa-i-platnosci' ) ? ' class="current-menu-item"' : ''; ?>><a href="<?php echo esc_url( home_url( '/dostawa-i-platnosci/' ) ); ?>"><?php esc_html_e( 'Dostawa i płatności', 'mnsk7-storefront' ); ?></a></li>
 				<li<?php echo is_page( 'kontakt' ) ? ' class="current-menu-item"' : ''; ?>><a href="<?php echo esc_url( home_url( '/kontakt/' ) ); ?>"><?php esc_html_e( 'Kontakt', 'mnsk7-storefront' ); ?></a></li>
 			</ul>

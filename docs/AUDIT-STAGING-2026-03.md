@@ -208,3 +208,35 @@
 ---
 
 *Аудит выполнен 2026-03-09. Рекомендуется повторная проверка после исправлений на viewport 360×800, 390×844, 768×1024, 1280×800, 1440×900, 1920×1080.*
+
+---
+
+## Исправление: ten sam wygląd przy URL z parametrami ?filter_*
+
+**Problem:** Przy adresach z filtrem atrybutów (np. `/kategoria-produktu/frez-kulowy/?filter_dlugosc-robocza-h=8-mm`) header i styl strony mogły wyglądać inaczej niż bez parametru (np. `/kategoria-produktu/frez-diamentowy/`). Możliwe przyczyny: inna wersja strony z cache (klucz z query string), blokowanie/opóźnienie ładowania CSS przez CDN lub plugin.
+
+**Wykonane (2026-03-09):**
+1. **Krytyczne style headera inline** w `header.php` — minimalny zestaw reguł (tło, sticky, flex, logo) zapewnia ten sam wygląd headera także gdy zewnętrzne pliki CSS nie załadują się dla URL z `?filter_*`.
+2. **Komentarz w `functions.php`** przy `wp_enqueue_scripts`: zasoby stylów muszą być zawsze te same niezależnie od parametrów URL.
+
+**Oczekiwane zachowanie:** Strona z filtrem (np. Frez kulowy + filtr „Dł. robocza: 8 mm”) wygląda tak samo jak strona kategorii bez filtra (np. Frez diamentowy) — ten sam header, menu, stopka, czcionki.
+
+---
+
+## Задача тестировщика: пустое место перед первым товаром
+
+**Суть:** Визуально заметное пустое пространство слева от первого товара в сетке.
+
+**Где воспроизвести:**
+1. **Главная:** https://staging.mnsk7-tools.pl/ — секция «Bestsellery i polecane»: сетка из 8 товаров, перед первой карточкой видно лишнее пустое поле.
+2. **Страница товара (PDP):** https://staging.mnsk7-tools.pl/sklep/frez-prosty-do-drewna-4p-trzpien-8-mm-fi-16-x-50-vhm-z-lozyskiem/ — секция «Podobne produkty»: та же картина — пустое место слева от первого товара.
+
+**Ожидание:** Первая карточка товара в ряду прижата к левому краю контентной области (или к левому краю секции) без лишнего «отступа» перед ней; сетка выровнена по левому краю (без визуального центрирования с равными пустыми полями по бокам).
+
+**Шаги:**
+1. Открыть главную, прокрутить до «Bestsellery i polecane» — оценить отступ слева до первой карточки.
+2. Открыть любую PDP, прокрутить до «Podobne produkty» — оценить отступ слева до первой карточки.
+3. Проверить на ширине 360px, 768px и 1200px+.
+
+**Критерий приёмки:** Нет визуально лишнего пустого пространства перед первым товаром в указанных секциях; сетка начинается от левого края контентной зоны.
+
