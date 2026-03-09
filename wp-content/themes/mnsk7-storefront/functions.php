@@ -706,15 +706,15 @@ add_action( 'init', function () {
 		$handle = preg_replace( '#^https?://(www\.)?instagram\.com/#', '', untrailingslashit( $profile ) );
 		$handle = $handle !== '' ? $handle : 'mnsk7tools';
 
-		// Załaduj embed.js jak na alesyatakun.by: wstrzyknięcie w footer + process() po load (nie zależymy od jQuery).
+		// Pełne embedy (jak 2. skrin): embed.js BEZ async — synchronicznie w footer, żeby na pewno zamienił blockquote na iframe z profilem/zdjęciem/lajkami.
 		static $footer_done = false;
 		if ( ! $footer_done ) {
 			$footer_done = true;
 			add_action( 'wp_footer', function () {
-				?>
-<script>(function(){function p(){if(window.instgrm&&window.instgrm.Embeds){window.instgrm.Embeds.process();}else{setTimeout(p,80);}}function go(){if(document.querySelector('script[src*="instagram.com/embed.js"]')){p();return;}var s=document.createElement('script');s.async=true;s.src='https://www.instagram.com/embed.js';s.onload=p;document.body.appendChild(s);}if(document.readyState==='loading'){document.addEventListener('DOMContentLoaded',go);}else{go();}})();</script>
-				<?php
-			}, 25 );
+				// Skrypt bez async/defer — ładuje się po kolei, blockquote są już w DOM, embed.js je zamienia na pełny widget.
+				echo '<script src="https://www.instagram.com/embed.js"></script>' . "\n";
+				echo '<script>if(window.instgrm&&window.instgrm.Embeds)window.instgrm.Embeds.process();</script>' . "\n";
+			}, 5 );
 		}
 
 		$out = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--embed">';
