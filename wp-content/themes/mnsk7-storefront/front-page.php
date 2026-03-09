@@ -91,8 +91,14 @@ get_header();
 		</div>
 	</section>
 
-	<!-- KATEGORIE (CRO: po trust — wybór kategorii) -->
-	<?php if ( taxonomy_exists( 'product_cat' ) ) :
+	<!-- KATALOG: kategorie + tagi w jednym bloku, jeden nagłówek, jedna link „Wszystkie produkty” -->
+	<?php
+	$cats          = array();
+	$quick_links   = array();
+	$tags          = array();
+	$has_cats      = taxonomy_exists( 'product_cat' );
+	$has_tags      = taxonomy_exists( 'product_tag' );
+	if ( $has_cats ) {
 		$cats = get_terms( array(
 			'taxonomy'   => 'product_cat',
 			'hide_empty' => true,
@@ -102,7 +108,6 @@ get_header();
 			'order'      => 'DESC',
 		) );
 		$quick_slugs = array( 'frez-spiralny', 'frezy-do-drewna-mdf', 'frezy-do-aluminium', 'frezy-do-stali', 'frezy-do-plastiku' );
-		$quick_links = array();
 		foreach ( $quick_slugs as $slug ) {
 			$t = get_term_by( 'slug', $slug, 'product_cat' );
 			if ( $t && ! is_wp_error( get_term_link( $t ) ) ) {
@@ -112,28 +117,63 @@ get_header();
 		if ( empty( $quick_links ) && ! is_wp_error( $cats ) && ! empty( $cats ) ) {
 			$quick_links = array_slice( $cats, 0, 5 );
 		}
-		if ( ! is_wp_error( $cats ) && ! empty( $cats ) ) :
+	}
+	if ( $has_tags ) {
+		$tags = get_terms( array(
+			'taxonomy'   => 'product_tag',
+			'hide_empty' => true,
+			'number'     => 16,
+			'orderby'    => 'count',
+			'order'      => 'DESC',
+		) );
+	}
+	$show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) );
+	if ( $show_catalog ) :
 	?>
-	<section class="mnsk7-section mnsk7-section--cats mnsk7-section--light">
+	<section class="mnsk7-section mnsk7-section--catalog mnsk7-section--light">
 		<div class="col-full">
-			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Kategorie', 'mnsk7-storefront' ); ?></h2>
-			<?php if ( ! empty( $quick_links ) ) : ?>
-			<div class="mnsk7-cats-quick">
-				<span class="mnsk7-cats-quick__label"><?php esc_html_e( 'Przeglądaj:', 'mnsk7-storefront' ); ?></span>
-				<?php foreach ( $quick_links as $q ) :
-					$q_link = get_term_link( $q );
-					if ( is_wp_error( $q_link ) ) continue;
-				?>
-				<a href="<?php echo esc_url( $q_link ); ?>" class="mnsk7-cats-quick__chip"><?php echo esc_html( $q->name ); ?></a>
-				<?php endforeach; ?>
+			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Przeglądaj asortyment', 'mnsk7-storefront' ); ?></h2>
+
+			<div class="mnsk7-catalog-chips">
+				<?php if ( $has_cats && ! empty( $quick_links ) ) : ?>
+				<div class="mnsk7-cats-quick">
+					<span class="mnsk7-cats-quick__label"><?php esc_html_e( 'Szybki wybór:', 'mnsk7-storefront' ); ?></span>
+					<?php foreach ( $quick_links as $q ) :
+						$q_link = get_term_link( $q );
+						if ( is_wp_error( $q_link ) ) continue;
+						$q_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $q->name ) : $q->name;
+						$q_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $q_name ) );
+					?>
+					<a href="<?php echo esc_url( $q_link ); ?>" class="mnsk7-cats-quick__chip"><?php echo esc_html( $q_name ); ?></a>
+					<?php endforeach; ?>
+				</div>
+				<?php endif; ?>
+				<?php if ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) ) : ?>
+				<div class="mnsk7-catalog-tags">
+					<span class="mnsk7-catalog-tags__label"><?php esc_html_e( 'Według cech:', 'mnsk7-storefront' ); ?></span>
+					<div class="mnsk7-tags-chips">
+						<?php foreach ( $tags as $tag ) :
+							$t_link = get_term_link( $tag );
+							if ( is_wp_error( $t_link ) ) continue;
+							$tag_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $tag->name ) : $tag->name;
+							$tag_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $tag_name ) );
+						?>
+						<a href="<?php echo esc_url( $t_link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $tag_name ); ?></a>
+						<?php endforeach; ?>
+					</div>
+				</div>
+				<?php endif; ?>
 			</div>
-			<?php endif; ?>
-			<div class="mnsk7-cats mnsk7-cats--catalog">
-				<?php foreach ( $cats as $cat ) :
-					$link = get_term_link( $cat );
-					if ( is_wp_error( $link ) ) continue;
-					$img_id = get_term_meta( $cat->term_id, 'thumbnail_id', true );
-					$img    = $img_id ? wp_get_attachment_image( $img_id, 'medium' ) : '';
+
+			<?php if ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) : ?>
+				<div class="mnsk7-cats mnsk7-cats--catalog">
+					<?php foreach ( $cats as $cat ) :
+						$link = get_term_link( $cat );
+						if ( is_wp_error( $link ) ) continue;
+						$cat_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $cat->name ) : $cat->name;
+						$cat_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $cat_name ) );
+						$img_id = get_term_meta( $cat->term_id, 'thumbnail_id', true );
+						$img    = $img_id ? wp_get_attachment_image( $img_id, 'medium', false, array( 'alt' => $cat_name ) ) : '';
 					?>
 					<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-cats__item">
 						<span class="mnsk7-cats__img-wrap">
@@ -144,53 +184,21 @@ get_header();
 							<?php endif; ?>
 						</span>
 						<span class="mnsk7-cats__body">
-							<span class="mnsk7-cats__name"><?php echo esc_html( $cat->name ); ?></span>
+							<span class="mnsk7-cats__name"><?php echo esc_html( $cat_name ); ?></span>
 							<span class="mnsk7-cats__count"><?php echo esc_html( $cat->count ); ?> <?php esc_html_e( 'prod.', 'mnsk7-storefront' ); ?></span>
 						</span>
 						<span class="mnsk7-cats__arrow" aria-hidden="true">→</span>
 					</a>
-				<?php endforeach; ?>
-			</div>
-			<p class="mnsk7-section__more">
-				<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>"><?php esc_html_e( 'Wszystkie produkty →', 'mnsk7-storefront' ); ?></a>
-			</p>
-		</div>
-	</section>
-	<?php endif; endif; ?>
+					<?php endforeach; ?>
+				</div>
+			<?php endif; ?>
 
-	<!-- TAGI PRODUKTÓW (nawigacja do stron /tag-produktu/...) -->
-	<?php
-	if ( taxonomy_exists( 'product_tag' ) ) {
-		$tags = get_terms( array(
-			'taxonomy'   => 'product_tag',
-			'hide_empty' => true,
-			'number'     => 16,
-			'orderby'    => 'count',
-			'order'      => 'DESC',
-		) );
-		if ( ! is_wp_error( $tags ) && ! empty( $tags ) ) :
-	?>
-	<section class="mnsk7-section mnsk7-section--tags mnsk7-section--light">
-		<div class="col-full">
-			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Tagi produktów', 'mnsk7-storefront' ); ?></h2>
-			<p class="mnsk7-section__sub mnsk7-tags-intro"><?php esc_html_e( 'Przeglądaj asortyment według tagów — np. typ frezu, liczba ostrzy.', 'mnsk7-storefront' ); ?></p>
-			<div class="mnsk7-tags-chips">
-				<?php foreach ( $tags as $tag ) :
-					$t_link = get_term_link( $tag );
-					if ( is_wp_error( $t_link ) ) continue;
-				?>
-				<a href="<?php echo esc_url( $t_link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $tag->name ); ?></a>
-				<?php endforeach; ?>
-			</div>
 			<p class="mnsk7-section__more">
 				<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Wszystkie produkty →', 'mnsk7-storefront' ); ?></a>
 			</p>
 		</div>
 	</section>
-	<?php
-		endif;
-	}
-	?>
+	<?php endif; ?>
 
 	<!-- SYSTEM RABATÓW -->
 	<section class="mnsk7-section mnsk7-section--loyalty mnsk7-section--light">

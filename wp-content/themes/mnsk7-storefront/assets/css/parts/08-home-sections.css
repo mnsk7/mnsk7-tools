@@ -153,8 +153,18 @@
   font-size: var(--fs-2xl);
   font-weight: 800;
   color: var(--color-text);
-  margin: 0 0 2rem;
+  margin: 0 0 0.5rem;
   letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.mnsk7-section__sub {
+  text-align: center;
+  font-size: var(--fs-base);
+  color: var(--color-text-secondary);
+  margin: 0 auto 1.5rem;
+  max-width: 36rem;
+  line-height: 1.5;
 }
 
 .mnsk7-section__more {
@@ -172,7 +182,55 @@
   color: var(--color-primary-hover);
 }
 
-/* Categories — quick chips (Przeglądaj: spiralne / drewno / …) + grid Sandvik-style */
+/* Katalog: jeden blok — chipy (Szybki wybór + Według cech) nad siatką kategorii */
+.mnsk7-catalog-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem 1.5rem;
+  margin-bottom: 1.5rem;
+  justify-content: center;
+}
+
+.mnsk7-section--catalog .mnsk7-cats-quick {
+  margin-bottom: 0;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+}
+
+.mnsk7-section--catalog .mnsk7-cats--catalog {
+  margin-bottom: 2rem;
+}
+
+.mnsk7-catalog-chips .mnsk7-catalog-tags {
+  margin: 0;
+  text-align: center;
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+}
+
+.mnsk7-catalog-chips .mnsk7-catalog-tags__label {
+  font-size: var(--fs-sm);
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
+  margin-right: 0.5rem;
+  margin-bottom: 0;
+}
+
+.mnsk7-section--catalog .mnsk7-tags-chips {
+  justify-content: center;
+  margin-bottom: 0;
+}
+
+.mnsk7-cats-intro {
+  margin-bottom: 1.25rem;
+}
+
 .mnsk7-cats-quick {
   display: flex;
   flex-wrap: wrap;
@@ -184,8 +242,9 @@
 
 .mnsk7-cats-quick__label {
   font-size: var(--fs-sm);
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-text-secondary);
+  letter-spacing: 0.02em;
 }
 
 .mnsk7-cats-quick__chip {
@@ -213,36 +272,45 @@
   outline-offset: 2px;
 }
 
-/* Tagi produktów na głównej — chipy do stron /tag-produktu/... */
+/* Tagi / przeglądaj według cech — intro + label + chipy */
 .mnsk7-section__sub.mnsk7-tags-intro {
-  font-size: var(--fs-sm);
-  color: var(--color-text-secondary);
-  margin: -0.5rem 0 1rem;
-  max-width: 42rem;
+  margin-bottom: 1.25rem;
 }
+
 .mnsk7-tags-chips {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: 0.5rem 0.75rem;
   margin-bottom: 1rem;
+  justify-content: center;
 }
+
+
 .mnsk7-tags-chip {
   display: inline-block;
-  padding: 0.4rem 0.9rem;
+  padding: 0.45rem 0.9rem;
   background: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: var(--r-pill);
   font-size: var(--fs-sm);
-  font-weight: 500;
+  font-weight: 600;
   color: var(--color-text);
   text-decoration: none;
   transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
+
 .mnsk7-tags-chip:hover {
-  background: var(--color-surface);
+  background: var(--color-primary);
   border-color: var(--color-primary);
-  color: var(--color-primary);
+  color: var(--color-white);
   text-decoration: none;
+}
+
+.mnsk7-tags-chip:focus,
+.mnsk7-tags-chip:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 /* Katalog kategorii (jak Sandvik) — karta: obrazek po lewej, nazwa + liczba, strzałka */
