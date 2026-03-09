@@ -233,3 +233,17 @@
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);
   }
 }
+
+/* Audit task 12: Oblicz koszty wysyłki — na wąskich ekranach pola w kolumnę, bez overflow */
+@media (max-width: 360px) {
+  .woocommerce-cart .cart_totals .shipping-calculator-form .form-row {
+    width: 100%;
+    float: none;
+    margin-right: 0;
+  }
+  .woocommerce-cart .cart_totals .shipping-calculator-form select,
+  .woocommerce-cart .cart_totals .shipping-calculator-form input[type="text"] {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
