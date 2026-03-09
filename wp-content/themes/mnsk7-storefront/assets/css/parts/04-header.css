@@ -252,6 +252,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   align-items: center;
   gap: 0.5rem;
   flex-shrink: 0;
+  flex-wrap: nowrap;
+  min-width: 0;
 }
 
 /* Search: один поиск — только иконка, по клику открывается dropdown */
@@ -259,6 +261,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   position: relative;
   display: flex;
   align-items: center;
+  flex-shrink: 0;
 }
 .mnsk7-header__search-form--inline {
   display: none !important;
@@ -323,29 +326,36 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   z-index: 101;
 }
 
-/* Desktop ≥1024px: widoczny pasek wyszukiwania w headerze (audit Zad.12) — jeden formularz */
-@media (min-width: 1024px) {
+/* Desktop ≥900px: pasek wyszukiwania W JEDNEJ LINII z headerem (nie dropdown pod spodem) */
+@media (min-width: 900px) {
   .mnsk7-header__search-toggle {
     display: none;
   }
+  .mnsk7-header__search-wrap {
+    align-items: stretch;
+  }
   .mnsk7-header__search-dropdown,
   .mnsk7-header__search-dropdown[hidden] {
-    position: static;
+    position: static !important;
     display: flex !important;
     opacity: 1;
     visibility: visible;
     margin: 0;
-    min-width: 220px;
-    width: 260px;
-    max-width: 280px;
+    min-width: 180px;
+    width: 220px;
+    max-width: 240px;
     box-shadow: none;
     border: 1px solid var(--color-border);
     border-radius: var(--r-sm);
-    padding: 0.35rem 0.5rem;
+    padding: 0.25rem 0.5rem;
+    margin-top: 0;
+    top: auto;
+    right: auto;
   }
   .mnsk7-header__search-dropdown .mnsk7-header__search-form {
     flex: 1;
     min-width: 0;
+    align-items: center;
   }
   .mnsk7-header__search-dropdown .mnsk7-header__search-input {
     flex: 1;
@@ -394,8 +404,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   outline-offset: 2px;
 }
 
-/* Account link + icon */
-/* Guest vs logged-in: stała szerokość etykiety konta — brak przesunięcia ikon */
+/* Account link + icon — bez nałożenia na koszyk (min-width: 0, flex-shrink) */
 .mnsk7-header__link {
   display: inline-flex;
   align-items: center;
@@ -409,9 +418,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   border-radius: var(--r-sm);
   transition: color 0.15s ease, background 0.15s ease;
   letter-spacing: 0.01em;
+  flex-shrink: 1;
+  min-width: 0;
 }
 .mnsk7-header__link--account .mnsk7-header__link-text {
-  max-width: 8em;
+  max-width: 6em;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -441,6 +452,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 /* Cart: icon + count, dropdown — tylko nasza SVG, bez ikony z Storefront/Woo */
 .mnsk7-header__cart {
   position: relative;
+  flex-shrink: 0;
 }
 .mnsk7-header__cart .cart-contents::before,
 .mnsk7-header__cart .cart-contents::after,

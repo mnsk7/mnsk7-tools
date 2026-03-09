@@ -344,7 +344,7 @@ add_action( 'wp_footer', function () {
 				searchToggle.setAttribute('aria-expanded', open);
 			}
 			function updateSearchDesktop() {
-				if (window.innerWidth >= 1024) {
+				if (window.innerWidth >= 900) {
 					searchDropdown.removeAttribute('hidden');
 					searchToggle.setAttribute('aria-expanded', 'true');
 				} else {
@@ -354,7 +354,7 @@ add_action( 'wp_footer', function () {
 			window.addEventListener('resize', updateSearchDesktop);
 			updateSearchDesktop();
 			searchToggle.addEventListener('click', function() {
-				if (window.innerWidth >= 1024) return;
+				if (window.innerWidth >= 900) return;
 				var open = searchDropdown.hidden;
 				setSearchOpen(open);
 				if (open) {
@@ -371,7 +371,7 @@ add_action( 'wp_footer', function () {
 			var searchForm = searchDropdown.querySelector('form');
 			if (searchForm) {
 				searchForm.addEventListener('submit', function() {
-					if (window.innerWidth < 1024) setSearchOpen(false);
+					if (window.innerWidth < 900) setSearchOpen(false);
 				});
 			}
 		}
