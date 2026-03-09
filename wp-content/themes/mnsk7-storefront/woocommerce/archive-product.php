@@ -154,6 +154,17 @@ if ( woocommerce_product_loop() ) {
 			</table>
 		</div>
 		<?php
+		/* Przy kilku stronach: przycisk „Pokaż więcej” (link do następnej strony) */
+		if ( $use_table ) {
+			$paged = max( 1, get_query_var( 'paged' ) );
+			$total_pages = $GLOBALS['wp_query']->max_num_pages;
+			if ( $total_pages > 1 && $paged < $total_pages ) {
+				$next_url = add_query_arg( 'paged', $paged + 1 );
+				echo '<div class="mnsk7-plp-load-more-wrap col-full">';
+				echo '<a href="' . esc_url( $next_url ) . '" class="mnsk7-plp-load-more button">' . esc_html__( 'Pokaż więcej', 'mnsk7-storefront' ) . '</a>';
+				echo '</div>';
+			}
+		}
 	} else {
 		woocommerce_product_loop_start();
 		if ( wc_get_loop_prop( 'total' ) ) {

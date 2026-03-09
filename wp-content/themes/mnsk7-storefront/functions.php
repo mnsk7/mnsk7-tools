@@ -54,15 +54,13 @@ add_filter( 'wp_nav_menu_objects', function ( $items, $args ) {
 	return $filtered;
 }, 20, 2 );
 
-/** PLP: jedna stylistyka — u góry tylko paginacja (+ ewent. powiadomienia); u dołu: sortowanie + wyników + paginacja (bez duplikatu) */
+/** PLP: u góry — sortowanie + paginacja; u dołu — tylko wyników + paginacja (bez duplikatu sortowania) */
 add_action( 'wp', function () {
 	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_category() && ! is_product_tag() ) ) {
 		return;
 	}
 	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_result_count', 20 );
-	remove_action( 'woocommerce_before_shop_loop', 'woocommerce_catalog_ordering', 30 );
-	add_action( 'woocommerce_after_shop_loop', 'woocommerce_catalog_ordering', 5 );
-	add_action( 'woocommerce_after_shop_loop', 'woocommerce_result_count', 7 );
+	add_action( 'woocommerce_after_shop_loop', 'woocommerce_result_count', 5 );
 }, 25 );
 
 /** Ładne okruszki: separator › + wrapper */

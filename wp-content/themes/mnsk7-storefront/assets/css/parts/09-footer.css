@@ -29,6 +29,13 @@
   margin: 0;
   font-family: var(--font-base);
 }
+/* Na stronie Moje konto i innych WooCommerce — ten sam footer co na głównej (nadpisuje ewent. styl parenta) */
+body.woocommerce-account .mnsk7-footer,
+body.woocommerce-account #colophon.mnsk7-footer,
+body.page .mnsk7-footer,
+body.page #colophon.mnsk7-footer {
+  background: var(--color-footer-bg) !important;
+}
 
 /* Górny blok: obramowanie w kolorze strony */
 .mnsk7-footer__top {

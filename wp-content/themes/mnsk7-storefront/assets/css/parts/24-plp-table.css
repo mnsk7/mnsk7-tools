@@ -14,17 +14,17 @@ body.tax-product_tag [class*="category-image"] {
   display: none !important;
 }
 
-/* Nagłówek kategorii/tagu: odstęp od headera i od chipów (design) */
+/* Nagłówek kategorii/tagu — wizualna hierarchia: tytuł + chips = jeden blok, oddalony od headera */
 .woocommerce-products-header {
-  margin-top: 1.25rem;
-  margin-bottom: 1rem;
-  padding-bottom: 0.5rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  padding-bottom: 0;
 }
 .woocommerce-products-header__title.page-title {
-  margin: 0 0 0.25rem 0;
+  margin: 0;
   font-size: clamp(1.25rem, 2.5vw, 1.5rem);
   font-weight: 700;
-  line-height: 1.25;
+  line-height: 1.3;
   color: var(--color-text);
 }
 
@@ -102,12 +102,12 @@ body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
   }
 }
 
-/* Archiwum sklepu, kategorii i tagów: bez sidebaru, pełna szerokość; odstęp od headera */
+/* Archiwum sklepu, kategorii i tagów: bez sidebaru, pełna szerokość; powietrze od headera (senior layout) */
 body.post-type-archive-product #content #primary,
 body.tax-product_cat #content #primary,
 body.tax-product_tag #content #primary {
   flex: 1 1 100%;
-  padding-top: 1rem;
+  padding-top: 1.75rem;
 }
 body.post-type-archive-product #content #secondary,
 body.tax-product_cat #content #secondary,
@@ -126,12 +126,16 @@ body.tax-product_tag .mnsk7-catalog-filters {
   display: none !important;
 }
 
-/* Chips row (subcategories / filters) — UX: min 44px touch, horizontal scroll on mobile */
+/* Chips row (subcategories / filters) — tuż pod tytułem, spójny rytm; UX: min 44px touch */
 .mnsk7-plp-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin-bottom: 1rem;
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+.mnsk7-plp-chips:first-of-type {
+  margin-bottom: 0.75rem;
 }
 
 @media (max-width: 768px) {
@@ -201,8 +205,10 @@ body.tax-product_tag .mnsk7-catalog-filters {
   align-self: center;
 }
 
+/* Drugi rząd chipów (Średnica, Długość L) — lekki odstęp od kategorii */
 .mnsk7-plp-chips--attrs {
   margin-top: 0.5rem;
+  margin-bottom: 0.75rem;
 }
 
 /* Wybrane filtry + przycisk Wyczyść wszystkie (UX audit) */
@@ -295,6 +301,34 @@ body.tax-product_tag .mnsk7-catalog-filters {
     margin-bottom: 0.25rem;
     margin-right: 0;
   }
+}
+
+/* Przycisk „Pokaż więcej” pod tabelą (gdy jest następna strona) */
+.mnsk7-plp-load-more-wrap {
+  margin: 1rem 0 1.5rem;
+  text-align: center;
+}
+.mnsk7-plp-load-more {
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  font-family: var(--font-base);
+  background: var(--color-primary);
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--r-sm);
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s ease;
+  min-height: 44px;
+  line-height: 1.25;
+  box-sizing: border-box;
+}
+.mnsk7-plp-load-more:hover {
+  background: var(--color-primary-hover);
+  color: var(--color-white);
+  text-decoration: none;
 }
 
 /* Table wrapper */
