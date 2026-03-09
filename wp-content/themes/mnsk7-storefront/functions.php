@@ -1084,18 +1084,24 @@ add_action( 'woocommerce_single_product_summary', function () {
 	echo '</tbody></table></div>';
 }, 21 );
 
+/** Trust badges HTML (PDP i PLP — wspólna treść: dostawa, faktura, zwroty) */
+function mnsk7_render_trust_badges( $wrapper_class = 'mnsk7-pdp-trust' ) {
+	$eta_label = function_exists( 'mnsk7_delivery_eta_badge_label' ) ? mnsk7_delivery_eta_badge_label() : __( 'Dostawa jutro', 'mnsk7-storefront' );
+	$item_class = $wrapper_class . '__item';
+	echo '<div class="' . esc_attr( $wrapper_class ) . '" role="list">';
+	echo '<span class="' . esc_attr( $item_class ) . '">' . esc_html( $eta_label ) . '</span>';
+	echo '<span class="' . esc_attr( $item_class ) . '">' . esc_html__( 'Faktura VAT', 'mnsk7-storefront' ) . '</span>';
+	echo '<span class="' . esc_attr( $item_class ) . '">' . esc_html__( 'Darmowa dostawa od 300 zł', 'mnsk7-storefront' ) . '</span>';
+	echo '<span class="' . esc_attr( $item_class ) . '">' . esc_html__( 'Zwroty 30 dni', 'mnsk7-storefront' ) . '</span>';
+	echo '</div>';
+}
+
 /* 10. PDP — trust strip pod CTA (fallback gdy brak mu-plugina) */
 add_action( 'woocommerce_single_product_summary', function () {
 	if ( function_exists( 'mnsk7_single_product_trust_badges' ) ) {
 		return;
 	}
-	$eta_label = function_exists( 'mnsk7_delivery_eta_badge_label' ) ? mnsk7_delivery_eta_badge_label() : __( 'Dostawa jutro', 'mnsk7-storefront' );
-	echo '<div class="mnsk7-pdp-trust">';
-	echo '<span class="mnsk7-pdp-trust__item">' . esc_html( $eta_label ) . '</span>';
-	echo '<span class="mnsk7-pdp-trust__item">' . esc_html__( 'Faktura VAT', 'mnsk7-storefront' ) . '</span>';
-	echo '<span class="mnsk7-pdp-trust__item">' . esc_html__( 'Darmowa dostawa od 300 zł', 'mnsk7-storefront' ) . '</span>';
-	echo '<span class="mnsk7-pdp-trust__item">' . esc_html__( 'Zwroty 30 dni', 'mnsk7-storefront' ) . '</span>';
-	echo '</div>';
+	mnsk7_render_trust_badges( 'mnsk7-pdp-trust' );
 }, 35 );
 
 /* 11. Instagram shortcode — oficjalny embed (jak na alesyatakun.by: blockquote + embed.js) */

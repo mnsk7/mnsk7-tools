@@ -181,6 +181,12 @@ if ( woocommerce_product_loop() ) {
 			</div>
 			<?php
 		}
+		/* Trust badges przy tabeli — tak jak w kartce produktu (dostawa, faktura, zwroty) */
+		if ( function_exists( 'mnsk7_render_trust_badges' ) ) {
+			echo '<div class="mnsk7-plp-trust-wrap col-full">';
+			mnsk7_render_trust_badges( 'mnsk7-plp-trust' );
+			echo '</div>';
+		}
 		?>
 		<div class="mnsk7-product-table-wrap col-full">
 			<table class="mnsk7-product-table shop_table">
