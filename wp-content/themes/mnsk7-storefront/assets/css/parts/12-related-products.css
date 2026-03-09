@@ -64,7 +64,13 @@
   align-self: stretch !important;
 }
 .cross-sells ul.products li.product .woocommerce-loop-product__link,
-.cross-sells ul.products li.product img {
+.cross-sells ul.products li.product img,
+.related.products ul.products li.product .woocommerce-loop-product__link,
+.related.products ul.products li.product img,
+.upsells.products ul.products li.product .woocommerce-loop-product__link,
+.upsells.products ul.products li.product img,
+.up-sells.products ul.products li.product .woocommerce-loop-product__link,
+.up-sells.products ul.products li.product img {
   display: block;
   width: 100%;
   height: auto;
@@ -88,7 +94,7 @@
   transform: translateY(-2px);
 }
 
-/* Cena w bloku Podobne produkty / Z tej samej kategorii — zawsze widoczna */
+/* Cena w bloku Podobne produkty — zawsze widoczna (fallback: „Cena na zapytanie”) */
 .related.products ul.products li.product .price,
 .upsells.products ul.products li.product .price,
 .cross-sells ul.products li.product .price {
@@ -98,6 +104,12 @@
   font-size: var(--fs-base);
   color: var(--color-primary-dark, #0a5a9e);
   margin: 0.25rem 0 0.5rem;
+}
+.related.products .woocommerce-price-fallback,
+.upsells.products .woocommerce-price-fallback,
+.cross-sells .woocommerce-price-fallback {
+  font-weight: 600;
+  color: var(--color-text-secondary);
 }
 
 /* Related/cross-sells: force Add to cart button horizontal text (fix vertical letter stacking) */

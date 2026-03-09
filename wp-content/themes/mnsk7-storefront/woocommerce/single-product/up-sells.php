@@ -25,14 +25,9 @@ if ( $upsells ) :
 	<section class="up-sells upsells products">
 		<?php
 		$heading = apply_filters( 'woocommerce_product_upsells_products_heading', __( 'You may also like&hellip;', 'woocommerce' ) );
-		$subtitle = apply_filters( 'mnsk7_upsells_subtitle', __( 'Dopasowane do tego produktu', 'mnsk7-storefront' ) );
-
 		if ( $heading ) :
 			?>
 			<h2><?php echo esc_html( $heading ); ?></h2>
-			<?php if ( $subtitle ) : ?>
-				<p class="related-products__subtitle"><?php echo esc_html( $subtitle ); ?></p>
-			<?php endif; ?>
 		<?php endif; ?>
 		<?php woocommerce_product_loop_start(); ?>
 

@@ -475,6 +475,27 @@ body.single-product #content #secondary {
   grid-template-columns: 1fr !important;
 }
 
+/* Zdjęcia w upsells/related — stały kwadrat, cena widoczna */
+.single-product .upsells.products ul.products li.product .woocommerce-loop-product__link,
+.single-product .upsells.products ul.products li.product img,
+.single-product .up-sells.products ul.products li.product .woocommerce-loop-product__link,
+.single-product .up-sells.products ul.products li.product img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+.single-product .upsells.products ul.products li.product .price,
+.single-product .up-sells.products ul.products li.product .price {
+  display: block !important;
+  visibility: visible;
+  font-weight: 700;
+  font-size: var(--fs-base);
+  color: var(--color-primary-dark, #0a5a9e);
+  margin: 0.25rem 0 0.5rem;
+}
+
 @media (max-width: 900px) {
   .single-product .related.products ul.products,
   .single-product .upsells.products ul.products,
