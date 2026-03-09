@@ -207,10 +207,11 @@
   border-radius: var(--r-md);
 }
 
-/* Audit: pełna nazwa produktu w "Twoje zamówienie" — bez obcięcia */
+/* Audit task 7: pełna nazwa produktu w "Twoje zamówienie" — bez obcięcia (mobile/tablet) */
 .woocommerce-checkout-review-order-table .product-name {
-  white-space: normal;
+  white-space: normal !important;
   word-wrap: break-word;
+  overflow-wrap: break-word;
   max-width: 100%;
 }
 .woocommerce-checkout-review-order-table .product-name a {
