@@ -242,6 +242,8 @@ if ( woocommerce_product_loop() ) {
 		}
 	}
 	if ( $is_taxonomy && $has_filter ) {
+		// Jeden spójny blok empty state — bez duplikatu komunikatu WooCommerce.
+		remove_action( 'woocommerce_no_products_found', 'wc_no_products_found', 10 );
 		$clear_url = remove_query_arg( $filter_params );
 		echo '<div class="mnsk7-plp-empty col-full" role="status">';
 		echo '<p class="mnsk7-plp-empty__text">' . esc_html__( 'Brak produktów dla wybranych filtrów.', 'mnsk7-storefront' ) . '</p>';

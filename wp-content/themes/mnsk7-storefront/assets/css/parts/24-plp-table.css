@@ -400,11 +400,14 @@ body.tax-product_tag .mnsk7-catalog-filters {
   font-weight: 600;
 }
 
-/* PLP-11: empty state — blok z CTA */
+/* PLP-11: empty state — jeden spójny blok (filtr / brak wyników) */
 .mnsk7-plp-empty {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   text-align: center;
-  padding: 2rem 1rem;
-  margin: 1.5rem 0;
+  padding: 2.5rem 1.5rem;
+  margin: 2rem 0;
   background: var(--color-surface, #f5f5f5);
   border-radius: var(--r-md, 8px);
   border: 1px dashed var(--color-border, #ddd);
@@ -414,16 +417,28 @@ body.tax-product_tag .mnsk7-catalog-filters {
   font-size: var(--fs-base);
   font-weight: 600;
   color: var(--color-text);
+  line-height: 1.4;
 }
 .mnsk7-plp-empty__hint {
   margin: 0 0 1rem;
   font-size: var(--fs-sm);
   color: var(--color-text-secondary);
+  line-height: 1.4;
+}
+.mnsk7-plp-empty__hint:last-child {
+  margin-bottom: 0;
 }
 .mnsk7-plp-empty__cta {
   display: inline-block;
   min-height: 44px;
   padding: 0.5rem 1.25rem;
+  margin-top: 0.25rem;
+}
+/* Na archiwum: ukryć ewentualny drugi notice Woo (gdy już pokazujemy własny empty) */
+body.post-type-archive-product .woocommerce-no-products-found:not(.mnsk7-plp-empty),
+body.tax-product_cat .woocommerce-no-products-found:not(.mnsk7-plp-empty),
+body.tax-product_tag .woocommerce-no-products-found:not(.mnsk7-plp-empty) {
+  margin-top: 0;
 }
 
 /* PLP-12: link „Wyczyść wyszukiwanie" na stronie wyników */
@@ -520,8 +535,10 @@ body.tax-product_tag .mnsk7-catalog-filters {
   width: 100%;
 }
 
+/* table-layout: fixed — одинаковые пропорции колонок при 1 и при многих товарах */
 .mnsk7-product-table {
   width: 100%;
+  table-layout: fixed;
   border-collapse: collapse;
   font-size: var(--fs-sm);
   background: var(--color-white);
@@ -543,6 +560,20 @@ body.tax-product_tag .mnsk7-catalog-filters {
   border-bottom: 2px solid var(--color-border-strong);
 }
 
+/* Фиксированные доли колонок для единого вида на всех категориях */
+.mnsk7-product-table th.mnsk7-table-cell--thumb,
+.mnsk7-product-table .mnsk7-table-cell--thumb { width: 7%; min-width: 64px; }
+.mnsk7-product-table th.mnsk7-table-cell--title,
+.mnsk7-product-table .mnsk7-table-cell--title { width: 40%; }
+.mnsk7-product-table th.mnsk7-table-cell--price,
+.mnsk7-product-table .mnsk7-table-cell--price { width: 10%; }
+.mnsk7-product-table th.mnsk7-table-cell--stock,
+.mnsk7-product-table .mnsk7-table-cell--stock { width: 12%; }
+.mnsk7-product-table th.mnsk7-table-cell--qty,
+.mnsk7-product-table .mnsk7-table-cell--qty { width: 12%; }
+.mnsk7-product-table th.mnsk7-table-cell--action,
+.mnsk7-product-table .mnsk7-table-cell--action { width: 19%; }
+
 .mnsk7-product-table tbody tr {
   border-bottom: 1px solid var(--color-border);
   transition: background 0.15s ease;
@@ -560,10 +591,6 @@ body.tax-product_tag .mnsk7-catalog-filters {
   padding: 0.5rem 0.75rem;
   vertical-align: middle;
   font-size: var(--fs-xs);
-}
-
-.mnsk7-product-table .mnsk7-table-cell--thumb {
-  width: 80px;
 }
 
 .mnsk7-product-table .mnsk7-table-cell--thumb a {
