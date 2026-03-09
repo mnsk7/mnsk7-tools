@@ -585,6 +585,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   box-sizing: border-box;
   vertical-align: middle;
 }
+/* Audit task 11: przy pustym koszyku ikona + „0” zawsze widoczne */
+.mnsk7-header__cart--empty .mnsk7-header__cart-icon,
+.mnsk7-header__cart--empty .mnsk7-header__cart-count {
+  display: inline-flex !important;
+}
 /* Mini-cart: pokazać do 3 ostatnich pozycji (audit Zad.10); podsumowanie i przyciski zawsze */
 .mnsk7-header__cart-dropdown .cart_list,
 .mnsk7-header__cart-dropdown .product_list_widget,

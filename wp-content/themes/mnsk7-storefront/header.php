@@ -112,8 +112,9 @@ endif;
 			if ( function_exists( 'wc_get_cart_url' ) && function_exists( 'woocommerce_mini_cart' ) ) {
 				$cart_count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
 				$cart_total = WC()->cart ? WC()->cart->get_cart_total() : '';
+				$cart_empty_class = ( $cart_count === 0 ) ? ' mnsk7-header__cart--empty' : '';
 				?>
-				<div class="mnsk7-header__cart">
+				<div class="mnsk7-header__cart<?php echo esc_attr( $cart_empty_class ); ?>">
 					<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php esc_attr_e( 'Koszyk', 'mnsk7-storefront' ); ?>">
 						<span class="mnsk7-header__cart-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
 						<span class="mnsk7-header__cart-count" aria-hidden="true"><?php echo absint( $cart_count ); ?></span>
