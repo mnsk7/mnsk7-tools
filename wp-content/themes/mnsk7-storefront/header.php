@@ -87,7 +87,7 @@ endif;
 					<button type="submit" class="mnsk7-header__search-submit" aria-label="<?php esc_attr_e( 'Szukaj', 'mnsk7-storefront' ); ?>"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
 				</form>
 				<button type="button" class="mnsk7-header__search-toggle" aria-expanded="false" aria-controls="mnsk7-header-search" aria-label="<?php esc_attr_e( 'Szukaj', 'mnsk7-storefront' ); ?>">
-					<span class="mnsk7-header__search-icon" aria-hidden="true"></span>
+					<span class="mnsk7-header__search-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
 					<span class="mnsk7-header__search-label"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></span>
 				</button>
 				<div id="mnsk7-header-search" class="mnsk7-header__search-dropdown" hidden>

@@ -47,6 +47,12 @@ if ( taxonomy_exists( 'product_cat' ) ) {
 			</div>
 			<div class="mnsk7-footer__col mnsk7-footer__col--contact">
 				<h3 class="mnsk7-footer__title" id="footer-kontakt"><?php esc_html_e( 'Kontakt', 'mnsk7-storefront' ); ?></h3>
+				<?php
+				$footer_address = apply_filters( 'mnsk7_footer_legal_address', '' );
+				if ( $footer_address !== '' ) {
+					echo '<p class="mnsk7-footer__address">' . wp_kses_post( $footer_address ) . '</p>';
+				}
+				?>
 				<ul class="mnsk7-footer__contact-list">
 					<li>
 						<span class="mnsk7-footer__icon mnsk7-footer__icon--email" aria-hidden="true"></span>
@@ -56,9 +62,13 @@ if ( taxonomy_exists( 'product_cat' ) ) {
 						<span class="mnsk7-footer__icon mnsk7-footer__icon--phone" aria-hidden="true"></span>
 						<a href="tel:+48451696511">+48 451696511</a>
 					</li>
-					<li>
+					<li class="mnsk7-footer__contact-item--hours">
 						<span class="mnsk7-footer__icon mnsk7-footer__icon--clock" aria-hidden="true"></span>
-						<span>Pn.–pt. 9.00–17.00, sb. 10.00–12.00, nd. zamknięte</span>
+						<dl class="mnsk7-footer__hours" aria-label="<?php esc_attr_e( 'Godziny otwarcia', 'mnsk7-storefront' ); ?>">
+							<div class="mnsk7-footer__hours-row"><dt>pn.&nbsp;&ndash;&nbsp;pt.</dt><dd>9:00&nbsp;&ndash;&nbsp;17:00</dd></div>
+							<div class="mnsk7-footer__hours-row"><dt>sb.</dt><dd>10:00&nbsp;&ndash;&nbsp;12:00</dd></div>
+							<div class="mnsk7-footer__hours-row"><dt>nd.</dt><dd><?php esc_html_e( 'zamknięte', 'mnsk7-storefront' ); ?></dd></div>
+						</dl>
 					</li>
 					<li>
 						<span class="mnsk7-footer__icon mnsk7-footer__icon--instagram" aria-hidden="true"></span>

@@ -96,6 +96,16 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	return __( 'Darmowa dostawa od 300 zł. Tylko Polska.', 'mnsk7-storefront' );
 }, 5 );
 
+/** Footer: dane firmy (jur. adres, KRS, NIP, REGON) — nadpisuj przez filtr mnsk7_footer_legal_address */
+add_filter( 'mnsk7_footer_legal_address', function ( $address ) {
+	if ( $address !== '' ) {
+		return $address;
+	}
+	return '<strong class="mnsk7-footer__legal-name">MNSK7 Spółka z o.o.</strong><br>'
+		. 'ul. Williama Heerleina Lindleya 16/512, 02-013 Warszawa (Ochota)<br>'
+		. '<span class="mnsk7-footer__legal-registry">KRS: 0001072755 &middot; NIP: 5242991741 &middot; REGON: 527101693</span>';
+}, 5 );
+
 /** 4.1 Korzyń: fallback — jeśli strona koszyka pusta lub bez shortcode, wyświetl [woocommerce_cart] */
 add_filter( 'the_content', function ( $content ) {
 	if ( ! function_exists( 'is_cart' ) || ! is_cart() ) {

@@ -139,11 +139,58 @@
   padding: 0;
   margin: 0;
 }
+/* Dane firmy / adres siedziby (domyślnie z filtra mnsk7_footer_legal_address) */
+.mnsk7-footer__address {
+  margin: 0 0 0.75rem;
+  line-height: 1.55;
+  color: var(--color-footer-text);
+}
+.mnsk7-footer__legal-name {
+  font-weight: 700;
+  color: var(--color-footer-text);
+}
+.mnsk7-footer__legal-registry {
+  font-size: 0.9375rem;
+  color: var(--color-footer-muted);
+  margin-top: 0.25rem;
+  display: block;
+}
+
+/* Godziny otwarcia — dwie kolumny, równo */
+.mnsk7-footer__hours {
+  margin: 0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0 1.25rem;
+  align-items: baseline;
+  font-size: inherit;
+}
+.mnsk7-footer__hours-row {
+  display: contents;
+}
+.mnsk7-footer__hours dt {
+  margin: 0;
+  font-weight: 500;
+  color: var(--color-footer-text);
+}
+.mnsk7-footer__hours dd {
+  margin: 0;
+  color: var(--color-footer-text);
+  text-align: right;
+  white-space: nowrap;
+}
+
 .mnsk7-footer__contact-list li {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
+}
+.mnsk7-footer__contact-item--hours {
+  align-items: flex-start;
+}
+.mnsk7-footer__contact-item--hours .mnsk7-footer__icon {
+  margin-top: 0.15em;
 }
 .mnsk7-footer__icon {
   flex-shrink: 0;
