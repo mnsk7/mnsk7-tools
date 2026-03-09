@@ -52,10 +52,15 @@ body.page #colophon.mnsk7-footer {
   grid-template-columns: 1fr 1fr 1.2fr 1fr;
   gap: 1.5rem 2rem;
 }
+/* Audit task 5: pełny tekst „Darmowa dostawa od 300 zł. Tylko Polska.” — zawijanie zamiast obcięcia */
 .mnsk7-footer__dostawa-line {
   margin: 0.75rem 0 0;
   font-size: 0.9375rem;
   font-weight: 600;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
+  min-width: 0;
 }
 .mnsk7-footer__dostawa-line a {
   color: var(--color-footer-link);
