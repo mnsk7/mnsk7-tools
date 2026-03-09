@@ -207,6 +207,16 @@
   border-radius: var(--r-md);
 }
 
+/* Audit task 13: na mobile przycisk „Kupuję i płacę” widoczny, nie zasłonięty przez sticky header */
+@media (max-width: 768px) {
+  .woocommerce-checkout form.woocommerce-checkout {
+    padding-bottom: 6rem;
+  }
+  .woocommerce-checkout #payment .form-row.place-order {
+    margin-bottom: 1rem;
+  }
+}
+
 /* Audit task 7: pełna nazwa produktu w "Twoje zamówienie" — bez obcięcia (mobile/tablet) */
 .woocommerce-checkout-review-order-table .product-name {
   white-space: normal !important;
