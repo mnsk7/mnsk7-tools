@@ -1076,7 +1076,10 @@
   text-align: center;
 }
 
-/* Bestsellers shortcode — grid jak PLP/related (równa siatka, spójny breakpoint) */
+/* Bestsellers shortcode — pełna szerokość (bez pustych pasów po bokach), grid jak PLP */
+.mnsk7-section--bestsellers .col-full {
+  max-width: 100%;
+}
 .mnsk7-section--bestsellers .mnsk7-bestsellers,
 .mnsk7-section--bestsellers .col-full > .woocommerce {
   margin: 0;
@@ -1114,6 +1117,10 @@
   margin-bottom: 0.5rem;
 }
 .mnsk7-section--bestsellers .woocommerce-price-suffix {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+.mnsk7-section--bestsellers .woocommerce-price-fallback {
   font-weight: 600;
   color: var(--color-text-secondary);
 }

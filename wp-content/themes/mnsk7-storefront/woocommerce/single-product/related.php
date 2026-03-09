@@ -2,7 +2,7 @@
 /**
  * Related Products
  *
- * Override: mnsk7-storefront. Podtytuł „Z tej samej kategorii” pod H2.
+ * Override: mnsk7-storefront. Bez podtytułu; pomijanie bieżącego produktu z listy.
  *
  * @see     woocommerce/templates/single-product/related.php
  * @package WooCommerce\Templates
@@ -26,22 +26,25 @@ if ( $related_products ) :
 
 		<?php
 		$heading = apply_filters( 'woocommerce_product_related_products_heading', __( 'Related products', 'woocommerce' ) );
-		$subtitle = apply_filters( 'mnsk7_related_products_subtitle', __( 'Z tej samej kategorii', 'mnsk7-storefront' ) );
 
 		if ( $heading ) :
 			?>
 			<h2><?php echo esc_html( $heading ); ?></h2>
-			<?php if ( $subtitle ) : ?>
-				<p class="related-products__subtitle"><?php echo esc_html( $subtitle ); ?></p>
-			<?php endif; ?>
 		<?php endif; ?>
 		<?php woocommerce_product_loop_start(); ?>
 
-			<?php foreach ( $related_products as $related_product ) : ?>
-
+			<?php
+		$current_id = get_the_ID();
+		foreach ( $related_products as $related_product ) :
+			if ( ! is_a( $related_product, 'WC_Product' ) || $related_product->get_id() === $current_id ) {
+				continue;
+			}
+			$post_object = get_post( $related_product->get_id() );
+			if ( ! $post_object ) {
+				continue;
+			}
+			?>
 					<?php
-					$post_object = get_post( $related_product->get_id() );
-
 					setup_postdata( $GLOBALS['post'] = $post_object ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited, Squiz.PHP.DisallowMultipleAssignments.Found
 
 					wc_get_template_part( 'content', 'product' );
