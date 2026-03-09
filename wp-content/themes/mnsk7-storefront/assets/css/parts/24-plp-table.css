@@ -292,6 +292,11 @@ body.tax-product_tag .mnsk7-catalog-filters {
   font-weight: 500;
 }
 
+/* Rozwinięty blok „Więcej”: chipy biorą udział w flexie rodzica */
+.mnsk7-plp-chips-more:not([hidden]) {
+  display: contents;
+}
+
 /* Przycisk „Więcej” — wizualnie odróżniony od chipów, czytelny CTA */
 .mnsk7-plp-chips-toggle {
   display: inline-flex;
