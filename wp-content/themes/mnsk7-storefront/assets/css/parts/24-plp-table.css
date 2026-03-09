@@ -150,19 +150,30 @@ body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
 }
 
 /* Archiwum sklepu, kategorii i tagów: bez sidebaru, pełna szerokość; powietrze od headera (senior layout) */
+body.post-type-archive-product #content,
+body.tax-product_cat #content,
+body.tax-product_tag #content {
+  width: 100%;
+  max-width: var(--content-max);
+  box-sizing: border-box;
+}
 body.post-type-archive-product #content #primary,
 body.tax-product_cat #content #primary,
 body.tax-product_tag #content #primary {
   flex: 1 1 100%;
   width: 100%;
   min-width: 0;
+  max-width: 100%;
   padding-top: 1.75rem;
+  box-sizing: border-box;
 }
-/* Kolumna główna i site-main — zawsze pełna szerokość (bez kurczenia przy 1 wierszu w tabeli) */
+/* Kolumna główna i site-main — zawsze pełna szerokość (bez kurczenia przy 1 wierszu w tabeli lub przy aktywnych filtrach) */
 body.post-type-archive-product #content #primary .site-main,
 body.tax-product_cat #content #primary .site-main,
 body.tax-product_tag #content #primary .site-main {
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 body.post-type-archive-product #content #secondary,
 body.tax-product_cat #content #secondary,
@@ -181,7 +192,14 @@ body.tax-product_tag .mnsk7-catalog-filters {
   display: none !important;
 }
 
-/* Jedna szerokość dla całego bloku: chips + wyszukiwarka + tabela (bez rozjeżdżania) */
+/* Jedna szerokość dla całego bloku: chips + wyszukiwarka + tabela (bez rozjeżdżania przy 1 wyniku lub aktywnych filtrach) */
+body.post-type-archive-product .mnsk7-plp-content.col-full,
+body.tax-product_cat .mnsk7-plp-content.col-full,
+body.tax-product_tag .mnsk7-plp-content.col-full {
+  width: 100%;
+  max-width: var(--content-max);
+  box-sizing: border-box;
+}
 .mnsk7-plp-content {
   width: 100%;
   max-width: 100%;
