@@ -205,8 +205,11 @@ add_filter( 'woocommerce_product_upsells_products_heading', function ( $heading 
 	return __( 'Może spodoba się również…', 'mnsk7-storefront' );
 }, 10 );
 
-/** 1.1 Bestsellery na głównej: wyraźna cena (zł, pod nazwą, kolor) */
+/** 1.1 Cena w pętli (bestsellery, related, PLP): fallback gdy pusta; suffix „zł” na głównej */
 add_filter( 'woocommerce_get_price_html', function ( $html, $product ) {
+	if ( in_the_loop() && (string) $html === '' ) {
+		return '<span class="woocommerce-price-fallback">' . esc_html__( 'Cena na zapytanie', 'mnsk7-storefront' ) . '</span>';
+	}
 	if ( ! $html || ! is_front_page() || ! in_the_loop() ) {
 		return $html;
 	}
@@ -215,7 +218,18 @@ add_filter( 'woocommerce_get_price_html', function ( $html, $product ) {
 		return $html;
 	}
 	return $html . ' <span class="woocommerce-price-suffix">zł</span>';
-}, 10, 2 );
+}, 5, 2 );
+
+/** Użycie theme loop/price.php (zawsze blok .price, fallback) zamiast domyślnego WooCommerce */
+add_action( 'init', function () {
+	if ( ! function_exists( 'woocommerce_template_loop_price' ) ) {
+		return;
+	}
+	remove_action( 'woocommerce_after_shop_loop_item_title', 'woocommerce_template_loop_price', 10 );
+	add_action( 'woocommerce_after_shop_loop_item_title', function () {
+		wc_get_template( 'loop/price.php' );
+	}, 10 );
+}, 20 );
 
 /** 4.6 Tekst pustego koszyka (do wyświetlenia w cart-empty.php) */
 add_filter( 'wc_empty_cart_message', function () {

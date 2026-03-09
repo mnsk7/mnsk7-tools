@@ -1076,9 +1076,23 @@
   text-align: center;
 }
 
-/* Bestsellers shortcode — pełna szerokość (bez pustych pasów po bokach), grid jak PLP */
+/* Bestsellers — pełna szerokość viewport (breakout z #content / .col-full), bez pustych pasów */
+.mnsk7-front-page .mnsk7-section--bestsellers {
+  width: 100vw;
+  max-width: 100vw;
+  margin-left: calc(-50vw + 50%);
+  box-sizing: border-box;
+}
 .mnsk7-section--bestsellers .col-full {
   max-width: 100%;
+  padding-left: var(--space-16, 1rem);
+  padding-right: var(--space-16, 1rem);
+}
+@media (min-width: 768px) {
+  .mnsk7-section--bestsellers .col-full {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 .mnsk7-section--bestsellers .mnsk7-bestsellers,
 .mnsk7-section--bestsellers .col-full > .woocommerce {

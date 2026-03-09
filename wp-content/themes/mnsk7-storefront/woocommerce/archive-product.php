@@ -19,6 +19,7 @@ $current_term = $is_taxonomy ? get_queried_object() : null;
 
 do_action( 'woocommerce_shop_loop_header' );
 
+echo '<div class="mnsk7-plp-archive-wrap col-full">';
 echo '<div class="mnsk7-plp-content col-full">';
 
 /* PLP-12: na stronie wyników wyszukiwania — link „Wyczyść wyszukiwanie" */
@@ -107,7 +108,7 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 			$without = remove_query_arg( $param );
 			echo '<a href="' . esc_url( $without ) . '" class="mnsk7-plp-chip mnsk7-plp-chip--active mnsk7-plp-chip--remove" aria-label="' . esc_attr__( 'Usuń filtr', 'mnsk7-storefront' ) . '">' . esc_html( $val ) . ' ×</a>';
 		}
-		echo ' <a href="' . esc_url( $clear_url ) . '" class="mnsk7-plp-reset">' . esc_html__( 'Wyczyść wszystkie', 'mnsk7-storefront' ) . '</a>';
+		echo ' <a href="' . esc_url( $clear_url ) . '" class="button mnsk7-plp-reset">' . esc_html__( 'Wyczyść wszystkie', 'mnsk7-storefront' ) . '</a>';
 		echo '</div>';
 	}
 }
@@ -231,6 +232,7 @@ if ( woocommerce_product_loop() ) {
 	echo '<div class="mnsk7-plp-toolbar mnsk7-plp-toolbar--bottom col-full">';
 	do_action( 'woocommerce_after_shop_loop' );
 	echo '</div>';
+	echo '</div><!-- .mnsk7-plp-archive-wrap -->';
 } else {
 	echo '</div><!-- .mnsk7-plp-content -->';
 	$filter_params = array( 'filter_srednica', 'filter_srednica-trzpienia', 'filter_dlugosc-calkowita-l', 'filter_dlugosc-robocza-h' );
@@ -252,6 +254,7 @@ if ( woocommerce_product_loop() ) {
 		echo '</div>';
 	}
 	do_action( 'woocommerce_no_products_found' );
+	echo '</div><!-- .mnsk7-plp-archive-wrap -->';
 }
 
 do_action( 'woocommerce_after_main_content' );
