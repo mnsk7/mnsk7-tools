@@ -93,10 +93,13 @@ add_filter( 'mnsk7_show_cookie_bar', function ( $show ) {
 	return $show;
 }, 5 );
 
-/** 4.0 UX: domyślny tekst promocyjny w headerze (darmowa dostawa) + CTA do Dostawa (audit Zad.11) */
+/** 4.0 UX: domyślny tekst promocyjny w headerze (darmowa dostawa) + CTA do Dostawa (audit Zad.11). Na stronie głównej bez paska — nie konkurować z hero. */
 add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	if ( $text !== '' ) {
 		return $text;
+	}
+	if ( is_front_page() ) {
+		return '';
 	}
 	$dostawa_url = home_url( '/dostawa-i-platnosci/' );
 	$link = '<a href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Warunki dostawy', 'mnsk7-storefront' ) . ' &rarr;</a>';

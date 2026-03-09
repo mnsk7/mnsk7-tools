@@ -206,6 +206,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 0 1rem;
+  pointer-events: auto;
 }
 .mnsk7-header__menu li.menu-item-has-children:hover .sub-menu,
 .mnsk7-header__menu li.menu-item-has-children:focus-within .sub-menu {
@@ -449,10 +450,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   background: rgba(0,0,0,0.04);
 }
 
-/* Cart: icon + count, dropdown — tylko nasza SVG, bez ikony z Storefront/Woo */
+/* Cart: nie kurczyć przy długim "Moje konto" (audit: zalogowany = kaša) */
 .mnsk7-header__cart {
   position: relative;
   flex-shrink: 0;
+  min-width: 44px;
 }
 .mnsk7-header__cart .cart-contents::before,
 .mnsk7-header__cart .cart-contents::after,
@@ -782,9 +784,28 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 
+/* Audit: dropdown Sklep nie może przycinać się ani zakrywać paska promocyjnego i koszyka */
 .mnsk7-header {
-  overflow-x: hidden;
-  overflow-y: visible;
+  overflow: visible;
+}
+.mnsk7-header__inner {
+  overflow: visible;
+}
+.mnsk7-header__nav {
+  overflow: visible;
+}
+/* Submenu Sklep: pod headerem, ale nie nad promo ani nad koszykiem */
+.mnsk7-header__menu .sub-menu {
+  z-index: 100;
+}
+/* Search, konto, koszyk — zawsze na wierzchu w headerze (dropdown nie zakrywa) */
+.mnsk7-header__actions {
+  position: relative;
+  z-index: 110;
+}
+.mnsk7-header__cart,
+.mnsk7-header__cart-dropdown {
+  z-index: 111;
 }
 
 /* Legacy: Storefront header actions (when parent outputs them) */

@@ -26,15 +26,11 @@ get_header();
 				</div>
 				<div class="mnsk7-hero__usp">
 					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
-					<span><?php esc_html_e( 'Faktura VAT', 'mnsk7-storefront' ); ?></span>
-				</div>
-				<div class="mnsk7-hero__usp">
-					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
 					<span><?php esc_html_e( '100% pozytywnych opinii', 'mnsk7-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-hero__usp">
 					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
-					<span><?php esc_html_e( '3 500+ zamówień rocznie', 'mnsk7-storefront' ); ?></span>
+					<span><?php esc_html_e( 'Faktura VAT', 'mnsk7-storefront' ); ?></span>
 				</div>
 			</div>
 			<?php if ( is_user_logged_in() ) : $u = wp_get_current_user(); ?>
@@ -50,7 +46,52 @@ get_header();
 		</div>
 	</section>
 
-	<!-- KATEGORIE -->
+	<!-- BESTSELLERS (CRO: drugi blok po hero — od razu produkt) -->
+	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
+	<section class="mnsk7-section mnsk7-section--bestsellers">
+		<div class="col-full">
+			<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title="Bestsellery i polecane"]' ); ?>
+			<p class="mnsk7-section__more mnsk7-bestsellers-more">
+				<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie bestsellery →', 'mnsk7-storefront' ); ?></a>
+			</p>
+		</div>
+	</section>
+	<?php endif; ?>
+
+	<!-- TRUST + OPINIE (CRO: trzeci blok — zaufanie przed głębszym katalogiem) -->
+	<section class="mnsk7-section mnsk7-section--trust mnsk7-section--light">
+		<div class="col-full">
+			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Dlaczego kupujący nam ufają', 'mnsk7-storefront' ); ?></h2>
+			<div class="mnsk7-trust-stats">
+				<div class="mnsk7-trust-stats__item">
+					<span class="mnsk7-trust-stats__number">100%</span>
+					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'pozytywnych opinii', 'mnsk7-storefront' ); ?></span>
+				</div>
+				<div class="mnsk7-trust-stats__item">
+					<span class="mnsk7-trust-stats__number">383</span>
+					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'ocen na Allegro', 'mnsk7-storefront' ); ?></span>
+				</div>
+				<div class="mnsk7-trust-stats__item">
+					<span class="mnsk7-trust-stats__number">3 500+</span>
+					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'zamówień w 2025 r.', 'mnsk7-storefront' ); ?></span>
+				</div>
+				<div class="mnsk7-trust-stats__item">
+					<span class="mnsk7-trust-stats__number">425</span>
+					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'produktów w ofercie', 'mnsk7-storefront' ); ?></span>
+				</div>
+			</div>
+			<p class="mnsk7-trust-stats__sub"><?php esc_html_e( 'Super Sprzedawca Allegro — najwyższa jakość obsługi i realizacji zamówień.', 'mnsk7-storefront' ); ?></p>
+			<?php echo do_shortcode( '[mnsk7_allegro_reviews title="" allegro_link="0"]' ); ?>
+			<?php $allegro_url = defined( 'MNK7_ALLEGRO_SELLER_URL' ) ? MNK7_ALLEGRO_SELLER_URL : '#'; ?>
+			<div class="mnsk7-trust-cta">
+				<a href="<?php echo esc_url( $allegro_url ); ?>" class="mnsk7-trust-cta__btn" target="_blank" rel="noopener nofollow">
+					<?php esc_html_e( 'Zobacz profil i opinie na Allegro →', 'mnsk7-storefront' ); ?>
+				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- KATEGORIE (CRO: po trust — wybór kategorii) -->
 	<?php if ( taxonomy_exists( 'product_cat' ) ) :
 		$cats = get_terms( array(
 			'taxonomy'   => 'product_cat',
@@ -60,7 +101,6 @@ get_header();
 			'orderby'    => 'count',
 			'order'      => 'DESC',
 		) );
-		// Szybkie linki: typ (spiralne) lub materiał (drewno, metal) — slugi do sprawdzenia
 		$quick_slugs = array( 'frez-spiralny', 'frezy-do-drewna-mdf', 'frezy-do-aluminium', 'frezy-do-stali', 'frezy-do-plastiku' );
 		$quick_links = array();
 		foreach ( $quick_slugs as $slug ) {
@@ -68,6 +108,9 @@ get_header();
 			if ( $t && ! is_wp_error( get_term_link( $t ) ) ) {
 				$quick_links[] = $t;
 			}
+		}
+		if ( empty( $quick_links ) && ! is_wp_error( $cats ) && ! empty( $cats ) ) {
+			$quick_links = array_slice( $cats, 0, 5 );
 		}
 		if ( ! is_wp_error( $cats ) && ! empty( $cats ) ) :
 	?>
@@ -115,48 +158,6 @@ get_header();
 	</section>
 	<?php endif; endif; ?>
 
-	<!-- BESTSELLERS -->
-	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
-	<section class="mnsk7-section mnsk7-section--bestsellers">
-		<div class="col-full">
-			<?php echo do_shortcode( '[mnsk7_bestsellers limit="8" title="Bestsellery i polecane"]' ); ?>
-		</div>
-	</section>
-	<?php endif; ?>
-
-	<!-- TRUST + OPINIE (single section) — layout: 4 stats, Allegro line + link, reviews, one CTA button -->
-	<section class="mnsk7-section mnsk7-section--trust mnsk7-section--light">
-		<div class="col-full">
-			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Dlaczego kupujący nam ufają', 'mnsk7-storefront' ); ?></h2>
-			<div class="mnsk7-trust-stats">
-				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number">100%</span>
-					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'pozytywnych opinii', 'mnsk7-storefront' ); ?></span>
-				</div>
-				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number">383</span>
-					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'ocen na Allegro', 'mnsk7-storefront' ); ?></span>
-				</div>
-				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number">3 500+</span>
-					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'zamówień w 2025 r.', 'mnsk7-storefront' ); ?></span>
-				</div>
-				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number">425</span>
-					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'produktów w ofercie', 'mnsk7-storefront' ); ?></span>
-				</div>
-			</div>
-			<p class="mnsk7-trust-stats__sub"><?php esc_html_e( 'Super Sprzedawca Allegro — najwyższa jakość obsługi i realizacji zamówień.', 'mnsk7-storefront' ); ?></p>
-			<?php echo do_shortcode( '[mnsk7_allegro_reviews title="" allegro_link="0"]' ); ?>
-			<?php $allegro_url = defined( 'MNK7_ALLEGRO_SELLER_URL' ) ? MNK7_ALLEGRO_SELLER_URL : '#'; ?>
-			<div class="mnsk7-trust-cta">
-				<a href="<?php echo esc_url( $allegro_url ); ?>" class="mnsk7-trust-cta__btn" target="_blank" rel="noopener nofollow">
-					<?php esc_html_e( 'Zobacz profil i opinie na Allegro →', 'mnsk7-storefront' ); ?>
-				</a>
-			</div>
-		</div>
-	</section>
-
 	<!-- SYSTEM RABATÓW -->
 	<section class="mnsk7-section mnsk7-section--loyalty mnsk7-section--light">
 		<div class="col-full">
@@ -179,9 +180,14 @@ get_header();
 				<?php endforeach; ?>
 			</div>
 			<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
-			<p class="mnsk7-section__more">
-				<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>"><?php esc_html_e( 'Sprawdź swój poziom rabatu w Moje konto →', 'mnsk7-storefront' ); ?></a>
-			</p>
+			<div class="mnsk7-loyalty-cta">
+				<?php if ( is_user_logged_in() ) : ?>
+					<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="mnsk7-btn mnsk7-btn--primary"><?php esc_html_e( 'Sprawdź swój poziom rabatu w Moje konto →', 'mnsk7-storefront' ); ?></a>
+				<?php else : ?>
+					<p class="mnsk7-loyalty-cta__guest"><?php esc_html_e( 'Zaloguj się lub załóż konto, aby zobaczyć swój rabat i zamawiać taniej.', 'mnsk7-storefront' ); ?></p>
+					<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="mnsk7-btn mnsk7-btn--primary"><?php esc_html_e( 'Moje konto / Zaloguj się', 'mnsk7-storefront' ); ?></a>
+				<?php endif; ?>
+			</div>
 			<?php endif; ?>
 		</div>
 	</section>
