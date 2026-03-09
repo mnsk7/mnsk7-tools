@@ -282,13 +282,19 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	);
 }, 5 );
 
-/** Audit: H1 na stronie Moje konto (task Account H1) */
+/** Audit task 14: H1 na stronie Moje konto — zalogowani (dashboard) i goście (logowanie) */
 add_action( 'woocommerce_before_account_navigation', function () {
 	if ( ! function_exists( 'is_account_page' ) || ! is_account_page() ) {
 		return;
 	}
 	echo '<h1 class="mnsk7-account-title entry-title">' . esc_html__( 'Moje konto', 'mnsk7-storefront' ) . '</h1>';
 }, 5 );
+add_action( 'woocommerce_before_customer_login_form', function () {
+	if ( ! function_exists( 'is_account_page' ) || ! is_account_page() ) {
+		return;
+	}
+	echo '<h1 class="mnsk7-account-title entry-title">' . esc_html__( 'Moje konto', 'mnsk7-storefront' ) . '</h1>';
+}, 1 );
 
 /** Audit: po logowaniu z checkout — przekierowanie z powrotem na zamówienie */
 add_filter( 'woocommerce_login_redirect', function ( $redirect, $user ) {
