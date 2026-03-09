@@ -37,6 +37,24 @@
   justify-items: stretch !important;
   width: 100% !important;
 }
+
+/* PDP Podobne produkty — liczba kolumn = liczba kart (1–3 lub 4), bez pustego slotu */
+.single-product .related.products ul.products {
+  justify-content: start !important;
+  width: 100% !important;
+}
+.single-product .related.products ul.products:has(li:nth-child(1):last-child) {
+  grid-template-columns: 1fr !important;
+}
+.single-product .related.products ul.products:has(li:nth-child(2):last-child) {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+.single-product .related.products ul.products:has(li:nth-child(3):last-child) {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+.single-product .related.products ul.products:has(li:nth-child(n+4):last-child) {
+  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+}
 .woocommerce-cart .cross-sells {
   width: 100%;
   max-width: 100%;
@@ -80,18 +98,26 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.cross-sells ul.products li.product .woocommerce-loop-product__link,
-.cross-sells ul.products li.product img,
-.related.products ul.products li.product .woocommerce-loop-product__link,
-.related.products ul.products li.product img,
-.upsells.products ul.products li.product .woocommerce-loop-product__link,
-.upsells.products ul.products li.product img,
-.up-sells.products ul.products li.product .woocommerce-loop-product__link,
-.up-sells.products ul.products li.product img {
+/* Tylko link z miniatury (nie tytuł) — kwadrat; inaczej aspect-ratio 1 obcina nazwę/cenę */
+.cross-sells ul.products li.product .woocommerce-loop-product__link:has(> img),
+.cross-sells ul.products li.product a.woocommerce-loop-product__link:first-of-type,
+.related.products ul.products li.product .woocommerce-loop-product__link:has(> img),
+.related.products ul.products li.product a.woocommerce-loop-product__link:first-of-type,
+.upsells.products ul.products li.product .woocommerce-loop-product__link:has(> img),
+.upsells.products ul.products li.product a.woocommerce-loop-product__link:first-of-type,
+.up-sells.products ul.products li.product .woocommerce-loop-product__link:has(> img),
+.up-sells.products ul.products li.product a.woocommerce-loop-product__link:first-of-type {
   display: block;
   width: 100%;
-  height: auto;
   aspect-ratio: 1;
+  overflow: hidden;
+}
+.related.products ul.products li.product img,
+.upsells.products ul.products li.product img,
+.cross-sells ul.products li.product img,
+.up-sells.products ul.products li.product img {
+  width: 100%;
+  height: auto;
   object-fit: cover;
 }
 
@@ -99,7 +125,7 @@
 .upsells.products ul.products li.product:first-child,
 .cross-sells ul.products li.product:first-child {
   margin-top: 0 !important;
-  align-self: start;
+  align-self: stretch !important;
   grid-column: span 1 !important;
   grid-row: auto !important;
 }

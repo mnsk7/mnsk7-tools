@@ -1168,12 +1168,14 @@ add_action( 'init', function () {
 		if ( ! empty( $urls ) ) {
 			$out .= '<div class="mnsk7-instagram-feed__posts" role="region" aria-label="' . esc_attr__( 'Posty z Instagrama', 'mnsk7-storefront' ) . '">';
 			foreach ( $urls as $url ) {
-				$out .= '<div class="mnsk7-instagram-feed__post">';
+				$out .= '<div class="mnsk7-instagram-feed__post" data-instagram-url="' . esc_attr( $url ) . '">';
 				$out .= '<blockquote class="instagram-media" data-instgrm-permalink="' . esc_url( $url ) . '" data-instgrm-version="14"></blockquote>';
 				$out .= '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__post-fallback">' . esc_html__( 'Zobacz post', 'mnsk7-storefront' ) . '</a>';
 				$out .= '</div>';
 			}
 			$out .= '</div>';
+			// Gdy iframe nie załaduje się (np. blokada połączenia z instagram.com), ukryj zepsuty blok i pokaż fallback po 5 s.
+			$out .= '<script>(function(){var posts=document.querySelectorAll(".mnsk7-instagram-feed__post");if(!posts.length)return;setTimeout(function(){posts.forEach(function(el){var ifr=el.querySelector("iframe");var fallback=el.querySelector(".mnsk7-instagram-feed__post-fallback");if(!fallback)return;if(!ifr||ifr.offsetHeight<100){var wrap=el.querySelector(".instagram-media")||el.querySelector("iframe");if(wrap)wrap.style.display="none";fallback.style.display="inline-flex";}});},5000);})();</script>';
 		}
 		$out .= '<div class="mnsk7-instagram-feed__profile">';
 		$out .= '<span class="mnsk7-instagram-feed__profile-icon" aria-hidden="true"></span>';
