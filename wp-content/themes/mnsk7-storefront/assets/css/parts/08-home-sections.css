@@ -1117,8 +1117,25 @@
 .mnsk7-section--bestsellers .mnsk7-bestsellers,
 .mnsk7-section--bestsellers .col-full > .woocommerce {
   margin: 0;
+  width: 100%;
+  max-width: 100%;
 }
 
+/* Nie zostawiać przed ul.products żadnego elementu w jednej „komórce” — np. result count */
+.mnsk7-section--bestsellers .woocommerce {
+  display: block;
+}
+.mnsk7-section--bestsellers .woocommerce > *:first-child:not(ul.products) {
+  display: none !important;
+}
+
+/* Pusty pierwszy li (clear/placeholder) — nie zajmuje miejsca w siatce */
+.mnsk7-section--bestsellers ul.products li.clear,
+.mnsk7-section--bestsellers ul.products > li:first-child:empty {
+  display: none !important;
+}
+
+/* 4 kolumny: 8 prod. = 2×4 */
 .mnsk7-section--bestsellers ul.products {
   display: grid !important;
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
@@ -1126,7 +1143,8 @@
   list-style: none;
   margin: 0 !important;
   padding: 0 !important;
-  width: 100%;
+  width: 100% !important;
+  max-width: 100% !important;
   justify-content: start !important;
   justify-items: stretch !important;
   align-items: stretch !important;
