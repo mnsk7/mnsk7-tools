@@ -58,16 +58,31 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 		echo '</div>';
 	}
 	$attr_data = function_exists( 'mnsk7_get_archive_attribute_filter_chips' ) ? mnsk7_get_archive_attribute_filter_chips() : array( 'filters' => array() );
+	$plp_chips_limit = 8; /* PLP-08: max chipów widocznych bez „Więcej" */
 	if ( ! empty( $attr_data['filters'] ) ) {
 		foreach ( $attr_data['filters'] as $attribute_filter ) {
 			if ( empty( $attribute_filter['chips'] ) ) { continue; }
 			$aria_label = sprintf( /* translators: %s: filter group name e.g. Średnica */ __( 'Filtruj: %s', 'mnsk7-storefront' ), $attribute_filter['label'] );
+			$chips_list = $attribute_filter['chips'];
+			$param      = $attribute_filter['param'];
+			$visible    = array_slice( $chips_list, 0, $plp_chips_limit, true );
+			$hidden     = array_slice( $chips_list, $plp_chips_limit, null, true );
 			echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="' . esc_attr( $aria_label ) . '">';
 			echo '<span class="mnsk7-plp-chips__label">' . esc_html( $attribute_filter['label'] ) . '</span>';
-			foreach ( $attribute_filter['chips'] as $slug => $label ) {
-				$url = add_query_arg( $attribute_filter['param'], $slug );
-				$active = isset( $_GET[ $attribute_filter['param'] ] ) && sanitize_text_field( wp_unslash( $_GET[ $attribute_filter['param'] ] ) ) === $slug;
+			foreach ( $visible as $slug => $label ) {
+				$url    = add_query_arg( $param, $slug );
+				$active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) === $slug;
 				printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
+			}
+			if ( ! empty( $hidden ) ) {
+				echo '<span class="mnsk7-plp-chips-more" id="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" hidden>';
+				foreach ( $hidden as $slug => $label ) {
+					$url    = add_query_arg( $param, $slug );
+					$active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) === $slug;
+					printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
+				}
+				echo '</span>';
+				echo '<button type="button" class="mnsk7-plp-chips-toggle" data-controls="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" aria-expanded="false">' . esc_html__( 'Więcej', 'mnsk7-storefront' ) . '</button>';
 			}
 			echo '</div>';
 		}

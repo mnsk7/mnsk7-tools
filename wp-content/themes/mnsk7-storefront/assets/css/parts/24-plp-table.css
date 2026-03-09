@@ -59,12 +59,16 @@ body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
   margin: 0;
 }
 .mnsk7-plp-toolbar--bottom {
-  margin-top: 1rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0;
   margin-left: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 .mnsk7-plp-toolbar--bottom .woocommerce-ordering {
   margin-left: 0;
@@ -75,6 +79,45 @@ body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
 }
 .mnsk7-plp-toolbar--bottom .woocommerce-pagination {
   margin-left: auto;
+  flex-shrink: 0;
+}
+.mnsk7-plp-toolbar--bottom .woocommerce-pagination ul {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.25rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.mnsk7-plp-toolbar--bottom .woocommerce-pagination ul li {
+  margin: 0;
+}
+.mnsk7-plp-toolbar--bottom .woocommerce-pagination a,
+.mnsk7-plp-toolbar--bottom .woocommerce-pagination span {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  padding: 0.35rem 0.5rem;
+  font-size: var(--fs-sm);
+  font-weight: 500;
+  text-decoration: none;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-sm);
+  background: var(--color-surface);
+  color: var(--color-text);
+}
+.mnsk7-plp-toolbar--bottom .woocommerce-pagination a:hover {
+  background: var(--color-surface-2);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.mnsk7-plp-toolbar--bottom .woocommerce-pagination span.current {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
 }
 .mnsk7-plp-toolbar .woocommerce-ordering .orderby {
   padding: 0.4rem 2rem 0.4rem 0.5rem;
@@ -94,11 +137,15 @@ body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
 @media (max-width: 480px) {
   .mnsk7-plp-toolbar {
     flex-direction: column;
-    align-items: flex-start;
-    gap: 0.5rem;
+    align-items: stretch;
+    gap: 0.75rem;
   }
   .mnsk7-plp-toolbar .woocommerce-ordering {
     margin-left: 0;
+  }
+  .mnsk7-plp-toolbar--bottom .woocommerce-pagination {
+    margin-left: 0;
+    justify-content: flex-start;
   }
 }
 
@@ -126,13 +173,15 @@ body.tax-product_tag .mnsk7-catalog-filters {
   display: none !important;
 }
 
-/* Chips row (subcategories / filters) — tuż pod tytułem, spójny rytm; UX: min 44px touch */
+/* Chips row (subcategories / filters) — tuż pod tytułem, spójny rytm; UX: min 44px touch; ta sama szerokość co tabela */
 .mnsk7-plp-chips {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
+  gap: 0.5rem;
   margin-top: 0;
   margin-bottom: 0.75rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 .mnsk7-plp-chips:first-of-type {
   margin-bottom: 0.75rem;
@@ -146,10 +195,8 @@ body.tax-product_tag .mnsk7-catalog-filters {
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
     padding-bottom: 0.25rem;
-    margin-left: -0.5rem;
-    margin-right: -0.5rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    margin-left: 0;
+    margin-right: 0;
   }
   .mnsk7-plp-chips__label {
     flex-shrink: 0;
@@ -209,6 +256,7 @@ body.tax-product_tag .mnsk7-catalog-filters {
 .mnsk7-plp-chips--attrs {
   margin-top: 0.5rem;
   margin-bottom: 0.75rem;
+  width: 100%;
 }
 .mnsk7-plp-chips--attrs .mnsk7-plp-chip {
   font-size: 0.8125rem;
@@ -228,6 +276,8 @@ body.tax-product_tag .mnsk7-catalog-filters {
   gap: 0.35rem 0.5rem;
   margin-bottom: 1rem;
   font-size: var(--fs-sm);
+  width: 100%;
+  box-sizing: border-box;
 }
 .mnsk7-plp-selected__label {
   font-weight: 600;
@@ -352,14 +402,20 @@ body.tax-product_tag .mnsk7-catalog-filters {
   }
 }
 
-/* Przycisk „Pokaż więcej” pod tabelą (gdy jest następna strona) */
+/* Przycisk „Pokaż więcej” pod tabelą (gdy jest następna strona) — wyśrodkowany, ta sama szerokość co tabela */
 .mnsk7-plp-load-more-wrap {
-  margin: 1rem 0 1.5rem;
-  text-align: center;
+  margin: 1.25rem 0 1rem;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
 }
 .mnsk7-plp-load-more {
-  display: inline-block;
-  padding: 0.6rem 1.5rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.6rem 1.75rem;
   font-size: var(--fs-sm);
   font-weight: 600;
   font-family: var(--font-base);
@@ -384,13 +440,13 @@ body.tax-product_tag .mnsk7-catalog-filters {
   pointer-events: none;
 }
 
-/* PLP-09: komputer i tablet (≥768px) — zawsze tabela; tylko mobile (≤767px) — wygodna siatka kart */
+/* PLP-09: desktop/tablet — tabela; mobile (≤767px) — siatka kart. Jedna klasa, bez !important. */
 .mnsk7-plp-grid-mobile {
   display: none;
 }
 @media (max-width: 767px) {
   .mnsk7-product-table-wrap {
-    display: none !important;
+    display: none;
   }
   .mnsk7-plp-grid-mobile {
     display: block;
