@@ -173,6 +173,22 @@ body.tax-product_tag .mnsk7-catalog-filters {
   display: none !important;
 }
 
+/* Jedna szerokość dla całego bloku: chips + wyszukiwarka + tabela (bez rozjeżdżania) */
+.mnsk7-plp-content {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.mnsk7-plp-content .mnsk7-plp-chips,
+.mnsk7-plp-content .mnsk7-plp-selected,
+.mnsk7-plp-content .mnsk7-plp-search,
+.mnsk7-plp-content .mnsk7-product-table-wrap,
+.mnsk7-plp-content .mnsk7-plp-grid-mobile {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 /* Chips row (subcategories / filters) — tuż pod tytułem, spójny rytm; UX: min 44px touch; ta sama szerokość co tabela */
 .mnsk7-plp-chips {
   display: flex;
@@ -268,6 +284,43 @@ body.tax-product_tag .mnsk7-catalog-filters {
   font-weight: 500;
 }
 
+/* Przycisk „Więcej” — wizualnie odróżniony od chipów, czytelny CTA */
+.mnsk7-plp-chips-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.4rem 1rem;
+  margin-left: 0.25rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  font-family: var(--font-base);
+  color: var(--color-primary);
+  background: transparent;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--r-pill);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+.mnsk7-plp-chips-toggle:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+.mnsk7-plp-chips-toggle:focus,
+.mnsk7-plp-chips-toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+.mnsk7-plp-chips-toggle[aria-expanded="true"] {
+  background: var(--color-primary);
+  color: var(--color-white);
+  border-color: var(--color-primary);
+}
+
 /* Wybrane filtry + przycisk Wyczyść wszystkie (UX audit) */
 .mnsk7-plp-selected {
   display: flex;
@@ -306,7 +359,7 @@ body.tax-product_tag .mnsk7-catalog-filters {
   flex-wrap: wrap;
   gap: 0.5rem;
   align-items: center;
-  max-width: 400px;
+  max-width: 100%;
 }
 .mnsk7-plp-search__input {
   flex: 1;

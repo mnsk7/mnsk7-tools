@@ -19,6 +19,8 @@ $current_term = $is_taxonomy ? get_queried_object() : null;
 
 do_action( 'woocommerce_shop_loop_header' );
 
+echo '<div class="mnsk7-plp-content col-full">';
+
 /* PLP-12: na stronie wyników wyszukiwania — link „Wyczyść wyszukiwanie" */
 if ( is_search() && get_query_var( 'post_type' ) === 'product' ) {
 	$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : get_permalink( wc_get_page_id( 'shop' ) );
@@ -224,11 +226,13 @@ if ( woocommerce_product_loop() ) {
 		}
 		woocommerce_product_loop_end();
 	}
+	echo '</div><!-- .mnsk7-plp-content -->';
 
 	echo '<div class="mnsk7-plp-toolbar mnsk7-plp-toolbar--bottom col-full">';
 	do_action( 'woocommerce_after_shop_loop' );
 	echo '</div>';
 } else {
+	echo '</div><!-- .mnsk7-plp-content -->';
 	$filter_params = array( 'filter_srednica', 'filter_srednica-trzpienia', 'filter_dlugosc-calkowita-l', 'filter_dlugosc-robocza-h' );
 	$has_filter = false;
 	foreach ( $filter_params as $p ) {
