@@ -93,11 +93,10 @@ get_header();
 
 	<!-- KATALOG: kategorie + tagi w jednym bloku, jeden nagłówek, jedna link „Wszystkie produkty” -->
 	<?php
-	$cats          = array();
-	$quick_links   = array();
-	$tags          = array();
-	$has_cats      = taxonomy_exists( 'product_cat' );
-	$has_tags      = taxonomy_exists( 'product_tag' );
+	$cats     = array();
+	$tags     = array();
+	$has_cats = taxonomy_exists( 'product_cat' );
+	$has_tags = taxonomy_exists( 'product_tag' );
 	if ( $has_cats ) {
 		$cats = get_terms( array(
 			'taxonomy'   => 'product_cat',
@@ -107,20 +106,6 @@ get_header();
 			'orderby'    => 'count',
 			'order'      => 'DESC',
 		) );
-		$quick_slugs = array( 'frezy-do-drewna-mdf', 'frezy-do-aluminium', 'frezy-do-stali', 'frezy-do-plastiku' );
-		foreach ( $quick_slugs as $slug ) {
-			$t = get_term_by( 'slug', $slug, 'product_cat' );
-			if ( $t && ! is_wp_error( get_term_link( $t ) ) ) {
-				$quick_links[] = $t;
-			}
-		}
-		if ( empty( $quick_links ) && ! is_wp_error( $cats ) && ! empty( $cats ) ) {
-			$quick_links = array_slice( $cats, 0, 5 );
-		}
-		// Nie pokazuj "Sklep" w chipach — to to samo co "Wszystkie produkty" na dole.
-		$quick_links = array_values( array_filter( $quick_links, function ( $t ) {
-			return $t && ( isset( $t->slug ) && strtolower( (string) $t->slug ) !== 'sklep' );
-		} ) );
 	}
 	if ( $has_tags ) {
 		$tags = get_terms( array(
@@ -139,18 +124,6 @@ get_header();
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Przeglądaj asortyment', 'mnsk7-storefront' ); ?></h2>
 
 			<div class="mnsk7-catalog-chips">
-				<?php if ( $has_cats && ! empty( $quick_links ) ) : ?>
-				<div class="mnsk7-cats-quick">
-					<?php foreach ( $quick_links as $q ) :
-						$q_link = get_term_link( $q );
-						if ( is_wp_error( $q_link ) ) continue;
-						$q_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $q->name ) : $q->name;
-						$q_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $q_name ) );
-					?>
-					<a href="<?php echo esc_url( $q_link ); ?>" class="mnsk7-cats-quick__chip"><?php echo esc_html( $q_name ); ?></a>
-					<?php endforeach; ?>
-				</div>
-				<?php endif; ?>
 				<?php if ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) ) : ?>
 				<div class="mnsk7-catalog-tags">
 					<div class="mnsk7-tags-chips">

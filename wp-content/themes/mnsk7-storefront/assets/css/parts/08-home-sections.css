@@ -182,7 +182,7 @@
   color: var(--color-primary-hover);
 }
 
-/* Katalog: jeden blok — chipy (Szybki wybór + Według cech) nad siatką kategorii */
+/* Katalog: tylko chipy tagów nad siatką kategorii (bez duplikatu kategorii) */
 .mnsk7-catalog-chips {
   display: flex;
   flex-wrap: wrap;
@@ -190,14 +190,6 @@
   gap: 0.75rem 1.5rem;
   margin-bottom: 1.5rem;
   justify-content: center;
-}
-
-.mnsk7-section--catalog .mnsk7-cats-quick {
-  margin-bottom: 0;
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.5rem 1rem;
 }
 
 .mnsk7-section--catalog .mnsk7-cats--catalog {
