@@ -335,10 +335,31 @@ body.tax-product_tag .mnsk7-catalog-filters {
   pointer-events: none;
 }
 
-/* Table wrapper */
+/* PLP-09: na desktop grid-mobile ukryty, na mobile tabela ukryta — pokazujemy grid kart */
+.mnsk7-plp-grid-mobile {
+  display: none;
+}
+@media (max-width: 768px) {
+  .mnsk7-product-table-wrap {
+    display: none !important;
+  }
+  .mnsk7-plp-grid-mobile {
+    display: block;
+    margin-bottom: 1rem;
+  }
+  .mnsk7-plp-grid-mobile ul.products {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Table wrapper — na mobile przewijanie w poziomie, bez wychodzenia poza ekran */
 .mnsk7-product-table-wrap {
   overflow-x: auto;
+  overflow-y: hidden;
+  -webkit-overflow-scrolling: touch;
   margin-bottom: 1.5rem;
+  max-width: 100%;
+  width: 100%;
 }
 
 .mnsk7-product-table {
@@ -460,6 +481,10 @@ body.tax-product_tag .mnsk7-catalog-filters {
 @media (max-width: 768px) {
   .mnsk7-plp-chips {
     margin-bottom: 0.75rem;
+  }
+
+  .mnsk7-product-table {
+    min-width: 560px;
   }
 
   .mnsk7-product-table .mnsk7-table-cell {

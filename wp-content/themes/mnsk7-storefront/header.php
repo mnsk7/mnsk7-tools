@@ -78,7 +78,6 @@ endif;
 								echo '<li><a href="' . esc_url( $link ) . '">' . esc_html( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name ) . '</a></li>';
 							}
 							if ( ! empty( $top_tags ) ) {
-								echo '<li class="mnsk7-submenu-label" aria-hidden="true">' . esc_html__( 'Tagi', 'mnsk7-storefront' ) . '</li>';
 								foreach ( $top_tags as $term ) {
 									$link = get_term_link( $term );
 									if ( is_wp_error( $link ) ) { continue; }

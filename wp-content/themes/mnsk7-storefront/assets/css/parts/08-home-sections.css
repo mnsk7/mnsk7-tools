@@ -196,6 +196,12 @@
   margin-bottom: 2rem;
 }
 
+@media (max-width: 768px) {
+  .mnsk7-section--catalog .col-full {
+    overflow-x: hidden;
+  }
+}
+
 .mnsk7-catalog-chips .mnsk7-catalog-tags {
   margin: 0;
   text-align: center;
@@ -296,11 +302,21 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
+  width: 100%;
+  min-width: 0;
 }
 
 @media (min-width: 900px) {
   .mnsk7-cats--catalog {
     grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* Mobile: kategorie nie wychodzą poza ekran — jedna kolumna na wąskich, ograniczenie overflow */
+@media (max-width: 480px) {
+  .mnsk7-section--catalog .mnsk7-cats--catalog {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
   }
 }
 
@@ -310,6 +326,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.25rem;
+  min-width: 0;
   background: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: var(--r-md);

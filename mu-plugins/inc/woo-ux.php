@@ -7,6 +7,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/* PLP-03: jednorazowy flush rewrite rules — po ustawieniu opcji mnsk7_plp_rewrite_flush (np. update_option('mnsk7_plp_rewrite_flush',1)) przy następnym odświeżeniu strony product_tag/category URL zaczną działać. */
+add_action( 'init', function () {
+	if ( get_option( 'mnsk7_plp_rewrite_flush', 0 ) ) {
+		flush_rewrite_rules( false );
+		delete_option( 'mnsk7_plp_rewrite_flush' );
+	}
+}, 999 );
+
 /* Related products: limit 4, 4 kolumny */
 add_filter( 'woocommerce_output_related_products_args', function ( $args ) {
 	$args['posts_per_page'] = 4;

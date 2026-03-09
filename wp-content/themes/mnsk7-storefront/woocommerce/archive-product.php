@@ -51,7 +51,8 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 	if ( ! empty( $attr_data['filters'] ) ) {
 		foreach ( $attr_data['filters'] as $attribute_filter ) {
 			if ( empty( $attribute_filter['chips'] ) ) { continue; }
-			echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="' . esc_attr__( 'Filtruj', 'mnsk7-storefront' ) . '">';
+			$aria_label = sprintf( /* translators: %s: filter group name e.g. Średnica */ __( 'Filtruj: %s', 'mnsk7-storefront' ), $attribute_filter['label'] );
+			echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="' . esc_attr( $aria_label ) . '">';
 			echo '<span class="mnsk7-plp-chips__label">' . esc_html( $attribute_filter['label'] ) . '</span>';
 			foreach ( $attribute_filter['chips'] as $slug => $label ) {
 				$url = add_query_arg( $attribute_filter['param'], $slug );
@@ -98,15 +99,10 @@ if ( is_shop() && ! $is_taxonomy && taxonomy_exists( 'product_cat' ) ) {
 }
 
 $use_table = is_shop() || $is_taxonomy;
+$GLOBALS['mnsk7_plp_use_table'] = $use_table;
 
 if ( woocommerce_product_loop() ) {
-	echo '<div class="mnsk7-plp-toolbar mnsk7-plp-toolbar--top col-full">';
-	do_action( 'woocommerce_before_shop_loop' );
-	if ( function_exists( 'woocommerce_pagination' ) ) {
-		woocommerce_pagination();
-	}
-	echo '</div>';
-
+	/* PLP-05/PLP-10: bez toolbara u góry — sortowanie i paginacja tylko na dole; przy tabeli tylko „Pokaż więcej” */
 	if ( $use_table ) {
 		if ( $is_taxonomy && $current_term && isset( $current_term->slug ) ) {
 			$is_tag = isset( $current_term->taxonomy ) && $current_term->taxonomy === 'product_tag';
@@ -153,6 +149,22 @@ if ( woocommerce_product_loop() ) {
 				</tbody>
 			</table>
 		</div>
+		<?php
+		/* PLP-09: na mobile (≤768px) grid zamiast tabeli — drugi loop w ukrytym kontenerze */
+		rewind_posts();
+		echo '<div class="mnsk7-plp-grid-mobile col-full">';
+		woocommerce_product_loop_start();
+		if ( wc_get_loop_prop( 'total' ) ) {
+			while ( have_posts() ) {
+				the_post();
+				do_action( 'woocommerce_shop_loop' );
+				wc_get_template_part( 'content', 'product' );
+			}
+		}
+		woocommerce_product_loop_end();
+		echo '</div>';
+		rewind_posts();
+		?>
 		<?php
 		/* Przy kilku stronach: przycisk „Pokaż więcej” — JS ładuje następne wiersze w tabelę (AJAX), bez przejścia na page/2 */
 		if ( $use_table ) {
