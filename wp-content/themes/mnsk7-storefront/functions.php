@@ -254,8 +254,11 @@ add_filter( 'wc_empty_cart_message', function () {
 	return __( 'Twój koszyk jest pusty — wróć do sklepu', 'mnsk7-storefront' );
 }, 10 );
 
-/** Audit: jeden bank cookie — wyłącz bank temy, jeśli używany jest plugin (add_filter( 'mnsk7_show_cookie_bar', __return_false' ); w mu-pluginie) */
+/** Audit task 4: jeden bank cookie — wyłącz bank temy, gdy aktywny Cookie Law Info (duplikat) */
 add_filter( 'mnsk7_show_cookie_bar', function ( $show ) {
+	if ( defined( 'CLI_VERSION' ) ) {
+		return false;
+	}
 	return $show;
 }, 5 );
 
