@@ -213,14 +213,6 @@
   gap: 0.5rem 0.75rem;
 }
 
-.mnsk7-catalog-chips .mnsk7-catalog-tags__label {
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  color: var(--color-text-secondary);
-  letter-spacing: 0.02em;
-  margin-right: 0.5rem;
-  margin-bottom: 0;
-}
 
 .mnsk7-section--catalog .mnsk7-tags-chips {
   justify-content: center;
@@ -240,12 +232,6 @@
   justify-content: center;
 }
 
-.mnsk7-cats-quick__label {
-  font-size: var(--fs-sm);
-  font-weight: 700;
-  color: var(--color-text-secondary);
-  letter-spacing: 0.02em;
-}
 
 .mnsk7-cats-quick__chip {
   display: inline-block;

@@ -107,7 +107,7 @@ get_header();
 			'orderby'    => 'count',
 			'order'      => 'DESC',
 		) );
-		$quick_slugs = array( 'frez-spiralny', 'frezy-do-drewna-mdf', 'frezy-do-aluminium', 'frezy-do-stali', 'frezy-do-plastiku' );
+		$quick_slugs = array( 'frezy-do-drewna-mdf', 'frezy-do-aluminium', 'frezy-do-stali', 'frezy-do-plastiku' );
 		foreach ( $quick_slugs as $slug ) {
 			$t = get_term_by( 'slug', $slug, 'product_cat' );
 			if ( $t && ! is_wp_error( get_term_link( $t ) ) ) {
@@ -117,6 +117,10 @@ get_header();
 		if ( empty( $quick_links ) && ! is_wp_error( $cats ) && ! empty( $cats ) ) {
 			$quick_links = array_slice( $cats, 0, 5 );
 		}
+		// Nie pokazuj "Sklep" w chipach — to to samo co "Wszystkie produkty" na dole.
+		$quick_links = array_values( array_filter( $quick_links, function ( $t ) {
+			return $t && ( isset( $t->slug ) && strtolower( (string) $t->slug ) !== 'sklep' );
+		} ) );
 	}
 	if ( $has_tags ) {
 		$tags = get_terms( array(
@@ -137,7 +141,6 @@ get_header();
 			<div class="mnsk7-catalog-chips">
 				<?php if ( $has_cats && ! empty( $quick_links ) ) : ?>
 				<div class="mnsk7-cats-quick">
-					<span class="mnsk7-cats-quick__label"><?php esc_html_e( 'Szybki wybór:', 'mnsk7-storefront' ); ?></span>
 					<?php foreach ( $quick_links as $q ) :
 						$q_link = get_term_link( $q );
 						if ( is_wp_error( $q_link ) ) continue;
@@ -150,7 +153,6 @@ get_header();
 				<?php endif; ?>
 				<?php if ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) ) : ?>
 				<div class="mnsk7-catalog-tags">
-					<span class="mnsk7-catalog-tags__label"><?php esc_html_e( 'Według cech:', 'mnsk7-storefront' ); ?></span>
 					<div class="mnsk7-tags-chips">
 						<?php foreach ( $tags as $tag ) :
 							$t_link = get_term_link( $tag );
