@@ -82,6 +82,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   top: var(--mnsk7-promo-h, 2.5rem);
 }
 
+/* Jednolity układ na wszystkich stronach i dla gościa/zalogowanego */
 .mnsk7-header__inner {
   display: flex;
   flex-wrap: nowrap;
@@ -227,6 +228,19 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-header__menu .sub-menu a:hover {
   background: rgba(0,0,0,0.06);
 }
+.mnsk7-header__menu .sub-menu li.mnsk7-submenu-label {
+  padding: 0.5rem 0.75rem 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  color: var(--color-text-secondary, #64748b);
+  border-top: 1px solid var(--color-border, #e2e8f0);
+  margin-top: 0.25rem;
+}
+.mnsk7-header__menu .sub-menu li.mnsk7-submenu-label + li {
+  margin-top: 0;
+}
 
 .mnsk7-header__menu-toggle {
   display: none;
@@ -328,8 +342,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   z-index: 101;
 }
 
-/* Desktop ≥900px: wyszukiwarka w jednej linii z headerem, w jednym stylu (białe tło, jak reszta) */
-@media (min-width: 900px) {
+/* Od 768px: pole wyszukiwania w jednej linii z headerem (jak u projektanta — wtopione w pasek) */
+@media (min-width: 768px) {
   .mnsk7-header__search-toggle {
     display: none;
   }
@@ -343,27 +357,60 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     opacity: 1;
     visibility: visible;
     margin: 0;
-    min-width: 200px;
-    width: 240px;
-    max-width: 280px;
+    min-width: 180px;
+    width: 200px;
+    max-width: 240px;
     box-shadow: none;
-    border: 1px solid var(--color-border);
-    border-radius: var(--r-sm);
-    padding: 0.25rem 0.5rem;
+    border: none;
+    border-radius: 0;
+    padding: 0;
     margin-top: 0;
     top: auto;
     right: auto;
-    background: var(--color-white);
+    background: transparent;
   }
   .mnsk7-header__search-dropdown .mnsk7-header__search-form {
     flex: 1;
     min-width: 0;
-    align-items: center;
+    align-items: stretch;
+    display: flex;
+    gap: 0;
+    margin: 0;
   }
   .mnsk7-header__search-dropdown .mnsk7-header__search-input {
     flex: 1;
     min-width: 0;
+    min-height: 40px;
+    height: 40px;
     background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-right: none;
+    border-radius: var(--r-sm) 0 0 var(--r-sm);
+    padding: 0.4rem 0.75rem;
+  }
+  .mnsk7-header__search-dropdown .mnsk7-header__search-input::placeholder {
+    color: var(--color-text-muted);
+  }
+  .mnsk7-header__search-dropdown .mnsk7-header__search-input:focus {
+    border-right: none;
+    border-color: var(--color-primary);
+    outline: 2px solid var(--color-primary) !important;
+    outline-offset: 0;
+    outline-color: var(--color-primary) !important;
+    box-shadow: none !important;
+  }
+  .mnsk7-header__search-dropdown .mnsk7-header__search-submit {
+    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    padding: 0.4rem 0.875rem;
+    min-height: 40px;
+    height: 40px;
+    border: 1px solid var(--color-primary);
+    background: var(--color-primary);
+    color: var(--color-white);
+  }
+  .mnsk7-header__search-dropdown .mnsk7-header__search-submit:hover {
+    background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
   }
 }
 .mnsk7-header__search-form {
@@ -381,11 +428,18 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   border: 1px solid var(--color-border);
   border-radius: var(--r-sm);
   font-family: var(--font-base);
+  background: var(--color-white);
 }
 .mnsk7-header__search-input:focus {
-  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline: 2px solid var(--color-primary) !important;
   outline-offset: 0;
+  outline-color: var(--color-primary) !important;
   border-color: var(--color-primary);
+  box-shadow: none !important;
+}
+.mnsk7-header__search-input::-webkit-search-cancel-button,
+.mnsk7-header__search-input::-webkit-search-decoration {
+  -webkit-appearance: none;
 }
 .mnsk7-header__search-submit {
   padding: 0.4rem 0.75rem;
@@ -424,6 +478,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   letter-spacing: 0.01em;
   flex-shrink: 1;
   min-width: 0;
+}
+/* Stała szerokość: gość „Moje konto” i zalogowany (imię) — ten sam layout na każdej stronie */
+.mnsk7-header__link--account {
+  min-width: 7.5em;
+  justify-content: flex-start;
 }
 .mnsk7-header__link--account .mnsk7-header__link-text {
   max-width: 6em;
