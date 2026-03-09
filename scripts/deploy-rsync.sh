@@ -53,14 +53,16 @@ if [[ -d "$ROOT/mu-plugins" ]]; then
   rsync -avz --delete $RSYNC_EXTRA -e "$RSYNC_SSH" "$ROOT/mu-plugins/" "${SSH_USER}@${SSH_HOST}:~/${REMOTE_BASE}/wp-content/mu-plugins/"
 fi
 
-if [[ -d "$ROOT/wp-content/themes" ]]; then
+# Deploy only child theme mnsk7-storefront — do NOT sync entire themes/ with --delete
+# (would remove storefront parent on server; see docs/THEME-STACK-ROOT-CAUSE-AND-FIX.md)
+if [[ -d "$ROOT/wp-content/themes/mnsk7-storefront" ]]; then
   if [[ -z "${DRY_RUN:-}" ]] && [[ -n "${DEPLOY_BACKUP_THEME:-}" ]]; then
-    echo "Backup current theme on server (for rollback)..."
+    echo "Backup current child theme on server (for rollback)..."
     ssh -p "$SSH_PORT" -o StrictHostKeyChecking=no "${SSH_USER}@${SSH_HOST}" \
-      "cd ~/${REMOTE_BASE}/wp-content/themes && for d in tech-storefront mnsk7-storefront; do [ -d \"\$d\" ] && [ ! -d \"\${d}_prev\" ] && cp -a \"\$d\" \"\${d}_prev\" && break; done" 2>/dev/null || true
+      "cd ~/${REMOTE_BASE}/wp-content/themes && [ -d mnsk7-storefront ] && [ ! -d mnsk7-storefront_prev ] && cp -a mnsk7-storefront mnsk7-storefront_prev" 2>/dev/null || true
   fi
-  echo "Rsync themes -> $TARGET..."
-  rsync -avz --delete $RSYNC_EXTRA -e "$RSYNC_SSH" "$ROOT/wp-content/themes/" "${SSH_USER}@${SSH_HOST}:~/${REMOTE_BASE}/wp-content/themes/"
+  echo "Rsync theme mnsk7-storefront -> $TARGET..."
+  rsync -avz --delete $RSYNC_EXTRA -e "$RSYNC_SSH" "$ROOT/wp-content/themes/mnsk7-storefront/" "${SSH_USER}@${SSH_HOST}:~/${REMOTE_BASE}/wp-content/themes/mnsk7-storefront/"
 fi
 
 if [[ -d "$ROOT/wp-content/plugins" ]]; then

@@ -16,7 +16,7 @@ Procedura wdrożenia, odświeżenia staging, odwołania i backupy. Źródła: cy
 | Źródło | Na serwer (staging) |
 |--------|----------------------|
 | Git: `mu-plugins/` | `~/domains/.../staging/wp-content/mu-plugins/` |
-| Git: `wp-content/themes/mnsk7-storefront` (parent Storefront na serwerze osobno) | `~/.../staging/wp-content/themes/` |
+| Git: `wp-content/themes/mnsk7-storefront` (tylko child; parent Storefront na serwerze osobno — deploy nie nadpisuje `themes/` z `--delete`, żeby nie usuwać storefront) | `~/.../staging/wp-content/themes/mnsk7-storefront/` |
 | **Nie w Git:** plugins, uploads, wp-config, .env | Na staging już są (kopie z prod lub ręcznie) |
 
 Trigger: **push do gałęzi `main`** → GitHub Actions robi rsync mu-plugins + themes. Lokalnie: `make deploy-files`.

@@ -58,6 +58,7 @@ jobs:
           chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
+      # Deploy only child theme (not entire themes/) so storefront parent is never removed — see docs/THEME-STACK-ROOT-CAUSE-AND-FIX.md
       - name: Deploy mu-plugins and themes
         env:
           SSH_HOST: ${{ secrets.STAGING_SSH_HOST }}
@@ -67,7 +68,7 @@ jobs:
         run: |
           RSYNC_SSH="ssh -i ~/.ssh/deploy_key -p $SSH_PORT -o StrictHostKeyChecking=no"
           rsync -avz --delete -e "$RSYNC_SSH" mu-plugins/ "$SSH_USER@$SSH_HOST:~/$REMOTE_PATH/wp-content/mu-plugins/"
-          rsync -avz --delete -e "$RSYNC_SSH" wp-content/themes/ "$SSH_USER@$SSH_HOST:~/$REMOTE_PATH/wp-content/themes/"
+          rsync -avz --delete -e "$RSYNC_SSH" wp-content/themes/mnsk7-storefront/ "$SSH_USER@$SSH_HOST:~/$REMOTE_PATH/wp-content/themes/mnsk7-storefront/"
 
       - name: Clear WP Rocket cache
         env:

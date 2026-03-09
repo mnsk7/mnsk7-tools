@@ -19,7 +19,7 @@ Stage вложен в prod. Поэтому:
 
 ## 2. Что деплоим (и чего никогда)
 
-- **Деплоим:** только `mu-plugins/`, `wp-content/themes/`, при наличии `wp-content/plugins/` из репозитория.
+- **Деплоим:** только `mu-plugins/`, каталог child-темы `wp-content/themes/mnsk7-storefront/` (не весь `themes/`), при наличии `wp-content/plugins/` из репозитория. Родительская тема Storefront на сервере не трогается (см. docs/THEME-STACK-ROOT-CAUSE-AND-FIX.md).
 - **Никогда не деплоим:** `wp-config.php`, `.env`, ядро WP, `uploads/`. В репо их нет (в `.gitignore`), скрипты их не копируют.
 
 Проверка: в репо нет `wp-config.php` → rsync не может его перезаписать.
@@ -35,7 +35,7 @@ Stage вложен в prod. Поэтому:
 REMOTE_BASE="domains/mnsk7-tools.pl/public_html/staging"
 
 rsync -avz --delete -e "ssh -p $SSH_PORT ..." mu-plugins/           "$SSH_USER@$SSH_HOST:~/$REMOTE_BASE/wp-content/mu-plugins/"
-rsync -avz --delete -e "ssh -p $SSH_PORT ..." wp-content/themes/   "$SSH_USER@$SSH_HOST:~/$REMOTE_BASE/wp-content/themes/"
+rsync -avz --delete -e "ssh -p $SSH_PORT ..." wp-content/themes/mnsk7-storefront/ "$SSH_USER@$SSH_HOST:~/$REMOTE_BASE/wp-content/themes/mnsk7-storefront/"
 rsync -avz --delete -e "ssh -p $SSH_PORT ..." wp-content/plugins/  "$SSH_USER@$SSH_HOST:~/$REMOTE_BASE/wp-content/plugins/"  # если есть
 ```
 
@@ -48,7 +48,7 @@ rsync -avz --delete -e "ssh -p $SSH_PORT ..." wp-content/plugins/  "$SSH_USER@$S
 REMOTE_BASE="domains/mnsk7-tools.pl/public_html"
 
 rsync -avz --delete -e "ssh -p $SSH_PORT ..." mu-plugins/         "$SSH_USER@$SSH_HOST:~/$REMOTE_BASE/wp-content/mu-plugins/"
-rsync -avz --delete -e "ssh -p $SSH_PORT ..." wp-content/themes/  "$SSH_USER@$SSH_HOST:~/$REMOTE_BASE/wp-content/themes/"
+rsync -avz --delete -e "ssh -p $SSH_PORT ..." wp-content/themes/mnsk7-storefront/ "$SSH_USER@$SSH_HOST:~/$REMOTE_BASE/wp-content/themes/mnsk7-storefront/"
 rsync -avz --delete -e "ssh -p $SSH_PORT ..." wp-content/plugins/ "$SSH_USER@$SSH_HOST:~/$REMOTE_BASE/wp-content/plugins/"  # jeśli jest
 ```
 
