@@ -631,9 +631,46 @@ body.tax-product_tag .mnsk7-catalog-filters {
 .mnsk7-product-table .mnsk7-table-cell--action .button,
 .mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button,
 .mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn {
-  padding: 0.5rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.5rem 1.25rem;
   font-size: var(--fs-sm);
+  font-weight: 600;
+  font-family: var(--font-base);
+  color: var(--color-white);
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--r-sm);
   white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: var(--shadow-sm);
+  box-sizing: border-box;
+}
+.mnsk7-product-table .mnsk7-table-cell--action .button:hover,
+.mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button:hover,
+.mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn:hover {
+  background: var(--color-primary-hover);
+  color: var(--color-white);
+  box-shadow: var(--shadow-md);
+}
+.mnsk7-product-table .mnsk7-table-cell--action .button:focus,
+.mnsk7-product-table .mnsk7-table-cell--action .button:focus-visible,
+.mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button:focus,
+.mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button:focus-visible,
+.mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn:focus,
+.mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+.mnsk7-product-table .mnsk7-table-cell--action .button:disabled,
+.mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn:disabled,
+.mnsk7-product-table .mnsk7-table-cell--action .button.loading,
+.mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn.loading {
+  opacity: 0.75;
+  cursor: not-allowed;
 }
 
 @media (max-width: 768px) {
