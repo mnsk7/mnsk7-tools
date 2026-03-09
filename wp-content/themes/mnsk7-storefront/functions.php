@@ -300,29 +300,43 @@ add_action( 'wp_footer', function () {
 		var searchToggle = document.querySelector('.mnsk7-header__search-toggle');
 		var searchDropdown = document.getElementById('mnsk7-header-search');
 		if (searchToggle && searchDropdown) {
-			searchToggle.addEventListener('click', function() {
-				var open = searchDropdown.hidden;
+			function setSearchOpen(open) {
 				searchDropdown.hidden = !open;
 				searchToggle.setAttribute('aria-expanded', open);
+			}
+			searchToggle.addEventListener('click', function() {
+				var open = searchDropdown.hidden;
+				setSearchOpen(open);
 				if (open) {
 					var inp = document.getElementById('mnsk7-header-search-input-mobile') || document.querySelector('#mnsk7-header-search input[type="search"]');
 					if (inp) { inp.focus(); }
 				}
 			});
+			document.addEventListener('keydown', function(e) {
+				if (e.key === 'Escape' && !searchDropdown.hidden) {
+					setSearchOpen(false);
+					searchToggle.focus();
+				}
+			});
+			var searchForm = searchDropdown.querySelector('form');
+			if (searchForm) {
+				searchForm.addEventListener('submit', function() { setSearchOpen(false); });
+			}
 		}
 		var cartWrap = document.querySelector('.mnsk7-header__cart');
 		if (cartWrap) {
 			var trigger = cartWrap.querySelector('.mnsk7-header__cart-trigger');
 			var dropdown = cartWrap.querySelector('.mnsk7-header__cart-dropdown');
 			if (trigger && dropdown) {
-				trigger.addEventListener('click', function(e) {
-					if (window.innerWidth >= 769) {
-						e.preventDefault();
-						cartWrap.classList.toggle('is-open');
-					}
-				});
+				// Audit: klik zawsze prowadzi do /koszyk/; na desktop dropdown tylko na hover (CSS)
 				document.addEventListener('click', function(e) {
 					if (!cartWrap.contains(e.target)) cartWrap.classList.remove('is-open');
+				});
+				document.addEventListener('keydown', function(e) {
+					if (e.key === 'Escape' && cartWrap.classList.contains('is-open')) {
+						cartWrap.classList.remove('is-open');
+						trigger.focus();
+					}
 				});
 			}
 		}
@@ -330,19 +344,22 @@ add_action( 'wp_footer', function () {
 		var promoBar = document.getElementById('mnsk7-promo-bar');
 		if (promoBar) {
 			try {
-				if (sessionStorage.getItem('mnsk7_promo_dismissed') === '1') { promoBar.remove(); }
-			} catch (e) {}
-			document.body.classList.add('mnsk7-has-promo');
-			document.body.style.setProperty('--mnsk7-promo-h', promoBar.offsetHeight + 'px');
-			var closeBtn = promoBar.querySelector('.mnsk7-promo-bar__close');
-			if (closeBtn) {
-				closeBtn.addEventListener('click', function() {
-					try { sessionStorage.setItem('mnsk7_promo_dismissed', '1'); } catch (e) {}
-					document.body.classList.remove('mnsk7-has-promo');
-					document.body.style.removeProperty('--mnsk7-promo-h');
+				if (sessionStorage.getItem('mnsk7_promo_dismissed') === '1') {
 					promoBar.remove();
-				});
-			}
+				} else {
+					document.body.classList.add('mnsk7-has-promo');
+					document.body.style.setProperty('--mnsk7-promo-h', promoBar.offsetHeight + 'px');
+					var closeBtn = promoBar.querySelector('.mnsk7-promo-bar__close');
+					if (closeBtn) {
+						closeBtn.addEventListener('click', function() {
+							try { sessionStorage.setItem('mnsk7_promo_dismissed', '1'); } catch (e) {}
+							document.body.classList.remove('mnsk7-has-promo');
+							document.body.style.removeProperty('--mnsk7-promo-h');
+							promoBar.remove();
+						});
+					}
+				}
+			} catch (e) {}
 		}
 		// Header shrink when scrolled (Visual Audit)
 		var header = document.getElementById('masthead');
@@ -637,6 +654,9 @@ add_action( 'init', function () {
 			if ( is_array( $entry ) && ! empty( $entry['image'] ) ) {
 				$img = $entry['image'];
 				$image = is_numeric( $img ) ? wp_get_attachment_image_url( (int) $img, 'medium' ) : esc_url_raw( $img );
+			}
+			if ( ( $image === '' || ! is_string( $image ) ) && function_exists( 'mnsk7_instagram_og_image_for_url' ) ) {
+				$image = mnsk7_instagram_og_image_for_url( $url );
 			}
 			$items[] = array( 'url' => $url, 'image' => is_string( $image ) ? $image : '' );
 		}

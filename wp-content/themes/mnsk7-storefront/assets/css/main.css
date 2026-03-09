@@ -48,9 +48,8 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.10);
 
-  /* Layout */
+  /* Layout: --header-h tylko w 01-tokens.css (52px), brak duplikatu */
   --content-max: 1200px;
-  --header-h:    64px;
 }
 
 /* -----------------------------------------------------------------

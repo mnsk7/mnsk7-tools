@@ -173,6 +173,18 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-header__menu li.menu-item-has-children {
   position: relative;
 }
+/* Audit: wskaźnik rozwijania submenu (Sklep) */
+.mnsk7-header__menu li.menu-item-has-children > a::after {
+  content: "";
+  display: inline-block;
+  margin-left: 0.25em;
+  width: 0.4em;
+  height: 0.4em;
+  border-right: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  transform: rotate(45deg);
+  vertical-align: 0.15em;
+}
 .mnsk7-header__menu .sub-menu {
   list-style: none;
   margin: 0;
@@ -546,6 +558,14 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+}
+/* Desktop: podgląd koszyka na hover (klik = nawigacja do /koszyk/) */
+@media (min-width: 769px) {
+  .mnsk7-header__cart:hover .mnsk7-header__cart-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
 }
 .mnsk7-header__cart-dropdown .widget_shopping_cart_content {
   max-height: none;
