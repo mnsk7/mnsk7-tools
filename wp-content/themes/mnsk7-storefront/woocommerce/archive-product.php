@@ -60,38 +60,69 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 		}
 		echo '</div>';
 	}
-	$attr_data = function_exists( 'mnsk7_get_archive_attribute_filter_chips' ) ? mnsk7_get_archive_attribute_filter_chips() : array( 'filters' => array() );
-	$plp_chips_limit = 8; /* PLP-08: max chipów widocznych bez „Więcej" */
-	if ( ! empty( $attr_data['filters'] ) ) {
-		foreach ( $attr_data['filters'] as $attribute_filter ) {
-			if ( empty( $attribute_filter['chips'] ) ) { continue; }
-			$aria_label = sprintf( /* translators: %s: filter group name e.g. Średnica */ __( 'Filtruj: %s', 'mnsk7-storefront' ), $attribute_filter['label'] );
-			$chips_list = $attribute_filter['chips'];
-			$param      = $attribute_filter['param'];
-			$visible    = array_slice( $chips_list, 0, $plp_chips_limit, true );
-			$hidden     = array_slice( $chips_list, $plp_chips_limit, null, true );
-			echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="' . esc_attr( $aria_label ) . '">';
-			echo '<span class="mnsk7-plp-chips__label">' . esc_html( $attribute_filter['label'] ) . '</span>';
-			foreach ( $visible as $slug => $label ) {
+	$attr_data = function_exists( 'mnsk7_get_archive_attribute_filter_chips' ) ? mnsk7_get_archive_attribute_filter_chips() : array( 'filters' => array(), 'filter_params' => array() );
+	$plp_chips_limit   = 8; /* PLP-08: max chipów w jednym wierszu bez „Więcej" */
+	$plp_attr_visible  = 4; /* Liczba wierszy filtrów (Średnica, Dł. robocza…) widocznych od razu; reszta pod „Więcej filtrów” */
+	$all_filters       = isset( $attr_data['filters'] ) ? $attr_data['filters'] : array();
+	$visible_filters   = array_slice( $all_filters, 0, $plp_attr_visible, true );
+	$hidden_filters    = array_slice( $all_filters, $plp_attr_visible, null, true );
+	$has_hidden_rows   = ! empty( $hidden_filters );
+	$active_in_hidden  = false;
+	if ( $has_hidden_rows ) {
+		foreach ( $hidden_filters as $attribute_filter ) {
+			$param = isset( $attribute_filter['param'] ) ? $attribute_filter['param'] : '';
+			if ( $param && ! empty( $_GET[ $param ] ) ) {
+				$active_in_hidden = true;
+				break;
+			}
+		}
+	}
+
+	$render_filter_row = function ( $attribute_filter ) use ( $plp_chips_limit ) {
+		if ( empty( $attribute_filter['chips'] ) ) { return; }
+		$aria_label = sprintf( /* translators: %s: filter group name */ __( 'Filtruj: %s', 'mnsk7-storefront' ), $attribute_filter['label'] );
+		$chips_list = $attribute_filter['chips'];
+		$param      = $attribute_filter['param'];
+		$visible    = array_slice( $chips_list, 0, $plp_chips_limit, true );
+		$hidden     = array_slice( $chips_list, $plp_chips_limit, null, true );
+		echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="' . esc_attr( $aria_label ) . '">';
+		echo '<span class="mnsk7-plp-chips__label">' . esc_html( $attribute_filter['label'] ) . '</span>';
+		foreach ( $visible as $slug => $label ) {
+			$url    = add_query_arg( $param, $slug );
+			$active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) === $slug;
+			printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
+		}
+		if ( ! empty( $hidden ) ) {
+			echo '<span class="mnsk7-plp-chips-more" id="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" hidden>';
+			foreach ( $hidden as $slug => $label ) {
 				$url    = add_query_arg( $param, $slug );
 				$active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) === $slug;
 				printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
 			}
-			if ( ! empty( $hidden ) ) {
-				echo '<span class="mnsk7-plp-chips-more" id="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" hidden>';
-				foreach ( $hidden as $slug => $label ) {
-					$url    = add_query_arg( $param, $slug );
-					$active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) === $slug;
-					printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
-				}
-				echo '</span>';
-				echo '<button type="button" class="mnsk7-plp-chips-toggle" data-controls="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" aria-expanded="false">' . esc_html__( 'Więcej', 'mnsk7-storefront' ) . '</button>';
-			}
-			echo '</div>';
+			echo '</span>';
+			echo '<button type="button" class="mnsk7-plp-chips-toggle" data-controls="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" aria-expanded="false">' . esc_html__( 'Więcej', 'mnsk7-storefront' ) . '</button>';
+		}
+		echo '</div>';
+	};
+
+	if ( ! empty( $visible_filters ) ) {
+		foreach ( $visible_filters as $attribute_filter ) {
+			$render_filter_row( $attribute_filter );
 		}
 	}
-	/* Wybrane filtry: pokaż aktywne i link „Reset” (UX audit) */
-	$filter_params = array( 'filter_srednica', 'filter_srednica-trzpienia', 'filter_dlugosc-calkowita-l', 'filter_dlugosc-robocza-h' );
+	if ( $has_hidden_rows ) {
+		$filters_expanded = $active_in_hidden;
+		echo '<div class="mnsk7-plp-filters-toggle-wrap col-full">';
+		echo '<button type="button" class="mnsk7-plp-chips-toggle mnsk7-plp-filters-toggle" data-controls="mnsk7-plp-more-filters" data-more-text="' . esc_attr__( 'Więcej filtrów', 'mnsk7-storefront' ) . '" data-less-text="' . esc_attr__( 'Mniej filtrów', 'mnsk7-storefront' ) . '" aria-expanded="' . ( $filters_expanded ? 'true' : 'false' ) . '">' . esc_html( $filters_expanded ? __( 'Mniej filtrów', 'mnsk7-storefront' ) : __( 'Więcej filtrów', 'mnsk7-storefront' ) ) . '</button>';
+		echo '</div>';
+		echo '<div class="mnsk7-plp-filters-more col-full" id="mnsk7-plp-more-filters"' . ( $filters_expanded ? '' : ' hidden' ) . '>';
+		foreach ( $hidden_filters as $attribute_filter ) {
+			$render_filter_row( $attribute_filter );
+		}
+		echo '</div>';
+	}
+	/* Wybrane filtry: pokaż aktywne i link „Reset” (UX audit) — parametry z faktycznie wyświetlanych chipów */
+	$filter_params = isset( $attr_data['filter_params'] ) && is_array( $attr_data['filter_params'] ) ? $attr_data['filter_params'] : array();
 	$active_filters = array();
 	foreach ( $filter_params as $param ) {
 		if ( ! empty( $_GET[ $param ] ) ) {
@@ -235,9 +266,9 @@ if ( woocommerce_product_loop() ) {
 	echo '</div><!-- .mnsk7-plp-archive-wrap -->';
 } else {
 	echo '</div><!-- .mnsk7-plp-content -->';
-	$filter_params = array( 'filter_srednica', 'filter_srednica-trzpienia', 'filter_dlugosc-calkowita-l', 'filter_dlugosc-robocza-h' );
-	$has_filter = false;
-	foreach ( $filter_params as $p ) {
+	$all_filter_params = function_exists( 'mnsk7_get_all_attribute_filter_param_names' ) ? mnsk7_get_all_attribute_filter_param_names() : array();
+	$has_filter        = false;
+	foreach ( $all_filter_params as $p ) {
 		if ( ! empty( $_GET[ $p ] ) ) {
 			$has_filter = true;
 			break;
@@ -246,7 +277,7 @@ if ( woocommerce_product_loop() ) {
 	if ( $is_taxonomy && $has_filter ) {
 		// Jeden spójny blok empty state — bez duplikatu komunikatu WooCommerce.
 		remove_action( 'woocommerce_no_products_found', 'wc_no_products_found', 10 );
-		$clear_url = remove_query_arg( $filter_params );
+		$clear_url = ! empty( $all_filter_params ) ? remove_query_arg( $all_filter_params ) : ( $current_term && ! is_wp_error( get_term_link( $current_term ) ) ? get_term_link( $current_term ) : ( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : '' ) );
 		echo '<div class="mnsk7-plp-empty col-full" role="status">';
 		echo '<p class="mnsk7-plp-empty__text">' . esc_html__( 'Brak produktów dla wybranych filtrów.', 'mnsk7-storefront' ) . '</p>';
 		echo '<p class="mnsk7-plp-empty__hint">' . esc_html__( 'Zmień kryteria lub zobacz całą kategorię.', 'mnsk7-storefront' ) . '</p>';

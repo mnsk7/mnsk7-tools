@@ -205,6 +205,13 @@ add_filter( 'woocommerce_product_upsells_products_heading', function ( $heading 
 	return __( 'Może spodoba się również…', 'mnsk7-storefront' );
 }, 10 );
 
+/** PDP: Podobne produkty — 8 pozycji, 4 kolumny (pełny rząd bez pustego miejsca z boku) */
+add_filter( 'woocommerce_output_related_products_args', function ( $args ) {
+	$args['posts_per_page'] = 8;
+	$args['columns']        = 4;
+	return $args;
+}, 10 );
+
 /** 1.1 Cena w pętli (bestsellery, related, PLP): fallback gdy pusta; suffix „zł” na głównej */
 add_filter( 'woocommerce_get_price_html', function ( $html, $product ) {
 	if ( in_the_loop() && (string) $html === '' ) {
@@ -778,11 +785,13 @@ add_action( 'wp_footer', function () {
 			if (!id) return;
 			var target = document.getElementById(id);
 			if (!target) return;
+			var btnMore = btn.getAttribute('data-more-text') || moreLabel;
+			var btnLess = btn.getAttribute('data-less-text') || lessLabel;
 			btn.addEventListener('click', function() {
 				var expanded = btn.getAttribute('aria-expanded') === 'true';
 				btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
 				target.hidden = expanded;
-				btn.textContent = expanded ? moreLabel : lessLabel;
+				btn.textContent = expanded ? btnMore : btnLess;
 			});
 		});
 	})();
@@ -1057,8 +1066,16 @@ add_action( 'woocommerce_single_product_summary', function () {
 		if ( ! $attr->get_visible() ) {
 			continue;
 		}
-		$label = wc_attribute_label( $attr->get_name() );
-		$value = $product->get_attribute( $attr->get_name() );
+		$name  = $attr->get_name();
+		$slug  = str_replace( 'pa_', '', $name );
+		$label = function_exists( 'mnsk7_attribute_label_pl' ) ? mnsk7_attribute_label_pl( $slug ) : '';
+		if ( $label === '' && function_exists( 'wc_attribute_label' ) ) {
+			$label = wc_attribute_label( $name );
+		}
+		if ( $label === '' ) {
+			$label = $slug;
+		}
+		$value = $product->get_attribute( $name );
 		if ( $value === '' ) {
 			continue;
 		}
@@ -1231,6 +1248,42 @@ function mnsk7_get_product_attribute_taxonomy_names() {
 }
 
 /**
+ * Human-readable Polish labels for product attribute slugs (for chips and filters).
+ * Keys = attribute slug (as in pa_*), values = label for customer.
+ *
+ * @param string $attr_name Attribute slug without 'pa_' (e.g. srednica, dlugosc-robocza-h).
+ * @return string Label to show, or empty to use WooCommerce default.
+ */
+function mnsk7_attribute_label_pl( $attr_name ) {
+	$labels = array(
+		'srednica'                => __( 'Średnica', 'mnsk7-storefront' ),
+		'srednica-trzpienia'      => __( 'Trzpień', 'mnsk7-storefront' ),
+		'wymiary-trzpienia'       => __( 'Wymiary trzpienia', 'mnsk7-storefront' ),
+		'dlugosc-calkowita'       => __( 'Długość całkowita', 'mnsk7-storefront' ),
+		'dlugosc-calkowita-l'     => __( 'Dł. całkowita (L)', 'mnsk7-storefront' ),
+		'dlugosc-czesci-roboczej' => __( 'Dł. części roboczej', 'mnsk7-storefront' ),
+		'dlugosc-robocza'         => __( 'Długość robocza', 'mnsk7-storefront' ),
+		'dlugosc-robocza-h'       => __( 'Dł. robocza (H)', 'mnsk7-storefront' ),
+		'fi'                      => __( 'Średnica (fi)', 'mnsk7-storefront' ),
+		'kat-skosu'               => __( 'Kąt skosu', 'mnsk7-storefront' ),
+		'kat_skosu'               => __( 'Kąt skosu', 'mnsk7-storefront' ),
+		'r'                       => __( 'Promień R', 'mnsk7-storefront' ),
+		'typ-pilnika'             => __( 'Typ pilnika', 'mnsk7-storefront' ),
+	);
+	$key = strtolower( trim( (string) $attr_name ) );
+	if ( isset( $labels[ $key ] ) ) {
+		return $labels[ $key ];
+	}
+	// WooCommerce może zwracać slug z podkreślnikami (np. kat_skosu) — sprawdź wariant z myślnikami i na odwrót.
+	$key_alt = str_replace( '_', '-', $key );
+	if ( isset( $labels[ $key_alt ] ) ) {
+		return $labels[ $key_alt ];
+	}
+	$key_alt = str_replace( '-', '_', $key );
+	return isset( $labels[ $key_alt ] ) ? $labels[ $key_alt ] : '';
+}
+
+/**
  * All filter_* query param names for product attributes (for clearing filters / detecting active filter).
  *
  * @return string[]
@@ -1351,6 +1404,10 @@ function mnsk7_get_archive_attribute_filter_chips() {
 
 	$product_ids = mnsk7_get_archive_product_ids_for_chips( $attrs_to_try );
 	$filters     = array();
+	// When archive has no (in-stock) products, don't show attribute chips — they would show global terms and lead to "Brak produktów".
+	if ( empty( $product_ids ) ) {
+		return array( 'filters' => array(), 'filter_params' => array() );
+	}
 
 	foreach ( $attrs_to_try as $tax => $_ ) {
 		if ( $is_zestawy && $tax === 'pa_srednica' ) {
@@ -1360,7 +1417,10 @@ function mnsk7_get_archive_attribute_filter_chips() {
 			continue;
 		}
 		$attr_name = str_replace( 'pa_', '', $tax );
-		$label     = function_exists( 'wc_attribute_label' ) ? wc_attribute_label( $attr_name ) : $attr_name;
+		$label     = function_exists( 'mnsk7_attribute_label_pl' ) ? mnsk7_attribute_label_pl( $attr_name ) : '';
+		if ( $label === '' && function_exists( 'wc_attribute_label' ) ) {
+			$label = wc_attribute_label( $attr_name );
+		}
 		if ( $label === '' ) {
 			$label = $attr_name;
 		}
