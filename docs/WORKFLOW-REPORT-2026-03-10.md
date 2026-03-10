@@ -82,9 +82,9 @@
 
 ## 8. GIT RESULT
 
-- **Commit message:** (patrz wynik `git log` po push)
-- **Commit hash:** (patrz wynik `git rev-parse HEAD` po commit)
-- **Push:** do `origin main`
+- **Commit message:** `fix(header): prevent scrollbar in mobile header row; workflow report`
+- **Commit hash:** `c811e6a`
+- **Push:** wykonany do `origin main` (0d7d2a5..c811e6a main -> main)
 
 ---
 
