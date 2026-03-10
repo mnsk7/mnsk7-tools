@@ -91,3 +91,18 @@ button[type="submit"] {
   cursor: not-allowed;
 }
 
+/* -----------------------------------------------------------------
+   § FORM ELEMENTS — :focus-visible (WCAG 2.4.7, UI_SPEC_V2 §12 W3)
+   ----------------------------------------------------------------- */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
+}
+

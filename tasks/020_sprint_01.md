@@ -1,6 +1,8 @@
 # Sprint 01
 
-*(Выход агента 01_product_manager; актуализировано 2026-03-06)*
+*(Выход агента 01_product_manager; актуализировано 2026-03-06; stan na staging 2026-03-10: docs/STAGING_PROGRESS.md)*
+
+**Źródło prawdy:** staging.mnsk7-tools.pl (nie wywiad klienta). Co już wdrożone na stagingu — w STAGING_PROGRESS.md.
 
 Реально сделать за 1 спринт. Фокус: стабильность (E1), технический задел для каталога и карточки (E7, часть E2/E3). Тема: **mnsk7-storefront** (child Storefront).
 

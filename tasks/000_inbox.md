@@ -4,6 +4,15 @@
 
 ---
 
+## Pipeline 2026-03-10 (staging jako źródło prawdy)
+
+- **STAGING_PROGRESS.md** — stan strony https://staging.mnsk7-tools.pl: co zrobione vs REQUIREMENTS. Zamiast „wywiad klienta” używamy stagingu do oceny postępu.
+- **Kolejność agentów:** as-is (gotowe) → client_discovery (gotowe) → 02_growth_seo, 03_wp_architect (dokumenty gotowe) → **01_product_manager** — zaktualizowane 020/030 pod staging. **Następni:** 09_ui_designer (UI_SPEC_V2), 05_theme_ux_frontend + 04_woo_engineer (kod), 08_qa_security (QA_REPORT), 06_devops_github + 07_server_ops (deploy).
+- **2026-03-10:** Uruchomiono **09_ui_designer** — zaktualizowano UI_SPEC_V2: §11 weryfikacja na staging, §12 checklista WCAG AA (W1–W7) dla QA. Uruchomiono **08_qa_security** — QA_REPORT: odniesienie do STAGING_PROGRESS i UI_SPEC_V2 §12 (WCAG).
+- **2026-03-10:** Uruchomiono **05_theme_ux_frontend + 04_woo_engineer** (kod): (1) **focus-visible** dla input/select/textarea (17-buttons.css, main.css) — WCAG 2.4.7, UI_SPEC_V2 §12 W3; (2) **touch targets 44px** — paginacja, .woocommerce-ordering select, .quantity .qty (22-touch-targets.css, main.css). Do weryfikacji na staging: QA_REPORT §5 (UI-1–UI-5) i §12 (W1–W7).
+
+---
+
 ## Zrobione (2026-03) — wrappers, tabela PLP, pluginy
 
 - [x] **Обёртки (tech-storefront → Storefront):** header/footer + Woo wrapper sprawdzone i poprawione. Jeden `</div>` zamyka `#content`, drugi `#page` po stopce. Dodane: `woocommerce/global/wrapper-start.php`, `wrapper-end.php` w mnsk7-storefront; dokument `docs/WRAPPERS_LAYOUT.md`.

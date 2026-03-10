@@ -1,6 +1,8 @@
 # Sprint 02
 
-*(Выход агента 01_product_manager)*
+*(Выход агента 01_product_manager; stan na staging 2026-03-10: docs/STAGING_PROGRESS.md)*
+
+**Źródło prawdy:** staging.mnsk7-tools.pl. Większość zadań E3/E4 wdrożona (Kluczowe parametry, Zastosowanie, availability, trust badges, bestsellery, shortcodes). Pozostało: dopracowanie katalogu (chipsy na stronie kategorii), SEO-landingi, loyalty w panelu.
 
 Фокус: каталог и подбор (E2), карточка товара (E3), начало доверия (E4). После Sprint 01 есть один фильтр, заполненные атрибуты и overrides карточки.
 
@@ -71,3 +73,15 @@
 - Карточка с быстрым сканированием параметров и блоком «подходит для».
 - На сайте видны элементы доверия: хиты, отзывы/место под отзывы, рейтинг, наличие, доставка на следующий день, фактура VAT.
 - Готовность к Sprint 03: SEO-страницы, контент, производительность и мобильная версия.
+
+---
+
+## Co dalej (po weryfikacji staging 2026-03-10)
+
+Źródło: [STAGING_PROGRESS.md](../docs/STAGING_PROGRESS.md). Na stagingu wdrożone: header/footer bez duplikatów, PDP z Kluczowe parametry/Zastosowanie/availability/trust, bestsellery, shortcodes. **Do zrobienia w kolejnych krokach:**
+
+- **E5 (SEO):** landingi pod zapytania (frezy do aluminium/MDF/drewna, CNC), audyt Title/H1/alt, jeden schema (P2-01).
+- **E6:** WebP/obrazki, mobile (tap targets, kontrast — zweryfikować na żywym stagingu).
+- **P0/P1 z AS_IS:** jeden filtr (S1-08), wyłączenie duplikatów filtrów na serwerze (FB-04), backupy (S1-05), cache exclusions (S1-02, S1-03).
+- **09_ui_designer:** UI_SPEC_V2 jako single source of truth; potem 05/04 — wdrożenie wizualne i konwersja (inbox: Rework po audycie marketing/UX).
+- **08_qa_security:** smoke + regres po każdym deploy; QA_REPORT §5 (UI-1–UI-5).

@@ -1815,6 +1815,19 @@ a.add_to_wishlist,
   cursor: not-allowed;
 }
 
+/* Form elements :focus-visible (WCAG 2.4.7, UI_SPEC_V2 §12 W3) */
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+}
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
+}
+
 /* -----------------------------------------------------------------
    § CART & CHECKOUT
    ----------------------------------------------------------------- */
@@ -2054,6 +2067,28 @@ a.button.alt,
 
 .site-header .menu-toggle {
   min-width: 44px;
+}
+
+.woocommerce nav.woocommerce-pagination ul li a,
+.woocommerce nav.woocommerce-pagination ul li span {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.woocommerce-ordering select,
+.woocommerce .woocommerce-ordering select {
+  min-height: 44px;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  box-sizing: border-box;
+}
+.woocommerce .quantity .qty,
+.woocommerce form .quantity input.qty {
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
 }
 
 /* Keep PLP buttons from expanding horizontally beyond card */

@@ -1,10 +1,10 @@
 # UI SPEC V2 — mnsk7-tools.pl (staging)
 
-Data: 2026-03-05 | Weryfikacja 09_ui_designer: 2026-03-06  
+Data: 2026-03-05 | Weryfikacja 09_ui_designer: 2026-03-06, **aktualizacja 2026-03-10** (staging jako źródło prawdy)  
 Owner: `09_ui_designer`  
 Zakres: tylko `theme/mu/custom docs/tasks` (bez zmian w core WP i zewnętrznych pluginach)
 
-**Źródła:** REQUIREMENTS.md, CONTACT_DELIVERY_LOYALTY.md, notatki PDF (staging.kayer.pl), skills: ecommerce_header_footer_guidelines, product_card_visual, visual_design_woo.
+**Źródła:** REQUIREMENTS.md, CONTACT_DELIVERY_LOYALTY.md, notatki PDF (staging.kayer.pl), [STAGING_PROGRESS.md](STAGING_PROGRESS.md), skills: ecommerce_header_footer_guidelines, product_card_visual, visual_design_woo.
 
 ## 1) Cel biznesowy i zasady
 
@@ -272,3 +272,34 @@ UX:
 | Dostawa: InPost/DPD, tabela warunków (pn.–pt. do 15:00 InPost → jutro), darmowa od 300 zł | §6.7 Dostawa i płatności; CONTACT_DELIVERY_LOYALTY §4, §5 |
 | Lojalność: progi 1000/3000/5000/10 000 zł → 5/10/15/20% w panelu | §6.2 Home p.5 (blok informacyjny + CTA „Zobacz progi”); implementacja w panelu klienta |
 | Menu: Sklep (kategorie), O nas, Pomoc, Kontakt | §4.5 Nawigacja; §6.1 Header; ecommerce_header_footer_guidelines — kategorie w menu robimy (standard e-commerce) |
+
+---
+
+## 11) Weryfikacja na staging 2026-03-10 (09_ui_designer)
+
+Źródło: [STAGING_PROGRESS.md](STAGING_PROGRESS.md). Na https://staging.mnsk7-tools.pl potwierdzone:
+
+- **Header:** jeden zestaw (logo, Sklep, Przewodnik, Dostawa i płatności, Kontakt, search, Moje konto, koszyk) — bez duplikatów w DOM.
+- **Główna:** H1 „Frezy CNC…”, bestsellery z CTA, „Dlaczego kupujący nam ufają”, Przeglądaj asortyment, Program rabatowy, Instagram.
+- **PDP:** breadcrumb, H1, galeria, wariant (Średnica), „X w magazynie”, cena, CTA, Kluczowe parametry, Zastosowanie, Podobne produkty — zgodne z §6.4 i product_card_visual.
+- **Footer:** kategorie, Kontakt (formularz, email, tel, godziny), newsletter, polityki, NIP/KRS/REGON.
+
+**Do dopracowania (05/04):** kontrast tekstu/cen (ciemny na ciemnym), spójność tokenów na wszystkich sekcjach, weryfikacja tap targets 44px na mobile. Zgodność z §7 (co usunąć/uprościć).
+
+---
+
+## 12) Checklista WCAG AA dla QA (08_qa_security)
+
+Do weryfikacji po każdym wdrożeniu UI (05/04). Źródło: spec §1 (WCAG AA), §4 (tap targets, focus).
+
+| # | Kryterium | Jak sprawdzić | Status |
+|---|-----------|----------------|--------|
+| W1 | Kontrast tekstu zwykłego min. 4.5:1 (tekst duży 3:1) | Narzędzie kontrastu (DevTools / axe) na home, PLP, PDP, footer | ☐ |
+| W2 | Kontrast cen i CTA min. 4.5:1 w stanie default/hover/focus | To samo; przycisk „Dodaj do koszyka” i ceny | ☐ |
+| W3 | Focus visible: wszystkie interaktywne elementy mają widoczny outline przy :focus-visible (klawiatura) | Tab przez header, menu, search, karty, CTA — bez skip | ☐ |
+| W4 | Tap targets min. 44×44 px (mobile) | Pomiar przycisków, linków w menu, ikon koszyka/konta, burgera, CTA na kartach i PDP | ☐ |
+| W5 | Nagłówki: jedna H1 na stronę; hierarchia H1→H2→H3 bez skoków | Inspekcja drzewa nagłówków (Lighthouse / ręcznie) | ☐ |
+| W6 | Formularze: labele powiązane z inputami; błędy opisane tekstem (nie tylko kolorem) | Kontakt, checkout, search | ☐ |
+| W7 | Obrazy: alt dla treściowych; dekoracyjne z alt="" lub role="presentation" | Karty produktów, galeria PDP, logo | ☐ |
+
+Pozytywne zaliczenie W1–W7 = spełnienie deklarowanego WCAG AA w tej specyfikacji.

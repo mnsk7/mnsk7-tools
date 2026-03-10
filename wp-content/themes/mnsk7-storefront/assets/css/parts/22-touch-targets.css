@@ -30,9 +30,29 @@ a.button.alt,
 .woocommerce nav.woocommerce-pagination ul li span {
   min-height: 44px;
   min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
 }
 .woocommerce-checkout #payment .form-row.place-order .button,
 .woocommerce-checkout #payment .place-order .button {
   min-height: 44px;
+}
+
+/* Ordering dropdown (Zamówienie w sklepie) — min height tap target */
+.woocommerce-ordering select,
+.woocommerce .woocommerce-ordering select {
+  min-height: 44px;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  box-sizing: border-box;
+}
+
+/* Quantity input .qty (PDP, PLP, cart) — min 44px height */
+.woocommerce .quantity .qty,
+.woocommerce form .quantity input.qty {
+  min-height: 44px;
+  box-sizing: border-box;
+  padding: 0.5rem 0.75rem;
 }
 

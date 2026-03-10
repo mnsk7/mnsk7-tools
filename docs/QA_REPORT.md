@@ -2,7 +2,8 @@
 
 *(Создаётся и обновляется агентом 08_qa_security)*
 
-Чеклисты smoke/regression, безопасность, производительность. Задачи и фиксы — в [tasks/000_inbox.md](../tasks/000_inbox.md).
+Чеклисты smoke/regression, безопасность, производительность. Задачи i фиксы — w [tasks/000_inbox.md](../tasks/000_inbox.md).  
+**Źródło prawdy dla stanu UI:** [STAGING_PROGRESS.md](STAGING_PROGRESS.md). **Checklista WCAG AA:** [UI_SPEC_V2.md](UI_SPEC_V2.md) §12.
 
 ---
 
@@ -80,6 +81,8 @@ Po wdrożeniu zmian z 05_theme_ux_frontend i 04_woo_engineer (tokeny, PDP CSS, f
 | UI-4 | Tap targets (WCAG) | Przyciski Woo min 44px; linki w menu, toggle, Moje konto, Koszyk — min 44px; focus-visible widoczny | ☐ |
 | UI-5 | PDP mobile | CTA pełna szerokość; form.cart w kolumnie; brak overflow | ☐ |
 
+**WCAG AA:** pełna checklista W1–W7 w [UI_SPEC_V2.md](UI_SPEC_V2.md) §12 (kontrast, focus-visible, tap targets 44px, nagłówki, formularze, alt). Weryfikować po wdrożeniach 05/04.
+
 ---
 
 ## 6. Otwarte punkty / inbox
@@ -99,3 +102,4 @@ W razie znalezionych błędów: opisać w [tasks/000_inbox.md](../tasks/000_inbo
 | 2026-03-05 | Utworzenie raportu przez 08_qa_security: checklists smoke, security, performance; powiązanie ze Sprint 01 i AS_IS. |
 | 2026-03-05 | Dodanie S8 (strona produktu), S9 (stopka: kontakt, ETA, Instagram); link do HOMEPAGE_AND_PAGES. |
 | 2026-03-06 | SEC-4: xmlrpc w kodzie zablokowany; do weryfikacji po deploy. Dodana sekcja 5 — weryfikacja UI/regresja po 05+04 (header, PDP, footer, tap targets, mobile). |
+| 2026-03-10 | Odniesienie do STAGING_PROGRESS (źródło prawdy); link do checklisty WCAG AA w UI_SPEC_V2 §12; rozszerzenie sekcji 5 o wymóg weryfikacji W1–W7. |
