@@ -216,79 +216,56 @@ body.tax-product_tag .mnsk7-catalog-filters {
 @media (max-width: 768px) {
   .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs) {
     flex-wrap: nowrap;
-    overflow-x: visible;
     overflow-y: hidden;
+    padding-bottom: 0.25rem;
     margin-left: 0;
     margin-right: 0;
-    padding-bottom: 0.25rem;
+    gap: 0.5rem;
+    align-items: center;
   }
   .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs) {
     overflow-x: auto;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
+    padding: 0.25rem 0;
   }
   .mnsk7-plp-chips--attrs {
-    flex-wrap: nowrap;
-    overflow: visible;
+    overflow-x: visible;
   }
-  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__label {
+  .mnsk7-plp-chips__label {
     flex-shrink: 0;
-    position: static;
-    background: transparent;
-    padding-right: 0.25rem;
+    padding-right: 0.5rem;
   }
-  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
+  .mnsk7-plp-chips__scroll {
     flex: 1 1 auto;
     min-width: 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    padding-bottom: 0.25rem;
-    margin-left: 0;
-    margin-right: 0;
-  }
-  /* Chipy atrybutów: label w osobnej linii, scroll w jednym bloku — bez białej pasy na wartości */
-  .mnsk7-plp-chips--attrs {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.35rem;
-    flex-wrap: wrap;
-    overflow: visible;
-    padding-bottom: 0.25rem;
-    margin-left: 0;
-    margin-right: 0;
-  }
-  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__label {
-    flex: 0 0 auto;
-    width: 100%;
-    margin-bottom: 0;
-    margin-right: 0;
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    color: var(--color-text-secondary);
-    background: transparent;
-    position: static;
-    padding-right: 0;
-  }
-  /* Scrollowalny obszar chipów — czytelny scroll, bez obcinania; affordance że można przesuwać */
-  .mnsk7-plp-chips__scroll {
     display: flex;
     flex-wrap: nowrap;
+    align-items: center;
     gap: 0.4rem;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
-    padding: 0.25rem 0 0.5rem;
-    margin: 0 -0.5rem;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding: 0.25rem 0.5rem 0.25rem 0;
+    margin: 0 -0.5rem 0 0;
+    min-height: 44px;
+    position: relative;
   }
   .mnsk7-plp-chips__scroll::after {
     content: "";
-    flex: 0 0 0.5rem;
-    min-width: 0.5rem;
+    position: sticky;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 24px;
+    flex-shrink: 0;
+    background: linear-gradient(to left, var(--color-bg) 40%, transparent);
+    pointer-events: none;
+    margin-left: -24px;
+  }
+  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
+    padding-left: 0;
   }
 }
 
@@ -342,6 +319,14 @@ body.tax-product_tag .mnsk7-catalog-filters {
   color: var(--color-text-secondary);
   margin-right: 0.5rem;
   align-self: center;
+}
+
+/* Na desktop: scroll wrapper zachowuje się jak zwykły flex-wrap (bez overflow) */
+.mnsk7-plp-chips__scroll {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 /* PLP-07: drugi rząd chipów (atrybuty) — wizualnie drugorzędne względem kategorii; każdy wiersz z etykietą + chipy z zawijaniem */
@@ -761,7 +746,11 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   pointer-events: none;
 }
 
+<<<<<<< HEAD
 /* PLP-09: desktop/tablet — tabela; mobile (≤768px) — siatka kart 2 kolumny. Spójny breakpoint 768px. */
+=======
+/* PLP-09: desktop/tablet — tabela; mobile (≤768px) — siatka kart 2 kolumny. */
+>>>>>>> origin/fix/mobile-ux-2026-03
 .mnsk7-plp-grid-mobile {
   display: none;
 }
@@ -775,7 +764,11 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   }
   .mnsk7-plp-grid-mobile ul.products {
     grid-template-columns: repeat(2, 1fr) !important;
+<<<<<<< HEAD
     gap: 0.75rem !important;
+=======
+    gap: 1rem !important;
+>>>>>>> origin/fix/mobile-ux-2026-03
   }
   /* Nazwa i cena zawsze widoczne w siatce mobilnej (ta sama karta co bestsellery) */
   .mnsk7-plp-grid-mobile .woocommerce-loop-product__title,
@@ -976,7 +969,6 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   .mnsk7-plp-chips {
     margin-bottom: 0.75rem;
   }
-
   .mnsk7-product-table {
     min-width: 560px;
   }

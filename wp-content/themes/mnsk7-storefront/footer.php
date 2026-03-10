@@ -183,8 +183,8 @@ if ( $show_theme_cookie_bar ) :
 (function() {
 	var cols = document.querySelectorAll('.mnsk7-footer__col');
 	if (!cols.length) return;
-	/* Zawsze inicjalizuj accordion (nie tylko przy width <= 768), żeby po resize na mobile lub przy ładowaniu na mobile handler był podpięty. Na desktop CSS accordion nie stosuje się. */
 	function init() {
+		var isMobile = window.matchMedia('(max-width: 768px)').matches;
 		cols.forEach(function(col) {
 			var title = col.querySelector('.mnsk7-footer__title');
 			if (!title) return;
@@ -197,6 +197,7 @@ if ( $show_theme_cookie_bar ) :
 			title.setAttribute('role', 'button');
 			title.setAttribute('tabindex', '0');
 			function toggle() {
+				if (!window.matchMedia('(max-width: 768px)').matches) return;
 				col.classList.toggle('is-open');
 				title.setAttribute('aria-expanded', col.classList.contains('is-open'));
 			}
@@ -206,8 +207,15 @@ if ( $show_theme_cookie_bar ) :
 			});
 		});
 	}
-	if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-	else init();
+	function runInitWhenMobile() {
+		if (window.matchMedia('(max-width: 768px)').matches) init();
+	}
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', runInitWhenMobile);
+	} else {
+		runInitWhenMobile();
+	}
+	window.matchMedia('(max-width: 768px)').addEventListener('change', runInitWhenMobile);
 })();
 </script>
 
