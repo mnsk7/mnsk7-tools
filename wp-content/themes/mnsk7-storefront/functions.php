@@ -1125,18 +1125,55 @@ add_action( 'init', function () {
 
 /* PLP-02: breadcrumbs na archive (sklep, kategoria, tag, wyniki wyszukiwania produktów) */
 add_action( 'woocommerce_before_main_content', function () {
-	$is_plp = function_exists( 'is_shop' ) && ( is_shop() || ( function_exists( 'is_product_category' ) && is_product_category() ) || ( function_exists( 'is_product_tag' ) && is_product_tag() ) );
+	$is_plp = function_exists( 'mnsk7_is_plp_archive' ) && mnsk7_is_plp_archive();
 	$is_product_search = is_search() && get_query_var( 'post_type' ) === 'product';
 	if ( $is_plp || $is_product_search ) {
 		woocommerce_breadcrumb();
 	}
 }, 19 );
 
+/**
+ * PLP + filter_*: jedna struktura body_class dla archiwum — niezależnie od ?filter_*.
+ * Zapobiega przełączeniu layoutu/headera gdy pluginy zmieniają klasy przy „filter request”.
+ * Krytyczne klasy dla 24-plp-table.css: post-type-archive-product, tax-product_cat, tax-product_tag.
+ */
+add_filter( 'body_class', function ( $classes ) {
+	if ( ! function_exists( 'mnsk7_is_plp_archive' ) || ! mnsk7_is_plp_archive() ) {
+		return $classes;
+	}
+	$ensure = array( 'woocommerce', 'woocommerce-page', 'post-type-archive', 'post-type-archive-product' );
+	$obj = get_queried_object();
+	if ( $obj instanceof WP_Term && isset( $obj->taxonomy ) ) {
+		if ( in_array( $obj->taxonomy, array( 'product_cat', 'product_tag' ), true ) ) {
+			$ensure[] = 'tax-' . $obj->taxonomy;
+		}
+	}
+	foreach ( $ensure as $class ) {
+		if ( ! in_array( $class, $classes, true ) ) {
+			$classes[] = $class;
+		}
+	}
+	return $classes;
+}, 999 );
+
+/**
+ * PLP cache: Vary: User-Agent na archiwum sklepu/kategorii/tagu, żeby CDN/cache nie serwowało
+ * wersji desktop użytkownikom mobile (layout wybierany po stronie serwera).
+ */
+add_action( 'send_headers', function () {
+	if ( ! function_exists( 'mnsk7_is_plp_archive' ) || ! mnsk7_is_plp_archive() ) {
+		return;
+	}
+	if ( ! headers_sent() ) {
+		header( 'Vary: User-Agent', false );
+	}
+}, 5 );
+
 add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 	if ( ! is_array( $crumbs ) ) {
 		return $crumbs;
 	}
-	// Na PDP: jeśli użytkownik przyszedł z archiwum tagu (np. /tag-produktu/hrc65/), pokaż ścieżkę: Strona główna › Tag › Nazwa produktu.
+	// Na PDP: jeśli użytkownik przyszedł z archiwum tagu (np. /tag-produktu/hrc65/ lub z filtrem ?filter_*), pokaż: Strona główna › Tag (bez duplikatu nazwy produktu). Link na tag = pełny referer, żeby wrócić z zachowaniem filtrów.
 	if ( is_singular( 'product' ) && count( $crumbs ) > 1 ) {
 		$product_id = get_queried_object_id();
 		$referer    = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
@@ -1144,24 +1181,24 @@ add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 		if ( $referer !== '' && $home_host && $home_host === wp_parse_url( $referer, PHP_URL_HOST ) ) {
 			$ref_path = wp_parse_url( $referer, PHP_URL_PATH );
 			if ( $ref_path && taxonomy_exists( 'product_tag' ) ) {
-				$tax_obj = get_taxonomy( 'product_tag' );
+				$tax_obj  = get_taxonomy( 'product_tag' );
 				$tag_base = ( $tax_obj && ! empty( $tax_obj->rewrite['slug'] ) ) ? $tax_obj->rewrite['slug'] : 'tag-produktu';
-				$pattern = '#/' . preg_quote( $tag_base, '#' ) . '/([^/]+)/?#';
+				$pattern  = '#/' . preg_quote( $tag_base, '#' ) . '/([^/]+)/?#';
 				if ( preg_match( $pattern, $ref_path, $m ) && ! empty( $m[1] ) ) {
 					$tag_slug = sanitize_text_field( $m[1] );
 					$tag_term = get_term_by( 'slug', $tag_slug, 'product_tag' );
 					if ( $tag_term && ! is_wp_error( $tag_term ) && has_term( $tag_term->term_id, 'product_tag', $product_id ) ) {
 						$tag_link = get_term_link( $tag_term );
 						if ( ! is_wp_error( $tag_link ) ) {
-							$product_title = get_the_title( $product_id );
-							$tag_name      = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $tag_term->name ) : $tag_term->name;
-							$home_crumb    = isset( $crumbs[0] ) ? $crumbs[0] : array( _x( 'Home', 'breadcrumb', 'woocommerce' ), wc_get_page_permalink( 'shop' ) );
+							$tag_name   = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $tag_term->name ) : $tag_term->name;
+							$home_crumb = isset( $crumbs[0] ) ? $crumbs[0] : array( _x( 'Home', 'breadcrumb', 'woocommerce' ), wc_get_page_permalink( 'shop' ) );
 							if ( is_array( $home_crumb ) && isset( $home_crumb[0] ) ) {
 								$home_url = home_url( '/' );
+								// Link na tag = pełny referer (z query), żeby „wstecz” wracał na listę z tymi samymi filtrami.
+								$back_url = $referer;
 								$crumbs   = array(
 									array( $home_crumb[0], $home_url ),
-									array( $tag_name, $tag_link ),
-									array( $product_title, '' ),
+									array( $tag_name, $back_url ),
 								);
 								foreach ( $crumbs as $i => $crumb ) {
 									if ( isset( $crumb[1] ) && is_string( $crumb[1] ) ) {
