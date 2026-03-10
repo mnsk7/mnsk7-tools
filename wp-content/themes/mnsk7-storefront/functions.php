@@ -26,6 +26,28 @@ function mnsk7_is_mobile_request() {
 }
 
 /**
+ * Niezawodne wykrywanie strony archiwum produktów (sklep / kategoria / tag).
+ * Używane dla body_class i menu: ten sam kontekst niezależnie od ?filter_* (żeby filtry
+ * nie przełączały na inny header/layout). Fallback na get_queried_object(), bo przy
+ * parametrach filter_* pluginy mogą zmieniać stan is_shop() / is_product_taxonomy().
+ *
+ * @return bool True gdy jesteśmy na archiwum sklepu, kategorii lub tagu produktu.
+ */
+function mnsk7_is_plp_archive() {
+	if ( ! function_exists( 'is_shop' ) ) {
+		return false;
+	}
+	if ( is_shop() || ( function_exists( 'is_product_category' ) && is_product_category() ) || ( function_exists( 'is_product_tag' ) && is_product_tag() ) ) {
+		return true;
+	}
+	$obj = get_queried_object();
+	if ( $obj instanceof WP_Term && isset( $obj->taxonomy ) && in_array( $obj->taxonomy, array( 'product_cat', 'product_tag' ), true ) ) {
+		return true;
+	}
+	return false;
+}
+
+/**
  * Whether parent theme Storefront is present (not removed/overwritten by WP or host).
  * When false, child uses its own header fallback and does not enqueue parent styles.
  */
@@ -1114,12 +1136,50 @@ add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 	if ( ! is_array( $crumbs ) ) {
 		return $crumbs;
 	}
-	// Na PDP bez nazwy produktu w okruszkach: Strona główna › Sklep › Kategoria.
+	// Na PDP: jeśli użytkownik przyszedł z archiwum tagu (np. /tag-produktu/hrc65/), pokaż ścieżkę: Strona główna › Tag › Nazwa produktu.
 	if ( is_singular( 'product' ) && count( $crumbs ) > 1 ) {
+		$product_id = get_queried_object_id();
+		$referer    = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
+		$home_host  = wp_parse_url( home_url( '/' ), PHP_URL_HOST );
+		if ( $referer !== '' && $home_host && $home_host === wp_parse_url( $referer, PHP_URL_HOST ) ) {
+			$ref_path = wp_parse_url( $referer, PHP_URL_PATH );
+			if ( $ref_path && taxonomy_exists( 'product_tag' ) ) {
+				$tax_obj = get_taxonomy( 'product_tag' );
+				$tag_base = ( $tax_obj && ! empty( $tax_obj->rewrite['slug'] ) ) ? $tax_obj->rewrite['slug'] : 'tag-produktu';
+				$pattern = '#/' . preg_quote( $tag_base, '#' ) . '/([^/]+)/?#';
+				if ( preg_match( $pattern, $ref_path, $m ) && ! empty( $m[1] ) ) {
+					$tag_slug = sanitize_text_field( $m[1] );
+					$tag_term = get_term_by( 'slug', $tag_slug, 'product_tag' );
+					if ( $tag_term && ! is_wp_error( $tag_term ) && has_term( $tag_term->term_id, 'product_tag', $product_id ) ) {
+						$tag_link = get_term_link( $tag_term );
+						if ( ! is_wp_error( $tag_link ) ) {
+							$product_title = get_the_title( $product_id );
+							$tag_name      = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $tag_term->name ) : $tag_term->name;
+							$home_crumb    = isset( $crumbs[0] ) ? $crumbs[0] : array( _x( 'Home', 'breadcrumb', 'woocommerce' ), wc_get_page_permalink( 'shop' ) );
+							if ( is_array( $home_crumb ) && isset( $home_crumb[0] ) ) {
+								$home_url = home_url( '/' );
+								$crumbs   = array(
+									array( $home_crumb[0], $home_url ),
+									array( $tag_name, $tag_link ),
+									array( $product_title, '' ),
+								);
+								foreach ( $crumbs as $i => $crumb ) {
+									if ( isset( $crumb[1] ) && is_string( $crumb[1] ) ) {
+										$crumbs[ $i ][1] = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $crumb[1] ) : $crumb[1];
+									}
+								}
+								return $crumbs;
+							}
+						}
+					}
+				}
+			}
+		}
+
+		// Domyślnie: Strona główna › Sklep › Kategoria (bez nazwy produktu).
 		array_pop( $crumbs );
 		// Upewnij się, że kategoria produktu jest w okruszkach (WC czasem jej nie dodaje).
-		$product_id = get_queried_object_id();
-		$terms      = $product_id ? wc_get_product_terms( $product_id, 'product_cat', array( 'orderby' => 'parent', 'order' => 'DESC' ) ) : array();
+		$terms = $product_id ? wc_get_product_terms( $product_id, 'product_cat', array( 'orderby' => 'parent', 'order' => 'DESC' ) ) : array();
 		if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
 			$main_term = apply_filters( 'woocommerce_breadcrumb_main_term', $terms[0], $terms );
 			$term_link = get_term_link( $main_term );
