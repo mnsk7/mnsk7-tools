@@ -45,9 +45,13 @@
   min-width: 44px;
   min-height: 44px;
   box-sizing: border-box;
+  border-radius: var(--r-sm);
+  transition: opacity 0.15s ease, background 0.15s ease;
 }
-.mnsk7-promo-bar__close:hover {
+.mnsk7-promo-bar__close:hover,
+.mnsk7-promo-bar__close:focus-visible {
   opacity: 1;
+  background: rgba(255, 255, 255, 0.15);
 }
 
 /* Header + dropdowny zawsze nad treścią strony (menu i koszyk nie chowają się za hero/banerem) */
@@ -187,7 +191,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   transform: rotate(45deg);
   vertical-align: 0.15em;
 }
-/* Megamenu: 4 kolumny, bez przewijania (max 12 kategorii) */
+/* Megamenu: 4 kolumny, nazwy kategorii w całości (zawijanie zamiast obcięcia) */
 .mnsk7-header__menu .sub-menu {
   list-style: none;
   margin: 0;
@@ -196,8 +200,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   top: 100%;
   left: 0;
   min-width: 320px;
-  max-width: min(480px, calc(100vw - 2rem));
-  max-height: 220px;
+  max-width: min(560px, calc(100vw - 2rem));
+  max-height: 280px;
   overflow-x: hidden;
   overflow-y: auto;
   background: var(--color-white);
@@ -210,8 +214,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   transition: opacity 0.15s ease, visibility 0.15s ease, transform 0.15s ease;
   z-index: 100;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.25rem 1rem;
+  grid-template-columns: repeat(4, minmax(120px, 1fr));
+  gap: 0.35rem 1rem;
   pointer-events: auto;
 }
 .mnsk7-header__menu li.menu-item-has-children:hover .sub-menu,
@@ -219,6 +223,12 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+}
+/* Sklep: aktywny stan gdy dropdown otwarty — dolna kreska w kolorze primary */
+.mnsk7-header__menu li.menu-item-has-children:hover > a,
+.mnsk7-header__menu li.menu-item-has-children:focus-within > a {
+  color: var(--color-primary);
+  box-shadow: inset 0 -2px 0 var(--color-primary);
 }
 /* Submenu nie wychodzi w prawo poza ekran (Sklep jest pierwszy, dropdown pod nim) */
 @media (max-width: 480px) {
@@ -234,9 +244,9 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   padding: 0.35rem 0.5rem;
   font-size: 0.8125rem;
   border-radius: var(--r-sm);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
   min-width: 0;
 }
 .mnsk7-header__menu .sub-menu a:hover {

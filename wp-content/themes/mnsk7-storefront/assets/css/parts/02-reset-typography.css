@@ -90,11 +90,16 @@ img {
   }
 }
 
-/* Skip link (a11y): ukryty, widoczny tylko przy :focus (Tab) */
+/* Skip link (a11y): niewidoczny do momentu :focus (Tab) — clip zapobiega „wyjeżdżaniu” w RTL/zoom */
 .mnsk7-skip-link {
   position: absolute;
-  left: -9999px;
-  top: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  border: 0;
   z-index: 10000;
   padding: 0.75rem 1rem;
   background: var(--color-primary);
@@ -106,6 +111,12 @@ img {
 }
 .mnsk7-skip-link:focus,
 .mnsk7-skip-link:focus-visible {
+  position: absolute;
+  width: auto;
+  height: auto;
+  margin: 0;
+  clip: auto;
+  clip-path: none;
   left: var(--space-16, 1rem);
   top: var(--space-16, 1rem);
   outline: 2px solid var(--color-white);
