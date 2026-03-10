@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
 	.mnsk7-header__brand a{display:flex;align-items:center;font-size:1.125rem;font-weight:700;color:#000;text-decoration:none!important;border-bottom:none}
 	.mnsk7-header__brand img{max-height:42px;width:auto;max-width:100%;display:block;vertical-align:middle}
 	@media (min-width:769px){.mnsk7-header__menu-toggle{display:none!important}}
-	@media (max-width:768px){.mnsk7-header__inner{overflow:hidden}.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:flex!important}}
+	@media (max-width:768px){.mnsk7-header__inner{overflow:hidden;overflow-x:hidden}.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:flex!important}}
 	</style>
 </head>
 <body <?php body_class(); ?>>
