@@ -342,8 +342,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   z-index: 99;
 }
 
-/* Od 769px: pole wyszukiwania w jednej linii z headerem */
-@media (min-width: 769px) {
+/* Od 768px (desktop): pole wyszukiwania w jednej linii z headerem */
+@media (min-width: 768px) {
   .mnsk7-header__search-toggle {
     display: none;
   }
@@ -475,7 +475,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   flex-shrink: 1;
   min-width: 0;
 }
-/* Na mobile: account = icon-only (jak inne przyciski). Na desktop: min-width w media 769px */
+/* Na mobile: account = icon-only (jak inne przyciski). Na desktop: min-width w media 768px */
 .mnsk7-header__link--account {
   justify-content: center;
 }
@@ -699,7 +699,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   transform: translateY(0);
 }
 /* Desktop: account link z tekstem — przywróć min-width i padding */
-@media (min-width: 769px) {
+@media (min-width: 768px) {
   .mnsk7-header__link.mnsk7-header__link--account {
     min-width: 7.5em;
     padding: 0 0.5rem;
@@ -707,7 +707,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 /* Desktop: dropdown tylko przy hover na triggerze lub samym dropdownie (JS dodaje .is-open) */
-@media (min-width: 769px) {
+@media (min-width: 768px) {
   .mnsk7-header__cart.is-open .mnsk7-header__cart-dropdown {
     opacity: 1;
     visibility: visible;

@@ -654,7 +654,7 @@ add_action( 'wp_footer', function () {
 				searchToggle.setAttribute('aria-expanded', open);
 			}
 			function updateSearchDesktop() {
-				if (window.innerWidth >= 769) {
+				if (window.innerWidth >= 768) {
 					searchDropdown.removeAttribute('hidden');
 					searchToggle.setAttribute('aria-expanded', 'true');
 				} else {
@@ -664,7 +664,7 @@ add_action( 'wp_footer', function () {
 			window.addEventListener('resize', updateSearchDesktop);
 			updateSearchDesktop();
 			searchToggle.addEventListener('click', function() {
-				if (window.innerWidth >= 769) return;
+				if (window.innerWidth >= 768) return;
 				var open = searchDropdown.hidden;
 				setSearchOpen(open);
 				if (open) {
@@ -679,7 +679,7 @@ add_action( 'wp_footer', function () {
 				}
 			});
 			document.addEventListener('click', function(e) {
-				if (window.innerWidth >= 769) return;
+				if (window.innerWidth >= 768) return;
 				var wrap = searchToggle && searchToggle.closest('.mnsk7-header__search-wrap');
 				if (!searchDropdown.hidden && wrap && !wrap.contains(e.target)) {
 					setSearchOpen(false);
@@ -688,7 +688,7 @@ add_action( 'wp_footer', function () {
 			var searchForm = searchDropdown.querySelector('form');
 			if (searchForm) {
 				searchForm.addEventListener('submit', function() {
-					if (window.innerWidth < 769) setSearchOpen(false);
+					if (window.innerWidth < 768) setSearchOpen(false);
 				});
 			}
 		}
@@ -708,7 +708,7 @@ add_action( 'wp_footer', function () {
 				});
 				// Mobile: klik na trigger otwiera/zamyka dropdown (na desktop tylko hover)
 				trigger.addEventListener('click', function(e) {
-					if (window.innerWidth < 769) {
+					if (window.innerWidth < 768) {
 						e.preventDefault();
 						cartWrap.classList.toggle('is-open');
 					}
@@ -717,7 +717,7 @@ add_action( 'wp_footer', function () {
 				var cartOpenTimer;
 				function openCart() {
 					clearTimeout(cartOpenTimer);
-					if (window.innerWidth >= 769) cartWrap.classList.add('is-open');
+					if (window.innerWidth >= 768) cartWrap.classList.add('is-open');
 				}
 				function closeCart() {
 					cartOpenTimer = setTimeout(function() {
@@ -1169,44 +1169,84 @@ add_action( 'send_headers', function () {
 	}
 }, 5 );
 
+/**
+ * Na archiwum tagu produktu: zapisz pełny URL (z filtrami) w cookie, żeby na PDP móc pokazać
+ * „wstecz” do tej samej listy nawet gdy Referer nie jest wysyłany (nowa karta, privacy).
+ */
+add_action( 'template_redirect', function () {
+	if ( ! function_exists( 'is_product_tag' ) || ! is_product_tag() || headers_sent() ) {
+		return;
+	}
+	$req_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+	if ( $req_uri === '' ) {
+		return;
+	}
+	$url = home_url( $req_uri );
+	$safe = esc_url_raw( $url );
+	if ( $safe === '' ) {
+		return;
+	}
+	setcookie( 'mnsk7_tag_back', $safe, time() + 1800, COOKIEPATH ?: '/', COOKIE_DOMAIN, is_ssl(), true );
+}, 5 );
+
 add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 	if ( ! is_array( $crumbs ) ) {
 		return $crumbs;
 	}
-	// Na PDP: jeśli użytkownik przyszedł z archiwum tagu (np. /tag-produktu/hrc65/ lub z filtrem ?filter_*), pokaż: Strona główna › Tag (bez duplikatu nazwy produktu). Link na tag = pełny referer, żeby wrócić z zachowaniem filtrów.
+	// Na PDP: jeśli użytkownik przyszedł z archiwum tagu (referer lub cookie), pokaż: Strona główna › Tag. Link = pełny URL (z filtrami).
 	if ( is_singular( 'product' ) && count( $crumbs ) > 1 ) {
 		$product_id = get_queried_object_id();
-		$referer    = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
 		$home_host  = wp_parse_url( home_url( '/' ), PHP_URL_HOST );
+		$tag_base   = 'tag-produktu';
+		if ( taxonomy_exists( 'product_tag' ) ) {
+			$tax_obj = get_taxonomy( 'product_tag' );
+			if ( $tax_obj && ! empty( $tax_obj->rewrite['slug'] ) ) {
+				$tag_base = $tax_obj->rewrite['slug'];
+			}
+		}
+		$pattern = '#/' . preg_quote( $tag_base, '#' ) . '/([^/]+)/?#';
+
+		$source_url = '';
+		$referer    = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
 		if ( $referer !== '' && $home_host && $home_host === wp_parse_url( $referer, PHP_URL_HOST ) ) {
 			$ref_path = wp_parse_url( $referer, PHP_URL_PATH );
-			if ( $ref_path && taxonomy_exists( 'product_tag' ) ) {
-				$tax_obj  = get_taxonomy( 'product_tag' );
-				$tag_base = ( $tax_obj && ! empty( $tax_obj->rewrite['slug'] ) ) ? $tax_obj->rewrite['slug'] : 'tag-produktu';
-				$pattern  = '#/' . preg_quote( $tag_base, '#' ) . '/([^/]+)/?#';
-				if ( preg_match( $pattern, $ref_path, $m ) && ! empty( $m[1] ) ) {
-					$tag_slug = sanitize_text_field( $m[1] );
-					$tag_term = get_term_by( 'slug', $tag_slug, 'product_tag' );
-					if ( $tag_term && ! is_wp_error( $tag_term ) && has_term( $tag_term->term_id, 'product_tag', $product_id ) ) {
-						$tag_link = get_term_link( $tag_term );
-						if ( ! is_wp_error( $tag_link ) ) {
-							$tag_name   = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $tag_term->name ) : $tag_term->name;
-							$home_crumb = isset( $crumbs[0] ) ? $crumbs[0] : array( _x( 'Home', 'breadcrumb', 'woocommerce' ), wc_get_page_permalink( 'shop' ) );
-							if ( is_array( $home_crumb ) && isset( $home_crumb[0] ) ) {
-								$home_url = home_url( '/' );
-								// Link na tag = pełny referer (z query), żeby „wstecz” wracał na listę z tymi samymi filtrami.
-								$back_url = $referer;
-								$crumbs   = array(
-									array( $home_crumb[0], $home_url ),
-									array( $tag_name, $back_url ),
-								);
-								foreach ( $crumbs as $i => $crumb ) {
-									if ( isset( $crumb[1] ) && is_string( $crumb[1] ) ) {
-										$crumbs[ $i ][1] = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $crumb[1] ) : $crumb[1];
-									}
+			if ( $ref_path && preg_match( $pattern, $ref_path ) ) {
+				$source_url = $referer;
+			}
+		}
+		if ( $source_url === '' && isset( $_COOKIE['mnsk7_tag_back'] ) ) {
+			$cookie_val = esc_url_raw( wp_unslash( $_COOKIE['mnsk7_tag_back'] ) );
+			if ( $cookie_val !== '' && $home_host && $home_host === wp_parse_url( $cookie_val, PHP_URL_HOST ) ) {
+				$cookie_path = wp_parse_url( $cookie_val, PHP_URL_PATH );
+				if ( $cookie_path && preg_match( $pattern, $cookie_path ) ) {
+					$source_url = $cookie_val;
+				}
+			}
+		}
+
+		if ( $source_url !== '' ) {
+			$ref_path = wp_parse_url( $source_url, PHP_URL_PATH );
+			if ( $ref_path && preg_match( $pattern, $ref_path, $m ) && ! empty( $m[1] ) ) {
+				$tag_slug = sanitize_text_field( $m[1] );
+				$tag_term = get_term_by( 'slug', $tag_slug, 'product_tag' );
+				if ( $tag_term && ! is_wp_error( $tag_term ) && has_term( $tag_term->term_id, 'product_tag', $product_id ) ) {
+					$tag_link = get_term_link( $tag_term );
+					if ( ! is_wp_error( $tag_link ) ) {
+						$tag_name   = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $tag_term->name ) : $tag_term->name;
+						$home_crumb = isset( $crumbs[0] ) ? $crumbs[0] : array( _x( 'Home', 'breadcrumb', 'woocommerce' ), wc_get_page_permalink( 'shop' ) );
+						if ( is_array( $home_crumb ) && isset( $home_crumb[0] ) ) {
+							$home_url = home_url( '/' );
+							$back_url = $source_url;
+							$crumbs   = array(
+								array( $home_crumb[0], $home_url ),
+								array( $tag_name, $back_url ),
+							);
+							foreach ( $crumbs as $i => $crumb ) {
+								if ( isset( $crumb[1] ) && is_string( $crumb[1] ) ) {
+									$crumbs[ $i ][1] = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $crumb[1] ) : $crumb[1];
 								}
-								return $crumbs;
 							}
+							return $crumbs;
 						}
 					}
 				}
@@ -1228,6 +1268,22 @@ add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 			}
 		}
 	}
+
+	// Na archiwum (kategoria, tag, sklep): ostatni element okruszków linkuje do bieżącego URL (z filtrami), żeby klik nie gubił filtrów.
+	if ( function_exists( 'mnsk7_is_plp_archive' ) && mnsk7_is_plp_archive() && ! empty( $_GET ) && count( $crumbs ) > 0 ) {
+		$req_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		if ( $req_uri !== '' ) {
+			$current_url = home_url( $req_uri );
+			$safe        = esc_url_raw( $current_url );
+			if ( $safe !== '' ) {
+				$last_idx = count( $crumbs ) - 1;
+				if ( isset( $crumbs[ $last_idx ][1] ) ) {
+					$crumbs[ $last_idx ][1] = $safe;
+				}
+			}
+		}
+	}
+
 	foreach ( $crumbs as $i => $crumb ) {
 		if ( isset( $crumb[1] ) && is_string( $crumb[1] ) ) {
 			$crumbs[ $i ][1] = mnsk7_strip_wpf_filters_from_text( $crumb[1] );
