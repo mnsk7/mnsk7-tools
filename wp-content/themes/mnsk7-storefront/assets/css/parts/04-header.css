@@ -862,6 +862,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 
 /* Mobile: one row — logo | burger, search, account, cart (icons only). All icon buttons: same hit-area, same container, one system. */
+/* Audit: no vertical scrollbar inside header bar — overflow hidden on inner row. */
 @media (max-width: 768px) {
   .mnsk7-header__inner {
     display: flex;
@@ -872,6 +873,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     min-height: var(--header-h);
     padding: 0 0.75rem 0 0.5rem;
     min-width: 0;
+    overflow: hidden;
   }
   .mnsk7-header__brand {
     order: 0;
