@@ -10,7 +10,7 @@
 }
 
 .mnsk7-seo-hero {
-  padding: 3rem 0 2rem;
+  padding: var(--space-48) 0 var(--space-32);
   text-align: center;
 }
 
@@ -52,7 +52,7 @@
 }
 
 .mnsk7-seo-products {
-  padding: 2rem 0;
+  padding: var(--space-32) 0;
 }
 
 .mnsk7-seo-products__title {
@@ -62,7 +62,7 @@
 }
 
 .mnsk7-seo-faq {
-  padding: 2rem 0 3rem;
+  padding: var(--space-32) 0 var(--space-48);
 }
 
 /* Przewodnik — single post (SEO artykuły) */
@@ -97,7 +97,7 @@
   font-size: var(--fs-base);
   line-height: 1.7;
   color: var(--color-text);
-  padding: 1rem 0 2rem;
+  padding: var(--space-16) 0 var(--space-32);
 }
 
 .mnsk7-guide-article__body h2 {
@@ -132,7 +132,7 @@
 
 /* Blok linków do produktów/kategorii w artykule (shortcode [mnsk7_guide_products]) */
 .mnsk7-guide-products {
-  margin: 2rem 0;
+  margin: var(--space-32) 0;
   padding: 1.5rem 0;
   border-top: 1px solid var(--color-border);
 }

@@ -31,7 +31,7 @@
 
   /* Sections */
   .mnsk7-section {
-    padding: 2rem 0;
+    padding: var(--space-32) 0;
   }
 
   /* Trust stats: stack */
@@ -59,7 +59,7 @@
 
   /* SEO page */
   .mnsk7-seo-hero {
-    padding: 2rem 0 1rem;
+    padding: var(--space-32) 0 var(--space-16);
   }
 
   /* PDP layout: stack images + summary */

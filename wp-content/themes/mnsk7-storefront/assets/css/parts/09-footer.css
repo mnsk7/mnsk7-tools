@@ -39,7 +39,7 @@ body.page #colophon.mnsk7-footer {
 
 /* Górny blok: obramowanie w kolorze strony */
 .mnsk7-footer__top {
-  padding: 2rem 0 1.75rem;
+  padding: var(--space-32) 0 1.75rem;
   border-top: 3px solid var(--color-primary);
 }
 
@@ -63,7 +63,7 @@ body.page #colophon.mnsk7-footer {
 }
 .mnsk7-footer__dostawa-line {
   margin: 0.75rem 0 0;
-  font-size: 0.9375rem;
+  font-size: var(--fs-sm);
   font-weight: 600;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -75,7 +75,7 @@ body.page #colophon.mnsk7-footer {
 }
 .mnsk7-footer__contact-page-link {
   margin: 0 0 0.5rem;
-  font-size: 0.9375rem;
+  font-size: var(--fs-sm);
 }
 .mnsk7-footer__contact-page-link a {
   color: var(--color-footer-link);
@@ -137,7 +137,7 @@ body.page #colophon.mnsk7-footer {
 
 /* UX: czytelność — font nie mniejszy od podstawowego (NN/G) */
 .mnsk7-footer__col {
-  font-size: 1rem;
+  font-size: var(--fs-base);
 }
 
 .mnsk7-footer__col p,
@@ -200,7 +200,7 @@ body.page #colophon.mnsk7-footer {
   color: var(--color-footer-text);
 }
 .mnsk7-footer__legal-registry {
-  font-size: 0.9375rem;
+  font-size: var(--fs-sm);
   color: var(--color-footer-muted);
   margin-top: 0.25rem;
   display: block;
@@ -343,7 +343,7 @@ body.page #colophon.mnsk7-footer {
     right: 0;
     top: 50%;
     transform: translateY(-50%);
-    font-size: 1.25rem;
+    font-size: var(--fs-lg);
     font-weight: 400;
     opacity: 0.8;
     transition: transform 0.2s ease;

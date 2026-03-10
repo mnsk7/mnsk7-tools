@@ -23,7 +23,7 @@
 
 .mnsk7-page-dostawa__note {
   margin-top: 1.5rem;
-  padding: 1rem;
+  padding: var(--space-16);
   background: var(--color-surface);
   border-radius: var(--r-sm);
   border-left: 4px solid var(--color-primary);
@@ -98,7 +98,7 @@
 @media (max-width: 768px) {
   .mnsk7-page-kontakt__grid {
     grid-template-columns: 1fr;
-    gap: 2rem;
+    gap: var(--space-32);
   }
 }
 
@@ -251,7 +251,7 @@
   max-width: var(--content-max);
   margin-left: auto;
   margin-right: auto;
-  padding: 2rem 1.5rem;
+  padding: var(--space-32) 1.5rem;
   box-sizing: border-box;
 }
 .woocommerce-account .woocommerce-MyAccount-navigation {
@@ -285,7 +285,7 @@
 
 /* Przewodnik (single post) — lista artykułów w porządku */
 .mnsk7-guide-single {
-  padding: 2rem 0 3rem;
+  padding: var(--space-32) 0 var(--space-48);
 }
 .mnsk7-guide-article__header {
   margin-bottom: 1.5rem;

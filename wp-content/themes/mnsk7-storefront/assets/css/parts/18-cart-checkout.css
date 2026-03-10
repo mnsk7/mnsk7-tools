@@ -108,7 +108,7 @@
 /* --- Empty cart (4.6) --- */
 .mnsk7-cart-empty {
   text-align: center;
-  padding: 2rem 1rem 3rem;
+  padding: var(--space-32) var(--space-16) var(--space-48);
   max-width: 360px;
   margin: 0 auto;
 }
@@ -160,7 +160,7 @@
 }
 
 .woocommerce-cart .product-remove .remove {
-  font-size: 1.25rem;
+  font-size: var(--fs-lg);
   line-height: 1;
   color: var(--color-text-muted);
   text-decoration: none;

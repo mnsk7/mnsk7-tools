@@ -8,7 +8,7 @@ body.woocommerce-page #content,
 body.woocommerce #content {
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: var(--space-32);
   max-width: var(--content-max);
   margin-left: auto;
   margin-right: auto;
@@ -45,7 +45,7 @@ body.woocommerce #content h1.page-title {
   body.woocommerce-page #content,
   body.woocommerce #content {
     flex-direction: column;
-    padding: 1rem;
+    padding: var(--space-16);
   }
   body.woocommerce-page #content #secondary,
   body.woocommerce #content #secondary,

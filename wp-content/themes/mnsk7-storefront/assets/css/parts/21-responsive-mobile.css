@@ -60,18 +60,18 @@
 
   /* Hero adjustments */
   .mnsk7-hero {
-    padding: 2rem 1rem;
+    padding: var(--space-32) var(--space-16);
   }
 
   .mnsk7-hero__title {
-    font-size: 1.5rem;
+    font-size: var(--fs-xl);
   }
 
   /* Cookie bar stack */
   .mnsk7-cookie-bar {
     flex-direction: column;
     text-align: center;
-    padding: 1rem;
+    padding: var(--space-16);
   }
 
   .mnsk7-cookie-bar .mnsk7-cookie-bar__btn {
@@ -85,7 +85,7 @@
 
   /* Delivery table: mniejszy font i padding, zawijanie tekstu — bez wewnętrznego scrolla */
   .mnsk7-delivery-rules {
-    font-size: 0.875rem;
+    font-size: var(--fs-sm);
   }
   .mnsk7-delivery-rules th,
   .mnsk7-delivery-rules td {

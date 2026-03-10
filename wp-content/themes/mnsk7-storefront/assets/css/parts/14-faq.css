@@ -17,7 +17,7 @@
 }
 
 .mnsk7-faq__q {
-  padding: 1rem;
+  padding: var(--space-16);
   cursor: pointer;
   font-weight: 600;
   color: var(--color-text);
