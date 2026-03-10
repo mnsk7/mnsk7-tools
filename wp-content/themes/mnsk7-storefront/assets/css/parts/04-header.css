@@ -1127,17 +1127,18 @@ body .site .site-content {
 }
 
 /* Audit: dropdown Sklep nie może przycinać się ani zakrywać paska promocyjnego i koszyka.
-   Na mobile .mnsk7-header__inner ma overflow: hidden (blok 524) — nie nadpisywać na visible. */
-.mnsk7-header {
-  overflow: visible;
-}
+   Tylko desktop: overflow visible dla dropdownów. Na mobile (≤768px) inner ma overflow: hidden
+   żeby uniknąć nałożenia menu/search na siebie (mobile UX fix). */
 @media (min-width: 769px) {
+  .mnsk7-header {
+    overflow: visible;
+  }
   .mnsk7-header__inner {
     overflow: visible;
   }
-}
-.mnsk7-header__nav {
-  overflow: visible;
+  .mnsk7-header__nav {
+    overflow: visible;
+  }
 }
 /* Submenu Sklep: pod headerem, ale nie nad promo ani nad koszykiem */
 .mnsk7-header__menu .sub-menu {
