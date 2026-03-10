@@ -23,8 +23,8 @@ defined( 'ABSPATH' ) || exit;
 	.mnsk7-header__brand{flex-shrink:0;min-width:0}
 	.mnsk7-header__brand a{display:flex;align-items:center;font-size:1.125rem;font-weight:700;color:#000;text-decoration:none!important;border-bottom:none}
 	.mnsk7-header__brand img{max-height:42px;width:auto;max-width:100%;display:block;vertical-align:middle}
-	@media (min-width:769px){.mnsk7-header__menu-toggle{display:none!important}}
-	@media (max-width:768px){.mnsk7-header__inner{overflow:hidden;overflow-x:hidden}.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:flex!important}}
+	@media (min-width:769px){.mnsk7-header__menu-toggle{display:none!important}.mnsk7-header__search-toggle{display:none!important}#mnsk7-header-search.mnsk7-header__search-dropdown{position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;margin:0!important;padding:0!important;min-width:240px;border:none!important;box-shadow:none!important}}
+	@media (max-width:768px){.mnsk7-header__inner{overflow:hidden;overflow-x:hidden}.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:flex!important;align-items:center;justify-content:center;min-width:44px;min-height:44px}#mnsk7-header-search.mnsk7-header__search-dropdown{display:none!important}.mnsk7-header__search-toggle{display:inline-flex!important;align-items:center;justify-content:center;min-width:44px;min-height:44px}}
 	</style>
 </head>
 <body <?php body_class(); ?>>
