@@ -212,22 +212,15 @@ body.tax-product_tag .mnsk7-catalog-filters {
   margin-bottom: 0.75rem;
 }
 
-/* Mobile: chipy kategorii — poziomy scroll; atrybuty: label w osobnej linii, scroll w __scroll (brak białej paski) */
+/* Mobile: chipy kategorii — zawijanie wierszy (flex-wrap), bez wewnętrznego scrolla. */
 @media (max-width: 768px) {
   .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs) {
-    flex-wrap: nowrap;
-    overflow-y: hidden;
+    flex-wrap: wrap;
     padding-bottom: 0.25rem;
     margin-left: 0;
     margin-right: 0;
     gap: 0.5rem;
     align-items: center;
-  }
-  .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs) {
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    padding: 0.25rem 0;
   }
   .mnsk7-plp-chips--attrs {
     overflow-x: visible;
@@ -237,32 +230,15 @@ body.tax-product_tag .mnsk7-catalog-filters {
     padding-right: 0.5rem;
   }
   .mnsk7-plp-chips__scroll {
-    flex: 1 1 auto;
+    flex: 1 1 100%;
     min-width: 0;
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.4rem;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    padding: 0.25rem 0.5rem 0.25rem 0;
-    margin: 0 -0.5rem 0 0;
+    padding: 0.25rem 0 0.25rem 0;
+    margin: 0;
     min-height: 44px;
-    position: relative;
-  }
-  .mnsk7-plp-chips__scroll::after {
-    content: "";
-    position: sticky;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    width: 24px;
-    flex-shrink: 0;
-    background: linear-gradient(to left, var(--color-bg) 40%, transparent);
-    pointer-events: none;
-    margin-left: -24px;
   }
   .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
     padding-left: 0;
@@ -746,29 +722,26 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   pointer-events: none;
 }
 
-<<<<<<< HEAD
-/* PLP-09: desktop/tablet — tabela; mobile (≤768px) — siatka kart 2 kolumny. Spójny breakpoint 768px. */
-=======
-/* PLP-09: desktop/tablet — tabela; mobile (≤768px) — siatka kart 2 kolumny. */
->>>>>>> origin/fix/mobile-ux-2026-03
+/* PLP-09: desktop/tablet — tylko tabela; mobile (≤768px) — tylko siatka kart. Wzajemnie się wykluczają. */
 .mnsk7-plp-grid-mobile {
-  display: none;
+  display: none !important;
+}
+@media (min-width: 769px) {
+  .mnsk7-product-table-wrap {
+    display: block !important;
+  }
 }
 @media (max-width: 768px) {
   .mnsk7-product-table-wrap {
     display: none !important;
   }
   .mnsk7-plp-grid-mobile {
-    display: block;
+    display: block !important;
     margin-bottom: 1rem;
   }
   .mnsk7-plp-grid-mobile ul.products {
     grid-template-columns: repeat(2, 1fr) !important;
-<<<<<<< HEAD
-    gap: 0.75rem !important;
-=======
     gap: 1rem !important;
->>>>>>> origin/fix/mobile-ux-2026-03
   }
   /* Nazwa i cena zawsze widoczne w siatce mobilnej (ta sama karta co bestsellery) */
   .mnsk7-plp-grid-mobile .woocommerce-loop-product__title,
@@ -790,11 +763,8 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   }
 }
 
-/* Table wrapper — na mobile przewijanie w poziomie, bez wychodzenia poza ekran */
+/* Table wrapper — bez wewnętrznego scrolla; tabela widoczna tylko na desktop (na mobile: grid kart). */
 .mnsk7-product-table-wrap {
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
   margin-bottom: 1.5rem;
   max-width: 100%;
   width: 100%;

@@ -83,9 +83,14 @@
     padding: 0 1rem;
   }
 
-  /* Delivery table responsive */
+  /* Delivery table: mniejszy font i padding, zawijanie tekstu — bez wewnętrznego scrolla */
   .mnsk7-delivery-rules {
-    overflow-x: auto;
+    font-size: 0.875rem;
+  }
+  .mnsk7-delivery-rules th,
+  .mnsk7-delivery-rules td {
+    padding: 0.5rem 0.6rem;
+    word-break: break-word;
   }
 }
 

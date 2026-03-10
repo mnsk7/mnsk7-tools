@@ -2005,10 +2005,7 @@ a.add_to_wishlist,
     padding: 0 1rem;
   }
 
-  /* Delivery table responsive */
-  .mnsk7-delivery-rules {
-    overflow-x: auto;
-  }
+  /* Delivery table: bez wewnętrznego scrolla — mniejszy font/padding w 21-responsive-mobile */
 }
 
 /* -----------------------------------------------------------------

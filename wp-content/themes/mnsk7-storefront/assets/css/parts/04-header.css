@@ -337,8 +337,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   border-radius: var(--r-sm);
   box-shadow: 0 8px 24px rgba(0,0,0,0.1);
   min-width: 260px;
-  max-height: min(80vh, 360px);
-  overflow-y: auto;
+  max-height: min(80vh, 480px);
   z-index: 101;
 }
 
@@ -599,8 +598,6 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   margin: 0 0 0.5rem !important;
   padding: 0 !important;
   list-style: none !important;
-  max-height: 10rem;
-  overflow-y: auto;
 }
 .mnsk7-header__cart-dropdown .cart_list li,
 .mnsk7-header__cart-dropdown .product_list_widget li {
@@ -776,8 +773,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     gap: 0.5rem;
     min-height: var(--header-h);
     padding: 0 0.75rem 0 0.5rem;
-    overflow-x: hidden !important;
-    overflow-y: visible;
+    min-width: 0;
   }
   .mnsk7-header__brand {
     order: 0;
@@ -825,8 +821,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     border-bottom: 1px solid var(--color-border);
     padding: 0.5rem 0;
     box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    max-height: 70vh;
-    overflow-y: auto;
+    max-height: 85vh;
     z-index: 100;
     border-radius: 0 0 var(--r-sm) var(--r-sm);
   }
