@@ -29,7 +29,6 @@ defined( 'ABSPATH' ) || exit;
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <div id="page" class="hfeed site">
-<a href="#content" class="mnsk7-skip-link"><?php esc_html_e( 'Przejdź do treści', 'mnsk7-storefront' ); ?></a>
 <?php
 $promo_text = apply_filters( 'mnsk7_header_promo_text', '' );
 if ( $promo_text !== '' ) :
@@ -148,5 +147,16 @@ endif;
 		</div>
 	</div>
 </header>
+<?php
+// Mobile search panel (Pattern B): below header, in document flow — pushes content down. One variant for all pages.
+?>
+<div id="mnsk7-header-search-panel" class="mnsk7-header-search-panel" hidden aria-hidden="true">
+	<form role="search" method="get" class="mnsk7-header-search-panel__form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+		<label for="mnsk7-header-search-panel-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
+		<input type="search" id="mnsk7-header-search-panel-input" class="mnsk7-header-search-panel__input" placeholder="<?php esc_attr_e( 'Szukaj produktów…', 'mnsk7-storefront' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>" name="s" />
+		<input type="hidden" name="post_type" value="product" />
+		<button type="submit" class="mnsk7-header-search-panel__submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
+	</form>
+</div>
 
 <div id="content" class="site-content">

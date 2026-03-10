@@ -648,40 +648,65 @@ add_action( 'wp_footer', function () {
 		}
 		var searchToggle = document.querySelector('.mnsk7-header__search-toggle');
 		var searchDropdown = document.getElementById('mnsk7-header-search');
+		var searchPanel = document.getElementById('mnsk7-header-search-panel');
 		if (searchToggle && searchDropdown) {
 			function setSearchOpen(open) {
 				searchDropdown.hidden = !open;
 				searchToggle.setAttribute('aria-expanded', open);
+				if (searchPanel) {
+					if (window.innerWidth < 768) {
+						document.body.classList.toggle('mnsk7-search-open', open);
+						searchPanel.hidden = !open;
+						searchPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
+						if (open) {
+							var panelInput = document.getElementById('mnsk7-header-search-panel-input');
+							if (panelInput) { setTimeout(function() { panelInput.focus(); }, 50); }
+						}
+					} else {
+						document.body.classList.remove('mnsk7-search-open');
+						searchPanel.hidden = true;
+						searchPanel.setAttribute('aria-hidden', 'true');
+					}
+				}
 			}
 			function updateSearchDesktop() {
 				if (window.innerWidth >= 768) {
 					searchDropdown.removeAttribute('hidden');
 					searchToggle.setAttribute('aria-expanded', 'true');
+					document.body.classList.remove('mnsk7-search-open');
+					if (searchPanel) { searchPanel.hidden = true; searchPanel.setAttribute('aria-hidden', 'true'); }
 				} else {
 					searchDropdown.hidden = true;
+					if (!document.body.classList.contains('mnsk7-search-open') && searchPanel) {
+						searchPanel.hidden = true;
+						searchPanel.setAttribute('aria-hidden', 'true');
+					}
 				}
 			}
 			window.addEventListener('resize', updateSearchDesktop);
 			updateSearchDesktop();
 			searchToggle.addEventListener('click', function() {
 				if (window.innerWidth >= 768) return;
-				var open = searchDropdown.hidden;
-				setSearchOpen(open);
-				if (open) {
-					var inp = document.getElementById('mnsk7-header-search-input') || document.querySelector('#mnsk7-header-search input[type="search"]');
-					if (inp) { inp.focus(); }
-				}
+				var open = document.body.classList.contains('mnsk7-search-open');
+				setSearchOpen(!open);
 			});
 			document.addEventListener('keydown', function(e) {
-				if (e.key === 'Escape' && !searchDropdown.hidden) {
-					setSearchOpen(false);
-					if (searchToggle.offsetParent !== null) searchToggle.focus();
+				if (e.key === 'Escape') {
+					if (window.innerWidth < 768 && document.body.classList.contains('mnsk7-search-open')) {
+						setSearchOpen(false);
+						if (searchToggle.offsetParent !== null) searchToggle.focus();
+					} else if (window.innerWidth >= 768 && !searchDropdown.hidden) {
+						searchDropdown.hidden = true;
+						searchToggle.setAttribute('aria-expanded', 'false');
+						if (searchToggle.offsetParent !== null) searchToggle.focus();
+					}
 				}
 			});
 			document.addEventListener('click', function(e) {
 				if (window.innerWidth >= 768) return;
 				var wrap = searchToggle && searchToggle.closest('.mnsk7-header__search-wrap');
-				if (!searchDropdown.hidden && wrap && !wrap.contains(e.target)) {
+				var panel = searchPanel && searchPanel.contains(e.target);
+				if (document.body.classList.contains('mnsk7-search-open') && !wrap.contains(e.target) && !panel) {
 					setSearchOpen(false);
 				}
 			});
@@ -690,6 +715,14 @@ add_action( 'wp_footer', function () {
 				searchForm.addEventListener('submit', function() {
 					if (window.innerWidth < 768) setSearchOpen(false);
 				});
+			}
+			if (searchPanel) {
+				var panelForm = searchPanel.querySelector('form');
+				if (panelForm) {
+					panelForm.addEventListener('submit', function() {
+						if (window.innerWidth < 768) setSearchOpen(false);
+					});
+				}
 			}
 		}
 		var cartWrap = document.querySelector('.mnsk7-header__cart');
@@ -753,11 +786,18 @@ add_action( 'wp_footer', function () {
 				}
 			} catch (e) {}
 		}
-		// Header shrink when scrolled (Visual Audit)
+		// Header shrink when scrolled (Visual Audit). Hysteresis: add at 70px, remove at 30px — zapobiega „trzęsieniu” przy pozycji ~50px.
 		var header = document.getElementById('masthead');
 		if (header && header.classList.contains('mnsk7-header')) {
+			var SCROLL_ON = 70;
+			var SCROLL_OFF = 30;
 			function onScroll() {
-				header.classList.toggle('mnsk7-header--scrolled', window.scrollY > 50);
+				var y = window.scrollY;
+				if (y > SCROLL_ON) {
+					header.classList.add('mnsk7-header--scrolled');
+				} else if (y < SCROLL_OFF) {
+					header.classList.remove('mnsk7-header--scrolled');
+				}
 			}
 			onScroll();
 			window.addEventListener('scroll', onScroll, { passive: true });
@@ -1123,14 +1163,14 @@ add_action( 'init', function () {
 	remove_action( 'woocommerce_archive_description', 'woocommerce_category_image', 15 );
 }, 20 );
 
-/* PLP-02: breadcrumbs na archive (sklep, kategoria, tag, wyniki wyszukiwania produktów) */
+/* PLP-02: breadcrumbs na archive — wyświetlane w woocommerce/archive-product.php (żeby nic nie nadpisywało). Tu tylko usuwamy domyślne WC z before_main_content, żeby nie duplikować. */
 add_action( 'woocommerce_before_main_content', function () {
 	$is_plp = function_exists( 'mnsk7_is_plp_archive' ) && mnsk7_is_plp_archive();
 	$is_product_search = is_search() && get_query_var( 'post_type' ) === 'product';
 	if ( $is_plp || $is_product_search ) {
-		woocommerce_breadcrumb();
+		remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
 	}
-}, 19 );
+}, 5 );
 
 /**
  * PLP + filter_*: jedna struktura body_class dla archiwum — niezależnie od ?filter_*.

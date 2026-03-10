@@ -53,20 +53,22 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Po kliknięciu / Tab — obwódka w kolorze primary (bez fioletu z domyślnej przeglądarki) */
+/* Visual states: normal, hover, active, focus-visible. Outline only on focus-visible (keyboard), not on mouse click. */
 a:focus,
-a:focus-visible,
 button:focus,
-button:focus-visible,
 input:focus,
-input:focus-visible,
 select:focus,
-select:focus-visible,
 textarea:focus,
+[tabindex]:focus {
+  outline: none;
+}
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
 textarea:focus-visible,
-[tabindex]:focus,
 [tabindex]:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid var(--color-focus, var(--color-primary));
   outline-offset: 2px;
 }
 

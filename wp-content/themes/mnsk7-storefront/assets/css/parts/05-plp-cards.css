@@ -129,7 +129,7 @@ ul.products.columns-4::before {
   margin: 0;
 }
 
-/* Product title — max 2 lines (card anatomy per UI_SPEC_V2), even height */
+/* Product title — max 2 lines, readable; no stray underline/focus artifacts */
 .woocommerce ul.products li.product .woocommerce-loop-product__title,
 .woocommerce ul.products li.product h2 {
   font-size: var(--fs-sm);
@@ -144,6 +144,18 @@ ul.products.columns-4::before {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+.woocommerce ul.products li.product .woocommerce-loop-product__link {
+  text-decoration: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.woocommerce ul.products li.product .woocommerce-loop-product__link:hover {
+  text-decoration: none;
+  color: var(--color-text);
+}
+.woocommerce ul.products li.product .woocommerce-loop-product__link:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
 }
 
 /* Price */
@@ -195,6 +207,15 @@ ul.products.columns-4::before {
   background: var(--color-primary-hover);
   color: var(--color-white);
   text-decoration: none;
+}
+.woocommerce ul.products li.product .button:focus,
+.woocommerce ul.products li.product .add_to_cart_button:focus {
+  outline: none;
+}
+.woocommerce ul.products li.product .button:focus-visible,
+.woocommerce ul.products li.product .add_to_cart_button:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
 }
 
 .woocommerce ul.products li.product a.added_to_cart {

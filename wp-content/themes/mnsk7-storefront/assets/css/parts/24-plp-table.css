@@ -212,7 +212,7 @@ body.tax-product_tag .mnsk7-catalog-filters {
   margin-bottom: 0.75rem;
 }
 
-/* Mobile: chipy kategorii — zawijanie wierszy (flex-wrap), bez wewnętrznego scrolla. */
+/* Mobile: filter groups = vertical block. Label full width on top, chips row below with horizontal scroll. No two-column label/value. */
 @media (max-width: 768px) {
   .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs) {
     flex-wrap: wrap;
@@ -223,25 +223,56 @@ body.tax-product_tag .mnsk7-catalog-filters {
     align-items: center;
   }
   .mnsk7-plp-chips--attrs {
-    overflow-x: visible;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
   }
   .mnsk7-plp-chips__label {
-    flex-shrink: 0;
-    padding-right: 0.5rem;
+    flex: 0 0 auto;
+    width: 100%;
+    padding: 0 0 0.25rem 0;
+    margin: 0;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-text);
+    white-space: normal;
+    overflow: visible;
   }
   .mnsk7-plp-chips__scroll {
-    flex: 1 1 100%;
+    width: 100%;
     min-width: 0;
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     gap: 0.4rem;
-    padding: 0.25rem 0 0.25rem 0;
+    padding: 0.25rem 0;
     margin: 0;
-    min-height: 44px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
   }
   .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
     padding-left: 0;
+  }
+  .mnsk7-plp-chips--attrs .mnsk7-plp-chip {
+    flex-shrink: 0;
+  }
+  /* Wyczyść wszystkie + filter search row — one system, aligned */
+  .mnsk7-plp-selected {
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .mnsk7-plp-search__form {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    gap: 0;
+  }
+  .mnsk7-plp-search__input {
+    flex: 1;
+    min-width: 0;
   }
 }
 
