@@ -318,3 +318,49 @@
   line-height: 1.6;
 }
 
+/* -----------------------------------------------------------------
+   § MOJE KONTO — wymuszenie stylów (nagłówek, przyciski, padding)
+   WooCommerce/Storefront ładują się później — wygrywamy !important.
+   ----------------------------------------------------------------- */
+body.woocommerce-account .mnsk7-header__search-input,
+body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-input {
+  border-radius: var(--r-sm) !important;
+  background: var(--color-white) !important;
+}
+body.woocommerce-account .mnsk7-header__search-submit,
+body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-submit {
+  border-radius: var(--r-md) !important;
+}
+body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-input {
+  border-radius: var(--r-sm) 0 0 var(--r-sm) !important;
+}
+body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-submit {
+  border-radius: 0 var(--r-sm) var(--r-sm) 0 !important;
+}
+body.woocommerce-account .woocommerce .button,
+body.woocommerce-account .woocommerce input[type="submit"],
+body.woocommerce-account .woocommerce button[type="submit"],
+body.woocommerce-account input[type="submit"],
+body.woocommerce-account button[type="submit"] {
+  border-radius: var(--r-md) !important;
+  min-height: 44px !important;
+}
+body.woocommerce-account .mnsk7-footer__newsletter-btn {
+  border-radius: var(--r-md) !important;
+}
+body.woocommerce-account #content,
+body.woocommerce-account .site-main {
+  max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  box-sizing: border-box;
+}
+body.woocommerce-account .col-full {
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+

@@ -650,12 +650,20 @@ add_action( 'wp_enqueue_scripts', function () {
 	wp_add_inline_style( $prev, $footer_inline . "\n" . $insta_inline . "\n" . $clearfix_inline );
 }, 10 );
 
-/* Override WooCommerce clearfix: woocommerce-layout.css ładuje się PO naszej temie i ustawia .woocommerce ul.products::before{display:table}, co daje pustą pierwszą „komórkę” w gridzie. Dodajemy inline do handle WooCommerce, żeby nasze display:none było po ich regule. */
+/* Override WooCommerce clearfix: woocommerce-layout.css ładuje się PO naszej temie i ustawia .woocommerce ul.products::before{display:table}, co daje pustą pierwszą „komórkę” w gridzie. Dodajemy inline do handle WooCommerce, żeby nasze display:none było po ich regule. Również Moje konto: przyciski + padding (wygrywamy z WC). */
 add_action( 'wp_enqueue_scripts', function () {
 	if ( ! wp_style_is( 'woocommerce-layout', 'registered' ) ) {
 		return;
 	}
 	$css = 'ul.products::before,.woocommerce ul.products::before,.woocommerce-page ul.products::before,ul.products.columns-3::before,ul.products.columns-4::before{content:none!important;display:none!important}';
+	$css .= 'body.woocommerce-account .mnsk7-header__search-input,body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-input{border-radius:var(--r-sm)!important;background:var(--color-white)!important}';
+	$css .= 'body.woocommerce-account .mnsk7-header__search-submit,body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-submit{border-radius:var(--r-md)!important}';
+	$css .= 'body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-input{border-radius:var(--r-sm) 0 0 var(--r-sm)!important}';
+	$css .= 'body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-submit{border-radius:0 var(--r-sm) var(--r-sm) 0!important}';
+	$css .= 'body.woocommerce-account .woocommerce .button,body.woocommerce-account .woocommerce input[type=submit],body.woocommerce-account .woocommerce button[type=submit],body.woocommerce-account input[type=submit],body.woocommerce-account button[type=submit]{border-radius:var(--r-md)!important;min-height:44px!important}';
+	$css .= 'body.woocommerce-account .mnsk7-footer__newsletter-btn{border-radius:var(--r-md)!important}';
+	$css .= 'body.woocommerce-account #content,body.woocommerce-account .site-main{max-width:var(--content-max);margin-left:auto;margin-right:auto;padding-left:1.5rem;padding-right:1.5rem;box-sizing:border-box}';
+	$css .= 'body.woocommerce-account .col-full{max-width:100%;padding-left:0;padding-right:0}';
 	wp_add_inline_style( 'woocommerce-layout', $css );
 }, 20 );
 
@@ -1314,6 +1322,26 @@ add_filter( 'body_class', function ( $classes ) {
 			$ensure[] = 'tax-' . $obj->taxonomy;
 		}
 	}
+	// Gdy query został zmieniony przez plugin (filter_*), get_queried_object() może być pusty — dopisz tax-* po ścieżce URL
+	if ( ! $obj && function_exists( 'mnsk7_is_plp_url_path' ) && mnsk7_is_plp_url_path() ) {
+		$req_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+		$path = trim( (string) wp_parse_url( 'http://dummy' . $req_uri, PHP_URL_PATH ), '/' );
+		$segments = array_filter( explode( '/', $path ), 'strlen' );
+		if ( taxonomy_exists( 'product_cat' ) ) {
+			$tax = get_taxonomy( 'product_cat' );
+			$cat_base = ( $tax && ! empty( $tax->rewrite['slug'] ) ) ? $tax->rewrite['slug'] : 'product-category';
+			if ( isset( $segments[0] ) && $segments[0] === $cat_base ) {
+				$ensure[] = 'tax-product_cat';
+			}
+		}
+		if ( taxonomy_exists( 'product_tag' ) ) {
+			$tax = get_taxonomy( 'product_tag' );
+			$tag_base = ( $tax && ! empty( $tax->rewrite['slug'] ) ) ? $tax->rewrite['slug'] : 'product-tag';
+			if ( isset( $segments[0] ) && $segments[0] === $tag_base ) {
+				$ensure[] = 'tax-product_tag';
+			}
+		}
+	}
 	foreach ( $ensure as $class ) {
 		if ( ! in_array( $class, $classes, true ) ) {
 			$classes[] = $class;
@@ -1323,15 +1351,67 @@ add_filter( 'body_class', function ( $classes ) {
 }, 999 );
 
 /**
+ * PLP + filter_*: wymuś szablon archiwum produktów gdy ścieżka URL to sklep/kategoria/tag.
+ * Zapobiega załadowaniu index.php (parent) gdy plugin zmienił main query — ten sam header i layout.
+ */
+add_filter( 'template_include', function ( $template ) {
+	if ( ! function_exists( 'mnsk7_is_plp_url_path' ) || ! mnsk7_is_plp_url_path() ) {
+		return $template;
+	}
+	if ( $template && ( strpos( $template, 'archive-product' ) !== false ) ) {
+		return $template;
+	}
+	$child_archive = get_stylesheet_directory() . '/woocommerce/archive-product.php';
+	if ( is_readable( $child_archive ) ) {
+		return $child_archive;
+	}
+	$parent_archive = get_template_directory() . '/woocommerce/archive-product.php';
+	if ( is_readable( $parent_archive ) ) {
+		return $parent_archive;
+	}
+	if ( function_exists( 'wc_locate_template' ) ) {
+		$found = wc_locate_template( 'archive-product.php' );
+		if ( $found !== '' ) {
+			return $found;
+		}
+	}
+	return $template;
+}, 5 );
+
+/**
  * PLP cache: Vary: User-Agent na archiwum sklepu/kategorii/tagu, żeby CDN/cache nie serwowało
  * wersji desktop użytkownikom mobile (layout wybierany po stronie serwera).
+ * Dla URL z parametrami filter_*: nie cache'ować — żeby po aktualizacji headera/szablonu
+ * nie serwować starej wersji strony (stary header z cache).
  */
 add_action( 'send_headers', function () {
-	if ( ! function_exists( 'mnsk7_is_plp_archive' ) || ! mnsk7_is_plp_archive() ) {
-		return;
-	}
 	if ( ! headers_sent() ) {
-		header( 'Vary: User-Agent', false );
+		// Strony z filtrami: nie cache'ować (no-store lub krótki max-age + must-revalidate).
+		// Zapobiega sytuacji „na części URL ładuje się stary header” po deployu.
+		$has_filter_param = false;
+		if ( function_exists( 'mnsk7_get_all_attribute_filter_param_names' ) ) {
+			$params = mnsk7_get_all_attribute_filter_param_names();
+			foreach ( $params as $p ) {
+				if ( ! empty( $_GET[ $p ] ) ) {
+					$has_filter_param = true;
+					break;
+				}
+			}
+		}
+		if ( ! $has_filter_param && ! empty( $_GET ) ) {
+			foreach ( array_keys( $_GET ) as $key ) {
+				if ( strpos( (string) $key, 'filter_' ) === 0 ) {
+					$has_filter_param = true;
+					break;
+				}
+			}
+		}
+		if ( $has_filter_param ) {
+			header( 'Cache-Control: private, no-cache, no-store, must-revalidate', true );
+			header( 'Pragma: no-cache', true );
+		} else if ( function_exists( 'mnsk7_is_plp_archive' ) && mnsk7_is_plp_archive() ) {
+			header( 'Vary: User-Agent', false );
+		}
 	}
 }, 5 );
 
