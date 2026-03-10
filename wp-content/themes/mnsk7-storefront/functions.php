@@ -446,6 +446,13 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	if ( is_page( 'kontakt' ) ) {
 		return '';
 	}
+	// Strony z szablonem Kontakt/Dostawa — bez paska (slug może być inny na stagingu).
+	if ( is_singular( 'page' ) ) {
+		$template = get_page_template_slug( get_queried_object_id() );
+		if ( $template === 'page-kontakt.php' || $template === 'page-dostawa.php' ) {
+			return '';
+		}
+	}
 	$dostawa_url = home_url( '/dostawa-i-platnosci/' );
 	$link = '<a href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Warunki dostawy', 'mnsk7-storefront' ) . ' &rarr;</a>';
 	return sprintf(
@@ -676,7 +683,8 @@ add_action( 'wp_footer', function () {
 	echo "ul.products::before,ul.products.columns-3::before,ul.products.columns-4::before,.woocommerce ul.products::before,.woocommerce-page ul.products::before{content:none!important;display:none!important}";
 	echo "#colophon.mnsk7-footer,.mnsk7-footer{background:#1e293b!important}.mnsk7-footer__bottom{background:#0f172a!important}";
 	echo "#masthead.mnsk7-header{background:#fff!important;border-bottom:1px solid #e9e8cc}";
-	echo "@media (min-width:769px){.mnsk7-header__menu-toggle{display:none!important}.mnsk7-header__search-toggle{display:none!important}}";
+	echo "@media (min-width:769px){.mnsk7-header__menu-toggle{display:none!important}.mnsk7-header__search-toggle{display:none!important}#mnsk7-header-search.mnsk7-header__search-dropdown{position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;margin:0!important;padding:0!important;border:none!important;box-shadow:none!important}}";
+	echo ".mnsk7-plp-trust-wrap .mnsk7-plp-trust,.mnsk7-plp-trust{display:flex!important;flex-wrap:wrap!important;gap:0.75rem 1.25rem!important}.mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,.mnsk7-plp-trust__item{display:inline-flex!important}.mnsk7-plp-trust__item:not(:last-child)::after{content:' · '!important;margin-left:0.5rem}";
 	echo "</style>\n";
 }, 999 );
 
@@ -1377,37 +1385,16 @@ add_filter( 'template_include', function ( $template ) {
 }, 5 );
 
 /**
- * PLP cache: Vary: User-Agent na archiwum sklepu/kategorii/tagu, żeby CDN/cache nie serwowało
- * wersji desktop użytkownikom mobile (layout wybierany po stronie serwera).
- * Dla URL z parametrami filter_*: nie cache'ować — żeby po aktualizacji headera/szablonu
- * nie serwować starej wersji strony (stary header z cache).
+ * PLP cache: Vary: User-Agent na archiwum sklepu/kategorii/tagu (CDN/cache nie serwuje desktop użytkownikom mobile).
+ *
+ * NIE ustawiać Cache-Control: no-cache dla URL z ?filter_* — to powodowało divergent final DOM:
+ * z no-cache odpowiedź nie trafia do cache, plugin (WP Rocket itp.) nie przetwarza HTML (minify, lazy load),
+ * więc strona z filtrem miała "raw" output, a bez filtra — przetworzony; header/footer wyglądały inaczej.
+ * Po deployu należy czyścić pełny cache strony, żeby wszystkie URL (w tym z filter_*) dostały świeżą wersję.
  */
 add_action( 'send_headers', function () {
 	if ( ! headers_sent() ) {
-		// Strony z filtrami: nie cache'ować (no-store lub krótki max-age + must-revalidate).
-		// Zapobiega sytuacji „na części URL ładuje się stary header” po deployu.
-		$has_filter_param = false;
-		if ( function_exists( 'mnsk7_get_all_attribute_filter_param_names' ) ) {
-			$params = mnsk7_get_all_attribute_filter_param_names();
-			foreach ( $params as $p ) {
-				if ( ! empty( $_GET[ $p ] ) ) {
-					$has_filter_param = true;
-					break;
-				}
-			}
-		}
-		if ( ! $has_filter_param && ! empty( $_GET ) ) {
-			foreach ( array_keys( $_GET ) as $key ) {
-				if ( strpos( (string) $key, 'filter_' ) === 0 ) {
-					$has_filter_param = true;
-					break;
-				}
-			}
-		}
-		if ( $has_filter_param ) {
-			header( 'Cache-Control: private, no-cache, no-store, must-revalidate', true );
-			header( 'Pragma: no-cache', true );
-		} else if ( function_exists( 'mnsk7_is_plp_archive' ) && mnsk7_is_plp_archive() ) {
+		if ( function_exists( 'mnsk7_is_plp_archive' ) && mnsk7_is_plp_archive() ) {
 			header( 'Vary: User-Agent', false );
 		}
 	}
