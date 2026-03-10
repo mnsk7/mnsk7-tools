@@ -307,8 +307,11 @@ body.tax-product_tag .mnsk7-catalog-filters {
   background: var(--color-surface-2);
   border-color: var(--color-primary);
   color: var(--color-primary);
+  text-decoration: none;
 }
-.mnsk7-plp-chip:focus,
+.mnsk7-plp-chip:focus {
+  outline: none;
+}
 .mnsk7-plp-chip:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
@@ -410,7 +413,9 @@ body.tax-product_tag .mnsk7-catalog-filters {
   border-color: var(--color-primary);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
-.mnsk7-plp-chips-toggle:focus,
+.mnsk7-plp-chips-toggle:focus {
+  outline: none;
+}
 .mnsk7-plp-chips-toggle:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
@@ -500,7 +505,9 @@ body.tax-product_tag .mnsk7-catalog-filters {
   color: var(--color-white);
   text-decoration: none;
 }
-.mnsk7-plp-reset.button:focus,
+.mnsk7-plp-reset.button:focus {
+  outline: none;
+}
 .mnsk7-plp-reset.button:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
@@ -607,7 +614,9 @@ body.tax-product_tag .mnsk7-catalog-filters {
   color: var(--color-white);
   text-decoration: none;
 }
-.mnsk7-plp-empty__cta.button:focus,
+.mnsk7-plp-empty__cta.button:focus {
+  outline: none;
+}
 .mnsk7-plp-empty__cta.button:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
@@ -755,6 +764,13 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   color: var(--color-white);
   text-decoration: none;
 }
+.mnsk7-plp-load-more:focus {
+  outline: none;
+}
+.mnsk7-plp-load-more:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
 .mnsk7-plp-load-more.loading {
   opacity: 0.7;
   pointer-events: none;
@@ -861,6 +877,16 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   background: var(--color-surface);
   border-radius: var(--r-sm);
   overflow: hidden;
+  text-decoration: none !important;
+  border-bottom: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.mnsk7-product-table .mnsk7-table-cell--thumb a:focus {
+  outline: none;
+}
+.mnsk7-product-table .mnsk7-table-cell--thumb a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .mnsk7-product-table .mnsk7-table-cell--thumb img {
@@ -879,11 +905,23 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table .mnsk7-table-cell--title a {
   color: var(--color-text);
   font-weight: 600;
-  text-decoration: none;
+  text-decoration: none !important;
+  border-bottom: none;
+  -webkit-tap-highlight-color: transparent;
 }
-
-.mnsk7-product-table .mnsk7-table-cell--title a:hover {
+.mnsk7-product-table .mnsk7-table-cell--title a:hover,
+.mnsk7-product-table .mnsk7-table-cell--title a:active,
+.mnsk7-product-table .mnsk7-table-cell--title a:visited {
   color: var(--color-primary);
+  text-decoration: none !important;
+  border-bottom: none;
+}
+.mnsk7-product-table .mnsk7-table-cell--title a:focus {
+  outline: none;
+}
+.mnsk7-product-table .mnsk7-table-cell--title a:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 
 .mnsk7-product-table .mnsk7-table-cell--price {
@@ -955,10 +993,12 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   box-shadow: var(--shadow-md);
 }
 .mnsk7-product-table .mnsk7-table-cell--action .button:focus,
-.mnsk7-product-table .mnsk7-table-cell--action .button:focus-visible,
 .mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button:focus,
+.mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn:focus {
+  outline: none;
+}
+.mnsk7-product-table .mnsk7-table-cell--action .button:focus-visible,
 .mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button:focus-visible,
-.mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn:focus,
 .mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
