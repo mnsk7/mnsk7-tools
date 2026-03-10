@@ -149,6 +149,29 @@
 .mnsk7-section--light {
   background: var(--color-surface);
 }
+/* Przeglądaj asortyment — białe tło sekcji, chipy białe z czarną ramką, hover/active niebieski */
+.mnsk7-section--catalog {
+  background: var(--color-white);
+}
+.mnsk7-section--catalog .mnsk7-tags-chip {
+  background: var(--color-white);
+  border: 1px solid var(--color-black);
+  color: var(--color-text);
+}
+.mnsk7-section--catalog .mnsk7-tags-chip:hover,
+.mnsk7-section--catalog .mnsk7-tags-chip:focus-visible {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-white);
+}
+.mnsk7-section--catalog .mnsk7-cats__img-wrap {
+  border: 1px solid var(--color-primary);
+  box-sizing: border-box;
+}
+.mnsk7-section--catalog .mnsk7-cats__item:hover .mnsk7-cats__img-wrap {
+  border-color: var(--color-primary);
+  background: rgba(12, 125, 219, 0.06);
+}
 
 .mnsk7-section__title {
   text-align: center;

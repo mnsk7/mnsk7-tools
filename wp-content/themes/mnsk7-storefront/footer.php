@@ -17,7 +17,7 @@ $footer_contact = apply_filters( 'mnsk7_footer_contact', array(
 ) );
 $top_cats = array();
 if ( taxonomy_exists( 'product_cat' ) ) {
-	$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true, 'number' => 6 ) );
+	$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true ) );
 	if ( is_wp_error( $top_cats ) ) {
 		$top_cats = array();
 	}
@@ -45,7 +45,6 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 					<li><a href="<?php echo esc_url( home_url( '/regulamin/' ) ); ?>"><?php esc_html_e( 'Regulamin', 'mnsk7-storefront' ); ?></a></li>
 					<li><a href="<?php echo esc_url( home_url( '/polityka-prywatnosci/' ) ); ?>"><?php esc_html_e( 'Polityka prywatności', 'mnsk7-storefront' ); ?></a></li>
 				</ul>
-				<p class="mnsk7-footer__dostawa-line"><a href="<?php echo esc_url( $dostawa_url ); ?>"><?php esc_html_e( 'Darmowa dostawa od 300 zł. Tylko Polska.', 'mnsk7-storefront' ); ?></a></p>
 			</div>
 			<div id="footer-col-kategorie" class="mnsk7-footer__col mnsk7-footer__col--kategorie" aria-label="<?php esc_attr_e( 'Kategorie produktów', 'mnsk7-storefront' ); ?>">
 				<h3 class="mnsk7-footer__title" id="footer-kategorie" role="button" tabindex="0" aria-expanded="false" aria-controls="footer-col-kategorie"><?php esc_html_e( 'Kategorie', 'mnsk7-storefront' ); ?></h3>

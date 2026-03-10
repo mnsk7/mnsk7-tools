@@ -1,6 +1,7 @@
 /* 17-buttons — jeden system: zaokrąglenia, wysokość, primary (audit: brak kwadratowych przycisków) */
 
-   § GLOBAL BUTTON RESET — spójne zaokrąglenie (audit: brak kwadratowych przycisków)
+/* -----------------------------------------------------------------
+   § GLOBAL BUTTON RESET — spójne zaokrąglenie, wysokość, padding
    ----------------------------------------------------------------- */
 .woocommerce a.button,
 .woocommerce button.button,
@@ -21,11 +22,26 @@ button.button,
 .mnsk7-btn,
 .mnsk7-trust-cta__btn,
 .mnsk7-header__menu-toggle,
+.mnsk7-header__search-submit,
+.mnsk7-header-search-panel__submit,
+.mnsk7-contact-form__submit,
+.single_add_to_cart_button,
+.add_to_cart_button,
 input[type="submit"],
 button[type="submit"] {
   border-radius: var(--r-md) !important;
+  min-height: 44px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.625rem 1.25rem;
+  font-family: var(--font-base);
+  font-weight: 600;
+  vertical-align: middle;
 }
 
+/* -----------------------------------------------------------------
    § WOOCOMMERCE / THEME BUTTONS
    ----------------------------------------------------------------- */
 /* Tap target min 44px (WCAG 2.5.5, UI_SPEC_V2 §4.1) */

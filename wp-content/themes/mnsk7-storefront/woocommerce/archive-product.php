@@ -12,6 +12,17 @@ defined( 'ABSPATH' ) || exit;
 
 get_header( 'shop' );
 
+/* Okruszki w szablonie — niezależnie od hooków, żeby nic ich nie nadpisywało (sklep, kategoria, tag, wyszukiwanie). */
+if ( function_exists( 'woocommerce_breadcrumb' ) ) {
+	$show_breadcrumb = ( function_exists( 'is_shop' ) && is_shop() )
+		|| ( function_exists( 'is_product_category' ) && is_product_category() )
+		|| ( function_exists( 'is_product_tag' ) && is_product_tag() )
+		|| ( is_search() && get_query_var( 'post_type' ) === 'product' );
+	if ( $show_breadcrumb ) {
+		woocommerce_breadcrumb();
+	}
+}
+
 do_action( 'woocommerce_before_main_content' );
 
 $is_taxonomy = is_product_taxonomy();

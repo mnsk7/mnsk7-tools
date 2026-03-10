@@ -8,8 +8,8 @@
 
 get_header();
 
-$przewodnik_url = home_url( '/przewodnik/' );
-$przewodnik_label = __( 'Przewodnik', 'mnsk7-storefront' );
+$przewodnik_url  = home_url( '/przewodnik/' );
+$przewodnik_label = apply_filters( 'mnsk7_przewodnik_menu_label', __( 'Przewodnik', 'mnsk7-storefront' ) );
 ?>
 
 <main class="mnsk7-guide-single">

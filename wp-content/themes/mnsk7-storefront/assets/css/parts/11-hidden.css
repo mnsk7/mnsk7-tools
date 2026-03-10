@@ -1,5 +1,6 @@
 /* 11-hidden — extracted from main.css */
 
+/* -----------------------------------------------------------------
    § HIDDEN ELEMENTS
    ----------------------------------------------------------------- */
 
@@ -18,6 +19,15 @@ a.add_to_wishlist,
 .wooscp-btn,
 .woosc-btn,
 .product_meta {
+  display: none !important;
+}
+
+/* PDP: linki poprzedni/następny produkt — ukryte (zgodnie z zadaniem) */
+body.single-product .post-navigation,
+body.single-product .storefront-product-pagination,
+body.single-product .product-navigation,
+body.single-product nav.previous-next,
+body.single-product .woocommerce-product-navigation {
   display: none !important;
 }
 

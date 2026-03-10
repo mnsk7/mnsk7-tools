@@ -216,13 +216,14 @@ add_filter( 'woocommerce_breadcrumb_defaults', function ( $args ) {
 	return $args;
 } );
 
-/** PDP: okruszki przy tytule produktu, nie pod headerem */
+/** PDP: okruszki przy tytule produktu, nie pod headerem; bez gwiazdek ratingu (zgodnie z zadaniem) */
 add_action( 'wp', function () {
 	if ( ! is_singular( 'product' ) ) {
 		return;
 	}
 	remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
 	add_action( 'woocommerce_single_product_summary', 'woocommerce_breadcrumb', 5 );
+	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10 );
 } );
 
 /** PDP: link „Wróć do wyników wyszukiwania” gdy użytkownik przyszedł z wyszukiwania (lepsza nawigacja niż tylko kategoria) */
@@ -472,6 +473,57 @@ add_action( 'wp_footer', function () {
 		? __( 'Dziękujemy za zapis do newslettera.', 'mnsk7-storefront' )
 		: __( 'Podaj poprawny adres e-mail.', 'mnsk7-storefront' );
 	echo '<script>document.addEventListener("DOMContentLoaded",function(){if(typeof wc_add_to_cart_params!=="undefined"){alert("' . esc_js( $msg ) . '");}else{alert("' . esc_js( $msg ) . '");}});</script>';
+}, 1 );
+
+/* Contact form: send email and redirect */
+add_action( 'template_redirect', function () {
+	if ( ! isset( $_POST['mnsk7_contact_form'] ) || empty( $_POST['mnsk7_contact_form'] ) ) {
+		return;
+	}
+	$kontakt_url = ( get_page_by_path( 'kontakt' ) ) ? get_permalink( get_page_by_path( 'kontakt' ) ) : home_url( '/kontakt/' );
+	if ( ! isset( $_POST['mnsk7_contact_nonce'] ) || ! wp_verify_nonce( sanitize_text_field( wp_unslash( $_POST['mnsk7_contact_nonce'] ) ), 'mnsk7_contact_form' ) ) {
+		wp_safe_redirect( add_query_arg( 'mnsk7_contact', 'error', $kontakt_url ) );
+		exit;
+	}
+	$name    = isset( $_POST['mnsk7_contact_name'] ) ? sanitize_text_field( wp_unslash( $_POST['mnsk7_contact_name'] ) ) : '';
+	$email   = isset( $_POST['mnsk7_contact_email'] ) ? sanitize_email( wp_unslash( $_POST['mnsk7_contact_email'] ) ) : '';
+	$phone   = isset( $_POST['mnsk7_contact_phone'] ) ? sanitize_text_field( wp_unslash( $_POST['mnsk7_contact_phone'] ) ) : '';
+	$subject = isset( $_POST['mnsk7_contact_subject'] ) ? sanitize_text_field( wp_unslash( $_POST['mnsk7_contact_subject'] ) ) : '';
+	$message = isset( $_POST['mnsk7_contact_message'] ) ? sanitize_textarea_field( wp_unslash( $_POST['mnsk7_contact_message'] ) ) : '';
+	if ( empty( $name ) || ! is_email( $email ) || empty( $message ) ) {
+		wp_safe_redirect( add_query_arg( 'mnsk7_contact', 'error', $kontakt_url ) );
+		exit;
+	}
+	$to = defined( 'MNK7_CONTACT_EMAIL' ) ? MNK7_CONTACT_EMAIL : get_option( 'admin_email' );
+	$mail_subject = sprintf(
+		/* translators: %s: site name */
+		__( '[Kontakt %s] ', 'mnsk7-storefront' ) . ( $subject ? $subject : __( 'Wiadomość z formularza', 'mnsk7-storefront' ) ),
+		get_bloginfo( 'name' )
+	);
+	$body = sprintf( __( 'Imię i nazwisko: %s', 'mnsk7-storefront' ), $name ) . "\n";
+	$body .= sprintf( __( 'E-mail: %s', 'mnsk7-storefront' ), $email ) . "\n";
+	if ( $phone ) {
+		$body .= sprintf( __( 'Telefon: %s', 'mnsk7-storefront' ), $phone ) . "\n";
+	}
+	if ( $subject ) {
+		$body .= sprintf( __( 'Temat: %s', 'mnsk7-storefront' ), $subject ) . "\n";
+	}
+	$body .= "\n" . __( 'Wiadomość:', 'mnsk7-storefront' ) . "\n" . $message . "\n";
+	$headers = array( 'Content-Type: text/plain; charset=UTF-8', 'Reply-To: ' . $name . ' <' . $email . '>' );
+	$sent = wp_mail( $to, $mail_subject, $body, $headers );
+	wp_safe_redirect( add_query_arg( 'mnsk7_contact', $sent ? 'ok' : 'error', $kontakt_url ) );
+	exit;
+}, 5 );
+
+add_action( 'wp_footer', function () {
+	if ( ! isset( $_GET['mnsk7_contact'] ) ) {
+		return;
+	}
+	$status = sanitize_key( wp_unslash( $_GET['mnsk7_contact'] ) );
+	$msg    = ( $status === 'ok' )
+		? __( 'Dziękujemy. Twoja wiadomość została wysłana. Odpowiemy w dni robocze.', 'mnsk7-storefront' )
+		: __( 'Wystąpił błąd podczas wysyłania. Spróbuj ponownie lub napisz na podany e-mail.', 'mnsk7-storefront' );
+	echo '<script>document.addEventListener("DOMContentLoaded",function(){alert("' . esc_js( $msg ) . '");});</script>';
 }, 1 );
 
 /** Fallback menu for header when no primary menu set (callable by name for cache-safe wp_nav_menu). */

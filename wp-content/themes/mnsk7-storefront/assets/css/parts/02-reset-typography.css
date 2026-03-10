@@ -53,6 +53,11 @@ a:hover {
   text-decoration: underline;
 }
 
+/* Oбычный текст — без underline/focus артефактов, не выглядит редактируемым */
+p, span, li, dd, dt {
+  text-decoration: none;
+}
+
 /* Visual states: normal, hover, active, focus-visible. Outline only on focus-visible (keyboard), not on mouse click. */
 a:focus,
 button:focus,

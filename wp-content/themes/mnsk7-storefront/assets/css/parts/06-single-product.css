@@ -54,6 +54,17 @@ body.single-product #content #secondary {
   flex-direction: column;
   gap: 0;
 }
+/* Stock („X w magazynie”) wizualnie przy CTA — flex order: dostępność nad przyciskiem */
+.single-product .summary .mnsk7-product-availability,
+.single-product .summary .mnsk7-product-availability-row {
+  order: 1;
+}
+.single-product .summary form.cart {
+  order: 2;
+}
+.single-product .summary .mnsk7-product-trust {
+  order: 3;
+}
 
 .single-product .images img {
   border-radius: var(--r-md);
@@ -106,7 +117,7 @@ body.single-product #content #secondary {
 
 .single-product .summary .product_title {
   font-size: clamp(1.25rem, 2.5vw, var(--fs-2xl));
-  font-weight: 800;
+  font-weight: 600;
   color: var(--color-text);
   margin: 0 0 0.5rem;
   line-height: 1.25;
@@ -114,11 +125,21 @@ body.single-product #content #secondary {
 
 .single-product .summary .price {
   font-size: var(--fs-2xl);
-  font-weight: 800;
+  font-weight: 700;
   color: var(--color-primary-dark);
-  margin: 0 0 0.75rem;
+  margin: 0 0 0.5rem;
   line-height: 1.2;
 }
+/* Cena + „X osób kupiło” w jednym rzędzie (wrapper z mu-plugina lub flex na rodzicu) */
+.mnsk7-pdp-price-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+.mnsk7-pdp-price-row .price,
+.mnsk7-pdp-price-row .mnsk7-product-sold-count { margin: 0; }
 
 .single-product .summary .price del {
   color: var(--color-text-muted);
@@ -131,13 +152,9 @@ body.single-product #content #secondary {
   text-decoration: none;
 }
 
-.single-product .summary .woocommerce-product-rating {
-  margin-bottom: 0.75rem;
-}
-
+.single-product .summary .woocommerce-product-rating,
 .single-product .summary .star-rating {
-  color: var(--color-warning);
-  font-size: var(--fs-base);
+  display: none !important;
 }
 
 /* Availability + „X osób kupiło” w jednym rzędzie */

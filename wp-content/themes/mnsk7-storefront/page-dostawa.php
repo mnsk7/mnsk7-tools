@@ -23,7 +23,12 @@ get_header();
 					<?php
 					the_content();
 					if ( function_exists( 'mnsk7_delivery_rules_table_html' ) ) {
-						echo mnsk7_delivery_rules_table_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						$table_html = mnsk7_delivery_rules_table_html();
+						if ( $table_html ) {
+							echo '<div class="mnsk7-delivery-rules">' . $table_html . '</div>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+						} else {
+							echo '<div class="mnsk7-delivery-rules mnsk7-delivery-rules--placeholder" aria-hidden="true"><p class="mnsk7-page-dostawa__table-placeholder">' . esc_html__( 'Tabela warunków dostawy — treść zostanie uzupełniona.', 'mnsk7-storefront' ) . '</p></div>';
+						}
 					}
 					if ( function_exists( 'do_shortcode' ) ) {
 						echo do_shortcode( '[mnsk7_delivery_eta]' );

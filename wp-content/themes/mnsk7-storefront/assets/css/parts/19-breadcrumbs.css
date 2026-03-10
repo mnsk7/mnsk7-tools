@@ -8,13 +8,17 @@
   border-bottom: 1px solid var(--color-border, #e5e5e5);
 }
 
-/* PDP: okruszki nad tytułem produktu — zwarte, bez pełnego paska */
+/* PDP: okruszki nad tytułem — wyrównanie do lewej, bez pływania */
 .single-product .summary .mnsk7-breadcrumb-wrap {
   margin-top: 0;
   margin-bottom: 0.5rem;
   padding: 0.35rem 0;
   background: transparent;
   border-bottom: none;
+  text-align: left;
+}
+.single-product .summary .woocommerce-breadcrumb {
+  justify-content: flex-start;
 }
 
 .woocommerce-breadcrumb,
