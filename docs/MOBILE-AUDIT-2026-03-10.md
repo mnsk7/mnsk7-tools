@@ -42,3 +42,15 @@
 | `assets/css/parts/17-buttons.css` | Wspólna reguła border-radius dla .button, .add_to_cart_button, .woocommerce .button, mnsk7-plp-chips-toggle, mnsk7-plp-reset. |
 | `assets/css/parts/21-responsive-mobile.css` | Do 480px: 2 kolumny (zamiast 1); nowy @media (max-width: 360px): 1 kolumna. |
 | `assets/css/parts/08-home-sections.css` | Bestsellery: 2 kolumny przy 480px; @media (max-width: 360px): 1 kolumna. |
+
+---
+
+## 3. Commit i push
+
+- **Branch:** `fix/mobile-ux-2026-03`
+- **Hash komitu:** `ad8e88c`
+- **Push:** Wypchnięto na `origin/fix/mobile-ux-2026-03`.
+
+**Merge do main:** W głównym worktree (`/Users/imac/staging.mnsk7-tools.pl`) są niezacommitowane zmiany w `footer.php` i `functions.php`, więc merge został przerwany. Aby wlać zmiany do main:
+- w katalogu z main: `git stash`, potem `git merge origin/fix/mobile-ux-2026-03`, `git push origin main`, potem `git stash pop` (i ewentualnie ręcznie dopasować footer/functions),
+- albo zrobić merge przez Pull Request na GitHubie.
