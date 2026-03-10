@@ -11,7 +11,7 @@ body.tax-product_tag .woocommerce-products-header .wp-post-image,
 body.tax-product_tag .woocommerce-products-header .attachment-woocommerce_thumbnail,
 body.tax-product_tag .woocommerce_category_image,
 body.tax-product_tag [class*="category-image"] {
-  display: none !important;
+  display: none;
 }
 
 /* Nagłówek kategorii/tagu — wizualna hierarchia: tytuł + chips = jeden blok, oddalony od headera */
@@ -32,7 +32,7 @@ body.tax-product_tag [class*="category-image"] {
 body.post-type-archive-product .mnsk7-plp-toolbar .woocommerce-info,
 body.tax-product_cat .mnsk7-plp-toolbar .woocommerce-info,
 body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
-  display: none !important;
+  display: none;
 }
 
 /* Toolbar: sortowanie + (opcjonalnie wyników) + paginacja — ten sam styl u góry i u dołu */
@@ -44,12 +44,12 @@ body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
   margin-bottom: 1rem;
 }
 /* U góry: tylko sortowanie + paginacja (wyników nie pokazujemy) */
-.mnsk7-plp-toolbar .woocommerce-result-count {
-  display: none !important;
+body.woocommerce .mnsk7-plp-toolbar .woocommerce-result-count {
+  display: none;
 }
 /* U dołu: jedna linia — sortowanie + wyników + paginacja (wyrównane) */
-.mnsk7-plp-toolbar--bottom .woocommerce-result-count {
-  display: block !important;
+body.woocommerce .mnsk7-plp-toolbar--bottom .woocommerce-result-count {
+  display: block;
   margin: 0;
   font-size: var(--fs-sm);
   color: var(--color-text-secondary);
@@ -746,39 +746,32 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   pointer-events: none;
 }
 
-/* PLP-09: desktop/tablet — tabela; mobile (≤768px) — siatka kart 2 kolumny. */
-.mnsk7-plp-grid-mobile {
-  display: none;
+/* PLP-09: layout wybierany na backendzie (mobile = grid, desktop = table). W DOM tylko jeden.
+   Stylowanie siatki kart gdy jest wyświetlana (mobile). Bez !important — specyficzność body.woocommerce. */
+body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile {
+  display: block;
+  margin-bottom: 1rem;
 }
-@media (max-width: 768px) {
-  .mnsk7-product-table-wrap {
-    display: none !important;
-  }
-  .mnsk7-plp-grid-mobile {
-    display: block;
-    margin-bottom: 1rem;
-  }
-  .mnsk7-plp-grid-mobile ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1rem !important;
-  }
-  /* Nazwa i cena zawsze widoczne w siatce mobilnej (ta sama karta co bestsellery) */
-  .mnsk7-plp-grid-mobile .woocommerce-loop-product__title,
-  .mnsk7-plp-grid-mobile ul.products li.product h2 {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
-  .mnsk7-plp-grid-mobile .price,
-  .mnsk7-plp-grid-mobile ul.products li.product .price {
-    display: block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-  }
+body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products {
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
 }
+body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile .woocommerce-loop-product__title,
+body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.product h2 {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile .price,
+body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.product .price {
+  display: block;
+  visibility: visible;
+  opacity: 1;
+}
+/* Bardzo wąskie ekrany — 1 kolumna (wartość z 01-tokens: --breakpoint-mobile-narrow) */
 @media (max-width: 360px) {
-  .mnsk7-plp-grid-mobile ul.products {
-    grid-template-columns: 1fr !important;
+  body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products {
+    grid-template-columns: 1fr;
   }
 }
 

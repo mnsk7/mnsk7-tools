@@ -159,35 +159,47 @@ if ( $show_theme_cookie_bar ) :
 <?php endif; ?>
 <script>
 (function() {
-	var cols = document.querySelectorAll('.mnsk7-footer__col');
-	if (!cols.length) return;
-	function init() {
-		var isMobile = window.matchMedia('(max-width: 768px)').matches;
-		cols.forEach(function(col) {
+	var footer = document.getElementById('colophon') || document.querySelector('.mnsk7-footer');
+	if (!footer) return;
+	var breakpointPx = <?php echo (int) ( defined( 'MNSK7_BREAKPOINT_MOBILE' ) ? MNSK7_BREAKPOINT_MOBILE : 768 ); ?>;
+	var mq = '(max-width: ' + breakpointPx + 'px)';
+	// Jedna obsługa delegowana — zawsze podpięta, działa przy każdym ładowaniu i na mobile
+	footer.addEventListener('click', function(e) {
+		if (!window.matchMedia(mq).matches) return;
+		var title = e.target.closest('.mnsk7-footer__title');
+		if (!title) return;
+		var col = title.closest('.mnsk7-footer__col');
+		if (!col) return;
+		e.preventDefault();
+		col.classList.toggle('is-open');
+		title.setAttribute('aria-expanded', col.classList.contains('is-open'));
+	});
+	footer.addEventListener('keydown', function(e) {
+		if (!window.matchMedia(mq).matches) return;
+		if (e.key !== 'Enter' && e.key !== ' ') return;
+		var title = e.target.closest('.mnsk7-footer__title');
+		if (!title) return;
+		var col = title.closest('.mnsk7-footer__col');
+		if (!col) return;
+		e.preventDefault();
+		col.classList.toggle('is-open');
+		title.setAttribute('aria-expanded', col.classList.contains('is-open'));
+	});
+	// Ustaw role/aria na mobile
+	function setAria() {
+		if (!window.matchMedia(mq).matches) return;
+		footer.querySelectorAll('.mnsk7-footer__col').forEach(function(col) {
 			var title = col.querySelector('.mnsk7-footer__title');
 			if (!title) return;
-			var isOpen = col.classList.contains('is-open') || col.hasAttribute('data-accordion-open');
-			if (isOpen) col.classList.add('is-open');
-			title.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 			title.setAttribute('role', 'button');
-			if (title.getAttribute('data-mnsk7-accordion') === '1') return;
-			title.setAttribute('data-mnsk7-accordion', '1');
-			title.addEventListener('click', function() {
-				if (!window.matchMedia('(max-width: 768px)').matches) return;
-				col.classList.toggle('is-open');
-				title.setAttribute('aria-expanded', col.classList.contains('is-open'));
-			});
+			title.setAttribute('tabindex', '0');
+			var open = col.classList.contains('is-open') || col.hasAttribute('data-accordion-open');
+			title.setAttribute('aria-expanded', open ? 'true' : 'false');
+			if (col.id) title.setAttribute('aria-controls', col.id);
 		});
 	}
-	function runInitWhenMobile() {
-		if (window.matchMedia('(max-width: 768px)').matches) init();
-	}
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', runInitWhenMobile);
-	} else {
-		runInitWhenMobile();
-	}
-	window.matchMedia('(max-width: 768px)').addEventListener('change', runInitWhenMobile);
+	setAria();
+	window.matchMedia(mq).addEventListener('change', setAria);
 })();
 </script>
 

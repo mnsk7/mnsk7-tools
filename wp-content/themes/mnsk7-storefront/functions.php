@@ -9,6 +9,23 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Breakpoint mobile (px) — jeden źródło dla PHP/JS. W CSS używać w media queries wartość 768
+ * (odpowiada --breakpoint-mobile w 01-tokens.css).
+ */
+if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
+	define( 'MNSK7_BREAKPOINT_MOBILE', 768 );
+}
+
+/**
+ * Czy request jest z urządzenia mobilnego (user-agent). Używane do renderowania jednego layoutu PLP.
+ *
+ * @return bool
+ */
+function mnsk7_is_mobile_request() {
+	return function_exists( 'wp_is_mobile' ) && wp_is_mobile();
+}
+
+/**
  * Whether parent theme Storefront is present (not removed/overwritten by WP or host).
  * When false, child uses its own header fallback and does not enqueue parent styles.
  */

@@ -53,6 +53,12 @@ PORADKEK-DZIALAN.txt
 instalacje.txt
 staging-plan.txt
 
+# E2E (Playwright)
+node_modules/
+playwright-report/
+test-results/
+.playwright/
+
 # Системные файлы
 .DS_Store
 Thumbs.db
