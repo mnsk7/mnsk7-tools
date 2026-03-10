@@ -1,6 +1,6 @@
 /* 17-buttons — jeden system: zaokrąglenia, wysokość, primary (audit: brak kwadratowych przycisków) */
 
-   § GLOBAL BUTTON RESET — spójne zaokrąglenie (audit: brak kwadratowych przycisków w treści)
+   § GLOBAL BUTTON RESET — spójne zaokrąglenie (audit: brak kwadratowych przycisków)
    ----------------------------------------------------------------- */
 .woocommerce a.button,
 .woocommerce button.button,
@@ -9,6 +9,8 @@
 .woocommerce button.button.alt,
 .woocommerce input.button.alt,
 a.button,
+button.button,
+.button,
 .mnsk7-plp-chips-toggle,
 .mnsk7-plp-search__submit,
 .mnsk7-plp-load-more,
@@ -18,7 +20,9 @@ a.button,
 .mnsk7-hero__btn,
 .mnsk7-btn,
 .mnsk7-trust-cta__btn,
-.mnsk7-header__menu-toggle {
+.mnsk7-header__menu-toggle,
+input[type="submit"],
+button[type="submit"] {
   border-radius: var(--r-md) !important;
 }
 

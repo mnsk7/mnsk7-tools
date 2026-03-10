@@ -1,7 +1,17 @@
-/* 21-responsive-mobile — Mobile (≤ 768px i ≤ 480px) */
+/* 21-responsive-mobile — Mobile: 2 kolumny gdzie sensowne, overflow-x hidden, 1 kol. tylko na bardzo wąskich */
 
-/* Tablet/mobile: 2 kolumny kart produktów (PLP, related, upsells, cross-sells) — spójny układ */
 @media (max-width: 768px) {
+  body,
+  .site,
+  #page {
+    overflow-x: hidden;
+  }
+  .site-content,
+  #content {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+  /* Product grids: 2 kolumny (PLP, related, upsells, cross-sells) */
   .woocommerce ul.products,
   .woocommerce-page ul.products {
     grid-template-columns: repeat(2, 1fr) !important;
@@ -16,7 +26,6 @@
 }
 
 @media (max-width: 480px) {
-  /* Bardzo wąskie ekrany: nadal 2 kolumny (zgodnie z wymaganiami — mobile grid 2 w szeregu) */
   .woocommerce ul.products,
   .woocommerce-page ul.products {
     grid-template-columns: repeat(2, 1fr) !important;
@@ -80,3 +89,15 @@
   }
 }
 
+/* Bardzo wąskie ekrany (≤360px): 1 kolumna, żeby karty nie były za małe */
+@media (max-width: 360px) {
+  .woocommerce ul.products,
+  .woocommerce-page ul.products {
+    grid-template-columns: 1fr !important;
+  }
+  .related.products ul.products,
+  .upsells.products ul.products,
+  .cross-sells ul.products {
+    grid-template-columns: 1fr !important;
+  }
+}

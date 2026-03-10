@@ -428,6 +428,7 @@ function mnsk7_header_fallback_menu() {
 /* 1. Enqueue styles — many small CSS parts (easier to maintain than one 2000+ line file).
  * Zawsze te same zasoby niezależnie od parametrów URL (np. ?filter_*). Strony z filtrami
  * muszą wyglądać identycznie jak bez filtrów (cache nie może serwować innej wersji CSS).
+ * Nie dodawać warunków is_filter_request / $_GET — header i layout muszą być te same.
  */
 add_action( 'wp_enqueue_scripts', function () {
 	$v = defined( 'MNSK7_THEME_VERSION' ) ? MNSK7_THEME_VERSION : '3.0.9';

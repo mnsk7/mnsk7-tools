@@ -1274,6 +1274,11 @@
     gap: 0.6rem !important;
   }
 }
+@media (max-width: 360px) {
+  .mnsk7-section--bestsellers ul.products {
+    grid-template-columns: 1fr !important;
+  }
+}
 
 /* Bestsellers — ta sama siatka co PLP (05-plp-cards + 20/21 responsive) */
 .mnsk7-section--bestsellers .mnsk7-bestsellers,
