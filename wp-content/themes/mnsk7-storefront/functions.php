@@ -292,6 +292,26 @@ add_filter( 'mnsk7_show_cookie_bar', function ( $show ) {
 	return $show;
 }, 5 );
 
+/**
+ * Zwraca stan zgody na opcjonalne pliki cookie (RODO).
+ * Wartość ustawiana w JS (localStorage + cookie). Na serwerze dostępna tylko cookie.
+ *
+ * @return string|null 'accept' | 'reject' | null (brak wyboru lub brak cookie)
+ */
+function mnsk7_get_cookie_consent() {
+	$key = 'mnsk7_cookie_consent';
+	if ( isset( $_COOKIE[ $key ] ) && is_string( $_COOKIE[ $key ] ) ) {
+		$v = sanitize_text_field( wp_unslash( $_COOKIE[ $key ] ) );
+		if ( $v === 'accept' || $v === 'reject' ) {
+			return $v;
+		}
+		if ( $v === '1' ) {
+			return 'accept'; // legacy
+		}
+	}
+	return null;
+}
+
 /** 4.0 UX: domyślny tekst promocyjny w headerze (darmowa dostawa) + CTA do Dostawa (audit Zad.11). Na stronie głównej bez paska — nie konkurować z hero. */
 add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	if ( $text !== '' ) {

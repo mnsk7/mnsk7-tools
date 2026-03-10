@@ -124,14 +124,15 @@ if ( $show_theme_cookie_bar ) :
 <div id="mnsk7-cookie-bar" class="mnsk7-cookie-bar" hidden role="dialog" aria-label="<?php esc_attr_e( 'Informacja o plikach cookie', 'mnsk7-storefront' ); ?>" aria-hidden="true">
 	<div class="mnsk7-cookie-bar__inner">
 		<p class="mnsk7-cookie-bar__text">
-			<?php esc_html_e( 'Ta strona używa plików cookie. Kliknij „Przyjmuję\", aby kontynuować, lub „Ustawienia\" aby wybrać zakres.', 'mnsk7-storefront' ); ?>
+			<?php esc_html_e( 'Ta strona używa plików cookie — niezbędnych do działania sklepu oraz opcjonalnych (analityka). Możesz zaakceptować wszystkie, odrzucić opcjonalne lub zobaczyć szczegóły w', 'mnsk7-storefront' ); ?>
 			<?php if ( $privacy_url ) : ?>
-				<a href="<?php echo esc_url( $privacy_url ); ?>"><?php esc_html_e( 'Polityka prywatności', 'mnsk7-storefront' ); ?></a>
+				<a href="<?php echo esc_url( $privacy_url ); ?>"><?php esc_html_e( 'Polityce prywatności', 'mnsk7-storefront' ); ?></a>.
 			<?php endif; ?>
 		</p>
 		<div class="mnsk7-cookie-bar__buttons">
+			<button type="button" class="mnsk7-cookie-bar__btn mnsk7-cookie-bar-accept"><?php esc_html_e( 'Akceptuję wszystkie', 'mnsk7-storefront' ); ?></button>
+			<button type="button" class="mnsk7-cookie-bar__btn mnsk7-cookie-bar-reject"><?php esc_html_e( 'Tylko niezbędne', 'mnsk7-storefront' ); ?></button>
 			<a href="<?php echo esc_url( $cookie_settings_url ); ?>" class="mnsk7-cookie-bar__btn mnsk7-cookie-bar__btn--secondary"><?php esc_html_e( 'Ustawienia', 'mnsk7-storefront' ); ?></a>
-			<button type="button" class="mnsk7-cookie-bar__btn mnsk7-cookie-bar-accept"><?php esc_html_e( 'Przyjmuję', 'mnsk7-storefront' ); ?></button>
 		</div>
 	</div>
 </div>
@@ -140,21 +141,42 @@ if ( $show_theme_cookie_bar ) :
 	var bar = document.getElementById('mnsk7-cookie-bar');
 	if (!bar) return;
 	var key = 'mnsk7_cookie_consent';
-	function accepted() { try { localStorage.setItem(key, '1'); } catch(e) {} try { document.cookie = key + '=1; path=/; max-age=31536000'; } catch(e) {} }
 	function show() { bar.removeAttribute('hidden'); bar.setAttribute('aria-hidden', 'false'); document.body.classList.add('mnsk7-cookie-bar-visible'); }
 	function hide() { bar.setAttribute('hidden', ''); bar.setAttribute('aria-hidden', 'true'); document.body.classList.remove('mnsk7-cookie-bar-visible'); }
-	if (document.cookie.indexOf(key + '=1') !== -1 || (typeof localStorage !== 'undefined' && localStorage.getItem(key) === '1')) { hide(); return; }
-	show();
-	function onAccept(e) {
-		if (e) { e.preventDefault(); e.stopPropagation(); }
-		accepted();
+	var valAccept = 'accept';
+	var valReject = 'reject';
+	function setConsent(value) {
+		try { localStorage.setItem(key, value); } catch(e) {}
+		try { document.cookie = key + '=' + value + '; path=/; max-age=31536000; SameSite=Lax'; } catch(e) {}
+		window.mnsk7CookieConsent = value;
+	}
+	function getStored() {
+		try { var s = localStorage.getItem(key); if (s) return s; } catch(e) {}
+		var m = document.cookie.match(new RegExp('(?:^|; )' + key.replace(/([.*+?^${}()|[\]\\])/g, '\\$1') + '=([^;]*)'));
+		return m ? decodeURIComponent(m[1]) : null;
+	}
+	var stored = getStored();
+	if (stored === valAccept || stored === valReject) {
+		window.mnsk7CookieConsent = stored;
 		hide();
+		return;
 	}
-	var btn = bar.querySelector('.mnsk7-cookie-bar-accept');
-	if (btn) {
-		btn.addEventListener('click', function(e) { onAccept(e); }, false);
-		btn.addEventListener('touchend', function(e) { onAccept(e); }, { passive: false });
+	var legacy = document.cookie.indexOf(key + '=1') !== -1 || (typeof localStorage !== 'undefined' && localStorage.getItem(key) === '1');
+	if (legacy) { setConsent(valAccept); hide(); return; }
+	show();
+	window.mnsk7CookieConsent = null;
+	function onChoice(e, value) {
+		if (e) { e.preventDefault(); e.stopPropagation(); }
+		setConsent(value);
+		hide();
+		document.dispatchEvent(new CustomEvent('mnsk7-cookie-consent', { detail: value }));
 	}
+	[bar.querySelector('.mnsk7-cookie-bar-accept'), bar.querySelector('.mnsk7-cookie-bar-reject')].forEach(function(btn, i) {
+		if (!btn) return;
+		var val = i === 0 ? valAccept : valReject;
+		btn.addEventListener('click', function(e) { onChoice(e, val); }, false);
+		btn.addEventListener('touchend', function(e) { onChoice(e, val); }, { passive: false });
+	});
 })();
 <?php endif; ?>
 <script>
