@@ -58,12 +58,15 @@ p, span, li, dd, dt {
   text-decoration: none;
 }
 
-/* Visual states: normal, hover, active, focus-visible. Outline only on focus-visible (keyboard), not on mouse click. */
+/* Visual states (VISUAL_STATES_SPEC): normal, hover, active, focus-visible.
+   Outline only on :focus-visible (keyboard), not on mouse :focus — avoids "looks like selected" on click.
+   Do not remove outline globally; keep focus-visible for a11y. */
 a:focus,
 button:focus,
 input:focus,
 select:focus,
 textarea:focus,
+summary:focus,
 [tabindex]:focus {
   outline: none;
 }
@@ -72,9 +75,28 @@ button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible,
+summary:focus-visible,
 [tabindex]:focus-visible {
   outline: 2px solid var(--color-focus, var(--color-primary));
   outline-offset: 2px;
+}
+
+/* Tap highlight: no gray flash on click/tap (avoids "looks like selected" on mobile). Caret only in real inputs. */
+a,
+button,
+input,
+select,
+textarea,
+summary,
+[tabindex],
+[role="button"] {
+  -webkit-tap-highlight-color: transparent;
+}
+/* Caret only where it belongs — not on non-editable elements */
+input:not([type="hidden"]),
+textarea,
+[contenteditable="true"] {
+  caret-color: auto;
 }
 
 img {

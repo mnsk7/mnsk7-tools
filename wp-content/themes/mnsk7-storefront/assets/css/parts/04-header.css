@@ -128,12 +128,25 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   font-size: 1.125rem;
   font-weight: 700;
   color: var(--color-text);
-  text-decoration: none;
+  text-decoration: none !important;
+  border-bottom: none;
   font-family: var(--font-base);
   letter-spacing: -0.02em;
+  -webkit-tap-highlight-color: transparent;
 }
-.mnsk7-header__brand a:hover {
+.mnsk7-header__brand a:hover,
+.mnsk7-header__brand a:visited,
+.mnsk7-header__brand a:active {
   color: var(--color-primary);
+  text-decoration: none !important;
+  border-bottom: none;
+}
+.mnsk7-header__brand a:focus {
+  outline: none;
+}
+.mnsk7-header__brand a:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
 }
 .mnsk7-header__brand img {
   max-height: 42px; /* +30% от 32px */
@@ -169,17 +182,30 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-text);
-  text-decoration: none;
+  text-decoration: none !important;
+  border-bottom: none;
   white-space: nowrap;
   border-radius: var(--r-sm);
   transition: color 0.15s ease, background 0.15s ease;
+  -webkit-tap-highlight-color: transparent;
 }
 .mnsk7-header__menu a:hover,
+.mnsk7-header__menu a:active,
+.mnsk7-header__menu a:visited,
 .mnsk7-header__menu li.current-menu-item > a {
   color: var(--color-primary);
+  text-decoration: none !important;
+  border-bottom: none;
 }
 .mnsk7-header__menu a:hover {
   background: rgba(0,0,0,0.04);
+}
+.mnsk7-header__menu a:focus {
+  outline: none;
+}
+.mnsk7-header__menu a:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
 }
 
 /* Hamburger icon (3 lines) */
@@ -265,8 +291,25 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   word-wrap: break-word;
   min-width: 0;
 }
+.mnsk7-header__menu .sub-menu a {
+  text-decoration: none !important;
+  border-bottom: none;
+}
+.mnsk7-header__menu .sub-menu a:hover,
+.mnsk7-header__menu .sub-menu a:visited,
+.mnsk7-header__menu .sub-menu a:active {
+  text-decoration: none !important;
+  border-bottom: none;
+}
 .mnsk7-header__menu .sub-menu a:hover {
   background: rgba(0,0,0,0.06);
+}
+.mnsk7-header__menu .sub-menu a:focus {
+  outline: none;
+}
+.mnsk7-header__menu .sub-menu a:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
 }
 
 .mnsk7-header__menu-toggle {
@@ -485,7 +528,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   outline-offset: 1px;
 }
 
-/* Account link + icon — bez nałożenia na koszyk (min-width: 0, flex-shrink) */
+/* Account link + icon — bez nałożenia na koszyk (min-width: 0, flex-shrink). No link underline/visited artifact. */
 .mnsk7-header__link {
   display: inline-flex;
   align-items: center;
@@ -494,13 +537,24 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   font-size: var(--fs-xs);
   font-weight: 600;
   color: var(--color-text);
-  text-decoration: none;
+  text-decoration: none !important;
+  border-bottom: none;
   white-space: nowrap;
   border-radius: var(--r-sm);
   transition: color 0.15s ease, background 0.15s ease;
   letter-spacing: 0.01em;
   flex-shrink: 1;
   min-width: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.mnsk7-header__link:visited,
+.mnsk7-header__link:active {
+  color: var(--color-text);
+  text-decoration: none !important;
+  border-bottom: none;
+}
+.mnsk7-header__link:focus {
+  outline: none;
 }
 /* Na mobile: account = icon-only (jak inne przyciski). Na desktop: min-width w media 768px */
 .mnsk7-header__link--account {
@@ -532,6 +586,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-header__link:hover {
   color: var(--color-primary);
   background: rgba(0, 0, 0, 0.04);
+  text-decoration: none !important;
+  border-bottom: none;
 }
 
 /* Cart: nie kurczyć przy długim "Moje konto" (audit: zalogowany = kaša) */
@@ -556,6 +612,29 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   font-weight: 600;
   min-height: var(--header-h);
   box-sizing: border-box;
+  color: var(--color-text);
+  text-decoration: none !important;
+  border-bottom: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.mnsk7-header__cart .cart-contents:hover,
+.mnsk7-header__cart .cart-contents:visited,
+.mnsk7-header__cart .cart-contents:active,
+.mnsk7-header__cart-trigger:hover,
+.mnsk7-header__cart-trigger:visited,
+.mnsk7-header__cart-trigger:active {
+  color: var(--color-text);
+  text-decoration: none !important;
+  border-bottom: none;
+}
+.mnsk7-header__cart .cart-contents:focus,
+.mnsk7-header__cart-trigger:focus {
+  outline: none;
+}
+.mnsk7-header__cart .cart-contents:focus-visible,
+.mnsk7-header__cart-trigger:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
 }
 .mnsk7-header__cart-icon {
   display: inline-flex;
@@ -854,8 +933,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     background: rgba(0, 0, 0, 0.04);
     color: var(--color-primary);
   }
-  .mnsk7-header__cart-trigger {
-    text-decoration: none;
+  .mnsk7-header__cart-trigger,
+  .mnsk7-header__cart .cart-contents {
+    text-decoration: none !important;
+    border-bottom: none;
   }
   /* Mobile menu panel: below header, full width, vertical nav list, left-aligned, normal spacing — not empty block */
   .mnsk7-header__nav .mnsk7-header__menu {

@@ -129,7 +129,7 @@ ul.products.columns-4::before {
   margin: 0;
 }
 
-/* Product title — max 2 lines, readable; no stray underline/focus artifacts */
+/* Product title — max 2 lines, readable; no stray underline/focus artifacts. Title is in its own link (theme moves link wrap). */
 .woocommerce ul.products li.product .woocommerce-loop-product__title,
 .woocommerce ul.products li.product h2 {
   font-size: var(--fs-sm);
@@ -145,13 +145,22 @@ ul.products.columns-4::before {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+/* Product link (image + title links share this class): no browser default underline, no blue link look, no fragmented underline */
 .woocommerce ul.products li.product .woocommerce-loop-product__link {
-  text-decoration: none;
+  color: var(--color-text);
+  text-decoration: none !important;
+  border-bottom: none !important;
   -webkit-tap-highlight-color: transparent;
 }
-.woocommerce ul.products li.product .woocommerce-loop-product__link:hover {
-  text-decoration: none;
+.woocommerce ul.products li.product .woocommerce-loop-product__link:hover,
+.woocommerce ul.products li.product .woocommerce-loop-product__link:active,
+.woocommerce ul.products li.product .woocommerce-loop-product__link:visited {
   color: var(--color-text);
+  text-decoration: none !important;
+  border-bottom: none !important;
+}
+.woocommerce ul.products li.product .woocommerce-loop-product__link:focus {
+  outline: none;
 }
 .woocommerce ul.products li.product .woocommerce-loop-product__link:focus-visible {
   outline: 2px solid var(--color-focus, var(--color-primary));
@@ -216,6 +225,12 @@ ul.products.columns-4::before {
 .woocommerce ul.products li.product .add_to_cart_button:focus-visible {
   outline: 2px solid var(--color-focus, var(--color-primary));
   outline-offset: 2px;
+}
+/* Avoid "edit" look: buttons are not text selection */
+.woocommerce ul.products li.product .button,
+.woocommerce ul.products li.product .add_to_cart_button {
+  -webkit-user-select: none;
+  user-select: none;
 }
 
 .woocommerce ul.products li.product a.added_to_cart {
