@@ -54,7 +54,7 @@ body.single-product #content #secondary {
   flex-direction: column;
   gap: 0;
 }
-/* Kolejność wizualna PDP: okruszki → tytuł → cena + „X osób kupiło” → dostępność → reszta (parametry, CTA, trust) */
+/* Kolejność wizualna PDP: okruszki → tytuł → cena + „X osób kupiło” → parametry → „X w magazynie” przy CTA → formularz → trust */
 .single-product .summary.entry-summary.mnsk7-pdp-buybox > * {
   order: 10;
 }
@@ -67,14 +67,15 @@ body.single-product #content #secondary {
 .single-product .summary .mnsk7-pdp-price-row {
   order: 2;
 }
+/* Dostępność (X w magazynie) tuż nad przyciskiem Dodaj do koszyka — supporting info dla CTA */
 .single-product .summary .mnsk7-product-availability-row {
-  order: 3;
+  order: 19;
 }
 .single-product .summary form.cart {
-  order: 10;
+  order: 20;
 }
 .single-product .summary .mnsk7-product-trust {
-  order: 10;
+  order: 21;
 }
 
 .single-product .images img {
@@ -322,7 +323,7 @@ body.single-product #content #secondary {
 .single-product .summary .single_add_to_cart_button {
   background: var(--color-primary);
   color: var(--color-white);
-  padding: 1rem 2rem;
+  padding: var(--space-16) var(--space-32);
   font-size: var(--fs-base);
   font-weight: 700;
   font-family: var(--font-base);
@@ -490,7 +491,7 @@ body.single-product #content #secondary {
 }
 
 .mnsk7-product-description-accordion__content {
-  padding: 1rem;
+  padding: var(--space-16);
   border-top: 1px solid var(--color-border);
   font-size: var(--fs-sm);
   line-height: 1.6;
@@ -633,10 +634,10 @@ body.single-product #content #secondary {
   background: var(--color-white);
   border-top: 1px solid var(--color-border);
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
-  padding: 0.75rem 1rem;
+  padding: 0.75rem var(--space-16);
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
+  gap: var(--space-16);
 }
 
 .mnsk7-pdp-sticky-cta[hidden] {
