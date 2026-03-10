@@ -178,6 +178,11 @@ body.page #colophon.mnsk7-footer {
   color: var(--color-white);
 }
 
+/* Wszystkie linki w stopce: hover w jasnym kolorze (WCAG AA na ciemnym tle) */
+.mnsk7-footer a:hover {
+  color: var(--color-white);
+}
+
 /* Lista kontaktów z ikonami */
 .mnsk7-footer__contact-list {
   list-style: none;

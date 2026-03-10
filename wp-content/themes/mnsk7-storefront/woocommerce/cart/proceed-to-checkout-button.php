@@ -17,5 +17,5 @@ if ( ! $checkout_url ) {
 ?>
 
 <a id="mnsk7-cart-checkout-button" href="<?php echo esc_url( $checkout_url ); ?>" class="checkout-button button alt wc-forward<?php echo esc_attr( wc_wp_theme_get_element_class_name( 'button' ) ? ' ' . wc_wp_theme_get_element_class_name( 'button' ) : '' ); ?>">
-	<?php esc_html_e( 'Proceed to checkout', 'woocommerce' ); ?>
+	<?php esc_html_e( 'Przejdź do płatności', 'mnsk7-storefront' ); ?>
 </a>

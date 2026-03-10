@@ -1,7 +1,8 @@
 /* 22-touch-targets — extracted from main.css */
 
+/* -----------------------------------------------------------------
    § TOUCH TARGETS
-   All interactive elements ≥ 44px for accessibility.
+   All interactive elements ≥ 44px for accessibility (WCAG 2.5.5).
    ----------------------------------------------------------------- */
 
 .site-header .menu-toggle,
@@ -22,5 +23,16 @@ a.button.alt,
 /* Keep PLP buttons from expanding horizontally beyond card */
 .woocommerce ul.products li.product .button {
   min-width: unset;
+}
+
+/* Pagination and Place order: min 44px for touch (WCAG 2.5.5) */
+.woocommerce nav.woocommerce-pagination ul li a,
+.woocommerce nav.woocommerce-pagination ul li span {
+  min-height: 44px;
+  min-width: 44px;
+}
+.woocommerce-checkout #payment .form-row.place-order .button,
+.woocommerce-checkout #payment .place-order .button {
+  min-height: 44px;
 }
 
