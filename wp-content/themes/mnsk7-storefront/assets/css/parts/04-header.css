@@ -312,6 +312,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   outline-offset: 2px;
 }
 
+/* Desktop: burger tylko na mobile; na desktop nie ma off-canvas — ukryty (również w header.php critical CSS). */
 .mnsk7-header__menu-toggle {
   display: none;
   padding: 0.5rem 1rem;
@@ -1147,20 +1148,5 @@ body .site .site-content {
   z-index: 111;
 }
 
-/* Legacy: Storefront header actions (when parent outputs them) */
-.mnsk7-header-actions {
-  display: flex;
-  align-items: center;
-  gap: var(--space-16);
-}
-.mnsk7-header-link {
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  color: var(--color-text);
-  text-decoration: none;
-  white-space: nowrap;
-}
-.mnsk7-header-link:hover {
-  color: var(--color-primary);
-}
+/* Legacy header paths removed: jeden header = header.php (mnsk7-header). Nie używać .mnsk7-header-actions / .mnsk7-header-link. */
 

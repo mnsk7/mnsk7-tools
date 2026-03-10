@@ -10,7 +10,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-get_header( 'shop' );
+get_header();
 
 /* Okruszki w szablonie — niezależnie od hooków, żeby nic ich nie nadpisywało (sklep, kategoria, tag, wyszukiwanie). */
 if ( function_exists( 'woocommerce_breadcrumb' ) ) {

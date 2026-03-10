@@ -14,7 +14,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-get_header( 'shop' ); ?>
+get_header(); ?>
 
 	<?php
 		do_action( 'woocommerce_before_main_content' );

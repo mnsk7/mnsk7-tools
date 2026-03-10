@@ -1208,15 +1208,7 @@ add_action( 'init', function () {
 	remove_action( 'storefront_footer', 'storefront_credit', 20 );
 } );
 
-/* Header: jawnie widoczne linki Koszyk + Moje konto (gdy parent Storefront) */
-add_action( 'storefront_header', function () {
-	if ( ! function_exists( 'wc_get_page_permalink' ) ) {
-		return;
-	}
-	echo '<div class="mnsk7-header-actions">';
-	echo '<a href="' . esc_url( wc_get_page_permalink( 'myaccount' ) ) . '" class="mnsk7-header-link mnsk7-header-link--account">' . esc_html__( 'Moje konto', 'mnsk7-storefront' ) . '</a>';
-	echo '</div>';
-}, 49 );
+/* Header: jeden source of truth — header.php (mnsk7-header). Legacy storefront_header output usunięty; nie dodawać tu żadnych elementów headera. */
 
 /* 5. Admin notice when parent Storefront is missing (e.g. overwritten by WP/host) */
 add_action( 'admin_notices', function () {
