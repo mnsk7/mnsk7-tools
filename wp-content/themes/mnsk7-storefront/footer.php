@@ -33,7 +33,7 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 	<div class="mnsk7-footer__top">
 		<div class="mnsk7-footer__inner">
 			<div id="footer-col-klient" class="mnsk7-footer__col mnsk7-footer__col--client is-open" data-accordion-open aria-label="<?php esc_attr_e( 'Linki dla klienta', 'mnsk7-storefront' ); ?>">
-				<h3 class="mnsk7-footer__title" id="footer-klient" aria-controls="footer-col-klient" aria-expanded="true"><?php esc_html_e( 'Klient', 'mnsk7-storefront' ); ?></h3>
+				<h3 class="mnsk7-footer__title" id="footer-klient" role="button" tabindex="0" aria-expanded="true" aria-controls="footer-col-klient"><?php esc_html_e( 'Klient', 'mnsk7-storefront' ); ?></h3>
 				<ul class="mnsk7-footer__links">
 					<li><a href="<?php echo esc_url( home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Sklep', 'mnsk7-storefront' ); ?></a></li>
 					<?php if ( function_exists( 'wc_get_page_permalink' ) ) { ?>
@@ -48,7 +48,7 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 				<p class="mnsk7-footer__dostawa-line"><a href="<?php echo esc_url( $dostawa_url ); ?>"><?php esc_html_e( 'Darmowa dostawa od 300 zł. Tylko Polska.', 'mnsk7-storefront' ); ?></a></p>
 			</div>
 			<div id="footer-col-kategorie" class="mnsk7-footer__col mnsk7-footer__col--kategorie" aria-label="<?php esc_attr_e( 'Kategorie produktów', 'mnsk7-storefront' ); ?>">
-				<h3 class="mnsk7-footer__title" id="footer-kategorie" aria-controls="footer-col-kategorie" aria-expanded="false"><?php esc_html_e( 'Kategorie', 'mnsk7-storefront' ); ?></h3>
+				<h3 class="mnsk7-footer__title" id="footer-kategorie" role="button" tabindex="0" aria-expanded="false" aria-controls="footer-col-kategorie"><?php esc_html_e( 'Kategorie', 'mnsk7-storefront' ); ?></h3>
 				<ul class="mnsk7-footer__links">
 					<?php
 					foreach ( $top_cats as $term ) {
@@ -61,7 +61,7 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 				</ul>
 			</div>
 			<div id="footer-col-kontakt" class="mnsk7-footer__col mnsk7-footer__col--contact" aria-label="<?php esc_attr_e( 'Dane kontaktowe', 'mnsk7-storefront' ); ?>">
-				<h3 class="mnsk7-footer__title" id="footer-kontakt" aria-controls="footer-col-kontakt" aria-expanded="false"><?php esc_html_e( 'Kontakt', 'mnsk7-storefront' ); ?></h3>
+				<h3 class="mnsk7-footer__title" id="footer-kontakt" role="button" tabindex="0" aria-expanded="false" aria-controls="footer-col-kontakt"><?php esc_html_e( 'Kontakt', 'mnsk7-storefront' ); ?></h3>
 				<?php
 				$footer_address = apply_filters( 'mnsk7_footer_legal_address', '' );
 				if ( $footer_address !== '' ) {
@@ -91,7 +91,7 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 				</ul>
 			</div>
 			<div id="footer-col-newsletter" class="mnsk7-footer__col mnsk7-footer__col--newsletter" aria-label="<?php esc_attr_e( 'Zapisz się do newslettera', 'mnsk7-storefront' ); ?>">
-				<h3 class="mnsk7-footer__title" id="footer-newsletter" aria-controls="footer-col-newsletter" aria-expanded="false"><?php esc_html_e( 'Newsletter', 'mnsk7-storefront' ); ?></h3>
+				<h3 class="mnsk7-footer__title" id="footer-newsletter" role="button" tabindex="0" aria-expanded="false" aria-controls="footer-col-newsletter"><?php esc_html_e( 'Newsletter', 'mnsk7-storefront' ); ?></h3>
 				<p class="mnsk7-footer__newsletter-desc"><?php esc_html_e( 'Otrzymuj informacje o promocjach, nowościach i poradach.', 'mnsk7-storefront' ); ?></p>
 				<form class="mnsk7-footer__newsletter-form" action="<?php echo esc_url( home_url( '/' ) ); ?>" method="post" aria-label="<?php esc_attr_e( 'Zapisz się do newslettera', 'mnsk7-storefront' ); ?>">
 					<?php wp_nonce_field( 'mnsk7_newsletter', 'mnsk7_newsletter_nonce' ); ?>

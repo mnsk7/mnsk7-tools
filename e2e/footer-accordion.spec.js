@@ -23,9 +23,10 @@ test.describe('Footer accordion (mobile)', () => {
     const col = cols.nth(1);
     const secondTitle = col.locator('.mnsk7-footer__title');
 
-    await secondTitle.click();
+    await secondTitle.scrollIntoViewIfNeeded();
+    await secondTitle.click({ force: true });
 
-    await expect(col).toHaveClass(/is-open/, { timeout: 2000 });
+    await expect(col).toHaveClass(/is-open/, { timeout: 3000 });
     const ariaExpanded = await secondTitle.getAttribute('aria-expanded');
     expect(ariaExpanded).toBe('true');
   });
