@@ -1269,6 +1269,12 @@
 
 @media (max-width: 480px) {
   .mnsk7-section--bestsellers ul.products {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .mnsk7-section--bestsellers ul.products {
     grid-template-columns: 1fr !important;
   }
 }

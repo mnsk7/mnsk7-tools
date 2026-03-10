@@ -160,8 +160,9 @@ if ( $show_theme_cookie_bar ) :
 <script>
 (function() {
 	var cols = document.querySelectorAll('.mnsk7-footer__col');
-	if (!cols.length || window.innerWidth > 768) return;
+	if (!cols.length) return;
 	function init() {
+		var isMobile = window.matchMedia('(max-width: 768px)').matches;
 		cols.forEach(function(col) {
 			var title = col.querySelector('.mnsk7-footer__title');
 			if (!title) return;
@@ -169,14 +170,24 @@ if ( $show_theme_cookie_bar ) :
 			if (isOpen) col.classList.add('is-open');
 			title.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 			title.setAttribute('role', 'button');
+			if (title.getAttribute('data-mnsk7-accordion') === '1') return;
+			title.setAttribute('data-mnsk7-accordion', '1');
 			title.addEventListener('click', function() {
+				if (!window.matchMedia('(max-width: 768px)').matches) return;
 				col.classList.toggle('is-open');
 				title.setAttribute('aria-expanded', col.classList.contains('is-open'));
 			});
 		});
 	}
-	if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
-	else init();
+	function runInitWhenMobile() {
+		if (window.matchMedia('(max-width: 768px)').matches) init();
+	}
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', runInitWhenMobile);
+	} else {
+		runInitWhenMobile();
+	}
+	window.matchMedia('(max-width: 768px)').addEventListener('change', runInitWhenMobile);
 })();
 </script>
 

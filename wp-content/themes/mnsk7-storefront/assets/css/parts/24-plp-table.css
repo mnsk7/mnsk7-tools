@@ -215,24 +215,55 @@ body.tax-product_tag .mnsk7-catalog-filters {
 @media (max-width: 768px) {
   .mnsk7-plp-chips {
     flex-wrap: nowrap;
+    overflow-y: hidden;
+    padding-bottom: 0.25rem;
+    margin-left: 0;
+    margin-right: 0;
+    gap: 0.5rem;
+    align-items: center;
+  }
+  .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding: 0.25rem 0;
+  }
+  .mnsk7-plp-chips--attrs {
+    overflow-x: visible;
+  }
+  .mnsk7-plp-chips__label {
+    flex-shrink: 0;
+    padding-right: 0.5rem;
+  }
+  /* Scroll tylko w wewnętrznym kontenerze — etykieta nie nakłada się na chipy */
+  .mnsk7-plp-chips__scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.4rem;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
-    padding-bottom: 0.25rem;
-    margin-left: 0;
-    margin-right: 0;
+    padding: 0.25rem 0.5rem 0.25rem 0;
+    margin: 0 -0.5rem 0 0;
+    min-height: 44px;
+    position: relative;
   }
-  .mnsk7-plp-chips__label {
-    flex-shrink: 0;
-  }
-  /* Metka (Średnica:, Długość L:) zostaje przy lewej krawędzi przy poziomym scrollu */
-  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__label {
+  .mnsk7-plp-chips__scroll::after {
+    content: "";
     position: sticky;
-    left: 0;
-    z-index: 1;
-    background: var(--color-bg);
-    padding-right: 0.35rem;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 24px;
+    flex-shrink: 0;
+    background: linear-gradient(to left, var(--color-bg) 40%, transparent);
+    pointer-events: none;
+    margin-left: -24px;
+  }
+  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
+    padding-left: 0;
   }
 }
 
@@ -286,6 +317,14 @@ body.tax-product_tag .mnsk7-catalog-filters {
   color: var(--color-text-secondary);
   margin-right: 0.5rem;
   align-self: center;
+}
+
+/* Na desktop: scroll wrapper zachowuje się jak zwykły flex-wrap (bez overflow) */
+.mnsk7-plp-chips__scroll {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
 }
 
 /* PLP-07: drugi rząd chipów (atrybuty) — wizualnie drugorzędne względem kategorii; każdy wiersz z etykietą + chipy z zawijaniem */
@@ -707,20 +746,21 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   pointer-events: none;
 }
 
-/* PLP-09: desktop/tablet — tabela; mobile (≤767px) — siatka kart. Jedna klasa, bez !important. */
+/* PLP-09: desktop/tablet — tabela; mobile (≤768px) — siatka kart 2 kolumny. */
 .mnsk7-plp-grid-mobile {
   display: none;
 }
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .mnsk7-product-table-wrap {
-    display: none;
+    display: none !important;
   }
   .mnsk7-plp-grid-mobile {
     display: block;
     margin-bottom: 1rem;
   }
   .mnsk7-plp-grid-mobile ul.products {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 1rem !important;
   }
   /* Nazwa i cena zawsze widoczne w siatce mobilnej (ta sama karta co bestsellery) */
   .mnsk7-plp-grid-mobile .woocommerce-loop-product__title,
@@ -734,6 +774,11 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
+  }
+}
+@media (max-width: 360px) {
+  .mnsk7-plp-grid-mobile ul.products {
+    grid-template-columns: 1fr !important;
   }
 }
 
@@ -916,7 +961,6 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   .mnsk7-plp-chips {
     margin-bottom: 0.75rem;
   }
-
   .mnsk7-product-table {
     min-width: 560px;
   }

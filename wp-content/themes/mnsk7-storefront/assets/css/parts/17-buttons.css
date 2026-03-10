@@ -3,6 +3,21 @@
    § BUTTONS (global)
    ----------------------------------------------------------------- */
 
+/* Wspólny border-radius dla przycisków (żadnych „kwadratowych” wyjątków w blokach WC i kartach) */
+.button,
+.add_to_cart_button,
+.woocommerce .button,
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce a.button.alt,
+.woocommerce button.button.alt,
+.woocommerce input.button.alt,
+.mnsk7-plp-chips-toggle,
+.mnsk7-plp-reset.button {
+  border-radius: var(--r-md);
+}
+
 /* Tap target min 44px (WCAG 2.5.5, UI_SPEC_V2 §4.1) */
 .woocommerce a.button,
 .woocommerce button.button,
