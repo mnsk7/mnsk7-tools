@@ -1126,12 +1126,15 @@ body .site .site-content {
   z-index: 0;
 }
 
-/* Audit: dropdown Sklep nie może przycinać się ani zakrywać paska promocyjnego i koszyka */
+/* Audit: dropdown Sklep nie może przycinać się ani zakrywać paska promocyjnego i koszyka.
+   Na mobile .mnsk7-header__inner ma overflow: hidden (blok 524) — nie nadpisywać na visible. */
 .mnsk7-header {
   overflow: visible;
 }
-.mnsk7-header__inner {
-  overflow: visible;
+@media (min-width: 769px) {
+  .mnsk7-header__inner {
+    overflow: visible;
+  }
 }
 .mnsk7-header__nav {
   overflow: visible;
