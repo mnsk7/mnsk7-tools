@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 <body <?php body_class(); ?>>
 <?php wp_body_open(); ?>
 <div id="page" class="hfeed site">
-
+<a href="#content" class="mnsk7-skip-link"><?php esc_html_e( 'Przejdź do treści', 'mnsk7-storefront' ); ?></a>
 <?php
 $promo_text = apply_filters( 'mnsk7_header_promo_text', '' );
 if ( $promo_text !== '' ) :

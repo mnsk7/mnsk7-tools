@@ -90,3 +90,25 @@ img {
   }
 }
 
+/* Skip link (a11y): ukryty, widoczny tylko przy :focus (Tab) */
+.mnsk7-skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 10000;
+  padding: 0.75rem 1rem;
+  background: var(--color-primary);
+  color: var(--color-white);
+  font-weight: 600;
+  text-decoration: none;
+  border-radius: var(--r-sm);
+  font-size: var(--fs-sm);
+}
+.mnsk7-skip-link:focus,
+.mnsk7-skip-link:focus-visible {
+  left: var(--space-16, 1rem);
+  top: var(--space-16, 1rem);
+  outline: 2px solid var(--color-white);
+  outline-offset: 2px;
+}
+

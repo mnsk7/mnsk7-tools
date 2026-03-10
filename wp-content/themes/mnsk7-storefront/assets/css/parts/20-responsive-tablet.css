@@ -12,26 +12,8 @@
     --fs-xl:  1.25rem;
   }
 
-  /* Product grids: 2 columns */
-  .woocommerce ul.products,
-  .woocommerce-page ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1rem !important;
-  }
-
-  .related.products ul.products,
-  .upsells.products ul.products,
-  .cross-sells ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1rem !important;
-  }
-
-  /* Footer: single column */
-  .mnsk7-footer__inner {
-    grid-template-columns: 1fr;
-    gap: 2rem;
-    padding: 0 1.5rem;
-  }
+  /* Product grids at 768px: only in 21-responsive-mobile.css (gap 0.75rem) */
+  /* Footer at 768px: only in 09-footer.css */
 
   /* Hero */
   .mnsk7-hero {
