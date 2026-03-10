@@ -212,8 +212,9 @@ body.tax-product_tag .mnsk7-catalog-filters {
   margin-bottom: 0.75rem;
 }
 
+/* Mobile: chipy kategorii — poziomy scroll jak wcześniej */
 @media (max-width: 768px) {
-  .mnsk7-plp-chips {
+  .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs) {
     flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
@@ -223,16 +224,47 @@ body.tax-product_tag .mnsk7-catalog-filters {
     margin-left: 0;
     margin-right: 0;
   }
-  .mnsk7-plp-chips__label {
-    flex-shrink: 0;
+  /* Chipy atrybutów: label w osobnej linii, scroll w jednym bloku — bez białej pasy na wartości */
+  .mnsk7-plp-chips--attrs {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+    flex-wrap: wrap;
+    overflow: visible;
+    padding-bottom: 0.25rem;
+    margin-left: 0;
+    margin-right: 0;
   }
-  /* Metka (Średnica:, Długość L:) zostaje przy lewej krawędzi przy poziomym scrollu */
   .mnsk7-plp-chips--attrs .mnsk7-plp-chips__label {
-    position: sticky;
-    left: 0;
-    z-index: 1;
-    background: var(--color-bg);
-    padding-right: 0.35rem;
+    flex: 0 0 auto;
+    width: 100%;
+    margin-bottom: 0;
+    margin-right: 0;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    background: transparent;
+    position: static;
+    padding-right: 0;
+  }
+  /* Scrollowalny obszar chipów — czytelny scroll, bez obcinania; affordance że można przesuwać */
+  .mnsk7-plp-chips__scroll {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding: 0.25rem 0 0.5rem;
+    margin: 0 -0.5rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .mnsk7-plp-chips__scroll::after {
+    content: "";
+    flex: 0 0 0.5rem;
+    min-width: 0.5rem;
   }
 }
 
@@ -658,14 +690,12 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   .mnsk7-plp-chips {
     gap: 0.4rem;
   }
+  .mnsk7-plp-chips--attrs .mnsk7-plp-chip {
+    flex-shrink: 0;
+  }
   .mnsk7-plp-chip {
     padding: 0.4rem 0.75rem;
     font-size: var(--fs-xs);
-  }
-  .mnsk7-plp-chips__label {
-    width: 100%;
-    margin-bottom: 0.25rem;
-    margin-right: 0;
   }
 }
 
@@ -707,11 +737,11 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   pointer-events: none;
 }
 
-/* PLP-09: desktop/tablet — tabela; mobile (≤767px) — siatka kart. Jedna klasa, bez !important. */
+/* PLP-09: desktop/tablet — tabela; mobile (≤768px) — siatka kart 2 kolumny. Spójny breakpoint 768px. */
 .mnsk7-plp-grid-mobile {
   display: none;
 }
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .mnsk7-product-table-wrap {
     display: none;
   }
@@ -720,7 +750,8 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
     margin-bottom: 1rem;
   }
   .mnsk7-plp-grid-mobile ul.products {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
   }
   /* Nazwa i cena zawsze widoczne w siatce mobilnej (ta sama karta co bestsellery) */
   .mnsk7-plp-grid-mobile .woocommerce-loop-product__title,

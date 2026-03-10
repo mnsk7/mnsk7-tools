@@ -366,10 +366,13 @@ body.page #colophon.mnsk7-footer {
   }
   .mnsk7-footer__col--newsletter.is-open .mnsk7-footer__newsletter-form { display: flex; }
   .mnsk7-footer__col--newsletter.is-open { border-bottom: 1px solid rgba(255,255,255,0.1); }
+  /* Newsletter column: accordion jak pozostałe — ukryte gdy brak .is-open */
   .mnsk7-footer__col--newsletter .mnsk7-footer__newsletter-desc,
   .mnsk7-footer__col--newsletter .mnsk7-footer__newsletter-form,
-  .mnsk7-footer__col--newsletter .mnsk7-footer__newsletter-privacy { display: block; }
-  .mnsk7-footer__col--newsletter .mnsk7-footer__newsletter-form { display: flex; }
+  .mnsk7-footer__col--newsletter .mnsk7-footer__newsletter-privacy { display: none; }
+  .mnsk7-footer__col--newsletter.is-open .mnsk7-footer__newsletter-desc,
+  .mnsk7-footer__col--newsletter.is-open .mnsk7-footer__newsletter-privacy { display: block; }
+  .mnsk7-footer__col--newsletter.is-open .mnsk7-footer__newsletter-form { display: flex; }
 }
 
 @media (max-width: 360px) {

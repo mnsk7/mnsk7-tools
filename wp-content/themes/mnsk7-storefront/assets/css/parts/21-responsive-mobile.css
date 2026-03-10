@@ -1,16 +1,32 @@
-/* 21-responsive-mobile — Mobile (≤ 480px) */
+/* 21-responsive-mobile — Mobile (≤ 768px i ≤ 480px) */
 
-@media (max-width: 480px) {
-  /* Product grids: single column */
+/* Tablet/mobile: 2 kolumny kart produktów (PLP, related, upsells, cross-sells) — spójny układ */
+@media (max-width: 768px) {
   .woocommerce ul.products,
   .woocommerce-page ul.products {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
   }
-
   .related.products ul.products,
   .upsells.products ul.products,
   .cross-sells ul.products {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Bardzo wąskie ekrany: nadal 2 kolumny (zgodnie z wymaganiami — mobile grid 2 w szeregu) */
+  .woocommerce ul.products,
+  .woocommerce-page ul.products {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
+  }
+  .related.products ul.products,
+  .upsells.products ul.products,
+  .cross-sells ul.products {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
   }
 
   /* Categories: 2 columns (compact on small screens) */

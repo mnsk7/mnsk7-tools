@@ -902,7 +902,7 @@
   border: 0;
 }
 
-@media (max-width: 767px) {
+@media (max-width: 768px) {
   .mnsk7-section--insta {
     padding: 2rem 0;
   }
@@ -1268,8 +1268,10 @@
 }
 
 @media (max-width: 480px) {
+  /* Bestsellery: 2 kolumny na mobile (jak PLP i related) — bez full-width kart */
   .mnsk7-section--bestsellers ul.products {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.6rem !important;
   }
 }
 

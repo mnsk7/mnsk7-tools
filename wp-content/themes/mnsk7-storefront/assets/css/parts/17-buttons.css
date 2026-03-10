@@ -1,8 +1,29 @@
-/* 17-buttons — extracted from main.css */
+/* 17-buttons — jeden system: zaokrąglenia, wysokość, primary (audit: brak kwadratowych przycisków) */
 
-   § BUTTONS (global)
+   § GLOBAL BUTTON RESET — spójne zaokrąglenie (audit: brak kwadratowych przycisków w treści)
    ----------------------------------------------------------------- */
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce a.button.alt,
+.woocommerce button.button.alt,
+.woocommerce input.button.alt,
+a.button,
+.mnsk7-plp-chips-toggle,
+.mnsk7-plp-search__submit,
+.mnsk7-plp-load-more,
+.mnsk7-plp-reset.button,
+.mnsk7-plp-empty__cta.button,
+.mnsk7-footer__newsletter-btn,
+.mnsk7-hero__btn,
+.mnsk7-btn,
+.mnsk7-trust-cta__btn,
+.mnsk7-header__menu-toggle {
+  border-radius: var(--r-md) !important;
+}
 
+   § WOOCOMMERCE / THEME BUTTONS
+   ----------------------------------------------------------------- */
 /* Tap target min 44px (WCAG 2.5.5, UI_SPEC_V2 §4.1) */
 .woocommerce a.button,
 .woocommerce button.button,
