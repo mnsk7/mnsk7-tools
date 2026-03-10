@@ -340,6 +340,20 @@ body.single-product #content #secondary {
   color: var(--color-primary);
 }
 
+/* Link „Wróć do wyników wyszukiwania” nad okruszkami (gdy użytkownik przyszedł z wyszukiwania) */
+.mnsk7-pdp-back-search {
+  margin: 0 0 0.5rem;
+  font-size: var(--fs-sm);
+}
+.mnsk7-pdp-back-search__link {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
+.mnsk7-pdp-back-search__link:hover {
+  text-decoration: underline;
+}
+
 .woocommerce-tabs {
   margin-top: 2.5rem;
   width: 100%;

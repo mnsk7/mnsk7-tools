@@ -186,6 +186,33 @@ add_action( 'wp', function () {
 	add_action( 'woocommerce_single_product_summary', 'woocommerce_breadcrumb', 5 );
 } );
 
+/** PDP: link „Wróć do wyników wyszukiwania” gdy użytkownik przyszedł z wyszukiwania (lepsza nawigacja niż tylko kategoria) */
+add_action( 'woocommerce_single_product_summary', function () {
+	$referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
+	if ( $referer === '' ) {
+		return;
+	}
+	$ref_host = wp_parse_url( $referer, PHP_URL_HOST );
+	$home_host = wp_parse_url( home_url( '/' ), PHP_URL_HOST );
+	if ( $ref_host !== $home_host ) {
+		return;
+	}
+	if ( strpos( $referer, '?' ) === false ) {
+		return;
+	}
+	$parsed = wp_parse_url( $referer );
+	if ( empty( $parsed['query'] ) ) {
+		return;
+	}
+	parse_str( $parsed['query'], $q );
+	$is_search = ! empty( $q['s'] ) && ( empty( $q['post_type'] ) || $q['post_type'] === 'product' );
+	if ( ! $is_search ) {
+		return;
+	}
+	$search_url = home_url( '/' ) . '?s=' . rawurlencode( $q['s'] ) . '&post_type=product';
+	echo '<p class="mnsk7-pdp-back-search"><a href="' . esc_url( $search_url ) . '" class="mnsk7-pdp-back-search__link">' . esc_html__( '← Wróć do wyników wyszukiwania', 'mnsk7-storefront' ) . '</a></p>';
+}, 4 );
+
 /** PDP a11y: etykieta pola Ilość bez nazwy produktu (tylko „Ilość”) */
 add_filter( 'woocommerce_quantity_input_args', function ( $args, $product ) {
 	if ( is_singular( 'product' ) ) {
@@ -273,6 +300,15 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	if ( is_front_page() ) {
 		return '';
 	}
+	if ( function_exists( 'is_cart' ) && is_cart() ) {
+		return '';
+	}
+	if ( function_exists( 'is_checkout' ) && is_checkout() ) {
+		return '';
+	}
+	if ( is_page( 'dostawa-i-platnosci' ) ) {
+		return '';
+	}
 	$dostawa_url = home_url( '/dostawa-i-platnosci/' );
 	$link = '<a href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Warunki dostawy', 'mnsk7-storefront' ) . ' &rarr;</a>';
 	return sprintf(
@@ -282,18 +318,22 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	);
 }, 5 );
 
-/** Audit task 14: H1 na stronie Moje konto — zalogowani (dashboard) i goście (logowanie) */
+/** Audit task 14: H1 na stronie Moje konto — jeden nagłówek (zalogowani: przed nawigacją; goście: przed formularzem). Bez duplikatu. */
 add_action( 'woocommerce_before_account_navigation', function () {
 	if ( ! function_exists( 'is_account_page' ) || ! is_account_page() ) {
 		return;
 	}
-	echo '<h1 class="mnsk7-account-title entry-title">' . esc_html__( 'Moje konto', 'mnsk7-storefront' ) . '</h1>';
+	if ( is_user_logged_in() ) {
+		echo '<h1 class="mnsk7-account-title entry-title">' . esc_html__( 'Moje konto', 'mnsk7-storefront' ) . '</h1>';
+	}
 }, 5 );
 add_action( 'woocommerce_before_customer_login_form', function () {
 	if ( ! function_exists( 'is_account_page' ) || ! is_account_page() ) {
 		return;
 	}
-	echo '<h1 class="mnsk7-account-title entry-title">' . esc_html__( 'Moje konto', 'mnsk7-storefront' ) . '</h1>';
+	if ( ! is_user_logged_in() ) {
+		echo '<h1 class="mnsk7-account-title entry-title">' . esc_html__( 'Moje konto', 'mnsk7-storefront' ) . '</h1>';
+	}
 }, 1 );
 
 /** Audit: po logowaniu z checkout — przekierowanie z powrotem na zamówienie */
@@ -536,6 +576,14 @@ add_action( 'wp_footer', function () {
 					li.classList.toggle('is-open');
 					a.setAttribute('aria-expanded', li.classList.contains('is-open'));
 				});
+			});
+			// Mobile: po kliknięciu w dowolny link menu zamknij overlay, żeby nawigacja działała za pierwszym razem (Przewodnik, Dostawa, Kontakt)
+			menu.addEventListener('click', function(e) {
+				var a = e.target.closest('a');
+				if (a && a.getAttribute('href') && window.innerWidth <= 768 && nav) {
+					nav.classList.remove('is-open');
+					if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+				}
 			});
 		}
 		var searchToggle = document.querySelector('.mnsk7-header__search-toggle');

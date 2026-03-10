@@ -150,6 +150,15 @@
   border-color: var(--color-border);
 }
 
+.woocommerce-cart table.shop_table .product-name a {
+  color: var(--color-primary);
+  text-decoration: none;
+  font-weight: 600;
+}
+.woocommerce-cart table.shop_table .product-name a:hover {
+  text-decoration: underline;
+}
+
 .woocommerce-cart .product-remove .remove {
   font-size: 1.25rem;
   line-height: 1;

@@ -57,6 +57,10 @@ body.page #colophon.mnsk7-footer {
   overflow-wrap: break-word;
 }
 /* Audit task 5: pełny tekst „Darmowa dostawa od 300 zł. Tylko Polska.” — zawijanie zamiast obcięcia */
+/* Na stronie głównej ukryj (hero ma już ten tekst w USP) */
+.front-page .mnsk7-footer__dostawa-line {
+  display: none;
+}
 .mnsk7-footer__dostawa-line {
   margin: 0.75rem 0 0;
   font-size: 0.9375rem;

@@ -60,6 +60,8 @@ body.mnsk7-cookie-bar-visible #page {
   align-items: center;
   gap: 0.5rem;
   flex-shrink: 0;
+  position: relative;
+  z-index: 1;
 }
 
 .mnsk7-cookie-bar__btn {
@@ -74,9 +76,14 @@ body.mnsk7-cookie-bar-visible #page {
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
   min-height: 44px;
+  min-width: 44px;
   box-sizing: border-box;
   text-decoration: none;
   border: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  position: relative;
+  z-index: 1;
 }
 
 .mnsk7-cookie-bar__btn {

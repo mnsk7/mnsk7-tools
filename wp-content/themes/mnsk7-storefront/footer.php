@@ -145,7 +145,16 @@ if ( $show_theme_cookie_bar ) :
 	function hide() { bar.setAttribute('hidden', ''); bar.setAttribute('aria-hidden', 'true'); document.body.classList.remove('mnsk7-cookie-bar-visible'); }
 	if (document.cookie.indexOf(key + '=1') !== -1 || (typeof localStorage !== 'undefined' && localStorage.getItem(key) === '1')) { hide(); return; }
 	show();
-	bar.querySelector('.mnsk7-cookie-bar-accept').addEventListener('click', function() { accepted(); hide(); });
+	function onAccept(e) {
+		if (e) { e.preventDefault(); e.stopPropagation(); }
+		accepted();
+		hide();
+	}
+	var btn = bar.querySelector('.mnsk7-cookie-bar-accept');
+	if (btn) {
+		btn.addEventListener('click', function(e) { onAccept(e); }, false);
+		btn.addEventListener('touchend', function(e) { onAccept(e); }, { passive: false });
+	}
 })();
 <?php endif; ?>
 <script>

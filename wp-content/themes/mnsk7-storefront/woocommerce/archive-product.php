@@ -22,12 +22,23 @@ do_action( 'woocommerce_shop_loop_header' );
 echo '<div class="mnsk7-plp-archive-wrap col-full">';
 echo '<div class="mnsk7-plp-content col-full">';
 
-/* PLP-12: na stronie wyników wyszukiwania — link „Wyczyść wyszukiwanie" */
+/* PLP-12: na stronie wyników wyszukiwania — link „Wyczyść wyszukiwanie" i liczba wyników */
 if ( is_search() && get_query_var( 'post_type' ) === 'product' ) {
+	global $wp_query;
+	$found = isset( $wp_query->found_posts ) ? (int) $wp_query->found_posts : 0;
 	$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : get_permalink( wc_get_page_id( 'shop' ) );
 	if ( $shop_url ) {
 		echo '<p class="mnsk7-plp-search-clear col-full">';
 		echo '<a href="' . esc_url( $shop_url ) . '" class="mnsk7-plp-search-clear__link">' . esc_html__( 'Wyczyść wyszukiwanie', 'mnsk7-storefront' ) . '</a>';
+		if ( $found >= 0 ) {
+			echo ' <span class="mnsk7-plp-search-count">';
+			echo esc_html( sprintf(
+				/* translators: %d: number of products found */
+				_n( 'Znaleziono %d produkt', 'Znaleziono %d produktów', $found, 'mnsk7-storefront' ),
+				$found
+			) );
+			echo '</span>';
+		}
 		echo '</p>';
 	}
 }
