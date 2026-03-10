@@ -1,7 +1,8 @@
 /* 20-responsive-tablet — extracted from main.css */
 
 /* -----------------------------------------------------------------
-   § RESPONSIVE — Tablet / Mobile (≤ 768px)
+   § RESPONSIVE — Tablet / Mobile
+   Breakpoint 768px = --breakpoint-mobile (01-tokens.css), MNSK7_BREAKPOINT_MOBILE (PHP).
    ----------------------------------------------------------------- */
 
 @media (max-width: 768px) {

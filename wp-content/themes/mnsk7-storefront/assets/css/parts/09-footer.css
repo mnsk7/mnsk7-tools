@@ -346,6 +346,11 @@ body.page #colophon.mnsk7-footer {
   .mnsk7-footer__col.is-open .mnsk7-footer__title::after {
     transform: translateY(-50%) rotate(45deg);
   }
+  @media (prefers-reduced-motion: reduce) {
+    .mnsk7-footer__title::after {
+      transition: none;
+    }
+  }
   .mnsk7-footer__col .mnsk7-footer__newsletter-desc,
   .mnsk7-footer__col .mnsk7-footer__newsletter-form,
   .mnsk7-footer__col .mnsk7-footer__newsletter-privacy,

@@ -181,41 +181,47 @@ if ( $show_theme_cookie_bar ) :
 <?php endif; ?>
 <script>
 (function() {
-	var cols = document.querySelectorAll('.mnsk7-footer__col');
-	if (!cols.length) return;
-	function init() {
-		var isMobile = window.matchMedia('(max-width: 768px)').matches;
-		cols.forEach(function(col) {
+	var footer = document.getElementById('colophon') || document.querySelector('.mnsk7-footer');
+	if (!footer) return;
+	var breakpointPx = <?php echo (int) ( defined( 'MNSK7_BREAKPOINT_MOBILE' ) ? MNSK7_BREAKPOINT_MOBILE : 768 ); ?>;
+	var mq = '(max-width: ' + breakpointPx + 'px)';
+	// Jedna obsługa delegowana — zawsze podpięta, działa przy każdym ładowaniu i na mobile
+	footer.addEventListener('click', function(e) {
+		if (!window.matchMedia(mq).matches) return;
+		var title = e.target.closest('.mnsk7-footer__title');
+		if (!title) return;
+		var col = title.closest('.mnsk7-footer__col');
+		if (!col) return;
+		e.preventDefault();
+		col.classList.toggle('is-open');
+		title.setAttribute('aria-expanded', col.classList.contains('is-open'));
+	});
+	footer.addEventListener('keydown', function(e) {
+		if (!window.matchMedia(mq).matches) return;
+		if (e.key !== 'Enter' && e.key !== ' ') return;
+		var title = e.target.closest('.mnsk7-footer__title');
+		if (!title) return;
+		var col = title.closest('.mnsk7-footer__col');
+		if (!col) return;
+		e.preventDefault();
+		col.classList.toggle('is-open');
+		title.setAttribute('aria-expanded', col.classList.contains('is-open'));
+	});
+	// Ustaw role/aria na mobile
+	function setAria() {
+		if (!window.matchMedia(mq).matches) return;
+		footer.querySelectorAll('.mnsk7-footer__col').forEach(function(col) {
 			var title = col.querySelector('.mnsk7-footer__title');
 			if (!title) return;
-			if (title.getAttribute('data-accordion-bound') === 'true') return;
-			title.setAttribute('data-accordion-bound', 'true');
-			var isOpen = col.classList.contains('is-open') || col.hasAttribute('data-accordion-open');
-			if (isOpen) col.classList.add('is-open');
-			title.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-			if (col.id) title.setAttribute('aria-controls', col.id);
 			title.setAttribute('role', 'button');
 			title.setAttribute('tabindex', '0');
-			function toggle() {
-				if (!window.matchMedia('(max-width: 768px)').matches) return;
-				col.classList.toggle('is-open');
-				title.setAttribute('aria-expanded', col.classList.contains('is-open'));
-			}
-			title.addEventListener('click', toggle);
-			title.addEventListener('keydown', function(e) {
-				if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(); }
-			});
+			var open = col.classList.contains('is-open') || col.hasAttribute('data-accordion-open');
+			title.setAttribute('aria-expanded', open ? 'true' : 'false');
+			if (col.id) title.setAttribute('aria-controls', col.id);
 		});
 	}
-	function runInitWhenMobile() {
-		if (window.matchMedia('(max-width: 768px)').matches) init();
-	}
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', runInitWhenMobile);
-	} else {
-		runInitWhenMobile();
-	}
-	window.matchMedia('(max-width: 768px)').addEventListener('change', runInitWhenMobile);
+	setAria();
+	window.matchMedia(mq).addEventListener('change', setAria);
 })();
 </script>
 

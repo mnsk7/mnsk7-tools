@@ -173,79 +173,104 @@ if ( is_shop() && ! $is_taxonomy && taxonomy_exists( 'product_cat' ) ) {
 $use_table = is_shop() || $is_taxonomy;
 $GLOBALS['mnsk7_plp_use_table'] = $use_table;
 
+/* Jeden layout na request: mobile (user-agent) = karty, desktop = tabela. Bez duplikatu w DOM. */
+$plp_is_mobile = function_exists( 'mnsk7_is_mobile_request' ) && mnsk7_is_mobile_request();
+
 if ( woocommerce_product_loop() ) {
 	/* PLP-05/PLP-10: bez toolbara u góry — sortowanie i paginacja tylko na dole; przy tabeli tylko „Pokaż więcej” */
 	if ( $use_table ) {
-		if ( $is_taxonomy && $current_term && isset( $current_term->slug ) ) {
-			$is_tag = isset( $current_term->taxonomy ) && $current_term->taxonomy === 'product_tag';
-			$search_placeholder = $is_tag ? __( 'Szukaj w tagu…', 'mnsk7-storefront' ) : __( 'Szukaj w kategorii…', 'mnsk7-storefront' );
+		if ( $plp_is_mobile ) {
+			/* Mobile: tylko siatka kart (jedna pętla, bez tabeli w DOM). */
+			if ( $is_taxonomy && $current_term && isset( $current_term->slug ) ) {
+				$is_tag = isset( $current_term->taxonomy ) && $current_term->taxonomy === 'product_tag';
+				$search_placeholder = $is_tag ? __( 'Szukaj w tagu…', 'mnsk7-storefront' ) : __( 'Szukaj w kategorii…', 'mnsk7-storefront' );
+				?>
+				<div class="mnsk7-plp-search col-full">
+					<form role="search" method="get" class="mnsk7-plp-search__form" action="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">
+						<label for="mnsk7-plp-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
+						<input type="search" id="mnsk7-plp-search-input" class="mnsk7-plp-search__input" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php echo esc_attr( $search_placeholder ); ?>" />
+						<?php if ( $is_tag ) : ?>
+							<input type="hidden" name="product_tag" value="<?php echo esc_attr( $current_term->slug ); ?>" />
+						<?php else : ?>
+							<input type="hidden" name="product_cat" value="<?php echo esc_attr( $current_term->slug ); ?>" />
+						<?php endif; ?>
+						<button type="submit" class="mnsk7-plp-search__submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
+					</form>
+				</div>
+				<?php
+			}
+			if ( function_exists( 'mnsk7_render_trust_badges' ) ) {
+				echo '<div class="mnsk7-plp-trust-wrap col-full">';
+				mnsk7_render_trust_badges( 'mnsk7-plp-trust' );
+				echo '</div>';
+			}
+			echo '<div class="mnsk7-plp-grid-mobile col-full">';
+			woocommerce_product_loop_start();
+			if ( wc_get_loop_prop( 'total' ) ) {
+				while ( have_posts() ) {
+					the_post();
+					do_action( 'woocommerce_shop_loop' );
+					wc_get_template_part( 'content', 'product' );
+				}
+			}
+			woocommerce_product_loop_end();
+			echo '</div>';
+		} else {
+			/* Desktop/tablet: tylko tabela (bez siatki kart w DOM). */
+			if ( $is_taxonomy && $current_term && isset( $current_term->slug ) ) {
+				$is_tag = isset( $current_term->taxonomy ) && $current_term->taxonomy === 'product_tag';
+				$search_placeholder = $is_tag ? __( 'Szukaj w tagu…', 'mnsk7-storefront' ) : __( 'Szukaj w kategorii…', 'mnsk7-storefront' );
+				?>
+				<div class="mnsk7-plp-search col-full">
+					<form role="search" method="get" class="mnsk7-plp-search__form" action="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">
+						<label for="mnsk7-plp-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
+						<input type="search" id="mnsk7-plp-search-input" class="mnsk7-plp-search__input" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php echo esc_attr( $search_placeholder ); ?>" />
+						<?php if ( $is_tag ) : ?>
+							<input type="hidden" name="product_tag" value="<?php echo esc_attr( $current_term->slug ); ?>" />
+						<?php else : ?>
+							<input type="hidden" name="product_cat" value="<?php echo esc_attr( $current_term->slug ); ?>" />
+						<?php endif; ?>
+						<button type="submit" class="mnsk7-plp-search__submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
+					</form>
+				</div>
+				<?php
+			}
+			if ( function_exists( 'mnsk7_render_trust_badges' ) ) {
+				echo '<div class="mnsk7-plp-trust-wrap col-full">';
+				mnsk7_render_trust_badges( 'mnsk7-plp-trust' );
+				echo '</div>';
+			}
 			?>
-			<div class="mnsk7-plp-search col-full">
-				<form role="search" method="get" class="mnsk7-plp-search__form" action="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">
-					<label for="mnsk7-plp-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
-					<input type="search" id="mnsk7-plp-search-input" class="mnsk7-plp-search__input" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php echo esc_attr( $search_placeholder ); ?>" />
-					<?php if ( $is_tag ) : ?>
-						<input type="hidden" name="product_tag" value="<?php echo esc_attr( $current_term->slug ); ?>" />
-					<?php else : ?>
-						<input type="hidden" name="product_cat" value="<?php echo esc_attr( $current_term->slug ); ?>" />
-					<?php endif; ?>
-					<button type="submit" class="mnsk7-plp-search__submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
-				</form>
+			<div class="mnsk7-product-table-wrap col-full">
+				<table class="mnsk7-product-table shop_table">
+					<thead>
+						<tr>
+							<th class="mnsk7-table-cell--thumb"><?php esc_html_e( 'Zdjęcie', 'mnsk7-storefront' ); ?></th>
+							<th class="mnsk7-table-cell--title"><?php esc_html_e( 'Produkt', 'mnsk7-storefront' ); ?></th>
+							<th class="mnsk7-table-cell--price"><?php esc_html_e( 'Cena', 'mnsk7-storefront' ); ?></th>
+							<th class="mnsk7-table-cell--stock"><?php esc_html_e( 'Na stanie', 'mnsk7-storefront' ); ?></th>
+							<th class="mnsk7-table-cell--qty"><?php esc_html_e( 'Ilość', 'mnsk7-storefront' ); ?></th>
+							<th class="mnsk7-table-cell--action"><?php esc_html_e( 'Akcja', 'mnsk7-storefront' ); ?></th>
+						</tr>
+					</thead>
+					<tbody>
+					<?php
+					while ( have_posts() ) {
+						the_post();
+						global $product;
+						if ( ! is_a( $product, WC_Product::class ) ) {
+							$product = wc_get_product( get_the_ID() );
+						}
+						wc_get_template_part( 'content', 'product-table-row' );
+					}
+					?>
+					</tbody>
+				</table>
 			</div>
 			<?php
 		}
-		/* Trust badges przy tabeli — tak jak w kartce produktu (dostawa, faktura, zwroty) */
-		if ( function_exists( 'mnsk7_render_trust_badges' ) ) {
-			echo '<div class="mnsk7-plp-trust-wrap col-full">';
-			mnsk7_render_trust_badges( 'mnsk7-plp-trust' );
-			echo '</div>';
-		}
-		?>
-		<div class="mnsk7-product-table-wrap col-full">
-			<table class="mnsk7-product-table shop_table">
-				<thead>
-					<tr>
-						<th class="mnsk7-table-cell--thumb"><?php esc_html_e( 'Zdjęcie', 'mnsk7-storefront' ); ?></th>
-						<th class="mnsk7-table-cell--title"><?php esc_html_e( 'Produkt', 'mnsk7-storefront' ); ?></th>
-						<th class="mnsk7-table-cell--price"><?php esc_html_e( 'Cena', 'mnsk7-storefront' ); ?></th>
-						<th class="mnsk7-table-cell--stock"><?php esc_html_e( 'Na stanie', 'mnsk7-storefront' ); ?></th>
-						<th class="mnsk7-table-cell--qty"><?php esc_html_e( 'Ilość', 'mnsk7-storefront' ); ?></th>
-						<th class="mnsk7-table-cell--action"><?php esc_html_e( 'Akcja', 'mnsk7-storefront' ); ?></th>
-					</tr>
-				</thead>
-				<tbody>
-				<?php
-				while ( have_posts() ) {
-					the_post();
-					global $product;
-					if ( ! is_a( $product, WC_Product::class ) ) {
-						$product = wc_get_product( get_the_ID() );
-					}
-					wc_get_template_part( 'content', 'product-table-row' );
-				}
-				?>
-				</tbody>
-			</table>
-		</div>
-		<?php
-		/* PLP-09: na mobile (≤768px) grid zamiast tabeli — drugi loop w ukrytym kontenerze */
-		rewind_posts();
-		echo '<div class="mnsk7-plp-grid-mobile col-full">';
-		woocommerce_product_loop_start();
-		if ( wc_get_loop_prop( 'total' ) ) {
-			while ( have_posts() ) {
-				the_post();
-				do_action( 'woocommerce_shop_loop' );
-				wc_get_template_part( 'content', 'product' );
-			}
-		}
-		woocommerce_product_loop_end();
-		echo '</div>';
-		rewind_posts();
-		?>
-		<?php
-		/* Przy kilku stronach: przycisk „Pokaż więcej” — JS ładuje następne wiersze w tabelę (AJAX), bez przejścia na page/2 */
-		if ( $use_table ) {
+		/* Przy kilku stronach (desktop): przycisk „Pokaż więcej” — AJAX. Na mobile paginacja z after_shop_loop. */
+		if ( $use_table && ! $plp_is_mobile ) {
 			$paged = max( 1, get_query_var( 'paged' ) );
 			$total_pages = $GLOBALS['wp_query']->max_num_pages;
 			$total = (int) $GLOBALS['wp_query']->found_posts;

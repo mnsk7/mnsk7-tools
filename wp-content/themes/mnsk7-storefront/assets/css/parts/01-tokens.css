@@ -66,6 +66,13 @@
   --content-max: 1200px;
   --header-h:            52px;
   --header-h-scrolled:   44px;
+
+  /* Breakpoints — jeden źródło (wartość używana w media queries i w PHP/JS).
+   * W @media trzeba wpisać wartość liczbową (CSS nie obsługuje var() w media queries).
+   * Odpowiednik w PHP: MNSK7_BREAKPOINT_MOBILE. */
+  --breakpoint-mobile:   768px;
+  --breakpoint-mobile-narrow: 360px;
+  --breakpoint-tablet:   900px;
   --space-4:  4px;
   --space-8:  8px;
   --space-12: 12px;
@@ -75,5 +82,16 @@
   --space-40: 40px;
   --space-48: 48px;
   --space-64: 64px;
+}
+
+/* prefers-reduced-motion: wyłącz/uprość animacje (WCAG, dostępność) */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
