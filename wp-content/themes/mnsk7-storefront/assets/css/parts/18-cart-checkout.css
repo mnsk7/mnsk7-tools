@@ -139,6 +139,23 @@
   border-radius: var(--r-md);
 }
 
+/* Mobile: avoid clipping price (e.g. "zł") and product name */
+@media (max-width: 768px) {
+  .woocommerce-cart table.shop_table td {
+    padding: 0.5rem 0.35rem;
+    word-break: break-word;
+    overflow: visible;
+  }
+  .woocommerce-cart table.shop_table td.product-price {
+    white-space: nowrap;
+    min-width: 4.5em;
+  }
+  .woocommerce-cart table.shop_table .product-name {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
 .woocommerce-cart table.shop_table th {
   font-weight: 600;
   font-size: var(--fs-sm);
