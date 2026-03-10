@@ -52,6 +52,36 @@
   letter-spacing: 0.01em;
 }
 
+/* Hero: materiały jako chipy (TASK 11 — nie zwykły tekst) */
+.mnsk7-hero__materials {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  margin: 0 0 2rem;
+  list-style: none;
+  padding: 0;
+}
+.mnsk7-hero__material-chip {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.4rem 0.9rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.95);
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+.mnsk7-hero__material-chip:hover {
+  background: rgba(255, 255, 255, 0.28);
+  border-color: rgba(255, 255, 255, 0.5);
+}
+
 /* USP pills — audit: brak obcięcia ostatniego chipa (flex-wrap, bez overflow) */
 .mnsk7-hero__usps {
   display: flex;
@@ -78,7 +108,7 @@
 }
 
 .mnsk7-hero__usp-icon {
-  font-size: 1rem;
+  font-size: var(--fs-base);
   line-height: 1;
 }
 .mnsk7-hero__welcome {
@@ -106,7 +136,7 @@
 .mnsk7-hero__ctas {
   display: flex;
   justify-content: center;
-  gap: 1rem;
+  gap: var(--space-16);
 }
 
 /* CRO: główny CTA hero — wyraźnie dominujący (jeden przycisk) */
@@ -129,8 +159,8 @@
   background: var(--color-white);
   color: var(--color-primary);
   box-shadow: 0 4px 20px rgba(0,0,0,0.2), 0 2px 8px rgba(0,0,0,0.12);
-  padding: 1rem 2.5rem;
-  font-size: 1.125rem;
+  padding: var(--space-16) 2.5rem;
+  font-size: var(--fs-lg);
 }
 
 .mnsk7-hero__btn--primary:hover {
@@ -143,15 +173,16 @@
 
 /* Sections */
 .mnsk7-section {
-  padding: 3rem 0;
+  padding: var(--space-48) 0;
 }
 
 .mnsk7-section--light {
   background: var(--color-surface);
 }
-/* Przeglądaj asortyment — białe tło sekcji, chipy białe z czarną ramką, hover/active niebieski */
-.mnsk7-section--catalog {
-  background: var(--color-white);
+/* Przeglądaj asortyment (TASK 12) — białe tło, chipy białe z czarną ramką, hover niebieski */
+.mnsk7-section--catalog.mnsk7-section--light,
+.mnsk7-section.mnsk7-section--catalog {
+  background: var(--color-white) !important;
 }
 .mnsk7-section--catalog .mnsk7-tags-chip {
   background: var(--color-white);
@@ -326,7 +357,7 @@
 .mnsk7-cats--catalog {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
+  gap: var(--space-16);
   width: 100%;
   min-width: 0;
 }
@@ -349,8 +380,8 @@
   display: flex;
   flex-direction: row;
   align-items: center;
-  gap: 1rem;
-  padding: 1rem 1.25rem;
+  gap: var(--space-16);
+  padding: var(--space-16) 1.25rem;
   min-width: 0;
   background: var(--color-white);
   border: 1px solid var(--color-border);
@@ -421,7 +452,7 @@
 }
 
 .mnsk7-cats__icon {
-  font-size: 1.75rem;
+  font-size: var(--fs-xl);
   line-height: 1;
   color: var(--color-text-muted);
 }
@@ -441,9 +472,9 @@
 .mnsk7-trust-stats {
   display: flex;
   flex-wrap: wrap;
-  gap: 2rem;
+  gap: var(--space-32);
   justify-content: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-32);
 }
 
 .mnsk7-trust-stats__item {
@@ -581,7 +612,7 @@
 .mnsk7-loyalty-tiers {
   display: flex;
   flex-wrap: wrap;
-  gap: 1rem;
+  gap: var(--space-16);
   justify-content: center;
 }
 
@@ -592,7 +623,7 @@
   background: var(--color-white);
   border: 1px solid var(--color-border);
   border-radius: var(--r-md);
-  padding: 1.5rem 1.25rem;
+  padding: var(--space-24) 1.25rem;
   min-width: 140px;
   text-align: center;
   transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
@@ -711,7 +742,7 @@
 /* Instagram section — wyśrodkowana, tło */
 .mnsk7-section--insta {
   background: var(--color-surface);
-  padding: 3rem 0;
+  padding: var(--space-48) 0;
 }
 .mnsk7-section--insta .mnsk7-instagram-feed--profile {
   min-height: 60vh;
@@ -756,7 +787,7 @@
   min-width: 0;
   padding: 0;
   background: var(--color-surface, #fff);
-  border-radius: 12px;
+  border-radius: var(--r-md);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   overflow: hidden;
 }
@@ -830,7 +861,7 @@
 }
 
 .mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot.is-active {
-  background: var(--color-primary, #0d6efd);
+  background: var(--color-primary);
   transform: scale(1.15);
 }
 
@@ -843,7 +874,7 @@
 .mnsk7-instagram-feed--card .mnsk7-instagram-feed__more-link {
   font-size: var(--fs-sm);
   font-weight: 600;
-  color: var(--color-primary, #0d6efd);
+  color: var(--color-primary);
   text-decoration: none;
 }
 
@@ -878,18 +909,18 @@
 .mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile-btn {
   flex-shrink: 0;
   padding: 0.4rem 0.75rem;
-  font-size: 0.8125rem;
+  font-size: var(--fs-xs);
   font-weight: 600;
-  color: var(--color-primary, #0d6efd);
+  color: var(--color-primary);
   background: transparent;
-  border: 1px solid var(--color-primary, #0d6efd);
-  border-radius: 6px;
+  border: 1px solid var(--color-primary);
+  border-radius: 6px; /* no --r- token for 6px */
   text-decoration: none;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
 .mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile-btn:hover {
-  background: var(--color-primary, #0d6efd);
+  background: var(--color-primary);
   color: #fff;
 }
 
@@ -913,7 +944,7 @@
 }
 .mnsk7-instagram-profile-embed {
   width: 100%;
-  border-radius: 12px;
+  border-radius: var(--r-md);
   overflow: hidden;
   background: #fafafa;
 }
@@ -927,13 +958,13 @@
 
 @media (max-width: 768px) {
   .mnsk7-section--insta {
-    padding: 2rem 0;
+    padding: var(--space-32) 0;
   }
   .mnsk7-section--insta .col-full {
-    padding: 0 1rem;
+    padding: 0 var(--space-16);
   }
   .mnsk7-instagram-profile-embed {
-    border-radius: 8px;
+    border-radius: var(--r-sm);
     margin: 0;
   }
   .mnsk7-instagram-profile-embed iframe {
@@ -965,7 +996,7 @@
 @media (min-width: 1200px) {
   .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts {
     grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
+    gap: var(--space-32);
   }
 }
 
@@ -982,7 +1013,7 @@
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media {
   min-height: 380px;
   background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
-  border-radius: 12px;
+  border-radius: var(--r-md);
 }
 
 @media (min-width: 600px) {
@@ -997,18 +1028,18 @@
   align-items: center;
   justify-content: center;
   min-height: 44px;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem var(--space-16);
   margin-top: 0.5rem;
   font-size: var(--fs-sm);
   font-weight: 600;
-  color: var(--color-primary, #0d6efd);
+  color: var(--color-primary);
   text-decoration: none;
-  border: 2px solid var(--color-primary, #0d6efd);
-  border-radius: 8px;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--r-sm);
   background: #fff;
 }
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post-fallback:hover {
-  background: var(--color-primary, #0d6efd);
+  background: var(--color-primary);
   color: #fff;
 }
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post:has(iframe) .mnsk7-instagram-feed__post-fallback {
@@ -1058,18 +1089,18 @@
 
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile-btn {
   padding: 0.4rem 0.75rem;
-  font-size: 0.8125rem;
+  font-size: var(--fs-xs);
   font-weight: 600;
-  color: var(--color-primary, #0d6efd);
+  color: var(--color-primary);
   background: transparent;
-  border: 1px solid var(--color-primary, #0d6efd);
-  border-radius: 6px;
+  border: 1px solid var(--color-primary);
+  border-radius: 6px; /* no --r- token for 6px */
   text-decoration: none;
   transition: background 0.2s ease, color 0.2s ease;
 }
 
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile-btn:hover {
-  background: var(--color-primary, #0d6efd);
+  background: var(--color-primary);
   color: #fff;
 }
 
@@ -1083,7 +1114,7 @@
 .mnsk7-instagram-feed__grid {
   display: grid !important;
   grid-template-columns: repeat(3, minmax(140px, 1fr)) !important;
-  gap: 1rem !important;
+  gap: var(--space-16) !important;
   justify-items: stretch;
   margin: 1.25rem auto;
   width: 100% !important;
@@ -1286,7 +1317,7 @@
 @media (max-width: 900px) {
   .mnsk7-section--bestsellers ul.products {
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 1rem !important;
+    gap: var(--space-16) !important;
   }
 }
 

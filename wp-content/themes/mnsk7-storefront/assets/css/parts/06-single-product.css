@@ -54,16 +54,27 @@ body.single-product #content #secondary {
   flex-direction: column;
   gap: 0;
 }
-/* Stock („X w magazynie”) wizualnie przy CTA — flex order: dostępność nad przyciskiem */
-.single-product .summary .mnsk7-product-availability,
-.single-product .summary .mnsk7-product-availability-row {
+/* Kolejność wizualna PDP: okruszki → tytuł → cena + „X osób kupiło” → dostępność → reszta (parametry, CTA, trust) */
+.single-product .summary.entry-summary.mnsk7-pdp-buybox > * {
+  order: 10;
+}
+.single-product .summary .mnsk7-breadcrumb-wrap {
+  order: 0;
+}
+.single-product .summary .product_title {
   order: 1;
 }
-.single-product .summary form.cart {
+.single-product .summary .mnsk7-pdp-price-row {
   order: 2;
 }
-.single-product .summary .mnsk7-product-trust {
+.single-product .summary .mnsk7-product-availability-row {
   order: 3;
+}
+.single-product .summary form.cart {
+  order: 10;
+}
+.single-product .summary .mnsk7-product-trust {
+  order: 10;
 }
 
 .single-product .images img {
@@ -140,6 +151,11 @@ body.single-product #content #secondary {
 }
 .mnsk7-pdp-price-row .price,
 .mnsk7-pdp-price-row .mnsk7-product-sold-count { margin: 0; }
+.mnsk7-pdp-price-row .mnsk7-product-sold-count {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text-muted, #555);
+}
 
 .single-product .summary .price del {
   color: var(--color-text-muted);

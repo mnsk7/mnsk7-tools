@@ -302,13 +302,7 @@ function mnsk7_single_product_availability() {
 		. '<i class="mnsk7-product-trust__badge-icon">&#10003;</i> '
 		. esc_html( $text )
 		. '</p>';
-	$sales = (int) $product->get_total_sales();
-	if ( $sales >= 5 ) {
-		echo '<span class="mnsk7-product-trust__badge mnsk7-product-trust__badge--sales">'
-			. '<i class="mnsk7-product-trust__badge-icon" aria-hidden="true">&#9733;</i> '
-			. sprintf( _n( '%d osoba kupiła', '%d osób kupiło', $sales, 'mnsk7-tools' ), $sales )
-			. '</span>';
-	}
+	/* „X osób kupiło” wyświetla motyw przy cenie (hooks 14/16) — tu tylko dostępność */
 	echo '</div>';
 }
 

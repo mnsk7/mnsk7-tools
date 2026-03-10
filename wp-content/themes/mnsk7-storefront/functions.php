@@ -30,6 +30,7 @@ function mnsk7_is_mobile_request() {
  * Używane dla body_class i menu: ten sam kontekst niezależnie od ?filter_* (żeby filtry
  * nie przełączały na inny header/layout). Fallback na get_queried_object(), bo przy
  * parametrach filter_* pluginy mogą zmieniać stan is_shop() / is_product_taxonomy().
+ * Dodatkowy fallback po ścieżce URL — gdy główny zapytanie zostało zmienione przez plugin.
  *
  * @return bool True gdy jesteśmy na archiwum sklepu, kategorii lub tagu produktu.
  */
@@ -44,6 +45,63 @@ function mnsk7_is_plp_archive() {
 	if ( $obj instanceof WP_Term && isset( $obj->taxonomy ) && in_array( $obj->taxonomy, array( 'product_cat', 'product_tag' ), true ) ) {
 		return true;
 	}
+	// Fallback po ścieżce URL: pluginy z filter_* czasem zmieniają main query, wtedy is_shop()/is_product_taxonomy() = false.
+	// Żeby header i body_class były takie same — traktuj request jako PLP, gdy ścieżka to sklep lub taksonomia.
+	return mnsk7_is_plp_url_path();
+}
+
+/**
+ * Czy bieżący request (ścieżka URL) to strona sklepu lub archiwum kategorii/tagu produktu.
+ * Używane gdy main query mógł zostać zmieniony (np. przez plugin filtrów).
+ *
+ * @return bool
+ */
+function mnsk7_is_plp_url_path() {
+	$req_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+	if ( $req_uri === '' ) {
+		return false;
+	}
+	$path = trim( (string) wp_parse_url( 'http://dummy' . $req_uri, PHP_URL_PATH ), '/' );
+	if ( $path === '' ) {
+		// Strona główna — może być ustawiona na sklep
+		if ( get_option( 'show_on_front' ) === 'page' && (int) get_option( 'page_on_front' ) === (int) ( function_exists( 'wc_get_page_id' ) ? wc_get_page_id( 'shop' ) : 0 ) ) {
+			return true;
+		}
+		return false;
+	}
+	$path_segments = array_filter( explode( '/', $path ), 'strlen' );
+	$first = isset( $path_segments[0] ) ? $path_segments[0] : '';
+
+	// Ścieżka strony sklepu (np. sklep lub sklep/kategoria)
+	if ( function_exists( 'wc_get_page_id' ) ) {
+		$shop_id = wc_get_page_id( 'shop' );
+		if ( $shop_id > 0 ) {
+			$shop_page = get_post( $shop_id );
+			if ( $shop_page && ! empty( $shop_page->post_name ) ) {
+				$shop_slug = $shop_page->post_name;
+				if ( $first === $shop_slug ) {
+					return true;
+				}
+			}
+		}
+	}
+
+	// Ścieżka archiwum kategorii/tagu (np. kategoria-produktu/frezy lub tag-produktu/xxx)
+	if ( taxonomy_exists( 'product_cat' ) ) {
+		$tax = get_taxonomy( 'product_cat' );
+		$cat_base = ( $tax && ! empty( $tax->rewrite['slug'] ) ) ? $tax->rewrite['slug'] : 'product-category';
+		if ( $first === $cat_base ) {
+			return true;
+		}
+	}
+	if ( taxonomy_exists( 'product_tag' ) ) {
+		$tax = get_taxonomy( 'product_tag' );
+		$tag_base = ( $tax && ! empty( $tax->rewrite['slug'] ) ) ? $tax->rewrite['slug'] : 'product-tag';
+		if ( $first === $tag_base ) {
+			return true;
+		}
+	}
+
 	return false;
 }
 
@@ -225,6 +283,22 @@ add_action( 'wp', function () {
 	add_action( 'woocommerce_single_product_summary', 'woocommerce_breadcrumb', 5 );
 	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10 );
 } );
+
+/** PDP: cena + „X osób kupiło” w jednym rzędzie (otwarcie wrappera przed ceną) */
+add_action( 'woocommerce_single_product_summary', function () {
+	echo '<div class="mnsk7-pdp-price-row">';
+}, 14 );
+/** PDP: zamknięcie wrappera ceny + wyświetlenie „X osób kupiło” obok ceny */
+add_action( 'woocommerce_single_product_summary', function () {
+	global $product;
+	if ( $product && is_a( $product, 'WC_Product' ) ) {
+		$sales = (int) $product->get_total_sales();
+		if ( $sales > 0 ) {
+			echo '<span class="mnsk7-product-sold-count">' . esc_html( sprintf( _n( '%d osoba kupiła', '%d osób kupiło', $sales, 'mnsk7-storefront' ), $sales ) ) . '</span>';
+		}
+	}
+	echo '</div>';
+}, 16 );
 
 /** PDP: link „Wróć do wyników wyszukiwania” gdy użytkownik przyszedł z wyszukiwania (lepsza nawigacja niż tylko kategoria) */
 add_action( 'woocommerce_single_product_summary', function () {

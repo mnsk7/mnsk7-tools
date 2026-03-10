@@ -240,6 +240,10 @@
   outline-offset: 2px;
 }
 
+/* Moje konto — jeden H1 (nasz z hooka), ukryć duplikat z szablonu strony */
+.woocommerce-account .entry-header {
+  display: none;
+}
 /* Moje konto — layout stabilny, w obrębie content-max */
 .woocommerce-account .entry-content,
 .woocommerce-account .woocommerce-MyAccount-content,

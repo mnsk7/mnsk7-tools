@@ -14,7 +14,14 @@ get_header();
 	<section class="mnsk7-hero">
 		<div class="mnsk7-hero__inner col-full">
 			<h1 class="mnsk7-hero__title"><?php esc_html_e( 'Frezy CNC i narzędzia skrawające', 'mnsk7-storefront' ); ?></h1>
-			<p class="mnsk7-hero__sub"><?php esc_html_e( 'Drewno · MDF · Aluminium · Stal · Tworzywa sztuczne', 'mnsk7-storefront' ); ?></p>
+			<div class="mnsk7-hero__materials" aria-label="<?php esc_attr_e( 'Materiały', 'mnsk7-storefront' ); ?>">
+				<?php
+				$materials = array( 'Drewno', 'MDF', 'Aluminium', 'Stal', __( 'Tworzywa sztuczne', 'mnsk7-storefront' ) );
+				foreach ( $materials as $mat ) {
+					echo '<span class="mnsk7-hero__material-chip">' . esc_html( $mat ) . '</span>';
+				}
+				?>
+			</div>
 			<div class="mnsk7-hero__usps">
 				<div class="mnsk7-hero__usp">
 					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
