@@ -43,8 +43,8 @@
 
 ## 5. Hash commit
 
-(будет заполнен после `git commit`)
+`7fc7e67`
 
 ## 6. Подтверждение push в main
 
-(будет подтверждено после `git push`)
+Push wykonany: `726b8c5..7fc7e67  main -> main` (origin).
