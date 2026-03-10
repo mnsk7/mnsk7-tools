@@ -212,27 +212,64 @@ body.tax-product_tag .mnsk7-catalog-filters {
   margin-bottom: 0.75rem;
 }
 
+/* Mobile: label + scroll container — label nie nakłada się na chipy (brak białej paski) */
+.mnsk7-plp-chips--attrs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-width: 0;
+}
+.mnsk7-plp-chips__label {
+  flex-shrink: 0;
+}
+.mnsk7-plp-chips__scroll {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
 @media (max-width: 768px) {
   .mnsk7-plp-chips {
     flex-wrap: nowrap;
+    overflow-x: visible;
+    overflow-y: hidden;
+    margin-left: 0;
+    margin-right: 0;
+    padding-bottom: 0.25rem;
+  }
+  .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs) {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .mnsk7-plp-chips--attrs {
+    flex-wrap: nowrap;
+    overflow: visible;
+  }
+  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__label {
+    flex-shrink: 0;
+    position: static;
+    background: transparent;
+    padding-right: 0.25rem;
+  }
+  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
+    flex: 1 1 auto;
+    min-width: 0;
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
-    padding-bottom: 0.25rem;
-    margin-left: 0;
-    margin-right: 0;
-  }
-  .mnsk7-plp-chips__label {
-    flex-shrink: 0;
-  }
-  /* Metka (Średnica:, Długość L:) zostaje przy lewej krawędzi przy poziomym scrollu */
-  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__label {
-    position: sticky;
-    left: 0;
-    z-index: 1;
-    background: var(--color-bg);
-    padding-right: 0.35rem;
+    flex-wrap: nowrap;
+    gap: 0.4rem;
+    padding: 0.15rem 0.5rem 0.15rem 0;
+    margin: 0 -0.5rem 0 0;
+    /* Wskazówka: można przewijać w prawo */
+    mask-image: linear-gradient(to left, transparent 0%, black 12px);
+    -webkit-mask-image: linear-gradient(to left, transparent 0%, black 12px);
   }
 }
 
@@ -655,14 +692,14 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
 }
 
 @media (max-width: 768px) {
-  .mnsk7-plp-chips {
+  .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs) {
     gap: 0.4rem;
   }
   .mnsk7-plp-chip {
     padding: 0.4rem 0.75rem;
     font-size: var(--fs-xs);
   }
-  .mnsk7-plp-chips__label {
+  .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs) .mnsk7-plp-chips__label {
     width: 100%;
     margin-bottom: 0.25rem;
     margin-right: 0;
@@ -713,14 +750,15 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
 }
 @media (max-width: 767px) {
   .mnsk7-product-table-wrap {
-    display: none;
+    display: none !important;
   }
   .mnsk7-plp-grid-mobile {
     display: block;
     margin-bottom: 1rem;
   }
   .mnsk7-plp-grid-mobile ul.products {
-    grid-template-columns: 1fr;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
   }
   /* Nazwa i cena zawsze widoczne w siatce mobilnej (ta sama karta co bestsellery) */
   .mnsk7-plp-grid-mobile .woocommerce-loop-product__title,
@@ -734,6 +772,11 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
     display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
+  }
+}
+@media (max-width: 360px) {
+  .mnsk7-plp-grid-mobile ul.products {
+    grid-template-columns: 1fr !important;
   }
 }
 

@@ -98,6 +98,7 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 		$hidden     = array_slice( $chips_list, $plp_chips_limit, null, true );
 		echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="' . esc_attr( $aria_label ) . '">';
 		echo '<span class="mnsk7-plp-chips__label">' . esc_html( $attribute_filter['label'] ) . '</span>';
+		echo '<div class="mnsk7-plp-chips__scroll">';
 		foreach ( $visible as $slug => $label ) {
 			$url    = add_query_arg( $param, $slug );
 			$active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) === $slug;
@@ -113,6 +114,7 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 			echo '</span>';
 			echo '<button type="button" class="mnsk7-plp-chips-toggle" data-controls="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" aria-expanded="false">' . esc_html__( 'Więcej', 'mnsk7-storefront' ) . '</button>';
 		}
+		echo '</div>';
 		echo '</div>';
 	};
 

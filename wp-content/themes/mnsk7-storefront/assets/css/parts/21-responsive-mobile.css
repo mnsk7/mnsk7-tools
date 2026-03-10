@@ -1,16 +1,31 @@
-/* 21-responsive-mobile — Mobile (≤ 480px) */
+/* 21-responsive-mobile — Mobile: 2 kolumny gdzie sensowne, 1 kol. tylko na bardzo wąskich */
+
+@media (max-width: 768px) {
+  body,
+  .site,
+  #page {
+    overflow-x: hidden;
+  }
+  .site-content,
+  #content {
+    overflow-x: hidden;
+    max-width: 100%;
+  }
+}
 
 @media (max-width: 480px) {
-  /* Product grids: single column */
+  /* Product grids: 2 columns (bestsellery, PLP, related — spójny układ) */
   .woocommerce ul.products,
   .woocommerce-page ul.products {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
   }
 
   .related.products ul.products,
   .upsells.products ul.products,
   .cross-sells ul.products {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 0.75rem !important;
   }
 
   /* Categories: 2 columns (compact on small screens) */
@@ -61,6 +76,19 @@
   /* Delivery table responsive */
   .mnsk7-delivery-rules {
     overflow-x: auto;
+  }
+}
+
+/* Bardzo wąskie ekrany (≤360px): 1 kolumna, żeby karty nie były za małe */
+@media (max-width: 360px) {
+  .woocommerce ul.products,
+  .woocommerce-page ul.products {
+    grid-template-columns: 1fr !important;
+  }
+  .related.products ul.products,
+  .upsells.products ul.products,
+  .cross-sells ul.products {
+    grid-template-columns: 1fr !important;
   }
 }
 

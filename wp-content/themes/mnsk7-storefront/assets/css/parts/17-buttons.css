@@ -1,7 +1,29 @@
 /* 17-buttons — extracted from main.css */
 
-   § BUTTONS (global)
+   § BUTTONS (global) — jeden system: zaokrąglenia, wysokość, primary
    ----------------------------------------------------------------- */
+
+/* Wszystkie przyciski (theme + WooCommerce + PLP) — brak „kwadratowych” wyjątków */
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce a.button.alt,
+.woocommerce button.button.alt,
+.woocommerce input.button.alt,
+a.button,
+button.button,
+.button,
+.mnsk7-plp-chips-toggle,
+.mnsk7-plp-search__submit,
+.mnsk7-plp-reset.button,
+.mnsk7-plp-empty__cta.button,
+.mnsk7-footer__newsletter-btn,
+.mnsk7-hero__btn,
+.mnsk7-btn,
+input[type="submit"],
+button[type="submit"] {
+  border-radius: var(--r-md) !important;
+}
 
 /* Tap target min 44px (WCAG 2.5.5, UI_SPEC_V2 §4.1) */
 .woocommerce a.button,
