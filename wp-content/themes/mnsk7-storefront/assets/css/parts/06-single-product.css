@@ -234,9 +234,29 @@ body.single-product #content #secondary {
   outline-offset: 1px;
 }
 
-/* Ukryj domyślne dropdowny wariacji — wybór tylko w tabeli Kluczowe parametry */
+/* TASK 17: Pokazać standardowy UI wariacji WooCommerce (product options), nie tylko tabelę Kluczowe parametry */
 .single-product form.cart .variations {
-  display: none !important;
+  margin-bottom: 0.75rem;
+}
+.single-product form.cart .variations tr {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+}
+.single-product form.cart .variations .label {
+  font-weight: 600;
+  font-size: var(--fs-sm);
+  color: var(--color-text);
+}
+.single-product form.cart .variations select {
+  min-height: 44px;
+  padding: 0.5rem 2rem 0.5rem 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-sm);
+  font-family: var(--font-base);
+  font-size: var(--fs-sm);
 }
 
 .mnsk7-product-zastosowanie {
