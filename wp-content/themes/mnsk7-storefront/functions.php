@@ -443,6 +443,9 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	if ( is_page( 'dostawa-i-platnosci' ) ) {
 		return '';
 	}
+	if ( is_page( 'kontakt' ) ) {
+		return '';
+	}
 	$dostawa_url = home_url( '/dostawa-i-platnosci/' );
 	$link = '<a href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Warunki dostawy', 'mnsk7-storefront' ) . ' &rarr;</a>';
 	return sprintf(
