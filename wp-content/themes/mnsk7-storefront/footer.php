@@ -135,8 +135,36 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 		</div>
 	</div>
 </footer>
-
-<?php /* Accordion: assets/js/footer-accordion.js (enqueue w functions.php). */ ?>
+<script>
+(function() {
+	var mq = window.matchMedia('(max-width: 768px)');
+	function initFooterAccordion() {
+		var footer = document.getElementById('colophon') || document.querySelector('.mnsk7-footer');
+		if (!footer) return;
+		function toggle(trigger) {
+			var col = trigger && trigger.closest('.mnsk7-footer__col');
+			if (!col) return;
+			var open = col.classList.toggle('is-open');
+			trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+		}
+		footer.addEventListener('click', function(e) {
+			if (!mq.matches) return;
+			var t = e.target && e.target.closest && e.target.closest('.mnsk7-footer__accordion-trigger');
+			if (t) { e.preventDefault(); e.stopPropagation(); toggle(t); }
+		});
+		footer.addEventListener('keydown', function(e) {
+			if (!mq.matches) return;
+			var t = e.target && e.target.closest && e.target.closest('.mnsk7-footer__accordion-trigger');
+			if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggle(t); }
+		});
+	}
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initFooterAccordion);
+	} else {
+		initFooterAccordion();
+	}
+})();
+</script>
 
 </div><!-- #page -->
 <?php

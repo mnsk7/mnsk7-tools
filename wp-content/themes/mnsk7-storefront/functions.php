@@ -666,7 +666,8 @@ add_action( 'wp_enqueue_scripts', function () {
 	}
 	wp_enqueue_style( 'mnsk7-storefront-style', get_stylesheet_uri(), $child_deps, $v );
 	wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( 'mnsk7-storefront-style' ), $v );
-	wp_enqueue_script( 'mnsk7-footer-accordion', get_stylesheet_directory_uri() . '/assets/js/footer-accordion.js', array(), $v, true );
+	// Footer accordion: init inline w footer.php (niezawodne na mobile); zewnętrzny plik opcjonalnie jako backup.
+	// wp_enqueue_script( 'mnsk7-footer-accordion', get_stylesheet_directory_uri() . '/assets/js/footer-accordion.js', array(), $v, true );
 	/* Inline: tylko Instagram karta — tylko gdy na stronie jest shortcode (front page lub treść z [mnsk7_instagram_feed]). */
 	$need_insta_inline = is_front_page();
 	if ( ! $need_insta_inline && is_singular() ) {
@@ -842,22 +843,20 @@ add_action( 'wp_footer', function () {
 				setMenuAria();
 			});
 		}
-		// Mobile (≤1024): tap na „Sklep” rozwijá submenu (accordion), bez przejścia do /sklep/. Desktop: link działa, megamenu przez hover.
+		// Mobile (≤1024): tap na „Sklep” rozwijá submenu (delegacja — niezawodnie nawet przy opóźnionym init).
 		var menu = document.getElementById('mnsk7-primary-menu');
 		if (menu) {
-			var parentItems = menu.querySelectorAll('li.menu-item-has-children');
-			parentItems.forEach(function(li) {
-				var a = li.querySelector(':scope > a');
-				if (!a) return;
-				a.addEventListener('click', function(e) {
-					if (window.innerWidth <= 1024) {
-						e.preventDefault();
-						li.classList.toggle('is-open');
-						a.setAttribute('aria-expanded', li.classList.contains('is-open'));
-					}
-					// desktop: nie preventDefault — link prowadzi do sklepu; megamenu otwiera hover
-				});
-			});
+			menu.addEventListener('click', function(e) {
+				var a = e.target && e.target.closest ? e.target.closest('a') : null;
+				if (!a || !a.href) return;
+				var li = a.closest('li.menu-item-has-children');
+				if (!li || li.querySelector(':scope > a') !== a) return;
+				if (window.innerWidth <= 1024) {
+					e.preventDefault();
+					li.classList.toggle('is-open');
+					a.setAttribute('aria-expanded', li.classList.contains('is-open'));
+				}
+			}, false);
 			// Mega menu (Sklep): hover delay 400ms na desktop — Baymard/NNG, bez flicker przy przejściu na panel
 			var megamenuLi = menu.querySelector('li.menu-item-has-children .sub-menu.mnsk7-megamenu');
 			if (megamenuLi) {
@@ -895,13 +894,14 @@ add_action( 'wp_footer', function () {
 					}
 				});
 			}
-			// Mobile: po kliknięciu w dowolny link menu zamknij overlay, żeby nawigacja działała za pierwszym razem (Przewodnik, Dostawa, Kontakt)
+			// Mobile: po kliknięciu w link (nie w parent „Sklep”) zamknij overlay — Przewodnik, Dostawa, Kontakt, podpunkty Sklep.
 			menu.addEventListener('click', function(e) {
 				var a = e.target.closest('a');
-				if (a && a.getAttribute('href') && window.innerWidth <= 1024 && nav) {
-					nav.classList.remove('is-open');
-					if (menuToggle) { menuToggle.setAttribute('aria-expanded', 'false'); if (menuToggle.getAttribute('data-open-label')) menuToggle.setAttribute('aria-label', menuToggle.getAttribute('data-open-label')); }
-				}
+				if (!a || !a.getAttribute('href') || window.innerWidth > 1024 || !nav) return;
+				var parentLi = a.closest('li.menu-item-has-children');
+				if (parentLi && parentLi.querySelector(':scope > a') === a) return; // tap na „Sklep” — nie zamykaj, tylko toggle submenu
+				nav.classList.remove('is-open');
+				if (menuToggle) { menuToggle.setAttribute('aria-expanded', 'false'); if (menuToggle.getAttribute('data-open-label')) menuToggle.setAttribute('aria-label', menuToggle.getAttribute('data-open-label')); }
 			});
 		}
 		var searchToggle = document.querySelector('.mnsk7-header__search-toggle');
