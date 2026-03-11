@@ -979,9 +979,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   font-weight: 400;
   margin-top: 0.15rem;
 }
-.mnsk7-product-table .mnsk7-table-addcart-form {
-  display: inline-block;
-}
+/* Alignment: keep inline-flex so button aligns to center of row (avoid baseline shift) */
 .mnsk7-product-table .mnsk7-table-cell--action .button,
 .mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button,
 .mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn {

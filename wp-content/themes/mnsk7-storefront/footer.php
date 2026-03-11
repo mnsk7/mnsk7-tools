@@ -180,70 +180,78 @@ if ( $show_theme_cookie_bar ) :
 <?php endif; ?>
 <script>
 (function() {
-	var footer = document.getElementById('colophon') || document.querySelector('.mnsk7-footer');
-	if (!footer) return;
-	var breakpointPx = <?php echo (int) ( defined( 'MNSK7_BREAKPOINT_MOBILE' ) ? MNSK7_BREAKPOINT_MOBILE : 768 ); ?>;
-	var mq = '(max-width: ' + breakpointPx + 'px)';
+	// UI Audit: accordion only when mobile layout is active (768px = same as 09-footer.css)
+	var FOOTER_ACCORDION_BREAKPOINT = 768;
+	var mq = '(max-width: ' + FOOTER_ACCORDION_BREAKPOINT + 'px)';
 
-	function toggleAccordion(title) {
-		if (!title) return;
-		var col = title.closest('.mnsk7-footer__col');
-		if (!col) return;
-		col.classList.toggle('is-open');
-		title.setAttribute('aria-expanded', col.classList.contains('is-open'));
-	}
+	function initFooterAccordion() {
+		var footer = document.getElementById('colophon') || document.querySelector('.mnsk7-footer');
+		if (!footer) return;
 
-	var touchedTitle = null; // żeby nie toggle 2× przy tap (touchend + click)
-
-	function handleAccordion(e) {
-		if (!window.matchMedia(mq).matches) return;
-		var title = e.target.closest('.mnsk7-footer__title');
-		if (!title) return;
-		if (e.type === 'click' && touchedTitle === title) {
-			touchedTitle = null;
-			return; // już obsłużone w touchend
-		}
-		e.preventDefault();
-		e.stopPropagation();
-		toggleAccordion(title);
-	}
-
-	// Click (desktop + mobile)
-	footer.addEventListener('click', handleAccordion);
-	// Touchend — na mobile sam click bywa nieodpalany; touchend pewnie otwiera/zamyka
-	footer.addEventListener('touchend', function(e) {
-		if (!window.matchMedia(mq).matches) return;
-		var title = e.target.closest('.mnsk7-footer__title');
-		if (!title) return;
-		touchedTitle = title;
-		e.preventDefault();
-		toggleAccordion(title);
-		setTimeout(function() { touchedTitle = null; }, 400);
-	}, { passive: false });
-
-	footer.addEventListener('keydown', function(e) {
-		if (!window.matchMedia(mq).matches) return;
-		if (e.key !== 'Enter' && e.key !== ' ') return;
-		var title = e.target.closest('.mnsk7-footer__title');
-		if (!title) return;
-		e.preventDefault();
-		toggleAccordion(title);
-	});
-
-	function setAria() {
-		if (!window.matchMedia(mq).matches) return;
-		footer.querySelectorAll('.mnsk7-footer__col').forEach(function(col) {
-			var title = col.querySelector('.mnsk7-footer__title');
+		function toggleAccordion(title) {
 			if (!title) return;
-			title.setAttribute('role', 'button');
-			title.setAttribute('tabindex', '0');
-			var open = col.classList.contains('is-open') || col.hasAttribute('data-accordion-open');
-			title.setAttribute('aria-expanded', open ? 'true' : 'false');
-			if (col.id) title.setAttribute('aria-controls', col.id);
+			var col = title.closest('.mnsk7-footer__col');
+			if (!col) return;
+			col.classList.toggle('is-open');
+			title.setAttribute('aria-expanded', col.classList.contains('is-open'));
+		}
+
+		var touchedTitle = null;
+
+		function handleAccordion(e) {
+			if (!window.matchMedia(mq).matches) return;
+			var title = e.target.closest('.mnsk7-footer__title');
+			if (!title) return;
+			if (e.type === 'click' && touchedTitle === title) {
+				touchedTitle = null;
+				return;
+			}
+			e.preventDefault();
+			e.stopPropagation();
+			toggleAccordion(title);
+		}
+
+		footer.addEventListener('click', handleAccordion);
+		footer.addEventListener('touchend', function(e) {
+			if (!window.matchMedia(mq).matches) return;
+			var title = e.target.closest('.mnsk7-footer__title');
+			if (!title) return;
+			touchedTitle = title;
+			e.preventDefault();
+			toggleAccordion(title);
+			setTimeout(function() { touchedTitle = null; }, 400);
+		}, { passive: false });
+
+		footer.addEventListener('keydown', function(e) {
+			if (!window.matchMedia(mq).matches) return;
+			if (e.key !== 'Enter' && e.key !== ' ') return;
+			var title = e.target.closest('.mnsk7-footer__title');
+			if (!title) return;
+			e.preventDefault();
+			toggleAccordion(title);
 		});
+
+		function setAria() {
+			if (!window.matchMedia(mq).matches) return;
+			footer.querySelectorAll('.mnsk7-footer__col').forEach(function(col) {
+				var title = col.querySelector('.mnsk7-footer__title');
+				if (!title) return;
+				title.setAttribute('role', 'button');
+				title.setAttribute('tabindex', '0');
+				var open = col.classList.contains('is-open') || col.hasAttribute('data-accordion-open');
+				title.setAttribute('aria-expanded', open ? 'true' : 'false');
+				if (col.id) title.setAttribute('aria-controls', col.id);
+			});
+		}
+		setAria();
+		window.matchMedia(mq).addEventListener('change', setAria);
 	}
-	setAria();
-	window.matchMedia(mq).addEventListener('change', setAria);
+
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', initFooterAccordion);
+	} else {
+		initFooterAccordion();
+	}
 })();
 </script>
 

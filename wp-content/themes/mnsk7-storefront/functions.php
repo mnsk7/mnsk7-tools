@@ -10,10 +10,10 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Breakpoint header "mobile" (px) — od tego width w dół: burger menu, ikony zamiast pełnego menu.
- * 992px = tablet/mały desktop dostaje burger, unikamy overflow w headerze.
+ * 1024px = przejście w burger wcześniej, bez przepełnienia/nałożenia elementów.
  */
 if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
-	define( 'MNSK7_BREAKPOINT_MOBILE', 992 );
+	define( 'MNSK7_BREAKPOINT_MOBILE', 1024 );
 }
 
 /**
@@ -626,17 +626,22 @@ function mnsk7_header_fallback_menu() {
  * Zawsze te same zasoby niezależnie od parametrów URL (np. ?filter_*). Strony z filtrami
  * muszą wyglądać identycznie jak bez filtrów (cache nie może serwować innej wersji CSS).
  * Nie dodawać warunków is_filter_request / $_GET — header i layout muszą być te same.
+ * B1: przyciski — source of truth w 17-buttons.css; theme ładuje się PO WooCommerce (dependency
+ * woocommerce-layout, priority 20), żeby nasz system przycisków wygrywał bez override w footer.
  */
 add_action( 'wp_enqueue_scripts', function () {
 	$v = defined( 'MNSK7_THEME_VERSION' ) ? MNSK7_THEME_VERSION : '3.0.9';
 	$base = get_stylesheet_directory_uri() . '/assets/css/parts/';
 	$dir = get_stylesheet_directory() . '/assets/css/parts/';
+	$child_deps = array();
 	if ( mnsk7_parent_storefront_available() ) {
 		wp_enqueue_style( 'storefront-style', get_template_directory_uri() . '/style.css' );
-		wp_enqueue_style( 'mnsk7-storefront-style', get_stylesheet_uri(), array( 'storefront-style' ), $v );
-	} else {
-		wp_enqueue_style( 'mnsk7-storefront-style', get_stylesheet_uri(), array(), $v );
+		$child_deps[] = 'storefront-style';
 	}
+	if ( wp_style_is( 'woocommerce-layout', 'registered' ) ) {
+		$child_deps[] = 'woocommerce-layout';
+	}
+	wp_enqueue_style( 'mnsk7-storefront-style', get_stylesheet_uri(), $child_deps, $v );
 	$prev = 'mnsk7-storefront-style';
 	$parts = array( '00-fonts-inter', '01-tokens', '02-reset-typography', '03-storefront-overrides', '04-header', '05-plp-cards', '06-single-product', '07-mnsk7-blocks', '08-home-sections', '09-footer', '10-cookie-bar', '11-hidden', '12-related-products', '13-seo-landing', '14-faq', '15-delivery-contact', '16-woo-notices', '17-buttons', '18-cart-checkout', '19-breadcrumbs', '20-responsive-tablet', '21-responsive-mobile', '22-touch-targets', '23-print', '24-plp-table', '25-global-layout' );
 	$parts_loaded = false;
@@ -660,7 +665,7 @@ add_action( 'wp_enqueue_scripts', function () {
 	/* Clearfix ::before w gridzie — na końcu cascade, żeby zawsze wygrać z Storefront/pluginami (Bestsellery, Podobne produkty, sklep) */
 	$clearfix_inline = 'ul.products::before,.woocommerce ul.products::before,.woocommerce-page ul.products::before,ul.products.columns-3::before,ul.products.columns-4::before{content:none!important;display:none!important}';
 	wp_add_inline_style( $prev, $footer_inline . "\n" . $insta_inline . "\n" . $clearfix_inline );
-}, 10 );
+}, 20 );
 
 /* Override WooCommerce clearfix: woocommerce-layout.css ładuje się PO naszej temie i ustawia .woocommerce ul.products::before{display:table}, co daje pustą pierwszą „komórkę” w gridzie. Dodajemy inline do handle WooCommerce, żeby nasze display:none było po ich regule. Również Moje konto: przyciski + padding (wygrywamy z WC). */
 add_action( 'wp_enqueue_scripts', function () {
@@ -680,7 +685,8 @@ add_action( 'wp_enqueue_scripts', function () {
 }, 20 );
 
 /* Krytyczne layouty przeniesione do parts/25-global-layout.css (nie wp_footer inline).
-   Clearfix ul.products::before pozostaje w wp_add_inline_style (wygrywa z woocommerce-layout). */
+   Clearfix ul.products::before pozostaje w wp_add_inline_style (wygrywa z woocommerce-layout).
+   Przyciski: source of truth 17-buttons.css; theme ładuje się po WC (dependency woocommerce-layout, priority 20). */
 
 /**
  * Zwraca kwotę rabatu lojalnościowego w koszyku (ujemna liczba lub 0).
@@ -765,7 +771,7 @@ add_action( 'wp_footer', function () {
 				menuToggle.setAttribute('aria-expanded', nav.classList.contains('is-open'));
 			});
 		}
-		// Tablet/mobile (≤992px): link „Sklep” prowadzi do sklepu (submenu ukryte w CSS)
+		// Tablet/mobile (≤1024px): link „Sklep” prowadzi do sklepu (submenu ukryte w CSS)
 		var menu = document.getElementById('mnsk7-primary-menu');
 		if (menu) {
 			var parentItems = menu.querySelectorAll('li.menu-item-has-children');
@@ -773,7 +779,7 @@ add_action( 'wp_footer', function () {
 				var a = li.querySelector(':scope > a');
 				if (!a) return;
 				a.addEventListener('click', function(e) {
-					if (window.innerWidth <= 992) return;
+					if (window.innerWidth <= 1024) return;
 					e.preventDefault();
 					li.classList.toggle('is-open');
 					a.setAttribute('aria-expanded', li.classList.contains('is-open'));
@@ -782,7 +788,7 @@ add_action( 'wp_footer', function () {
 			// Mobile: po kliknięciu w dowolny link menu zamknij overlay, żeby nawigacja działała za pierwszym razem (Przewodnik, Dostawa, Kontakt)
 			menu.addEventListener('click', function(e) {
 				var a = e.target.closest('a');
-				if (a && a.getAttribute('href') && window.innerWidth <= 992 && nav) {
+				if (a && a.getAttribute('href') && window.innerWidth <= 1024 && nav) {
 					nav.classList.remove('is-open');
 					if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
 				}
@@ -796,7 +802,7 @@ add_action( 'wp_footer', function () {
 				searchDropdown.hidden = !open;
 				searchToggle.setAttribute('aria-expanded', open);
 				if (searchPanel) {
-					if (window.innerWidth < 993) {
+					if (window.innerWidth < 1025) {
 						document.body.classList.toggle('mnsk7-search-open', open);
 						searchPanel.hidden = !open;
 						searchPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
@@ -812,7 +818,7 @@ add_action( 'wp_footer', function () {
 				}
 			}
 			function updateSearchDesktop() {
-				if (window.innerWidth >= 993) {
+				if (window.innerWidth >= 1025) {
 					searchDropdown.removeAttribute('hidden');
 					searchToggle.setAttribute('aria-expanded', 'true');
 					document.body.classList.remove('mnsk7-search-open');
@@ -828,16 +834,16 @@ add_action( 'wp_footer', function () {
 			window.addEventListener('resize', updateSearchDesktop);
 			updateSearchDesktop();
 			searchToggle.addEventListener('click', function() {
-				if (window.innerWidth >= 993) return;
+				if (window.innerWidth >= 1025) return;
 				var open = document.body.classList.contains('mnsk7-search-open');
 				setSearchOpen(!open);
 			});
 			document.addEventListener('keydown', function(e) {
 				if (e.key === 'Escape') {
-					if (window.innerWidth < 993 && document.body.classList.contains('mnsk7-search-open')) {
+					if (window.innerWidth < 1025 && document.body.classList.contains('mnsk7-search-open')) {
 						setSearchOpen(false);
 						if (searchToggle.offsetParent !== null) searchToggle.focus();
-					} else if (window.innerWidth >= 993 && !searchDropdown.hidden) {
+					} else if (window.innerWidth >= 1025 && !searchDropdown.hidden) {
 						searchDropdown.hidden = true;
 						searchToggle.setAttribute('aria-expanded', 'false');
 						if (searchToggle.offsetParent !== null) searchToggle.focus();
@@ -845,7 +851,7 @@ add_action( 'wp_footer', function () {
 				}
 			});
 			document.addEventListener('click', function(e) {
-				if (window.innerWidth >= 993) return;
+				if (window.innerWidth >= 1025) return;
 				var wrap = searchToggle && searchToggle.closest('.mnsk7-header__search-wrap');
 				var panel = searchPanel && searchPanel.contains(e.target);
 				if (document.body.classList.contains('mnsk7-search-open') && !wrap.contains(e.target) && !panel) {
@@ -855,14 +861,14 @@ add_action( 'wp_footer', function () {
 			var searchForm = searchDropdown.querySelector('form');
 			if (searchForm) {
 				searchForm.addEventListener('submit', function() {
-					if (window.innerWidth < 993) setSearchOpen(false);
+					if (window.innerWidth < 1025) setSearchOpen(false);
 				});
 			}
 			if (searchPanel) {
 				var panelForm = searchPanel.querySelector('form');
 				if (panelForm) {
 					panelForm.addEventListener('submit', function() {
-						if (window.innerWidth < 993) setSearchOpen(false);
+						if (window.innerWidth < 1025) setSearchOpen(false);
 					});
 				}
 			}
@@ -883,7 +889,7 @@ add_action( 'wp_footer', function () {
 				});
 				// Mobile: klik na trigger otwiera/zamyka dropdown (na desktop tylko hover)
 				trigger.addEventListener('click', function(e) {
-					if (window.innerWidth < 993) {
+					if (window.innerWidth < 1025) {
 						e.preventDefault();
 						cartWrap.classList.toggle('is-open');
 					}
@@ -892,7 +898,7 @@ add_action( 'wp_footer', function () {
 				var cartOpenTimer;
 				function openCart() {
 					clearTimeout(cartOpenTimer);
-					if (window.innerWidth >= 993) cartWrap.classList.add('is-open');
+					if (window.innerWidth >= 1025) cartWrap.classList.add('is-open');
 				}
 				function closeCart() {
 					cartOpenTimer = setTimeout(function() {
