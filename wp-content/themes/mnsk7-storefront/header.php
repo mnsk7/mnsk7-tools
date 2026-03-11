@@ -13,10 +13,15 @@ defined( 'ABSPATH' ) || exit;
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 	<?php
-	// Performance: preload main font for faster LCP (Inter).
-	$font_uri = get_stylesheet_directory_uri() . '/assets/fonts/inter-latin-wght-normal.woff2';
+	// Performance: preload main font for faster LCP (Inter). Tylko gdy plik istnieje (unika 404 + „preloaded but not used” na staging).
+	$font_path = get_stylesheet_directory() . '/assets/fonts/inter-latin-wght-normal.woff2';
+	if ( file_exists( $font_path ) ) {
+		$font_uri = get_stylesheet_directory_uri() . '/assets/fonts/inter-latin-wght-normal.woff2';
+		?>
+		<link rel="preload" href="<?php echo esc_url( $font_uri ); ?>" as="font" type="font/woff2" crossorigin>
+		<?php
+	}
 	?>
-	<link rel="preload" href="<?php echo esc_url( $font_uri ); ?>" as="font" type="font/woff2" crossorigin>
 	<?php wp_head(); ?>
 	<?php
 	// Krytyczne style nagłówka inline — gwarantują ten sam wygląd także gdy URL ma parametry ?filter_*
