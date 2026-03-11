@@ -14,10 +14,10 @@ body.tax-product_tag [class*="category-image"] {
   display: none;
 }
 
-/* Nagłówek kategorii/tagu — wizualna hierarchia: tytuł + chips; większy odstęp od headera i między tytułem a chipsami */
+/* Nagłówek kategorii/tagu — wizualna hierarchia: tytuł + chips; odstęp pod tytułem = token */
 .woocommerce-products-header {
   margin-top: 0;
-  margin-bottom: 1.25rem;
+  margin-bottom: var(--space-title-bottom);
   padding-bottom: 0;
 }
 .woocommerce-products-header__title.page-title {
@@ -165,7 +165,7 @@ body.tax-product_tag .mnsk7-content > main.mnsk7-main {
   flex: 1 1 100%;
   width: 100%;
   min-width: 0;
-  padding-top: 1.75rem;
+  padding-top: 0;
 }
 /* .mnsk7-content-area / .mnsk7-main pełna szerokość */
 body.post-type-archive-product #content #primary .site-main,
@@ -228,7 +228,7 @@ body.tax-product_tag .mnsk7-catalog-filters {
 }
 .mnsk7-plp-chips:first-of-type {
   margin-top: 0.25rem;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-section-gap);
 }
 
 /* Mobile: filter groups = vertical block. Label full width on top, chips row below with horizontal scroll. No two-column label/value. */

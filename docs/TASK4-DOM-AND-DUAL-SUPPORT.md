@@ -47,14 +47,38 @@
 
 ---
 
-## Что проверить вручную (регрессия Task 4)
+## Auto-check (jeden #content)
 
-- [ ] Cart — вёрстка, отступы
-- [ ] Checkout — то же
-- [ ] Account (Moje konto) — контент, ширина
-- [ ] PDP (single product) — без сайдбара, ширина
-- [ ] PLP (sklep, kategoria, tag) — сетка, сайдбар при наличии
-- [ ] Strony z ?filter_* — layout jak wcześniej
-- [ ] Search results (product search) — nie archive-product layout
+Skrypt **`scripts/task4-regression-check.sh`**: sprawdza, że na każdej stronie jest dokładnie jeden `id="content"`.
 
-После проверки — można uznać Task 4 za zamknięty z dual-support; ewentualne usunięcie starych selektorów — osobna, późniejsza zmiana.
+- `BASE_URL=https://staging.mnsk7-tools.pl ./scripts/task4-regression-check.sh`
+- W skrypcie jest **stały PDP URL** (`FIXED_PDP_PATH`); można nadpisać: `PDP_URL=… ./scripts/...`
+
+**Przyjęte jako dowiedzione:** na sprawdzonych stronach ровно один #content; product search nie jest podmien­niany przez nasz archive-product.php (mnsk7_is_plp() → false przy is_search()).
+
+---
+
+## Ręczna / Browser‑weryfikacja (wymagana do akceptacji Task 4)
+
+**Task 4 NIE jest przyjęta**, dopóki nie przejdzie pełna weryfikacja wizualna po **deployu i cache purge**.
+
+Dla każdej strony z listy wpisać w tabeli: layout / wrapper / spacing / header / sidebar.
+
+| Strona | layout ok? | wrapper ok? | spacing ok? | header ok? | sidebar ok? |
+|--------|------------|-------------|-------------|------------|-------------|
+| `/` (home) | | | | | n/a |
+| `/koszyk/` (cart) | | | | | n/a |
+| `/zamowienie/` (checkout) | | | | | n/a |
+| `/moje-konto/` (account) | | | | | n/a |
+| `/sklep/` (PLP) | | | | | ok / n/a |
+| search (`/?s=frezy&post_type=product`) | | | | | n/a |
+| PLP + filter (`/sklep/?filter_...`) | | | | | ok / n/a |
+| PDP (single product; URL ze skryptu) | | | | | n/a |
+
+- **layout ok / not ok** — ogólny układ strony, bez rozjechanych bloków.
+- **wrapper ok / not ok** — #content/#primary/main w jednym, prawidłowa hierarchia.
+- **spacing ok / not ok** — odstępy, padding, max-width kontenera.
+- **header ok / not ok** — nagłówek (logo, menu, koszyk) wyświetla się poprawnie.
+- **sidebar ok / n/a** — tam gdzie sidebar jest (PLP z filtrami), że jest ok; na cart/checkout/PDP — n/a.
+
+**Dopiero po wypełnieniu tej tabeli (wszystkie ok) i zapisie wyniku — Task 4 accepted.** Zadania 5–8 nie wykonywać do akceptacji Task 4.

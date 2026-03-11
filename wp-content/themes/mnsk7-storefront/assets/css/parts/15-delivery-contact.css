@@ -3,14 +3,14 @@
    § DELIVERY RULES / CONTACT / CHECKOUT NOTE
    ----------------------------------------------------------------- */
 
-/* Delivery page — layout pod headerem, 2–3 interwały (jak kontakt) */
+/* Delivery page — layout pod headerem; page-top od #content, bez duplikatu */
 .mnsk7-page-dostawa {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 2.5rem 1rem 3rem;
+  padding: 0 1rem 3rem;
 }
 .mnsk7-page-dostawa .entry-header {
-  margin-bottom: var(--space-24);
+  margin-bottom: var(--space-title-bottom);
 }
 .mnsk7-page-dostawa .entry-content {
   margin-top: 0.5rem;
@@ -74,14 +74,14 @@
   font-style: italic;
 }
 
-/* Contact page — layout formularza, rytm pionowy */
+/* Contact page — layout formularza; page-top od #content */
 .mnsk7-page-kontakt {
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 2.5rem 1rem 3rem;
+  padding: 0 1rem 3rem;
 }
 .mnsk7-page-kontakt .entry-header {
-  margin-bottom: var(--space-24);
+  margin-bottom: var(--space-title-bottom);
 }
 .mnsk7-page-kontakt .entry-content {
   margin-top: 0.5rem;
@@ -251,7 +251,7 @@
   max-width: var(--content-max);
   margin-left: auto;
   margin-right: auto;
-  padding: var(--space-32) 1.5rem;
+  padding: 0 1.5rem var(--space-32);
   box-sizing: border-box;
 }
 .woocommerce-account .woocommerce-MyAccount-navigation {

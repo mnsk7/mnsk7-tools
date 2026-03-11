@@ -78,6 +78,10 @@
   --space-40: 40px;
   --space-48: 48px;
   --space-64: 64px;
+  --space-page-top: 2rem;
+  --space-breadcrumbs-bottom: 1rem;
+  --space-title-bottom: 1.25rem;
+  --space-section-gap: 1.5rem;
 }
 
 /* -----------------------------------------------------------------
@@ -127,6 +131,24 @@ img {
 }
 @media (min-width: 768px) {
   .col-full {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+/* Page top — единый отступ от header до контента (все типы страниц) */
+#content,
+.site-content,
+.mnsk7-content {
+  padding-top: var(--space-page-top);
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  #content,
+  .site-content,
+  .mnsk7-content {
     padding-left: 2rem;
     padding-right: 2rem;
   }

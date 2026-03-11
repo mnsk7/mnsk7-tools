@@ -14,7 +14,7 @@ body.woocommerce .mnsk7-content {
   max-width: var(--content-max);
   margin-left: auto;
   margin-right: auto;
-  padding: 1.5rem;
+  padding: var(--space-page-top) 1.5rem 1.5rem;
   box-sizing: border-box;
 }
 
@@ -49,7 +49,7 @@ body.woocommerce-page .mnsk7-content .page-title,
 body.woocommerce .mnsk7-content .page-title,
 body.woocommerce-page .mnsk7-content h1.page-title,
 body.woocommerce .mnsk7-content h1.page-title {
-  margin: 0 0 1rem;
+  margin: 0 0 var(--space-title-bottom);
   font-size: var(--fs-2xl);
 }
 
@@ -59,7 +59,7 @@ body.woocommerce .mnsk7-content h1.page-title {
   body.woocommerce #content,
   body.woocommerce .mnsk7-content {
     flex-direction: column;
-    padding: var(--space-16);
+    padding: var(--space-page-top) var(--space-16) var(--space-16);
   }
   body.woocommerce-page #content .woocommerce-sidebar,
   body.woocommerce-page #content .widget-area,

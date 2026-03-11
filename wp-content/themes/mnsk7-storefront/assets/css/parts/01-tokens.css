@@ -82,6 +82,12 @@
   --space-40: 40px;
   --space-48: 48px;
   --space-64: 64px;
+
+  /* Page top rhythm — единый вертикальный ритм от header до контента (все типы страниц) */
+  --space-page-top:        2rem;   /* 32px — отступ от header (или promo bar) до первого контента */
+  --space-breadcrumbs-bottom: 1rem;   /* отступ под breadcrumbs до заголовка/контента */
+  --space-title-bottom:    1.25rem;   /* отступ под H1 / page title до следующего блока */
+  --space-section-gap:    1.5rem;   /* интервал между крупными секциями (chips → listing и т.д.) */
 }
 
 /* prefers-reduced-motion: wyłącz/uprość animacje (WCAG, dostępność) */

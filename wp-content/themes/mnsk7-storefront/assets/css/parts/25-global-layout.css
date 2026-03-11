@@ -1,6 +1,24 @@
 /* 25-global-layout — source of truth dla header/footer/clearfix/PLP trust (HANDOFF: bez wp_footer).
    Ten sam wygląd na wszystkich stronach (/, koszyk, archive, tag, ?filter_*, PDP). */
 
+/* Page top — единый отступ от header до контента на всех типах страниц (page, dostawa, kontakt, account, archive, tag) */
+#content,
+.site-content,
+.mnsk7-content {
+  padding-top: var(--space-page-top);
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  #content,
+  .site-content,
+  .mnsk7-content {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
 /* Woo clearfix: usuń ::before, który psuł grid produktów */
 ul.products::before,
 ul.products.columns-3::before,
