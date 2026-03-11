@@ -63,7 +63,7 @@
 
 **Критерий приёмки:** Условие «это PLP» задаётся в одном месте; остальной код только читает его. Страницы shop/category/tag и URL с ?filter_* ведут себя как раньше (те же body_class, тот же шаблон).
 
-**✅ Выполнено (05_theme_ux_frontend):** Добавлены `mnsk7_is_plp()` (читает/кэширует `$GLOBALS['mnsk7_is_plp']`) и хук `wp` priority 1, устанавливающий глобал один раз. Все проверки переведены на `mnsk7_is_plp()`: woocommerce_before_main_content, body_class, template_include, send_headers, breadcrumbs, header.php, archive-product.php ($show_breadcrumb). `mnsk7_is_plp_archive()` и `mnsk7_is_plp_url_path()` остаются внутренней реализацией; снаружи используется только `mnsk7_is_plp()`.
+**✅ Выполнено (05_theme_ux_frontend):** Добавлены `mnsk7_is_plp()` (читает/кэширует `$GLOBALS['mnsk7_is_plp']`), **lazy-eval** при первом вызове — без хука wp priority 1, чтобы pluginy zmieniające query (filter_*, taxonomy, koszyk) nie były wyprzedzane. W `mnsk7_is_plp_archive()` na początku: **`is_search() → false`** — product search (?s=...&post_type=product) nigdy nie jest PLP, archive-product.php nie jest podsuwany. Fallback `if ( ! $obj )` w body_class (tax-* po ścieżce) pozostaje **tylko wewnątrz gałęzi** `if ( mnsk7_is_plp() )`. Wszystkie sprawdzenia używają tylko `mnsk7_is_plp()`.
 
 ---
 
@@ -79,7 +79,7 @@
 
 **Критерий приёмки:** При отключённом JS промо-бар и cookie bar (если показываются) не ломают отступ/верстку — класс на body уже в HTML там, где нужно.
 
-**✅ Выполнено (05_theme_ux_frontend):** Промо уже добавлялся в body_class (priority 5). Добавлено: класс `mnsk7-cookie-bar-visible` выставляется в том же фильтре body_class, когда включён `mnsk7_show_cookie_bar` и у пользователя нет cookie `mnsk7_cookie_consent` со значением accept/reject. JS в footer по-прежнему добавляет/снимает класс при show/hide; при первой загрузке без JS класс уже в HTML из PHP — отступ #page корректен.
+**✅ Выполнено (05_theme_ux_frontend):** Промо уже добавлялся в body_class (priority 5). Dodano: klasa `mnsk7-cookie-bar-visible` z PHP gdy brak cookie `mnsk7_cookie_consent` (accept/reject). **Źródło prawdy po stronie serwera = cookie** — JS przy accept/reject ustawia `document.cookie` (footer.php setConsent), żeby kolejny request widział ten sam stan; nie używamy sessionStorage do visibility, first paint jest deterministyczny. JS dalej dodaje/usuwa klasę przy show/hide w tej samej sesji.
 
 ---
 
@@ -95,7 +95,7 @@
 
 **Критерий приёмки:** Вёрстка PLP, PDP, account, cart, checkout не изменилась визуально; при этом в CSS нет зависимости от #content/#primary/#secondary для общих правил (используются только component class).
 
-**✅ Выполнено (05_theme_ux_frontend):** В header.php добавлен класс `.mnsk7-content` на `#content`; в wrapper-start.php — `.mnsk7-content-area` на `#primary`, `.mnsk7-main` на `main`. В CSS (05, 24, 06, 15, 03, 04, main, 21) и в inline (functions.php woocommerce-account) селекторы заменены на `.mnsk7-content`, `.mnsk7-content-area`, `.mnsk7-main`, `.woocommerce-sidebar`. Id остаются в разметке для совместимости; стили опираются на классы.
+**⚠️ W toku / wymaga akceptacji po regresji:** W header.php jest **jeden** `<div id="content" class="site-content mnsk7-content">` (bez drugiego zagnieżdżonego #content). W wrapper-start.php — `#primary` + `.mnsk7-content-area`, `main` + `.mnsk7-main`. Wykonano **dual-support**: w CSS (05, 24, 06, 15, 03, 04, main, 21, functions inline) dodano równoległe selektory `#content`, `#primary`, `main` obok `.mnsk7-content` / `.mnsk7-content-area` / `.mnsk7-main` — ten sam styl stosuje się i do starej, i do nowej markupu. **Nie przechodzić do zadań 5–8**, dopóki Task 4 nie zostanie przyjęty po ręcznej weryfikacji: cart, checkout, account, PDP, PLP, strony z ?filter_*, product search. Szczegóły i pruf DOM: [docs/TASK4-DOM-AND-DUAL-SUPPORT.md](./TASK4-DOM-AND-DUAL-SUPPORT.md).
 
 ---
 
@@ -175,6 +175,17 @@
 | 8 | Overflow только где нужно | Регрессий нет; overflow обоснован |
 
 После всех задач: полная проверка корзины, чекаута, скорости загрузки; при деплое — очистка полного кэша страницы (в т.ч. URL с filter_*).
+
+---
+
+## Weryfikacja (uwagi 2026-03-11)
+
+| Pytanie | Odpowiedź / zmiana |
+|--------|---------------------|
+| **Product search** — czy ?s=…&post_type=product nie jest traktowany jak PLP? | W `mnsk7_is_plp_archive()` na początku: **`is_search() → false`**. Search (zwykły i product) nigdy nie jest PLP; `template_include` nie podsuwa archive-product.php. |
+| **body_class fallback** `if ( ! $obj )` — tylko wewnątrz PLP? | Tak. Ten blok jest wewnątrz filtra, który wcześniej robi `if ( ! mnsk7_is_plp() ) return $classes;`. Dopisano komentarz w kodzie. |
+| **wp priority 1** — czy main query gotowy? Ryzyko wczesnego cache? | Usunięto `add_action('wp', ..., 1)`. **Tylko lazy-eval** przy pierwszym wywołaniu `mnsk7_is_plp()` — cache w $GLOBALS w momencie pierwszego konsumenta (template_include, body_class itd.), więc po ewentualnych zmianach query przez pluginy. |
+| **Cookie bar** — źródło prawdy: cookie czy sessionStorage? | **Cookie.** PHP (body_class) czyta tylko cookie. JS w `setConsent()` ustawia cookie (i localStorage); przy następnym request PHP widzi ten sam stan. W kodzie: komentarze w functions.php i footer.php. |
 
 ---
 

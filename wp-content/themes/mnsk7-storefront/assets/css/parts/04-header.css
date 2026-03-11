@@ -54,7 +54,7 @@
   background: rgba(255, 255, 255, 0.15);
 }
 /* Tablet + mobile: promo bar — one line, compact */
-@media (max-width: 992px) {
+@media (max-width: 1024px) {
   .mnsk7-promo-bar {
     padding: 0.3rem 0.75rem;
     font-size: var(--fs-xs); /* 0.75rem mobile override */
@@ -208,15 +208,33 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   outline-offset: 2px;
 }
 
-/* Hamburger icon (3 lines) — wyśrodkowany w przycisku */
+/* Hamburger icon (3 lines) — równe długość/grubość, wyśrodkowany w przycisku, bez przesunięcia w open */
 .mnsk7-header__hamburger {
   display: block;
   width: 22px;
-  height: 2px;
-  margin: 0 auto;
-  background: currentColor;
-  box-shadow: 0 6px 0 currentColor, 0 12px 0 currentColor;
+  height: 18px;
+  margin: 0;
   flex-shrink: 0;
+  position: relative;
+  box-sizing: border-box;
+}
+.mnsk7-header__hamburger::before,
+.mnsk7-header__hamburger::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  width: 22px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+}
+.mnsk7-header__hamburger::before {
+  top: 0;
+  box-shadow: 0 16px 0 currentColor;
+}
+.mnsk7-header__hamburger::after {
+  top: 50%;
+  margin-top: -1px;
 }
 
 /* Sklep dropdown — megamenu style: 2 columns, wider (audit: "grouped categories") */
@@ -235,8 +253,117 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   transform: rotate(45deg);
   vertical-align: 0.15em;
 }
-/* Megamenu: 4 kolumny, nazwy kategorii w całości (zawijanie zamiast obcięcia) */
-.mnsk7-header__menu .sub-menu {
+/* Megamenu Sklep: sekcje Kategorie + Tagi, uporządkowana siatka */
+.mnsk7-header__menu .sub-menu.mnsk7-megamenu {
+  list-style: none;
+  margin: 0;
+  padding: 0.75rem 1rem 0.5rem;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  min-width: 360px;
+  max-width: min(600px, calc(100vw - 2rem));
+  max-height: 70vh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-sm);
+  box-shadow: var(--shadow-md);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: opacity 0.15s ease, visibility 0.15s ease, transform 0.15s ease;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-16);
+  pointer-events: auto;
+}
+.mnsk7-megamenu__group {
+  margin: 0;
+  list-style: none;
+}
+.mnsk7-megamenu__heading {
+  display: block;
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.5rem;
+}
+.mnsk7-megamenu__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.25rem 1rem;
+}
+.mnsk7-megamenu__list--cols {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.mnsk7-megamenu__list--tags {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.mnsk7-megamenu__list li {
+  margin: 0;
+}
+.mnsk7-megamenu__list a {
+  display: block;
+  padding: 0.35rem 0.5rem;
+  font-size: var(--fs-xs);
+  border-radius: var(--r-sm);
+  white-space: normal;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  min-width: 0;
+  text-decoration: none !important;
+  border-bottom: none;
+  color: var(--color-text);
+}
+.mnsk7-megamenu__list a:hover {
+  background: rgba(0, 0, 0, 0.06);
+  color: var(--color-primary);
+}
+.mnsk7-megamenu__list a:focus {
+  outline: none;
+}
+.mnsk7-megamenu__list a:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
+}
+.mnsk7-megamenu__footer {
+  margin: 0;
+  padding-top: 0.5rem;
+  border-top: 1px solid var(--color-border);
+  list-style: none;
+}
+.mnsk7-megamenu__footer a {
+  display: inline-block;
+  padding: 0.35rem 0.5rem;
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none !important;
+  border-radius: var(--r-sm);
+}
+.mnsk7-megamenu__footer a:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+@media (max-width: 480px) {
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
+    max-width: calc(100vw - 1.5rem);
+  }
+  .mnsk7-megamenu__list--cols {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .mnsk7-megamenu__list--tags {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+/* Legacy: zwykły sub-menu (tylko gdy bez .mnsk7-megamenu) */
+.mnsk7-header__menu .sub-menu:not(.mnsk7-megamenu) {
   list-style: none;
   margin: 0;
   padding: 0.75rem 1rem;
@@ -317,9 +444,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 /* Desktop: burger tylko na mobile; na desktop nie ma off-canvas — ukryty (również w header.php critical CSS). */
 .mnsk7-header__menu-toggle {
   display: none;
-  padding: 0;
+  width: 44px;
+  height: 44px;
   min-height: 44px;
   min-width: 44px;
+  padding: 0;
   box-sizing: border-box;
   font-size: var(--fs-sm);
   font-weight: 600;
@@ -331,11 +460,19 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   color: var(--color-text);
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
-
+.mnsk7-header__menu-toggle:hover {
+  background: rgba(0, 0, 0, 0.04);
+}
 .mnsk7-header__menu-toggle:focus-visible {
   outline: 2px solid var(--color-focus, var(--color-primary));
   outline-offset: 2px;
+}
+/* Open: bez przesunięcia ikony */
+.mnsk7-header__nav.is-open .mnsk7-header__menu-toggle {
+  color: var(--color-primary);
+  background: rgba(0, 0, 0, 0.04);
 }
 
 .mnsk7-header__actions {
@@ -417,8 +554,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   z-index: 99;
 }
 
-/* Od 993px (desktop): pole wyszukiwania w jednej linii z headerem; do 992px — ikona + panel */
-@media (min-width: 993px) {
+/* Od 1025px (desktop): pole wyszukiwania w jednej linii z headerem; do 1024px — ikona + panel */
+@media (min-width: 1025px) {
   .mnsk7-header__search-toggle {
     display: none;
   }
@@ -562,7 +699,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-header__link:focus {
   outline: none;
 }
-/* Na mobile: account = icon-only (jak inne przyciski). Na desktop: min-width w media 768px */
+/* Na mobile/tablet: account = icon-only. Na desktop (1025px+): min-width dla linku */
 .mnsk7-header__link--account {
   justify-content: center;
 }
@@ -820,7 +957,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   transform: translateY(0);
 }
 /* Desktop: account link z tekstem — przywróć min-width i padding */
-@media (min-width: 993px) {
+@media (min-width: 1025px) {
   .mnsk7-header__link.mnsk7-header__link--account {
     min-width: 7.5em;
     padding: 0 0.5rem;
@@ -828,7 +965,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 /* Desktop: dropdown tylko przy hover na triggerze lub samym dropdownie (JS dodaje .is-open) */
-@media (min-width: 993px) {
+@media (min-width: 1025px) {
   .mnsk7-header__cart.is-open .mnsk7-header__cart-dropdown {
     opacity: 1;
     visibility: visible;
@@ -866,8 +1003,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 
-/* Tablet + mobile (≤992px): one row — logo | burger, search, account, cart (icons only). Avoids overflow on narrow desktop. */
-@media (max-width: 992px) {
+/* Tablet + mobile (≤1024px): one row — logo | burger, search, account, cart (icons only). Avoids overflow on narrow desktop. */
+@media (max-width: 1024px) {
   .mnsk7-header__inner {
     display: flex;
     flex-wrap: nowrap;
@@ -1031,18 +1168,34 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
 }
-@media (min-width: 993px) {
+@media (min-width: 1025px) {
   .mnsk7-header-search-panel {
     display: none !important;
   }
 }
-@media (max-width: 992px) {
+/* Tablet (769–1024px): search row zawsze widoczna — druga linia pod headerem, jeden składany control (input + przycisk bez szpary) */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .mnsk7-header-search-panel {
+    display: block !important;
+    box-shadow: none;
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.5rem 1rem;
+  }
+  .mnsk7-header-search-panel__form {
+    max-width: var(--content-max, 1200px);
+    margin: 0 auto;
+  }
+}
+/* Mobile (≤768px): panel tylko po kliknięciu ikony */
+@media (max-width: 768px) {
   .mnsk7-header-search-panel[hidden] {
     display: none !important;
   }
   body.mnsk7-search-open .mnsk7-header-search-panel {
     display: block !important;
   }
+}
+@media (max-width: 1024px) {
   .mnsk7-header-search-panel__form {
     display: flex;
     flex-direction: row;
@@ -1052,6 +1205,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     max-width: 100%;
     margin: 0;
   }
+  /* Jeden wizualny control: bez szpary między inputem a przyciskiem, wspólna wysokość i obramowanie */
   .mnsk7-header-search-panel__input {
     flex: 1;
     min-width: 0;
@@ -1065,16 +1219,17 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     border-radius: var(--r-sm) 0 0 var(--r-sm);
     background: var(--color-white);
   }
-  .mnsk7-header-search-panel__input::placeholder {
-    color: var(--color-text-muted);
-  }
   .mnsk7-header-search-panel__input:focus {
-    outline: none;
     border-color: var(--color-primary);
+    outline: none;
+    box-shadow: none;
   }
   .mnsk7-header-search-panel__input:focus-visible {
     outline: 2px solid var(--color-focus, var(--color-primary));
     outline-offset: 0;
+  }
+  .mnsk7-header-search-panel__input::placeholder {
+    color: var(--color-text-muted);
   }
   .mnsk7-header-search-panel__submit {
     flex-shrink: 0;
@@ -1089,7 +1244,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     color: var(--color-white);
     border-radius: 0 var(--r-sm) var(--r-sm) 0;
     cursor: pointer;
-    transition: background 0.15s ease;
+    transition: background 0.15s ease, border-color 0.15s ease;
   }
   .mnsk7-header-search-panel__submit:hover {
     background: var(--color-primary-hover);
@@ -1123,7 +1278,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 
-/* Warstwa treści pod headerem (menu i dropdowny zawsze na wierzchu) */
+/* Warstwa treści pod headerem (menu i dropdowny zawsze na wierzchu). Dual-support (Task 4). */
+#content.site-content,
 .mnsk7-content.site-content,
 body .site .site-content {
   position: relative;
@@ -1131,9 +1287,9 @@ body .site .site-content {
 }
 
 /* Audit: dropdown Sklep nie może przycinać się ani zakrywać paska promocyjnego i koszyka.
-   Tylko desktop: overflow visible dla dropdownów. Na mobile (≤768px) inner ma overflow: hidden
+   Tylko desktop: overflow visible dla dropdownów. Na mobile/tablet (≤1024px) inner ma overflow: hidden
    żeby uniknąć nałożenia menu/search na siebie (mobile UX fix). */
-@media (min-width: 769px) {
+@media (min-width: 1025px) {
   .mnsk7-header {
     overflow: visible;
   }

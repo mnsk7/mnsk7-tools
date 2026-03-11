@@ -144,6 +144,7 @@ if ( $show_theme_cookie_bar ) :
 	function hide() { bar.setAttribute('hidden', ''); bar.setAttribute('aria-hidden', 'true'); document.body.classList.remove('mnsk7-cookie-bar-visible'); }
 	var valAccept = 'accept';
 	var valReject = 'reject';
+	// Cookie = źródło prawdy dla PHP (body_class): przy następnym request PHP widzi ten sam stan, bez sessionStorage.
 	function setConsent(value) {
 		try { localStorage.setItem(key, value); } catch(e) {}
 		try { document.cookie = key + '=' + value + '; path=/; max-age=31536000; SameSite=Lax'; } catch(e) {}

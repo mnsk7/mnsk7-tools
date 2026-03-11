@@ -3,8 +3,10 @@
    § SHOP / ARCHIVE LAYOUT — content + sidebar
    ----------------------------------------------------------------- */
 
-/* Strona sklepu i archiwum: component classes (HANDOFF — nie #content #primary). */
+/* Strona sklepu i archiwum: dual-support — #content/#primary i .mnsk7-* (Task 4). */
+body.woocommerce-page #content,
 body.woocommerce-page .mnsk7-content,
+body.woocommerce #content,
 body.woocommerce .mnsk7-content {
   display: flex;
   flex-wrap: wrap;
@@ -16,14 +18,21 @@ body.woocommerce .mnsk7-content {
   box-sizing: border-box;
 }
 
+body.woocommerce-page #content #primary,
+body.woocommerce-page #content > main,
 body.woocommerce-page .mnsk7-content .mnsk7-content-area,
-body.woocommerce .mnsk7-content .mnsk7-content-area,
 body.woocommerce-page .mnsk7-content > main.mnsk7-main,
+body.woocommerce #content #primary,
+body.woocommerce #content > main,
+body.woocommerce .mnsk7-content .mnsk7-content-area,
 body.woocommerce .mnsk7-content > main.mnsk7-main {
   flex: 1 1 0%;
   min-width: 0;
 }
 
+body.woocommerce-page #content .woocommerce-sidebar,
+body.woocommerce-page #content .widget-area,
+body.woocommerce-page #content aside[role="complementary"],
 body.woocommerce-page .mnsk7-content .woocommerce-sidebar,
 body.woocommerce .mnsk7-content .woocommerce-sidebar,
 body.woocommerce-page .mnsk7-content .widget-area,
@@ -34,6 +43,8 @@ body.woocommerce-page .mnsk7-content aside[role="complementary"] {
   min-width: 0;
 }
 
+body.woocommerce-page #content .page-title,
+body.woocommerce-page #content h1.page-title,
 body.woocommerce-page .mnsk7-content .page-title,
 body.woocommerce .mnsk7-content .page-title,
 body.woocommerce-page .mnsk7-content h1.page-title,
@@ -43,11 +54,16 @@ body.woocommerce .mnsk7-content h1.page-title {
 }
 
 @media (max-width: 768px) {
+  body.woocommerce-page #content,
   body.woocommerce-page .mnsk7-content,
+  body.woocommerce #content,
   body.woocommerce .mnsk7-content {
     flex-direction: column;
     padding: var(--space-16);
   }
+  body.woocommerce-page #content .woocommerce-sidebar,
+  body.woocommerce-page #content .widget-area,
+  body.woocommerce-page #content aside[role="complementary"],
   body.woocommerce-page .mnsk7-content .woocommerce-sidebar,
   body.woocommerce .mnsk7-content .woocommerce-sidebar,
   body.woocommerce-page .mnsk7-content .widget-area,

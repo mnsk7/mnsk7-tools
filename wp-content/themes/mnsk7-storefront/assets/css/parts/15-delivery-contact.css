@@ -348,8 +348,11 @@ body.woocommerce-account button[type="submit"] {
 body.woocommerce-account .mnsk7-footer__newsletter-btn {
   border-radius: var(--r-md) !important;
 }
+/* Account: dual-support #content i .mnsk7-content (Task 4). */
+body.woocommerce-account #content,
 body.woocommerce-account .mnsk7-content,
-body.woocommerce-account .site-main {
+body.woocommerce-account .site-main,
+body.woocommerce-account .mnsk7-main {
   max-width: var(--content-max);
   margin-left: auto;
   margin-right: auto;

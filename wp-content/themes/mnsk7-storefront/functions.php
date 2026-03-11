@@ -37,6 +37,10 @@ function mnsk7_is_plp_archive() {
 	if ( ! function_exists( 'is_shop' ) ) {
 		return false;
 	}
+	// Поиск (в т.ч. ?s=...&post_type=product) — не PLP; nie podsuwamy archive-product.php.
+	if ( function_exists( 'is_search' ) && is_search() ) {
+		return false;
+	}
 	if ( is_shop() || ( function_exists( 'is_product_category' ) && is_product_category() ) || ( function_exists( 'is_product_tag' ) && is_product_tag() ) ) {
 		return true;
 	}
@@ -105,8 +109,9 @@ function mnsk7_is_plp_url_path() {
 }
 
 /**
- * Jedno miejsce określania „to jest PLP” (sklep / kategoria / tag). Ustawiane w wp (priority 1) lub przy pierwszym wywołaniu.
- * HANDOFF: jeden source of truth — body_class, template_include, breadcrumbs, header używają tylko tego.
+ * Jedno miejsce określania „to jest PLP” (sklep / kategoria / tag). Lazy-eval przy pierwszym wywołaniu — cache w $GLOBALS.
+ * Nie ustawiamy w wp (priority 1), żeby pluginy zmieniające query (filter_*, koszyk, taxonomy) nie były wyprzedzane.
+ * HANDOFF: body_class, template_include, breadcrumbs, header używają tylko tego.
  *
  * @return bool
  */
@@ -121,10 +126,6 @@ function mnsk7_is_plp() {
 /**
  * Ustawienie globalnego stanu „to jest PLP” na początku requestu (jeden raz).
  */
-add_action( 'wp', function () {
-	$GLOBALS['mnsk7_is_plp'] = mnsk7_is_plp_archive();
-}, 1 );
-
 /**
  * Whether parent theme Storefront is present (not removed/overwritten by WP or host).
  * When false, child uses its own header fallback and does not enqueue parent styles.
@@ -694,7 +695,7 @@ add_action( 'wp_enqueue_scripts', function () {
 	$css .= 'body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-submit{border-radius:0 var(--r-sm) var(--r-sm) 0!important}';
 	$css .= 'body.woocommerce-account .woocommerce .button,body.woocommerce-account .woocommerce input[type=submit],body.woocommerce-account .woocommerce button[type=submit],body.woocommerce-account input[type=submit],body.woocommerce-account button[type=submit]{border-radius:var(--r-md)!important;min-height:44px!important}';
 	$css .= 'body.woocommerce-account .mnsk7-footer__newsletter-btn{border-radius:var(--r-md)!important}';
-	$css .= 'body.woocommerce-account .mnsk7-content,body.woocommerce-account .mnsk7-main{max-width:var(--content-max);margin-left:auto;margin-right:auto;padding-left:1.5rem;padding-right:1.5rem;box-sizing:border-box}';
+	$css .= 'body.woocommerce-account #content,body.woocommerce-account .mnsk7-content,body.woocommerce-account .site-main,body.woocommerce-account .mnsk7-main{max-width:var(--content-max);margin-left:auto;margin-right:auto;padding-left:1.5rem;padding-right:1.5rem;box-sizing:border-box}';
 	$css .= 'body.woocommerce-account .col-full{max-width:100%;padding-left:0;padding-right:0}';
 	wp_add_inline_style( 'woocommerce-layout', $css );
 }, 20 );
@@ -1334,7 +1335,7 @@ add_filter( 'body_class', function ( $classes ) {
 	if ( $promo_text !== '' && ! in_array( 'mnsk7-has-promo', $classes, true ) ) {
 		$classes[] = 'mnsk7-has-promo';
 	}
-	// Cookie bar visible: gdy włączony i użytkownik jeszcze nie wyraził zgody (brak cookie lub wartość inna niż accept/reject).
+	// Cookie bar visible: źródło prawdy po stronie serwera — cookie. JS przy accept/reject ustawia cookie, żeby kolejny request widział stan.
 	if ( apply_filters( 'mnsk7_show_cookie_bar', true ) ) {
 		$consent = isset( $_COOKIE['mnsk7_cookie_consent'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['mnsk7_cookie_consent'] ) ) : '';
 		if ( $consent !== 'accept' && $consent !== 'reject' && ! in_array( 'mnsk7-cookie-bar-visible', $classes, true ) ) {
@@ -1362,7 +1363,7 @@ add_filter( 'body_class', function ( $classes ) {
 			$ensure[] = 'tax-' . $obj->taxonomy;
 		}
 	}
-	// Gdy query został zmieniony przez plugin (filter_*), get_queried_object() może być pusty — dopisz tax-* po ścieżce URL
+	// Fallback tylko wewnątrz PLP: gdy query zmieniony (filter_*), get_queried_object() pusty — dopisz tax-* po ścieżce URL.
 	if ( ! $obj ) {
 		$req_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
 		$path = trim( (string) wp_parse_url( 'http://dummy' . $req_uri, PHP_URL_PATH ), '/' );

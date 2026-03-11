@@ -6,6 +6,7 @@
   #page {
     overflow-x: hidden;
   }
+  #content,
   .site-content,
   .mnsk7-content {
     overflow-x: hidden;
