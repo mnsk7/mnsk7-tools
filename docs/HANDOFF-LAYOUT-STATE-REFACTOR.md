@@ -95,7 +95,7 @@
 
 **Критерий приёмки:** Вёрстка PLP, PDP, account, cart, checkout не изменилась визуально; при этом в CSS нет зависимости от #content/#primary/#secondary для общих правил (используются только component class).
 
-**⚠️ W toku / wymaga akceptacji po regresji:** W header.php jest **jeden** `<div id="content" class="site-content mnsk7-content">` (bez drugiego zagnieżdżonego #content). W wrapper-start.php — `#primary` + `.mnsk7-content-area`, `main` + `.mnsk7-main`. Wykonano **dual-support**: w CSS (05, 24, 06, 15, 03, 04, main, 21, functions inline) dodano równoległe selektory `#content`, `#primary`, `main` obok `.mnsk7-content` / `.mnsk7-content-area` / `.mnsk7-main` — ten sam styl stosuje się i do starej, i do nowej markupu. **Nie przechodzić do zadań 5–8**, dopóki Task 4 nie zostanie przyjęty po ręcznej weryfikacji: cart, checkout, account, PDP, PLP, strony z ?filter_*, product search. Szczegóły i pruf DOM: [docs/TASK4-DOM-AND-DUAL-SUPPORT.md](./TASK4-DOM-AND-DUAL-SUPPORT.md).
+**Status: Pending acceptance after visual regression.** Dowiedzione: jeden #content na stronach; product search nie podmieniany przez nasz archive-product.php. **Do akceptacji:** (1) Auto-check `scripts/task4-regression-check.sh` z stałym PDP URL. (2) Po deployu i cache purge — ręczna/Browser weryfikacja tabeli w [docs/TASK4-DOM-AND-DUAL-SUPPORT.md](./TASK4-DOM-AND-DUAL-SUPPORT.md) (layout/wrapper/spacing/header/sidebar dla każdej strony). Task 4 accepted wyłącznie po wypełnieniu tabeli (wszystkie ok).
 
 ---
 
@@ -111,7 +111,7 @@
 
 **Критерий приёмки:** Поведение на shop/category/tag и с ?filter_* сохранено; код явно разделяет «основная проверка» и «fallback по path».
 
-**✅ Выполнено (05_theme_ux_frontend):** В docblock `mnsk7_is_plp_archive()` и `mnsk7_is_plp_url_path()` явно указано: główna logika (is_shop, is_product_*, get_queried_object), fallback REQUEST_URI tylko gdy main query zmieniony. Zewnętrznie używany tylko `mnsk7_is_plp()`.
+**Status: Accepted only if confirmed by actual code path** (nie przez docblock/komentarze). Dowód — sekcja Proof Task 5 poniżej.
 
 ---
 
@@ -126,7 +126,7 @@
 
 **Критерий приёмки:** Нет двух разных мест, где задаётся один и тот же стиль для одного и того же элемента (фон футера, фон хедера, clearfix ul.products, десктопное отображение меню/поиска).
 
-**✅ Проверено:** После задачи 1 источник истины — 25-global-layout.css. Inline к woocommerce-layout (clearfix, account) оставлен намеренно (Woo подключается позже). Critical в header.php — для first paint; 25 — полный набор. Лишнего дублирования нет.
+**Status: Partially accepted with known exception.** Single source of truth dla footer/header/desktop menu/PLP trust/buttons — 25-global-layout.css; reguły te nie są duplikowane w theme enqueue ani w wp_footer. **Wyjątek:** clearfix `ul.products::before` jest celowo zduplikowany w inline do handle `woocommerce-layout` (functions.php), żeby wygrać z woocommerce-layout.css ładującym się później. Dowód — sekcja Proof Task 6 poniżej.
 
 ---
 
@@ -142,7 +142,7 @@
 
 **Критерий приёмки:** Меньше правил с !important; где переделано — layout не держится на скрытии (display:none/visibility) без необходимости.
 
-**⏸ Отложено:** Постепенный рефакторинг (вне текущего handoff). В 25-global-layout.css !important оставлен для переопределения Woo/Storefront.
+**Status: Reviewed/documented, deferred, not completed.** Dodanie komentarzy w CSS ≠ wykonanie zadania. W kodzie tylko komentarze (25-global-layout, 05-plp-cards). Redukcja !important i rezygnacja z fixów przez ukrywanie — w **hardening backlog**.
 
 ---
 
@@ -157,7 +157,81 @@
 
 **Критерий приёмки:** Нет лишних глобальных overflow: hidden; оставшиеся — обоснованы и по возможности локализованы.
 
-**⏸ Отложено:** Обзор overflow в следующем рефакторинге; в этом handoff изменений нет.
+**Status: Reviewed/documented, deferred, not completed.** Dodanie komentarzy ≠ wykonanie zadania. W kodzie tylko komentarze przy overflow. Usunięcie nieuzasadnionych overflow i poprawa layoutu — w **hardening backlog**.
+
+---
+
+## Proof Task 5 (standard conditional first, REQUEST_URI fallback)
+
+**Kod:** `functions.php`, funkcja `mnsk7_is_plp_archive()` (linie 36–53).
+
+- **Najpierw standard conditional:** `is_shop()` \|\| `is_product_category()` \|\| `is_product_tag()` (43–44) → return true.
+- **Potem:** `get_queried_object()` — jeśli `WP_Term` i taxonomy `product_cat`/`product_tag` (46–48) → return true.
+- **Na końcu fallback:** `return mnsk7_is_plp_url_path();` (53) — parsowanie REQUEST_URI tylko gdy powyższe nie dały true.
+
+`mnsk7_is_plp_url_path()` (61–108) wywoływane **tylko** wewnątrz `mnsk7_is_plp_archive()`. Na zewnątrz używana wyłącznie `mnsk7_is_plp()` (cache $GLOBALS, wywołuje `mnsk7_is_plp_archive()`).
+
+**Wszystkie miejsca używające tej logiki (wyłącznie `mnsk7_is_plp()`):**
+
+| Plik | Miejsce |
+|------|--------|
+| `header.php` | ok. 70: `$is_shop_archive = … mnsk7_is_plp()` |
+| `functions.php` | ok. 1329: `$is_plp = … mnsk7_is_plp()` (woocommerce_before_main_content) |
+| `functions.php` | ok. 1363: `if ( ! mnsk7_is_plp() ) return $template` (template_include) |
+| `functions.php` | ok. 1406: `if ( ! mnsk7_is_plp() ) return $classes` (body_class 999) |
+| `functions.php` | ok. 1439: `if ( … mnsk7_is_plp() )` (send_headers) |
+| `functions.php` | ok. 1546: `mnsk7_is_plp() && …` (woocommerce_get_breadcrumb) |
+| `woocommerce/archive-product.php` | ok. 17: `$show_breadcrumb = … mnsk7_is_plp()` |
+
+---
+
+## Proof Task 6 (single source CSS — co usunięto, gdzie jest)
+
+**Usunięte z kodu:** W `functions.php` w callbacku `wp_enqueue_scripts` (ok. 688): do ostatniego partu tematy dodawany jest **tylko** `$insta_inline` (Instagram). Komentarz: „Footer/clearfix/header — source of truth w 25-global-layout.css”. Zmiennych `$footer_inline` / `$clearfix_inline` **nie ma** — nie są dodawane do żadnego handle. Blok `wp_footer` z `<style>` (priority 999) z regułami footer/header/clearfix **został usunięty** (Task 1).
+
+**Gdzie te reguły są teraz (tylko 25-global-layout.css):**
+
+| Reguły | Plik (linie) |
+|--------|---------------|
+| `ul.products::before` — content: none; display: none | 25-global-layout.css (22–30) |
+| `#colophon.mnsk7-footer`, `.mnsk7-footer` — background, color | 25-global-layout.css (32–52) |
+| `#masthead.mnsk7-header` — background | 25-global-layout.css (54–57) |
+| Desktop 1025px: menu/search toggle display:none, dropdown visible | 25-global-layout.css (59–75) |
+| `.mnsk7-plp-trust` — flex | 25-global-layout.css (77–91) |
+| Przyciski `.button` — border-radius | 25-global-layout.css (93–108) |
+
+**Wyjątek (celowa duplikacja):** Inline do handle `woocommerce-layout` (functions.php 694–707) zawiera **tę samą** regułę clearfix `ul.products::before`, żeby wygrać z woocommerce-layout.css. Plus reguły `body.woocommerce-account` (przyciski, padding #content) — nie są to reguły footer/header/clearfix z 25.
+
+**Critical w header.php:** Tylko header (first paint). Pełny zestaw w 25.
+
+**Exact files touched:** `assets/css/parts/25-global-layout.css`, `functions.php` (enqueue: tylko $insta_inline; osobny callback: inline do woocommerce-layout), `header.php` (critical inline).
+
+---
+
+## Deferred backlog (Task 7, Task 8)
+
+- **Task 7:** Redukcja `!important`; rezygnacja z fixów przez ukrywanie (display:none, .is-open). **Nie wykonane.** Komentarze w CSS ≠ wykonanie.
+- **Task 8:** Usunięcie nieuzasadnionych `overflow: hidden`; poprawa layoutu zamiast maskowania. **Nie wykonane.** Komentarze przy overflow ≠ wykonanie.
+
+---
+
+## Stop point
+
+**Handoff fragility-refactor kończy się tutaj.** Nie kontynuować nowych zadań architektonicznych w tym handoffie. Następny blok roboczy: **HEADER UI FIXES**, nie fragility-refactor.
+
+---
+
+## Podsumowanie: co realnie zmienione / co udokumentowane / co w backlogu
+
+| Obszar | Status | Uwagi |
+|--------|--------|-------|
+| **Task 4** | Pending acceptance after visual regression | Tabela w TASK4-DOM-AND-DUAL-SUPPORT.md; auto-check + ręczna weryfikacja. |
+| **Task 5** | Accepted only if confirmed by actual code path | Dowód: Proof Task 5 (kolejność w `mnsk7_is_plp_archive()`, miejsca wywołań `mnsk7_is_plp()`). Nie przez docblock/komentarze. |
+| **Task 6** | Partially accepted with known exception | Single source 25-global-layout; wyjątek: intentional clearfix duplication in inline for woocommerce-layout. Dowód: Proof Task 6. |
+| **Task 7** | Reviewed/documented, **deferred, not completed** | Komentarze w CSS ≠ refaktor. Backlog: redukcja !important, rezygnacja z fixów przez ukrywanie. |
+| **Task 8** | Reviewed/documented, **deferred, not completed** | Komentarze przy overflow ≠ refaktor. Backlog: usunięcie nieuzasadnionych overflow, poprawa layoutu. |
+
+Dodanie komentarzy **nie** uznaje się za wykonanie zadania 7 ani 8.
 
 ---
 
@@ -171,8 +245,8 @@
 | 4 | #content #primary → component class | Визуально PLP, PDP, account, cart, checkout без изменений |
 | 5 | Меньше REQUEST_URI, нормальный conditional | Shop/category/tag и filter_* без регрессий |
 | 6 | Один источник для footer/header/clearfix CSS | Нет дублирования одних и тех же правил |
-| 7 | Меньше !important, меньше fix через скрытие | Регрессий нет; меньше !important в изменённых файлах |
-| 8 | Overflow только где нужно | Регрессий нет; overflow обоснован |
+| 7 | Меньше !important, меньше fix через скрытие | **Udokumentowane / odłożone.** W kodzie tylko komentarze; redukcja w backlogu. |
+| 8 | Overflow только где нужно | **Udokumentowane / odłożone.** W kodzie tylko komentarze; przegląd/cleanup w backlogu. |
 
 После всех задач: полная проверка корзины, чекаута, скорости загрузки; при деплое — очистка полного кэша страницы (в т.ч. URL с filter_*).
 
