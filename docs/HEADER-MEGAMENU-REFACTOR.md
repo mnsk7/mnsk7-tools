@@ -24,6 +24,11 @@
 
 **Bez zmian:** overflow-wrap/word-break normal, hyphens: none, hover/focus-visible, responsywność.
 
+### Poprawki po pass 2 (luki pionowe + obcinanie tekstu)
+
+- **Luki nad „Frez typ U” / „Frez typ V”:** grid domyślnie rozciąga komórki w wierszu (`align-items: stretch`), więc gdy jedna pozycja ma 2 linie, cały wiersz się rozciąga i w innych kolumnach powstaje pusta przestrzeń. **Rozwiązanie:** `align-items: start` na `.mnsk7-megamenu__list` — komórki nie rozciągają się, rytm pionowy równy.
+- **Obcinanie słów po prawej** („kulowy”, „płytkami”): przy `minmax(10.5em, 1fr)` i wąskim dropdownie kolumny były za wąskie, a `overflow-x: hidden` obcinał treść. **Rozwiązanie:** kolumny kategorii `minmax(12em, 1fr)`, dropdown `min-width: 460px`, `max-width: 560px`, `overflow-x: auto` (w razie wąskiego viewportu — przewijanie zamiast obcięcia).
+
 ---
 
 ## 1. Przyczyna problemu (pass 1)

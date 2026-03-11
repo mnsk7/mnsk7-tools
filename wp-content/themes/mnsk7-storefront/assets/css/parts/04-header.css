@@ -261,10 +261,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 420px;
-  max-width: min(520px, calc(100vw - 2rem));
+  min-width: 460px;
+  max-width: min(560px, calc(100vw - 2rem));
   max-height: 70vh;
-  overflow-x: hidden;
+  overflow-x: auto;
   overflow-y: auto;
   background: var(--color-white);
   border: 1px solid var(--color-border);
@@ -303,13 +303,14 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   display: grid;
   gap: 0.0625rem 1rem;
   align-content: start;
+  align-items: start;
 }
-/* 3 kolumny — zwarty układ, min 10.5em żeby słowa się nie łamały */
+/* 3 kolumny — min 12em żeby długie nazwy (Frez z wymiennymi płytkami) nie były obcinane */
 .mnsk7-megamenu__list--cols {
-  grid-template-columns: repeat(3, minmax(10.5em, 1fr));
+  grid-template-columns: repeat(3, minmax(12em, 1fr));
 }
 .mnsk7-megamenu__list--tags {
-  grid-template-columns: repeat(3, minmax(9em, 1fr));
+  grid-template-columns: repeat(3, minmax(9.5em, 1fr));
 }
 .mnsk7-megamenu__list li {
   margin: 0;
