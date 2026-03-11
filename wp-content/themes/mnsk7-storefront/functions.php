@@ -9,11 +9,11 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Breakpoint mobile (px) — jeden źródło dla PHP/JS. W CSS używać w media queries wartość 768
- * (odpowiada --breakpoint-mobile w 01-tokens.css).
+ * Breakpoint header "mobile" (px) — od tego width w dół: burger menu, ikony zamiast pełnego menu.
+ * 992px = tablet/mały desktop dostaje burger, unikamy overflow w headerze.
  */
 if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
-	define( 'MNSK7_BREAKPOINT_MOBILE', 768 );
+	define( 'MNSK7_BREAKPOINT_MOBILE', 992 );
 }
 
 /**
@@ -683,8 +683,7 @@ add_action( 'wp_footer', function () {
 	echo "ul.products::before,ul.products.columns-3::before,ul.products.columns-4::before,.woocommerce ul.products::before,.woocommerce-page ul.products::before{content:none!important;display:none!important}";
 	echo "#colophon.mnsk7-footer,.mnsk7-footer{background:#1e293b!important}.mnsk7-footer__bottom{background:#0f172a!important}";
 	echo "#masthead.mnsk7-header{background:#fff!important;border-bottom:1px solid #e9e8cc}";
-	echo "@media (min-width:769px){.mnsk7-header__menu-toggle{display:none!important}.mnsk7-header__search-toggle{display:none!important}#mnsk7-header-search.mnsk7-header__search-dropdown{position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;margin:0!important;padding:0!important;border:none!important;box-shadow:none!important}}";
-	echo "@media (max-width:768px){.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:flex!important}#mnsk7-header-search.mnsk7-header__search-dropdown{display:none!important}.mnsk7-header__search-toggle{display:inline-flex!important}}";
+	echo "@media (min-width:993px){.mnsk7-header__menu-toggle{display:none!important}.mnsk7-header__search-toggle{display:none!important}#mnsk7-header-search.mnsk7-header__search-dropdown{position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;margin:0!important;padding:0!important;border:none!important;box-shadow:none!important}}";
 	echo ".mnsk7-plp-trust-wrap .mnsk7-plp-trust,.mnsk7-plp-trust{display:flex!important;flex-wrap:wrap!important;gap:0.75rem 1.25rem!important}.mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,.mnsk7-plp-trust__item{display:inline-flex!important}.mnsk7-plp-trust__item:not(:last-child)::after{content:' · '!important;margin-left:0.5rem}";
 	echo "</style>\n";
 }, 999 );
@@ -772,7 +771,7 @@ add_action( 'wp_footer', function () {
 				menuToggle.setAttribute('aria-expanded', nav.classList.contains('is-open'));
 			});
 		}
-		// Mobile (≤768px): link „Sklep” prowadzi do sklepu (submenu ukryte w CSS)
+		// Tablet/mobile (≤992px): link „Sklep” prowadzi do sklepu (submenu ukryte w CSS)
 		var menu = document.getElementById('mnsk7-primary-menu');
 		if (menu) {
 			var parentItems = menu.querySelectorAll('li.menu-item-has-children');
@@ -780,7 +779,7 @@ add_action( 'wp_footer', function () {
 				var a = li.querySelector(':scope > a');
 				if (!a) return;
 				a.addEventListener('click', function(e) {
-					if (window.innerWidth <= 768) return;
+					if (window.innerWidth <= 992) return;
 					e.preventDefault();
 					li.classList.toggle('is-open');
 					a.setAttribute('aria-expanded', li.classList.contains('is-open'));
@@ -789,7 +788,7 @@ add_action( 'wp_footer', function () {
 			// Mobile: po kliknięciu w dowolny link menu zamknij overlay, żeby nawigacja działała za pierwszym razem (Przewodnik, Dostawa, Kontakt)
 			menu.addEventListener('click', function(e) {
 				var a = e.target.closest('a');
-				if (a && a.getAttribute('href') && window.innerWidth <= 768 && nav) {
+				if (a && a.getAttribute('href') && window.innerWidth <= 992 && nav) {
 					nav.classList.remove('is-open');
 					if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
 				}
@@ -803,7 +802,7 @@ add_action( 'wp_footer', function () {
 				searchDropdown.hidden = !open;
 				searchToggle.setAttribute('aria-expanded', open);
 				if (searchPanel) {
-					if (window.innerWidth < 768) {
+					if (window.innerWidth < 993) {
 						document.body.classList.toggle('mnsk7-search-open', open);
 						searchPanel.hidden = !open;
 						searchPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
@@ -819,7 +818,7 @@ add_action( 'wp_footer', function () {
 				}
 			}
 			function updateSearchDesktop() {
-				if (window.innerWidth >= 768) {
+				if (window.innerWidth >= 993) {
 					searchDropdown.removeAttribute('hidden');
 					searchToggle.setAttribute('aria-expanded', 'true');
 					document.body.classList.remove('mnsk7-search-open');
@@ -835,16 +834,16 @@ add_action( 'wp_footer', function () {
 			window.addEventListener('resize', updateSearchDesktop);
 			updateSearchDesktop();
 			searchToggle.addEventListener('click', function() {
-				if (window.innerWidth >= 768) return;
+				if (window.innerWidth >= 993) return;
 				var open = document.body.classList.contains('mnsk7-search-open');
 				setSearchOpen(!open);
 			});
 			document.addEventListener('keydown', function(e) {
 				if (e.key === 'Escape') {
-					if (window.innerWidth < 768 && document.body.classList.contains('mnsk7-search-open')) {
+					if (window.innerWidth < 993 && document.body.classList.contains('mnsk7-search-open')) {
 						setSearchOpen(false);
 						if (searchToggle.offsetParent !== null) searchToggle.focus();
-					} else if (window.innerWidth >= 768 && !searchDropdown.hidden) {
+					} else if (window.innerWidth >= 993 && !searchDropdown.hidden) {
 						searchDropdown.hidden = true;
 						searchToggle.setAttribute('aria-expanded', 'false');
 						if (searchToggle.offsetParent !== null) searchToggle.focus();
@@ -852,7 +851,7 @@ add_action( 'wp_footer', function () {
 				}
 			});
 			document.addEventListener('click', function(e) {
-				if (window.innerWidth >= 768) return;
+				if (window.innerWidth >= 993) return;
 				var wrap = searchToggle && searchToggle.closest('.mnsk7-header__search-wrap');
 				var panel = searchPanel && searchPanel.contains(e.target);
 				if (document.body.classList.contains('mnsk7-search-open') && !wrap.contains(e.target) && !panel) {
@@ -862,14 +861,14 @@ add_action( 'wp_footer', function () {
 			var searchForm = searchDropdown.querySelector('form');
 			if (searchForm) {
 				searchForm.addEventListener('submit', function() {
-					if (window.innerWidth < 768) setSearchOpen(false);
+					if (window.innerWidth < 993) setSearchOpen(false);
 				});
 			}
 			if (searchPanel) {
 				var panelForm = searchPanel.querySelector('form');
 				if (panelForm) {
 					panelForm.addEventListener('submit', function() {
-						if (window.innerWidth < 768) setSearchOpen(false);
+						if (window.innerWidth < 993) setSearchOpen(false);
 					});
 				}
 			}
@@ -890,7 +889,7 @@ add_action( 'wp_footer', function () {
 				});
 				// Mobile: klik na trigger otwiera/zamyka dropdown (na desktop tylko hover)
 				trigger.addEventListener('click', function(e) {
-					if (window.innerWidth < 768) {
+					if (window.innerWidth < 993) {
 						e.preventDefault();
 						cartWrap.classList.toggle('is-open');
 					}
@@ -899,7 +898,7 @@ add_action( 'wp_footer', function () {
 				var cartOpenTimer;
 				function openCart() {
 					clearTimeout(cartOpenTimer);
-					if (window.innerWidth >= 768) cartWrap.classList.add('is-open');
+					if (window.innerWidth >= 993) cartWrap.classList.add('is-open');
 				}
 				function closeCart() {
 					cartOpenTimer = setTimeout(function() {
