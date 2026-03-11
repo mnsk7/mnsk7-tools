@@ -61,11 +61,20 @@
 
 ---
 
-## 6. Порядок выполнения
+## 6. Layout и spacing
+
+| ID | Задача | Связь |
+|----|--------|--------|
+| ARCH-21 | ~~**PAGE-TOP-SPACING-REFACTOR**~~ | **Сделано:** 25-global-layout — единственный источник padding-top для #content; в 05-plp-cards убрано дублирование (только padding-left/right/bottom). [backlog/PAGE-TOP-SPACING-REFACTOR.md](backlog/PAGE-TOP-SPACING-REFACTOR.md), [PAGE-TOP-SPACING-REFACTOR.md](PAGE-TOP-SPACING-REFACTOR.md) |
+
+---
+
+## 7. Порядок выполнения
 
 - **Сначала:** ARCH-13, ARCH-14, ARCH-15, ARCH-18, ARCH-19 (стабильность, деньги, безопасность).
 - **Параллельно/сразу после:** ARCH-02, ARCH-03 (код и overrides для спринтов).
 - **Для каталога и SEO:** ARCH-05, ARCH-06, ARCH-09, ARCH-10, ARCH-07, ARCH-20.
+- **Layout/spacing:** ARCH-21 (по приоритету, без смешения с archive contract).
 - **По мере возможности:** ARCH-11, ARCH-12, ARCH-16, ARCH-08.
 
 Детализацию по спринтам см. в tasks/020_sprint_01.md и 030_sprint_02.md.

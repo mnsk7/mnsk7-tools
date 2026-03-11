@@ -3,7 +3,8 @@
    § SHOP / ARCHIVE LAYOUT — content + sidebar
    ----------------------------------------------------------------- */
 
-/* Strona sklepu i archiwum: dual-support — #content/#primary i .mnsk7-* (Task 4). */
+/* Strona sklepu i archiwum: dual-support — #content/#primary i .mnsk7-* (Task 4).
+   ARCH-21: padding-top tylko w 25-global-layout.css (canonical). Tu tylko flex + boczne/dolny padding. */
 body.woocommerce-page #content,
 body.woocommerce-page .mnsk7-content,
 body.woocommerce #content,
@@ -14,7 +15,10 @@ body.woocommerce .mnsk7-content {
   max-width: var(--content-max);
   margin-left: auto;
   margin-right: auto;
-  padding: var(--space-page-top) 1.5rem 1.5rem;
+  /* padding-top: canonical 25-global-layout.css — nie ustawiać tutaj */
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  padding-bottom: 1.5rem;
   box-sizing: border-box;
 }
 
@@ -59,7 +63,10 @@ body.woocommerce .mnsk7-content h1.page-title {
   body.woocommerce #content,
   body.woocommerce .mnsk7-content {
     flex-direction: column;
-    padding: var(--space-page-top) var(--space-16) var(--space-16);
+    /* padding-top: canonical 25-global-layout.css — nie ustawiać tutaj */
+    padding-left: var(--space-16);
+    padding-right: var(--space-16);
+    padding-bottom: var(--space-16);
   }
   body.woocommerce-page #content .woocommerce-sidebar,
   body.woocommerce-page #content .widget-area,
