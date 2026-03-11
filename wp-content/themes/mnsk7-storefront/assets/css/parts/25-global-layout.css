@@ -1,5 +1,37 @@
-/* 25-global-layout — krytyczne stany layoutu (serwerowo, nie wp_footer inline).
-   Header/footer/main content — ten sam wygląd na wszystkich stronach (/, koszyk, archive, tag, ?filter_*, PDP). */
+/* 25-global-layout — source of truth dla header/footer/clearfix/PLP trust (HANDOFF: bez wp_footer).
+   Ten sam wygląd na wszystkich stronach (/, koszyk, archive, tag, ?filter_*, PDP). */
+
+/* Woo clearfix: usuń ::before, który psuł grid produktów */
+ul.products::before,
+ul.products.columns-3::before,
+ul.products.columns-4::before,
+.woocommerce ul.products::before,
+.woocommerce-page ul.products::before {
+  content: none !important;
+  display: none !important;
+}
+
+/* Footer: ciemne tło i kolory tekstu */
+#colophon.mnsk7-footer,
+.mnsk7-footer {
+  background: #1e293b !important;
+  color: #e2e8f0;
+}
+.mnsk7-footer__bottom {
+  background: #0f172a !important;
+  color: #94a3b8;
+}
+.mnsk7-footer__top,
+.mnsk7-footer__col,
+.mnsk7-footer__title,
+.mnsk7-footer__top p,
+.mnsk7-footer__col p,
+.mnsk7-footer__col li {
+  color: #e2e8f0 !important;
+}
+.mnsk7-footer__top a {
+  color: #60a5fa;
+}
 
 /* Header: tło i obramowanie (wygrywa z cache/pluginami) */
 #masthead.mnsk7-header {
@@ -7,8 +39,8 @@
   border-bottom: 1px solid var(--color-border, #e9e8cc);
 }
 
-/* Desktop: jeden search/menu — bez duplikatu, bez zależności od JS */
-@media (min-width: 769px) {
+/* Desktop (1025px): jeden search/menu — bez duplikatu, bez zależności od JS */
+@media (min-width: 1025px) {
   .mnsk7-header__menu-toggle,
   .mnsk7-header__search-toggle {
     display: none !important;
@@ -39,4 +71,21 @@
 .mnsk7-plp-trust__item:not(:last-child)::after {
   content: " · " !important;
   margin-left: 0.5rem;
+}
+
+/* UI Audit: jeden border-radius dla wszystkich przycisków (var(--r-md)) — nadpisuje WC/Storefront */
+.woocommerce a.button,
+.woocommerce button.button,
+.woocommerce input.button,
+.woocommerce a.button.alt,
+.woocommerce button.button.alt,
+.woocommerce input.button.alt,
+a.button,
+button.button,
+.button,
+input[type="submit"],
+button[type="submit"],
+.single_add_to_cart_button,
+.add_to_cart_button {
+  border-radius: var(--r-md) !important;
 }

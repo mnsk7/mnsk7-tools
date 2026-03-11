@@ -67,7 +67,7 @@ endif;
 			<ul id="mnsk7-primary-menu" class="mnsk7-header__menu">
 				<?php
 				$shop_url = ( function_exists( 'wc_get_page_permalink' ) ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
-				$is_shop_archive = function_exists( 'mnsk7_is_plp_archive' ) && mnsk7_is_plp_archive();
+				$is_shop_archive = function_exists( 'mnsk7_is_plp' ) && mnsk7_is_plp();
 				$sklep_class = $is_shop_archive ? ' class="current-menu-item menu-item-has-children"' : ' class="menu-item-has-children"';
 				?>
 				<li<?php echo $sklep_class; ?>>

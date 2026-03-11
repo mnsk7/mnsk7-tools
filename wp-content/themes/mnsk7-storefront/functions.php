@@ -108,6 +108,27 @@ function mnsk7_is_plp_url_path() {
 }
 
 /**
+ * Jedno miejsce określania „to jest PLP” (sklep / kategoria / tag). Ustawiane w wp (priority 1) lub przy pierwszym wywołaniu.
+ * HANDOFF: jeden source of truth — body_class, template_include, breadcrumbs, header używają tylko tego.
+ *
+ * @return bool
+ */
+function mnsk7_is_plp() {
+	if ( isset( $GLOBALS['mnsk7_is_plp'] ) ) {
+		return (bool) $GLOBALS['mnsk7_is_plp'];
+	}
+	$GLOBALS['mnsk7_is_plp'] = mnsk7_is_plp_archive();
+	return (bool) $GLOBALS['mnsk7_is_plp'];
+}
+
+/**
+ * Ustawienie globalnego stanu „to jest PLP” na początku requestu (jeden raz).
+ */
+add_action( 'wp', function () {
+	$GLOBALS['mnsk7_is_plp'] = mnsk7_is_plp_archive();
+}, 1 );
+
+/**
  * Whether parent theme Storefront is present (not removed/overwritten by WP or host).
  * When false, child uses its own header fallback and does not enqueue parent styles.
  */
@@ -659,12 +680,9 @@ add_action( 'wp_enqueue_scripts', function () {
 		wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( $prev ), $v );
 		$prev = 'mnsk7-main';
 	}
-	/* Krytyczne style inline — footer ciemny (w tym dolny pasek) i Instagram karta; na wszystkich stronach (account, filter_*) ten sam wygląd. */
-	$footer_inline = 'footer.mnsk7-footer,#colophon.mnsk7-footer,.site-footer.mnsk7-footer{background:#1e293b!important;color:#e2e8f0}.mnsk7-footer__bottom{background:#0f172a!important;color:#94a3b8}.mnsk7-footer__top,.mnsk7-footer__col,.mnsk7-footer__title,.mnsk7-footer__top p,.mnsk7-footer__col p,.mnsk7-footer__col li{color:#e2e8f0!important}.mnsk7-footer__top a{color:#60a5fa}';
-	$insta_inline  = '.mnsk7-instagram-feed--card{width:100%;max-width:560px;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.08)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__carousel{aspect-ratio:1;overflow:hidden;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__track{display:flex;height:100%;transition:transform .3s ease}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide{flex:0 0 100%;width:100%;height:100%;position:relative}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide .mnsk7-instagram-feed__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dots{display:flex;justify-content:center;gap:6px;padding:10px 0}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot{width:8px;height:8px;border-radius:50%;border:none;background:#c4c4c4;cursor:pointer}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot.is-active{background:#0d6efd;transform:scale(1.15)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile{display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border-top:1px solid #eee}';
-	/* Clearfix ::before w gridzie — na końcu cascade, żeby zawsze wygrać z Storefront/pluginami (Bestsellery, Podobne produkty, sklep) */
-	$clearfix_inline = 'ul.products::before,.woocommerce ul.products::before,.woocommerce-page ul.products::before,ul.products.columns-3::before,ul.products.columns-4::before{content:none!important;display:none!important}';
-	wp_add_inline_style( $prev, $footer_inline . "\n" . $insta_inline . "\n" . $clearfix_inline );
+	/* Inline: tylko Instagram karta. Footer/clearfix/header — source of truth w 25-global-layout.css (HANDOFF). */
+	$insta_inline = '.mnsk7-instagram-feed--card{width:100%;max-width:560px;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.08)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__carousel{aspect-ratio:1;overflow:hidden;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__track{display:flex;height:100%;transition:transform .3s ease}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide{flex:0 0 100%;width:100%;height:100%;position:relative}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide .mnsk7-instagram-feed__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dots{display:flex;justify-content:center;gap:6px;padding:10px 0}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot{width:8px;height:8px;border-radius:50%;border:none;background:#c4c4c4;cursor:pointer}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot.is-active{background:#0d6efd;transform:scale(1.15)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile{display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border-top:1px solid #eee}';
+	wp_add_inline_style( $prev, $insta_inline );
 }, 20 );
 
 /* Override WooCommerce clearfix: woocommerce-layout.css ładuje się PO naszej temie i ustawia .woocommerce ul.products::before{display:table}, co daje pustą pierwszą „komórkę” w gridzie. Dodajemy inline do handle WooCommerce, żeby nasze display:none było po ich regule. Również Moje konto: przyciski + padding (wygrywamy z WC). */
@@ -684,9 +702,7 @@ add_action( 'wp_enqueue_scripts', function () {
 	wp_add_inline_style( 'woocommerce-layout', $css );
 }, 20 );
 
-/* Krytyczne layouty przeniesione do parts/25-global-layout.css (nie wp_footer inline).
-   Clearfix ul.products::before pozostaje w wp_add_inline_style (wygrywa z woocommerce-layout).
-   Przyciski: source of truth 17-buttons.css; theme ładuje się po WC (dependency woocommerce-layout, priority 20). */
+/* Layout overrides: source of truth w 25-global-layout.css (ostatni part). Bez wp_footer — HANDOFF LAYOUT-STATE-REFACTOR. */
 
 /**
  * Zwraca kwotę rabatu lojalnościowego w koszyku (ujemna liczba lub 0).
@@ -1305,7 +1321,7 @@ add_action( 'init', function () {
 
 /* PLP-02: breadcrumbs na archive — wyświetlane w woocommerce/archive-product.php (żeby nic nie nadpisywało). Tu tylko usuwamy domyślne WC z before_main_content, żeby nie duplikować. */
 add_action( 'woocommerce_before_main_content', function () {
-	$is_plp = function_exists( 'mnsk7_is_plp_archive' ) && mnsk7_is_plp_archive();
+	$is_plp = function_exists( 'mnsk7_is_plp' ) && mnsk7_is_plp();
 	$is_product_search = is_search() && get_query_var( 'post_type' ) === 'product';
 	if ( $is_plp || $is_product_search ) {
 		remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
@@ -1313,14 +1329,20 @@ add_action( 'woocommerce_before_main_content', function () {
 }, 5 );
 
 /**
- * Krytyczny stan layoutu: mnsk7-has-promo w PHP (nie tylko JS).
- * Gdy pasek promocyjny jest wyświetlany, klasa ustawiana serwerowo — header/footer nie zależą od JS przy first paint.
- * JS nadal usuwa klasę po zamknięciu paska (sessionStorage).
+ * Krytyczny stan layoutu: mnsk7-has-promo i mnsk7-cookie-bar-visible w PHP (nie tylko JS).
+ * First paint: odступ #page i layout nie zależą od wykonania JS. JS nadal usuwa klasy po zamknięciu/dismiss.
  */
 add_filter( 'body_class', function ( $classes ) {
 	$promo_text = apply_filters( 'mnsk7_header_promo_text', '' );
 	if ( $promo_text !== '' && ! in_array( 'mnsk7-has-promo', $classes, true ) ) {
 		$classes[] = 'mnsk7-has-promo';
+	}
+	// Cookie bar visible: gdy włączony i użytkownik jeszcze nie wyraził zgody (brak cookie lub wartość inna niż accept/reject).
+	if ( apply_filters( 'mnsk7_show_cookie_bar', true ) ) {
+		$consent = isset( $_COOKIE['mnsk7_cookie_consent'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['mnsk7_cookie_consent'] ) ) : '';
+		if ( $consent !== 'accept' && $consent !== 'reject' && ! in_array( 'mnsk7-cookie-bar-visible', $classes, true ) ) {
+			$classes[] = 'mnsk7-cookie-bar-visible';
+		}
 	}
 	return $classes;
 }, 5 );
@@ -1333,7 +1355,7 @@ add_filter( 'body_class', function ( $classes ) {
  * wtedy tax-* dopisywane po ścieżce. Pełna determinacja wymagałaby poprawnego main query po stronie Woo/pluginu.
  */
 add_filter( 'body_class', function ( $classes ) {
-	if ( ! function_exists( 'mnsk7_is_plp_archive' ) || ! mnsk7_is_plp_archive() ) {
+	if ( ! function_exists( 'mnsk7_is_plp' ) || ! mnsk7_is_plp() ) {
 		return $classes;
 	}
 	$ensure = array( 'woocommerce', 'woocommerce-page', 'post-type-archive', 'post-type-archive-product' );
@@ -1344,7 +1366,7 @@ add_filter( 'body_class', function ( $classes ) {
 		}
 	}
 	// Gdy query został zmieniony przez plugin (filter_*), get_queried_object() może być pusty — dopisz tax-* po ścieżce URL
-	if ( ! $obj && function_exists( 'mnsk7_is_plp_url_path' ) && mnsk7_is_plp_url_path() ) {
+	if ( ! $obj ) {
 		$req_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
 		$path = trim( (string) wp_parse_url( 'http://dummy' . $req_uri, PHP_URL_PATH ), '/' );
 		$segments = array_filter( explode( '/', $path ), 'strlen' );
@@ -1376,7 +1398,7 @@ add_filter( 'body_class', function ( $classes ) {
  * Zapobiega załadowaniu index.php (parent) gdy plugin zmienił main query — ten sam header i layout.
  */
 add_filter( 'template_include', function ( $template ) {
-	if ( ! function_exists( 'mnsk7_is_plp_url_path' ) || ! mnsk7_is_plp_url_path() ) {
+	if ( ! function_exists( 'mnsk7_is_plp' ) || ! mnsk7_is_plp() ) {
 		return $template;
 	}
 	if ( $template && ( strpos( $template, 'archive-product' ) !== false ) ) {
@@ -1409,7 +1431,7 @@ add_filter( 'template_include', function ( $template ) {
  */
 add_action( 'send_headers', function () {
 	if ( ! headers_sent() ) {
-		if ( function_exists( 'mnsk7_is_plp_archive' ) && mnsk7_is_plp_archive() ) {
+		if ( function_exists( 'mnsk7_is_plp' ) && mnsk7_is_plp() ) {
 			header( 'Vary: User-Agent', false );
 		}
 	}
@@ -1516,7 +1538,7 @@ add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 	}
 
 	// Na archiwum (kategoria, tag, sklep): ostatni element okruszków linkuje do bieżącego URL (z filtrami), żeby klik nie gubił filtrów.
-	if ( function_exists( 'mnsk7_is_plp_archive' ) && mnsk7_is_plp_archive() && ! empty( $_GET ) && count( $crumbs ) > 0 ) {
+	if ( function_exists( 'mnsk7_is_plp' ) && mnsk7_is_plp() && ! empty( $_GET ) && count( $crumbs ) > 0 ) {
 		$req_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
 		if ( $req_uri !== '' ) {
 			$current_url = home_url( $req_uri );
