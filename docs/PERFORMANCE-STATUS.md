@@ -1,21 +1,26 @@
 # Performance — status i bazowa linia
 
-**Aktualna bazowa linia:** **Pass 1.**
+**Aktualny status (po action plan P1/P2):**
 
-| Pass   | Status    | Uwagi |
-|--------|-----------|--------|
-| **Pass 1** | **current best baseline** | Home: 58 / 1,79 s / 3,13 s / 1668 ms TBT. Archive: 69 / 1,78 s / 2,68 s / 1087 ms TBT. CLS ~0,004. |
-| Pass 2 | **rejected** | Regresje: home TBT 1668→2990 ms, archive LCP 2,68→4,4 s. |
-| Pass 2b | **rejected** | Lepszy niż Pass 2, ale nadal gorszy niż Pass 1 (home TBT 2410 ms, archive słabszy). Brak czystej korzyści. |
+| Strona   | Status    | Metryki (Lighthouse mobile) |
+|----------|-----------|------------------------------|
+| **Home** | **improved** | 69 / 2,0 s FCP / 2,9 s LCP / 910 ms TBT / 0,004 CLS. Nie ruszać bez osobnego powodu. |
+| **Archive** | **blocked by LCP** | 79 / 1,8 s FCP / **4,8 s LCP** / 0 ms TBT / 0,004 CLS. Główny bottleneck: LCP. |
 
 ---
 
-## Rekomendacja
+## Kolejny fokus: tylko archive LCP
 
-- **Przyjąć Pass 1 jako działającą bazę.** Nie kontynuować ogólnych eksperymentów „w ciemno”.
-- **Odrollować do Pass 1:** przywrócić stan kodu z przed Pass 2 / Pass 2b (w tym `functions.php` — init headera, ewentualnie `content-product-table-row.php`), tak aby metryki odpowiadały Pass 1. Szczegóły zmian do cofnięcia: [PERFORMANCE-PASS-2.md](PERFORMANCE-PASS-2.md), [PERFORMANCE-PASS-2b.md](PERFORMANCE-PASS-2b.md).
-- **Dalsze prace tylko jako osobne, celowane zadania:**
-  1. **Zadanie: home TBT** — profilowanie long tasks (Lighthouse / DevTools), rozbicie dużego inline/init, **bez pogorszenia archive**.
-  2. **Zadanie: archive LCP** — ustalenie realnego LCP elementu w aktualnym buildzie, działania **tylko** pod ten element, **bez pogorszenia TBT**.
+- **Nie zmieniać** logiki home.
+- **Osobny pass:** [PERFORMANCE-ARCHIVE-LCP-PASS.md](PERFORMANCE-ARCHIVE-LCP-PASS.md) — ustalenie realnego LCP elementu (trace/Lighthouse), lista kontrolna (promo/header, TTFB, critical CSS, font), minimalne zmiany tylko pod archive, bez wzrostu TBT.
 
-Metryki Pass 1 (Lighthouse mobile, staging): [PERFORMANCE-AUDIT-AND-PLAN.md](PERFORMANCE-AUDIT-AND-PLAN.md).
+---
+
+## Historia (dla kontekstu)
+
+| Pass   | Status    | Uwagi |
+|--------|-----------|--------|
+| Pass 1 | baseline (historyczny) | Home: 58 / 1,79 s / 3,13 s / 1668 ms TBT. Archive: 69 / 1,78 s / 2,68 s / 1087 ms TBT. |
+| Pass 2 | rejected | Regresje: home TBT, archive LCP. |
+| Pass 2b | rejected | Brak czystej korzyści vs Pass 1. |
+| Action plan (P1.1, P1.3, P2.7, P2.8) | wdrożone | fragments off home, mobile megamenu skip, transient get_terms. Home improved; archive TBT 0, LCP 4,8 s. |

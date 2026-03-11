@@ -35,6 +35,13 @@ defined( 'ABSPATH' ) || exit;
 	.mnsk7-header__brand img{max-height:42px;width:auto;max-width:100%;display:block;vertical-align:middle}
 	@media (min-width:1025px){.mnsk7-header__menu-toggle{display:none!important}.mnsk7-header__search-toggle{display:none!important}#mnsk7-header-search.mnsk7-header__search-dropdown{position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;margin:0!important;padding:0!important;min-width:240px;border:none!important;box-shadow:none!important}}
 	@media (max-width:1024px){.mnsk7-header__inner{overflow:hidden}.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:flex!important}}
+	/* Archive LCP pass: promo bar = LCP candidate — krytyczne style bez czekania na main.css */
+	.mnsk7-promo-bar{background:#0c7ddb;color:#fff;font-size:0.8125rem;font-weight:500;padding:0.35rem 1rem;position:sticky;top:0;z-index:1001;box-sizing:border-box}
+	.mnsk7-promo-bar__inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:1rem;position:relative}
+	.mnsk7-promo-bar__text{flex:1;text-align:center}
+	.mnsk7-promo-bar__text a{color:inherit;text-decoration:underline}
+	@media (max-width:1024px){.mnsk7-promo-bar{padding:0.35rem 0.75rem;padding-right:3rem}.mnsk7-promo-bar__inner{gap:0.5rem}.mnsk7-promo-bar__text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;padding-right:0.5rem}}
+	@media (max-width:480px){.mnsk7-promo-bar{padding:0.5rem 3rem 0.5rem 1rem;min-height:44px}.mnsk7-promo-bar__inner{flex-wrap:wrap;justify-content:center;text-align:center}.mnsk7-promo-bar__text{white-space:normal;overflow:visible;text-overflow:clip;flex:1 1 100%;padding-right:0;line-height:1.4}}
 	</style>
 </head>
 <body <?php body_class(); ?>>
@@ -87,12 +94,11 @@ endif;
 					$has_submenu = false;
 					$top_cats = array();
 					$top_tags = array();
-					// P1.3/P2.8: Na mobile nie renderujemy megamenu (mniej DOM, brak get_terms). Desktop: cache get_terms (P2.7).
-					$render_megamenu = ! function_exists( 'wp_is_mobile' ) || ! wp_is_mobile();
-					if ( $render_megamenu && function_exists( 'mnsk7_get_megamenu_terms' ) ) {
+					// Jedna struktura na desktop i mobile: megamenu w DOM zawsze (mobile rozwijane przez JS, tap → .is-open).
+					if ( function_exists( 'mnsk7_get_megamenu_terms' ) ) {
 						$terms = mnsk7_get_megamenu_terms();
-						$top_cats = $terms['cats'];
-						$top_tags = $terms['tags'];
+						$top_cats = isset( $terms['cats'] ) ? $terms['cats'] : array();
+						$top_tags = isset( $terms['tags'] ) ? $terms['tags'] : array();
 					}
 					if ( ! empty( $top_cats ) || ! empty( $top_tags ) ) {
 						$has_submenu = true;
