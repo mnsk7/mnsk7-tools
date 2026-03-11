@@ -579,6 +579,39 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   z-index: 99;
 }
 
+/* Search form as input-group: no gap, unified border, one control (desktop + dropdown open) */
+.mnsk7-header__search-dropdown .mnsk7-header__search-form {
+  display: flex;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  gap: 0;
+  min-width: 0;
+}
+.mnsk7-header__search-dropdown .mnsk7-header__search-input {
+  border-right: none;
+  border-radius: var(--r-sm) 0 0 var(--r-sm);
+  flex: 1;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.mnsk7-header__search-dropdown .mnsk7-header__search-submit {
+  border: 1px solid var(--color-border);
+  border-left: none;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
+  flex-shrink: 0;
+  box-sizing: border-box;
+}
+.mnsk7-header__search-dropdown .mnsk7-header__search-form:focus-within .mnsk7-header__search-input {
+  border-color: var(--color-primary);
+}
+.mnsk7-header__search-dropdown .mnsk7-header__search-form:focus-within .mnsk7-header__search-submit {
+  border-color: var(--color-primary);
+}
+.mnsk7-header__search-dropdown .mnsk7-header__search-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
 /* Od 1025px (desktop): pole wyszukiwania w jednej linii z headerem; do 1024px — ikona + panel */
 @media (min-width: 1025px) {
   .mnsk7-header__search-toggle {
@@ -609,42 +642,37 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__search-dropdown .mnsk7-header__search-form {
     flex: 1;
     min-width: 0;
-    align-items: stretch;
-    display: flex;
-    gap: 0;
     margin: 0;
   }
   .mnsk7-header__search-dropdown .mnsk7-header__search-input {
-    flex: 1;
     min-width: 11.5em; /* placeholder "Szukaj produktów…" */
     min-height: 40px;
     height: 40px;
-    background: var(--color-white);
-    border: 1px solid var(--color-border);
-    border-right: none;
-    border-radius: var(--r-sm) 0 0 var(--r-sm);
     padding: 0.4rem 0.75rem;
   }
   .mnsk7-header__search-dropdown .mnsk7-header__search-input::placeholder {
     color: var(--color-text-muted);
   }
   .mnsk7-header__search-dropdown .mnsk7-header__search-input:focus {
-    border-right: none;
-    border-color: var(--color-primary);
     outline: none;
     box-shadow: none;
   }
   .mnsk7-header__search-dropdown .mnsk7-header__search-submit {
-    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    border-radius: 0 var(--r-sm) var(--r-sm) 0 !important;
     padding: 0.4rem 0.875rem;
     min-height: 40px;
     height: 40px;
-    border: 1px solid var(--color-primary);
+    border: 1px solid var(--color-border);
+    border-left: none;
     background: var(--color-primary);
     color: var(--color-white);
   }
   .mnsk7-header__search-dropdown .mnsk7-header__search-submit:hover {
     background: var(--color-primary-hover);
+    border-color: var(--color-primary-hover);
+    border-left: none;
+  }
+  .mnsk7-header__search-dropdown .mnsk7-header__search-form:focus-within .mnsk7-header__search-submit:hover {
     border-color: var(--color-primary-hover);
   }
 }
@@ -1264,20 +1292,29 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     font-size: var(--fs-sm);
     font-weight: 600;
     font-family: var(--font-base);
-    border: 1px solid var(--color-primary);
+    border: 1px solid var(--color-border);
+    border-left: none;
     background: var(--color-primary);
     color: var(--color-white);
-    border-radius: 0 var(--r-sm) var(--r-sm) 0;
+    border-radius: 0 var(--r-sm) var(--r-sm) 0 !important;
     cursor: pointer;
     transition: background 0.15s ease, border-color 0.15s ease;
+    box-sizing: border-box;
   }
   .mnsk7-header-search-panel__submit:hover {
     background: var(--color-primary-hover);
     border-color: var(--color-primary-hover);
+    border-left: none;
   }
   .mnsk7-header-search-panel__submit:focus-visible {
     outline: 2px solid var(--color-focus, var(--color-primary));
     outline-offset: 1px;
+  }
+  .mnsk7-header-search-panel__form:focus-within .mnsk7-header-search-panel__input {
+    border-color: var(--color-primary);
+  }
+  .mnsk7-header-search-panel__form:focus-within .mnsk7-header-search-panel__submit {
+    border-color: var(--color-primary);
   }
 }
 
