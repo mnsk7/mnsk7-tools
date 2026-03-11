@@ -9,4 +9,4 @@
 
 Архитектура темы и шаблонов Woo: **docs/ARCHITECTURE.md**.
 
-**CSS:** Тема подключает стили из `assets/css/parts/*.css`. Если на сервере папка `parts/` отсутствует или пуста, подключается `assets/css/main.css`. Перед деплоем без parts пересобрать main: `bash scripts/build-main-css.sh` (из корня темы). Диагностика футера на staging: **docs/FOOTER-DIAGNOSTIC-STAGING.md**.
+**CSS:** W runtime ładuje się tylko `assets/css/main.css`. Pliki w `assets/css/parts/` to źródło do budowy — po zmianach w parts uruchomić `bash scripts/build-main-css.sh` (z katalogu theme), commit + deploy main.css. Jedna strategia ładowania eliminuje błąd „staging serwuje stary/rozjechany CSS”. Diagnostyka footera na staging: **docs/FOOTER-DIAGNOSTIC-STAGING.md**.

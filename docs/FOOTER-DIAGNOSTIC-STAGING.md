@@ -1,6 +1,14 @@
 # Диагностика mobile footer на staging — proof и root cause
 
-**Цель:** установить, почему на странице результат другой (accordion не работает, дефолтные стили кнопки, desktop layout на mobile).
+**Статус задачи:** не закрыта, пока нет proof на самом staging (Network, DOM, Console, Computed, скриншоты после деплоя).
+
+**Цель:** установить, какой CSS реально грузится и что в DOM; подтвердить рабочий accordion после деплоя.
+
+---
+
+## 0. Схема подключения CSS (после рефактора)
+
+В runtime **всегда** грузится один файл: `assets/css/main.css`. Папка `parts/` используется только как источник для сборки (`scripts/build-main-css.sh`). Двойная схема «если есть parts — parts, иначе main» убрана — она и создавала баг (staging мог отдавать старый main или разъехавшиеся parts).
 
 ---
 
@@ -25,46 +33,64 @@
 
 ## 2. Подключён ли нужный CSS
 
-**Логика в `functions.php` (около 672–686):**
-
-- Перебираются файлы из папки `assets/css/parts/` (00-fonts-inter.css … 25-global-layout.css).
-- Для **каждого существующего** файла подключается отдельный `<link>` (handle `mnsk7-parts-09-footer` и т.д.).
-- **main.css подключается только если ни один part не найден** (`$parts_loaded === false`), т.е. когда папка `parts/` пуста или отсутствует.
+**Логика в `functions.php`:** в runtime подключается только `main.css` (jeden plik, jedna strategia).
 
 **Проверка на staging:**
 
-1. **Network:** отфильтровать по CSS. Проверить, что загружаются либо:
-   - `.../assets/css/parts/09-footer.css`, `10-cookie-bar.css`, `21-responsive-mobile.css`,  
-   либо
-   - один файл `main.css` (если parts не задеплоены).
-2. **Sources:** открыть загруженный CSS (09-footer.css или main.css) и поискать по тексту:
+1. **Network:** отфильтровать по CSS. Должен загружаться один файл: `.../assets/css/main.css` (bez mnsk7-parts-*).
+2. **Sources:** открыть `main.css` и поискать:
    - `mnsk7-footer__accordion-trigger`
    - `mnsk7-footer__accordion-panel`
-   - `@media (max-width: 768px)` и внутри — правила для `.mnsk7-footer__col.is-open`.
+   - `@media (max-width: 768px)` и внутри — `.mnsk7-footer__col.is-open`.
 
-**Если в загруженном CSS этих селекторов нет** → на сервере либо старая версия parts, либо старый main.css.  
-**Решение:** задеплоить актуальные `parts/09-footer.css`, `10-cookie-bar.css`, `21-responsive-mobile.css` **или** один пересобранный `main.css` (см. ниже).
+**Если этих селекторов в загруженном main.css нет** → на сервере старый main.css; задеплоить пересобранный (run `scripts/build-main-css.sh`, commit + deploy).
 
 ---
 
 ## 3. Root cause (итог по коду)
 
-| Ситуация на сервере | Что грузится | Результат |
-|---------------------|--------------|-----------|
-| Есть папка `parts/` с актуальными файлами | Отдельные parts, в т.ч. 09-footer.css | Стили и accordion должны работать. |
-| Папка `parts/` пуста или отсутствует | Только `main.css` | Раньше main.css **не содержал** 09-footer (не был собран из parts) → футер без стилей, дефолтные кнопки, нет mobile accordion. |
-| Задеплоен старый main.css / старые parts | Старый CSS | Селекторы `.mnsk7-footer__accordion-*` отсутствуют, остаются старые правила под `.mnsk7-footer__title` или вообще без футера. |
+Раньше: две стратегии — «есть parts → грузим parts, нет parts → main.css». Staging мог отдавать старый main.css (без 09-footer) или разъехавшиеся parts → футер/header/PDP получали не тот CSS.
 
-**Исправление в репозитории:**
-
-1. **main.css пересобран из всех parts** скриптом `scripts/build-main-css.sh` — в нём есть и 09-footer, и mobile accordion.
-2. После деплоя при отсутствии parts будет подключаться актуальный main.css со всеми стилями футера.
-
-**На staging нужно:** задеплоить либо обновлённые `parts/` (в т.ч. 09, 10, 21), либо новый `main.css`, либо и то и другое.
+Сейчас: одна стратегия — всегда грузится только `main.css`. Parts — только источник для сборки. На staging нужно задеплоить актуальный пересобранный `main.css`.
 
 ---
 
-## 4. Есть ли на странице нужные селекторы (DOM)
+## 4. Referencja: DOM jednej sekcji i reguła otwierająca
+
+**Oczekiwany fragment HTML jednej kolumny (np. Newsletter):**
+
+```html
+<div id="footer-col-newsletter" class="mnsk7-footer__col mnsk7-footer__col--newsletter" aria-label="…">
+  <button type="button" class="mnsk7-footer__accordion-trigger" id="footer-trigger-newsletter"
+          aria-expanded="false" aria-controls="footer-panel-newsletter">
+    <span class="mnsk7-footer__accordion-title">Newsletter</span>
+    <span class="mnsk7-footer__accordion-icon" aria-hidden="true"></span>
+  </button>
+  <div id="footer-panel-newsletter" class="mnsk7-footer__accordion-panel" role="region" aria-labelledby="footer-trigger-newsletter">
+    <p class="mnsk7-footer__newsletter-desc">…</p>
+    <form class="mnsk7-footer__newsletter-form" …>…</form>
+    <p class="mnsk7-footer__newsletter-privacy">…</p>
+  </div>
+</div>
+```
+
+**Reguła CSS, która faktycznie pokazuje panel (mobile):**
+
+```css
+@media (max-width: 768px) {
+  .mnsk7-footer__accordion-panel { display: none !important; }
+  .mnsk7-footer__col.is-open > .mnsk7-footer__accordion-panel { display: block !important; }
+}
+```
+
+Klasa `is-open` wisi na **rodzicu** `.mnsk7-footer__col`, a nie na panelu. Panel musi być **bezpośrednim dzieckiem** (>) tej kolumny.
+
+**W DevTools przed klikiem:** u `.mnsk7-footer__accordion-panel` computed `display` = none.  
+**Po kliknięciu:** na `div.mnsk7-footer__col` pojawia się klasa `is-open`; u `.mnsk7-footer__accordion-panel` computed `display` = block.
+
+---
+
+## 5. Есть ли на странице нужные селекторы (DOM)
 
 В DevTools → Elements в дереве футера проверить:
 
@@ -75,7 +101,7 @@
 
 ---
 
-## 5. Работает ли JS
+## 6. Работает ли JS
 
 1. **Console:** при загрузке и при тапе по секции футера не должно быть ошибок.
 2. **Проверка listener:** в Console выполнить:
@@ -89,7 +115,7 @@
 
 ---
 
-## 6. Конфликтующие правила (computed styles)
+## 7. Конфликтующие правила (computed styles)
 
 Для элемента `button.mnsk7-footer__accordion-trigger` (в мобильном виде):
 
@@ -102,24 +128,25 @@
 
 ---
 
-## 7. Сборка main.css (для деплоя без parts)
+## 8. Сборка main.css przed деплоем
 
-Если на staging подключается только main.css, он должен быть собран из актуальных parts:
+main.css — jedyny plik CSS tematy w runtime. Po zmianach w `parts/*.css` trzeba go przebudować i wrzucić w deploy:
 
 ```bash
 cd wp-content/themes/mnsk7-storefront
 bash scripts/build-main-css.sh
 ```
 
-Скрипт конкатенирует все parts в порядке из `functions.php` и перезаписывает `assets/css/main.css`. После этого задеплоить обновлённый `main.css`.
+Skrypt skleja wszystkie parts w kolejności i nadpisuje `assets/css/main.css`. Potem commit + deploy zaktualizowanego `main.css`.
 
 ---
 
-## 8. Checklist после исправления
+## 9. Obowiązkowy proof na staging (zadanie nie zamknięte bez tego)
 
-- [ ] В DOM есть `button.mnsk7-footer__accordion-trigger` и `div.mnsk7-footer__accordion-panel` (не старый h3).
-- [ ] В загруженном CSS есть селекторы `mnsk7-footer__accordion-trigger`, `mnsk7-footer__accordion-panel`, mobile `@media (max-width: 768px)` с `.mnsk7-footer__col.is-open`.
-- [ ] При тапе по секции класс `is-open` появляется/снимается с `.mnsk7-footer__col`, панель открывается/закрывается.
-- [ ] Нет синего выделения текста при тапе (есть `user-select: none`, `-webkit-tap-highlight-color: transparent`).
-- [ ] Нет дефолтного вида кнопки (есть `appearance: none`, `box-shadow: none`, нужный background/border).
-- [ ] На ширине ≤768px футер в одну колонку (accordion), не 4 колонки как на desktop.
+- [ ] **Network:** skrin — widać, że ładuje się `main.css` (i nie parts/*).
+- [ ] **DOM:** skrin jednej sekcji footera — widać `button.mnsk7-footer__accordion-trigger` i `div.mnsk7-footer__accordion-panel` (nie h3).
+- [ ] **Console/DOM:** po kliku sekcja dostaje `is-open` na `.mnsk7-footer__col`, panel się otwiera/zamyka.
+- [ ] **Computed:** mobile rules (np. display dla panelu) wygrywają.
+- [ ] **Skriny końcowe (mobile):** 2–3 z działającym accordionem — sekcje otwierają się/zamykają, brak domyślnego wyglądu przycisków, brak niebieskiego zaznaczenia tekstu.
+
+**Cache:** przed proof sprawdzić i w razie potrzeby wyczyścić: cache przeglądarki, cache serwera, cache pluginu/minify, CDN.

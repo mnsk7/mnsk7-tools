@@ -648,17 +648,14 @@ function mnsk7_header_fallback_menu() {
 	echo '</ul>';
 }
 
-/* 1. Enqueue styles — many small CSS parts (easier to maintain than one 2000+ line file).
- * Zawsze te same zasoby niezależnie od parametrów URL (np. ?filter_*). Strony z filtrami
- * muszą wyglądać identycznie jak bez filtrów (cache nie może serwować innej wersji CSS).
- * Nie dodawać warunków is_filter_request / $_GET — header i layout muszą być te same.
- * B1: przyciski — source of truth w 17-buttons.css; theme ładuje się PO WooCommerce (dependency
- * woocommerce-layout, priority 20), żeby nasz system przycisków wygrywał bez override w footer.
+/* 1. Enqueue styles — jeden plik runtime: main.css (zbudowany z parts przez scripts/build-main-css.sh).
+ * Architektura: parts/ to tylko źródło do budowy; na staging/prod ładuje się wyłącznie main.css.
+ * Eliminuje to podwójną strategię (parts vs main), która powodowała bug: staging mógł serwować
+ * stary main.css lub rozjechane parts, a footer/header/PDP dostawały nieaktualne style.
+ * Zawsze te same zasoby niezależnie od URL (cache). B1: theme ładuje się po WC (priority 20).
  */
 add_action( 'wp_enqueue_scripts', function () {
 	$v = defined( 'MNSK7_THEME_VERSION' ) ? MNSK7_THEME_VERSION : '3.0.9';
-	$base = get_stylesheet_directory_uri() . '/assets/css/parts/';
-	$dir = get_stylesheet_directory() . '/assets/css/parts/';
 	$child_deps = array();
 	if ( mnsk7_parent_storefront_available() ) {
 		wp_enqueue_style( 'storefront-style', get_template_directory_uri() . '/style.css' );
@@ -668,26 +665,19 @@ add_action( 'wp_enqueue_scripts', function () {
 		$child_deps[] = 'woocommerce-layout';
 	}
 	wp_enqueue_style( 'mnsk7-storefront-style', get_stylesheet_uri(), $child_deps, $v );
-	$prev = 'mnsk7-storefront-style';
-	$parts = array( '00-fonts-inter', '01-tokens', '02-reset-typography', '03-storefront-overrides', '04-header', '05-plp-cards', '06-single-product', '07-mnsk7-blocks', '08-home-sections', '09-footer', '10-cookie-bar', '11-hidden', '12-related-products', '13-seo-landing', '14-faq', '15-delivery-contact', '16-woo-notices', '17-buttons', '18-cart-checkout', '19-breadcrumbs', '20-responsive-tablet', '21-responsive-mobile', '22-touch-targets', '23-print', '24-plp-table', '25-global-layout' );
-	$parts_loaded = false;
-	foreach ( $parts as $part ) {
-		$path = $dir . $part . '.css';
-		if ( ! file_exists( $path ) ) {
-			continue;
+	wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( 'mnsk7-storefront-style' ), $v );
+	/* Inline: tylko Instagram karta — tylko gdy na stronie jest shortcode (front page lub treść z [mnsk7_instagram_feed]). */
+	$need_insta_inline = is_front_page();
+	if ( ! $need_insta_inline && is_singular() ) {
+		$post = get_queried_object();
+		if ( $post && isset( $post->post_content ) && has_shortcode( (string) $post->post_content, 'mnsk7_instagram_feed' ) ) {
+			$need_insta_inline = true;
 		}
-		$handle = 'mnsk7-parts-' . $part;
-		wp_enqueue_style( $handle, $base . $part . '.css', array( $prev ), $v );
-		$prev = $handle;
-		$parts_loaded = true;
 	}
-	if ( ! $parts_loaded ) {
-		wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( $prev ), $v );
-		$prev = 'mnsk7-main';
+	if ( $need_insta_inline ) {
+		$insta_inline = '.mnsk7-instagram-feed--card{width:100%;max-width:560px;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.08)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__carousel{aspect-ratio:1;overflow:hidden;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__track{display:flex;height:100%;transition:transform .3s ease}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide{flex:0 0 100%;width:100%;height:100%;position:relative}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide .mnsk7-instagram-feed__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dots{display:flex;justify-content:center;gap:6px;padding:10px 0}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot{width:8px;height:8px;border-radius:50%;border:none;background:#c4c4c4;cursor:pointer}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot.is-active{background:#0d6efd;transform:scale(1.15)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile{display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border-top:1px solid #eee}';
+		wp_add_inline_style( 'mnsk7-main', $insta_inline );
 	}
-	/* Inline: tylko Instagram karta. Footer/clearfix/header — source of truth w 25-global-layout.css (HANDOFF). */
-	$insta_inline = '.mnsk7-instagram-feed--card{width:100%;max-width:560px;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.08)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__carousel{aspect-ratio:1;overflow:hidden;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__track{display:flex;height:100%;transition:transform .3s ease}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide{flex:0 0 100%;width:100%;height:100%;position:relative}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide .mnsk7-instagram-feed__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dots{display:flex;justify-content:center;gap:6px;padding:10px 0}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot{width:8px;height:8px;border-radius:50%;border:none;background:#c4c4c4;cursor:pointer}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot.is-active{background:#0d6efd;transform:scale(1.15)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile{display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border-top:1px solid #eee}';
-	wp_add_inline_style( $prev, $insta_inline );
 }, 20 );
 
 /* Override WooCommerce clearfix: woocommerce-layout.css ładuje się PO naszej temie i ustawia .woocommerce ul.products::before{display:table}, co daje pustą pierwszą „komórkę” w gridzie. Dodajemy inline do handle WooCommerce, żeby nasze display:none było po ich regule. Również Moje konto: przyciski + padding (wygrywamy z WC). */

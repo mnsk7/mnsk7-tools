@@ -1,7 +1,5 @@
 # CSS parts — mnsk7-storefront
 
-Styły w małych plikach (~20–400 linii). W functions.php ładowane są części 01–23.
+Pliki w tym katalogu to **źródło** do budowy. W runtime temat ładuje tylko `../main.css` (zbudowany skryptem `scripts/build-main-css.sh`). Kolejność: 00-fonts-inter … 25-global-layout (zgodna ze skryptem).
 
-01-tokens, 02-reset-typography, 03-storefront-overrides, 04-header, 05-plp-cards, 06-single-product, 07-mnsk7-blocks, 08-home-sections, 09-footer, 10-cookie-bar … 23-print.
-
-Edytuj tylko odpowiedni part; nie twórz jednego wielkiego pliku.
+Po edycji parta uruchom `bash scripts/build-main-css.sh` z katalogu theme i wrzuć zaktualizowany main.css w deploy.
