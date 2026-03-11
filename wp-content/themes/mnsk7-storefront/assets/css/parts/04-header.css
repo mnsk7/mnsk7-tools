@@ -128,7 +128,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   font-size: 1.125rem;
   font-weight: 700;
   color: var(--color-text);
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
   font-family: var(--font-base);
   letter-spacing: -0.02em;
@@ -138,7 +138,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-header__brand a:visited,
 .mnsk7-header__brand a:active {
   color: var(--color-primary);
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
 }
 .mnsk7-header__brand a:focus {
@@ -182,7 +182,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--color-text);
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
   white-space: nowrap;
   border-radius: var(--r-sm);
@@ -194,7 +194,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-header__menu a:visited,
 .mnsk7-header__menu li.current-menu-item > a {
   color: var(--color-primary);
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
 }
 .mnsk7-header__menu a:hover {
@@ -265,7 +265,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   min-width: 360px;
   max-width: min(560px, calc(100vw - 2rem));
   max-height: 70vh;
-  overflow-x: hidden;
+  overflow-x: hidden; /* Task 8: no horizontal scrollbar */
   overflow-y: auto;
   background: var(--color-white);
   border: 1px solid var(--color-border);
@@ -319,7 +319,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-megamenu__list li {
   margin: 0;
   min-width: 0;
-  overflow: hidden;
+  overflow: hidden; /* Task 8: clip grid cell to avoid spill */
 }
 .mnsk7-megamenu__list a {
   display: block;
@@ -334,7 +334,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   word-wrap: normal;
   word-break: normal;
   hyphens: none;
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
   color: var(--color-text);
   min-width: 0;
@@ -363,7 +363,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   font-size: var(--fs-xs);
   font-weight: 600;
   color: var(--color-primary);
-  text-decoration: none !important;
+  text-decoration: none;
   border-radius: var(--r-sm);
   line-height: 1.35;
 }
@@ -465,13 +465,13 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   min-width: 0;
 }
 .mnsk7-header__menu .sub-menu a {
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
 }
 .mnsk7-header__menu .sub-menu a:hover,
 .mnsk7-header__menu .sub-menu a:visited,
 .mnsk7-header__menu .sub-menu a:active {
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
 }
 .mnsk7-header__menu .sub-menu a:hover {
@@ -752,7 +752,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   font-size: var(--fs-xs);
   font-weight: 600;
   color: var(--color-text);
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
   white-space: nowrap;
   border-radius: var(--r-sm);
@@ -765,7 +765,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-header__link:visited,
 .mnsk7-header__link:active {
   color: var(--color-text);
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
 }
 .mnsk7-header__link:focus {
@@ -801,7 +801,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-header__link:hover {
   color: var(--color-primary);
   background: rgba(0, 0, 0, 0.04);
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
 }
 
@@ -828,7 +828,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   min-height: var(--header-h);
   box-sizing: border-box;
   color: var(--color-text);
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -839,7 +839,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-header__cart-trigger:visited,
 .mnsk7-header__cart-trigger:active {
   color: var(--color-text);
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
 }
 .mnsk7-header__cart .cart-contents:focus,
@@ -1086,7 +1086,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     min-height: var(--header-h);
     padding: 0 0.75rem 0 0.5rem;
     min-width: 0;
-    overflow: hidden;
+    overflow: hidden; /* Task 8: tablet/mobile — prevent menu/search overlap */
   }
   .mnsk7-header__brand {
     order: 0;
@@ -1151,7 +1151,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
   .mnsk7-header__cart-trigger,
   .mnsk7-header__cart .cart-contents {
-    text-decoration: none !important;
+    text-decoration: none;
     border-bottom: none;
   }
   /* Mobile menu panel: below header, full width, vertical nav list, left-aligned, normal spacing — not empty block */

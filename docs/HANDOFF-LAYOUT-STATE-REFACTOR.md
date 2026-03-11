@@ -142,7 +142,7 @@
 
 **Критерий приёмки:** Меньше правил с !important; где переделано — layout не держится на скрытии (display:none/visibility) без необходимости.
 
-**Status: Reviewed/documented, deferred, not completed.** Dodanie komentarzy w CSS ≠ wykonanie zadania. W kodzie tylko komentarze (25-global-layout, 05-plp-cards). Redukcja !important i rezygnacja z fixów przez ukrywanie — w **hardening backlog**.
+**Status: Wykonane (2026-03-11).** Usunięto `!important` z text-decoration (i border-bottom) w 04-header.css, 24-plp-table.css, 05-plp-cards.css. display:none pozostawione tam, gdzie konieczne (clearfix Woo, responsive, drawer, sidebar PLP) — udokumentowane w [docs/TASK7-TASK8-HARDENING.md](./TASK7-TASK8-HARDENING.md).
 
 ---
 
@@ -157,7 +157,7 @@
 
 **Критерий приёмки:** Нет лишних глобальных overflow: hidden; оставшиеся — обоснованы и по возможности локализованы.
 
-**Status: Reviewed/documented, deferred, not completed.** Dodanie komentarzy ≠ wykonanie zadania. W kodzie tylko komentarze przy overflow. Usunięcie nieuzasadnionych overflow i poprawa layoutu — w **hardening backlog**.
+**Status: Wykonane (2026-03-11).** Przejrzano overflow w 04-header, 02-reset-typography, 24-plp-table, 05-plp-cards, 06-single-product, 07-mnsk7-blocks; nie znaleziono overflowu maskującego błąd layoutu. Dodano komentarze Task 8 przy uzasadnionych overflow. Szczegóły: [docs/TASK7-TASK8-HARDENING.md](./TASK7-TASK8-HARDENING.md).
 
 ---
 
@@ -208,10 +208,10 @@
 
 ---
 
-## Deferred backlog (Task 7, Task 8)
+## Backlog zamknięty (Task 7, Task 8 — wykonane)
 
-- **Task 7:** Redukcja `!important`; rezygnacja z fixów przez ukrywanie (display:none, .is-open). **Nie wykonane.** Komentarze w CSS ≠ wykonanie.
-- **Task 8:** Usunięcie nieuzasadnionych `overflow: hidden`; poprawa layoutu zamiast maskowania. **Nie wykonane.** Komentarze przy overflow ≠ wykonanie.
+- **Task 7:** Wykonane — redukcja !important (header, PLP table, PLP cards); display:none udokumentowane (gdzie konieczne, gdzie zostawione). [TASK7-TASK8-HARDENING.md](./TASK7-TASK8-HARDENING.md).
+- **Task 8:** Wykonane — audyt overflow, komentarze przy uzasadnionych; brak usuniętych (nie znaleziono maskowania layoutu). [TASK7-TASK8-HARDENING.md](./TASK7-TASK8-HARDENING.md).
 
 ---
 
@@ -228,8 +228,8 @@
 | **Task 4** | Pending acceptance after visual regression | Tabela w TASK4-DOM-AND-DUAL-SUPPORT.md; auto-check + ręczna weryfikacja. |
 | **Task 5** | Accepted only if confirmed by actual code path | Dowód: Proof Task 5 (kolejność w `mnsk7_is_plp_archive()`, miejsca wywołań `mnsk7_is_plp()`). Nie przez docblock/komentarze. |
 | **Task 6** | Partially accepted with known exception | Single source 25-global-layout; wyjątek: intentional clearfix duplication in inline for woocommerce-layout. Dowód: Proof Task 6. |
-| **Task 7** | Reviewed/documented, **deferred, not completed** | Komentarze w CSS ≠ refaktor. Backlog: redukcja !important, rezygnacja z fixów przez ukrywanie. |
-| **Task 8** | Reviewed/documented, **deferred, not completed** | Komentarze przy overflow ≠ refaktor. Backlog: usunięcie nieuzasadnionych overflow, poprawa layoutu. |
+| **Task 7** | **Wykonane** | Redukcja !important (04-header, 24-plp-table, 05-plp-cards); display:none udokumentowane. TASK7-TASK8-HARDENING.md. |
+| **Task 8** | **Wykonane** | Audyt overflow, komentarze Task 8; brak maskowania layoutu. TASK7-TASK8-HARDENING.md. |
 
 Dodanie komentarzy **nie** uznaje się za wykonanie zadania 7 ani 8.
 

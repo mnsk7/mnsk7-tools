@@ -4,7 +4,7 @@
    § GLOBAL RESET & TYPOGRAPHY
    ----------------------------------------------------------------- */
 
-/* Zapobiegaj poziomemu przewijaniu (np. gdy jakiś element wymusza 1633px) */
+/* Task 8: zapobiegaj poziomemu przewijaniu (np. gdy element wymusza szerszą szerokość) */
 html {
   overflow-x: hidden;
   max-width: 100%;
@@ -119,7 +119,7 @@ img {
   }
 }
 
-/* Skip link (a11y): niewidoczny do momentu :focus (Tab) — clip zapobiega „wyjeżdżaniu” w RTL/zoom */
+/* Skip link (a11y): niewidoczny do momentu :focus (Tab). overflow: hidden + clip — standardowy wzorzec ukrycia wizualnego bez usuwania z a11y. */
 .mnsk7-skip-link {
   position: absolute;
   width: 1px;

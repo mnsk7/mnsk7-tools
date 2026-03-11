@@ -78,7 +78,7 @@ body.woocommerce .mnsk7-content h1.page-title {
    § PLP PRODUCT CARDS
    ----------------------------------------------------------------- */
 
-/* Clearfix ::before (Storefront) w gridzie = pierwsza pusta „komórka” — wyłączamy wszędzie (główna, sklep, kategoria, Podobne produkty) */
+/* Clearfix ::before (Storefront/Woo) = pusta „komórka” w gridzie. Task 7: wyłączamy celowo — nasz layout to grid, nie float-clearfix. */
 .woocommerce ul.products::before,
 .woocommerce-page ul.products::before,
 ul.products.columns-3::before,
@@ -114,7 +114,7 @@ ul.products.columns-4::before {
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-sm);
   border-radius: var(--r-md);
-  overflow: hidden;
+  overflow: hidden; /* Task 8: obcięcie obrazu/treści do border-radius karty. */
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -164,16 +164,16 @@ ul.products.columns-4::before {
 /* Product link (image + title links share this class): no browser default underline, no blue link look, no fragmented underline */
 .woocommerce ul.products li.product .woocommerce-loop-product__link {
   color: var(--color-text);
-  text-decoration: none !important;
-  border-bottom: none !important;
+  text-decoration: none;
+  border-bottom: none;
   -webkit-tap-highlight-color: transparent;
 }
 .woocommerce ul.products li.product .woocommerce-loop-product__link:hover,
 .woocommerce ul.products li.product .woocommerce-loop-product__link:active,
 .woocommerce ul.products li.product .woocommerce-loop-product__link:visited {
   color: var(--color-text);
-  text-decoration: none !important;
-  border-bottom: none !important;
+  text-decoration: none;
+  border-bottom: none;
 }
 .woocommerce ul.products li.product .woocommerce-loop-product__link:focus {
   outline: none;

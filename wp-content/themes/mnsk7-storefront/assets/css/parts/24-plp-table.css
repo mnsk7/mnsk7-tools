@@ -939,7 +939,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   -webkit-overflow-scrolling: touch;
 }
 
-/* table-layout: fixed — одинаковые пропорции колонок при 1 и при многих товарах. Task 8: overflow: hidden — obcięcie do border-radius. */
+/* table-layout: fixed — jednakowe proporcje kolumn. Task 8: overflow: hidden — obcięcie treści do border-radius. */
 .mnsk7-product-table {
   width: 100%;
   table-layout: fixed;
@@ -1005,7 +1005,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   background: var(--color-surface);
   border-radius: var(--r-sm);
   overflow: hidden; /* obcięcie miniatury do border-radius */
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -1033,7 +1033,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table .mnsk7-table-cell--title a {
   color: var(--color-text);
   font-weight: 600;
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
   -webkit-tap-highlight-color: transparent;
 }
@@ -1041,7 +1041,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table .mnsk7-table-cell--title a:active,
 .mnsk7-product-table .mnsk7-table-cell--title a:visited {
   color: var(--color-primary);
-  text-decoration: none !important;
+  text-decoration: none;
   border-bottom: none;
 }
 .mnsk7-product-table .mnsk7-table-cell--title a:focus {
