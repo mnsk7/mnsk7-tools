@@ -348,7 +348,7 @@ body.woocommerce-account button[type="submit"] {
 body.woocommerce-account .mnsk7-footer__newsletter-btn {
   border-radius: var(--r-md) !important;
 }
-body.woocommerce-account #content,
+body.woocommerce-account .mnsk7-content,
 body.woocommerce-account .site-main {
   max-width: var(--content-max);
   margin-left: auto;

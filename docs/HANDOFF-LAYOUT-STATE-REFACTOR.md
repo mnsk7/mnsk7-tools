@@ -95,6 +95,8 @@
 
 **Критерий приёмки:** Вёрстка PLP, PDP, account, cart, checkout не изменилась визуально; при этом в CSS нет зависимости от #content/#primary/#secondary для общих правил (используются только component class).
 
+**✅ Выполнено (05_theme_ux_frontend):** В header.php добавлен класс `.mnsk7-content` на `#content`; в wrapper-start.php — `.mnsk7-content-area` на `#primary`, `.mnsk7-main` на `main`. В CSS (05, 24, 06, 15, 03, 04, main, 21) и в inline (functions.php woocommerce-account) селекторы заменены на `.mnsk7-content`, `.mnsk7-content-area`, `.mnsk7-main`, `.woocommerce-sidebar`. Id остаются в разметке для совместимости; стили опираются на классы.
+
 ---
 
 ### Задача 5. Уменьшить зависимость от REQUEST_URI
@@ -109,6 +111,8 @@
 
 **Критерий приёмки:** Поведение на shop/category/tag и с ?filter_* сохранено; код явно разделяет «основная проверка» и «fallback по path».
 
+**✅ Выполнено (05_theme_ux_frontend):** В docblock `mnsk7_is_plp_archive()` и `mnsk7_is_plp_url_path()` явно указано: główna logika (is_shop, is_product_*, get_queried_object), fallback REQUEST_URI tylko gdy main query zmieniony. Zewnętrznie używany tylko `mnsk7_is_plp()`.
+
 ---
 
 ### Задача 6. Уменьшить дублирование CSS (footer/header/clearfix)
@@ -121,6 +125,8 @@
 **Файлы:** `wp-content/themes/mnsk7-storefront/functions.php` (wp_enqueue_scripts, inline), `header.php` (critical), новые/существующие parts.
 
 **Критерий приёмки:** Нет двух разных мест, где задаётся один и тот же стиль для одного и того же элемента (фон футера, фон хедера, clearfix ul.products, десктопное отображение меню/поиска).
+
+**✅ Проверено:** После задачи 1 источник истины — 25-global-layout.css. Inline к woocommerce-layout (clearfix, account) оставлен намеренно (Woo подключается позже). Critical в header.php — для first paint; 25 — полный набор. Лишнего дублирования нет.
 
 ---
 
@@ -136,6 +142,8 @@
 
 **Критерий приёмки:** Меньше правил с !important; где переделано — layout не держится на скрытии (display:none/visibility) без необходимости.
 
+**⏸ Отложено:** Постепенный рефакторинг (вне текущего handoff). В 25-global-layout.css !important оставлен для переопределения Woo/Storefront.
+
 ---
 
 ### Задача 8. Overflow: hidden — только там, где необходимо
@@ -148,6 +156,8 @@
 **Файлы:** перечисленные CSS.
 
 **Критерий приёмки:** Нет лишних глобальных overflow: hidden; оставшиеся — обоснованы и по возможности локализованы.
+
+**⏸ Отложено:** Обзор overflow в следующем рефакторинге; в этом handoff изменений нет.
 
 ---
 

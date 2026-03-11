@@ -3,9 +3,9 @@
    § SHOP / ARCHIVE LAYOUT — content + sidebar
    ----------------------------------------------------------------- */
 
-/* Strona sklepu i archiwum: #content = flex, #primary = główna kolumna, sidebar = boczna */
-body.woocommerce-page #content,
-body.woocommerce #content {
+/* Strona sklepu i archiwum: component classes (HANDOFF — nie #content #primary). */
+body.woocommerce-page .mnsk7-content,
+body.woocommerce .mnsk7-content {
   display: flex;
   flex-wrap: wrap;
   gap: var(--space-32);
@@ -16,45 +16,43 @@ body.woocommerce #content {
   box-sizing: border-box;
 }
 
-body.woocommerce-page #content #primary,
-body.woocommerce #content #primary,
-body.woocommerce-page #content > main.site-main,
-body.woocommerce #content > main.site-main {
+body.woocommerce-page .mnsk7-content .mnsk7-content-area,
+body.woocommerce .mnsk7-content .mnsk7-content-area,
+body.woocommerce-page .mnsk7-content > main.mnsk7-main,
+body.woocommerce .mnsk7-content > main.mnsk7-main {
   flex: 1 1 0%;
   min-width: 0;
 }
 
-body.woocommerce-page #content #secondary,
-body.woocommerce #content #secondary,
-body.woocommerce-page #content .widget-area,
-body.woocommerce #content .widget-area,
-body.woocommerce-page #content .woocommerce-sidebar,
-body.woocommerce #content aside[role="complementary"] {
+body.woocommerce-page .mnsk7-content .woocommerce-sidebar,
+body.woocommerce .mnsk7-content .woocommerce-sidebar,
+body.woocommerce-page .mnsk7-content .widget-area,
+body.woocommerce .mnsk7-content .widget-area,
+body.woocommerce-page .mnsk7-content aside[role="complementary"] {
   flex: 0 0 280px;
   max-width: 100%;
   min-width: 0;
 }
 
-body.woocommerce-page #content .page-title,
-body.woocommerce #content .page-title,
-body.woocommerce-page #content h1.page-title,
-body.woocommerce #content h1.page-title {
+body.woocommerce-page .mnsk7-content .page-title,
+body.woocommerce .mnsk7-content .page-title,
+body.woocommerce-page .mnsk7-content h1.page-title,
+body.woocommerce .mnsk7-content h1.page-title {
   margin: 0 0 1rem;
   font-size: var(--fs-2xl);
 }
 
 @media (max-width: 768px) {
-  body.woocommerce-page #content,
-  body.woocommerce #content {
+  body.woocommerce-page .mnsk7-content,
+  body.woocommerce .mnsk7-content {
     flex-direction: column;
     padding: var(--space-16);
   }
-  body.woocommerce-page #content #secondary,
-  body.woocommerce #content #secondary,
-  body.woocommerce-page #content .widget-area,
-  body.woocommerce #content .widget-area,
-  body.woocommerce-page #content .woocommerce-sidebar,
-  body.woocommerce #content aside[role="complementary"] {
+  body.woocommerce-page .mnsk7-content .woocommerce-sidebar,
+  body.woocommerce .mnsk7-content .woocommerce-sidebar,
+  body.woocommerce-page .mnsk7-content .widget-area,
+  body.woocommerce .mnsk7-content .widget-area,
+  body.woocommerce-page .mnsk7-content aside[role="complementary"] {
     flex: 0 0 auto;
     width: 100%;
     order: -1;

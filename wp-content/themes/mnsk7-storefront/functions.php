@@ -27,10 +27,9 @@ function mnsk7_is_mobile_request() {
 
 /**
  * Niezawodne wykrywanie strony archiwum produktów (sklep / kategoria / tag).
- * Używane dla body_class i menu: ten sam kontekst niezależnie od ?filter_* (żeby filtry
- * nie przełączały na inny header/layout). Fallback na get_queried_object(), bo przy
- * parametrach filter_* pluginy mogą zmieniać stan is_shop() / is_product_taxonomy().
- * Dodatkowy fallback po ścieżce URL — gdy główny zapytanie zostało zmienione przez plugin.
+ * Główna logika: is_shop(), is_product_category(), is_product_tag(), get_queried_object().
+ * Fallback REQUEST_URI (mnsk7_is_plp_url_path) tylko gdy plugin zmienił main query (np. ?filter_*).
+ * HANDOFF: normalny conditional first, path fallback — jeden source of truth via mnsk7_is_plp().
  *
  * @return bool True gdy jesteśmy na archiwum sklepu, kategorii lub tagu produktu.
  */
@@ -45,16 +44,14 @@ function mnsk7_is_plp_archive() {
 	if ( $obj instanceof WP_Term && isset( $obj->taxonomy ) && in_array( $obj->taxonomy, array( 'product_cat', 'product_tag' ), true ) ) {
 		return true;
 	}
-	// Fallback po ścieżce URL: pluginy z filter_* czasem zmieniają main query, wtedy is_shop()/is_product_taxonomy() = false.
+	// Fallback: REQUEST_URI tylko gdy main query zmieniony (filter_*).
 	// Żeby header i body_class były takie same — traktuj request jako PLP, gdy ścieżka to sklep lub taksonomia.
 	return mnsk7_is_plp_url_path();
 }
 
 /**
- * Czy bieżący request (ścieżka URL) to strona sklepu lub archiwum kategorii/tagu produktu.
- * Używane gdy main query mógł zostać zmieniony (np. przez plugin filtrów ?filter_*).
- * Fallback REQUEST_URI — deterministyczny stan wymagałby poprawnego main query po stronie Woo/pluginu;
- * template_include i body_class używają tej funkcji, żeby zachować ten sam layout/header przy zmienionym query.
+ * Fallback: czy ścieżka URL to sklep/kategoria/tag (gdy main query już zmieniony, np. ?filter_*).
+ * Używane tylko wewnątrz mnsk7_is_plp_archive(). Nie wywoływać bezpośrednio dla layoutu — użyć mnsk7_is_plp().
  *
  * @return bool
  */
@@ -697,7 +694,7 @@ add_action( 'wp_enqueue_scripts', function () {
 	$css .= 'body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-submit{border-radius:0 var(--r-sm) var(--r-sm) 0!important}';
 	$css .= 'body.woocommerce-account .woocommerce .button,body.woocommerce-account .woocommerce input[type=submit],body.woocommerce-account .woocommerce button[type=submit],body.woocommerce-account input[type=submit],body.woocommerce-account button[type=submit]{border-radius:var(--r-md)!important;min-height:44px!important}';
 	$css .= 'body.woocommerce-account .mnsk7-footer__newsletter-btn{border-radius:var(--r-md)!important}';
-	$css .= 'body.woocommerce-account #content,body.woocommerce-account .site-main{max-width:var(--content-max);margin-left:auto;margin-right:auto;padding-left:1.5rem;padding-right:1.5rem;box-sizing:border-box}';
+	$css .= 'body.woocommerce-account .mnsk7-content,body.woocommerce-account .mnsk7-main{max-width:var(--content-max);margin-left:auto;margin-right:auto;padding-left:1.5rem;padding-right:1.5rem;box-sizing:border-box}';
 	$css .= 'body.woocommerce-account .col-full{max-width:100%;padding-left:0;padding-right:0}';
 	wp_add_inline_style( 'woocommerce-layout', $css );
 }, 20 );

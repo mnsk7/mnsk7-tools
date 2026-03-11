@@ -165,4 +165,4 @@ endif;
 	</form>
 </div>
 
-<div id="content" class="site-content">
+<div id="content" class="site-content mnsk7-content">

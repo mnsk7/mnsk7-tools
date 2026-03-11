@@ -12,5 +12,5 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 ?>
-<div id="primary" class="content-area">
-	<main id="main" class="site-main" role="main">
+<div id="primary" class="content-area mnsk7-content-area">
+	<main id="main" class="site-main mnsk7-main" role="main">

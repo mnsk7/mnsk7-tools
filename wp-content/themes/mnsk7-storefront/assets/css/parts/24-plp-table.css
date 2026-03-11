@@ -149,33 +149,33 @@ body.woocommerce .mnsk7-plp-toolbar--bottom .woocommerce-result-count {
   }
 }
 
-/* Archiwum: główna kolumna — Woo (#content #primary) i page (#content > main) ten sam layout. */
-body.post-type-archive-product #content #primary,
-body.post-type-archive-product #content > main.site-main,
-body.tax-product_cat #content #primary,
-body.tax-product_cat #content > main.site-main,
-body.tax-product_tag #content #primary,
-body.tax-product_tag #content > main.site-main {
+/* Archiwum: główna kolumna — component classes (HANDOFF). */
+body.post-type-archive-product .mnsk7-content .mnsk7-content-area,
+body.post-type-archive-product .mnsk7-content > main.mnsk7-main,
+body.tax-product_cat .mnsk7-content .mnsk7-content-area,
+body.tax-product_cat .mnsk7-content > main.mnsk7-main,
+body.tax-product_tag .mnsk7-content .mnsk7-content-area,
+body.tax-product_tag .mnsk7-content > main.mnsk7-main {
   flex: 1 1 100%;
   width: 100%;
   min-width: 0;
   padding-top: 1.75rem;
 }
-/* site-main pełna szerokość (Woo: wewnątrz #primary; page: bezpośrednio w #content) */
-body.post-type-archive-product #content #primary .site-main,
-body.post-type-archive-product #content > main.site-main,
-body.tax-product_cat #content #primary .site-main,
-body.tax-product_cat #content > main.site-main,
-body.tax-product_tag #content #primary .site-main,
-body.tax-product_tag #content > main.site-main {
+/* .mnsk7-content-area / .mnsk7-main pełna szerokość */
+body.post-type-archive-product .mnsk7-content .mnsk7-content-area .site-main,
+body.post-type-archive-product .mnsk7-content > main.mnsk7-main,
+body.tax-product_cat .mnsk7-content .mnsk7-content-area .site-main,
+body.tax-product_cat .mnsk7-content > main.mnsk7-main,
+body.tax-product_tag .mnsk7-content .mnsk7-content-area .site-main,
+body.tax-product_tag .mnsk7-content > main.mnsk7-main {
   width: 100%;
 }
-body.post-type-archive-product #content #secondary,
-body.tax-product_cat #content #secondary,
-body.tax-product_tag #content #secondary,
-body.post-type-archive-product #content .woocommerce-sidebar,
-body.tax-product_cat #content .woocommerce-sidebar,
-body.tax-product_tag #content .woocommerce-sidebar {
+body.post-type-archive-product .mnsk7-content .woocommerce-sidebar,
+body.tax-product_cat .mnsk7-content .woocommerce-sidebar,
+body.tax-product_tag .mnsk7-content .woocommerce-sidebar,
+body.post-type-archive-product .mnsk7-content .woocommerce-sidebar,
+body.tax-product_cat .mnsk7-content .woocommerce-sidebar,
+body.tax-product_tag .mnsk7-content .woocommerce-sidebar {
   display: none !important;
 }
 body.post-type-archive-product .wpf-filters,
