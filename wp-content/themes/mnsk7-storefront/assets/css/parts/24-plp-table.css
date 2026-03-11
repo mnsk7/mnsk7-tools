@@ -28,6 +28,123 @@ body.tax-product_tag [class*="category-image"] {
   color: var(--color-text);
 }
 
+/* =================================================================
+   Archive vertical rhythm (compact) — tylko archiwa towarów
+   body.post-type-archive-product, body.tax-product_cat, body.tax-product_tag
+   Cel: jeden source of truth dla odległości breadcrumbs → h1 → chips → filtry → search/table.
+   Nie zmienia: PDP, cart, checkout, my-account, zwykłe strony.
+   ================================================================= */
+body.post-type-archive-product #content,
+body.post-type-archive-product .mnsk7-content,
+body.tax-product_cat #content,
+body.tax-product_cat .mnsk7-content,
+body.tax-product_tag #content,
+body.tax-product_tag .mnsk7-content {
+  padding-top: 1.25rem; /* 20px — mniej niż global 2rem, żeby pierwszy ekran = filtry i towary */
+}
+body.post-type-archive-product .mnsk7-breadcrumb-wrap,
+body.tax-product_cat .mnsk7-breadcrumb-wrap,
+body.tax-product_tag .mnsk7-breadcrumb-wrap {
+  margin-bottom: 1rem;   /* breadcrumbs → h1: 8px (padding-bottom) + 16px = 24px */
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+body.post-type-archive-product .woocommerce-products-header,
+body.tax-product_cat .woocommerce-products-header,
+body.tax-product_tag .woocommerce-products-header {
+  margin-bottom: 1rem;   /* h1 → chips: 16px + first chip margin-top 0.5rem = 24px */
+}
+body.post-type-archive-product .mnsk7-plp-chips:first-of-type,
+body.tax-product_cat .mnsk7-plp-chips:first-of-type,
+body.tax-product_tag .mnsk7-plp-chips:first-of-type {
+  margin-top: 0.5rem;
+  margin-bottom: 1rem;   /* chips (kategorie) → first filter row: 16px + attrs margin-top = 24px */
+}
+body.post-type-archive-product .mnsk7-plp-chips--attrs,
+body.tax-product_cat .mnsk7-plp-chips--attrs,
+body.tax-product_tag .mnsk7-plp-chips--attrs {
+  margin-top: 0.375rem;
+  margin-bottom: 0.375rem; /* między wierszami filtrów: 6px + 6px = 12px */
+}
+body.post-type-archive-product .mnsk7-plp-chips--attrs + .mnsk7-plp-chips--attrs,
+body.tax-product_cat .mnsk7-plp-chips--attrs + .mnsk7-plp-chips--attrs,
+body.tax-product_tag .mnsk7-plp-chips--attrs + .mnsk7-plp-chips--attrs {
+  margin-top: 0.25rem;
+}
+body.post-type-archive-product .mnsk7-plp-filters-toggle-wrap,
+body.tax-product_cat .mnsk7-plp-filters-toggle-wrap,
+body.tax-product_tag .mnsk7-plp-filters-toggle-wrap {
+  margin-top: 0.25rem;
+  margin-bottom: 0.375rem;
+}
+body.post-type-archive-product .mnsk7-plp-selected,
+body.tax-product_cat .mnsk7-plp-selected,
+body.tax-product_tag .mnsk7-plp-selected {
+  margin-bottom: 0.75rem;
+}
+body.post-type-archive-product .mnsk7-plp-search,
+body.tax-product_cat .mnsk7-plp-search,
+body.tax-product_tag .mnsk7-plp-search {
+  margin-top: 1.25rem;   /* filtry → search/table: 20px */
+  margin-bottom: 0.75rem;
+}
+body.post-type-archive-product .mnsk7-plp-trust-wrap,
+body.tax-product_cat .mnsk7-plp-trust-wrap,
+body.tax-product_tag .mnsk7-plp-trust-wrap {
+  margin-bottom: 0.75rem;
+}
+body.post-type-archive-product .mnsk7-product-table-wrap,
+body.tax-product_cat .mnsk7-product-table-wrap,
+body.tax-product_tag .mnsk7-product-table-wrap {
+  margin-bottom: 1rem;
+}
+
+@media (max-width: 768px) {
+  body.post-type-archive-product #content,
+  body.post-type-archive-product .mnsk7-content,
+  body.tax-product_cat #content,
+  body.tax-product_cat .mnsk7-content,
+  body.tax-product_tag #content,
+  body.tax-product_tag .mnsk7-content {
+    padding-top: 1rem; /* 16px mobile */
+  }
+  body.post-type-archive-product .mnsk7-breadcrumb-wrap,
+  body.tax-product_cat .mnsk7-breadcrumb-wrap,
+  body.tax-product_tag .mnsk7-breadcrumb-wrap {
+    margin-bottom: 0.75rem;
+    padding-top: 0.35rem;
+    padding-bottom: 0.35rem;
+  }
+  body.post-type-archive-product .woocommerce-products-header,
+  body.tax-product_cat .woocommerce-products-header,
+  body.tax-product_tag .woocommerce-products-header {
+    margin-bottom: 0.75rem;
+  }
+  body.post-type-archive-product .mnsk7-plp-chips:first-of-type,
+  body.tax-product_cat .mnsk7-plp-chips:first-of-type,
+  body.tax-product_tag .mnsk7-plp-chips:first-of-type {
+    margin-top: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+  body.post-type-archive-product .mnsk7-plp-chips--attrs,
+  body.tax-product_cat .mnsk7-plp-chips--attrs,
+  body.tax-product_tag .mnsk7-plp-chips--attrs {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem; /* między grupami filtrów: 10px */
+  }
+  body.post-type-archive-product .mnsk7-plp-search,
+  body.tax-product_cat .mnsk7-plp-search,
+  body.tax-product_tag .mnsk7-plp-search {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  body.post-type-archive-product .mnsk7-plp-trust-wrap,
+  body.tax-product_cat .mnsk7-plp-trust-wrap,
+  body.tax-product_tag .mnsk7-plp-trust-wrap {
+    margin-bottom: 0.5rem;
+  }
+}
+
 /* Strefa wysyłki: w treści nie pokazujemy (przenoszone do footera przez JS), żeby nie zsuwało strony */
 body.post-type-archive-product .mnsk7-plp-toolbar .woocommerce-info,
 body.tax-product_cat .mnsk7-plp-toolbar .woocommerce-info,
@@ -836,7 +953,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   -webkit-overflow-scrolling: touch;
 }
 
-/* table-layout: fixed — одинаковые пропорции колонок при 1 и при многих товарах */
+/* table-layout: fixed — одинаковые пропорции колонок при 1 и при многих товарах. Task 8: overflow: hidden — obcięcie do border-radius. */
 .mnsk7-product-table {
   width: 100%;
   table-layout: fixed;
@@ -901,7 +1018,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   max-width: 64px;
   background: var(--color-surface);
   border-radius: var(--r-sm);
-  overflow: hidden;
+  overflow: hidden; /* obcięcie miniatury do border-radius */
   text-decoration: none !important;
   border-bottom: none;
   -webkit-tap-highlight-color: transparent;
