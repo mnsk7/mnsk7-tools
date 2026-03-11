@@ -34,7 +34,7 @@ defined( 'ABSPATH' ) || exit;
 	.mnsk7-header__brand a{display:flex;align-items:center;font-size:1.125rem;font-weight:700;color:#000;text-decoration:none!important;border-bottom:none}
 	.mnsk7-header__brand img{max-height:42px;width:auto;max-width:100%;display:block;vertical-align:middle}
 	@media (min-width:1025px){.mnsk7-header__menu-toggle{display:none!important}.mnsk7-header__search-toggle{display:none!important}#mnsk7-header-search.mnsk7-header__search-dropdown{position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;margin:0!important;padding:0!important;min-width:240px;border:none!important;box-shadow:none!important}}
-	@media (max-width:1024px){.mnsk7-header__inner{overflow:hidden}.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:flex!important}}
+	@media (max-width:1024px){.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:flex!important}}
 	/* Archive LCP pass: promo bar = LCP candidate — krytyczne style bez czekania na main.css */
 	.mnsk7-promo-bar{background:#0c7ddb;color:#fff;font-size:0.8125rem;font-weight:500;padding:0.35rem 1rem;position:sticky;top:0;z-index:1001;box-sizing:border-box}
 	.mnsk7-promo-bar__inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:1rem;position:relative}
@@ -91,57 +91,53 @@ endif;
 				<li<?php echo $sklep_class; ?>>
 					<a href="<?php echo esc_url( $shop_url ); ?>" aria-haspopup="true" aria-expanded="false"><?php esc_html_e( 'Sklep', 'mnsk7-storefront' ); ?></a>
 					<?php
-					$has_submenu = false;
+					$has_submenu = true;
 					$top_cats = array();
 					$top_tags = array();
-					// Jedna struktura na desktop i mobile: megamenu w DOM zawsze (mobile rozwijane przez JS, tap → .is-open).
+					// Submenu w DOM zawsze (desktop + mobile); na mobile rozwijane przez JS (tap → .is-open). Nawet przy pustych termach — footer „Wszystkie produkty”.
 					if ( function_exists( 'mnsk7_get_megamenu_terms' ) ) {
 						$terms = mnsk7_get_megamenu_terms();
 						$top_cats = isset( $terms['cats'] ) ? $terms['cats'] : array();
 						$top_tags = isset( $terms['tags'] ) ? $terms['tags'] : array();
 					}
-					if ( ! empty( $top_cats ) || ! empty( $top_tags ) ) {
-						$has_submenu = true;
-						?>
-						<ul class="sub-menu mnsk7-megamenu">
-							<?php
-							/* Nagłówki: pod treść (AUDIT-PLP-CHIPS — cat = Frez diamentowy, spiralny…; tag = kukurudza, materiały). Filtr: mnsk7_megamenu_heading_categories, mnsk7_megamenu_heading_tags. */
-							if ( ! empty( $top_cats ) ) : ?>
-							<li class="mnsk7-megamenu__group">
-								<span class="mnsk7-megamenu__heading"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) ) ); ?></span>
-								<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--cols">
-									<?php
-									foreach ( $top_cats as $term ) {
-										$link = get_term_link( $term );
-										if ( is_wp_error( $link ) ) { continue; }
-										$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
-										echo '<li><a href="' . esc_url( $link ) . '">' . esc_html( $name ) . '</a></li>';
-									}
-									?>
-								</ul>
-							</li>
-							<?php endif; ?>
-							<?php if ( ! empty( $top_tags ) ) : ?>
-							<li class="mnsk7-megamenu__group">
-								<span class="mnsk7-megamenu__heading"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) ) ); ?></span>
-								<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--tags">
-									<?php
-									foreach ( $top_tags as $term ) {
-										$link = get_term_link( $term );
-										if ( is_wp_error( $link ) ) { continue; }
-										$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
-										echo '<li><a href="' . esc_url( $link ) . '">' . esc_html( $name ) . '</a></li>';
-									}
-									?>
-								</ul>
-							</li>
-							<?php endif; ?>
-							<li class="mnsk7-megamenu__footer">
-								<a href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Wszystkie produkty', 'mnsk7-storefront' ); ?> &rarr;</a>
-							</li>
-						</ul>
+					?>
+					<ul class="sub-menu mnsk7-megamenu">
 						<?php
-					}
+						if ( ! empty( $top_cats ) ) : ?>
+						<li class="mnsk7-megamenu__group">
+							<span class="mnsk7-megamenu__heading"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) ) ); ?></span>
+							<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--cols">
+								<?php
+								foreach ( $top_cats as $term ) {
+									$link = get_term_link( $term );
+									if ( is_wp_error( $link ) ) { continue; }
+									$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
+									echo '<li><a href="' . esc_url( $link ) . '">' . esc_html( $name ) . '</a></li>';
+								}
+								?>
+							</ul>
+						</li>
+						<?php endif; ?>
+						<?php if ( ! empty( $top_tags ) ) : ?>
+						<li class="mnsk7-megamenu__group">
+							<span class="mnsk7-megamenu__heading"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) ) ); ?></span>
+							<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--tags">
+								<?php
+								foreach ( $top_tags as $term ) {
+									$link = get_term_link( $term );
+									if ( is_wp_error( $link ) ) { continue; }
+									$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
+									echo '<li><a href="' . esc_url( $link ) . '">' . esc_html( $name ) . '</a></li>';
+								}
+								?>
+							</ul>
+						</li>
+						<?php endif; ?>
+						<li class="mnsk7-megamenu__footer">
+							<a href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Wszystkie produkty', 'mnsk7-storefront' ); ?> &rarr;</a>
+						</li>
+					</ul>
+					<?php
 					?>
 				</li>
 				<li<?php echo ( is_page( 'przewodnik' ) || is_home() || is_singular( 'post' ) ) ? ' class="current-menu-item"' : ''; ?>><a href="<?php echo esc_url( home_url( '/przewodnik/' ) ); ?>"><?php echo esc_html( apply_filters( 'mnsk7_przewodnik_menu_label', __( 'Przewodnik', 'mnsk7-storefront' ) ) ); ?></a></li>
