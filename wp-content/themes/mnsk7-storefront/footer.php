@@ -160,7 +160,7 @@ if ( $show_theme_cookie_bar ) :
 	var bar = document.getElementById('mnsk7-cookie-bar');
 	if (!bar) return;
 	var key = 'mnsk7_cookie_consent';
-	function show() { bar.removeAttribute('hidden'); bar.setAttribute('aria-hidden', 'false'); document.body.classList.add('mnsk7-cookie-bar-visible'); }
+	function show() { bar.removeAttribute('hidden'); bar.setAttribute('aria-hidden', 'false'); document.body.classList.add('mnsk7-cookie-bar-visible'); var acceptBtn = bar.querySelector('.mnsk7-cookie-bar-accept'); if (acceptBtn) setTimeout(function() { acceptBtn.focus(); }, 100); }
 	function hide() { bar.setAttribute('hidden', ''); bar.setAttribute('aria-hidden', 'true'); document.body.classList.remove('mnsk7-cookie-bar-visible'); }
 	var valAccept = 'accept';
 	var valReject = 'reject';

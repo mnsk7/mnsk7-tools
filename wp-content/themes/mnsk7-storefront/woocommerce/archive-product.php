@@ -121,7 +121,7 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 				printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
 			}
 			echo '</span>';
-			echo '<button type="button" class="mnsk7-plp-chips-toggle" data-controls="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" aria-expanded="false">' . esc_html__( 'Więcej', 'mnsk7-storefront' ) . '</button>';
+			echo '<button type="button" class="mnsk7-plp-chips-toggle" data-controls="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" aria-controls="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" aria-expanded="false">' . esc_html__( 'Więcej', 'mnsk7-storefront' ) . '</button>';
 		}
 		echo '</div>';
 		echo '</div>';
@@ -135,7 +135,7 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 	if ( $has_hidden_rows ) {
 		$filters_expanded = $active_in_hidden;
 		echo '<div class="mnsk7-plp-filters-toggle-wrap col-full">';
-		echo '<button type="button" class="mnsk7-plp-chips-toggle mnsk7-plp-filters-toggle" data-controls="mnsk7-plp-more-filters" data-more-text="' . esc_attr__( 'Więcej filtrów', 'mnsk7-storefront' ) . '" data-less-text="' . esc_attr__( 'Mniej filtrów', 'mnsk7-storefront' ) . '" aria-expanded="' . ( $filters_expanded ? 'true' : 'false' ) . '">' . esc_html( $filters_expanded ? __( 'Mniej filtrów', 'mnsk7-storefront' ) : __( 'Więcej filtrów', 'mnsk7-storefront' ) ) . '</button>';
+		echo '<button type="button" class="mnsk7-plp-chips-toggle mnsk7-plp-filters-toggle" data-controls="mnsk7-plp-more-filters" aria-controls="mnsk7-plp-more-filters" data-more-text="' . esc_attr__( 'Więcej filtrów', 'mnsk7-storefront' ) . '" data-less-text="' . esc_attr__( 'Mniej filtrów', 'mnsk7-storefront' ) . '" aria-expanded="' . ( $filters_expanded ? 'true' : 'false' ) . '">' . esc_html( $filters_expanded ? __( 'Mniej filtrów', 'mnsk7-storefront' ) : __( 'Więcej filtrów', 'mnsk7-storefront' ) ) . '</button>';
 		echo '</div>';
 		echo '<div class="mnsk7-plp-filters-more col-full" id="mnsk7-plp-more-filters"' . ( $filters_expanded ? '' : ' hidden' ) . '>';
 		foreach ( $hidden_filters as $attribute_filter ) {

@@ -34,6 +34,7 @@ $mnsk7_header_ver = defined( 'MNSK7_THEME_VERSION' ) ? MNSK7_THEME_VERSION : '3.
 echo '<!-- mnsk7-header v' . esc_attr( $mnsk7_header_ver ) . ' -->' . "\n";
 ?>
 <?php wp_body_open(); ?>
+<a class="mnsk7-skip-link skip-link" href="#main"><?php esc_html_e( 'Przejdź do treści', 'mnsk7-storefront' ); ?></a>
 <div id="page" class="hfeed site">
 <?php
 $promo_text = apply_filters( 'mnsk7_header_promo_text', '' );
@@ -61,7 +62,7 @@ endif;
 			?>
 		</div>
 		<nav class="mnsk7-header__nav" role="navigation" aria-label="<?php esc_attr_e( 'Menu główne', 'mnsk7-storefront' ); ?>">
-			<button type="button" class="mnsk7-header__menu-toggle" aria-expanded="false" aria-controls="mnsk7-primary-menu" aria-label="<?php esc_attr_e( 'Otwórz menu', 'mnsk7-storefront' ); ?>">
+			<button type="button" class="mnsk7-header__menu-toggle" aria-expanded="false" aria-controls="mnsk7-primary-menu" aria-label="<?php esc_attr_e( 'Otwórz menu', 'mnsk7-storefront' ); ?>" data-close-label="<?php esc_attr_e( 'Zamknij menu', 'mnsk7-storefront' ); ?>" data-open-label="<?php esc_attr_e( 'Otwórz menu', 'mnsk7-storefront' ); ?>">
 				<span class="mnsk7-header__hamburger" aria-hidden="true"></span>
 			</button>
 			<ul id="mnsk7-primary-menu" class="mnsk7-header__menu">
@@ -71,7 +72,7 @@ endif;
 				$sklep_class = $is_shop_archive ? ' class="current-menu-item menu-item-has-children"' : ' class="menu-item-has-children"';
 				?>
 				<li<?php echo $sklep_class; ?>>
-					<a href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Sklep', 'mnsk7-storefront' ); ?></a>
+					<a href="<?php echo esc_url( $shop_url ); ?>" aria-haspopup="true" aria-expanded="false"><?php esc_html_e( 'Sklep', 'mnsk7-storefront' ); ?></a>
 					<?php
 					$has_submenu = false;
 					$top_cats = array();
@@ -143,7 +144,7 @@ endif;
 			// Search: один поиск — только иконка, по клику dropdown (inline form скрыт)
 			?>
 			<div class="mnsk7-header__search-wrap">
-				<button type="button" class="mnsk7-header__search-toggle" aria-expanded="false" aria-controls="mnsk7-header-search" aria-label="<?php esc_attr_e( 'Szukaj', 'mnsk7-storefront' ); ?>">
+				<button type="button" class="mnsk7-header__search-toggle" aria-expanded="false" aria-controls="mnsk7-header-search" aria-label="<?php esc_attr_e( 'Szukaj', 'mnsk7-storefront' ); ?>" data-close-label="<?php esc_attr_e( 'Zamknij wyszukiwanie', 'mnsk7-storefront' ); ?>" data-open-label="<?php esc_attr_e( 'Szukaj', 'mnsk7-storefront' ); ?>">
 					<span class="mnsk7-header__search-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
 					<span class="mnsk7-header__search-label"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></span>
 				</button>
@@ -172,13 +173,16 @@ endif;
 				$cart_count = WC()->cart ? WC()->cart->get_cart_contents_count() : 0;
 				$cart_total = WC()->cart ? WC()->cart->get_cart_total() : '';
 				$cart_empty_class = ( $cart_count === 0 ) ? ' mnsk7-header__cart--empty' : '';
+				$cart_aria_label = $cart_count === 0
+					? __( 'Koszyk', 'mnsk7-storefront' )
+					: sprintf( _n( 'Koszyk, %d pozycja', 'Koszyk, %d pozycji', $cart_count, 'mnsk7-storefront' ), $cart_count );
 				?>
 				<div class="mnsk7-header__cart<?php echo esc_attr( $cart_empty_class ); ?>">
-					<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php esc_attr_e( 'Koszyk', 'mnsk7-storefront' ); ?>">
+					<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php echo esc_attr( $cart_aria_label ); ?>" aria-expanded="false" aria-controls="mnsk7-header-cart-dropdown">
 						<span class="mnsk7-header__cart-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
 						<span class="mnsk7-header__cart-count" aria-hidden="true"><?php echo absint( $cart_count ); ?></span>
 					</a>
-					<div class="mnsk7-header__cart-dropdown">
+					<div id="mnsk7-header-cart-dropdown" class="mnsk7-header__cart-dropdown" role="region" aria-label="<?php esc_attr_e( 'Koszyk', 'mnsk7-storefront' ); ?>">
 						<?php
 						$loyalty_discount = function_exists( 'mnsk7_header_cart_loyalty_discount' ) ? mnsk7_header_cart_loyalty_discount() : 0.0;
 						echo function_exists( 'mnsk7_header_cart_summary_html' )

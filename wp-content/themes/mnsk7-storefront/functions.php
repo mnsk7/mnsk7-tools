@@ -787,9 +787,16 @@ add_action( 'wp_footer', function () {
 		var menuToggle = document.querySelector('.mnsk7-header__menu-toggle');
 		var nav = document.querySelector('.mnsk7-header__nav');
 		if (menuToggle && nav) {
+			var menuOpenLabel = menuToggle.getAttribute('data-open-label') || 'Otwórz menu';
+			var menuCloseLabel = menuToggle.getAttribute('data-close-label') || 'Zamknij menu';
+			function setMenuAria() {
+				var open = nav.classList.contains('is-open');
+				menuToggle.setAttribute('aria-expanded', open);
+				menuToggle.setAttribute('aria-label', open ? menuCloseLabel : menuOpenLabel);
+			}
 			menuToggle.addEventListener('click', function() {
 				nav.classList.toggle('is-open');
-				menuToggle.setAttribute('aria-expanded', nav.classList.contains('is-open'));
+				setMenuAria();
 			});
 		}
 		// Tablet/mobile (≤1024px): link „Sklep” prowadzi do sklepu (submenu ukryte w CSS)
@@ -815,30 +822,31 @@ add_action( 'wp_footer', function () {
 				var openTimer, closeTimer;
 				var HOVER_OPEN_MS = 400;
 				var HOVER_CLOSE_MS = 150;
+				var megamenuLink = megamenuLi.querySelector(':scope > a');
+				function setMegamenuExpanded(open) {
+					if (megamenuLink) megamenuLink.setAttribute('aria-expanded', open ? 'true' : 'false');
+					if (open) megamenuLi.classList.add('mnsk7-megamenu-open'); else megamenuLi.classList.remove('mnsk7-megamenu-open');
+				}
 				function openMegamenu() {
 					clearTimeout(closeTimer);
 					if (window.innerWidth < 1025) return;
-					openTimer = setTimeout(function() {
-						megamenuLi.classList.add('mnsk7-megamenu-open');
-						var link = megamenuLi.querySelector(':scope > a');
-						if (link) link.setAttribute('aria-expanded', 'true');
-					}, HOVER_OPEN_MS);
+					openTimer = setTimeout(function() { setMegamenuExpanded(true); }, HOVER_OPEN_MS);
 				}
 				function closeMegamenu() {
 					clearTimeout(openTimer);
-					closeTimer = setTimeout(function() {
-						megamenuLi.classList.remove('mnsk7-megamenu-open');
-						var link = megamenuLi.querySelector(':scope > a');
-						if (link) link.setAttribute('aria-expanded', 'false');
-					}, HOVER_CLOSE_MS);
+					closeTimer = setTimeout(function() { setMegamenuExpanded(false); }, HOVER_CLOSE_MS);
 				}
 				megamenuLi.addEventListener('mouseenter', openMegamenu);
 				megamenuLi.addEventListener('mouseleave', closeMegamenu);
+				megamenuLi.addEventListener('focusin', function() { if (window.innerWidth >= 1025) { clearTimeout(closeTimer); setMegamenuExpanded(true); } });
+				megamenuLi.addEventListener('focusout', function(e) {
+					if (window.innerWidth < 1025) return;
+					setTimeout(function() { if (!megamenuLi.contains(document.activeElement)) setMegamenuExpanded(false); }, 0);
+				});
 				document.addEventListener('keydown', function(e) {
 					if (e.key === 'Escape' && megamenuLi.classList.contains('mnsk7-megamenu-open')) {
-						megamenuLi.classList.remove('mnsk7-megamenu-open');
-						var link = megamenuLi.querySelector(':scope > a');
-						if (link) { link.setAttribute('aria-expanded', 'false'); link.focus(); }
+						setMegamenuExpanded(false);
+						if (megamenuLink) megamenuLink.focus();
 					}
 				});
 			}
@@ -847,7 +855,7 @@ add_action( 'wp_footer', function () {
 				var a = e.target.closest('a');
 				if (a && a.getAttribute('href') && window.innerWidth <= 1024 && nav) {
 					nav.classList.remove('is-open');
-					if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+					if (menuToggle) { menuToggle.setAttribute('aria-expanded', 'false'); if (menuToggle.getAttribute('data-open-label')) menuToggle.setAttribute('aria-label', menuToggle.getAttribute('data-open-label')); }
 				}
 			});
 		}
@@ -858,6 +866,9 @@ add_action( 'wp_footer', function () {
 			function setSearchOpen(open) {
 				searchDropdown.hidden = !open;
 				searchToggle.setAttribute('aria-expanded', open);
+				var searchCloseLabel = searchToggle.getAttribute('data-close-label');
+				var searchOpenLabel = searchToggle.getAttribute('data-open-label');
+				if (searchCloseLabel && searchOpenLabel) searchToggle.setAttribute('aria-label', open ? searchCloseLabel : searchOpenLabel);
 				if (searchPanel) {
 					if (window.innerWidth < 1025) {
 						document.body.classList.toggle('mnsk7-search-open', open);
@@ -878,6 +889,8 @@ add_action( 'wp_footer', function () {
 				if (window.innerWidth >= 1025) {
 					searchDropdown.removeAttribute('hidden');
 					searchToggle.setAttribute('aria-expanded', 'true');
+					var searchOpenLabel = searchToggle.getAttribute('data-open-label');
+					if (searchOpenLabel) searchToggle.setAttribute('aria-label', searchOpenLabel);
 					document.body.classList.remove('mnsk7-search-open');
 					if (searchPanel) { searchPanel.hidden = true; searchPanel.setAttribute('aria-hidden', 'true'); }
 				} else {
@@ -935,12 +948,19 @@ add_action( 'wp_footer', function () {
 			var trigger = cartWrap.querySelector('.mnsk7-header__cart-trigger');
 			var dropdown = cartWrap.querySelector('.mnsk7-header__cart-dropdown');
 			if (trigger && dropdown) {
+				function setCartExpanded(open) {
+					trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+				}
 				document.addEventListener('click', function(e) {
-					if (!cartWrap.contains(e.target)) cartWrap.classList.remove('is-open');
+					if (!cartWrap.contains(e.target)) {
+						cartWrap.classList.remove('is-open');
+						setCartExpanded(false);
+					}
 				});
 				document.addEventListener('keydown', function(e) {
 					if (e.key === 'Escape' && cartWrap.classList.contains('is-open')) {
 						cartWrap.classList.remove('is-open');
+						setCartExpanded(false);
 						trigger.focus();
 					}
 				});
@@ -949,17 +969,19 @@ add_action( 'wp_footer', function () {
 					if (window.innerWidth < 1025) {
 						e.preventDefault();
 						cartWrap.classList.toggle('is-open');
+						setCartExpanded(cartWrap.classList.contains('is-open'));
 					}
 				});
 				// Desktop: dropdown tylko przy hover na triggerze lub dropdownie (nie na całym headerze/bannerze)
 				var cartOpenTimer;
 				function openCart() {
 					clearTimeout(cartOpenTimer);
-					if (window.innerWidth >= 1025) cartWrap.classList.add('is-open');
+					if (window.innerWidth >= 1025) { cartWrap.classList.add('is-open'); setCartExpanded(true); }
 				}
 				function closeCart() {
 					cartOpenTimer = setTimeout(function() {
 						cartWrap.classList.remove('is-open');
+						setCartExpanded(false);
 					}, 120);
 				}
 				function cancelClose() { clearTimeout(cartOpenTimer); }
