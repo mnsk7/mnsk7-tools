@@ -701,6 +701,43 @@ add_action( 'wp_enqueue_scripts', function () {
 /* Layout overrides: source of truth w 25-global-layout.css (ostatni part). Bez wp_footer — HANDOFF LAYOUT-STATE-REFACTOR. */
 
 /**
+ * P2.7: Zwraca kategorie i tagi do megamenu (z transient cache). Inwalidacja przy zapisie termu.
+ */
+function mnsk7_get_megamenu_terms() {
+	$cached = get_transient( 'mnsk7_megamenu_terms' );
+	if ( is_array( $cached ) && isset( $cached['cats'] ) && isset( $cached['tags'] ) ) {
+		return $cached;
+	}
+	$top_cats = array();
+	$top_tags = array();
+	if ( taxonomy_exists( 'product_cat' ) ) {
+		$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true, 'number' => 16, 'orderby' => 'name' ) );
+		$top_cats = is_wp_error( $top_cats ) ? array() : $top_cats;
+	}
+	if ( taxonomy_exists( 'product_tag' ) ) {
+		$top_tags = get_terms( array( 'taxonomy' => 'product_tag', 'hide_empty' => true, 'number' => 10, 'orderby' => 'count', 'order' => 'DESC' ) );
+		$top_tags = is_wp_error( $top_tags ) ? array() : $top_tags;
+		$top_tags = array_filter( $top_tags, function ( $t ) {
+			$slug_ok = isset( $t->slug ) && strtolower( $t->slug ) !== 'sklep';
+			$name_ok = empty( $t->name ) || trim( strtolower( $t->name ) ) !== 'sklep';
+			return $slug_ok && $name_ok;
+		} );
+	}
+	set_transient( 'mnsk7_megamenu_terms', array( 'cats' => $top_cats, 'tags' => $top_tags ), 12 * HOUR_IN_SECONDS );
+	return array( 'cats' => $top_cats, 'tags' => $top_tags );
+}
+
+function mnsk7_clear_megamenu_transient() {
+	delete_transient( 'mnsk7_megamenu_terms' );
+}
+add_action( 'edited_product_cat', 'mnsk7_clear_megamenu_transient' );
+add_action( 'created_product_cat', 'mnsk7_clear_megamenu_transient' );
+add_action( 'delete_product_cat', 'mnsk7_clear_megamenu_transient' );
+add_action( 'edited_product_tag', 'mnsk7_clear_megamenu_transient' );
+add_action( 'created_product_tag', 'mnsk7_clear_megamenu_transient' );
+add_action( 'delete_product_tag', 'mnsk7_clear_megamenu_transient' );
+
+/**
  * Zwraca kwotę rabatu lojalnościowego w koszyku (ujemna liczba lub 0).
  * Używane w headerze i fragmentach do wyświetlenia "Rabat: -X zł".
  */
@@ -741,12 +778,15 @@ function mnsk7_header_cart_summary_html( $cart_count, $cart_total, $loyalty_disc
 	return $out;
 }
 
-/* 1b. Enqueue cart fragments so header cart count updates via AJAX. PERFORMANCE PASS 2: nie ładuj na cart/checkout (tam korzyń = treść strony, odświeżanie fragmentu zbędne) — redukcja TBT. Defer zostaje. */
+/* 1b. Enqueue cart fragments so header cart count updates via AJAX. PERFORMANCE: nie ładuj na cart/checkout (Pass 2) ani na home (P1.1 — redukcja TBT; licznik odświeży się po przeładowaniu). Defer zostaje. */
 add_action( 'wp_enqueue_scripts', function () {
 	if ( is_admin() || ! function_exists( 'WC' ) ) {
 		return;
 	}
 	if ( function_exists( 'is_cart' ) && function_exists( 'is_checkout' ) && ( is_cart() || is_checkout() ) ) {
+		return;
+	}
+	if ( is_front_page() ) {
 		return;
 	}
 	wp_enqueue_script( 'wc-cart-fragments' );

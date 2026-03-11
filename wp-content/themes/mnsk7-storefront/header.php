@@ -82,19 +82,12 @@ endif;
 					$has_submenu = false;
 					$top_cats = array();
 					$top_tags = array();
-					// Jedna struktura na desktop i mobile: megamenu renderowane zawsze (mobile rozwijane przez JS).
-					if ( taxonomy_exists( 'product_cat' ) ) {
-						$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true, 'number' => 16, 'orderby' => 'name' ) );
-						$top_cats = is_wp_error( $top_cats ) ? array() : $top_cats;
-					}
-					if ( taxonomy_exists( 'product_tag' ) ) {
-						$top_tags = get_terms( array( 'taxonomy' => 'product_tag', 'hide_empty' => true, 'number' => 10, 'orderby' => 'count', 'order' => 'DESC' ) );
-						$top_tags = is_wp_error( $top_tags ) ? array() : $top_tags;
-						$top_tags = array_filter( $top_tags, function ( $t ) {
-							$slug_ok = isset( $t->slug ) && strtolower( $t->slug ) !== 'sklep';
-							$name_ok = empty( $t->name ) || trim( strtolower( $t->name ) ) !== 'sklep';
-							return $slug_ok && $name_ok;
-						} );
+					// P1.3/P2.8: Na mobile nie renderujemy megamenu (mniej DOM, brak get_terms). Desktop: cache get_terms (P2.7).
+					$render_megamenu = ! function_exists( 'wp_is_mobile' ) || ! wp_is_mobile();
+					if ( $render_megamenu && function_exists( 'mnsk7_get_megamenu_terms' ) ) {
+						$terms = mnsk7_get_megamenu_terms();
+						$top_cats = $terms['cats'];
+						$top_tags = $terms['tags'];
 					}
 					if ( ! empty( $top_cats ) || ! empty( $top_tags ) ) {
 						$has_submenu = true;
