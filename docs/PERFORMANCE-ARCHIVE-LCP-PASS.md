@@ -155,8 +155,32 @@ Po passie zaktualizować ten dokument: aktualny LCP element, breakdown, wykonane
 
 | Zmiana | Plik | Cel |
 |--------|------|-----|
-| **Critical CSS dla promo bar** | `header.php` — blok `#mnsk7-header-critical` | Promo bar (LCP candidate na archive) maluje się bez czekania na `main.css`. Dodane: .mnsk7-promo-bar, __inner, __text z wartościami literalnymi (#0c7ddb, #fff, 0.8125rem, 1200px) oraz media dla 1024px i 480px. |
-| **Odczyt offsetHeight po rAF** | `functions.php` — runDeferred(), promo bar | Ustawienie `--mnsk7-promo-h` i podpięcie przycisku close wykonuje się w requestAnimationFrame, żeby nie blokować pierwszego paint. |
+| **Critical CSS dla promo bar** | `header.php` — blok `#mnsk7-header-critical` | Promo bar (LCP candidate na archive) maluje się bez czekania na `main.css`. **Zachowane** w corrective pass. |
+| ~~Odczyt offsetHeight po rAF~~ | `functions.php` — runDeferred(), promo bar | **Cofnięte:** rAF wiązał się z regresją TBT; przywrócono bezpośredni init (setProperty + listener) w runDeferred. |
 | — | Home, init headera, megamenu | Bez zmian. |
 
-**Oczekiwany efekt:** niższy LCP na archive (promo bar widoczny wcześniej). **Weryfikacja:** Lighthouse archive po deployu; porównać LCP i TBT.
+**Oczekiwany efekt:** LCP archive ~2,8 s (critical CSS); TBT bez regresji po cofnięciu rAF. **Weryfikacja:** Lighthouse home + archive po corrective pass.
+
+---
+
+## 9. Pass nie przyjęty — regresja TBT, corrective pass
+
+### Wyniki po passie
+
+| Strona   | Przed passem | Po passie |
+|----------|--------------|-----------|
+| Home     | 69 / 910 ms TBT | 60 / **1310 ms** TBT |
+| Archive  | 79 / 0 ms TBT   | 63 / **1830 ms** TBT / **LCP 2,8 s** (było 4,8 s) |
+
+**Wniosek:** LCP na archive się poprawił (4,8 → 2,8 s) — **hipoteza promo bar / critical CSS była słuszna.** Jednocześnie silna regresja TBT na obu stronach; pass nie jest akceptowany jako finalny.
+
+### Co mogło podnieść TBT
+
+- **Critical CSS w headerze** — większy blok inline = więcej parse/style na main thread. Możliwy wpływ, ale sam CSS rzadko daje ~1 s TBT.
+- **requestAnimationFrame w runDeferred** — przeniesienie init promo bar (offsetHeight + listener) do rAF mogło rozbić pracę na dwa momenty i pogorszyć rozkład long tasks (albo rAF zbiegł w czasie z innym ciężkim kodem). **Główny kandydat** na regresję TBT przy naszej zmianie w `functions.php`.
+
+### Corrective pass (wdrożone)
+
+- **Zachować:** critical CSS dla promo bar w `header.php` — bez tego LCP archive znów może wzrosnąć.
+- **Cofnąć:** opakowanie init promo bar w `requestAnimationFrame` w `functions.php`. Przywrócono bezpośrednie ustawienie `--mnsk7-promo-h` i listenera close w runDeferred (jak przed passem).
+- **Po wdrożeniu:** zmierzyć ponownie archive (LCP, TBT) i home (TBT). Jeśli TBT wróci do poziomu sprzed passu przy zachowaniu LCP ~2,8 s — winowajcą był rAF. Jeśli TBT pozostanie wysoki — rozważyć zmniejszenie critical CSS (np. tylko niezbędne reguły) lub dalsze profilowanie.

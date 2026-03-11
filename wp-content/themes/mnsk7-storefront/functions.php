@@ -1039,7 +1039,7 @@ add_action( 'wp_footer', function () {
 		}
 		}
 		function runDeferred() {
-		// Promo bar: dismissible (sessionStorage). Archive LCP pass: odczyt offsetHeight po rAF, żeby nie opóźniać pierwszego paint (LCP candidate).
+		// Promo bar: dismissible (sessionStorage). Critical CSS w header.php daje LCP; init tutaj bez rAF (corrective pass: rAF wiązał się z regresją TBT).
 		var promoBar = document.getElementById('mnsk7-promo-bar');
 		if (promoBar) {
 			try {
@@ -1047,22 +1047,15 @@ add_action( 'wp_footer', function () {
 					promoBar.remove();
 					document.body.classList.remove('mnsk7-has-promo');
 				} else {
-					function setPromoHeight() {
-						document.body.style.setProperty('--mnsk7-promo-h', promoBar.offsetHeight + 'px');
-						var closeBtn = promoBar.querySelector('.mnsk7-promo-bar__close');
-						if (closeBtn) {
-							closeBtn.addEventListener('click', function() {
-								try { sessionStorage.setItem('mnsk7_promo_dismissed', '1'); } catch (e) {}
-								document.body.classList.remove('mnsk7-has-promo');
-								document.body.style.removeProperty('--mnsk7-promo-h');
-								promoBar.remove();
-							});
-						}
-					}
-					if (typeof requestAnimationFrame === 'function') {
-						requestAnimationFrame(setPromoHeight);
-					} else {
-						setPromoHeight();
+					document.body.style.setProperty('--mnsk7-promo-h', promoBar.offsetHeight + 'px');
+					var closeBtn = promoBar.querySelector('.mnsk7-promo-bar__close');
+					if (closeBtn) {
+						closeBtn.addEventListener('click', function() {
+							try { sessionStorage.setItem('mnsk7_promo_dismissed', '1'); } catch (e) {}
+							document.body.classList.remove('mnsk7-has-promo');
+							document.body.style.removeProperty('--mnsk7-promo-h');
+							promoBar.remove();
+						});
 					}
 				}
 			} catch (e) {}
