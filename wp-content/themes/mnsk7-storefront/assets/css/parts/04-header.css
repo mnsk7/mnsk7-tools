@@ -254,7 +254,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   transform: rotate(45deg);
   vertical-align: 0.15em;
 }
-/* Megamenu Sklep: HEADER UI — no horizontal scrollbar, no clipping logo/search, structured columns, reduced weight */
+/* Megamenu Sklep: адаптивный layout, без обрезки текста и без выхода за viewport */
 .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
   list-style: none;
   margin: 0;
@@ -262,8 +262,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 300px;
-  max-width: min(520px, calc(100vw - 2rem));
+  min-width: 280px;
+  max-width: min(460px, calc(100vw - 3rem));
   max-height: 70vh;
   overflow-x: hidden;
   overflow-y: auto;
@@ -309,26 +309,29 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   align-items: start;
   min-width: 0;
 }
-/* 3 kolumny, min 10.5em — mieszczą się w max-width 520px, bez łamania w środku słów (HEADER UI) */
+/* 2 kolumny dla kategorii — więcej miejsca na długie nazwy (Frez spiralny stożkowy kulowy), bez obcinania */
 .mnsk7-megamenu__list--cols {
-  grid-template-columns: repeat(3, minmax(10.5em, 1fr));
+  grid-template-columns: repeat(2, minmax(11em, 1fr));
 }
 .mnsk7-megamenu__list--tags {
-  grid-template-columns: repeat(3, minmax(9em, 1fr));
+  grid-template-columns: repeat(3, minmax(8em, 1fr));
 }
 .mnsk7-megamenu__list li {
   margin: 0;
   min-width: 0;
+  overflow: hidden;
 }
 .mnsk7-megamenu__list a {
   display: block;
+  width: 100%;
+  box-sizing: border-box;
   padding: 0.15rem 0.35rem;
   font-size: var(--fs-xs);
   line-height: 1.3;
   border-radius: var(--r-sm);
   white-space: normal;
-  overflow-wrap: normal;
-  word-wrap: normal;
+  overflow-wrap: break-word;
+  word-wrap: break-word;
   word-break: normal;
   hyphens: none;
   text-decoration: none !important;
@@ -373,9 +376,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     padding: 0.4rem 0.6rem 0.3rem;
     gap: 0.35rem;
   }
-  .mnsk7-megamenu__list--cols,
+  .mnsk7-megamenu__list--cols {
+    grid-template-columns: repeat(2, minmax(9em, 1fr));
+  }
   .mnsk7-megamenu__list--tags {
-    grid-template-columns: repeat(2, minmax(8em, 1fr));
+    grid-template-columns: repeat(2, minmax(7em, 1fr));
   }
 }
 /* Legacy: zwykły sub-menu (tylko gdy bez .mnsk7-megamenu) */
