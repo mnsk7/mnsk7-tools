@@ -447,6 +447,13 @@ function mnsk7_get_cookie_consent() {
 	return null;
 }
 
+/**
+ * Mega menu „Sklep”: nagłówki sekcji dla użytkownika (nie nazwy taksonomii Woo).
+ * Domyślnie: product_cat → „Rodzaje frezów”, product_tag → „Zastosowanie i materiały”.
+ * Aby zmienić: add_filter( 'mnsk7_megamenu_heading_categories', fn( $s ) => 'Twoja etykieta' );
+ *              add_filter( 'mnsk7_megamenu_heading_tags', fn( $s ) => 'Twoja etykieta' );
+ */
+
 /** 4.0 UX: domyślny tekst promocyjny w headerze (darmowa dostawa) + CTA do Dostawa (audit Zad.11). Na stronie głównej bez paska — nie konkurować z hero. */
 add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	if ( $text !== '' ) {

@@ -88,7 +88,9 @@ endif;
 						$has_submenu = true;
 						?>
 						<ul class="sub-menu mnsk7-megamenu">
-							<?php if ( ! empty( $top_cats ) ) : ?>
+							<?php
+							/* Nagłówki: pod treść (AUDIT-PLP-CHIPS — cat = Frez diamentowy, spiralny…; tag = kukurudza, materiały). Filtr: mnsk7_megamenu_heading_categories, mnsk7_megamenu_heading_tags. */
+							if ( ! empty( $top_cats ) ) : ?>
 							<li class="mnsk7-megamenu__group">
 								<span class="mnsk7-megamenu__heading"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) ) ); ?></span>
 								<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--cols">
