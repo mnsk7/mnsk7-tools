@@ -83,6 +83,11 @@ endif;
 					if ( taxonomy_exists( 'product_tag' ) ) {
 						$top_tags = get_terms( array( 'taxonomy' => 'product_tag', 'hide_empty' => true, 'number' => 10, 'orderby' => 'count', 'order' => 'DESC' ) );
 						$top_tags = is_wp_error( $top_tags ) ? array() : $top_tags;
+						$top_tags = array_filter( $top_tags, function ( $t ) {
+							$slug_ok = isset( $t->slug ) && strtolower( $t->slug ) !== 'sklep';
+							$name_ok = empty( $t->name ) || trim( strtolower( $t->name ) ) !== 'sklep';
+							return $slug_ok && $name_ok;
+						} );
 					}
 					if ( ! empty( $top_cats ) || ! empty( $top_tags ) ) {
 						$has_submenu = true;

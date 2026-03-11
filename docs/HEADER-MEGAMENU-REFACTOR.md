@@ -29,6 +29,22 @@
 - **Luki nad „Frez typ U” / „Frez typ V”:** grid domyślnie rozciąga komórki w wierszu (`align-items: stretch`), więc gdy jedna pozycja ma 2 linie, cały wiersz się rozciąga i w innych kolumnach powstaje pusta przestrzeń. **Rozwiązanie:** `align-items: start` na `.mnsk7-megamenu__list` — komórki nie rozciągają się, rytm pionowy równy.
 - **Obcinanie słów po prawej** („kulowy”, „płytkami”): przy `minmax(10.5em, 1fr)` i wąskim dropdownie kolumny były za wąskie, a `overflow-x: hidden` obcinał treść. **Rozwiązanie:** kolumny kategorii `minmax(12em, 1fr)`, dropdown `min-width: 460px`, `max-width: 560px`, `overflow-x: auto` (w razie wąskiego viewportu — przewijanie zamiast obcięcia).
 
+### Pass 4: scrollbar, viewport, waga, „Sklep” w tagach
+
+**Problemy:** wewnętrzny horizontal scrollbar; otwarte menu rozsadza viewport (obcinanie logo z lewej, search z prawej); kontener za szeroki i za ciężki; layout nie dopasowuje się do szerokości; punkt „Sklep” w sekcji „Zastosowanie i materiały” zbędny.
+
+**Zmiany:**
+
+| Obszar | Zmiany |
+|--------|--------|
+| **Scrollbar** | `overflow-x: auto` → **`overflow-x: hidden`** — brak wewnętrznego paska przewijania. |
+| **Viewport** | `min-width: 460px`, `max-width: 560px` → **`min-width: 280px`**, **`max-width: min(440px, calc(100vw - 2rem))`** — menu nie rozsadza strony, logo i search nie są obcinane. |
+| **Waga** | Mniejszy padding (0.5rem 0.75rem 0.4rem), gap 0.5rem; nagłówki 0.6875rem, mniejsze marginesy; linki 0.2rem 0.4rem, line-height 1.3; footer węższy. |
+| **Kolumny** | 3 kolumny `minmax(8.5em, 1fr)` / `minmax(7.5em, 1fr)` — mieszczą się w 440px, bez rozjeżdżania. Na viewport ≤419px: 2 kolumny `minmax(7em, 1fr)`. |
+| **„Sklep” w tagach** | W `header.php` tagi z `slug === 'sklep'` są **wykluczane** z listy `$top_tags` (filtr po `get_terms`). |
+
+**Kryteria:** brak wewnętrznego horizontal scroll; logo i search nie obcinane; menu w viewport; kolumny zwarte; czytelne mega menu.
+
 ---
 
 ## 1. Przyczyna problemu (pass 1)
