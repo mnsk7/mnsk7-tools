@@ -17,7 +17,9 @@ body.woocommerce #content {
 }
 
 body.woocommerce-page #content #primary,
-body.woocommerce #content #primary {
+body.woocommerce #content #primary,
+body.woocommerce-page #content > main.site-main,
+body.woocommerce #content > main.site-main {
   flex: 1 1 0%;
   min-width: 0;
 }

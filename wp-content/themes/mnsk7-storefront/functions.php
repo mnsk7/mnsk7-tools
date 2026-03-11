@@ -52,7 +52,9 @@ function mnsk7_is_plp_archive() {
 
 /**
  * Czy bieżący request (ścieżka URL) to strona sklepu lub archiwum kategorii/tagu produktu.
- * Używane gdy main query mógł zostać zmieniony (np. przez plugin filtrów).
+ * Używane gdy main query mógł zostać zmieniony (np. przez plugin filtrów ?filter_*).
+ * Fallback REQUEST_URI — deterministyczny stan wymagałby poprawnego main query po stronie Woo/pluginu;
+ * template_include i body_class używają tej funkcji, żeby zachować ten sam layout/header przy zmienionym query.
  *
  * @return bool
  */
@@ -636,7 +638,7 @@ add_action( 'wp_enqueue_scripts', function () {
 		wp_enqueue_style( 'mnsk7-storefront-style', get_stylesheet_uri(), array(), $v );
 	}
 	$prev = 'mnsk7-storefront-style';
-	$parts = array( '00-fonts-inter', '01-tokens', '02-reset-typography', '03-storefront-overrides', '04-header', '05-plp-cards', '06-single-product', '07-mnsk7-blocks', '08-home-sections', '09-footer', '10-cookie-bar', '11-hidden', '12-related-products', '13-seo-landing', '14-faq', '15-delivery-contact', '16-woo-notices', '17-buttons', '18-cart-checkout', '19-breadcrumbs', '20-responsive-tablet', '21-responsive-mobile', '22-touch-targets', '23-print', '24-plp-table' );
+	$parts = array( '00-fonts-inter', '01-tokens', '02-reset-typography', '03-storefront-overrides', '04-header', '05-plp-cards', '06-single-product', '07-mnsk7-blocks', '08-home-sections', '09-footer', '10-cookie-bar', '11-hidden', '12-related-products', '13-seo-landing', '14-faq', '15-delivery-contact', '16-woo-notices', '17-buttons', '18-cart-checkout', '19-breadcrumbs', '20-responsive-tablet', '21-responsive-mobile', '22-touch-targets', '23-print', '24-plp-table', '25-global-layout' );
 	$parts_loaded = false;
 	foreach ( $parts as $part ) {
 		$path = $dir . $part . '.css';
@@ -677,16 +679,8 @@ add_action( 'wp_enqueue_scripts', function () {
 	wp_add_inline_style( 'woocommerce-layout', $css );
 }, 20 );
 
-/* Ostateczne nadpisanie: na końcu strony, wygrywa z WooCommerce/Storefront/cache. Jednolity header i footer na wszystkich stronach (home, moje-konto, category, ?filter_*). */
-add_action( 'wp_footer', function () {
-	echo "<style id=\"mnsk7-global-layout-fix\">";
-	echo "ul.products::before,ul.products.columns-3::before,ul.products.columns-4::before,.woocommerce ul.products::before,.woocommerce-page ul.products::before{content:none!important;display:none!important}";
-	echo "#colophon.mnsk7-footer,.mnsk7-footer{background:#1e293b!important}.mnsk7-footer__bottom{background:#0f172a!important}";
-	echo "#masthead.mnsk7-header{background:#fff!important;border-bottom:1px solid #e9e8cc}";
-	echo "@media (min-width:769px){.mnsk7-header__menu-toggle{display:none!important}.mnsk7-header__search-toggle{display:none!important}#mnsk7-header-search.mnsk7-header__search-dropdown{position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;margin:0!important;padding:0!important;border:none!important;box-shadow:none!important}}";
-	echo ".mnsk7-plp-trust-wrap .mnsk7-plp-trust,.mnsk7-plp-trust{display:flex!important;flex-wrap:wrap!important;gap:0.75rem 1.25rem!important}.mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,.mnsk7-plp-trust__item{display:inline-flex!important}.mnsk7-plp-trust__item:not(:last-child)::after{content:' · '!important;margin-left:0.5rem}";
-	echo "</style>\n";
-}, 999 );
+/* Krytyczne layouty przeniesione do parts/25-global-layout.css (nie wp_footer inline).
+   Clearfix ul.products::before pozostaje w wp_add_inline_style (wygrywa z woocommerce-layout). */
 
 /**
  * Zwraca kwotę rabatu lojalnościowego w koszyku (ujemna liczba lub 0).
@@ -913,14 +907,14 @@ add_action( 'wp_footer', function () {
 				dropdown.addEventListener('mouseleave', closeCart);
 			}
 		}
-		// Promo bar: dismissible (sessionStorage), header sticks below when visible
+		// Promo bar: dismissible (sessionStorage). Klasa mnsk7-has-promo z PHP (body_class); JS tylko usuwa przy zamknięciu.
 		var promoBar = document.getElementById('mnsk7-promo-bar');
 		if (promoBar) {
 			try {
 				if (sessionStorage.getItem('mnsk7_promo_dismissed') === '1') {
 					promoBar.remove();
+					document.body.classList.remove('mnsk7-has-promo');
 				} else {
-					document.body.classList.add('mnsk7-has-promo');
 					document.body.style.setProperty('--mnsk7-promo-h', promoBar.offsetHeight + 'px');
 					var closeBtn = promoBar.querySelector('.mnsk7-promo-bar__close');
 					if (closeBtn) {
@@ -1313,9 +1307,24 @@ add_action( 'woocommerce_before_main_content', function () {
 }, 5 );
 
 /**
+ * Krytyczny stan layoutu: mnsk7-has-promo w PHP (nie tylko JS).
+ * Gdy pasek promocyjny jest wyświetlany, klasa ustawiana serwerowo — header/footer nie zależą od JS przy first paint.
+ * JS nadal usuwa klasę po zamknięciu paska (sessionStorage).
+ */
+add_filter( 'body_class', function ( $classes ) {
+	$promo_text = apply_filters( 'mnsk7_header_promo_text', '' );
+	if ( $promo_text !== '' && ! in_array( 'mnsk7-has-promo', $classes, true ) ) {
+		$classes[] = 'mnsk7-has-promo';
+	}
+	return $classes;
+}, 5 );
+
+/**
  * PLP + filter_*: jedna struktura body_class dla archiwum — niezależnie od ?filter_*.
  * Zapobiega przełączeniu layoutu/headera gdy pluginy zmieniają klasy przy „filter request”.
  * Krytyczne klasy dla 24-plp-table.css: post-type-archive-product, tax-product_cat, tax-product_tag.
+ * REQUEST_URI fallback: gdy plugin zmienia main query (np. ?filter_*), get_queried_object() bywa pusty —
+ * wtedy tax-* dopisywane po ścieżce. Pełna determinacja wymagałaby poprawnego main query po stronie Woo/pluginu.
  */
 add_filter( 'body_class', function ( $classes ) {
 	if ( ! function_exists( 'mnsk7_is_plp_archive' ) || ! mnsk7_is_plp_archive() ) {

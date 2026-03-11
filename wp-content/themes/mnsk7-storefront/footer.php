@@ -184,29 +184,52 @@ if ( $show_theme_cookie_bar ) :
 	if (!footer) return;
 	var breakpointPx = <?php echo (int) ( defined( 'MNSK7_BREAKPOINT_MOBILE' ) ? MNSK7_BREAKPOINT_MOBILE : 768 ); ?>;
 	var mq = '(max-width: ' + breakpointPx + 'px)';
-	// Jedna obsługa delegowana — zawsze podpięta, działa przy każdym ładowaniu i na mobile
-	footer.addEventListener('click', function(e) {
-		if (!window.matchMedia(mq).matches) return;
-		var title = e.target.closest('.mnsk7-footer__title');
+
+	function toggleAccordion(title) {
 		if (!title) return;
 		var col = title.closest('.mnsk7-footer__col');
 		if (!col) return;
-		e.preventDefault();
 		col.classList.toggle('is-open');
 		title.setAttribute('aria-expanded', col.classList.contains('is-open'));
-	});
+	}
+
+	var touchedTitle = null; // żeby nie toggle 2× przy tap (touchend + click)
+
+	function handleAccordion(e) {
+		if (!window.matchMedia(mq).matches) return;
+		var title = e.target.closest('.mnsk7-footer__title');
+		if (!title) return;
+		if (e.type === 'click' && touchedTitle === title) {
+			touchedTitle = null;
+			return; // już obsłużone w touchend
+		}
+		e.preventDefault();
+		e.stopPropagation();
+		toggleAccordion(title);
+	}
+
+	// Click (desktop + mobile)
+	footer.addEventListener('click', handleAccordion);
+	// Touchend — na mobile sam click bywa nieodpalany; touchend pewnie otwiera/zamyka
+	footer.addEventListener('touchend', function(e) {
+		if (!window.matchMedia(mq).matches) return;
+		var title = e.target.closest('.mnsk7-footer__title');
+		if (!title) return;
+		touchedTitle = title;
+		e.preventDefault();
+		toggleAccordion(title);
+		setTimeout(function() { touchedTitle = null; }, 400);
+	}, { passive: false });
+
 	footer.addEventListener('keydown', function(e) {
 		if (!window.matchMedia(mq).matches) return;
 		if (e.key !== 'Enter' && e.key !== ' ') return;
 		var title = e.target.closest('.mnsk7-footer__title');
 		if (!title) return;
-		var col = title.closest('.mnsk7-footer__col');
-		if (!col) return;
 		e.preventDefault();
-		col.classList.toggle('is-open');
-		title.setAttribute('aria-expanded', col.classList.contains('is-open'));
+		toggleAccordion(title);
 	});
-	// Ustaw role/aria na mobile
+
 	function setAria() {
 		if (!window.matchMedia(mq).matches) return;
 		footer.querySelectorAll('.mnsk7-footer__col').forEach(function(col) {

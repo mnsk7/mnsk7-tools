@@ -1,7 +1,8 @@
 /* 06-single-product — PDP (product_card_visual, UI_SPEC_V2) */
 
-/* PDP: pełna szerokość (bez sidebaru) */
-body.single-product #content #primary {
+/* PDP: pełna szerokość (bez sidebaru). Woo = #primary, page = main — ten sam efekt. */
+body.single-product #content #primary,
+body.single-product #content > main.site-main {
   flex: 1 1 100%;
   max-width: 100%;
 }

@@ -1,0 +1,42 @@
+/* 25-global-layout — krytyczne stany layoutu (serwerowo, nie wp_footer inline).
+   Header/footer/main content — ten sam wygląd na wszystkich stronach (/, koszyk, archive, tag, ?filter_*, PDP). */
+
+/* Header: tło i obramowanie (wygrywa z cache/pluginami) */
+#masthead.mnsk7-header {
+  background: #fff !important;
+  border-bottom: 1px solid var(--color-border, #e9e8cc);
+}
+
+/* Desktop: jeden search/menu — bez duplikatu, bez zależności od JS */
+@media (min-width: 769px) {
+  .mnsk7-header__menu-toggle,
+  .mnsk7-header__search-toggle {
+    display: none !important;
+  }
+  #mnsk7-header-search.mnsk7-header__search-dropdown {
+    position: static !important;
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    box-shadow: none !important;
+  }
+}
+
+/* PLP trust: flex layout (wygrywa z WooCommerce/innymi) */
+.mnsk7-plp-trust-wrap .mnsk7-plp-trust,
+.mnsk7-plp-trust {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 0.75rem 1.25rem !important;
+}
+.mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
+.mnsk7-plp-trust__item {
+  display: inline-flex !important;
+}
+.mnsk7-plp-trust__item:not(:last-child)::after {
+  content: " · " !important;
+  margin-left: 0.5rem;
+}

@@ -184,7 +184,7 @@ if ( is_shop() && ! $is_taxonomy && taxonomy_exists( 'product_cat' ) ) {
 $use_table = is_shop() || $is_taxonomy;
 $GLOBALS['mnsk7_plp_use_table'] = $use_table;
 
-/* Jeden layout na request: mobile (user-agent) = karty, desktop = tabela. Bez duplikatu w DOM. */
+/* Jeden layout na request: mobile (user-agent) = karty, desktop = tabela. W DOM tylko jeden blok. */
 $plp_is_mobile = function_exists( 'mnsk7_is_mobile_request' ) && mnsk7_is_mobile_request();
 
 if ( woocommerce_product_loop() ) {

@@ -208,13 +208,15 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   outline-offset: 2px;
 }
 
-/* Hamburger icon (3 lines) */
+/* Hamburger icon (3 lines) — wyśrodkowany w przycisku */
 .mnsk7-header__hamburger {
   display: block;
   width: 22px;
   height: 2px;
+  margin: 0 auto;
   background: currentColor;
   box-shadow: 0 6px 0 currentColor, 0 12px 0 currentColor;
+  flex-shrink: 0;
 }
 
 /* Sklep dropdown — megamenu style: 2 columns, wider (audit: "grouped categories") */
@@ -315,7 +317,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 /* Desktop: burger tylko na mobile; na desktop nie ma off-canvas — ukryty (również w header.php critical CSS). */
 .mnsk7-header__menu-toggle {
   display: none;
-  padding: 0.5rem 1rem;
+  padding: 0;
   min-height: 44px;
   min-width: 44px;
   box-sizing: border-box;
@@ -327,6 +329,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   cursor: pointer;
   font-family: var(--font-base);
   color: var(--color-text);
+  align-items: center;
+  justify-content: center;
 }
 
 .mnsk7-header__menu-toggle:focus-visible {
@@ -500,9 +504,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   background: var(--color-white);
 }
 .mnsk7-header__search-input:focus {
-  outline: none;
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
   border-color: var(--color-primary);
-  box-shadow: none;
+  box-shadow: none; /* bez fioletowego glow */
 }
 .mnsk7-header__search-input::-webkit-search-cancel-button,
 .mnsk7-header__search-input::-webkit-search-decoration {

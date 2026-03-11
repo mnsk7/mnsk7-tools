@@ -149,19 +149,25 @@ body.woocommerce .mnsk7-plp-toolbar--bottom .woocommerce-result-count {
   }
 }
 
-/* Archiwum sklepu, kategorii i tagów: bez sidebaru, pełna szerokość; powietrze od headera (senior layout) */
+/* Archiwum: główna kolumna — Woo (#content #primary) i page (#content > main) ten sam layout. */
 body.post-type-archive-product #content #primary,
+body.post-type-archive-product #content > main.site-main,
 body.tax-product_cat #content #primary,
-body.tax-product_tag #content #primary {
+body.tax-product_cat #content > main.site-main,
+body.tax-product_tag #content #primary,
+body.tax-product_tag #content > main.site-main {
   flex: 1 1 100%;
   width: 100%;
   min-width: 0;
   padding-top: 1.75rem;
 }
-/* Kolumna główna i site-main — zawsze pełna szerokość (bez kurczenia przy 1 wierszu w tabeli) */
+/* site-main pełna szerokość (Woo: wewnątrz #primary; page: bezpośrednio w #content) */
 body.post-type-archive-product #content #primary .site-main,
+body.post-type-archive-product #content > main.site-main,
 body.tax-product_cat #content #primary .site-main,
-body.tax-product_tag #content #primary .site-main {
+body.tax-product_cat #content > main.site-main,
+body.tax-product_tag #content #primary .site-main,
+body.tax-product_tag #content > main.site-main {
   width: 100%;
 }
 body.post-type-archive-product #content #secondary,
@@ -535,8 +541,13 @@ body.tax-product_tag .mnsk7-catalog-filters {
 }
 .mnsk7-plp-search__input:focus {
   outline: 2px solid var(--color-primary);
-  outline-offset: 0;
+  outline-offset: 2px;
   border-color: var(--color-primary);
+  box-shadow: none; /* bez fioletowego glow z przeglądarki */
+}
+.mnsk7-plp-search__input:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
 }
 .mnsk7-plp-search__submit {
   padding: 0.5rem 1.25rem;
@@ -776,8 +787,7 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   pointer-events: none;
 }
 
-/* PLP-09: layout wybierany na backendzie (mobile = grid, desktop = table). W DOM tylko jeden.
-   Stylowanie siatki kart gdy jest wyświetlana (mobile). Bez !important — specyficzność body.woocommerce. */
+/* PLP-09: layout wybierany na backendzie (mobile = grid, desktop = table). W DOM tylko jeden. */
 body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile {
   display: block;
   margin-bottom: 1rem;
@@ -1018,15 +1028,12 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   .mnsk7-product-table {
     min-width: 560px;
   }
-
   .mnsk7-product-table .mnsk7-table-cell {
     padding: 0.4rem 0.5rem;
   }
-
   .mnsk7-product-table .mnsk7-table-cell--thumb {
     width: 56px;
   }
-
   .mnsk7-product-table .mnsk7-table-cell--thumb a {
     max-width: 48px;
   }
