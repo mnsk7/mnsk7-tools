@@ -815,11 +815,13 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   }
 }
 
-/* Table wrapper — bez wewnętrznego scrolla; tabela widoczna tylko na desktop (na mobile: grid kart). */
+/* Table wrapper — na wąskim desktopie przewijanie w poziomie zamiast obcinania przycisku. */
 .mnsk7-product-table-wrap {
   margin-bottom: 1.5rem;
   max-width: 100%;
   width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* table-layout: fixed — одинаковые пропорции колонок при 1 и при многих товарах */
@@ -845,6 +847,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   font-size: var(--fs-xs);
   color: var(--color-text);
   border-bottom: 2px solid var(--color-border-strong);
+  white-space: nowrap;
 }
 
 /* Фиксированные доли колонок для единого вида на всех категориях */
@@ -859,7 +862,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table th.mnsk7-table-cell--qty,
 .mnsk7-product-table .mnsk7-table-cell--qty { width: 12%; }
 .mnsk7-product-table th.mnsk7-table-cell--action,
-.mnsk7-product-table .mnsk7-table-cell--action { width: 19%; }
+.mnsk7-product-table .mnsk7-table-cell--action { width: 19%; min-width: 160px; }
 
 .mnsk7-product-table tbody tr {
   border-bottom: 1px solid var(--color-border);
@@ -949,6 +952,11 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table .mnsk7-table-cell--qty,
 .mnsk7-product-table .mnsk7-table-cell--action {
   vertical-align: middle;
+}
+.mnsk7-product-table .mnsk7-table-cell--action .button,
+.mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button,
+.mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn {
+  flex-shrink: 0;
 }
 .mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-input {
   width: 4rem;

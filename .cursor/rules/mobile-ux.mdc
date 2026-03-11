@@ -1,0 +1,15 @@
+---
+description: Ograniczenia przy poprawkach mobile UX/UI i responsive (mnsk7-storefront)
+globs: ["**/mnsk7-storefront/**"]
+---
+
+# Mobile UX / responsive — reguły
+
+- **Nie** leczyć layoutu przez: `overflow-x: auto`, `overflow: scroll`, wewnętrzne scrollbary w zwykłych blokach UI, obcinanie treści, `hidden` jako maskę defektu.
+- **Nie** dodawać desktop burgera ani innych nowych kontrolek bez wyraźnego żądania.
+- **Nie** zostawiać martwych kontrolek.
+- **Nie** przywracać starego zepsutego headera dla naprawy innej rzeczy.
+- Header: jeden źródłowy plik — `header.php` (mnsk7-header). Storefront header output jest usunięty w `functions.php`; nie dodawać elementów headera w hookach.
+- Breakpoint mobile: 768px (max-width). Desktop: min-width 769px w critical CSS.
+- Search na mobile: Pattern B — panel pod headerem (`#mnsk7-header-search-panel`), body class `mnsk7-search-open`; w headerze dropdown wyszukiwania na mobile `display: none !important`.
+- Wszystkie szablony używają tego samego `get_header()`; różnice finalnego renderu mogą wynikać z cache lub body_class/template_include — analizować DOM, klasy, hooki, conditionals.

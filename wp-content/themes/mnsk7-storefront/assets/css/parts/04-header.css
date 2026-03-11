@@ -53,8 +53,8 @@
   opacity: 1;
   background: rgba(255, 255, 255, 0.15);
 }
-/* Mobile: promo bar — one line, compact; no huge strip, no wrap clutter */
-@media (max-width: 768px) {
+/* Tablet + mobile: promo bar — one line, compact */
+@media (max-width: 992px) {
   .mnsk7-promo-bar {
     padding: 0.3rem 0.75rem;
     font-size: var(--fs-xs); /* 0.75rem mobile override */
@@ -417,8 +417,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   z-index: 99;
 }
 
-/* Od 768px (desktop): pole wyszukiwania w jednej linii z headerem */
-@media (min-width: 768px) {
+/* Od 993px (desktop): pole wyszukiwania w jednej linii z headerem; do 992px — ikona + panel */
+@media (min-width: 993px) {
   .mnsk7-header__search-toggle {
     display: none;
   }
@@ -820,7 +820,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   transform: translateY(0);
 }
 /* Desktop: account link z tekstem — przywróć min-width i padding */
-@media (min-width: 768px) {
+@media (min-width: 993px) {
   .mnsk7-header__link.mnsk7-header__link--account {
     min-width: 7.5em;
     padding: 0 0.5rem;
@@ -828,7 +828,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 /* Desktop: dropdown tylko przy hover na triggerze lub samym dropdownie (JS dodaje .is-open) */
-@media (min-width: 768px) {
+@media (min-width: 993px) {
   .mnsk7-header__cart.is-open .mnsk7-header__cart-dropdown {
     opacity: 1;
     visibility: visible;
@@ -866,9 +866,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 
-/* Mobile: one row — logo | burger, search, account, cart (icons only). All icon buttons: same hit-area, same container, one system. */
-/* Audit: no vertical scrollbar inside header bar — overflow hidden on inner row. */
-@media (max-width: 768px) {
+/* Tablet + mobile (≤992px): one row — logo | burger, search, account, cart (icons only). Avoids overflow on narrow desktop. */
+@media (max-width: 992px) {
   .mnsk7-header__inner {
     display: flex;
     flex-wrap: nowrap;
@@ -1032,12 +1031,12 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   box-sizing: border-box;
 }
-@media (min-width: 769px) {
+@media (min-width: 993px) {
   .mnsk7-header-search-panel {
     display: none !important;
   }
 }
-@media (max-width: 768px) {
+@media (max-width: 992px) {
   .mnsk7-header-search-panel[hidden] {
     display: none !important;
   }
@@ -1131,15 +1130,19 @@ body .site .site-content {
   z-index: 0;
 }
 
-/* Audit: dropdown Sklep nie może przycinać się ani zakrywać paska promocyjnego i koszyka */
-.mnsk7-header {
-  overflow: visible;
-}
-.mnsk7-header__inner {
-  overflow: visible;
-}
-.mnsk7-header__nav {
-  overflow: visible;
+/* Audit: dropdown Sklep nie może przycinać się ani zakrywać paska promocyjnego i koszyka.
+   Tylko desktop: overflow visible dla dropdownów. Na mobile (≤768px) inner ma overflow: hidden
+   żeby uniknąć nałożenia menu/search na siebie (mobile UX fix). */
+@media (min-width: 769px) {
+  .mnsk7-header {
+    overflow: visible;
+  }
+  .mnsk7-header__inner {
+    overflow: visible;
+  }
+  .mnsk7-header__nav {
+    overflow: visible;
+  }
 }
 /* Submenu Sklep: pod headerem, ale nie nad promo ani nad koszykiem */
 .mnsk7-header__menu .sub-menu {
