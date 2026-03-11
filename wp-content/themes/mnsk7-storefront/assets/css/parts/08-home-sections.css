@@ -7,8 +7,7 @@
   padding: 0;
 }
 
-/* Hero — czytelny, wyrazisty (nie „biednie”) */
-/* Audit task 6: brak obcięcia ostatniego chipa (np. „3 500+ zamówień rocznie”) — overflow visible */
+/* Hero — czytelny, full-bleed (bez białych pasów od padding #content). Audit task 6: overflow visible */
 .mnsk7-hero {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: var(--color-white);
@@ -16,6 +15,19 @@
   padding: 4rem 1.5rem 4.5rem;
   position: relative;
   overflow: visible;
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
+  width: calc(100% + 3rem);
+  max-width: none;
+}
+@media (min-width: 768px) {
+  .mnsk7-hero {
+    margin-left: -2rem;
+    margin-right: -2rem;
+    width: calc(100% + 4rem);
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 .mnsk7-hero::before {

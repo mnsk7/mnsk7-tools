@@ -82,24 +82,21 @@ endif;
 					$has_submenu = false;
 					$top_cats = array();
 					$top_tags = array();
-					// Performance T4: na mobile nie renderować mega menu (mniej DOM, szybszy parse). Link „Sklep” i tak prowadzi do /sklep/.
-					$render_megamenu = ! ( function_exists( 'mnsk7_is_mobile_request' ) && mnsk7_is_mobile_request() );
-					if ( $render_megamenu ) {
-						if ( taxonomy_exists( 'product_cat' ) ) {
-							$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true, 'number' => 16, 'orderby' => 'name' ) );
-							$top_cats = is_wp_error( $top_cats ) ? array() : $top_cats;
-						}
-						if ( taxonomy_exists( 'product_tag' ) ) {
-							$top_tags = get_terms( array( 'taxonomy' => 'product_tag', 'hide_empty' => true, 'number' => 10, 'orderby' => 'count', 'order' => 'DESC' ) );
-							$top_tags = is_wp_error( $top_tags ) ? array() : $top_tags;
-							$top_tags = array_filter( $top_tags, function ( $t ) {
-								$slug_ok = isset( $t->slug ) && strtolower( $t->slug ) !== 'sklep';
-								$name_ok = empty( $t->name ) || trim( strtolower( $t->name ) ) !== 'sklep';
-								return $slug_ok && $name_ok;
-							} );
-						}
+					// Jedna struktura na desktop i mobile: megamenu renderowane zawsze (mobile rozwijane przez JS).
+					if ( taxonomy_exists( 'product_cat' ) ) {
+						$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true, 'number' => 16, 'orderby' => 'name' ) );
+						$top_cats = is_wp_error( $top_cats ) ? array() : $top_cats;
 					}
-					if ( $render_megamenu && ( ! empty( $top_cats ) || ! empty( $top_tags ) ) ) {
+					if ( taxonomy_exists( 'product_tag' ) ) {
+						$top_tags = get_terms( array( 'taxonomy' => 'product_tag', 'hide_empty' => true, 'number' => 10, 'orderby' => 'count', 'order' => 'DESC' ) );
+						$top_tags = is_wp_error( $top_tags ) ? array() : $top_tags;
+						$top_tags = array_filter( $top_tags, function ( $t ) {
+							$slug_ok = isset( $t->slug ) && strtolower( $t->slug ) !== 'sklep';
+							$name_ok = empty( $t->name ) || trim( strtolower( $t->name ) ) !== 'sklep';
+							return $slug_ok && $name_ok;
+						} );
+					}
+					if ( ! empty( $top_cats ) || ! empty( $top_tags ) ) {
 						$has_submenu = true;
 						?>
 						<ul class="sub-menu mnsk7-megamenu">

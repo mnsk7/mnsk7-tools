@@ -1,10 +1,13 @@
-/* 10-cookie-bar — widoczny pasek, Ustawienia (GDPR), safe-area (iPhone) */
+/* 10-cookie-bar — widoczny pasek, Ustawienia (GDPR), safe-area (iPhone). Bar poza #page (fixed względem viewport). */
 
 .mnsk7-cookie-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
   background: var(--color-dark-bg);
   color: var(--color-white);
   padding: 0.75rem 1.25rem;
@@ -18,6 +21,7 @@
   box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.2);
   font-size: var(--fs-sm);
   line-height: 1.5;
+  overflow: hidden;
 }
 
 .mnsk7-cookie-bar[hidden] {
@@ -36,12 +40,15 @@ body.mnsk7-cookie-bar-visible #page {
   flex-wrap: wrap;
   gap: 0.75rem 1rem;
   width: 100%;
+  min-width: 0;
   max-width: var(--content-max, 1200px);
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .mnsk7-cookie-bar__text {
   flex: 1 1 260px;
+  min-width: 0;
   margin: 0;
 }
 
@@ -59,8 +66,10 @@ body.mnsk7-cookie-bar-visible #page {
 .mnsk7-cookie-bar__buttons {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
   flex-shrink: 0;
+  min-width: 0;
   position: relative;
   z-index: 1;
 }

@@ -110,6 +110,8 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 					<span class="mnsk7-footer__accordion-icon" aria-hidden="true"></span>
 				</button>
 				<div id="footer-panel-newsletter" class="mnsk7-footer__accordion-panel" role="region" aria-labelledby="footer-trigger-newsletter">
+				<?php /* W View Source: jeśli w środku jest ten komentarz i formularz, deploy footer.php jest OK. */ ?>
+				<!-- mnsk7-footer newsletter -->
 				<p class="mnsk7-footer__newsletter-desc"><?php esc_html_e( 'Otrzymuj informacje o promocjach, nowościach i poradach.', 'mnsk7-storefront' ); ?></p>
 				<form class="mnsk7-footer__newsletter-form" action="<?php echo esc_url( home_url( '/' ) ); ?>" method="post" aria-label="<?php esc_attr_e( 'Zapisz się do newslettera', 'mnsk7-storefront' ); ?>">
 					<?php wp_nonce_field( 'mnsk7_newsletter', 'mnsk7_newsletter_nonce' ); ?>
@@ -134,6 +136,9 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 	</div>
 </footer>
 
+<?php /* Accordion: assets/js/footer-accordion.js (enqueue w functions.php). */ ?>
+
+</div><!-- #page -->
 <?php
 $privacy_url = get_privacy_policy_url();
 $cookie_settings_url = $privacy_url ? $privacy_url . '#cookies' : home_url( '/polityka-prywatnosci/#cookies' );
@@ -159,106 +164,55 @@ if ( $show_cookie_bar_markup ) :
 </div>
 <script>
 (function() {
-	var bar = document.getElementById('mnsk7-cookie-bar');
-	if (!bar) return;
-	var key = 'mnsk7_cookie_consent';
-	function show() { bar.removeAttribute('hidden'); bar.setAttribute('aria-hidden', 'false'); document.body.classList.add('mnsk7-cookie-bar-visible'); var acceptBtn = bar.querySelector('.mnsk7-cookie-bar-accept'); if (acceptBtn) setTimeout(function() { acceptBtn.focus(); }, 100); }
-	function hide() { bar.setAttribute('hidden', ''); bar.setAttribute('aria-hidden', 'true'); document.body.classList.remove('mnsk7-cookie-bar-visible'); }
-	var valAccept = 'accept';
-	var valReject = 'reject';
-	// Cookie = źródło prawdy dla PHP (body_class): przy następnym request PHP widzi ten sam stan, bez sessionStorage.
-	function setConsent(value) {
-		try { localStorage.setItem(key, value); } catch(e) {}
-		try { document.cookie = key + '=' + value + '; path=/; max-age=31536000; SameSite=Lax'; } catch(e) {}
-		window.mnsk7CookieConsent = value;
-	}
-	function getStored() {
-		try { var s = localStorage.getItem(key); if (s) return s; } catch(e) {}
-		var m = document.cookie.match(new RegExp('(?:^|; )' + key.replace(/([.*+?^${}()|[\]\\])/g, '\\$1') + '=([^;]*)'));
-		return m ? decodeURIComponent(m[1]) : null;
-	}
-	var stored = getStored();
-	if (stored === valAccept || stored === valReject) {
-		window.mnsk7CookieConsent = stored;
-		hide();
-		return;
-	}
-	var legacy = document.cookie.indexOf(key + '=1') !== -1 || (typeof localStorage !== 'undefined' && localStorage.getItem(key) === '1');
-	if (legacy) { setConsent(valAccept); hide(); return; }
-	show();
-	window.mnsk7CookieConsent = null;
-	function onChoice(e, value) {
-		if (e) { e.preventDefault(); e.stopPropagation(); }
-		setConsent(value);
-		hide();
-		document.dispatchEvent(new CustomEvent('mnsk7-cookie-consent', { detail: value }));
-	}
-	[bar.querySelector('.mnsk7-cookie-bar-accept'), bar.querySelector('.mnsk7-cookie-bar-reject')].forEach(function(btn, i) {
-		if (!btn) return;
-		var val = i === 0 ? valAccept : valReject;
-		btn.addEventListener('click', function(e) { onChoice(e, val); }, false);
-		btn.addEventListener('touchend', function(e) { onChoice(e, val); }, { passive: false });
-	});
-})();
-<?php endif; ?>
-<script>
-(function() {
-	var FOOTER_ACCORDION_BREAKPOINT = 768;
-	var mq = '(max-width: ' + FOOTER_ACCORDION_BREAKPOINT + 'px)';
-
-	function initFooterAccordion() {
-		var footer = document.getElementById('colophon') || document.querySelector('.mnsk7-footer');
-		if (!footer) return;
-
-		function toggleSection(trigger) {
-			if (!trigger || trigger.getAttribute('aria-controls') === null) return;
-			var col = trigger.closest('.mnsk7-footer__col');
-			if (!col) return;
-			var isOpen = col.classList.toggle('is-open');
-			trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+	function init() {
+		var bar = document.getElementById('mnsk7-cookie-bar');
+		if (!bar) return;
+		var key = 'mnsk7_cookie_consent';
+		function show() { bar.removeAttribute('hidden'); bar.setAttribute('aria-hidden', 'false'); document.body.classList.add('mnsk7-cookie-bar-visible'); var acceptBtn = bar.querySelector('.mnsk7-cookie-bar-accept'); if (acceptBtn) setTimeout(function() { acceptBtn.focus(); }, 100); }
+		function hide() { bar.setAttribute('hidden', ''); bar.setAttribute('aria-hidden', 'true'); document.body.classList.remove('mnsk7-cookie-bar-visible'); }
+		var valAccept = 'accept';
+		var valReject = 'reject';
+		function setConsent(value) {
+			try { localStorage.setItem(key, value); } catch(e) {}
+			try { document.cookie = key + '=' + encodeURIComponent(value) + '; path=/; max-age=31536000; SameSite=Lax'; } catch(e) {}
+			window.mnsk7CookieConsent = value;
 		}
-
-		function handleTrigger(e) {
-			if (!window.matchMedia(mq).matches) return;
-			var trigger = e.target.closest('.mnsk7-footer__accordion-trigger');
-			if (!trigger) return;
-			e.preventDefault();
-			e.stopPropagation();
-			toggleSection(trigger);
+		function getStored() {
+			try { var s = localStorage.getItem(key); if (s) return s; } catch(e) {}
+			var m = document.cookie.match(new RegExp('(?:^|; )' + key.replace(/([.*+?^${}()|[\]\\])/g, '\\$1') + '=([^;]*)'));
+			return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : null;
 		}
-
-		footer.addEventListener('click', handleTrigger);
-		footer.addEventListener('keydown', function(e) {
-			if (!window.matchMedia(mq).matches) return;
-			var trigger = e.target.closest('.mnsk7-footer__accordion-trigger');
-			if (!trigger) return;
-			if (e.key === 'Enter' || e.key === ' ') {
-				e.preventDefault();
-				toggleSection(trigger);
-			}
-		});
-
-		function syncAria() {
-			var open = window.matchMedia(mq).matches;
-			footer.querySelectorAll('.mnsk7-footer__accordion-trigger').forEach(function(btn) {
-				var col = btn.closest('.mnsk7-footer__col');
-				if (!col) return;
-				btn.setAttribute('aria-expanded', col.classList.contains('is-open') ? 'true' : 'false');
-			});
+		var stored = getStored();
+		if (stored === valAccept || stored === valReject) {
+			window.mnsk7CookieConsent = stored;
+			hide();
+			return;
 		}
-		syncAria();
-		window.matchMedia(mq).addEventListener('change', syncAria);
+		var legacy = document.cookie.indexOf(key + '=1') !== -1 || (typeof localStorage !== 'undefined' && localStorage.getItem(key) === '1');
+		if (legacy) { setConsent(valAccept); hide(); return; }
+		show();
+		window.mnsk7CookieConsent = null;
+		function onChoice(e, value) {
+			if (e) { e.preventDefault(); e.stopPropagation(); }
+			setConsent(value);
+			hide();
+			document.dispatchEvent(new CustomEvent('mnsk7-cookie-consent', { detail: value }));
+		}
+		bar.addEventListener('click', function(e) {
+			var target = e.target && e.target.closest ? e.target.closest('button') : null;
+			if (!target) return;
+			if (target.classList.contains('mnsk7-cookie-bar-accept')) { onChoice(e, valAccept); return; }
+			if (target.classList.contains('mnsk7-cookie-bar-reject')) { onChoice(e, valReject); return; }
+		}, false);
 	}
-
 	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', initFooterAccordion);
+		document.addEventListener('DOMContentLoaded', init);
 	} else {
-		initFooterAccordion();
+		init();
 	}
 })();
 </script>
-
-</div><!-- #page -->
+<?php endif; ?>
 <?php wp_footer(); ?>
 </body>
 </html>

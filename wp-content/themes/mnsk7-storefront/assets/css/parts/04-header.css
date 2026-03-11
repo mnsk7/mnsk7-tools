@@ -53,20 +53,50 @@
   opacity: 1;
   background: rgba(255, 255, 255, 0.15);
 }
-/* Tablet + mobile: promo bar — one line, compact */
+/* Tablet + mobile: promo bar — compact, bez nałożenia tekstu i close */
 @media (max-width: 1024px) {
   .mnsk7-promo-bar {
-    padding: 0.3rem 0.75rem;
-    font-size: var(--fs-xs); /* 0.75rem mobile override */
+    padding: 0.35rem 0.75rem;
+    padding-right: 3rem;
+    font-size: var(--fs-xs);
   }
   .mnsk7-promo-bar__inner {
     gap: 0.5rem;
+    padding-right: 0;
   }
   .mnsk7-promo-bar__text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     min-width: 0;
+    padding-right: 0.5rem;
+  }
+}
+
+/* Mobile: promo bar — 2-line layout jeśli potrzeba, close nie najeżdża */
+@media (max-width: 480px) {
+  .mnsk7-promo-bar {
+    padding: 0.5rem 3rem 0.5rem 1rem;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+  .mnsk7-promo-bar__inner {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+  .mnsk7-promo-bar__text {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    flex: 1 1 100%;
+    padding-right: 0;
+    line-height: 1.4;
+  }
+  .mnsk7-promo-bar__close {
+    right: 0.25rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 
@@ -445,6 +475,68 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     box-shadow: inset 0 -2px 0 var(--color-primary);
   }
 }
+/* Mobile (≤1024px): Sklep rozwijany — submenu ukryte domyślnie, widoczne gdy li.is-open; układ pionowy, tap targets 44px */
+@media (max-width: 1024px) {
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    display: none;
+    min-width: 0;
+    max-width: none;
+    max-height: none;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    flex-direction: column;
+    gap: 0;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children.is-open .sub-menu {
+    display: flex;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu {
+    flex-direction: column;
+    padding: 0.5rem 0 0 0;
+    margin-top: 0.25rem;
+    margin-left: var(--space-16, 1rem);
+    border-left: 2px solid var(--color-border);
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__group {
+    margin-bottom: 0.5rem;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__heading {
+    margin-bottom: 0.25rem;
+    padding-left: 0.5rem;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list,
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list--cols,
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list--tags {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list a,
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list li a {
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__footer {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__footer a {
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
 /* Submenu nie wychodzi w prawo poza ekran (Sklep jest pierwszy, dropdown pod nim) */
 @media (max-width: 480px) {
   .mnsk7-header__menu .sub-menu {
@@ -1201,12 +1293,15 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     outline: 2px solid var(--color-focus, var(--color-primary));
     outline-offset: -2px;
   }
-  /* Mobile: submenu Sklep nie pokazywane — link „Sklep” prowadzi do sklepu (bez ogromnej listy) */
+  /* Mobile: submenu Sklep ukryte domyślnie; po tap na „Sklep” (li.is-open) — rozwijane (JS), ta sama struktura co desktop */
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu {
     display: none !important;
   }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children.is-open .sub-menu {
+    display: flex !important;
+  }
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children > a::after {
-    display: none;
+    display: inline-block;
   }
   .mnsk7-header__link-text {
     display: none;

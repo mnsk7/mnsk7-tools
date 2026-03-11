@@ -69,16 +69,36 @@
     font-size: var(--fs-xl);
   }
 
-  /* Cookie bar: stos przycisków (główny styl w 10-cookie-bar.css) */
+  /* Cookie bar: bottom-sheet / stacked — bez obcięcia, bez overflow (P0) */
   .mnsk7-cookie-bar {
     flex-direction: column;
     text-align: center;
-    padding: var(--space-16);
+    padding: var(--space-12) var(--space-16);
     padding-bottom: max(var(--space-16), env(safe-area-inset-bottom));
+    align-items: stretch;
   }
 
-  .mnsk7-cookie-bar .mnsk7-cookie-bar__btn {
+  .mnsk7-cookie-bar__inner {
+    flex-direction: column;
+    gap: var(--space-12);
+  }
+
+  .mnsk7-cookie-bar__text {
+    flex: none;
     width: 100%;
+    text-align: center;
+  }
+
+  .mnsk7-cookie-bar__buttons {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .mnsk7-cookie-bar__btn {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   /* Delivery table: mniejszy font i padding, zawijanie tekstu — bez wewnętrznego scrolla */
