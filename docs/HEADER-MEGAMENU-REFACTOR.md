@@ -1,11 +1,32 @@
-# Refaktor mega menu w headerze — brak łamania słów
+# Refaktor mega menu w headerze — brak łamania słów + pass 2 (kompozycja)
 
 **Data:** 2026-03-11  
 **Plik:** `wp-content/themes/mnsk7-storefront/assets/css/parts/04-header.css`
 
 ---
 
-## 1. Przyczyna problemu
+## Pass 2 (kompozycja, gęstość, proporcje)
+
+**Zmiany względem pass 1:**
+
+| Element | Było (pass 1) | Jest (pass 2) |
+|--------|----------------|----------------|
+| **Dropdown** | min 520px, max 640px, padding 1rem 1.25rem 0.75rem, gap 1.25rem | min 420px, max 520px, padding 0.75rem 1rem 0.5rem, gap 0.75rem |
+| **Kolumny kategorii** | 4 × minmax(11.5em, 1fr) | **3** × minmax(10.5em, 1fr) |
+| **Kolumny tagów** | 3 × minmax(10em, 1fr) | 3 × minmax(9em, 1fr) |
+| **List gap** | 0.125rem 1.25rem | 0.0625rem 1rem |
+| **Link padding** | 0.375rem 0.5rem, line-height 1.4 | 0.25rem 0.5rem, line-height 1.35 |
+| **Nagłówek sekcji** | 0.6875rem, color text-muted, border | 0.75rem, color text, border-strong |
+| **Footer** | padding-top 0.75rem, margin-top 0.25rem | padding-top 0.5rem, margin-top 0.125rem |
+| **Tablet ≤640px** | padding 0.75rem 1rem | padding 0.625rem 0.875rem, gap 0.625rem, min 300px |
+
+**Liczba kolumn:** 4 → 3 dla kategorii — mniej pustej przestrzeni po prawej, układ bardziej zwarty przy ~16–19 pozycjach. Słowa nadal nie łamią się (min 10.5em).
+
+**Bez zmian:** overflow-wrap/word-break normal, hyphens: none, hover/focus-visible, responsywność.
+
+---
+
+## 1. Przyczyna problemu (pass 1)
 
 1. **`grid-template-columns: repeat(4, minmax(0, 1fr))`** — `minmax(0, 1fr)` pozwala kolumnom skurczyć się do zera, więc przeglądarka łamała tekst w środku słów (np. „diament/owy”, „łożyskie/m”).
 2. **`overflow-wrap: break-word` + `word-wrap: break-word`** na linkach — przy wąskim kontenerze dozwalało łamanie w dowolnym miejscu.
