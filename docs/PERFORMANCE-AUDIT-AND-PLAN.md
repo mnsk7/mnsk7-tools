@@ -236,18 +236,20 @@
 | 2026-03 | **Cookie bar tylko gdy widoczny** | `footer.php` | Bar + skrypt cookie wyświetlane tylko gdy `mnsk7_show_cookie_bar` i brak zgody (`mnsk7_get_cookie_consent()` !== accept/reject). Przy już ustawionej zgodzie nie wysyłamy HTML ani skryptu. |
 | — | **T1** Page-specific CSS | — | Nie wdrożone: temat ładuje jeden plik `main.css` (zbudowany z parts), nie parts osobno. Aby włączyć T1, trzeba by wrócić do ładowania parts z warunkami lub podzielić main.css na critical + page-specific. |
 
-### Pomiar baseline (przed optymalizacjami)
+### Pomiar baseline i po optymalizacjach
 
-Lighthouse uruchomiony na staging (mobile simulation). Pliki: `docs/lighthouse-home-before.json`, `docs/lighthouse-archive-before.json`.
+Lighthouse na staging (mobile simulation). Before: `lighthouse-*-before.json`; After: `lighthouse-*-after.json` (po pushu z T2, T4, cookie bar, preload, conditional Instagram).
 
-| Strona | Performance | FCP | LCP | TBT | CLS | Speed Index |
-|--------|-------------|-----|-----|-----|-----|-------------|
-| **Home** (/) | 53 | 2,18 s | 3,47 s | 1881 ms | 0,004 | 9,26 s |
-| **Archive** (/sklep/) | 60 | 2,38 s | 3,95 s | 673 ms | 0,009 | 8,66 s |
+| Strona | Pomiar | Performance | FCP | LCP | TBT | CLS |
+|--------|--------|-------------|-----|-----|-----|-----|
+| **Home** (/) | Before | 53 | 2,18 s | 3,47 s | 1881 ms | 0,004 |
+| **Home** (/) | After | **58** | **1,79 s** | **3,13 s** | **1668 ms** | 0,004 |
+| **Archive** (/sklep/) | Before | 60 | 2,38 s | 3,95 s | 673 ms | 0,009 |
+| **Archive** (/sklep/) | After | **69** | **1,78 s** | **2,68 s** | **1087 ms** | 0,005 |
 
-**Obserwacje:** Home ma wyższy TBT (głównie JS); LCP na obu stronach powyżej 2,5 s (cel CWV). CLS w normie (< 0,1). Po wdrożeniu kolejnych faz (defer fragments, critical CSS, redukcja DOM) powtórzyć pomiar i wpisać „After” w tej tabeli.
+**Obserwacje po optymalizacjach:** Performance +5 pkt (home), +9 pkt (archive); FCP i LCP lepsze (archive LCP 2,68 s — bliżej celu 2,5 s); TBT niższe na archive. CLS bez zmian (w normie).
 
-Ponowne uruchomienie Lighthouse (np. po Phase 2/3):
+Kolejne pomiary (np. po cache purge lub Phase 3):
 
 ```bash
 npx lighthouse https://staging.mnsk7-tools.pl --only-categories=performance --output=json --output-path=docs/lighthouse-home-after.json
