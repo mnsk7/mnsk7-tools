@@ -740,12 +740,19 @@ function mnsk7_header_cart_summary_html( $cart_count, $cart_total, $loyalty_disc
 	return $out;
 }
 
-/* 1b. Enqueue cart fragments so header cart count updates via AJAX (na wszystkich stronach z headerem) */
+/* 1b. Enqueue cart fragments so header cart count updates via AJAX (na wszystkich stronach z headerem). Defer = mniej TBT (PERFORMANCE T2). */
 add_action( 'wp_enqueue_scripts', function () {
 	if ( ! is_admin() && function_exists( 'WC' ) ) {
 		wp_enqueue_script( 'wc-cart-fragments' );
 	}
 }, 5 );
+
+add_filter( 'script_loader_tag', function ( $tag, $handle, $src ) {
+	if ( $handle === 'wc-cart-fragments' ) {
+		return str_replace( ' src=', ' defer src=', $tag );
+	}
+	return $tag;
+}, 10, 3 );
 
 /* 1c. Cart fragments: trigger (icon + count) + summary in dropdown */
 add_filter( 'woocommerce_add_to_cart_fragments', function ( $fragments ) {

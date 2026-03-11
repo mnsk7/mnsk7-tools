@@ -138,7 +138,9 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 $privacy_url = get_privacy_policy_url();
 $cookie_settings_url = $privacy_url ? $privacy_url . '#cookies' : home_url( '/polityka-prywatnosci/#cookies' );
 $show_theme_cookie_bar = apply_filters( 'mnsk7_show_cookie_bar', true );
-if ( $show_theme_cookie_bar ) :
+$cookie_consent = function_exists( 'mnsk7_get_cookie_consent' ) ? mnsk7_get_cookie_consent() : null;
+$show_cookie_bar_markup = $show_theme_cookie_bar && ( $cookie_consent !== 'accept' && $cookie_consent !== 'reject' );
+if ( $show_cookie_bar_markup ) :
 ?>
 <div id="mnsk7-cookie-bar" class="mnsk7-cookie-bar" hidden role="dialog" aria-label="<?php esc_attr_e( 'Informacja o plikach cookie', 'mnsk7-storefront' ); ?>" aria-hidden="true">
 	<div class="mnsk7-cookie-bar__inner">
