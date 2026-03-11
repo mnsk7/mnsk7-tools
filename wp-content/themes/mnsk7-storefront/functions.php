@@ -853,8 +853,9 @@ add_action( 'wp_footer', function () {
 				if (!li || li.querySelector(':scope > a') !== a) return;
 				if (window.innerWidth <= 1024) {
 					e.preventDefault();
+					e.stopPropagation();
 					li.classList.toggle('is-open');
-					a.setAttribute('aria-expanded', li.classList.contains('is-open'));
+					a.setAttribute('aria-expanded', li.classList.contains('is-open') ? 'true' : 'false');
 				}
 			}, false);
 			// Mega menu (Sklep): hover delay 400ms na desktop — Baymard/NNG, bez flicker przy przejściu na panel
