@@ -45,6 +45,38 @@
 
 **Kryteria:** brak wewnętrznego horizontal scroll; logo i search nie obcinane; menu w viewport; kolumny zwarte; czytelne mega menu.
 
+### Pass 5: overlay panel, viewport, hover delay (NNG/Baymard/W3C APG)
+
+**Root problem layoutowy:** Mega menu traktowano jako element wciśnięty w szerokość kontenera headera — albo ładna kompozycja wychodziła poza layout, albo mieściła się, ale wyglądała biednie (złe proporcje, puste przestrzenie).
+
+**Założenie:** Mega menu = overlay panel powiązany z itemem „Sklep”, z **własną** szerokością zależną od viewportu, nie od wewnętrznego kontenera nav.
+
+**Zmiana modelu pozycjonowania:**
+- Dropdown nie jest ograniczany szerokością `.mnsk7-header__inner` ani nav.
+- Pozycjonowany względem `li` (Sklep), renderowany jako panel z `position: absolute; left: 0; top: 100%`.
+- Szerokość: **min-width: 360px**, **max-width: min(560px, calc(100vw - 2rem))** — panel ma sensowny rozmiar i nigdy nie wychodzi poza viewport (safe viewport fit).
+
+**Viewport fit:**
+- `max-width: min(560px, calc(100vw - 2rem))` — panel nie rozsadza strony, logo i search nie są obcinane.
+- Na wąskich desktopach panel się kurczy; na mobile (≤1024px) megamenu w nav jest ukryte w CSS.
+
+**Width / padding / gap:**
+- **Panel:** min-width 360px, max-width jak wyżej; padding `0.75rem 1rem 0.6rem`; gap między sekcjami `0.6rem`.
+- **Listy:** gap `0.125rem 0.875rem` (row/column); kolumny kategorii 3×`minmax(11em, 1fr)`, tagów 3×`minmax(9em, 1fr)`.
+- **Nagłówki:** 0.6875rem, font-weight 700, border-bottom strong; margin-bottom 0.35rem.
+- **Footer „Wszystkie produkty”:** padding-top 0.5rem, margin-top 0.2rem.
+- **Linki:** overflow-wrap/word-wrap/word-break normal, hyphens none — zawijanie tylko między słowami.
+
+**Hover delay (Baymard/NNG):**
+- W `functions.php`: na desktop (width ≥1025px) otwarcie megamenu po **400 ms** od `mouseenter` na `li` (klasa `.mnsk7-megamenu-open`), zamknięcie po **150 ms** od `mouseleave`.
+- W CSS (min-width: 1025px): megamenu widoczne tylko przy `.mnsk7-megamenu-open` lub `:focus-within` — nie przy samym `:hover`, co eliminuje flicker i przypadkowe otwieranie.
+- Klawisz Escape zamyka panel i zwraca focus na link „Sklep”.
+- Dostępność: disclosure/navigation pattern, aria-expanded, keyboard, focus-visible bez zmian.
+
+**Pliki:** `04-header.css` (panel, desktop media, kompozycja), `functions.php` (hover delay + Escape).
+
+**Self-QA:** desktop 1440+/1280, tablet, mobile; brak overflow; brak łamania słów; hover 400 ms / focus / Escape.
+
 ---
 
 ## 1. Przyczyna problemu (pass 1)

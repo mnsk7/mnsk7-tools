@@ -806,6 +806,42 @@ add_action( 'wp_footer', function () {
 					a.setAttribute('aria-expanded', li.classList.contains('is-open'));
 				});
 			});
+			// Mega menu (Sklep): hover delay 400ms na desktop — Baymard/NNG, bez flicker przy przejściu na panel
+			var megamenuLi = menu.querySelector('li.menu-item-has-children .sub-menu.mnsk7-megamenu');
+			if (megamenuLi) {
+				megamenuLi = megamenuLi.closest('li.menu-item-has-children');
+			}
+			if (megamenuLi) {
+				var openTimer, closeTimer;
+				var HOVER_OPEN_MS = 400;
+				var HOVER_CLOSE_MS = 150;
+				function openMegamenu() {
+					clearTimeout(closeTimer);
+					if (window.innerWidth < 1025) return;
+					openTimer = setTimeout(function() {
+						megamenuLi.classList.add('mnsk7-megamenu-open');
+						var link = megamenuLi.querySelector(':scope > a');
+						if (link) link.setAttribute('aria-expanded', 'true');
+					}, HOVER_OPEN_MS);
+				}
+				function closeMegamenu() {
+					clearTimeout(openTimer);
+					closeTimer = setTimeout(function() {
+						megamenuLi.classList.remove('mnsk7-megamenu-open');
+						var link = megamenuLi.querySelector(':scope > a');
+						if (link) link.setAttribute('aria-expanded', 'false');
+					}, HOVER_CLOSE_MS);
+				}
+				megamenuLi.addEventListener('mouseenter', openMegamenu);
+				megamenuLi.addEventListener('mouseleave', closeMegamenu);
+				document.addEventListener('keydown', function(e) {
+					if (e.key === 'Escape' && megamenuLi.classList.contains('mnsk7-megamenu-open')) {
+						megamenuLi.classList.remove('mnsk7-megamenu-open');
+						var link = megamenuLi.querySelector(':scope > a');
+						if (link) { link.setAttribute('aria-expanded', 'false'); link.focus(); }
+					}
+				});
+			}
 			// Mobile: po kliknięciu w dowolny link menu zamknij overlay, żeby nawigacja działała za pierwszym razem (Przewodnik, Dostawa, Kontakt)
 			menu.addEventListener('click', function(e) {
 				var a = e.target.closest('a');
