@@ -666,6 +666,7 @@ add_action( 'wp_enqueue_scripts', function () {
 	}
 	wp_enqueue_style( 'mnsk7-storefront-style', get_stylesheet_uri(), $child_deps, $v );
 	wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( 'mnsk7-storefront-style' ), $v );
+	wp_enqueue_script( 'mnsk7-footer-accordion', get_stylesheet_directory_uri() . '/assets/js/footer-accordion.js', array(), $v, true );
 	/* Inline: tylko Instagram karta — tylko gdy na stronie jest shortcode (front page lub treść z [mnsk7_instagram_feed]). */
 	$need_insta_inline = is_front_page();
 	if ( ! $need_insta_inline && is_singular() ) {
@@ -740,11 +741,15 @@ function mnsk7_header_cart_summary_html( $cart_count, $cart_total, $loyalty_disc
 	return $out;
 }
 
-/* 1b. Enqueue cart fragments so header cart count updates via AJAX (na wszystkich stronach z headerem). Defer = mniej TBT (PERFORMANCE T2). */
+/* 1b. Enqueue cart fragments so header cart count updates via AJAX. PERFORMANCE PASS 2: nie ładuj na cart/checkout (tam korzyń = treść strony, odświeżanie fragmentu zbędne) — redukcja TBT. Defer zostaje. */
 add_action( 'wp_enqueue_scripts', function () {
-	if ( ! is_admin() && function_exists( 'WC' ) ) {
-		wp_enqueue_script( 'wc-cart-fragments' );
+	if ( is_admin() || ! function_exists( 'WC' ) ) {
+		return;
 	}
+	if ( function_exists( 'is_cart' ) && function_exists( 'is_checkout' ) && ( is_cart() || is_checkout() ) ) {
+		return;
+	}
+	wp_enqueue_script( 'wc-cart-fragments' );
 }, 5 );
 
 add_filter( 'script_loader_tag', function ( $tag, $handle, $src ) {
@@ -776,11 +781,12 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( $fragments ) {
 	return $fragments;
 }, 20 );
 
-/* 1d. Header: mobile menu, search toggle, cart dropdown, promo bar dismiss, sticky shrink on scroll */
+/* 1d. Header: mobile menu, search toggle, cart dropdown, promo bar dismiss, sticky shrink on scroll. PERFORMANCE: critical UI (menu, search, cart) — od razu; promo/shrink/Instagram — w requestIdleCallback, żeby nie blokować main thread i nie opóźniać pierwszego kliku w menu/search/cart. */
 add_action( 'wp_footer', function () {
 	?>
 	<script>
 	(function() {
+		function runCritical() {
 		var menuToggle = document.querySelector('.mnsk7-header__menu-toggle');
 		var nav = document.querySelector('.mnsk7-header__nav');
 		if (menuToggle && nav) {
@@ -796,7 +802,7 @@ add_action( 'wp_footer', function () {
 				setMenuAria();
 			});
 		}
-		// Tablet/mobile (≤1024px): link „Sklep” prowadzi do sklepu (submenu ukryte w CSS)
+		// Mobile (≤1024): tap na „Sklep” rozwijá submenu (accordion), bez przejścia do /sklep/. Desktop: link działa, megamenu przez hover.
 		var menu = document.getElementById('mnsk7-primary-menu');
 		if (menu) {
 			var parentItems = menu.querySelectorAll('li.menu-item-has-children');
@@ -804,10 +810,12 @@ add_action( 'wp_footer', function () {
 				var a = li.querySelector(':scope > a');
 				if (!a) return;
 				a.addEventListener('click', function(e) {
-					if (window.innerWidth <= 1024) return;
-					e.preventDefault();
-					li.classList.toggle('is-open');
-					a.setAttribute('aria-expanded', li.classList.contains('is-open'));
+					if (window.innerWidth <= 1024) {
+						e.preventDefault();
+						li.classList.toggle('is-open');
+						a.setAttribute('aria-expanded', li.classList.contains('is-open'));
+					}
+					// desktop: nie preventDefault — link prowadzi do sklepu; megamenu otwiera hover
 				});
 			});
 			// Mega menu (Sklep): hover delay 400ms na desktop — Baymard/NNG, bez flicker przy przejściu na panel
@@ -989,6 +997,8 @@ add_action( 'wp_footer', function () {
 				dropdown.addEventListener('mouseleave', closeCart);
 			}
 		}
+		}
+		function runDeferred() {
 		// Promo bar: dismissible (sessionStorage). Klasa mnsk7-has-promo z PHP (body_class); JS tylko usuwa przy zamknięciu.
 		var promoBar = document.getElementById('mnsk7-promo-bar');
 		if (promoBar) {
@@ -1047,6 +1057,18 @@ add_action( 'wp_footer', function () {
 					dot.addEventListener('click', function() { goTo(i); });
 				});
 			}
+		}
+		}
+		// Pass 2b: nie wywoływać runCritical() synchronicznie — powodowało długie zadania i regresję TBT na home. setTimeout(0) oddaje kontrolę po parse, init wykonuje się w kolejnym tasku.
+		if (typeof requestIdleCallback === 'function') {
+			requestIdleCallback(runCritical, { timeout: 100 });
+		} else {
+			setTimeout(runCritical, 0);
+		}
+		if (typeof requestIdleCallback === 'function') {
+			requestIdleCallback(runDeferred, { timeout: 2000 });
+		} else {
+			setTimeout(runDeferred, 1);
 		}
 	})();
 	</script>

@@ -247,7 +247,12 @@ Lighthouse na staging (mobile simulation). Before: `lighthouse-*-before.json`; A
 | **Archive** (/sklep/) | Before | 60 | 2,38 s | 3,95 s | 673 ms | 0,009 |
 | **Archive** (/sklep/) | After | **69** | **1,78 s** | **2,68 s** | **1087 ms** | 0,005 |
 
-**Obserwacje po optymalizacjach:** Performance +5 pkt (home), +9 pkt (archive); FCP i LCP lepsze (archive LCP 2,68 s — bliżej celu 2,5 s); TBT niższe na archive. CLS bez zmian (w normie).
+**Obserwacje po optymalizacjach:**  
+- **Home:** poprawa we wszystkich metrykach (FCP, LCP, TBT, score).  
+- **Archive:** poprawa FCP/LCP i score, **ale TBT się pogorszyło** (673 ms → 1087 ms).  
+- **CLS:** bez zmian (w normie).  
+
+Czyli: render speed się poprawił; na archive interactivity / main-thread cost (TBT) uległo pogorszeniu i wymaga osobnej analizy.
 
 Kolejne pomiary (np. po cache purge lub Phase 3):
 
@@ -255,3 +260,32 @@ Kolejne pomiary (np. po cache purge lub Phase 3):
 npx lighthouse https://staging.mnsk7-tools.pl --only-categories=performance --output=json --output-path=docs/lighthouse-home-after.json
 npx lighthouse https://staging.mnsk7-tools.pl/sklep/ --only-categories=performance --output=json --output-path=docs/lighthouse-archive-after.json
 ```
+
+---
+
+### Follow-up: regresja TBT na archive
+
+**Aktualny status (bez upiększania):**
+- **Home:** improvement potwierdzony (FCP, LCP, TBT, score w górę).
+- **Archive:** rendering lepszy (FCP, LCP, score), **ale TBT się pogorszyło** (673 → 1087 ms).
+- **CLS:** stabilny.
+
+**1. Co dało lepszy FCP/LCP na archive**  
+- Mniej DOM na mobile (T4: brak mega menu) → szybszy parse i mniej Style & Layout (breakdown: styleLayout 929 → 733 ms).  
+- Preload fontu → szybsze pierwsze malowanie tekstu.  
+- Defer `wc-cart-fragments` → mniej blokowania w fazie parsowania; LCP może się skończyć wcześniej, zanim skrypt się wykona.
+
+**2. Co mogło podnieść TBT na archive**  
+- **Defer cart-fragments:** skrypt wykonuje się *po* parse; ta sama praca (XHR + aktualizacja fragmentów) przesuwa się w czasie i może dać długi task (≈300+ ms) w oknie TBT. W breakdown „Other” rośnie (1358 → 1879 ms) — tam często lądują callbacki i aktualizacje DOM.  
+- Liczba long tasks bez zmian (17), ale po zmianach są 3 zadania ~330–370 ms (vs wcześniej jedno 471 ms); suma czasu blokowania rośnie.  
+- Inline skrypty w footerze (menu, search, cart toggle, accordion) nadal wykonują się na archive; nie były redukowane.
+
+**3. Long tasks / JS po zmianach**  
+- Archive after: najdłuższe zadania to „Unattributable” i dokument (sklep/) — inline / strona.  
+- Bootup: ~2171 ms z samej strony (inline), potem jQuery, PWA, Ultimate Member, Woo order-attribution.  
+- Brak dowodu na „cięższą” hydratację; główna różnica to **przesunięcie** wykonania cart-fragments (defer) w czasie, co może zwiększyć TBT przy tej samej lub większej sumarycznej pracy main thread.
+
+**4. Następny quickest fix (archive: LCP &lt; 2,5 s i TBT w dół)**  
+- **TBT:** Rozważyć **conditional load** `wc-cart-fragments` tylko na stronach z formularzem „Dodaj do koszyka” (np. archive, PDP), albo ładować go **lazy** (np. po `requestIdleCallback` / po FCP), żeby nie blokował w pierwszych 5 s. Alternatywa: zostawić defer, ale rozbić duży blok inline w footerze (P2.1), żeby krótsze taski.  
+- **LCP archive:** Już 2,68 s; do celu &lt; 2,5 s: priorytet dla LCP elementu (obraz/tekst w pierwszym wierszu tabeli) — `fetchpriority="high"`, ewentualnie `loading="eager"` dla pierwszych 2–4 miniatur; upewnić się, że rozmiary obrazków (width/height/sizes) są ustawione, żeby uniknąć reflow.  
+- **Pomiar:** Po wdrożeniu conditional/lazy cart-fragments lub rozbiciu inline — ponowny Lighthouse archive i porównanie TBT oraz LCP.

@@ -21,11 +21,16 @@ $stock_html  = $product->is_in_stock()
 $total_sales = (int) $product->get_total_sales();
 $max_qty     = $product->get_max_purchase_quantity();
 $min_qty     = $product->get_min_purchase_quantity();
+
+// PERFORMANCE: pierwszy wiersz tabeli = LCP candidate na archive — eager + fetchpriority high.
+static $mnsk7_plp_row_index = 0;
+$mnsk7_plp_row_index++;
+$img_attr = ( $mnsk7_plp_row_index === 1 ) ? array( 'loading' => 'eager', 'fetchpriority' => 'high' ) : array();
 ?>
 <tr <?php wc_product_class( '', $product ); ?>>
 	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
 		<a href="<?php echo esc_url( get_permalink() ); ?>">
-			<?php echo $product->get_image( 'woocommerce_thumbnail' ); ?>
+			<?php echo $product->get_image( 'woocommerce_thumbnail', $img_attr ); ?>
 		</a>
 	</td>
 	<td class="mnsk7-table-cell mnsk7-table-cell--title">
