@@ -32,8 +32,12 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 <footer id="colophon" class="mnsk7-footer" role="contentinfo">
 	<div class="mnsk7-footer__top">
 		<div class="mnsk7-footer__inner">
-			<div id="footer-col-klient" class="mnsk7-footer__col mnsk7-footer__col--client is-open" data-accordion-open aria-label="<?php esc_attr_e( 'Linki dla klienta', 'mnsk7-storefront' ); ?>">
-				<h3 class="mnsk7-footer__title" id="footer-klient" role="button" tabindex="0" aria-expanded="true" aria-controls="footer-col-klient"><?php esc_html_e( 'Klient', 'mnsk7-storefront' ); ?></h3>
+			<div id="footer-col-klient" class="mnsk7-footer__col mnsk7-footer__col--client is-open" aria-label="<?php esc_attr_e( 'Linki dla klienta', 'mnsk7-storefront' ); ?>">
+				<button type="button" class="mnsk7-footer__accordion-trigger" id="footer-trigger-klient" aria-expanded="true" aria-controls="footer-panel-klient">
+					<span class="mnsk7-footer__accordion-title"><?php esc_html_e( 'Klient', 'mnsk7-storefront' ); ?></span>
+					<span class="mnsk7-footer__accordion-icon" aria-hidden="true"></span>
+				</button>
+				<div id="footer-panel-klient" class="mnsk7-footer__accordion-panel" role="region" aria-labelledby="footer-trigger-klient">
 				<ul class="mnsk7-footer__links">
 					<li><a href="<?php echo esc_url( home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Sklep', 'mnsk7-storefront' ); ?></a></li>
 					<?php if ( function_exists( 'wc_get_page_permalink' ) ) { ?>
@@ -45,9 +49,14 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 					<li><a href="<?php echo esc_url( home_url( '/regulamin/' ) ); ?>"><?php esc_html_e( 'Regulamin', 'mnsk7-storefront' ); ?></a></li>
 					<li><a href="<?php echo esc_url( home_url( '/polityka-prywatnosci/' ) ); ?>"><?php esc_html_e( 'Polityka prywatności', 'mnsk7-storefront' ); ?></a></li>
 				</ul>
+				</div>
 			</div>
 			<div id="footer-col-kategorie" class="mnsk7-footer__col mnsk7-footer__col--kategorie" aria-label="<?php esc_attr_e( 'Kategorie produktów', 'mnsk7-storefront' ); ?>">
-				<h3 class="mnsk7-footer__title" id="footer-kategorie" role="button" tabindex="0" aria-expanded="false" aria-controls="footer-col-kategorie"><?php esc_html_e( 'Kategorie', 'mnsk7-storefront' ); ?></h3>
+				<button type="button" class="mnsk7-footer__accordion-trigger" id="footer-trigger-kategorie" aria-expanded="false" aria-controls="footer-panel-kategorie">
+					<span class="mnsk7-footer__accordion-title"><?php esc_html_e( 'Kategorie', 'mnsk7-storefront' ); ?></span>
+					<span class="mnsk7-footer__accordion-icon" aria-hidden="true"></span>
+				</button>
+				<div id="footer-panel-kategorie" class="mnsk7-footer__accordion-panel" role="region" aria-labelledby="footer-trigger-kategorie">
 				<ul class="mnsk7-footer__links">
 					<?php
 					foreach ( $top_cats as $term ) {
@@ -58,9 +67,14 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 					}
 					?>
 				</ul>
+				</div>
 			</div>
 			<div id="footer-col-kontakt" class="mnsk7-footer__col mnsk7-footer__col--contact" aria-label="<?php esc_attr_e( 'Dane kontaktowe', 'mnsk7-storefront' ); ?>">
-				<h3 class="mnsk7-footer__title" id="footer-kontakt" role="button" tabindex="0" aria-expanded="false" aria-controls="footer-col-kontakt"><?php esc_html_e( 'Kontakt', 'mnsk7-storefront' ); ?></h3>
+				<button type="button" class="mnsk7-footer__accordion-trigger" id="footer-trigger-kontakt" aria-expanded="false" aria-controls="footer-panel-kontakt">
+					<span class="mnsk7-footer__accordion-title"><?php esc_html_e( 'Kontakt', 'mnsk7-storefront' ); ?></span>
+					<span class="mnsk7-footer__accordion-icon" aria-hidden="true"></span>
+				</button>
+				<div id="footer-panel-kontakt" class="mnsk7-footer__accordion-panel" role="region" aria-labelledby="footer-trigger-kontakt">
 				<?php
 				$footer_address = apply_filters( 'mnsk7_footer_legal_address', '' );
 				if ( $footer_address !== '' ) {
@@ -88,9 +102,14 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 						<a href="<?php echo esc_url( $footer_contact['instagram_url'] ?? '#' ); ?>" target="_blank" rel="noopener"><?php echo esc_html( $footer_contact['instagram_label'] ?? '@mnsk7tools' ); ?></a>
 					</li>
 				</ul>
+				</div>
 			</div>
 			<div id="footer-col-newsletter" class="mnsk7-footer__col mnsk7-footer__col--newsletter" aria-label="<?php esc_attr_e( 'Zapisz się do newslettera', 'mnsk7-storefront' ); ?>">
-				<h3 class="mnsk7-footer__title" id="footer-newsletter" role="button" tabindex="0" aria-expanded="false" aria-controls="footer-col-newsletter"><?php esc_html_e( 'Newsletter', 'mnsk7-storefront' ); ?></h3>
+				<button type="button" class="mnsk7-footer__accordion-trigger" id="footer-trigger-newsletter" aria-expanded="false" aria-controls="footer-panel-newsletter">
+					<span class="mnsk7-footer__accordion-title"><?php esc_html_e( 'Newsletter', 'mnsk7-storefront' ); ?></span>
+					<span class="mnsk7-footer__accordion-icon" aria-hidden="true"></span>
+				</button>
+				<div id="footer-panel-newsletter" class="mnsk7-footer__accordion-panel" role="region" aria-labelledby="footer-trigger-newsletter">
 				<p class="mnsk7-footer__newsletter-desc"><?php esc_html_e( 'Otrzymuj informacje o promocjach, nowościach i poradach.', 'mnsk7-storefront' ); ?></p>
 				<form class="mnsk7-footer__newsletter-form" action="<?php echo esc_url( home_url( '/' ) ); ?>" method="post" aria-label="<?php esc_attr_e( 'Zapisz się do newslettera', 'mnsk7-storefront' ); ?>">
 					<?php wp_nonce_field( 'mnsk7_newsletter', 'mnsk7_newsletter_nonce' ); ?>
@@ -100,6 +119,7 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 					<button type="submit" class="mnsk7-footer__newsletter-btn"><?php esc_html_e( 'Zapisz się', 'mnsk7-storefront' ); ?></button>
 				</form>
 				<p class="mnsk7-footer__newsletter-privacy"><?php esc_html_e( 'Możesz w każdej chwili wypisać się. Zobacz politykę prywatności.', 'mnsk7-storefront' ); ?></p>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -181,7 +201,6 @@ if ( $show_theme_cookie_bar ) :
 <?php endif; ?>
 <script>
 (function() {
-	// UI Audit: accordion only when mobile layout is active (768px = same as 09-footer.css)
 	var FOOTER_ACCORDION_BREAKPOINT = 768;
 	var mq = '(max-width: ' + FOOTER_ACCORDION_BREAKPOINT + 'px)';
 
@@ -189,63 +208,44 @@ if ( $show_theme_cookie_bar ) :
 		var footer = document.getElementById('colophon') || document.querySelector('.mnsk7-footer');
 		if (!footer) return;
 
-		function toggleAccordion(title) {
-			if (!title) return;
-			var col = title.closest('.mnsk7-footer__col');
+		function toggleSection(trigger) {
+			if (!trigger || trigger.getAttribute('aria-controls') === null) return;
+			var col = trigger.closest('.mnsk7-footer__col');
 			if (!col) return;
-			col.classList.toggle('is-open');
-			title.setAttribute('aria-expanded', col.classList.contains('is-open'));
+			var isOpen = col.classList.toggle('is-open');
+			trigger.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 		}
 
-		var touchedTitle = null;
-
-		function handleAccordion(e) {
+		function handleTrigger(e) {
 			if (!window.matchMedia(mq).matches) return;
-			var title = e.target.closest('.mnsk7-footer__title');
-			if (!title) return;
-			if (e.type === 'click' && touchedTitle === title) {
-				touchedTitle = null;
-				return;
-			}
+			var trigger = e.target.closest('.mnsk7-footer__accordion-trigger');
+			if (!trigger) return;
 			e.preventDefault();
 			e.stopPropagation();
-			toggleAccordion(title);
+			toggleSection(trigger);
 		}
 
-		footer.addEventListener('click', handleAccordion);
-		footer.addEventListener('touchend', function(e) {
-			if (!window.matchMedia(mq).matches) return;
-			var title = e.target.closest('.mnsk7-footer__title');
-			if (!title) return;
-			touchedTitle = title;
-			e.preventDefault();
-			toggleAccordion(title);
-			setTimeout(function() { touchedTitle = null; }, 400);
-		}, { passive: false });
-
+		footer.addEventListener('click', handleTrigger);
 		footer.addEventListener('keydown', function(e) {
 			if (!window.matchMedia(mq).matches) return;
-			if (e.key !== 'Enter' && e.key !== ' ') return;
-			var title = e.target.closest('.mnsk7-footer__title');
-			if (!title) return;
-			e.preventDefault();
-			toggleAccordion(title);
+			var trigger = e.target.closest('.mnsk7-footer__accordion-trigger');
+			if (!trigger) return;
+			if (e.key === 'Enter' || e.key === ' ') {
+				e.preventDefault();
+				toggleSection(trigger);
+			}
 		});
 
-		function setAria() {
-			if (!window.matchMedia(mq).matches) return;
-			footer.querySelectorAll('.mnsk7-footer__col').forEach(function(col) {
-				var title = col.querySelector('.mnsk7-footer__title');
-				if (!title) return;
-				title.setAttribute('role', 'button');
-				title.setAttribute('tabindex', '0');
-				var open = col.classList.contains('is-open') || col.hasAttribute('data-accordion-open');
-				title.setAttribute('aria-expanded', open ? 'true' : 'false');
-				if (col.id) title.setAttribute('aria-controls', col.id);
+		function syncAria() {
+			var open = window.matchMedia(mq).matches;
+			footer.querySelectorAll('.mnsk7-footer__accordion-trigger').forEach(function(btn) {
+				var col = btn.closest('.mnsk7-footer__col');
+				if (!col) return;
+				btn.setAttribute('aria-expanded', col.classList.contains('is-open') ? 'true' : 'false');
 			});
 		}
-		setAria();
-		window.matchMedia(mq).addEventListener('change', setAria);
+		syncAria();
+		window.matchMedia(mq).addEventListener('change', syncAria);
 	}
 
 	if (document.readyState === 'loading') {

@@ -151,11 +151,26 @@ body.page #colophon.mnsk7-footer {
   overflow-wrap: break-word;
 }
 
-.mnsk7-footer__title {
+/* Desktop: trigger wygląda jak nagłówek sekcji (bez wyglądu przycisku) */
+.mnsk7-footer__accordion-trigger {
+  display: block;
+  width: 100%;
+  margin: 0 0 0.75rem;
+  padding: 0;
+  border: none;
+  background: none;
   color: var(--color-footer-text);
   font-size: var(--fs-base);
   font-weight: 700;
-  margin: 0 0 0.75rem;
+  font-family: var(--font-base);
+  text-align: left;
+  cursor: default;
+}
+.mnsk7-footer__accordion-icon {
+  display: none;
+}
+.mnsk7-footer__accordion-panel {
+  display: block;
 }
 
 .mnsk7-footer__top,
@@ -304,97 +319,119 @@ body.page #colophon.mnsk7-footer {
   color: var(--color-footer-link);
 }
 
-/* Mobile: accordion sections (audit: "Use accordions for each column") */
+/* -----------------------------------------------------------------
+   Mobile footer accordion (≤768px) — jeden mechanizm, bez duplikatów
+   ----------------------------------------------------------------- */
 @media (max-width: 768px) {
   .mnsk7-footer__inner {
     grid-template-columns: 1fr;
     gap: 0;
-    padding: 0 1rem;
+    padding: 0 var(--space-16);
   }
   .mnsk7-footer__col {
-    border-bottom: 1px solid rgba(255,255,255,0.1);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   }
   .mnsk7-footer__col:last-of-type {
     border-bottom: none;
   }
-  .mnsk7-footer__title {
+
+  /* Trigger: cały wiersz klikalny, min 44px, bez artefaktów focus */
+  .mnsk7-footer__accordion-trigger {
     margin: 0;
-    padding: 0.75rem 0;
+    padding: 0.75rem 2.5rem 0.75rem 0;
     min-height: 44px;
     box-sizing: border-box;
     display: flex;
     align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    text-align: left;
     cursor: pointer;
-    position: relative;
-    padding-right: 2.5rem;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
-    width: 100%;
-    text-align: left;
+    border: none;
+    background: transparent;
+    color: var(--color-footer-text);
+    font-size: var(--fs-base);
+    font-weight: 700;
+    font-family: var(--font-base);
+    position: relative;
   }
-  .mnsk7-footer__title[role="button"]:focus-visible {
+  .mnsk7-footer__accordion-trigger:focus {
+    outline: none;
+  }
+  .mnsk7-footer__accordion-trigger:focus-visible {
     outline: 2px solid var(--color-footer-link);
     outline-offset: 2px;
   }
-  .mnsk7-footer__title::after {
-    content: "+";
+  .mnsk7-footer__accordion-trigger:hover {
+    color: var(--color-footer-text);
+  }
+  .mnsk7-footer__accordion-icon {
+    display: block;
     position: absolute;
     right: 0;
     top: 50%;
     transform: translateY(-50%);
+    width: 1.25rem;
+    height: 1.25rem;
     font-size: var(--fs-lg);
     font-weight: 400;
-    opacity: 0.8;
+    opacity: 0.85;
+    line-height: 1;
     transition: transform 0.2s ease;
+    pointer-events: none;
   }
-  .mnsk7-footer__col.is-open .mnsk7-footer__title::after {
-    transform: translateY(-50%) rotate(45deg);
+  .mnsk7-footer__accordion-icon::before {
+    content: "+";
+  }
+  .mnsk7-footer__col.is-open .mnsk7-footer__accordion-icon::before {
+    content: "−";
   }
   @media (prefers-reduced-motion: reduce) {
-    .mnsk7-footer__title::after {
+    .mnsk7-footer__accordion-icon {
       transition: none;
     }
   }
-  .mnsk7-footer__col .mnsk7-footer__newsletter-desc,
-  .mnsk7-footer__col .mnsk7-footer__newsletter-form,
-  .mnsk7-footer__col .mnsk7-footer__newsletter-privacy,
-  .mnsk7-footer__col .mnsk7-footer__links,
-  .mnsk7-footer__col .mnsk7-footer__contact-list,
-  .mnsk7-footer__col p {
+
+  /* Panel: ukryty domyślnie, widoczny gdy .is-open na kolumnie */
+  .mnsk7-footer__accordion-panel {
     display: none;
+    padding-bottom: var(--space-12);
   }
-  .mnsk7-footer__col.is-open .mnsk7-footer__newsletter-desc,
-  .mnsk7-footer__col.is-open .mnsk7-footer__newsletter-form,
-  .mnsk7-footer__col.is-open .mnsk7-footer__newsletter-privacy,
-  .mnsk7-footer__col.is-open .mnsk7-footer__links,
-  .mnsk7-footer__col.is-open .mnsk7-footer__contact-list,
-  .mnsk7-footer__col.is-open p {
+  .mnsk7-footer__col.is-open .mnsk7-footer__accordion-panel {
     display: block;
   }
-  .mnsk7-footer__col.is-open p {
-    margin-top: 0.5rem;
+  .mnsk7-footer__col--newsletter.is-open .mnsk7-footer__accordion-panel {
+    display: block;
   }
-  .mnsk7-footer__col .mnsk7-footer__links,
-  .mnsk7-footer__col .mnsk7-footer__contact-list {
-    padding-bottom: 0.75rem;
+  .mnsk7-footer__col--newsletter.is-open .mnsk7-footer__newsletter-form {
+    display: flex;
+  }
+
+  .mnsk7-footer__accordion-panel > .mnsk7-footer__links,
+  .mnsk7-footer__accordion-panel > .mnsk7-footer__contact-list {
+    padding-bottom: 0;
+  }
+  .mnsk7-footer__accordion-panel p:first-child {
+    margin-top: 0.5rem;
   }
   .mnsk7-footer__contact-list li {
     margin-bottom: 0.6rem;
   }
-  .mnsk7-footer__col--newsletter.is-open .mnsk7-footer__newsletter-form { display: flex; }
-  .mnsk7-footer__col--newsletter.is-open { border-bottom: 1px solid rgba(255,255,255,0.1); }
-  /* Newsletter column: accordion jak pozostałe — ukryte gdy brak .is-open */
-  .mnsk7-footer__col--newsletter .mnsk7-footer__newsletter-desc,
-  .mnsk7-footer__col--newsletter .mnsk7-footer__newsletter-form,
-  .mnsk7-footer__col--newsletter .mnsk7-footer__newsletter-privacy { display: none; }
-  .mnsk7-footer__col--newsletter.is-open .mnsk7-footer__newsletter-desc,
-  .mnsk7-footer__col--newsletter.is-open .mnsk7-footer__newsletter-privacy { display: block; }
-  .mnsk7-footer__col--newsletter.is-open .mnsk7-footer__newsletter-form { display: flex; }
+
+  .mnsk7-footer__bottom-inner {
+    padding: 0 var(--space-16);
+    gap: 0.5rem;
+  }
 }
 
 @media (max-width: 360px) {
   .mnsk7-footer__inner {
-    padding: 0 0.75rem;
+    padding: 0 var(--space-8);
+  }
+  .mnsk7-footer__bottom-inner {
+    padding: 0 var(--space-8);
   }
 }

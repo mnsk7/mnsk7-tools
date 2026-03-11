@@ -1,4 +1,5 @@
-/* 21-responsive-mobile — Mobile: 2 kolumny gdzie sensowne, overflow-x hidden, 1 kol. tylko na bardzo wąskich */
+/* 21-responsive-mobile — Mobile: 2 kolumny gdzie sensowne, overflow-x hidden, 1 kol. tylko na bardzo wąskich.
+   Task 8: overflow-x: hidden — zapobiega przewijaniu w poziomie na wąskich ekranach (szerokie tabele/obrazy). */
 
 @media (max-width: 768px) {
   body,
@@ -68,20 +69,16 @@
     font-size: var(--fs-xl);
   }
 
-  /* Cookie bar stack */
+  /* Cookie bar: stos przycisków (główny styl w 10-cookie-bar.css) */
   .mnsk7-cookie-bar {
     flex-direction: column;
     text-align: center;
     padding: var(--space-16);
+    padding-bottom: max(var(--space-16), env(safe-area-inset-bottom));
   }
 
   .mnsk7-cookie-bar .mnsk7-cookie-bar__btn {
     width: 100%;
-  }
-
-  /* Footer */
-  .mnsk7-footer__inner {
-    padding: 0 1rem;
   }
 
   /* Delivery table: mniejszy font i padding, zawijanie tekstu — bez wewnętrznego scrolla */
