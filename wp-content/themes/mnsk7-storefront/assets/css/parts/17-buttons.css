@@ -82,6 +82,12 @@ button[type="submit"] {
   color: var(--color-white);
 }
 
+/* A11y: Add to cart — darker blue so white text meets WCAG 4.5:1 (Lighthouse) */
+.woocommerce .add_to_cart_button,
+.woocommerce .single_add_to_cart_button {
+  background: var(--color-primary-dark, var(--color-primary));
+}
+
 .woocommerce a.button.alt.disabled,
 .woocommerce a.button.alt:disabled,
 .woocommerce button.button.alt.disabled,

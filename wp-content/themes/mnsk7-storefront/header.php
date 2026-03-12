@@ -175,7 +175,10 @@ endif;
 				if ( $account_label === '' && is_user_logged_in() ) {
 					$account_label = wp_get_current_user()->user_login;
 				}
-				?><a href="<?php echo esc_url( $account_url ); ?>" class="mnsk7-header__link mnsk7-header__link--account">
+				$account_aria = is_user_logged_in()
+					? sprintf( __( 'Moje konto: %s', 'mnsk7-storefront' ), esc_attr( $account_label ) )
+					: __( 'Moje konto / Zaloguj się', 'mnsk7-storefront' );
+				?><a href="<?php echo esc_url( $account_url ); ?>" class="mnsk7-header__link mnsk7-header__link--account" aria-label="<?php echo esc_attr( $account_aria ); ?>">
 				<span class="mnsk7-header__account-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
 				<span class="mnsk7-header__link-text"><?php echo esc_html( $account_label ); ?></span>
 			</a><?php

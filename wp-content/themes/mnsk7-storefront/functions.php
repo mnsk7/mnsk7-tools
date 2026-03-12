@@ -699,6 +699,21 @@ add_action( 'wp_enqueue_scripts', function () {
 	wp_add_inline_style( 'woocommerce-layout', $css );
 }, 20 );
 
+/**
+ * LCP (Lighthouse): pierwszy obrazek w pętli produktów (karty/siatka) — eager + fetchpriority=high,
+ * żeby przeglądarka nie odkładała ładowania i nie stosowała lazy. Dla tabeli PLP jest content-product-table-row.php.
+ */
+add_action( 'init', function () {
+	remove_action( 'woocommerce_before_shop_loop_item_title', 'woocommerce_template_loop_product_thumbnail', 10 );
+	add_action( 'woocommerce_before_shop_loop_item_title', function () {
+		$attr = array();
+		if ( function_exists( 'wc_get_loop_prop' ) && (int) wc_get_loop_prop( 'current' ) === 1 ) {
+			$attr = array( 'loading' => 'eager', 'fetchpriority' => 'high' );
+		}
+		echo woocommerce_get_product_thumbnail( 'woocommerce_thumbnail', $attr, true ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}, 10 );
+}, 20 );
+
 /* Layout overrides: source of truth w 25-global-layout.css (ostatni part). Bez wp_footer — HANDOFF LAYOUT-STATE-REFACTOR. */
 
 /**

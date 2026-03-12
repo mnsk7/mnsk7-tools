@@ -210,7 +210,8 @@ ul.products.columns-4::before {
   font-weight: 700;
 }
 
-/* Add to cart button — prevent vertical text (narrow cards in cart/related) */
+/* Add to cart button — prevent vertical text (narrow cards in cart/related).
+ * A11y: darker background so white text meets WCAG 4.5:1 (Lighthouse contrast). */
 .woocommerce ul.products li.product .button,
 .woocommerce ul.products li.product .add_to_cart_button,
 .woocommerce ul.products li.product a.added_to_cart {
@@ -218,7 +219,7 @@ ul.products.columns-4::before {
   width: calc(100% - 1.5rem);
   min-width: 120px;
   margin: auto 0.75rem 0.75rem;
-  background: var(--color-primary);
+  background: var(--color-primary-dark, var(--color-primary));
   color: var(--color-white);
   border: none;
   border-radius: var(--r-md);
