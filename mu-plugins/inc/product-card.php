@@ -289,7 +289,18 @@ function mnsk7_single_product_zastosowanie() {
 	echo '</div>';
 }
 
+/**
+ * Placeholder: availability jest teraz w CTA row (obok przycisku) — woocommerce_before_add_to_cart_button.
+ * Nie wyświetlamy osobnego bloku nad formularzem.
+ */
 function mnsk7_single_product_availability() {
+	// Pusty — jeden blok availability tylko przy CTA (mnsk7_single_product_availability_inline).
+}
+
+/**
+ * Stock availability tuż obok przycisku „Dodaj do koszyka” (compact inline, po lewej od CTA).
+ */
+function mnsk7_single_product_availability_inline() {
 	global $product;
 	if ( ! is_a( $product, 'WC_Product' ) ) {
 		return;
@@ -297,13 +308,10 @@ function mnsk7_single_product_availability() {
 	$availability = $product->get_availability();
 	$class        = ! empty( $availability['class'] ) ? $availability['class'] : ( $product->is_in_stock() ? 'in-stock' : 'out-of-stock' );
 	$text         = ! empty( $availability['availability'] ) ? $availability['availability'] : ( $product->is_in_stock() ? __( 'W magazynie', 'mnsk7-tools' ) : __( 'Na zamówienie', 'mnsk7-tools' ) );
-	echo '<div class="mnsk7-product-availability-row">';
-	echo '<p class="mnsk7-product-availability ' . esc_attr( $class ) . '">'
-		. '<i class="mnsk7-product-trust__badge-icon">&#10003;</i> '
-		. esc_html( $text )
-		. '</p>';
-	/* „X osób kupiło” wyświetla motyw przy cenie (hooks 14/16) — tu tylko dostępność */
-	echo '</div>';
+	echo '<span class="mnsk7-product-availability mnsk7-product-availability--inline ' . esc_attr( $class ) . '" aria-live="polite">';
+	echo '<i class="mnsk7-product-availability__icon" aria-hidden="true">&#10003;</i> ';
+	echo esc_html( $text );
+	echo '</span>';
 }
 
 function mnsk7_single_product_trust_badges() {
@@ -339,6 +347,7 @@ add_filter( 'woocommerce_get_stock_html', function ( $html ) {
 } );
 
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_availability', 8 );
+add_action( 'woocommerce_before_add_to_cart_button', 'mnsk7_single_product_availability_inline', 5 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_key_params', 21 );
 
 add_action( 'wp_footer', function () {

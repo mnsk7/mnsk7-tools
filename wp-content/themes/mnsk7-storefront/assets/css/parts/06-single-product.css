@@ -57,7 +57,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   flex-direction: column;
   gap: 0;
 }
-/* Kolejność wizualna PDP: okruszki → tytuł → cena + „X osób kupiło” → parametry → „X w magazynie” przy CTA → formularz → trust */
+/* Kolejność wizualna PDP: okruszki → tytuł → cena + „X osób kupiło” → parametry → formularz (availability wewnątrz przy CTA) → trust */
 .single-product .summary.entry-summary.mnsk7-pdp-buybox > * {
   order: 10;
 }
@@ -69,11 +69,6 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 .single-product .summary .mnsk7-pdp-price-row {
   order: 2;
-}
-/* Dostępność (X w magazynie) tuż nad przyciskiem Dodaj do koszyka — jeden blok z CTA */
-.single-product .summary .mnsk7-product-availability-row {
-  order: 19;
-  margin-bottom: 0.5rem;
 }
 .single-product .summary form.cart {
   order: 20;
@@ -201,6 +196,36 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
 .mnsk7-product-availability.out-of-stock {
   color: var(--color-text-muted);
+}
+
+/* Availability obok przycisku CTA (jeden blok, compact status) */
+.single-product .mnsk7-product-availability--inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin: 0;
+  padding: 0;
+}
+.single-product .mnsk7-product-availability--inline.in-stock {
+  color: var(--color-accent);
+}
+.single-product .mnsk7-product-availability--inline.out-of-stock {
+  color: var(--color-text-muted);
+}
+.single-product .mnsk7-product-availability__icon {
+  font-style: normal;
+  color: inherit;
+}
+
+/* Variable: quantity + availability + button w jednym rzędzie */
+.single-product .woocommerce-variation-add-to-cart {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
 }
 
 .mnsk7-product-key-params {
