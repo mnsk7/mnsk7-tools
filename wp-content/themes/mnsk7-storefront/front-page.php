@@ -98,7 +98,7 @@ get_header();
 		</div>
 	</section>
 
-	<!-- KATALOG: kategorie + tagi w jednym bloku, jeden nagłówek, jedna link „Wszystkie produkty” -->
+	<!-- KATALOG: grupy chipów (tagi + kategorie) jako poziome swipe rows, potem siatka kart kategorii. -->
 	<?php
 	$cats     = array();
 	$tags     = array();
@@ -109,7 +109,7 @@ get_header();
 			'taxonomy'   => 'product_cat',
 			'hide_empty' => true,
 			'parent'     => 0,
-			'number'     => 12,
+			'number'     => 20,
 			'orderby'    => 'count',
 			'order'      => 'DESC',
 		) );
@@ -118,11 +118,14 @@ get_header();
 		$tags = get_terms( array(
 			'taxonomy'   => 'product_tag',
 			'hide_empty' => true,
-			'number'     => 16,
+			'number'     => 20,
 			'orderby'    => 'count',
 			'order'      => 'DESC',
 		) );
 	}
+	$catalog_chips_limit = 8;
+	$tags_label = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
+	$cats_label = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
 	$show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) );
 	if ( $show_catalog ) :
 	?>
@@ -131,10 +134,15 @@ get_header();
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Przeglądaj asortyment', 'mnsk7-storefront' ); ?></h2>
 
 			<div class="mnsk7-catalog-chips">
-				<?php if ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) ) : ?>
-				<div class="mnsk7-catalog-tags">
-					<div class="mnsk7-tags-chips">
-						<?php foreach ( $tags as $tag ) :
+				<?php
+				if ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) ) :
+					$tags_visible = array_slice( $tags, 0, $catalog_chips_limit );
+					$tags_hidden  = array_slice( $tags, $catalog_chips_limit, null );
+				?>
+				<div class="mnsk7-catalog-chips-group" role="navigation" aria-label="<?php echo esc_attr( $tags_label ); ?>">
+					<span class="mnsk7-catalog-chips__label"><?php echo esc_html( $tags_label ); ?></span>
+					<div class="mnsk7-catalog-chips__scroll">
+						<?php foreach ( $tags_visible as $tag ) :
 							$t_link = get_term_link( $tag );
 							if ( is_wp_error( $t_link ) ) continue;
 							$tag_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $tag->name ) : $tag->name;
@@ -142,6 +150,52 @@ get_header();
 						?>
 						<a href="<?php echo esc_url( $t_link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $tag_name ); ?></a>
 						<?php endforeach; ?>
+						<?php if ( ! empty( $tags_hidden ) ) : ?>
+						<span class="mnsk7-catalog-chips-more" id="mnsk7-catalog-more-tags" hidden>
+							<?php foreach ( $tags_hidden as $tag ) :
+								$t_link = get_term_link( $tag );
+								if ( is_wp_error( $t_link ) ) continue;
+								$tag_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $tag->name ) : $tag->name;
+								$tag_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $tag_name ) );
+							?>
+							<a href="<?php echo esc_url( $t_link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $tag_name ); ?></a>
+							<?php endforeach; ?>
+						</span>
+						<button type="button" class="mnsk7-catalog-chips-toggle" data-controls="mnsk7-catalog-more-tags" aria-controls="mnsk7-catalog-more-tags" aria-expanded="false"><?php esc_html_e( 'Więcej', 'mnsk7-storefront' ); ?></button>
+						<?php endif; ?>
+					</div>
+				</div>
+				<?php endif; ?>
+
+				<?php
+				if ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) :
+					$cats_visible = array_slice( $cats, 0, $catalog_chips_limit );
+					$cats_hidden  = array_slice( $cats, $catalog_chips_limit, null );
+				?>
+				<div class="mnsk7-catalog-chips-group" role="navigation" aria-label="<?php echo esc_attr( $cats_label ); ?>">
+					<span class="mnsk7-catalog-chips__label"><?php echo esc_html( $cats_label ); ?></span>
+					<div class="mnsk7-catalog-chips__scroll">
+						<?php foreach ( $cats_visible as $cat ) :
+							$c_link = get_term_link( $cat );
+							if ( is_wp_error( $c_link ) ) continue;
+							$cat_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $cat->name ) : $cat->name;
+							$cat_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $cat_name ) );
+						?>
+						<a href="<?php echo esc_url( $c_link ); ?>" class="mnsk7-tags-chip mnsk7-catalog-cat-chip"><?php echo esc_html( $cat_name ); ?></a>
+						<?php endforeach; ?>
+						<?php if ( ! empty( $cats_hidden ) ) : ?>
+						<span class="mnsk7-catalog-chips-more" id="mnsk7-catalog-more-cats" hidden>
+							<?php foreach ( $cats_hidden as $cat ) :
+								$c_link = get_term_link( $cat );
+								if ( is_wp_error( $c_link ) ) continue;
+								$cat_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $cat->name ) : $cat->name;
+								$cat_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $cat_name ) );
+							?>
+							<a href="<?php echo esc_url( $c_link ); ?>" class="mnsk7-tags-chip mnsk7-catalog-cat-chip"><?php echo esc_html( $cat_name ); ?></a>
+							<?php endforeach; ?>
+						</span>
+						<button type="button" class="mnsk7-catalog-chips-toggle" data-controls="mnsk7-catalog-more-cats" aria-controls="mnsk7-catalog-more-cats" aria-expanded="false"><?php esc_html_e( 'Więcej', 'mnsk7-storefront' ); ?></button>
+						<?php endif; ?>
 					</div>
 				</div>
 				<?php endif; ?>

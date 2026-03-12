@@ -334,15 +334,47 @@ body.tax-product_tag .mnsk7-catalog-filters {
   margin-bottom: var(--space-section-gap);
 }
 
-/* Mobile: filter groups = vertical block. Label full width on top, chips row below with horizontal scroll. No two-column label/value. */
+/* Mobile: filter groups and nav groups = vertical block. Label full width on top, chips row below with horizontal scroll. */
 @media (max-width: 768px) {
-  .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs) {
+  .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs):not(.mnsk7-plp-chips--nav) {
     flex-wrap: wrap;
     padding-bottom: 0.25rem;
     margin-left: 0;
     margin-right: 0;
     gap: 0.5rem;
     align-items: center;
+  }
+  .mnsk7-plp-chips--nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+  .mnsk7-plp-chips--nav .mnsk7-plp-chips__label {
+    flex: 0 0 auto;
+    width: 100%;
+    padding: 0 0 0.25rem 0;
+    margin: 0;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  .mnsk7-plp-chips--nav .mnsk7-plp-chips__scroll {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0;
+    margin: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .mnsk7-plp-chips--nav .mnsk7-plp-chip {
+    flex-shrink: 0;
   }
   .mnsk7-plp-chips--attrs {
     display: flex;

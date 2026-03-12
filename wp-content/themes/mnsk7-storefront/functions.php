@@ -822,10 +822,12 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( $fragments ) {
 	return $fragments;
 }, 20 );
 
-/* 1d. Header: mobile menu, search toggle, cart dropdown, promo bar dismiss, sticky shrink on scroll. PERFORMANCE: critical UI (menu, search, cart) — od razu; promo/shrink/Instagram — w requestIdleCallback, żeby nie blokować main thread i nie opóźniać pierwszego kliku w menu/search/cart. */
+/* 1d. Header: mobile menu, search toggle, cart dropdown, promo bar dismiss, sticky shrink on scroll. PERFORMANCE: critical UI (menu, search, cart) — od razu; promo/shrink/Instagram — w requestIdleCallback, żeby nie blokować main thread i nie opóźniać pierwszego kliku w menu/search/cart. Na archive: cały init w jednym rIC (timeout 150) — redukcja TBT. */
 add_action( 'wp_footer', function () {
+	$mnsk7_is_archive = function_exists( 'is_shop' ) && ( is_shop() || is_product_category() || is_product_tag() );
 	?>
 	<script>
+	window.mnsk7IsArchive = <?php echo $mnsk7_is_archive ? 'true' : 'false'; ?>;
 	(function() {
 		function runCritical() {
 		var menuToggle = document.querySelector('.mnsk7-header__menu-toggle');
@@ -843,21 +845,22 @@ add_action( 'wp_footer', function () {
 				setMenuAria();
 			});
 		}
-		// Mobile (≤1024): tap na „Sklep” rozwijá submenu (delegacja — niezawodnie nawet przy opóźnionym init).
+		// Mobile (≤1024): tap na „Sklep” rozwijá submenu. Capture phase — żeby żaden inny handler nie przechwycił; data-mnsk7="sklep-parent" jako fallback.
 		var menu = document.getElementById('mnsk7-primary-menu');
 		if (menu) {
 			menu.addEventListener('click', function(e) {
 				var a = e.target && e.target.closest ? e.target.closest('a') : null;
 				if (!a || !a.href) return;
 				var li = a.closest('li.menu-item-has-children');
-				if (!li || li.querySelector(':scope > a') !== a) return;
+				var isSklepParent = a.getAttribute('data-mnsk7') === 'sklep-parent' || (li && li.querySelector(':scope > a') === a);
+				if (!li || !isSklepParent) return;
 				if (window.innerWidth <= 1024) {
 					e.preventDefault();
 					e.stopPropagation();
 					li.classList.toggle('is-open');
 					a.setAttribute('aria-expanded', li.classList.contains('is-open') ? 'true' : 'false');
 				}
-			}, false);
+			}, true);
 			// Mega menu (Sklep): hover delay 400ms na desktop — Baymard/NNG, bez flicker przy przejściu na panel
 			var megamenuLi = menu.querySelector('li.menu-item-has-children .sub-menu.mnsk7-megamenu');
 			if (megamenuLi) {
@@ -899,8 +902,9 @@ add_action( 'wp_footer', function () {
 			menu.addEventListener('click', function(e) {
 				var a = e.target.closest('a');
 				if (!a || !a.getAttribute('href') || window.innerWidth > 1024 || !nav) return;
+				if (a.getAttribute('data-mnsk7') === 'sklep-parent') return;
 				var parentLi = a.closest('li.menu-item-has-children');
-				if (parentLi && parentLi.querySelector(':scope > a') === a) return; // tap na „Sklep” — nie zamykaj, tylko toggle submenu
+				if (parentLi && parentLi.querySelector(':scope > a') === a) return; // tap na „Sklep” — nie zamykaj
 				nav.classList.remove('is-open');
 				if (menuToggle) { menuToggle.setAttribute('aria-expanded', 'false'); if (menuToggle.getAttribute('data-open-label')) menuToggle.setAttribute('aria-label', menuToggle.getAttribute('data-open-label')); }
 			});
@@ -1100,16 +1104,25 @@ add_action( 'wp_footer', function () {
 			}
 		}
 		}
-		// Pass 2b: nie wywoływać runCritical() synchronicznie — powodowało długie zadania i regresję TBT na home. setTimeout(0) oddaje kontrolę po parse, init wykonuje się w kolejnym tasku.
-		if (typeof requestIdleCallback === 'function') {
-			requestIdleCallback(runCritical, { timeout: 100 });
+		// Pass 2b: nie wywoływać runCritical() synchronicznie — powodowało długie zadania i regresję TBT na home. Na archive: cały init w jednym rIC (timeout 150) — mniej long tasks, niższy TBT.
+		if (window.mnsk7IsArchive) {
+			var runBoth = function() { runCritical(); runDeferred(); };
+			if (typeof requestIdleCallback === 'function') {
+				requestIdleCallback(runBoth, { timeout: 150 });
+			} else {
+				setTimeout(runBoth, 0);
+			}
 		} else {
-			setTimeout(runCritical, 0);
-		}
-		if (typeof requestIdleCallback === 'function') {
-			requestIdleCallback(runDeferred, { timeout: 2000 });
-		} else {
-			setTimeout(runDeferred, 1);
+			if (typeof requestIdleCallback === 'function') {
+				requestIdleCallback(runCritical, { timeout: 100 });
+			} else {
+				setTimeout(runCritical, 0);
+			}
+			if (typeof requestIdleCallback === 'function') {
+				requestIdleCallback(runDeferred, { timeout: 2000 });
+			} else {
+				setTimeout(runDeferred, 1);
+			}
 		}
 	})();
 	</script>
@@ -1246,13 +1259,14 @@ add_action( 'wp_footer', function () {
 	<?php
 }, 20 );
 
-/* 1e bis. PLP chips „Więcej” / „Więcej filtrów”: pokaż/ukryj dodatkowe chipy i blok filtrów */
+/* 1e bis. PLP chips „Więcej” / „Więcej filtrów”: pokaż/ukryj dodatkowe chipy i blok filtrów. Scroll do wyników po filter/category/tag. */
 add_action( 'wp_footer', function () {
 	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_category() && ! is_product_tag() ) ) {
 		return;
 	}
 	$more_text = __( 'Więcej', 'mnsk7-storefront' );
 	$less_text = __( 'Mniej', 'mnsk7-storefront' );
+	$has_filter_params = ! empty( $_GET ) && preg_match( '/filter_/', implode( ' ', array_keys( $_GET ) ) );
 	?>
 	<script>
 	(function() {
@@ -1275,15 +1289,60 @@ add_action( 'wp_footer', function () {
 				});
 			});
 		}
-		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', initPlpToggles);
-		} else {
+		function scrollToResults() {
+			var el = document.getElementById('mnsk7-plp-results');
+			if (el && (window.location.hash === '#mnsk7-plp-results' || <?php echo $has_filter_params ? 'true' : 'false'; ?>)) {
+				el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			}
+		}
+		function init() {
 			initPlpToggles();
+			scrollToResults();
+		}
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', init);
+		} else {
+			init();
 		}
 	})();
 	</script>
 	<?php
 }, 19 );
+
+/* 1e ter. Catalog chips „Więcej” na stronie głównej — rozwijanie ukrytych chipów w grupie. */
+add_action( 'wp_footer', function () {
+	if ( ! is_front_page() ) {
+		return;
+	}
+	?>
+	<script>
+	(function() {
+		function initCatalogChipsToggles() {
+			var toggles = document.querySelectorAll('.mnsk7-catalog-chips-toggle');
+			var moreLabel = <?php echo json_encode( __( 'Więcej', 'mnsk7-storefront' ) ); ?>;
+			var lessLabel = <?php echo json_encode( __( 'Mniej', 'mnsk7-storefront' ) ); ?>;
+			toggles.forEach(function(btn) {
+				var id = btn.getAttribute('data-controls');
+				if (!id) return;
+				var target = document.getElementById(id);
+				if (!target) return;
+				btn.addEventListener('click', function() {
+					var expanded = btn.getAttribute('aria-expanded') === 'true';
+					btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+					target.hidden = expanded;
+					btn.textContent = expanded ? moreLabel : lessLabel;
+				});
+			});
+		}
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initCatalogChipsToggles);
+		} else {
+			initCatalogChipsToggles();
+		}
+	})();
+	</script>
+	<?php
+}, 20 );
 
 /* 1f. Strefa wysyłki: nie pokazuj powiadomienia "Customer matched zone" / "Strefa wysyłki dopasowana" — zbędne na froncie, powodowało skok strony w dół */
 function mnsk7_suppress_shipping_zone_matched_notice( $message ) {
@@ -1469,6 +1528,16 @@ add_filter( 'body_class', function ( $classes ) {
 	}
 	return $classes;
 }, 5 );
+
+/**
+ * Archive (sklep/kategoria): klasa mnsk7-archive dla critical CSS — kompaktowy promo bar, żeby LCP mógł przejąć pierwszy blok produktów.
+ */
+add_filter( 'body_class', function ( $classes ) {
+	if ( function_exists( 'is_shop' ) && ( is_shop() || is_product_category() || is_product_tag() ) ) {
+		$classes[] = 'mnsk7-archive';
+	}
+	return $classes;
+}, 6 );
 
 /**
  * PLP + filter_*: jedna struktura body_class dla archiwum — niezależnie od ?filter_*.
@@ -2020,6 +2089,23 @@ function mnsk7_get_all_attribute_filter_param_names() {
 		$params[] = 'filter_' . str_replace( 'pa_', '', $tax );
 	}
 	return $params;
+}
+
+/**
+ * Append #mnsk7-plp-results to URL so after filter/category/tag navigation user lands at products.
+ * Used for PLP chip and filter links (reload → scroll to results).
+ *
+ * @param string $url Full URL (e.g. term link or add_query_arg result).
+ * @return string URL with fragment (existing hash replaced).
+ */
+function mnsk7_plp_anchor_results( $url ) {
+	$anchor = 'mnsk7-plp-results';
+	$url    = (string) $url;
+	$pos    = strpos( $url, '#' );
+	if ( $pos !== false ) {
+		$url = substr( $url, 0, $pos );
+	}
+	return $url . '#' . $anchor;
 }
 
 add_action( 'woocommerce_product_query', function ( $q ) {

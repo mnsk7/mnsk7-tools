@@ -52,40 +52,84 @@ if ( is_search() && get_query_var( 'post_type' ) === 'product' ) {
 	}
 }
 
-/* Чипсы pod nazwą kategorii (breadcrumb → tytuł → chips) */
+/* Render jednego rzędu chipów nawigacyjnych (kategorie/tagi): etykieta + poziomy scroll + opcjonalnie „Więcej”. */
+$plp_nav_chips_limit = 8;
+$render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $plp_nav_chips_limit ) {
+	if ( empty( $terms ) || ! is_array( $terms ) ) {
+		return;
+	}
+	$terms   = array_values( $terms );
+	$visible = array_slice( $terms, 0, $plp_nav_chips_limit );
+	$hidden  = array_slice( $terms, $plp_nav_chips_limit, null );
+	$anchor  = function_exists( 'mnsk7_plp_anchor_results' ) ? 'mnsk7_plp_anchor_results' : null;
+	echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--nav col-full" role="navigation" aria-label="' . esc_attr( $label ) . '">';
+	echo '<span class="mnsk7-plp-chips__label">' . esc_html( $label ) . '</span>';
+	echo '<div class="mnsk7-plp-chips__scroll">';
+	foreach ( $visible as $term ) {
+		$link = get_term_link( $term );
+		if ( is_wp_error( $link ) ) {
+			continue;
+		}
+		$link = $anchor ? $anchor( $link ) : $link;
+		$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
+		$active = $active_term_id && (int) $term->term_id === (int) $active_term_id;
+		printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $link ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $name ) );
+	}
+	if ( ! empty( $hidden ) ) {
+		$more_id = 'mnsk7-plp-more-nav-' . sanitize_title( $label );
+		echo '<span class="mnsk7-plp-chips-more" id="' . esc_attr( $more_id ) . '" hidden>';
+		foreach ( $hidden as $term ) {
+			$link = get_term_link( $term );
+			if ( is_wp_error( $link ) ) {
+				continue;
+			}
+			$link = $anchor ? $anchor( $link ) : $link;
+			$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
+			$active = $active_term_id && (int) $term->term_id === (int) $active_term_id;
+			printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $link ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $name ) );
+		}
+		echo '</span>';
+		echo '<button type="button" class="mnsk7-plp-chips-toggle" data-controls="' . esc_attr( $more_id ) . '" aria-controls="' . esc_attr( $more_id ) . '" aria-expanded="false">' . esc_html__( 'Więcej', 'mnsk7-storefront' ) . '</button>';
+	}
+	echo '</div>';
+	echo '</div>';
+};
+
+/* Чипсы na stronie taksonomii (kategoria/tag): rząd kategorii + rząd tagów (jak w megamenu), potem filtry atrybutów. */
 if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
-	$chips = array();
+	$cat_row_terms = array();
 	if ( $current_term->taxonomy === 'product_cat' ) {
-		$parent_id = $current_term->parent;
-		$chips = get_terms( array(
+		$parent_id     = $current_term->parent;
+		$cat_row_terms = get_terms( array(
 			'taxonomy'   => 'product_cat',
 			'parent'     => $parent_id,
 			'hide_empty' => true,
 		) );
 	} else {
-		$chips = get_terms( array(
+		$cat_row_terms = get_terms( array(
 			'taxonomy'   => 'product_cat',
 			'parent'     => 0,
 			'hide_empty' => true,
 			'number'     => 12,
 		) );
 	}
-	if ( ! is_wp_error( $chips ) && ! empty( $chips ) ) {
-		echo '<div class="mnsk7-plp-chips col-full" role="navigation" aria-label="' . esc_attr__( 'Kategorie', 'mnsk7-storefront' ) . '">';
-		foreach ( $chips as $term ) {
-			$link = get_term_link( $term );
-			if ( is_wp_error( $link ) ) { continue; }
-			$active = (int) $current_term->term_id === (int) $term->term_id;
-			printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $link ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name ) );
-		}
-		echo '</div>';
+	$cat_label = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
+	if ( ! is_wp_error( $cat_row_terms ) && ! empty( $cat_row_terms ) ) {
+		$render_plp_nav_row( $cat_label, $cat_row_terms, $current_term->taxonomy === 'product_cat' ? $current_term->term_id : 0 );
 	}
-	$attr_data = function_exists( 'mnsk7_get_archive_attribute_filter_chips' ) ? mnsk7_get_archive_attribute_filter_chips() : array( 'filters' => array(), 'filter_params' => array() );
-	$plp_chips_limit   = 8; /* PLP-08: max chipów w jednym wierszu bez „Więcej" */
-	$plp_attr_visible  = 4; /* Liczba wierszy filtrów (Średnica, Dł. robocza…) widocznych od razu; reszta pod „Więcej filtrów” */
-	$all_filters       = isset( $attr_data['filters'] ) ? $attr_data['filters'] : array();
-	$visible_filters   = array_slice( $all_filters, 0, $plp_attr_visible, true );
-	$hidden_filters    = array_slice( $all_filters, $plp_attr_visible, null, true );
+	$megamenu_terms = function_exists( 'mnsk7_get_megamenu_terms' ) ? mnsk7_get_megamenu_terms() : array( 'tags' => array() );
+	$tags_row      = isset( $megamenu_terms['tags'] ) ? $megamenu_terms['tags'] : array();
+	$tags_label    = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
+	if ( ! empty( $tags_row ) ) {
+		$render_plp_nav_row( $tags_label, $tags_row, $current_term->taxonomy === 'product_tag' ? $current_term->term_id : 0 );
+	}
+
+	$attr_data      = function_exists( 'mnsk7_get_archive_attribute_filter_chips' ) ? mnsk7_get_archive_attribute_filter_chips() : array( 'filters' => array(), 'filter_params' => array() );
+	$plp_chips_limit  = 8;
+	$plp_attr_visible = 4;
+	$all_filters      = isset( $attr_data['filters'] ) ? $attr_data['filters'] : array();
+	$visible_filters  = array_slice( $all_filters, 0, $plp_attr_visible, true );
+	$hidden_filters   = array_slice( $all_filters, $plp_attr_visible, null, true );
 	$has_hidden_rows   = ! empty( $hidden_filters );
 	$active_in_hidden  = false;
 	if ( $has_hidden_rows ) {
@@ -99,24 +143,29 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 	}
 
 	$render_filter_row = function ( $attribute_filter ) use ( $plp_chips_limit ) {
-		if ( empty( $attribute_filter['chips'] ) ) { return; }
+		if ( empty( $attribute_filter['chips'] ) ) {
+			return;
+		}
 		$aria_label = sprintf( /* translators: %s: filter group name */ __( 'Filtruj: %s', 'mnsk7-storefront' ), $attribute_filter['label'] );
 		$chips_list = $attribute_filter['chips'];
 		$param      = $attribute_filter['param'];
 		$visible    = array_slice( $chips_list, 0, $plp_chips_limit, true );
 		$hidden     = array_slice( $chips_list, $plp_chips_limit, null, true );
+		$anchor_fn  = function_exists( 'mnsk7_plp_anchor_results' ) ? 'mnsk7_plp_anchor_results' : null;
 		echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="' . esc_attr( $aria_label ) . '">';
 		echo '<span class="mnsk7-plp-chips__label">' . esc_html( $attribute_filter['label'] ) . '</span>';
 		echo '<div class="mnsk7-plp-chips__scroll">';
 		foreach ( $visible as $slug => $label ) {
-			$url    = add_query_arg( $param, $slug );
+			$url = add_query_arg( $param, $slug );
+			$url = $anchor_fn ? $anchor_fn( $url ) : $url;
 			$active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) === $slug;
 			printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
 		}
 		if ( ! empty( $hidden ) ) {
 			echo '<span class="mnsk7-plp-chips-more" id="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" hidden>';
 			foreach ( $hidden as $slug => $label ) {
-				$url    = add_query_arg( $param, $slug );
+				$url = add_query_arg( $param, $slug );
+				$url = $anchor_fn ? $anchor_fn( $url ) : $url;
 				$active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) === $slug;
 				printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
 			}
@@ -143,7 +192,6 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 		}
 		echo '</div>';
 	}
-	/* Wybrane filtry: pokaż aktywne i link „Reset” (UX audit) — parametry z faktycznie wyświetlanych chipów */
 	$filter_params = isset( $attr_data['filter_params'] ) && is_array( $attr_data['filter_params'] ) ? $attr_data['filter_params'] : array();
 	$active_filters = array();
 	foreach ( $filter_params as $param ) {
@@ -153,12 +201,14 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 		}
 	}
 	if ( ! empty( $active_filters ) ) {
-		$term_link = get_term_link( $current_term );
-		$clear_url = is_wp_error( $term_link ) ? wc_get_page_permalink( 'shop' ) : $term_link;
+		$term_link  = get_term_link( $current_term );
+		$clear_url  = is_wp_error( $term_link ) ? ( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : '' ) : $term_link;
+		$clear_url  = function_exists( 'mnsk7_plp_anchor_results' ) ? mnsk7_plp_anchor_results( $clear_url ) : $clear_url;
 		echo '<div class="mnsk7-plp-selected col-full">';
 		echo '<span class="mnsk7-plp-selected__label">' . esc_html__( 'Wybrane:', 'mnsk7-storefront' ) . '</span>';
 		foreach ( $active_filters as $param => $val ) {
 			$without = remove_query_arg( $param );
+			$without = function_exists( 'mnsk7_plp_anchor_results' ) ? mnsk7_plp_anchor_results( $without ) : $without;
 			echo '<a href="' . esc_url( $without ) . '" class="mnsk7-plp-chip mnsk7-plp-chip--active mnsk7-plp-chip--remove" aria-label="' . esc_attr__( 'Usuń filtr', 'mnsk7-storefront' ) . '">' . esc_html( $val ) . ' ×</a>';
 		}
 		echo ' <a href="' . esc_url( $clear_url ) . '" class="button mnsk7-plp-reset">' . esc_html__( 'Wyczyść wszystkie', 'mnsk7-storefront' ) . '</a>';
@@ -166,16 +216,18 @@ if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 	}
 }
 
-if ( is_shop() && ! $is_taxonomy && taxonomy_exists( 'product_cat' ) ) {
-	$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true, 'number' => 20 ) );
-	if ( ! is_wp_error( $top_cats ) && ! empty( $top_cats ) ) {
-		echo '<div class="mnsk7-plp-chips col-full" role="navigation" aria-label="' . esc_attr__( 'Kategorie', 'mnsk7-storefront' ) . '">';
-		foreach ( $top_cats as $term ) {
-			$link = get_term_link( $term );
-			if ( is_wp_error( $link ) ) { continue; }
-			echo '<a href="' . esc_url( $link ) . '" class="mnsk7-plp-chip">' . esc_html( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name ) . '</a>';
-		}
-		echo '</div>';
+/* Strona Sklep (bez taksonomii): dwie grupy chipów — kategorie i tagi (jak w megamenu). */
+if ( is_shop() && ! $is_taxonomy ) {
+	$megamenu = function_exists( 'mnsk7_get_megamenu_terms' ) ? mnsk7_get_megamenu_terms() : array( 'cats' => array(), 'tags' => array() );
+	$shop_cats = isset( $megamenu['cats'] ) ? $megamenu['cats'] : array();
+	$shop_tags = isset( $megamenu['tags'] ) ? $megamenu['tags'] : array();
+	$cat_label = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
+	$tags_label = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
+	if ( ! is_wp_error( $shop_cats ) && ! empty( $shop_cats ) ) {
+		$render_plp_nav_row( $cat_label, $shop_cats, 0 );
+	}
+	if ( ! is_wp_error( $shop_tags ) && ! empty( $shop_tags ) ) {
+		$render_plp_nav_row( $tags_label, $shop_tags, 0 );
 	}
 }
 
@@ -213,7 +265,7 @@ if ( woocommerce_product_loop() ) {
 				mnsk7_render_trust_badges( 'mnsk7-plp-trust' );
 				echo '</div>';
 			}
-			echo '<div class="mnsk7-plp-grid-mobile col-full">';
+			echo '<div id="mnsk7-plp-results" class="mnsk7-plp-grid-mobile col-full">';
 			woocommerce_product_loop_start();
 			if ( wc_get_loop_prop( 'total' ) ) {
 				while ( have_posts() ) {
@@ -250,7 +302,7 @@ if ( woocommerce_product_loop() ) {
 				echo '</div>';
 			}
 			?>
-			<div class="mnsk7-product-table-wrap col-full">
+			<div id="mnsk7-plp-results" class="mnsk7-product-table-wrap col-full">
 				<table class="mnsk7-product-table shop_table">
 					<thead>
 						<tr>

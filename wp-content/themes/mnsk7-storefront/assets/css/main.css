@@ -1,6 +1,6 @@
 /* =================================================================
    MNK7 Storefront — main.css (built from parts)
-   Build: 2026-03-11
+   Build: 2026-03-12
    Run: scripts/build-main-css.sh
    ================================================================= */
 /* === 00-fonts-inter.css === */
@@ -414,20 +414,50 @@ a {
   opacity: 1;
   background: rgba(255, 255, 255, 0.15);
 }
-/* Tablet + mobile: promo bar — one line, compact */
+/* Tablet + mobile: promo bar — compact, bez nałożenia tekstu i close */
 @media (max-width: 1024px) {
   .mnsk7-promo-bar {
-    padding: 0.3rem 0.75rem;
-    font-size: var(--fs-xs); /* 0.75rem mobile override */
+    padding: 0.35rem 0.75rem;
+    padding-right: 3rem;
+    font-size: var(--fs-xs);
   }
   .mnsk7-promo-bar__inner {
     gap: 0.5rem;
+    padding-right: 0;
   }
   .mnsk7-promo-bar__text {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     min-width: 0;
+    padding-right: 0.5rem;
+  }
+}
+
+/* Mobile: promo bar — 2-line layout jeśli potrzeba, close nie najeżdża */
+@media (max-width: 480px) {
+  .mnsk7-promo-bar {
+    padding: 0.5rem 3rem 0.5rem 1rem;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
+  .mnsk7-promo-bar__inner {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+  .mnsk7-promo-bar__text {
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    flex: 1 1 100%;
+    padding-right: 0;
+    line-height: 1.4;
+  }
+  .mnsk7-promo-bar__close {
+    right: 0.25rem;
+    top: 50%;
+    transform: translateY(-50%);
   }
 }
 
@@ -806,6 +836,68 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     box-shadow: inset 0 -2px 0 var(--color-primary);
   }
 }
+/* Mobile (≤1024px): Sklep rozwijany — submenu ukryte domyślnie, widoczne gdy li.is-open; układ pionowy, tap targets 44px */
+@media (max-width: 1024px) {
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu {
+    position: static;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    display: none;
+    min-width: 0;
+    max-width: none;
+    max-height: none;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    background: transparent;
+    flex-direction: column;
+    gap: 0;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children.is-open .sub-menu {
+    display: flex;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu {
+    flex-direction: column;
+    padding: 0.5rem 0 0 0;
+    margin-top: 0.25rem;
+    margin-left: var(--space-16, 1rem);
+    border-left: 2px solid var(--color-border);
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__group {
+    margin-bottom: 0.5rem;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__heading {
+    margin-bottom: 0.25rem;
+    padding-left: 0.5rem;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list,
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list--cols,
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list--tags {
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list a,
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list li a {
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    display: flex;
+    align-items: center;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__footer {
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__footer a {
+    min-height: 44px;
+    padding: 0.5rem 0.75rem;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
 /* Submenu nie wychodzi w prawo poza ekran (Sklep jest pierwszy, dropdown pod nim) */
 @media (max-width: 480px) {
   .mnsk7-header__menu .sub-menu {
@@ -887,6 +979,9 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   flex-shrink: 0;
   flex-wrap: nowrap;
   min-width: 0;
+}
+.mnsk7-header__actions > * {
+  margin: 0;
 }
 
 /* Search: один поиск — только иконка, по клику открывается dropdown */
@@ -1436,18 +1531,17 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 
-/* Tablet + mobile (≤1024px): one row — logo | burger, search, account, cart (icons only). Avoids overflow on narrow desktop. */
+/* Tablet + mobile (≤1024px): one row — logo | burger, search, account, cart (icons only). Symetryczny padding + safe-area. */
 @media (max-width: 1024px) {
   .mnsk7-header__inner {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
     justify-content: space-between;
-    gap: 0.5rem;
+    gap: var(--space-8);
     min-height: var(--header-h);
-    padding: 0 0.75rem 0 0.5rem;
+    padding-inline: max(var(--space-12), env(safe-area-inset-left)) max(var(--space-12), env(safe-area-inset-right));
     min-width: 0;
-    overflow: hidden; /* Task 8: tablet/mobile — prevent menu/search overlap */
   }
   .mnsk7-header__brand {
     order: 0;
@@ -1456,6 +1550,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
   .mnsk7-header__brand img {
     max-height: 42px;
+    max-width: 150px; /* nie rozciąga rzędu na wąskich ekranach */
     object-fit: contain;
   }
   .mnsk7-header__nav {
@@ -1463,14 +1558,20 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     flex-shrink: 0;
     width: auto;
     min-width: 0;
-    margin-left: 0.25rem;
   }
   .mnsk7-header__actions {
     order: 0;
     flex-shrink: 0;
     margin-left: auto;
+    min-width: 0;
+    gap: 0.5rem;
+    display: flex;
+    align-items: center;
   }
-  /* Unified icon buttons: burger, search, account, cart — same size, same style, no single beige/gray outlier */
+  .mnsk7-header__actions > * {
+    margin: 0;
+  }
+  /* Unified icon buttons: burger, search, account, cart — same min size, even spacing; cart has icon+badge so no fixed width */
   .mnsk7-header__menu-toggle,
   .mnsk7-header__search-toggle,
   .mnsk7-header__link--account,
@@ -1488,6 +1589,28 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     border: 1px solid var(--color-border);
     color: var(--color-text);
     transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+    flex-shrink: 0;
+  }
+  .mnsk7-header__menu-toggle,
+  .mnsk7-header__search-toggle,
+  .mnsk7-header__link--account,
+  .mnsk7-header__cart-trigger {
+    width: 44px;
+    height: 44px;
+  }
+  /* Koszyk jak pozostałe przyciski — kwadrat, badge absolutnie (jednolity rytm) */
+  .mnsk7-header__cart-trigger {
+    position: relative;
+    gap: 0;
+    padding: 0;
+  }
+  .mnsk7-header__cart .mnsk7-header__cart-count,
+  .mnsk7-header__cart .count {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    left: auto;
+    margin: 0;
   }
   .mnsk7-header__menu-toggle:hover,
   .mnsk7-header__search-toggle:hover,
@@ -1505,6 +1628,183 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
   .mnsk7-header__menu-toggle {
     border: 1px solid var(--color-border);
+  }
+  /* Wąskie viewporty: przyciski i ikony maleją — równomierny gap, logo ograniczone, symetryczny padding */
+  @media (max-width: 430px) {
+    .mnsk7-header__inner {
+      padding-inline: 0.5rem;
+      gap: 0.35rem;
+    }
+    .mnsk7-header__actions {
+      gap: 0.35rem;
+    }
+    .mnsk7-header__brand img {
+      max-height: 38px;
+      max-width: 120px;
+    }
+    .mnsk7-header__menu-toggle,
+    .mnsk7-header__search-toggle,
+    .mnsk7-header__link--account {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+    }
+    .mnsk7-header__cart-trigger {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      min-height: 40px;
+      padding: 0;
+      gap: 0;
+    }
+    .mnsk7-header__cart .mnsk7-header__cart-count,
+    .mnsk7-header__cart .count {
+      top: 1px;
+      right: 1px;
+    }
+    .mnsk7-header__hamburger {
+      width: 18px;
+    }
+    .mnsk7-header__hamburger::before,
+    .mnsk7-header__hamburger::after {
+      width: 18px;
+    }
+    .mnsk7-header__search-icon,
+    .mnsk7-header__search-icon svg,
+    .mnsk7-header__account-icon,
+    .mnsk7-header__account-icon svg,
+    .mnsk7-header__cart-icon,
+    .mnsk7-header__cart-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+    .mnsk7-header__cart .mnsk7-header__cart-count,
+    .mnsk7-header__cart .count {
+      min-width: 18px;
+      height: 18px;
+      font-size: 0.6875rem;
+      padding: 0 0.25rem;
+    }
+  }
+  @media (max-width: 375px) {
+    .mnsk7-header__inner {
+      padding-inline: 0.5rem;
+      gap: 0.35rem;
+    }
+    .mnsk7-header__actions {
+      gap: 0.35rem;
+    }
+    .mnsk7-header__brand img {
+      max-height: 36px;
+      max-width: 105px;
+    }
+  }
+  @media (max-width: 360px) {
+    .mnsk7-header__inner {
+      padding-inline: 0.4rem;
+      gap: 0.25rem;
+    }
+    .mnsk7-header__actions {
+      gap: 0.25rem;
+    }
+    .mnsk7-header__brand img {
+      max-height: 34px;
+      max-width: 95px;
+    }
+    .mnsk7-header__menu-toggle,
+    .mnsk7-header__search-toggle,
+    .mnsk7-header__link--account {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      min-height: 36px;
+    }
+    .mnsk7-header__cart-trigger {
+      width: 36px;
+      height: 36px;
+      min-width: 36px;
+      min-height: 36px;
+      padding: 0;
+      gap: 0;
+    }
+    .mnsk7-header__cart .mnsk7-header__cart-count,
+    .mnsk7-header__cart .count {
+      top: 1px;
+      right: 1px;
+    }
+    .mnsk7-header__hamburger {
+      width: 16px;
+    }
+    .mnsk7-header__hamburger::before,
+    .mnsk7-header__hamburger::after {
+      width: 16px;
+    }
+    .mnsk7-header__search-icon,
+    .mnsk7-header__search-icon svg,
+    .mnsk7-header__account-icon,
+    .mnsk7-header__account-icon svg,
+    .mnsk7-header__cart-icon,
+    .mnsk7-header__cart-icon svg {
+      width: 18px;
+      height: 18px;
+    }
+    .mnsk7-header__cart .mnsk7-header__cart-count,
+    .mnsk7-header__cart .count {
+      min-width: 16px;
+      height: 16px;
+      font-size: 0.625rem;
+      padding: 0 0.2rem;
+    }
+  }
+  @media (max-width: 320px) {
+    .mnsk7-header__inner {
+      padding-inline: 0.35rem;
+      gap: 0.2rem;
+    }
+    .mnsk7-header__actions {
+      gap: 0.2rem;
+    }
+    .mnsk7-header__brand img {
+      max-height: 32px;
+      max-width: 80px;
+    }
+    .mnsk7-header__menu-toggle,
+    .mnsk7-header__search-toggle,
+    .mnsk7-header__link--account {
+      width: 34px;
+      height: 34px;
+      min-width: 34px;
+      min-height: 34px;
+    }
+    .mnsk7-header__cart-trigger {
+      width: 34px;
+      height: 34px;
+      min-width: 34px;
+      min-height: 34px;
+      padding: 0;
+      gap: 0;
+    }
+    .mnsk7-header__cart .mnsk7-header__cart-count,
+    .mnsk7-header__cart .count {
+      top: 1px;
+      right: 1px;
+    }
+    .mnsk7-header__search-icon,
+    .mnsk7-header__search-icon svg,
+    .mnsk7-header__account-icon,
+    .mnsk7-header__account-icon svg,
+    .mnsk7-header__cart-icon,
+    .mnsk7-header__cart-icon svg {
+      width: 16px;
+      height: 16px;
+    }
+    .mnsk7-header__cart .mnsk7-header__cart-count,
+    .mnsk7-header__cart .count {
+      min-width: 14px;
+      height: 14px;
+      font-size: 0.5625rem;
+    }
   }
   .mnsk7-header__search-toggle[aria-expanded="true"] {
     background: rgba(0, 0, 0, 0.04);
@@ -1562,12 +1862,15 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     outline: 2px solid var(--color-focus, var(--color-primary));
     outline-offset: -2px;
   }
-  /* Mobile: submenu Sklep nie pokazywane — link „Sklep” prowadzi do sklepu (bez ogromnej listy) */
+  /* Mobile: submenu Sklep ukryte domyślnie; po tap na „Sklep” (li.is-open) — rozwijane (JS), ta sama struktura co desktop */
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu {
     display: none !important;
   }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children.is-open .sub-menu {
+    display: flex !important;
+  }
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children > a::after {
-    display: none;
+    display: inline-block;
   }
   .mnsk7-header__link-text {
     display: none;
@@ -1698,25 +2001,82 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 
-/* Wąskie ekrany 320–430px: mniejsze odstępy, brak overflow-x */
+/* Wąskie ekrany (≤430/360): nadpisanie padding/gap/logo poza blokiem 1024px — symetryczny padding z safe-area */
 @media (max-width: 430px) {
   .mnsk7-header__inner {
-    padding: 0 0.5rem;
+    padding-inline: max(0.5rem, env(safe-area-inset-left)) max(0.5rem, env(safe-area-inset-right));
+    gap: 0.35rem;
+  }
+  .mnsk7-header__actions {
     gap: 0.35rem;
   }
   .mnsk7-header__brand img {
-    max-height: 36px;
+    max-height: 38px;
+    max-width: 120px;
+  }
+  .mnsk7-header__menu-toggle,
+  .mnsk7-header__search-toggle,
+  .mnsk7-header__link--account,
+  .mnsk7-header__cart-trigger {
+    width: 40px !important;
+    min-width: 40px !important;
+    height: 40px !important;
+    min-height: 40px !important;
+  }
+  .mnsk7-header__search-icon,
+  .mnsk7-header__search-icon svg,
+  .mnsk7-header__account-icon,
+  .mnsk7-header__account-icon svg,
+  .mnsk7-header__cart-icon,
+  .mnsk7-header__cart-icon svg {
+    width: 20px !important;
+    height: 20px !important;
   }
 }
 
-/* Bardzo wąskie 320–360px: logo mniejsze, żeby nie obcinać (audit task 1) */
 @media (max-width: 360px) {
   .mnsk7-header__inner {
-    padding: 0 0.4rem;
+    padding-inline: max(0.4rem, env(safe-area-inset-left)) max(0.4rem, env(safe-area-inset-right));
+    gap: 0.25rem;
+  }
+  .mnsk7-header__actions {
     gap: 0.25rem;
   }
   .mnsk7-header__brand img {
+    max-height: 34px;
+    max-width: 95px;
+  }
+  .mnsk7-header__menu-toggle,
+  .mnsk7-header__search-toggle,
+  .mnsk7-header__link--account,
+  .mnsk7-header__cart-trigger {
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+    min-height: 36px !important;
+  }
+  .mnsk7-header__search-icon,
+  .mnsk7-header__search-icon svg,
+  .mnsk7-header__account-icon,
+  .mnsk7-header__account-icon svg,
+  .mnsk7-header__cart-icon,
+  .mnsk7-header__cart-icon svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+}
+
+@media (max-width: 320px) {
+  .mnsk7-header__inner {
+    padding-inline: max(0.35rem, env(safe-area-inset-left)) max(0.35rem, env(safe-area-inset-right));
+    gap: 0.2rem;
+  }
+  .mnsk7-header__actions {
+    gap: 0.2rem;
+  }
+  .mnsk7-header__brand img {
     max-height: 32px;
+    max-width: 80px;
   }
 }
 
@@ -1754,6 +2114,20 @@ body .site .site-content {
 .mnsk7-header__cart,
 .mnsk7-header__cart-dropdown {
   z-index: 111;
+}
+
+/* Mobile Sklep: gwarancja widoczności submenu po tap (li.is-open) — wygrywa z innymi regułami */
+@media (max-width: 1024px) {
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children.is-open > .sub-menu.mnsk7-megamenu {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children > a.mnsk7-menu-item-sklep {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+  }
 }
 
 /* Legacy header paths removed: jeden header = header.php (mnsk7-header). Nie używać .mnsk7-header-actions / .mnsk7-header-link. */
@@ -2986,8 +3360,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   padding: 0;
 }
 
-/* Hero — czytelny, wyrazisty (nie „biednie”) */
-/* Audit task 6: brak obcięcia ostatniego chipa (np. „3 500+ zamówień rocznie”) — overflow visible */
+/* Hero — czytelny, full-bleed (bez białych pasów od padding #content). Audit task 6: overflow visible */
 .mnsk7-hero {
   background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
   color: var(--color-white);
@@ -2995,6 +3368,19 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   padding: 4rem 1.5rem 4.5rem;
   position: relative;
   overflow: visible;
+  margin-left: -1.5rem;
+  margin-right: -1.5rem;
+  width: calc(100% + 3rem);
+  max-width: none;
+}
+@media (min-width: 768px) {
+  .mnsk7-hero {
+    margin-left: -2rem;
+    margin-right: -2rem;
+    width: calc(100% + 4rem);
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
 
 .mnsk7-hero::before {
@@ -3217,39 +3603,106 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   color: var(--color-primary-hover);
 }
 
-/* Katalog: tylko chipy tagów nad siatką kategorii (bez duplikatu kategorii) */
+/* Katalog: grupy chipów — każda grupa = etykieta + pozioma swipe-row (mobile). */
 .mnsk7-catalog-chips {
   display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  gap: 0.75rem 1.5rem;
+  flex-direction: column;
+  gap: 1rem;
   margin-bottom: 1.5rem;
-  justify-content: center;
 }
 
-.mnsk7-section--catalog .mnsk7-cats--catalog {
-  margin-bottom: 2rem;
+.mnsk7-catalog-chips-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  width: 100%;
+  min-width: 0;
+}
+
+.mnsk7-catalog-chips__label {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  flex: 0 0 auto;
+}
+
+.mnsk7-catalog-chips__scroll {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  width: 100%;
+  min-width: 0;
 }
 
 @media (max-width: 768px) {
   .mnsk7-section--catalog .col-full {
     overflow-x: hidden;
   }
+  /* Mobile: każda grupa = etykieta nad poziomą swipe-row (overflow-x). */
+  .mnsk7-catalog-chips__scroll {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 0.25rem;
+    gap: 0.5rem;
+  }
+  .mnsk7-catalog-chips__scroll .mnsk7-tags-chip,
+  .mnsk7-catalog-chips__scroll .mnsk7-catalog-cat-chip {
+    flex-shrink: 0;
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
 }
 
-.mnsk7-catalog-chips .mnsk7-catalog-tags {
-  margin: 0;
-  text-align: center;
+.mnsk7-catalog-chips-more[hidden] {
+  display: none !important;
+}
+
+.mnsk7-catalog-chips-more:not([hidden]) {
   display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
   gap: 0.5rem 0.75rem;
 }
 
+@media (max-width: 768px) {
+  .mnsk7-catalog-chips-more:not([hidden]) {
+    flex-wrap: nowrap;
+    display: inline-flex;
+  }
+}
 
-.mnsk7-section--catalog .mnsk7-tags-chips {
-  justify-content: center;
-  margin-bottom: 0;
+.mnsk7-catalog-chips-toggle {
+  flex-shrink: 0;
+  min-height: 44px;
+  padding: 0.4rem 1rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  font-family: var(--font-base);
+  color: var(--color-primary);
+  background: transparent;
+  border: 2px solid var(--color-primary);
+  border-radius: var(--r-md);
+  cursor: pointer;
+  transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease;
+  box-sizing: border-box;
+}
+
+.mnsk7-catalog-chips-toggle:hover {
+  background: var(--color-primary);
+  color: var(--color-white);
+}
+
+.mnsk7-catalog-chips-toggle:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.mnsk7-section--catalog .mnsk7-cats--catalog {
+  margin-bottom: 2rem;
 }
 
 .mnsk7-cats-intro {
@@ -4795,13 +5248,16 @@ body.page #colophon.mnsk7-footer {
 }
 
 /* === 10-cookie-bar.css === */
-/* 10-cookie-bar — widoczny pasek, Ustawienia (GDPR), safe-area (iPhone) */
+/* 10-cookie-bar — widoczny pasek, Ustawienia (GDPR), safe-area (iPhone). Bar poza #page (fixed względem viewport). */
 
 .mnsk7-cookie-bar {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  max-width: 100vw;
+  box-sizing: border-box;
   background: var(--color-dark-bg);
   color: var(--color-white);
   padding: 0.75rem 1.25rem;
@@ -4815,6 +5271,7 @@ body.page #colophon.mnsk7-footer {
   box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.2);
   font-size: var(--fs-sm);
   line-height: 1.5;
+  overflow: hidden;
 }
 
 .mnsk7-cookie-bar[hidden] {
@@ -4833,12 +5290,15 @@ body.mnsk7-cookie-bar-visible #page {
   flex-wrap: wrap;
   gap: 0.75rem 1rem;
   width: 100%;
+  min-width: 0;
   max-width: var(--content-max, 1200px);
   margin: 0 auto;
+  box-sizing: border-box;
 }
 
 .mnsk7-cookie-bar__text {
   flex: 1 1 260px;
+  min-width: 0;
   margin: 0;
 }
 
@@ -4856,8 +5316,10 @@ body.mnsk7-cookie-bar-visible #page {
 .mnsk7-cookie-bar__buttons {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
   gap: 0.5rem;
   flex-shrink: 0;
+  min-width: 0;
   position: relative;
   z-index: 1;
 }
@@ -6465,16 +6927,36 @@ nav.woocommerce-breadcrumb {
     font-size: var(--fs-xl);
   }
 
-  /* Cookie bar: stos przycisków (główny styl w 10-cookie-bar.css) */
+  /* Cookie bar: bottom-sheet / stacked — bez obcięcia, bez overflow (P0) */
   .mnsk7-cookie-bar {
     flex-direction: column;
     text-align: center;
-    padding: var(--space-16);
+    padding: var(--space-12) var(--space-16);
     padding-bottom: max(var(--space-16), env(safe-area-inset-bottom));
+    align-items: stretch;
   }
 
-  .mnsk7-cookie-bar .mnsk7-cookie-bar__btn {
+  .mnsk7-cookie-bar__inner {
+    flex-direction: column;
+    gap: var(--space-12);
+  }
+
+  .mnsk7-cookie-bar__text {
+    flex: none;
     width: 100%;
+    text-align: center;
+  }
+
+  .mnsk7-cookie-bar__buttons {
+    flex-direction: column;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .mnsk7-cookie-bar__btn {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   /* Delivery table: mniejszy font i padding, zawijanie tekstu — bez wewnętrznego scrolla */
@@ -6920,15 +7402,47 @@ body.tax-product_tag .mnsk7-catalog-filters {
   margin-bottom: var(--space-section-gap);
 }
 
-/* Mobile: filter groups = vertical block. Label full width on top, chips row below with horizontal scroll. No two-column label/value. */
+/* Mobile: filter groups and nav groups = vertical block. Label full width on top, chips row below with horizontal scroll. */
 @media (max-width: 768px) {
-  .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs) {
+  .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs):not(.mnsk7-plp-chips--nav) {
     flex-wrap: wrap;
     padding-bottom: 0.25rem;
     margin-left: 0;
     margin-right: 0;
     gap: 0.5rem;
     align-items: center;
+  }
+  .mnsk7-plp-chips--nav {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.35rem;
+    margin-bottom: 0.75rem;
+  }
+  .mnsk7-plp-chips--nav .mnsk7-plp-chips__label {
+    flex: 0 0 auto;
+    width: 100%;
+    padding: 0 0 0.25rem 0;
+    margin: 0;
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  .mnsk7-plp-chips--nav .mnsk7-plp-chips__scroll {
+    width: 100%;
+    min-width: 0;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.25rem 0;
+    margin: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+  .mnsk7-plp-chips--nav .mnsk7-plp-chip {
+    flex-shrink: 0;
   }
   .mnsk7-plp-chips--attrs {
     display: flex;
