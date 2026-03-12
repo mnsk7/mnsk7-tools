@@ -83,7 +83,6 @@ endif;
 			}
 			?>
 		</div>
-		<div class="mnsk7-header__controls">
 		<nav class="mnsk7-header__nav" role="navigation" aria-label="<?php esc_attr_e( 'Menu główne', 'mnsk7-storefront' ); ?>">
 			<button type="button" class="mnsk7-header__menu-toggle" aria-expanded="false" aria-controls="mnsk7-primary-menu" aria-label="<?php esc_attr_e( 'Otwórz menu', 'mnsk7-storefront' ); ?>" data-close-label="<?php esc_attr_e( 'Zamknij menu', 'mnsk7-storefront' ); ?>" data-open-label="<?php esc_attr_e( 'Otwórz menu', 'mnsk7-storefront' ); ?>">
 				<span class="mnsk7-header__hamburger" aria-hidden="true"></span>
@@ -210,7 +209,6 @@ endif;
 			}
 			?>
 		</div>
-		</div><!-- .mnsk7-header__controls -->
 	</div>
 </header>
 <?php
