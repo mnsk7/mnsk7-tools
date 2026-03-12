@@ -6,9 +6,11 @@
  * Проверки: хедер виден и с лого/контролами; hero виден и с контентом; #content не под хедером;
  * нет горизонтального скролла; PLP и футер видимы; порядок секций и отсутствие наложений.
  *
+ * Строгие layout-проверки хедера (одна строка, overlap, clipping, cart в viewport, desktop regression,
+ * visual regression): e2e/header-layout.spec.js
+ *
  * Viewporty: 320, 360, 375, 390, 414 (height 700).
  * Запуск: BASE_URL=https://staging.mnsk7-tools.pl npx playwright test e2e/mobile-design.spec.js
- * Один viewport: npx playwright test e2e/mobile-design.spec.js --grep "375"
  */
 const { test, expect } = require('@playwright/test');
 
