@@ -49,23 +49,33 @@ ul.products.columns-3::before {
   width: 100% !important;
 }
 
-/* PDP Podobne produkty — liczba kolumn = liczba kart (1–3 lub 4), bez pustego miejsca przed pierwszym */
-.single-product .related.products ul.products {
+/* PDP Podobne produkty i Może spodoba się również — liczba kolumn = liczba kart (1–3 lub 4), bez pustego miejsca przed pierwszym */
+.single-product .related.products ul.products,
+.single-product .upsells.products ul.products,
+.single-product .up-sells.products ul.products {
   justify-content: start !important;
   width: 100% !important;
   margin-left: 0 !important;
   padding-left: 0 !important;
 }
-.single-product .related.products ul.products:has(li:nth-child(1):last-child) {
+.single-product .related.products ul.products:has(li:nth-child(1):last-child),
+.single-product .upsells.products ul.products:has(li:nth-child(1):last-child),
+.single-product .up-sells.products ul.products:has(li:nth-child(1):last-child) {
   grid-template-columns: 1fr !important;
 }
-.single-product .related.products ul.products:has(li:nth-child(2):last-child) {
+.single-product .related.products ul.products:has(li:nth-child(2):last-child),
+.single-product .upsells.products ul.products:has(li:nth-child(2):last-child),
+.single-product .up-sells.products ul.products:has(li:nth-child(2):last-child) {
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
 }
-.single-product .related.products ul.products:has(li:nth-child(3):last-child) {
+.single-product .related.products ul.products:has(li:nth-child(3):last-child),
+.single-product .upsells.products ul.products:has(li:nth-child(3):last-child),
+.single-product .up-sells.products ul.products:has(li:nth-child(3):last-child) {
   grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
 }
-.single-product .related.products ul.products:has(li:nth-child(n+4):last-child) {
+.single-product .related.products ul.products:has(li:nth-child(n+4):last-child),
+.single-product .upsells.products ul.products:has(li:nth-child(n+4):last-child),
+.single-product .up-sells.products ul.products:has(li:nth-child(n+4):last-child) {
   grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
 }
 .woocommerce-cart .cross-sells {
