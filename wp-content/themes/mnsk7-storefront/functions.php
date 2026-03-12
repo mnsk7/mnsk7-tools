@@ -845,20 +845,32 @@ add_action( 'wp_footer', function () {
 				setMenuAria();
 			});
 		}
-		// Mobile (≤1024): tap na „Sklep” rozwijá submenu. Capture phase — żeby żaden inny handler nie przechwycił; data-mnsk7="sklep-parent" jako fallback.
+		// Mobile (≤1024): tap na parent z submenu (np. „Sklep”) rozwijá submenu; bez przejścia po URL. Capture phase + pewne wykrycie linku (tap może dać target = tekst/child).
 		var menu = document.getElementById('mnsk7-primary-menu');
 		if (menu) {
+			function getLinkFromEvent(ev, root) {
+				var el = ev.target;
+				while (el && el !== root) {
+					if (el.nodeType === 1 && el.tagName === 'A' && el.getAttribute('href')) return el;
+					el = el.parentElement;
+				}
+				return null;
+			}
+			function isParentItemLink(link, parentLi) {
+				if (!parentLi || !link) return false;
+				return link.getAttribute('data-mnsk7') === 'sklep-parent' || parentLi.firstElementChild === link;
+			}
 			menu.addEventListener('click', function(e) {
-				var a = e.target && e.target.closest ? e.target.closest('a') : null;
+				var a = getLinkFromEvent(e, menu);
 				if (!a || !a.href) return;
 				var li = a.closest('li.menu-item-has-children');
-				var isSklepParent = a.getAttribute('data-mnsk7') === 'sklep-parent' || (li && li.querySelector(':scope > a') === a);
-				if (!li || !isSklepParent) return;
+				if (!li || !isParentItemLink(a, li)) return;
 				if (window.innerWidth <= 1024) {
 					e.preventDefault();
 					e.stopPropagation();
 					li.classList.toggle('is-open');
-					a.setAttribute('aria-expanded', li.classList.contains('is-open') ? 'true' : 'false');
+					var open = li.classList.contains('is-open');
+					a.setAttribute('aria-expanded', open ? 'true' : 'false');
 				}
 			}, true);
 			// Mega menu (Sklep): hover delay 400ms na desktop — Baymard/NNG, bez flicker przy przejściu na panel
@@ -870,7 +882,7 @@ add_action( 'wp_footer', function () {
 				var openTimer, closeTimer;
 				var HOVER_OPEN_MS = 400;
 				var HOVER_CLOSE_MS = 150;
-				var megamenuLink = megamenuLi.querySelector(':scope > a');
+				var megamenuLink = megamenuLi.firstElementChild && megamenuLi.firstElementChild.tagName === 'A' ? megamenuLi.firstElementChild : null;
 				function setMegamenuExpanded(open) {
 					if (megamenuLink) megamenuLink.setAttribute('aria-expanded', open ? 'true' : 'false');
 					if (open) megamenuLi.classList.add('mnsk7-megamenu-open'); else megamenuLi.classList.remove('mnsk7-megamenu-open');
@@ -900,11 +912,10 @@ add_action( 'wp_footer', function () {
 			}
 			// Mobile: po kliknięciu w link (nie w parent „Sklep”) zamknij overlay — Przewodnik, Dostawa, Kontakt, podpunkty Sklep.
 			menu.addEventListener('click', function(e) {
-				var a = e.target.closest('a');
+				var a = getLinkFromEvent(e, menu);
 				if (!a || !a.getAttribute('href') || window.innerWidth > 1024 || !nav) return;
-				if (a.getAttribute('data-mnsk7') === 'sklep-parent') return;
 				var parentLi = a.closest('li.menu-item-has-children');
-				if (parentLi && parentLi.querySelector(':scope > a') === a) return; // tap na „Sklep” — nie zamykaj
+				if (parentLi && isParentItemLink(a, parentLi)) return; // tap na parent (Sklep) — nie zamykaj, toggle obsłużył
 				nav.classList.remove('is-open');
 				if (menuToggle) { menuToggle.setAttribute('aria-expanded', 'false'); if (menuToggle.getAttribute('data-open-label')) menuToggle.setAttribute('aria-label', menuToggle.getAttribute('data-open-label')); }
 			});

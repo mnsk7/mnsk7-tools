@@ -42,6 +42,11 @@ defined( 'ABSPATH' ) || exit;
 	.mnsk7-promo-bar__text a{color:inherit;text-decoration:underline}
 	@media (max-width:1024px){.mnsk7-promo-bar{padding:0.35rem 0.75rem;padding-right:3rem}.mnsk7-promo-bar__inner{gap:0.5rem}.mnsk7-promo-bar__text{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0;padding-right:0.5rem}}
 	@media (max-width:480px){.mnsk7-promo-bar{padding:0.5rem 3rem 0.5rem 1rem;min-height:44px}.mnsk7-promo-bar__inner{flex-wrap:wrap;justify-content:center;text-align:center}.mnsk7-promo-bar__text{white-space:normal;overflow:visible;text-overflow:clip;flex:1 1 100%;padding-right:0;line-height:1.4}}
+	/* Archive: kompaktowy promo bar — mniejszy wpływ na LCP, pierwszy blok produktów może być LCP. */
+	.mnsk7-archive .mnsk7-promo-bar{font-size:0.75rem;padding:0.25rem 0.75rem}
+	.mnsk7-archive .mnsk7-promo-bar__text{font-size:inherit}
+	@media (max-width:1024px){.mnsk7-archive .mnsk7-promo-bar{padding:0.25rem 2.5rem 0.25rem 0.5rem}}
+	@media (max-width:480px){.mnsk7-archive .mnsk7-promo-bar{min-height:36px;padding:0.35rem 2.5rem 0.35rem 0.5rem}}
 	</style>
 </head>
 <body <?php body_class(); ?>>
@@ -78,6 +83,7 @@ endif;
 			}
 			?>
 		</div>
+		<div class="mnsk7-header__controls">
 		<nav class="mnsk7-header__nav" role="navigation" aria-label="<?php esc_attr_e( 'Menu główne', 'mnsk7-storefront' ); ?>">
 			<button type="button" class="mnsk7-header__menu-toggle" aria-expanded="false" aria-controls="mnsk7-primary-menu" aria-label="<?php esc_attr_e( 'Otwórz menu', 'mnsk7-storefront' ); ?>" data-close-label="<?php esc_attr_e( 'Zamknij menu', 'mnsk7-storefront' ); ?>" data-open-label="<?php esc_attr_e( 'Otwórz menu', 'mnsk7-storefront' ); ?>">
 				<span class="mnsk7-header__hamburger" aria-hidden="true"></span>
@@ -89,7 +95,7 @@ endif;
 				$sklep_class = $is_shop_archive ? ' class="current-menu-item menu-item-has-children"' : ' class="menu-item-has-children"';
 				?>
 				<li<?php echo $sklep_class; ?>>
-					<a href="<?php echo esc_url( $shop_url ); ?>" aria-haspopup="true" aria-expanded="false"><?php esc_html_e( 'Sklep', 'mnsk7-storefront' ); ?></a>
+					<a href="<?php echo esc_url( $shop_url ); ?>" class="mnsk7-menu-item-sklep" aria-haspopup="true" aria-expanded="false" aria-controls="mnsk7-menu-submenu-sklep" data-mnsk7="sklep-parent"><?php esc_html_e( 'Sklep', 'mnsk7-storefront' ); ?></a>
 					<?php
 					$has_submenu = true;
 					$top_cats = array();
@@ -101,7 +107,7 @@ endif;
 						$top_tags = isset( $terms['tags'] ) ? $terms['tags'] : array();
 					}
 					?>
-					<ul class="sub-menu mnsk7-megamenu">
+					<ul id="mnsk7-menu-submenu-sklep" class="sub-menu mnsk7-megamenu" role="menu" aria-label="<?php esc_attr_e( 'Sklep — kategorie i tagi', 'mnsk7-storefront' ); ?>">
 						<?php
 						if ( ! empty( $top_cats ) ) : ?>
 						<li class="mnsk7-megamenu__group">
@@ -204,6 +210,7 @@ endif;
 			}
 			?>
 		</div>
+		</div><!-- .mnsk7-header__controls -->
 	</div>
 </header>
 <?php
