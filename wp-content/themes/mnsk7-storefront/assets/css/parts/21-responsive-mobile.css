@@ -112,7 +112,15 @@
   }
 }
 
-/* Bardzo wąskie ekrany (≤360px): 1 kolumna, żeby karty nie były za małe */
+/* Wąskie ekrany (≤400px): 1 kolumna w recommendation blocks, żeby karty nie były za małe i kładka się nie łamała */
+@media (max-width: 400px) {
+  .related.products ul.products,
+  .upsells.products ul.products,
+  .cross-sells ul.products {
+    grid-template-columns: 1fr !important;
+  }
+}
+/* Bardzo wąskie (≤360px): 1 kolumna także na PLP */
 @media (max-width: 360px) {
   .woocommerce ul.products,
   .woocommerce-page ul.products {

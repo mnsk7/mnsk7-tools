@@ -70,12 +70,14 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .single-product .summary .mnsk7-pdp-price-row {
   order: 2;
 }
-/* Dostępność (X w magazynie) tuż nad przyciskiem Dodaj do koszyka — supporting info dla CTA */
+/* Dostępność (X w magazynie) tuż nad przyciskiem Dodaj do koszyka — jeden blok z CTA */
 .single-product .summary .mnsk7-product-availability-row {
   order: 19;
+  margin-bottom: 0.5rem;
 }
 .single-product .summary form.cart {
   order: 20;
+  margin-top: 0;
 }
 .single-product .summary .mnsk7-product-trust {
   order: 21;
@@ -582,8 +584,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
     grid-template-columns: repeat(2, 1fr) !important;
   }
 }
-
-@media (max-width: 480px) {
+@media (max-width: 400px) {
   .single-product .related.products ul.products,
   .single-product .upsells.products ul.products,
   .single-product .up-sells.products ul.products {
@@ -651,10 +652,21 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   display: flex !important;
 }
 
+.mnsk7-pdp-sticky-cta__left {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
 .mnsk7-pdp-sticky-cta__price {
   font-size: var(--fs-xl);
   font-weight: 800;
   color: var(--color-primary-dark);
+}
+.mnsk7-pdp-sticky-cta__stock {
+  font-size: var(--fs-xs);
+  font-weight: 600;
+  color: var(--color-accent);
 }
 
 .mnsk7-pdp-sticky-cta__price del {

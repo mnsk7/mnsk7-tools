@@ -11,6 +11,15 @@
   padding-right: 1.5rem;
   box-sizing: border-box;
 }
+@media (max-width: 768px) {
+  #content,
+  .site-content,
+  .mnsk7-content {
+    padding-top: 1.25rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
 @media (min-width: 768px) {
   #content,
   .site-content,
@@ -18,6 +27,13 @@
     padding-left: 2rem;
     padding-right: 2rem;
   }
+}
+
+/* Content area: same background as body so no visible stripes on sides (mobile/tablet) */
+#content,
+.site-content,
+.mnsk7-content {
+  background: var(--color-bg, #fff);
 }
 
 /* Woo clearfix: usuń ::before, który psuł grid produktów */

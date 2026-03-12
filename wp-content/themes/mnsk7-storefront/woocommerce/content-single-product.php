@@ -63,11 +63,16 @@ if ( post_password_required() ) {
 </div>
 
 <?php
-// Sticky CTA na mobile (PDP): cena + przycisk przewijający do formularza.
+// Sticky CTA na mobile (PDP): cena + stock info + przycisk przewijający do formularza.
 if ( isset( $product ) && is_a( $product, 'WC_Product' ) && $product->is_purchasable() && $product->is_in_stock() ) {
+	$availability = $product->get_availability();
+	$stock_text   = ! empty( $availability['availability'] ) ? $availability['availability'] : __( 'W magazynie', 'mnsk7-storefront' );
 	?>
 	<div id="mnsk7-pdp-sticky-cta" class="mnsk7-pdp-sticky-cta" aria-hidden="true" hidden>
-		<span class="mnsk7-pdp-sticky-cta__price"><?php echo $product->get_price_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+		<div class="mnsk7-pdp-sticky-cta__left">
+			<span class="mnsk7-pdp-sticky-cta__price"><?php echo $product->get_price_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+			<span class="mnsk7-pdp-sticky-cta__stock"><?php echo esc_html( $stock_text ); ?></span>
+		</div>
 		<button type="button" class="mnsk7-pdp-sticky-cta__btn" aria-label="<?php esc_attr_e( 'Dodaj do koszyka — przewiń do formularza', 'mnsk7-storefront' ); ?>"><?php esc_html_e( 'Dodaj do koszyka', 'mnsk7-storefront' ); ?></button>
 	</div>
 	<?php
