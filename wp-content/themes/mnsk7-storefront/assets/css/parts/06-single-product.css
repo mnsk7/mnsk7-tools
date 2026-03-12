@@ -461,7 +461,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   color: var(--color-text);
 }
 
-/* Opis jako harmonijka (domyślnie zwinięty) — zawsze pod blokiem zdjęcie+buybox */
+/* Opis jako harmonijka (domyślnie zwinięty) — zawsze pod blokiem zdjęcie+buybox. Task 8: overflow: hidden — obcięcie do border-radius. */
 .mnsk7-product-description-accordion {
   margin: 1.25rem 0 0.5rem;
   border: 1px solid var(--color-border);
@@ -545,7 +545,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   grid-column: span 1 !important;
   grid-row: auto !important;
   min-width: 0;
-  overflow: hidden;
+  overflow: hidden; /* obcięcie treści karty do border-radius */
 }
 
 /* Upsells z 1 produktem — jedna kolumna (nie 4 z trzema pustymi) */

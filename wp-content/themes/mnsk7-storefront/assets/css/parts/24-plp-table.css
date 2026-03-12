@@ -319,6 +319,15 @@ body.tax-product_tag .mnsk7-catalog-filters {
   box-sizing: border-box;
 }
 
+/* Scroll target: górna granica strefy wyników (chips + search + USP). scroll-margin dla sticky header. */
+.mnsk7-plp-results-anchor {
+  display: block;
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+  scroll-margin-top: var(--header-h, 52px);
+}
+
 /* Chips row (subcategories / filters) — odstęp od tytułu Sklep, spójny rytm; UX: min 44px touch */
 .mnsk7-plp-chips {
   display: flex;
@@ -334,7 +343,7 @@ body.tax-product_tag .mnsk7-catalog-filters {
   margin-bottom: var(--space-section-gap);
 }
 
-/* Mobile: filter groups and nav groups = vertical block. Label full width on top, chips row below with horizontal scroll. */
+/* Mobile: swipe row pattern — scrollbar ukryty, scroll-snap, fade hint, label+row w jednym bloku. */
 @media (max-width: 768px) {
   .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs):not(.mnsk7-plp-chips--nav) {
     flex-wrap: wrap;
@@ -344,49 +353,19 @@ body.tax-product_tag .mnsk7-catalog-filters {
     gap: 0.5rem;
     align-items: center;
   }
-  .mnsk7-plp-chips--nav {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.35rem;
-    margin-bottom: 0.75rem;
-  }
-  .mnsk7-plp-chips--nav .mnsk7-plp-chips__label {
-    flex: 0 0 auto;
-    width: 100%;
-    padding: 0 0 0.25rem 0;
-    margin: 0;
-    font-size: var(--fs-sm);
-    font-weight: 600;
-    color: var(--color-text);
-  }
-  .mnsk7-plp-chips--nav .mnsk7-plp-chips__scroll {
-    width: 100%;
-    min-width: 0;
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-    gap: 0.4rem;
-    padding: 0.25rem 0;
-    margin: 0;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-  }
-  .mnsk7-plp-chips--nav .mnsk7-plp-chip {
-    flex-shrink: 0;
-  }
+  .mnsk7-plp-chips--nav,
   .mnsk7-plp-chips--attrs {
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    gap: 0.35rem;
-    margin-bottom: 0.75rem;
+    gap: 0.2rem;
+    margin-bottom: 0.6rem;
   }
+  .mnsk7-plp-chips--nav .mnsk7-plp-chips__label,
   .mnsk7-plp-chips__label {
     flex: 0 0 auto;
     width: 100%;
-    padding: 0 0 0.25rem 0;
+    padding: 0 0 0.15rem 0;
     margin: 0;
     font-size: var(--fs-sm);
     font-weight: 600;
@@ -394,24 +373,41 @@ body.tax-product_tag .mnsk7-catalog-filters {
     white-space: normal;
     overflow: visible;
   }
+  /* Jedna definicja scroll-row: ukryty scrollbar, snap, fade, minimalny powietrze. */
+  .mnsk7-plp-chips--nav .mnsk7-plp-chips__scroll,
   .mnsk7-plp-chips__scroll {
     width: 100%;
     min-width: 0;
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    gap: 0.4rem;
-    padding: 0.25rem 0;
+    gap: 0.5rem;
+    padding: 0.15rem 0;
+    padding-inline: max(0.75rem, env(safe-area-inset-left)) 1rem;
     margin: 0;
+    margin-inline: -0.5rem 0;
     overflow-x: auto;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: max(0.75rem, env(safe-area-inset-left)) 1rem;
+    mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
   }
-  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
-    padding-left: 0;
+  .mnsk7-plp-chips__scroll::-webkit-scrollbar {
+    display: none;
+    height: 0;
   }
+  .mnsk7-plp-chips--nav .mnsk7-plp-chip,
   .mnsk7-plp-chips--attrs .mnsk7-plp-chip {
     flex-shrink: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
+  }
+  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
+    padding-inline-start: 0;
   }
   /* Wyczyść wszystkie + filter search row — one system, aligned */
   .mnsk7-plp-selected {

@@ -50,5 +50,35 @@
 - **P1:** D2 (footer breakpoint sync).
 - **Исправления (2026-03-11):**
   - **A1:** footer.php — breakpoint 768px (sync z CSS), init w DOMContentLoaded.
-  - **B1:** functions.php wp_footer — global override `border-radius: var(--r-md) !important` dla .woocommerce .button, .button, input[type=submit], .single_add_to_cart_button, .add_to_cart_button.
+  - **B1:** 25-global-layout.css — global override `border-radius: var(--r-md) !important` dla .woocommerce .button, .button, input[type=submit], .single_add_to_cart_button, .add_to_cart_button.
   - **C1:** 24-plp-table.css — usunięto duplikat `.mnsk7-table-addcart-form { display: inline-block }` (zostaje inline-flex + align-items: center).
+
+---
+
+## Разбор оставшихся пунктов (status w kodzie)
+
+### P0 — wszystkie zamknięte w kodzie
+
+| # | Defekt | Oczekiwane | Stan w kodzie | Plik / fragment |
+|---|--------|------------|----------------|------------------|
+| **A1** | Footer accordion nie otwiera się na tap | Accordion działa przy ≤768px | **Fix:** JS używa `FOOTER_ACCORDION_BREAKPOINT = 768`, `matchMedia(mq)` przed toggle; `click` + `touchend` z deduplikacją; init w DOM. | `footer.php` ok. 184–222: `var FOOTER_ACCORDION_BREAKPOINT = 768`, `handleAccordion`, `toggleAccordion` |
+| **D1** | Jak A1 (320–430px) | Jak A1 | Ten sam fix co A1 — jeden breakpoint 768. | — |
+| **B1** | Różne border-radius przycisków Woo | Jednolity `var(--r-md)` | **Fix:** Globalny override w 25-global-layout.css dla .woocommerce .button, .button, input[type=submit], .single_add_to_cart_button, .add_to_cart_button. | `25-global-layout.css` ok. 95–110: blok „UI Audit: jeden border-radius” |
+| **C1** | Przycisk „Dodaj do koszyka” wyżej niż pole qty w tabeli PLP | Jedna linia, wyśrodkowanie | **Fix:** Brak `display: inline-block` na formularzu; tylko `inline-flex` + `align-items: center`. | `24-plp-table.css` ok. 1085–1089: `.mnsk7-table-addcart-form`; komentarz ok. 1097 „Alignment: keep inline-flex” |
+
+### P1 — zamknięte
+
+| # | Defekt | Oczekiwane | Stan w kodzie | Plik / fragment |
+|---|--------|------------|----------------|------------------|
+| **D2** | JS accordion przy 1024px, CSS layout przy 768px | Jeden breakpoint 768 dla zachowania i layoutu | **Fix:** W footer.php używany jest `768`, nie 1024. CSS w 09-footer.css: `@media (max-width: 768px)` — zgodność. | `footer.php` ok. 185: `FOOTER_ACCORDION_BREAKPOINT = 768`; `09-footer.css` ok. 308: `@media (max-width: 768px)` |
+
+### Weryfikacja ręczna (opcjonalnie)
+
+- **A1/D1:** Na urządzeniu lub DevTools (≤768px) — klik/tap w „Klient”, „Kategorie”, „Kontakt”, „Newsletter” w stopce: sekcja powinna się rozwinąć/zwinąć.
+- **B1:** Strony z przyciskami Woo (sklep, koszyk, checkout, konto): wszystkie przyciski z zaokrągleniem `var(--r-md)`.
+- **C1:** PLP w widoku tabeli (desktop): w wierszu produktu pole qty i przycisk „Dodaj do koszyka” w jednej linii, wyrównane pionowo.
+
+### Podsumowanie
+
+- **P0 (A1, B1, C1) i P1 (D2):** zaimplementowane w repozytorium; brak otwartych punktów z matrycy.
+- **A2, A3, A4, A5, B2, B3, C2:** od początku OK lub już spełnione (bez defektu).

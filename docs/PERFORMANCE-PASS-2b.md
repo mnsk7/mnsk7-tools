@@ -1,6 +1,8 @@
 # Performance Pass 2b — Analiza regresji i plan naprawy
 
-**Kontekst:** Pass 2 nie został przyjęty. Wyniki po wdrożeniu dały regresje na home (TBT) i archive (LCP). Cel Pass 2b: zidentyfikować przyczyny na podstawie danych z Lighthouse i przygotować bezpieczny plan naprawy.
+**Status: nie przyjęty.** Pass 2b jest lepszy niż Pass 2, ale nadal gorszy niż Pass 1. Nie daje czystej korzyści. **Bazowa linia: Pass 1.** Rekomendacja: **→ [PERFORMANCE-STATUS.md](PERFORMANCE-STATUS.md)**.
+
+**Kontekst:** Pass 2 nie został przyjęty. Pass 2b miał naprawić regresje (runCritical w rIC zamiast sync). Wyniki 2b: lepsze niż Pass 2, jednak home TBT i archive wciąż gorsze niż Pass 1.
 
 ---
 
@@ -134,9 +136,40 @@ Kryteria sukcesu Pass 2b:
 
 ---
 
+## 5b. Wyniki Pass 2b (nie przyjęty)
+
+Porównanie z **Pass 1** (obecna najlepsza bazowa linia):
+
+| Strona   | Metryka     | Pass 1 (baseline) | Pass 2b | Zmiana      |
+|----------|-------------|-------------------|--------|-------------|
+| **Home** | Performance | 58                | 58     | =           |
+| Home     | FCP         | 1,79 s            | 2,0 s  | gorzej      |
+| Home     | LCP         | 3,13 s            | 2,9 s  | lepiej      |
+| Home     | **TBT**     | **1668 ms**       | **2410 ms** | **gorzej** |
+| Home     | CLS         | 0,004             | 0,004  | =           |
+| **Archive** | Performance | 69             | 67     | gorzej      |
+| Archive  | FCP         | 1,78 s            | 1,8 s  | ≈           |
+| Archive  | LCP         | 2,68 s            | 2,9 s  | gorzej      |
+| Archive  | TBT         | 1087 ms           | 1200 ms | gorzej    |
+| Archive  | CLS         | 0,004             | 0,005  | ≈           |
+
+**Wniosek:** Pass 2b jest lepszy niż Pass 2 (który był katastrofalny), ale **nie daje czystej korzyści** względem Pass 1. Home nie poprawiony z powodu dużej degradacji TBT. Archive też nie poprawiony względem Pass 1. **Pass 2b nie jest akceptowany jako finalny.**
+
+---
+
 ## 6. Krótki uczciwy wniosek
 
-- **Pass 2 nie jest przyjęty:** home ma wyraźnie gorsze TBT (1668 → 2990 ms), archive ma gorsze LCP (2,68 → 4,4 s), przy bardzo dobrej poprawie TBT na archive (1087 → 20 ms).
-- **Home TBT:** Główną przyczyną jest **synchroniczne wykonanie dużego bloku `runCritical()`** w footerze (document URL). Naprawa: nie uruchamiać tego bloku synchronicznie; użyć setTimeout(0), rIC lub rozbicia na mniejsze kawałki.
-- **Archive LCP:** W tym przebiegu **LCP to nie pierwsza miniatura, tylko tekst promo bar** (`span.mnsk7-promo-bar__text`). Optymalizacja pierwszej miniatury nie adresuje faktycznego LCP. Naprawa: optymalizacja pod promo bar (render, font, brak zbędnego opóźniania) oraz TTFB/render; dokumentacja zaktualizowana.
-- **Pass 2b:** Skupienie na dwóch celach: (1) obniżenie TBT na home przez zmianę sposobu uruchomienia init, (2) poprawa LCP na archive przez działania pod realny element (promo bar). Bez przyrównywań do „teoretycznego” LCP i bez zmian „na wszelki wypadek”.
+- **Pass 2 — rejected.** Regresje: home TBT 1668→2990 ms, archive LCP 2,68→4,4 s.
+- **Pass 2b — rejected.** Lepszy niż Pass 2, ale home TBT 1668→2410 ms, archive słabszy (Performance 69→67, LCP 2,68→2,9 s, TBT 1087→1200 ms). Brak czystej korzyści.
+- **Pass 1 = current best baseline.** Nie kontynuować ogólnych eksperymentów w ciemno.
+- **Rekomendacja:** Odrollować do stanu Pass 1 (kod + metryki) jako bazę. Dalsze prace tylko jako **osobne, celowane zadania:** (1) tylko home TBT — profilowanie long tasks, rozbicie inline/init, bez pogorszenia archive; (2) tylko archive LCP — ustalenie realnego LCP elementu, praca wyłącznie pod niego, bez pogorszenia TBT.
+
+---
+
+## 7. Bazowa linia i dalsze kroki
+
+- **Bazowa linia:** **Pass 1** — stan po Pass 1 jest uznany za aktualną najlepszą działającą punkt odniesienia. Szczegóły: **→ [PERFORMANCE-STATUS.md](PERFORMANCE-STATUS.md)**.
+- **Odrollowanie:** Zaleca się przywrócenie kodu do stanu Pass 1 (bez zmian z Pass 2 / Pass 2b w `functions.php` i `content-product-table-row.php`, lub tylko te zmiany, które nie pogarszają metryk względem Pass 1 — do ustalenia po diff).
+- **Osobne zadania (nie łączone):**
+  1. **Home TBT:** profilowanie long tasks (Lighthouse / DevTools), rozbicie dużego inline/init, bez pogorszenia archive.
+  2. **Archive LCP:** określenie realnego LCP elementu w bieżącym buildzie, działania tylko pod ten element, bez pogorszenia TBT.

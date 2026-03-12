@@ -52,6 +52,9 @@ if ( is_search() && get_query_var( 'post_type' ) === 'product' ) {
 	}
 }
 
+/* Scroll target: górna granica strefy wyników (chips + search + USP + lista). Po zastosowaniu filtra użytkownik ląduje tutaj, nie przy pierwszej karcie. */
+echo '<div id="mnsk7-plp-results" class="mnsk7-plp-results-anchor" aria-hidden="true"></div>';
+
 /* Render jednego rzędu chipów nawigacyjnych (kategorie/tagi): etykieta + poziomy scroll + opcjonalnie „Więcej”. */
 $plp_nav_chips_limit = 8;
 $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $plp_nav_chips_limit ) {
@@ -265,7 +268,7 @@ if ( woocommerce_product_loop() ) {
 				mnsk7_render_trust_badges( 'mnsk7-plp-trust' );
 				echo '</div>';
 			}
-			echo '<div id="mnsk7-plp-results" class="mnsk7-plp-grid-mobile col-full">';
+			echo '<div class="mnsk7-plp-grid-mobile col-full">';
 			woocommerce_product_loop_start();
 			if ( wc_get_loop_prop( 'total' ) ) {
 				while ( have_posts() ) {
@@ -302,7 +305,7 @@ if ( woocommerce_product_loop() ) {
 				echo '</div>';
 			}
 			?>
-			<div id="mnsk7-plp-results" class="mnsk7-product-table-wrap col-full">
+			<div class="mnsk7-product-table-wrap col-full">
 				<table class="mnsk7-product-table shop_table">
 					<thead>
 						<tr>

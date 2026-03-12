@@ -66,6 +66,14 @@ Używamy **jednego** przełączenia layoutu: **1025px** (desktop) vs **≤1024px
 ## 5. Kolejność
 
 1. Plan (ten dokument) + aktualizacja Task 6 w handoff (zrobione).
-2. Wdrożenie: 04-header.css (breakpoints, burger, search input-group, megamenu), ewentualnie header.php (filtr Sklep).
-3. Weryfikacja wizualna: desktop 1025px+, tablet 768–1024px, mobile &lt;768px; brak scrollbara w megamenu, brak obcinania.
-4. Commit.
+2. Wdrożenie: 04-header.css (breakpoints, burger, search input-group, megamenu), header.php (filtr Sklep po slug + name) — w repozytorium (commit „Mega menu pass 4”).
+3. Weryfikacja wizualna: desktop 1025px+, tablet 768–1024px, mobile &lt;768px; brak scrollbara w megamenu, brak obcinania — do ręcznego sprawdzenia po deployu.
+4. Commit dokumentacji (zrobione).
+
+---
+
+## 6. Status (давай дальше)
+
+- **Header UI:** implementacja w 04-header.css i header.php; plan i Task 6 status w HANDOFF zaktualizowane.
+- **PLP vertical rhythm:** opis w PLP-ARCHIVE-VERTICAL-RHYTHM-HANDOFF.md; reguły w 24-plp-table.css (body.post-type-archive-product, --archive-gap-*).
+- **Możliwe kolejne kroki:** ręczna weryfikacja header przy 1024px vs 1025px; ewentualne dopracowanie z UI-AUDIT (np. D2 jeśli footer breakpoint wymaga sync); nowe zadania z backlogu.

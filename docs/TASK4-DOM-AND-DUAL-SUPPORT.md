@@ -54,7 +54,7 @@ Skrypt **`scripts/task4-regression-check.sh`**: sprawdza, że na każdej stronie
 - `BASE_URL=https://staging.mnsk7-tools.pl ./scripts/task4-regression-check.sh`
 - W skrypcie jest **stały PDP URL** (`FIXED_PDP_PATH`); można nadpisać: `PDP_URL=… ./scripts/...`
 
-**Przyjęte jako dowiedzione:** na sprawdzonych stronach ровно один #content; product search nie jest podmien­niany przez nasz archive-product.php (mnsk7_is_plp() → false przy is_search()).
+**Przyjęte jako dowiedzione:** na sprawdzonych stronach ровно один #content; product search nie jest podmieniany przez nasz archive-product.php (mnsk7_is_plp() → false przy is_search()).
 
 ---
 

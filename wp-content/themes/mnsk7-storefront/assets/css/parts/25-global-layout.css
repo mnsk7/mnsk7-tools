@@ -1,5 +1,6 @@
 /* 25-global-layout — source of truth dla header/footer/clearfix/PLP trust (HANDOFF: bez wp_footer).
-   Ten sam wygląd na wszystkich stronach (/, koszyk, archive, tag, ?filter_*, PDP). */
+   Ten sam wygląd na wszystkich stronach (/, koszyk, archive, tag, ?filter_*, PDP).
+   Task 7: !important celowo — nadpisanie Woo/Storefront (kolejność ładowania); nie usuwać bez zmiany specyficzności lub kolejności plików. */
 
 /* Page top — единый отступ от header до контента на всех типах страниц (page, dostawa, kontakt, account, archive, tag) */
 #content,

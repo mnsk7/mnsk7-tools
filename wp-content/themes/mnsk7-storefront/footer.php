@@ -218,7 +218,12 @@ if ( $show_cookie_bar_markup ) :
 		}
 		var legacy = document.cookie.indexOf(key + '=1') !== -1 || (typeof localStorage !== 'undefined' && localStorage.getItem(key) === '1');
 		if (legacy) { setConsent(valAccept); hide(); return; }
-		show();
+		// Performance: defer show so cookie bar is not LCP (home LCP was 6.9s = this element). Show after 3.5s so LCP picks content above.
+		if (typeof requestIdleCallback === 'function') {
+			requestIdleCallback(function() { setTimeout(show, 3500); }, { timeout: 4000 });
+		} else {
+			setTimeout(show, 3500);
+		}
 		window.mnsk7CookieConsent = null;
 		function onChoice(e, value) {
 			if (e) { e.preventDefault(); e.stopPropagation(); }

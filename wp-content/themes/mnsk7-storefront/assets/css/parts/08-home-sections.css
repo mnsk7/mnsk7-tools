@@ -261,7 +261,7 @@
 .mnsk7-catalog-chips-group {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
+  gap: 0.2rem;
   width: 100%;
   min-width: 0;
 }
@@ -271,6 +271,7 @@
   font-weight: 600;
   color: var(--color-text-secondary);
   flex: 0 0 auto;
+  padding-bottom: 0.15rem;
 }
 
 .mnsk7-catalog-chips__scroll {
@@ -286,14 +287,26 @@
   .mnsk7-section--catalog .col-full {
     overflow-x: hidden;
   }
-  /* Mobile: każda grupa = etykieta nad poziomą swipe-row (overflow-x). */
+  /* Mobile: swipe row pattern — ukryty scrollbar, snap, fade hint, bez nadmiaru powietrza. */
   .mnsk7-catalog-chips__scroll {
     flex-wrap: nowrap;
     overflow-x: auto;
+    overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    scrollbar-width: thin;
-    padding-bottom: 0.25rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding: 0.15rem 0;
+    padding-inline: max(0.75rem, env(safe-area-inset-left)) 1rem;
+    margin-inline: -0.5rem 0;
     gap: 0.5rem;
+    scroll-snap-type: x proximity;
+    scroll-padding-inline: max(0.75rem, env(safe-area-inset-left)) 1rem;
+    mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
+  }
+  .mnsk7-catalog-chips__scroll::-webkit-scrollbar {
+    display: none;
+    height: 0;
   }
   .mnsk7-catalog-chips__scroll .mnsk7-tags-chip,
   .mnsk7-catalog-chips__scroll .mnsk7-catalog-cat-chip {
@@ -301,6 +314,8 @@
     min-height: 44px;
     display: inline-flex;
     align-items: center;
+    scroll-snap-align: start;
+    scroll-snap-stop: normal;
   }
 }
 

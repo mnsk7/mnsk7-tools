@@ -1,6 +1,6 @@
 # Performance Pass 2 — TBT i archive LCP
 
-**Status: nie przyjęty.** Wyniki po wdrożeniu: regresja TBT na home (1668 → 2990 ms), regresja LCP na archive (2,68 → 4,4 s). Analiza przyczyn i plan naprawy: **→ [PERFORMANCE-PASS-2b.md](PERFORMANCE-PASS-2b.md)**.
+**Status: rejected.** Wyniki: regresja TBT na home (1668→2990 ms), regresja LCP na archive (2,68→4,4 s). **Bazowa linia: Pass 1.** Rekomendacja odrollowania i osobnych zadań: **→ [PERFORMANCE-STATUS.md](PERFORMANCE-STATUS.md)**. Analiza: [PERFORMANCE-PASS-2b.md](PERFORMANCE-PASS-2b.md).
 
 **Cel (oryginalny):** obniżyć TBT na home i archive, dociągnąć archive LCP < 2,5 s, bez regresji UX.
 
@@ -130,7 +130,7 @@ Wyniki wpisać poniżej (i ewentualnie zaktualizować tabelę w §9 PERFORMANCE-
 - Co **się poprawiło:** TBT archive (1087 → 20 ms), Performance archive (69 → 80).
 - Co **się pogorszyło:** TBT home (1668 → 2990 ms), LCP archive (2,68 → 4,4 s).
 - **Główny bottleneck home:** synchroniczne wykonanie `runCritical()` w footerze (długie zadania, document URL). **Archive LCP:** realny element = promo bar, nie pierwsza miniatura.
-- **Dalsze kroki:** [PERFORMANCE-PASS-2b.md](PERFORMANCE-PASS-2b.md) — analiza regresji i plan naprawy.
+- **Dalsze kroki:** [PERFORMANCE-PASS-2b.md](PERFORMANCE-PASS-2b.md) — analiza regresji i plan naprawy. Pass 2b także **rejected**; **bazowa linia = Pass 1**, rekomendacja odrollowania: [PERFORMANCE-STATUS.md](PERFORMANCE-STATUS.md).
 
 ---
 

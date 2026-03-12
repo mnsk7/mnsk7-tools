@@ -3,7 +3,7 @@
    § MNK7 CUSTOM BLOCKS (mu-plugin)
    ----------------------------------------------------------------- */
 
-/* Key params table */
+/* Key params table. overflow: hidden — obcinanie zawartości do border-radius. */
 .mnsk7-product-key-params {
   border: 1px solid var(--color-border);
   border-radius: var(--r-sm);
