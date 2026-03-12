@@ -54,8 +54,10 @@
 | `wp-content/themes/mnsk7-storefront/assets/css/parts/21-responsive-mobile.css` | Related/upsells/cross-sells: 1 kolumna ≤400px |
 | `wp-content/themes/mnsk7-storefront/assets/css/parts/06-single-product.css` | Availability-row/CTA spacing, sticky CTA stock, related 400px |
 | `wp-content/themes/mnsk7-storefront/woocommerce/content-single-product.php` | Sticky CTA: lewa kolumna cena + stock |
-| `wp-content/mu-plugins/mnsk7-tools.php` | Search normalization `pre_get_posts`, availability w `<div class="mnsk7-product-availability-row">` — **katalog mu-plugins bywa w .gitignore; zmiany wdrożyć ręcznie na serwerze** |
+| `mu-plugins/inc/woo-ux.php` | Search normalization `pre_get_posts` (tracked, deploy z repo) |
+| `wp-content/themes/mnsk7-storefront/functions.php` | Search normalization `pre_get_posts` (fallback przy deploy samej theme) |
 | `wp-content/themes/mnsk7-storefront/assets/css/main.css` | Zbudowany ponownie (`scripts/build-main-css.sh`) |
+| Availability row | Już w `mu-plugins/inc/product-card.php` (mnsk7_single_product_availability) — bez zmian |
 
 ---
 
@@ -84,8 +86,8 @@ Sprawdzić: header (bez obcięcia), mobile „Sklep”, search `fi 4mm` vs `fi 4
 
 ## 5. Commit i push
 
-**Commit:** `13503ef` — fix(mobile): header, megamenu Sklep, search UX, gap, stripes, related cols, stock CTA.
+**Commit:** `334ce67` — fix(mobile): header, megamenu Sklep, search UX, gap, stripes, related cols, stock CTA.
 
 Push: `git push` (po zatwierdzeniu).
 
-**Uwaga:** Zmiany w `wp-content/mu-plugins/mnsk7-tools.php` (normalizacja wyszukiwania + wrapper availability-row) nie są w commicie (mu-plugins w .gitignore). Trzeba je wdrożyć ręcznie na stagingu: dodać hook `pre_get_posts` z normalizacją `s` oraz w `mnsk7_single_product_availability()` opakowanie outputu w `<div class="mnsk7-product-availability-row">`.
+**Wszystkie zmiany w repo:** normalizacja wyszukiwania w `functions.php` (theme) i w `mu-plugins/inc/woo-ux.php`; availability row już w `mu-plugins/inc/product-card.php`. Deploy: push na main → GitHub Actions rsync mu-plugins + theme na staging.

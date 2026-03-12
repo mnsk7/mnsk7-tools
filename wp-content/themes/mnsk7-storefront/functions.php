@@ -17,6 +17,29 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 }
 
 /**
+ * Search normalization: "fi 4mm" / "4mm" → "fi 4 mm" / "4 mm" for product search (deployable in theme, no mu-plugin dependency).
+ */
+add_action( 'pre_get_posts', function ( WP_Query $query ) {
+	if ( is_admin() || ! $query->get( 's' ) ) {
+		return;
+	}
+	$post_type = $query->get( 'post_type' );
+	if ( $post_type !== 'product' && ( ! is_array( $post_type ) || ! in_array( 'product', $post_type, true ) ) ) {
+		return;
+	}
+	$s = $query->get( 's' );
+	if ( ! is_string( $s ) || trim( $s ) === '' ) {
+		return;
+	}
+	$normalized = preg_replace( '/(\d+(?:[.,]\d+)?)\s*(mm|cm|m\b|g\b|kg|ml)/iu', '$1 $2', $s );
+	$normalized = preg_replace( '/\s+/', ' ', $normalized );
+	$normalized = trim( $normalized );
+	if ( $normalized !== $s ) {
+		$query->set( 's', $normalized );
+	}
+}, 5 );
+
+/**
  * Czy request jest z urządzenia mobilnego (user-agent). Używane do renderowania jednego layoutu PLP.
  *
  * @return bool

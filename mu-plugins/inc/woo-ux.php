@@ -7,6 +7,29 @@
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Search normalization: "fi 4mm" / "4mm" → "fi 4 mm" / "4 mm" for product search (deployable in repo).
+ */
+add_action( 'pre_get_posts', function ( WP_Query $query ) {
+	if ( is_admin() || ! $query->get( 's' ) ) {
+		return;
+	}
+	$post_type = $query->get( 'post_type' );
+	if ( $post_type !== 'product' && ( ! is_array( $post_type ) || ! in_array( 'product', $post_type, true ) ) ) {
+		return;
+	}
+	$s = $query->get( 's' );
+	if ( ! is_string( $s ) || trim( $s ) === '' ) {
+		return;
+	}
+	$normalized = preg_replace( '/(\d+(?:[.,]\d+)?)\s*(mm|cm|m\b|g\b|kg|ml)/iu', '$1 $2', $s );
+	$normalized = preg_replace( '/\s+/', ' ', $normalized );
+	$normalized = trim( $normalized );
+	if ( $normalized !== $s ) {
+		$query->set( 's', $normalized );
+	}
+}, 5 );
+
 /* PLP-03: jednorazowy flush rewrite rules — po ustawieniu opcji mnsk7_plp_rewrite_flush (np. update_option('mnsk7_plp_rewrite_flush',1)) przy następnym odświeżeniu strony product_tag/category URL zaczną działać. */
 add_action( 'init', function () {
 	if ( get_option( 'mnsk7_plp_rewrite_flush', 0 ) ) {
