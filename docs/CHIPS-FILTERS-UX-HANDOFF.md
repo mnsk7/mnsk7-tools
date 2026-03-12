@@ -61,4 +61,5 @@ Sprawdzić: chipy w grupach, poziomy scroll na mobile, „Więcej” rozwijane, 
 
 ## Commit i push
 
-Po weryfikacji: commit z opisem zmian, następnie push (confirmation w logu git).
+- **Commit:** `12c64d3` — feat(PLP/catalog): chips UX — grouped swipe rows, tags+categories, scroll to results after filter.
+- **Push:** `main -> main` (origin).
