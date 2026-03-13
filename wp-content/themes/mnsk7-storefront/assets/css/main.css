@@ -1962,7 +1962,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     max-width: 100%;
     margin: 0;
   }
-  /* Jeden wizualny control: bez szpary między inputem a przyciskiem, wspólna wysokość i obramowanie */
+  /* Jeden wizualny control: bez szpary między inputem a przyciskiem (jak na desktop), wspólna wysokość i obramowanie */
   .mnsk7-header-search-panel__input {
     flex: 1;
     min-width: 0;
@@ -1975,6 +1975,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     border-right: none;
     border-radius: var(--r-sm) 0 0 var(--r-sm);
     background: var(--color-white);
+    margin-right: -1px; /* nakładka 1px — brak białej linii między polem a przyciskiem (mobile/tablet) */
   }
   .mnsk7-header-search-panel__input:focus {
     border-color: var(--color-primary);
@@ -2001,7 +2002,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     font-size: var(--fs-sm);
     font-weight: 600;
     font-family: var(--font-base);
-    border: 1px solid var(--color-border);
+    border: 1px solid var(--color-primary);
     border-left: none;
     background: var(--color-primary);
     color: var(--color-white);
@@ -2009,6 +2010,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     cursor: pointer;
     transition: background 0.15s ease, border-color 0.15s ease;
     box-sizing: border-box;
+    position: relative;
+    z-index: 1; /* nad nakładką inputa — jedna wizualna całość */
   }
   .mnsk7-header-search-panel__submit:hover {
     background: var(--color-primary-hover);
@@ -8464,6 +8467,12 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
     padding-top: 1.25rem;
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+  /* Strona główna: minimalna biała wstęga między headerem a hero (mobile) */
+  body.home #content,
+  body.home .site-content,
+  body.home .mnsk7-content {
+    padding-top: 0.5rem;
   }
 }
 @media (min-width: 768px) {

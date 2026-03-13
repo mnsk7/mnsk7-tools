@@ -19,6 +19,12 @@
     padding-left: 1rem;
     padding-right: 1rem;
   }
+  /* Strona główna: minimalna biała wstęga między headerem a hero (mobile) */
+  body.home #content,
+  body.home .site-content,
+  body.home .mnsk7-content {
+    padding-top: 0.5rem;
+  }
 }
 @media (min-width: 768px) {
   #content,
