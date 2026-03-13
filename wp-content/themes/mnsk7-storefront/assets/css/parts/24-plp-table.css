@@ -69,6 +69,14 @@ body.tax-product_cat .woocommerce-products-header,
 body.tax-product_tag .woocommerce-products-header {
   margin-bottom: var(--archive-gap-title-chips);
 }
+/* Kategoria/tag: tytuł i chips w jednej linii wizualnej — ten sam lewy brzeg (bez dodatkowego paddingu) */
+body.tax-product_cat .woocommerce-products-header,
+body.tax-product_tag .woocommerce-products-header,
+body.tax-product_cat .mnsk7-plp-archive-wrap,
+body.tax-product_tag .mnsk7-plp-archive-wrap {
+  padding-left: 0;
+  padding-right: 0;
+}
 body.post-type-archive-product .mnsk7-plp-chips:first-of-type,
 body.tax-product_cat .mnsk7-plp-chips:first-of-type,
 body.tax-product_tag .mnsk7-plp-chips:first-of-type {
@@ -511,11 +519,12 @@ body.tax-product_tag .mnsk7-catalog-filters {
   outline-offset: 2px;
 }
 
-/* Wybrane/aktywne chipy — zawsze czytelny kontrast (ciemne tło + biały tekst) */
+/* Wybrane/aktywne chipy — zawsze czytelny kontrast (ciemne tło + biały tekst) i na początku rzędu */
 .mnsk7-plp-chip--active {
   background: var(--color-primary, #0c7ddb) !important;
   border-color: var(--color-primary, #0c7ddb) !important;
   color: #fff !important;
+  order: -1; /* wybrany chip zawsze na początku rzędu (flex order) */
 }
 
 .mnsk7-plp-chip--active:hover {
