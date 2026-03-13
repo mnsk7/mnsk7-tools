@@ -3526,7 +3526,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
 /* Dlaczego kupujący + Program rabatowy — beżowe tło full-bleed (bez bocznych odstępów) */
 .mnsk7-section--trust.mnsk7-section--light,
-.mnsk7-section--loyalty.mnsk7-section--light {
+.mnsk7-section--loyalty.mnsk7-section--light,
+.mnsk7-section--catalog.mnsk7-section--light {
   margin-left: -1rem;
   margin-right: -1rem;
   width: calc(100% + 2rem);
@@ -3535,7 +3536,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 @media (min-width: 768px) {
   .mnsk7-section--trust.mnsk7-section--light,
-  .mnsk7-section--loyalty.mnsk7-section--light {
+  .mnsk7-section--loyalty.mnsk7-section--light,
+  .mnsk7-section--catalog.mnsk7-section--light {
     margin-left: -2rem;
     margin-right: -2rem;
     width: calc(100% + 4rem);
@@ -3600,19 +3602,19 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   color: var(--color-primary-hover);
 }
 
-/* Przeglądaj asortyment: Zastosowanie i materiały — chmura chipów (bez Więcej), potem Rodzaje frezów — karty. */
+/* Przeglądaj asortyment: Zastosowanie i materiały — chmura chipów (bez Więcej), potem Rodzaje frezów — karty. Jednakowe odstępy pionowe. */
 .mnsk7-catalog-aside {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
 }
 .mnsk7-catalog-aside__title {
   font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--color-text-secondary);
-  margin: 0 0 0.5rem;
+  margin: 0 0 1.25rem;
 }
 .mnsk7-catalog-aside__title--cats {
-  margin-top: 1.5rem;
-  margin-bottom: 0.75rem;
+  margin-top: 0;
+  margin-bottom: 1.25rem;
 }
 .mnsk7-catalog-chips__scroll--cloud {
   display: flex;
