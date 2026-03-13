@@ -1403,115 +1403,13 @@
   display: none !important;
 }
 
-/* Clearfix ::before (z rodzica/Storefront) w gridzie staje się pierwszą „komórką” i daje ~285px pustego miejsca — wyłączamy */
-.mnsk7-section--bestsellers ul.products::before {
-  content: none !important;
-  display: none !important;
-}
-
-/* Pusty pierwszy li (clear/placeholder) — nie zajmuje miejsca w siatce */
+/* Pusty pierwszy li (clear/placeholder) — tylko w bestsellerach */
 .mnsk7-section--bestsellers ul.products li.clear,
 .mnsk7-section--bestsellers ul.products > li:first-child:empty {
   display: none !important;
 }
 
-/* 4 kolumny: 8 prod. = 2×4; bez pustego miejsca przed pierwszym — siatka od lewej */
-.mnsk7-section--bestsellers ul.products {
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  gap: 1.25rem !important;
-  list-style: none;
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  max-width: none !important;
-  justify-content: start !important;
-  justify-items: stretch !important;
-  align-items: stretch !important;
-}
-
-.mnsk7-section--bestsellers ul.products li.product {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin: 0 !important;
-  min-width: 0;
-  align-self: stretch !important;
-}
-
-/* 1.1 Nazwa i cena zawsze widoczne; tytuł max 2 linie — równe wysokości kart w rzędzie */
-.mnsk7-section--bestsellers .woocommerce-loop-product__title,
-.mnsk7-section--bestsellers ul.products li.product h2 {
-  display: -webkit-box !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  margin-bottom: 0.25rem;
-  min-height: 2.8em;
-  line-height: 1.4;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.mnsk7-section--bestsellers .price,
-.mnsk7-section--bestsellers ul.products li.product .price {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  font-weight: 700;
-  font-size: var(--fs-base);
-  color: var(--color-primary-dark, #0a5a9e);
-  margin-bottom: 0.5rem;
-  height: auto;
-  overflow: visible;
-}
-.mnsk7-section--bestsellers .woocommerce-price-suffix {
-  font-weight: 600;
-  color: var(--color-text-secondary);
-}
-.mnsk7-section--bestsellers .woocommerce-price-fallback {
-  font-weight: 600;
-  color: var(--color-text-secondary);
-}
-
-/* Przycisk „Dodaj do koszyka” w bestsellerach — widoczny jak na PLP */
-.mnsk7-section--bestsellers ul.products li.product .button,
-.mnsk7-section--bestsellers ul.products li.product .add_to_cart_button {
-  display: inline-block !important;
-  width: calc(100% - 1.5rem);
-  margin: auto 0.75rem 0.75rem;
-}
-
-@media (max-width: 900px) {
-  .mnsk7-section--bestsellers ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: var(--space-16) !important;
-  }
-}
-
-@media (max-width: 480px) {
-  /* Bestsellery: 2 kolumny na mobile (jak PLP i related) — bez full-width kart */
-  .mnsk7-section--bestsellers ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.6rem !important;
-  }
-}
-@media (max-width: 360px) {
-  .mnsk7-section--bestsellers ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-
-@media (max-width: 360px) {
-  .mnsk7-section--bestsellers ul.products {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-/* Bestsellers — ta sama siatka co PLP (05-plp-cards + 20/21 responsive) */
-.mnsk7-section--bestsellers .mnsk7-bestsellers,
-.mnsk7-section--bestsellers .col-full > .woocommerce {
-  margin: 0;
-}
+/* Siatka i karta bestsellerów: 12-related-products.css (wspólny recommendation block). */
 
 .mnsk7-section--bestsellers .mnsk7-bestsellers-title,
 .mnsk7-section--bestsellers .woocommerce h2 {

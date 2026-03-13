@@ -2198,12 +2198,9 @@ ul.products.columns-4::before {
   display: none !important;
 }
 
-/* Jedna siatka dla wszystkich listów produktów (sklep, kategoria, related, bestsellery); start — bez pustych slotów z boku */
+/* Siatka tylko dla sklepu/kategorii (PLP). Recommendation blocks: 12-related-products.css. */
 .woocommerce ul.products,
-.woocommerce-page ul.products,
-.related.products ul.products,
-.upsells.products ul.products,
-.cross-sells ul.products {
+.woocommerce-page ul.products {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
   gap: 1.25rem !important;
@@ -2961,7 +2958,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin-bottom: 0.75rem;
 }
 
-/* Strona produktu bez sidebaru — related/upsells na pełną szerokość; bez pustego miejsca przed pierwszym (breakout z paddingu div.product) */
+/* PDP: related/upsells na pełną szerokość (breakout z paddingu). Siatka i karta: 12-related-products.css. */
 .single-product .related.products,
 .single-product .upsells.products,
 .single-product .up-sells.products {
@@ -2977,67 +2974,6 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .single-product .up-sells.products > h2 {
   padding-left: 1rem;
   padding-right: 1rem;
-}
-
-/* 4 kolumny w jednym rzędzie: minmax(0,1fr) żeby kolumny mogły się ścisnąć i 4. nie zjeżdżało */
-.single-product .related.products ul.products,
-.single-product .upsells.products ul.products,
-.single-product .up-sells.products ul.products {
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  grid-auto-flow: row !important;
-  gap: 1.25rem !important;
-  justify-content: start !important;
-  justify-items: stretch;
-  align-items: stretch !important;
-  width: 100% !important;
-  min-width: 0;
-}
-
-.single-product .related.products ul.products li.product,
-.single-product .upsells.products ul.products li.product,
-.single-product .up-sells.products ul.products li.product {
-  align-self: stretch;
-  grid-column: span 1 !important;
-  grid-row: auto !important;
-  min-width: 0;
-  overflow: hidden; /* obcięcie treści karty do border-radius */
-}
-
-/* Zdjęcia w upsells/related — stały kwadrat, cena widoczna */
-.single-product .upsells.products ul.products li.product .woocommerce-loop-product__link,
-.single-product .upsells.products ul.products li.product img,
-.single-product .up-sells.products ul.products li.product .woocommerce-loop-product__link,
-.single-product .up-sells.products ul.products li.product img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1;
-  object-fit: cover;
-}
-.single-product .upsells.products ul.products li.product .price,
-.single-product .up-sells.products ul.products li.product .price {
-  display: block !important;
-  visibility: visible;
-  font-weight: 700;
-  font-size: var(--fs-base);
-  color: var(--color-primary-dark, #0a5a9e);
-  margin: 0.25rem 0 0.5rem;
-}
-
-@media (max-width: 900px) {
-  .single-product .related.products ul.products,
-  .single-product .upsells.products ul.products,
-  .single-product .up-sells.products ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-@media (max-width: 400px) {
-  .single-product .related.products ul.products,
-  .single-product .upsells.products ul.products,
-  .single-product .up-sells.products ul.products {
-    grid-template-columns: 1fr !important;
-  }
 }
 
 @media (max-width: 900px) {
@@ -4756,115 +4692,13 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   display: none !important;
 }
 
-/* Clearfix ::before (z rodzica/Storefront) w gridzie staje się pierwszą „komórką” i daje ~285px pustego miejsca — wyłączamy */
-.mnsk7-section--bestsellers ul.products::before {
-  content: none !important;
-  display: none !important;
-}
-
-/* Pusty pierwszy li (clear/placeholder) — nie zajmuje miejsca w siatce */
+/* Pusty pierwszy li (clear/placeholder) — tylko w bestsellerach */
 .mnsk7-section--bestsellers ul.products li.clear,
 .mnsk7-section--bestsellers ul.products > li:first-child:empty {
   display: none !important;
 }
 
-/* 4 kolumny: 8 prod. = 2×4; bez pustego miejsca przed pierwszym — siatka od lewej */
-.mnsk7-section--bestsellers ul.products {
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  gap: 1.25rem !important;
-  list-style: none;
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-  max-width: none !important;
-  justify-content: start !important;
-  justify-items: stretch !important;
-  align-items: stretch !important;
-}
-
-.mnsk7-section--bestsellers ul.products li.product {
-  width: 100% !important;
-  max-width: 100% !important;
-  margin: 0 !important;
-  min-width: 0;
-  align-self: stretch !important;
-}
-
-/* 1.1 Nazwa i cena zawsze widoczne; tytuł max 2 linie — równe wysokości kart w rzędzie */
-.mnsk7-section--bestsellers .woocommerce-loop-product__title,
-.mnsk7-section--bestsellers ul.products li.product h2 {
-  display: -webkit-box !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  margin-bottom: 0.25rem;
-  min-height: 2.8em;
-  line-height: 1.4;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.mnsk7-section--bestsellers .price,
-.mnsk7-section--bestsellers ul.products li.product .price {
-  display: block !important;
-  visibility: visible !important;
-  opacity: 1 !important;
-  font-weight: 700;
-  font-size: var(--fs-base);
-  color: var(--color-primary-dark, #0a5a9e);
-  margin-bottom: 0.5rem;
-  height: auto;
-  overflow: visible;
-}
-.mnsk7-section--bestsellers .woocommerce-price-suffix {
-  font-weight: 600;
-  color: var(--color-text-secondary);
-}
-.mnsk7-section--bestsellers .woocommerce-price-fallback {
-  font-weight: 600;
-  color: var(--color-text-secondary);
-}
-
-/* Przycisk „Dodaj do koszyka” w bestsellerach — widoczny jak na PLP */
-.mnsk7-section--bestsellers ul.products li.product .button,
-.mnsk7-section--bestsellers ul.products li.product .add_to_cart_button {
-  display: inline-block !important;
-  width: calc(100% - 1.5rem);
-  margin: auto 0.75rem 0.75rem;
-}
-
-@media (max-width: 900px) {
-  .mnsk7-section--bestsellers ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: var(--space-16) !important;
-  }
-}
-
-@media (max-width: 480px) {
-  /* Bestsellery: 2 kolumny na mobile (jak PLP i related) — bez full-width kart */
-  .mnsk7-section--bestsellers ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.6rem !important;
-  }
-}
-@media (max-width: 360px) {
-  .mnsk7-section--bestsellers ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-
-@media (max-width: 360px) {
-  .mnsk7-section--bestsellers ul.products {
-    grid-template-columns: 1fr !important;
-  }
-}
-
-/* Bestsellers — ta sama siatka co PLP (05-plp-cards + 20/21 responsive) */
-.mnsk7-section--bestsellers .mnsk7-bestsellers,
-.mnsk7-section--bestsellers .col-full > .woocommerce {
-  margin: 0;
-}
+/* Siatka i karta bestsellerów: 12-related-products.css (wspólny recommendation block). */
 
 .mnsk7-section--bestsellers .mnsk7-bestsellers-title,
 .mnsk7-section--bestsellers .woocommerce h2 {
@@ -5500,19 +5334,25 @@ body.single-product .woocommerce-product-navigation {
 
 
 /* === 12-related-products.css === */
-/* 12-related-products — extracted from main.css */
+/* 12-related-products — jedyny moduł dla recommendation blocks (PDP, koszyk, główna).
+   Wszystkie sekcje: related, upsells, cross-sells, bestsellery — ta sama siatka, ta sama karta.
+   Breakpoints: desktop ≥1200: 3 kolumny; tablet 768–1199: 2; mobile <768: 2; ≤400: 1.
+   Docs: docs/RECOMMENDATION-BLOCKS-UNIFIED.md */
 
-   § RELATED / UPSELL / CROSS-SELL PRODUCTS
+/* -----------------------------------------------------------------
+   § SECTIONS: nagłówki i odstępy (wspólne)
    ----------------------------------------------------------------- */
 
 .related.products,
 .upsells.products,
+.up-sells.products,
 .cross-sells {
   margin-top: 3rem;
 }
 
 .related.products > h2,
 .upsells.products > h2,
+.up-sells.products > h2,
 .cross-sells > h2 {
   font-size: var(--fs-xl);
   font-weight: 700;
@@ -5526,57 +5366,7 @@ body.single-product .woocommerce-product-navigation {
   margin: 0 0 1.25rem;
 }
 
-/* Clearfix ::before (Storefront) w gridzie = pierwsza pusta „komórka” — wyłączamy (Podobne produkty, upsells, cross-sells) */
-.related.products ul.products::before,
-.upsells.products ul.products::before,
-.cross-sells ul.products::before,
-.single-product .related.products ul.products::before,
-.single-product .upsells.products ul.products::before,
-ul.products.columns-3::before {
-  content: none !important;
-  display: none !important;
-}
-
-.related.products ul.products,
-.upsells.products ul.products,
-.cross-sells ul.products {
-  display: grid !important;
-  grid-template-columns: repeat(auto-fill, minmax(min(180px, 100%), 1fr)) !important;
-  gap: 1.5rem !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  align-items: stretch !important;
-  justify-content: start !important;
-  justify-items: stretch !important;
-  width: 100% !important;
-}
-
-/* PDP Podobne produkty — liczba kolumn = liczba kart (1–3 lub 4). Upsells — zawsze 4 kolumny (karty tego samego rozmiaru co w Related). */
-.single-product .related.products ul.products,
-.single-product .upsells.products ul.products,
-.single-product .up-sells.products ul.products {
-  justify-content: start !important;
-  width: 100% !important;
-  margin-left: 0 !important;
-  padding-left: 0 !important;
-}
-.single-product .related.products ul.products:has(li:nth-child(1):last-child) {
-  grid-template-columns: 1fr !important;
-}
-.single-product .related.products ul.products:has(li:nth-child(2):last-child) {
-  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
-}
-.single-product .related.products ul.products:has(li:nth-child(3):last-child) {
-  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
-}
-.single-product .related.products ul.products:has(li:nth-child(n+4):last-child) {
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-}
-/* Upsells: zawsze 4 kolumny na desktop (karta = ten sam rozmiar co w Podobne produkty), bez rozciągania jednej karty na całą szerokość */
-.single-product .upsells.products ul.products,
-.single-product .up-sells.products ul.products {
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-}
+/* Koszyk: cross-sells */
 .woocommerce-cart .cross-sells {
   width: 100%;
   max-width: 100%;
@@ -5584,13 +5374,81 @@ ul.products.columns-3::before {
 .woocommerce-cart .cross-sells > h2 {
   margin-bottom: 1rem;
 }
-.woocommerce-cart .cross-sells ul.products {
-  grid-template-columns: repeat(auto-fill, minmax(min(200px, 100%), 1fr)) !important;
+
+/* -----------------------------------------------------------------
+   § GRID: jedna siatka dla wszystkich recommendation blocks
+   ----------------------------------------------------------------- */
+
+.related.products ul.products::before,
+.upsells.products ul.products::before,
+.up-sells.products ul.products::before,
+.cross-sells ul.products::before,
+.mnsk7-section--bestsellers ul.products::before {
+  content: none !important;
+  display: none !important;
 }
+
+/* Desktop ≥1200px: 3 karty w rzędzie */
+.related.products ul.products,
+.upsells.products ul.products,
+.up-sells.products ul.products,
+.cross-sells ul.products,
+.mnsk7-section--bestsellers ul.products {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  gap: 1.5rem !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none;
+  align-items: stretch !important;
+  justify-content: start !important;
+  justify-items: stretch !important;
+  width: 100% !important;
+  min-width: 0;
+}
+
+@media (max-width: 1199px) {
+  .related.products ul.products,
+  .upsells.products ul.products,
+  .up-sells.products ul.products,
+  .cross-sells ul.products,
+  .mnsk7-section--bestsellers ul.products {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 1.25rem !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .related.products ul.products,
+  .upsells.products ul.products,
+  .up-sells.products ul.products,
+  .cross-sells ul.products,
+  .mnsk7-section--bestsellers ul.products {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.75rem !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .related.products ul.products,
+  .upsells.products ul.products,
+  .up-sells.products ul.products,
+  .cross-sells ul.products,
+  .mnsk7-section--bestsellers ul.products {
+    grid-template-columns: 1fr !important;
+    gap: 0.75rem !important;
+  }
+}
+
+/* -----------------------------------------------------------------
+   § CARD: wspólny komponent karty (obrazek, tytuł, cena, CTA)
+   ----------------------------------------------------------------- */
 
 .related.products ul.products li.product,
 .upsells.products ul.products li.product,
-.cross-sells ul.products li.product {
+.up-sells.products ul.products li.product,
+.cross-sells ul.products li.product,
+.mnsk7-section--bestsellers ul.products li.product {
   width: 100% !important;
   max-width: 100% !important;
   min-width: 0 !important;
@@ -5607,94 +5465,153 @@ ul.products.columns-3::before {
   flex-direction: column !important;
   transition: box-shadow 0.2s ease, transform 0.2s ease;
   align-self: stretch !important;
+  min-height: 0;
 }
 
-/* Tytuł w related/upsells — stała wysokość (max 2 linie), żeby karty w rzędzie były równe */
+/* Obrazek: stały aspect-ratio 1:1 */
+.related.products ul.products li.product .woocommerce-loop-product__link:has(> img),
+.related.products ul.products li.product a.woocommerce-loop-product__link:first-of-type,
+.upsells.products ul.products li.product .woocommerce-loop-product__link:has(> img),
+.upsells.products ul.products li.product a.woocommerce-loop-product__link:first-of-type,
+.up-sells.products ul.products li.product .woocommerce-loop-product__link:has(> img),
+.up-sells.products ul.products li.product a.woocommerce-loop-product__link:first-of-type,
+.cross-sells ul.products li.product .woocommerce-loop-product__link:has(> img),
+.cross-sells ul.products li.product a.woocommerce-loop-product__link:first-of-type,
+.mnsk7-section--bestsellers ul.products li.product .woocommerce-loop-product__link:has(> img),
+.mnsk7-section--bestsellers ul.products li.product a.woocommerce-loop-product__link:first-of-type {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: var(--color-surface);
+}
+
+.related.products ul.products li.product img,
+.upsells.products ul.products li.product img,
+.up-sells.products ul.products li.product img,
+.cross-sells ul.products li.product img,
+.mnsk7-section--bestsellers ul.products li.product img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Tytuł: max 2 linie, line-clamp */
 .related.products ul.products li.product .woocommerce-loop-product__title,
 .related.products ul.products li.product h2,
 .upsells.products ul.products li.product .woocommerce-loop-product__title,
 .upsells.products ul.products li.product h2,
 .cross-sells ul.products li.product .woocommerce-loop-product__title,
-.cross-sells ul.products li.product h2 {
+.cross-sells ul.products li.product h2,
+.mnsk7-section--bestsellers ul.products li.product .woocommerce-loop-product__title,
+.mnsk7-section--bestsellers ul.products li.product h2 {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text);
+  margin: 0;
+  padding: 0.75rem 0.75rem 0.25rem;
   min-height: 2.8em;
+  line-height: 1.4;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-/* Tylko link z miniatury (nie tytuł) — kwadrat; inaczej aspect-ratio 1 obcina nazwę/cenę */
-.cross-sells ul.products li.product .woocommerce-loop-product__link:has(> img),
-.cross-sells ul.products li.product a.woocommerce-loop-product__link:first-of-type,
-.related.products ul.products li.product .woocommerce-loop-product__link:has(> img),
-.related.products ul.products li.product a.woocommerce-loop-product__link:first-of-type,
-.upsells.products ul.products li.product .woocommerce-loop-product__link:has(> img),
-.upsells.products ul.products li.product a.woocommerce-loop-product__link:first-of-type,
-.up-sells.products ul.products li.product .woocommerce-loop-product__link:has(> img),
-.up-sells.products ul.products li.product a.woocommerce-loop-product__link:first-of-type {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1;
-  overflow: hidden;
-}
-.related.products ul.products li.product img,
-.upsells.products ul.products li.product img,
-.cross-sells ul.products li.product img,
-.up-sells.products ul.products li.product img {
-  width: 100%;
-  height: auto;
-  object-fit: cover;
-}
 
-.related.products ul.products li.product:first-child,
-.upsells.products ul.products li.product:first-child,
-.cross-sells ul.products li.product:first-child {
-  margin-top: 0 !important;
-  align-self: stretch !important;
-  grid-column: span 1 !important;
-  grid-row: auto !important;
-}
-
-.related.products ul.products li.product:hover,
-.upsells.products ul.products li.product:hover,
-.cross-sells ul.products li.product:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-}
-
-/* Cena w bloku Podobne produkty — zawsze widoczna (fallback: „Cena na zapytanie”) */
+/* Cena: jedna linia, bez łamania po jednej cyfrze */
 .related.products ul.products li.product .price,
 .upsells.products ul.products li.product .price,
-.cross-sells ul.products li.product .price {
+.up-sells.products ul.products li.product .price,
+.cross-sells ul.products li.product .price,
+.mnsk7-section--bestsellers ul.products li.product .price {
   display: block !important;
   visibility: visible;
   font-weight: 700;
   font-size: var(--fs-base);
   color: var(--color-primary-dark, #0a5a9e);
-  margin: 0.25rem 0 0.5rem;
+  margin: 0.25rem 0.75rem 0.5rem;
+  padding: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
+
 .related.products .woocommerce-price-fallback,
 .upsells.products .woocommerce-price-fallback,
-.cross-sells .woocommerce-price-fallback {
+.cross-sells .woocommerce-price-fallback,
+.mnsk7-section--bestsellers .woocommerce-price-fallback {
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+.mnsk7-section--bestsellers .woocommerce-price-suffix {
   font-weight: 600;
   color: var(--color-text-secondary);
 }
 
-/* Related/cross-sells: force Add to cart button horizontal text (fix vertical letter stacking) */
-.related.products .add_to_cart_button,
-.cross-sells .add_to_cart_button,
-.upsells.products .add_to_cart_button {
+/* CTA: zawsze poziomy tekst, min-width żeby nie łamać w pion */
+.related.products ul.products li.product .button,
+.related.products ul.products li.product .add_to_cart_button,
+.related.products ul.products li.product a.added_to_cart,
+.upsells.products ul.products li.product .button,
+.upsells.products ul.products li.product .add_to_cart_button,
+.upsells.products ul.products li.product a.added_to_cart,
+.up-sells.products ul.products li.product .button,
+.up-sells.products ul.products li.product .add_to_cart_button,
+.cross-sells ul.products li.product .button,
+.cross-sells ul.products li.product .add_to_cart_button,
+.mnsk7-section--bestsellers ul.products li.product .button,
+.mnsk7-section--bestsellers ul.products li.product .add_to_cart_button {
   writing-mode: horizontal-tb;
   display: block !important;
-  width: 100%;
-  min-width: 0;
+  width: calc(100% - 1.5rem);
+  min-width: 7rem;
+  max-width: 100%;
+  margin: auto 0.75rem 0.75rem;
   box-sizing: border-box;
   padding: 0.625rem 0.75rem;
   white-space: normal;
   text-align: center;
   line-height: 1.3;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  background: var(--color-primary-dark, var(--color-primary));
+  color: var(--color-white);
+  border: none;
+  border-radius: var(--r-md);
 }
 
+.related.products ul.products li.product .button:hover,
+.related.products ul.products li.product .add_to_cart_button:hover,
+.upsells.products ul.products li.product .button:hover,
+.upsells.products ul.products li.product .add_to_cart_button:hover,
+.cross-sells ul.products li.product .button:hover,
+.cross-sells ul.products li.product .add_to_cart_button:hover,
+.mnsk7-section--bestsellers ul.products li.product .button:hover,
+.mnsk7-section--bestsellers ul.products li.product .add_to_cart_button:hover {
+  background: var(--color-primary-hover, var(--color-primary));
+}
+
+.related.products ul.products li.product:first-child,
+.upsells.products ul.products li.product:first-child,
+.up-sells.products ul.products li.product:first-child,
+.cross-sells ul.products li.product:first-child,
+.mnsk7-section--bestsellers ul.products li.product:first-child {
+  margin-top: 0 !important;
+  align-self: stretch !important;
+  grid-column: span 1 !important;
+}
+
+.related.products ul.products li.product:hover,
+.upsells.products ul.products li.product:hover,
+.up-sells.products ul.products li.product:hover,
+.cross-sells ul.products li.product:hover,
+.mnsk7-section--bestsellers ul.products li.product:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
 
 /* === 13-seo-landing.css === */
 /* 13-seo-landing — extracted from main.css */
@@ -6972,15 +6889,9 @@ nav.woocommerce-breadcrumb {
     overflow-x: hidden;
     max-width: 100%;
   }
-  /* Product grids: 2 kolumny (PLP, related, upsells, cross-sells) */
+  /* Product grids: 2 kolumny tylko PLP. Recommendation blocks: 12-related-products.css. */
   .woocommerce ul.products,
   .woocommerce-page ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.75rem !important;
-  }
-  .related.products ul.products,
-  .upsells.products ul.products,
-  .cross-sells ul.products {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 0.75rem !important;
   }
@@ -6989,12 +6900,6 @@ nav.woocommerce-breadcrumb {
 @media (max-width: 480px) {
   .woocommerce ul.products,
   .woocommerce-page ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.6rem !important;
-  }
-  .related.products ul.products,
-  .upsells.products ul.products,
-  .cross-sells ul.products {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 0.6rem !important;
   }
@@ -7071,23 +6976,10 @@ nav.woocommerce-breadcrumb {
   }
 }
 
-/* Wąskie ekrany (≤400px): 1 kolumna w recommendation blocks, żeby karty nie były za małe i kładka się nie łamała */
-@media (max-width: 400px) {
-  .related.products ul.products,
-  .upsells.products ul.products,
-  .cross-sells ul.products {
-    grid-template-columns: 1fr !important;
-  }
-}
-/* Bardzo wąskie (≤360px): 1 kolumna także na PLP */
+/* Bardzo wąskie (≤360px): 1 kolumna na PLP. Recommendation blocks: 12-related-products.css (≤400px). */
 @media (max-width: 360px) {
   .woocommerce ul.products,
   .woocommerce-page ul.products {
-    grid-template-columns: 1fr !important;
-  }
-  .related.products ul.products,
-  .upsells.products ul.products,
-  .cross-sells ul.products {
     grid-template-columns: 1fr !important;
   }
 }

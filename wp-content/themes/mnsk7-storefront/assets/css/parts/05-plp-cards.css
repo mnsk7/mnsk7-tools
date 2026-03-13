@@ -94,12 +94,9 @@ ul.products.columns-4::before {
   display: none !important;
 }
 
-/* Jedna siatka dla wszystkich listów produktów (sklep, kategoria, related, bestsellery); start — bez pustych slotów z boku */
+/* Siatka tylko dla sklepu/kategorii (PLP). Recommendation blocks: 12-related-products.css. */
 .woocommerce ul.products,
-.woocommerce-page ul.products,
-.related.products ul.products,
-.upsells.products ul.products,
-.cross-sells ul.products {
+.woocommerce-page ul.products {
   display: grid !important;
   grid-template-columns: repeat(4, 1fr) !important;
   gap: 1.25rem !important;

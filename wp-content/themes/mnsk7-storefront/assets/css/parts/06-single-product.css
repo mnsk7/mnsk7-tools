@@ -532,7 +532,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin-bottom: 0.75rem;
 }
 
-/* Strona produktu bez sidebaru — related/upsells na pełną szerokość; bez pustego miejsca przed pierwszym (breakout z paddingu div.product) */
+/* PDP: related/upsells na pełną szerokość (breakout z paddingu). Siatka i karta: 12-related-products.css. */
 .single-product .related.products,
 .single-product .upsells.products,
 .single-product .up-sells.products {
@@ -548,67 +548,6 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .single-product .up-sells.products > h2 {
   padding-left: 1rem;
   padding-right: 1rem;
-}
-
-/* 4 kolumny w jednym rzędzie: minmax(0,1fr) żeby kolumny mogły się ścisnąć i 4. nie zjeżdżało */
-.single-product .related.products ul.products,
-.single-product .upsells.products ul.products,
-.single-product .up-sells.products ul.products {
-  display: grid !important;
-  grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
-  grid-auto-flow: row !important;
-  gap: 1.25rem !important;
-  justify-content: start !important;
-  justify-items: stretch;
-  align-items: stretch !important;
-  width: 100% !important;
-  min-width: 0;
-}
-
-.single-product .related.products ul.products li.product,
-.single-product .upsells.products ul.products li.product,
-.single-product .up-sells.products ul.products li.product {
-  align-self: stretch;
-  grid-column: span 1 !important;
-  grid-row: auto !important;
-  min-width: 0;
-  overflow: hidden; /* obcięcie treści karty do border-radius */
-}
-
-/* Zdjęcia w upsells/related — stały kwadrat, cena widoczna */
-.single-product .upsells.products ul.products li.product .woocommerce-loop-product__link,
-.single-product .upsells.products ul.products li.product img,
-.single-product .up-sells.products ul.products li.product .woocommerce-loop-product__link,
-.single-product .up-sells.products ul.products li.product img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1;
-  object-fit: cover;
-}
-.single-product .upsells.products ul.products li.product .price,
-.single-product .up-sells.products ul.products li.product .price {
-  display: block !important;
-  visibility: visible;
-  font-weight: 700;
-  font-size: var(--fs-base);
-  color: var(--color-primary-dark, #0a5a9e);
-  margin: 0.25rem 0 0.5rem;
-}
-
-@media (max-width: 900px) {
-  .single-product .related.products ul.products,
-  .single-product .upsells.products ul.products,
-  .single-product .up-sells.products ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-  }
-}
-@media (max-width: 400px) {
-  .single-product .related.products ul.products,
-  .single-product .upsells.products ul.products,
-  .single-product .up-sells.products ul.products {
-    grid-template-columns: 1fr !important;
-  }
 }
 
 @media (max-width: 900px) {

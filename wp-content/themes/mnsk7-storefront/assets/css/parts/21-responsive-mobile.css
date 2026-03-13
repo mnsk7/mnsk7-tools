@@ -13,15 +13,9 @@
     overflow-x: hidden;
     max-width: 100%;
   }
-  /* Product grids: 2 kolumny (PLP, related, upsells, cross-sells) */
+  /* Product grids: 2 kolumny tylko PLP. Recommendation blocks: 12-related-products.css. */
   .woocommerce ul.products,
   .woocommerce-page ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.75rem !important;
-  }
-  .related.products ul.products,
-  .upsells.products ul.products,
-  .cross-sells ul.products {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 0.75rem !important;
   }
@@ -30,12 +24,6 @@
 @media (max-width: 480px) {
   .woocommerce ul.products,
   .woocommerce-page ul.products {
-    grid-template-columns: repeat(2, 1fr) !important;
-    gap: 0.6rem !important;
-  }
-  .related.products ul.products,
-  .upsells.products ul.products,
-  .cross-sells ul.products {
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 0.6rem !important;
   }
@@ -112,23 +100,10 @@
   }
 }
 
-/* Wąskie ekrany (≤400px): 1 kolumna w recommendation blocks, żeby karty nie były za małe i kładka się nie łamała */
-@media (max-width: 400px) {
-  .related.products ul.products,
-  .upsells.products ul.products,
-  .cross-sells ul.products {
-    grid-template-columns: 1fr !important;
-  }
-}
-/* Bardzo wąskie (≤360px): 1 kolumna także na PLP */
+/* Bardzo wąskie (≤360px): 1 kolumna na PLP. Recommendation blocks: 12-related-products.css (≤400px). */
 @media (max-width: 360px) {
   .woocommerce ul.products,
   .woocommerce-page ul.products {
-    grid-template-columns: 1fr !important;
-  }
-  .related.products ul.products,
-  .upsells.products ul.products,
-  .cross-sells ul.products {
     grid-template-columns: 1fr !important;
   }
 }
