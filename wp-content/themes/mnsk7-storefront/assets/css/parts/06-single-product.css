@@ -575,12 +575,6 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   overflow: hidden; /* obcięcie treści karty do border-radius */
 }
 
-/* Upsells z 1 produktem — jedna kolumna (nie 4 z trzema pustymi) */
-.single-product .upsells.products ul.products:has(li:only-child),
-.single-product .up-sells.products ul.products:has(li:only-child) {
-  grid-template-columns: 1fr !important;
-}
-
 /* Zdjęcia w upsells/related — stały kwadrat, cena widoczna */
 .single-product .upsells.products ul.products li.product .woocommerce-loop-product__link,
 .single-product .upsells.products ul.products li.product img,
