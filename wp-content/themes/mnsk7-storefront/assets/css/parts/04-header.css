@@ -1472,6 +1472,20 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     text-decoration: none;
     border-bottom: none;
   }
+  /* < 600px: tylko ikona koszyka (bez badge/licznika — unikamy nakładania i przepełnienia) */
+  @media (max-width: 600px) {
+    .mnsk7-header__cart .mnsk7-header__cart-count,
+    .mnsk7-header__cart .count {
+      display: none !important;
+    }
+    .mnsk7-header__cart-trigger {
+      width: 44px;
+      min-width: 44px;
+      padding: 0;
+      gap: 0;
+      justify-content: center;
+    }
+  }
   /* Mobile menu panel: below header, full width, vertical nav list, left-aligned, normal spacing — not empty block */
   .mnsk7-header__nav .mnsk7-header__menu {
     display: none !important;
