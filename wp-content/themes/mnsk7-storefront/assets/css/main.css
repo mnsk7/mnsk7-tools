@@ -1962,7 +1962,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     max-width: 100%;
     margin: 0;
   }
-  /* Jeden wizualny control: bez szpary między inputem a przyciskiem (jak na desktop), wspólna wysokość i obramowanie */
+  /* Jeden wizualny control: pole + przycisk w jednej całości (jak na desktop), bez szpary */
   .mnsk7-header-search-panel__input {
     flex: 1;
     min-width: 0;
@@ -1972,10 +1972,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     font-size: var(--fs-base);
     font-family: var(--font-base);
     border: 1px solid var(--color-border);
-    border-right: none;
+    border-right: none !important;
     border-radius: var(--r-sm) 0 0 var(--r-sm);
     background: var(--color-white);
-    margin-right: -1px; /* nakładka 1px — brak białej linii między polem a przyciskiem (mobile/tablet) */
+    margin-right: -2px; /* nakładka — przycisk zasłania prawą krawędź, zero białej linii */
   }
   .mnsk7-header-search-panel__input:focus {
     border-color: var(--color-primary);
@@ -2003,7 +2003,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     font-weight: 600;
     font-family: var(--font-base);
     border: 1px solid var(--color-primary);
-    border-left: none;
+    border-left: none !important;
     background: var(--color-primary);
     color: var(--color-white);
     border-radius: 0 var(--r-sm) var(--r-sm) 0 !important;
@@ -2011,12 +2011,12 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     transition: background 0.15s ease, border-color 0.15s ease;
     box-sizing: border-box;
     position: relative;
-    z-index: 1; /* nad nakładką inputa — jedna wizualna całość */
+    z-index: 2; /* nad inputem — jedna wizualna całość, przycisk zasłania łączenie */
   }
   .mnsk7-header-search-panel__submit:hover {
     background: var(--color-primary-hover);
     border-color: var(--color-primary-hover);
-    border-left: none;
+    border-left: none !important;
   }
   .mnsk7-header-search-panel__submit:focus-visible {
     outline: 2px solid var(--color-focus, var(--color-primary));
@@ -8468,11 +8468,11 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  /* Strona główna: minimalna biała wstęga między headerem a hero (mobile) */
+  /* Strona główna: brak białej wstęgi między headerem a hero (mobile) — wygrywa z innymi regułami */
   body.home #content,
   body.home .site-content,
   body.home .mnsk7-content {
-    padding-top: 0.5rem;
+    padding-top: 0 !important;
   }
 }
 @media (min-width: 768px) {
