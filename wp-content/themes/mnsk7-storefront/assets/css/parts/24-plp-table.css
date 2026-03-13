@@ -103,6 +103,18 @@ body.tax-product_tag .mnsk7-plp-search {
   margin-top: var(--archive-gap-filters-results);
   margin-bottom: var(--archive-after-search);
 }
+body.post-type-archive-product .mnsk7-plp-row-search-toolbar,
+body.tax-product_cat .mnsk7-plp-row-search-toolbar,
+body.tax-product_tag .mnsk7-plp-row-search-toolbar {
+  margin-top: var(--archive-gap-filters-results);
+  margin-bottom: var(--archive-after-search);
+}
+body.post-type-archive-product .mnsk7-plp-row-search-toolbar .mnsk7-plp-search,
+body.tax-product_cat .mnsk7-plp-row-search-toolbar .mnsk7-plp-search,
+body.tax-product_tag .mnsk7-plp-row-search-toolbar .mnsk7-plp-search {
+  margin-top: 0;
+  margin-bottom: 0;
+}
 body.post-type-archive-product .mnsk7-plp-trust-wrap,
 body.tax-product_cat .mnsk7-plp-trust-wrap,
 body.tax-product_tag .mnsk7-plp-trust-wrap {
@@ -146,17 +158,17 @@ body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
   gap: var(--space-16);
   margin-bottom: var(--space-16);
 }
-/* U góry: tylko sortowanie + paginacja (wyników nie pokazujemy) */
-body.woocommerce .mnsk7-plp-toolbar .woocommerce-result-count {
-  display: none;
-}
-/* U dołu: jedna linia — sortowanie + wyników + paginacja (wyrównane) */
+/* U góry i u dołu: wyników + sortowanie + paginacja w jednej linii */
+body.woocommerce .mnsk7-plp-toolbar--top .woocommerce-result-count,
 body.woocommerce .mnsk7-plp-toolbar--bottom .woocommerce-result-count {
   display: block;
   margin: 0;
   font-size: var(--fs-sm);
   color: var(--color-text-secondary);
   flex: 0 0 auto;
+}
+body.woocommerce .mnsk7-plp-toolbar:not(.mnsk7-plp-toolbar--top):not(.mnsk7-plp-toolbar--bottom) .woocommerce-result-count {
+  display: none;
 }
 .mnsk7-plp-toolbar .woocommerce-ordering {
   margin: 0;
@@ -662,7 +674,31 @@ body.tax-product_tag .mnsk7-catalog-filters {
   outline-offset: 2px;
 }
 
-/* FB-05: search over table */
+/* FB-05: search over table. Row: search + toolbar (wyniki, sortowanie, paginacja) w jednej linii, ten sam styl. */
+.mnsk7-plp-row-search-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.mnsk7-plp-row-search-toolbar .mnsk7-plp-search {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-bottom: 0;
+}
+.mnsk7-plp-row-search-toolbar .mnsk7-plp-toolbar--top {
+  margin: 0;
+  margin-bottom: 0;
+  flex: 0 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-16);
+  font-size: var(--fs-sm);
+}
 .mnsk7-plp-search {
   margin-bottom: 1rem;
 }

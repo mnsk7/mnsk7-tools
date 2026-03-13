@@ -240,6 +240,9 @@ $GLOBALS['mnsk7_plp_use_table'] = $use_table;
 /* Jeden layout na request: mobile (user-agent) = karty, desktop = tabela. W DOM tylko jeden blok. */
 $plp_is_mobile = function_exists( 'mnsk7_is_mobile_request' ) && mnsk7_is_mobile_request();
 
+/* Na kategoria/tag (desktop): toolbar u góry w jednej linii z wyszukiwarką; na dole nie powielamy. */
+$plp_show_toolbar_at_top = false;
+
 if ( woocommerce_product_loop() ) {
 	/* PLP-05/PLP-10: bez toolbara u góry — sortowanie i paginacja tylko na dole; przy tabeli tylko „Pokaż więcej” */
 	if ( $use_table ) {
@@ -280,22 +283,28 @@ if ( woocommerce_product_loop() ) {
 			woocommerce_product_loop_end();
 			echo '</div>';
 		} else {
-			/* Desktop/tablet: tylko tabela (bez siatki kart w DOM). */
+			/* Desktop/tablet: tylko tabela (bez siatki kart w DOM). Toolbar (wyniki + sortowanie + paginacja) w jednej linii z wyszukiwarką. */
+			$plp_show_toolbar_at_top = $is_taxonomy && $current_term;
 			if ( $is_taxonomy && $current_term && isset( $current_term->slug ) ) {
 				$is_tag = isset( $current_term->taxonomy ) && $current_term->taxonomy === 'product_tag';
 				$search_placeholder = $is_tag ? __( 'Szukaj w tagu…', 'mnsk7-storefront' ) : __( 'Szukaj w kategorii…', 'mnsk7-storefront' );
 				?>
-				<div class="mnsk7-plp-search col-full">
-					<form role="search" method="get" class="mnsk7-plp-search__form" action="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">
-						<label for="mnsk7-plp-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
-						<input type="search" id="mnsk7-plp-search-input" class="mnsk7-plp-search__input" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php echo esc_attr( $search_placeholder ); ?>" />
-						<?php if ( $is_tag ) : ?>
-							<input type="hidden" name="product_tag" value="<?php echo esc_attr( $current_term->slug ); ?>" />
-						<?php else : ?>
-							<input type="hidden" name="product_cat" value="<?php echo esc_attr( $current_term->slug ); ?>" />
-						<?php endif; ?>
-						<button type="submit" class="mnsk7-plp-search__submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
-					</form>
+				<div class="mnsk7-plp-row-search-toolbar col-full">
+					<div class="mnsk7-plp-search">
+						<form role="search" method="get" class="mnsk7-plp-search__form" action="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">
+							<label for="mnsk7-plp-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
+							<input type="search" id="mnsk7-plp-search-input" class="mnsk7-plp-search__input" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php echo esc_attr( $search_placeholder ); ?>" />
+							<?php if ( $is_tag ) : ?>
+								<input type="hidden" name="product_tag" value="<?php echo esc_attr( $current_term->slug ); ?>" />
+							<?php else : ?>
+								<input type="hidden" name="product_cat" value="<?php echo esc_attr( $current_term->slug ); ?>" />
+							<?php endif; ?>
+							<button type="submit" class="mnsk7-plp-search__submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
+						</form>
+					</div>
+					<div class="mnsk7-plp-toolbar mnsk7-plp-toolbar--top">
+						<?php do_action( 'woocommerce_after_shop_loop' ); ?>
+					</div>
 				</div>
 				<?php
 			}
@@ -368,9 +377,11 @@ if ( woocommerce_product_loop() ) {
 	}
 	echo '</div><!-- .mnsk7-plp-content -->';
 
-	echo '<div class="mnsk7-plp-toolbar mnsk7-plp-toolbar--bottom col-full">';
-	do_action( 'woocommerce_after_shop_loop' );
-	echo '</div>';
+	if ( ! $plp_show_toolbar_at_top ) {
+		echo '<div class="mnsk7-plp-toolbar mnsk7-plp-toolbar--bottom col-full">';
+		do_action( 'woocommerce_after_shop_loop' );
+		echo '</div>';
+	}
 	echo '</div><!-- .mnsk7-plp-archive-wrap -->';
 } else {
 	echo '</div><!-- .mnsk7-plp-content -->';
