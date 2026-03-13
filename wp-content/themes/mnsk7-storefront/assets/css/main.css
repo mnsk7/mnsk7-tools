@@ -8493,11 +8493,11 @@ body.home .mnsk7-content {
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  /* Strona główna na mobile: bez białej wstęgi — override zaraz po 1.25rem (konkretnie dla mobile). */
+  /* Strona główna na mobile: bez białej wstęgi — !important żeby wygrać z cache/pluginami/inline. */
   body.home #content,
   body.home .site-content,
   body.home .mnsk7-content {
-    padding-top: 0;
+    padding-top: 0 !important;
   }
 }
 @media (min-width: 768px) {
