@@ -40,7 +40,7 @@ body.tax-product_cat,
 body.tax-product_tag {
   --archive-gap-page-top: 1.25rem;           /* 20px — header → strefa archiwum */
   --archive-gap-breadcrumbs-title: 1.5rem;  /* 24px — breadcrumbs → H1 */
-  --archive-gap-title-chips: 1.5rem;         /* 24px — H1 → chips (kategorie) */
+  --archive-gap-title-chips: 1rem;          /* 16px — H1 → chips (mniej białej przestrzeni) */
   --archive-gap-chips-filters: 1.5rem;       /* 24px — chips → pierwszy rząd filtrów */
   --archive-gap-filter-rows: 0.75rem;        /* 12px — między wierszami filtrów */
   --archive-gap-filters-results: 1.25rem;    /* 20px — filtry → search/tabela */
@@ -140,6 +140,14 @@ body.tax-product_tag .mnsk7-product-table-wrap {
     --archive-after-search: 0.5rem;
     --archive-after-trust: 0.5rem;
     --archive-after-table: 1rem;
+  }
+  /* Kategoria/tag: mniejsze boczne odstępy na mobile */
+  body.tax-product_cat #content,
+  body.tax-product_cat .mnsk7-content,
+  body.tax-product_tag #content,
+  body.tax-product_tag .mnsk7-content {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
 }
 
@@ -385,13 +393,13 @@ body.tax-product_tag .mnsk7-catalog-filters {
     white-space: normal;
     overflow: visible;
   }
-  /* Jedna definicja scroll-row: ukryty scrollbar, snap, fade, minimalny powietrze. */
+  /* Jedna definicja scroll-row: ukryty scrollbar, snap, fade. Nav i attrs — jedna linia (swipe), bez zawijania. */
   .mnsk7-plp-chips--nav .mnsk7-plp-chips__scroll,
-  .mnsk7-plp-chips__scroll {
+  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
     width: 100%;
     min-width: 0;
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: nowrap !important;
     align-items: center;
     gap: 0.5rem;
     padding: 0.15rem 0;
@@ -499,12 +507,14 @@ body.tax-product_tag .mnsk7-catalog-filters {
   align-self: center;
 }
 
-/* Na desktop: scroll wrapper zachowuje się jak zwykły flex-wrap (bez overflow) */
-.mnsk7-plp-chips__scroll {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.35rem;
+/* Na desktop: scroll wrapper zachowuje się jak zwykły flex-wrap (bez overflow). Na mobile — nowrap w @media wyżej. */
+@media (min-width: 769px) {
+  .mnsk7-plp-chips__scroll {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+  }
 }
 
 /* PLP-07: drugi rząd chipów (atrybuty) — wizualnie drugorzędne względem kategorii; każdy wiersz z etykietą + chipy z zawijaniem */
