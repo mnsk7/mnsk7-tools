@@ -12,25 +12,24 @@
   padding-right: 1.5rem;
   box-sizing: border-box;
 }
-/* Strona główna: zerujemy padding-top #content (biała wstęga header→hero). Desktop/tablet: root rule; mobile: też w media żeby wygrać z regułą 1.25rem poniżej. */
+/* Strona główna: zerujemy padding-top #content (biała wstęga header→hero). */
 body.home #content,
 body.home .site-content,
 body.home .mnsk7-content {
   padding-top: 0;
 }
+/* Mobile: padding-top tylko dla stron innych niż główna — główna nie dostaje 1.25rem, więc nie trzeba go nadpisywać (bez !important). */
 @media (max-width: 768px) {
   #content,
   .site-content,
   .mnsk7-content {
-    padding-top: 1.25rem;
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  /* Strona główna na mobile: bez białej wstęgi — !important żeby wygrać z cache/pluginami/inline. */
-  body.home #content,
-  body.home .site-content,
-  body.home .mnsk7-content {
-    padding-top: 0 !important;
+  body:not(.home) #content,
+  body:not(.home) .site-content,
+  body:not(.home) .mnsk7-content {
+    padding-top: 1.25rem;
   }
 }
 @media (min-width: 768px) {
