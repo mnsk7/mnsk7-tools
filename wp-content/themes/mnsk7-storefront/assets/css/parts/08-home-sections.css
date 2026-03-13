@@ -191,6 +191,24 @@
 .mnsk7-section--light {
   background: var(--color-surface);
 }
+
+/* Dlaczego kupujący + Program rabatowy — beżowe tło full-bleed (bez bocznych odstępów) */
+.mnsk7-section--trust.mnsk7-section--light,
+.mnsk7-section--loyalty.mnsk7-section--light {
+  margin-left: -1rem;
+  margin-right: -1rem;
+  width: calc(100% + 2rem);
+  max-width: none;
+  box-sizing: border-box;
+}
+@media (min-width: 768px) {
+  .mnsk7-section--trust.mnsk7-section--light,
+  .mnsk7-section--loyalty.mnsk7-section--light {
+    margin-left: -2rem;
+    margin-right: -2rem;
+    width: calc(100% + 4rem);
+  }
+}
 /* Przeglądaj asortyment (TASK 12) — białe tło, chipy białe z czarną ramką, hover niebieski */
 .mnsk7-section--catalog.mnsk7-section--light,
 .mnsk7-section.mnsk7-section--catalog {
@@ -250,6 +268,30 @@
   color: var(--color-primary-hover);
 }
 
+/* Przeglądaj asortyment: Zastosowanie i materiały — chmura chipów (bez Więcej), potem Rodzaje frezów — karty. */
+.mnsk7-catalog-aside {
+  margin-bottom: 1.5rem;
+}
+.mnsk7-catalog-aside__title {
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  margin: 0 0 0.5rem;
+}
+.mnsk7-catalog-aside__title--cats {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+.mnsk7-catalog-chips__scroll--cloud {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.75rem;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+}
+
 /* Katalog: grupy chipów — każda grupa = etykieta + pozioma swipe-row (mobile). */
 .mnsk7-catalog-chips {
   display: flex;
@@ -287,8 +329,13 @@
   .mnsk7-section--catalog .col-full {
     overflow-x: hidden;
   }
-  /* Mobile: swipe row pattern — ukryty scrollbar, snap, fade hint, bez nadmiaru powietrza. */
-  .mnsk7-catalog-chips__scroll {
+  /* Chmura tagów (Zastosowanie) — zawsze wrap, bez swipe. */
+  .mnsk7-catalog-chips__scroll--cloud {
+    flex-wrap: wrap;
+    overflow: visible;
+  }
+  /* Mobile: swipe row pattern — ukryty scrollbar, snap, fade hint (tylko gdy nie --cloud). */
+  .mnsk7-catalog-chips__scroll:not(.mnsk7-catalog-chips__scroll--cloud) {
     flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
@@ -304,12 +351,12 @@
     mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
     -webkit-mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
   }
-  .mnsk7-catalog-chips__scroll::-webkit-scrollbar {
+  .mnsk7-catalog-chips__scroll:not(.mnsk7-catalog-chips__scroll--cloud)::-webkit-scrollbar {
     display: none;
     height: 0;
   }
-  .mnsk7-catalog-chips__scroll .mnsk7-tags-chip,
-  .mnsk7-catalog-chips__scroll .mnsk7-catalog-cat-chip {
+  .mnsk7-catalog-chips__scroll:not(.mnsk7-catalog-chips__scroll--cloud) .mnsk7-tags-chip,
+  .mnsk7-catalog-chips__scroll:not(.mnsk7-catalog-chips__scroll--cloud) .mnsk7-catalog-cat-chip {
     flex-shrink: 0;
     min-height: 44px;
     display: inline-flex;
@@ -833,13 +880,19 @@
   transform: translateY(-1px);
 }
 
-/* Instagram section — wyśrodkowana, tło */
+/* Instagram section — wyśrodkowana, tło; bez nadmiarowej białej wstęgi (wysokość = treść) */
 .mnsk7-section--insta {
   background: var(--color-surface);
   padding: var(--space-48) 0;
 }
 .mnsk7-section--insta .mnsk7-instagram-feed--profile {
-  min-height: 60vh;
+  min-height: 0;
+}
+.mnsk7-section--insta .mnsk7-instagram-feed--embed {
+  padding-bottom: 0;
+}
+.mnsk7-section--insta .mnsk7-instagram-feed__posts {
+  margin-bottom: 0;
 }
 
 .mnsk7-section--insta .col-full {
