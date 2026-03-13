@@ -12,7 +12,7 @@
   padding-right: 1.5rem;
   box-sizing: border-box;
 }
-/* Strona główna: zerujemy padding-top #content na wszystkich breakpointach (mobile miał, tablet/desktop — nie; stąd wstęga na desktop) */
+/* Strona główna: zerujemy padding-top #content (biała wstęga header→hero). Desktop/tablet: root rule; mobile: też w media żeby wygrać z regułą 1.25rem poniżej. */
 body.home #content,
 body.home .site-content,
 body.home .mnsk7-content {
@@ -25,6 +25,12 @@ body.home .mnsk7-content {
     padding-top: 1.25rem;
     padding-left: 1rem;
     padding-right: 1rem;
+  }
+  /* Strona główna na mobile: bez białej wstęgi — override zaraz po 1.25rem (konkretnie dla mobile). */
+  body.home #content,
+  body.home .site-content,
+  body.home .mnsk7-content {
+    padding-top: 0;
   }
 }
 @media (min-width: 768px) {
