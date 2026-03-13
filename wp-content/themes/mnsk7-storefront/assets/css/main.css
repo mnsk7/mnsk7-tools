@@ -1938,6 +1938,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     border-bottom: 1px solid var(--color-border);
     padding: 0.5rem 1rem;
   }
+  /* Strona główna: bez białej wstęgi nad search barem — panel tuż pod headerem */
+  body.home .mnsk7-header-search-panel {
+    padding-top: 0;
+  }
   .mnsk7-header-search-panel__form {
     max-width: var(--content-max, 1200px);
     margin: 0 auto;
@@ -8452,7 +8456,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
    Task 7: !important celowo — nadpisanie Woo/Storefront (kolejność ładowania); nie usuwać bez zmiany specyficzności lub kolejności plików. */
 
 /* Page top — jedyne źródło odstępu header→treść: padding-top #content (header.php zamyka #content, wewnątrz main/hero).
-   Brak margin-top na main/.mnsk7-hero; ewentualna biała wstęga = tylko ten padding. */
+   Brak margin-top na main/.mnsk7-hero; biała wstęga = ten padding. Root cause: docs/ROOT-CAUSE-WHITE-STRIP-HOME.md */
 #content,
 .site-content,
 .mnsk7-content {
@@ -8461,6 +8465,12 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   padding-right: 1.5rem;
   box-sizing: border-box;
 }
+/* Strona główna: zerujemy padding-top #content na wszystkich breakpointach (mobile miał, tablet/desktop — nie; stąd wstęga na desktop) */
+body.home #content,
+body.home .site-content,
+body.home .mnsk7-content {
+  padding-top: 0;
+}
 @media (max-width: 768px) {
   #content,
   .site-content,
@@ -8468,12 +8478,6 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
     padding-top: 1.25rem;
     padding-left: 1rem;
     padding-right: 1rem;
-  }
-  /* Strona główna mobile: ten sam padding-top — zerujemy w jednym miejscu (bez duplikatu w header.php, bez !important) */
-  body.home #content,
-  body.home .site-content,
-  body.home .mnsk7-content {
-    padding-top: 0;
   }
 }
 @media (min-width: 768px) {

@@ -1577,6 +1577,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     border-bottom: 1px solid var(--color-border);
     padding: 0.5rem 1rem;
   }
+  /* Strona główna: bez białej wstęgi nad search barem — panel tuż pod headerem */
+  body.home .mnsk7-header-search-panel {
+    padding-top: 0;
+  }
   .mnsk7-header-search-panel__form {
     max-width: var(--content-max, 1200px);
     margin: 0 auto;
