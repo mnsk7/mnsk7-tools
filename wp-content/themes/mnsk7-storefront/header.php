@@ -47,8 +47,6 @@ defined( 'ABSPATH' ) || exit;
 	.mnsk7-archive .mnsk7-promo-bar__text{font-size:inherit}
 	@media (max-width:1024px){.mnsk7-archive .mnsk7-promo-bar{padding:0.25rem 2.5rem 0.25rem 0.5rem}}
 	@media (max-width:480px){.mnsk7-archive .mnsk7-promo-bar{min-height:36px;padding:0.35rem 2.5rem 0.35rem 0.5rem}}
-	/* Strona główna mobile: brak białej wstęgi header–hero (gdy main.css z cache) */
-	@media (max-width:768px){body.home #content,body.home .site-content,body.home .mnsk7-content{padding-top:0!important}}
 	</style>
 </head>
 <body <?php body_class(); ?>>

@@ -1953,6 +1953,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 @media (max-width: 1024px) {
+  /* Jeden komponent: form ma obramowanie i radius, overflow:hidden — input i przycisk bez własnego bordera */
   .mnsk7-header-search-panel__form {
     display: flex;
     flex-direction: row;
@@ -1961,8 +1962,15 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     width: 100%;
     max-width: 100%;
     margin: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+    overflow: hidden;
+    background: var(--color-white);
+    transition: border-color 0.15s ease;
   }
-  /* Jeden wizualny control: pole + przycisk w jednej całości (jak na desktop), bez szpary */
+  .mnsk7-header-search-panel__form:focus-within {
+    border-color: var(--color-primary);
+  }
   .mnsk7-header-search-panel__input {
     flex: 1;
     min-width: 0;
@@ -1971,25 +1979,18 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     padding: 0 0.75rem;
     font-size: var(--fs-base);
     font-family: var(--font-base);
-    border: 1px solid var(--color-border);
-    border-right: none !important;
-    border-radius: var(--r-sm) 0 0 var(--r-sm);
-    background: var(--color-white);
-    margin-right: -2px; /* nakładka — przycisk zasłania prawą krawędź, zero białej linii */
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    -webkit-appearance: none;
+    appearance: none;
   }
   .mnsk7-header-search-panel__input:focus {
-    border-color: var(--color-primary);
     outline: none;
-    box-shadow: none;
   }
   .mnsk7-header-search-panel__input:focus-visible {
     outline: 2px solid var(--color-focus, var(--color-primary));
     outline-offset: 2px;
-    box-shadow: none;
-  }
-  .mnsk7-header-search-panel__input {
-    -webkit-appearance: none;
-    appearance: none;
   }
   .mnsk7-header-search-panel__input::placeholder {
     color: var(--color-text-muted);
@@ -2002,31 +2003,30 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     font-size: var(--fs-sm);
     font-weight: 600;
     font-family: var(--font-base);
-    border: 1px solid var(--color-primary);
-    border-left: none !important;
+    border: none;
+    border-radius: 0;
     background: var(--color-primary);
     color: var(--color-white);
-    border-radius: 0 var(--r-sm) var(--r-sm) 0 !important;
     cursor: pointer;
-    transition: background 0.15s ease, border-color 0.15s ease;
+    transition: background 0.15s ease;
     box-sizing: border-box;
-    position: relative;
-    z-index: 2; /* nad inputem — jedna wizualna całość, przycisk zasłania łączenie */
   }
   .mnsk7-header-search-panel__submit:hover {
     background: var(--color-primary-hover);
-    border-color: var(--color-primary-hover);
-    border-left: none !important;
+  }
+  .mnsk7-header-search-panel__submit:active {
+    background: var(--color-primary-pressed, var(--color-primary-hover));
+  }
+  .mnsk7-header-search-panel__submit:focus {
+    outline: none;
   }
   .mnsk7-header-search-panel__submit:focus-visible {
     outline: 2px solid var(--color-focus, var(--color-primary));
     outline-offset: 1px;
   }
-  .mnsk7-header-search-panel__form:focus-within .mnsk7-header-search-panel__input {
-    border-color: var(--color-primary);
-  }
-  .mnsk7-header-search-panel__form:focus-within .mnsk7-header-search-panel__submit {
-    border-color: var(--color-primary);
+  .mnsk7-header-search-panel__submit:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
   }
 }
 
@@ -8451,7 +8451,8 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
    Ten sam wygląd na wszystkich stronach (/, koszyk, archive, tag, ?filter_*, PDP).
    Task 7: !important celowo — nadpisanie Woo/Storefront (kolejność ładowania); nie usuwać bez zmiany specyficzności lub kolejności plików. */
 
-/* Page top — единый отступ от header до контента на всех типах страниц (page, dostawa, kontakt, account, archive, tag) */
+/* Page top — jedyne źródło odstępu header→treść: padding-top #content (header.php zamyka #content, wewnątrz main/hero).
+   Brak margin-top na main/.mnsk7-hero; ewentualna biała wstęga = tylko ten padding. */
 #content,
 .site-content,
 .mnsk7-content {
@@ -8468,11 +8469,11 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
     padding-left: 1rem;
     padding-right: 1rem;
   }
-  /* Strona główna: brak białej wstęgi między headerem a hero (mobile) — wygrywa z innymi regułami */
+  /* Strona główna mobile: ten sam padding-top — zerujemy w jednym miejscu (bez duplikatu w header.php, bez !important) */
   body.home #content,
   body.home .site-content,
   body.home .mnsk7-content {
-    padding-top: 0 !important;
+    padding-top: 0;
   }
 }
 @media (min-width: 768px) {
