@@ -53,36 +53,7 @@ add_filter( 'woocommerce_product_cross_sells_products_heading', function () {
 	return __( 'Dopasowane do Twojego koszyka', 'mnsk7-tools' );
 } );
 
-/* Cookie consent bar — widoczny, z przyciskiem Ustawienia (GDPR) */
-add_action( 'wp_footer', function () {
-	if ( is_admin() ) return;
-	$privacy_url = home_url( '/polityka-prywatnosci/' );
-	$settings_url = add_query_arg( 'cookies', '1', $privacy_url ) . '#cookies';
-	?>
-	<div id="mnsk7-cookie-bar" class="mnsk7-cookie-bar" role="dialog" aria-label="<?php esc_attr_e( 'Informacja o cookies', 'mnsk7-tools' ); ?>" aria-hidden="true" hidden>
-		<div class="mnsk7-cookie-bar__inner">
-			<p class="mnsk7-cookie-bar__text"><?php esc_html_e( 'Ta strona używa plików cookie. Kliknij „Przyjmuję", aby kontynuować.', 'mnsk7-tools' ); ?> <a href="<?php echo esc_url( $privacy_url ); ?>#cookies" class="mnsk7-cookie-bar__link"><?php esc_html_e( 'Więcej informacji', 'mnsk7-tools' ); ?></a></p>
-			<div class="mnsk7-cookie-bar__buttons">
-				<a href="<?php echo esc_url( $settings_url ); ?>" class="mnsk7-cookie-bar__btn mnsk7-cookie-bar__btn--secondary" id="mnsk7-cookie-bar-settings"><?php esc_html_e( 'Ustawienia', 'mnsk7-tools' ); ?></a>
-				<button type="button" class="mnsk7-cookie-bar__btn" id="mnsk7-cookie-bar-accept"><?php esc_html_e( 'Przyjmuję', 'mnsk7-tools' ); ?></button>
-			</div>
-		</div>
-	</div>
-	<script>
-	(function(){
-		var key='mnsk7_cookie_ok';
-		function get(n){var m=document.cookie.match(new RegExp('(?:^|; )'+n.replace(/([\.$?*|{}\(\)\[\]\\\/+^])/g,'\\$1')+'=([^;]*)'));return m?decodeURIComponent(m[1]):null;}
-		function set(n,v,d){var e=new Date();e.setTime(e.getTime()+d*86400000);document.cookie=n+'='+encodeURIComponent(v)+';path=/;expires='+e.toUTCString()+';SameSite=Lax';}
-		var bar=document.getElementById('mnsk7-cookie-bar');
-		if(!bar)return;
-		if(get(key)){bar.remove();return;}
-		bar.removeAttribute('hidden');bar.setAttribute('aria-hidden','false');
-		document.body.classList.add('mnsk7-cookie-bar-visible');
-		document.getElementById('mnsk7-cookie-bar-accept').addEventListener('click',function(){set(key,'1',365);bar.remove();document.body.classList.remove('mnsk7-cookie-bar-visible');});
-	})();
-	</script>
-	<?php
-}, 99 );
+/* Cookie consent bar — jeden bank w motywie (footer.php: Akceptuję wszystkie / Tylko niezbędne / Ustawienia). Tu nie dodajemy drugiego. */
 
 /**
  * Seed primary menu: Przewodnik, Sklep, Dostawa i płatności, Kontakt (home_url() — staging i prod).
