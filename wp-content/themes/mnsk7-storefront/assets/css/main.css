@@ -7191,7 +7191,7 @@ body.tax-product_cat,
 body.tax-product_tag {
   --archive-gap-page-top: 1.25rem;           /* 20px — header → strefa archiwum */
   --archive-gap-breadcrumbs-title: 1.5rem;  /* 24px — breadcrumbs → H1 */
-  --archive-gap-title-chips: 1rem;          /* 16px — H1 → chips (mniej białej przestrzeni) */
+  --archive-gap-title-chips: 0.75rem;      /* 12px — H1 → chips (minimalna przerwa na desktop) */
   --archive-gap-chips-filters: 1.5rem;       /* 24px — chips → pierwszy rząd filtrów */
   --archive-gap-filter-rows: 0.75rem;        /* 12px — między wierszami filtrów */
   --archive-gap-filters-results: 1.25rem;    /* 20px — filtry → search/tabela */
@@ -7277,6 +7277,17 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   margin-bottom: var(--archive-after-table);
 }
 
+/* Desktop: mniejsze boczne odstępy na kategoria/tag (spójnie z mobile) */
+@media (min-width: 769px) {
+  body.tax-product_cat #content,
+  body.tax-product_cat .mnsk7-content,
+  body.tax-product_tag #content,
+  body.tax-product_tag .mnsk7-content {
+    padding-left: 1.25rem;
+    padding-right: 1.25rem;
+  }
+}
+
 @media (max-width: 768px) {
   body.post-type-archive-product,
   body.tax-product_cat,
@@ -7292,13 +7303,27 @@ body.tax-product_tag .mnsk7-product-table-wrap {
     --archive-after-trust: 0.5rem;
     --archive-after-table: 1rem;
   }
-  /* Kategoria/tag: mniejsze boczne odstępy na mobile */
+  /* Kategoria/tag: minimalne boczne odstępy; kontekst od „F” (wyrównanie z tytułem) */
   body.tax-product_cat #content,
   body.tax-product_cat .mnsk7-content,
   body.tax-product_tag #content,
   body.tax-product_tag .mnsk7-content {
-    padding-left: 0.75rem;
-    padding-right: 0.75rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  /* Chips: bez dodatkowego wcięcia — Rodzaje frezów i chipy startują pod „F” w tytule */
+  body.tax-product_cat .mnsk7-plp-chips__scroll,
+  body.tax-product_tag .mnsk7-plp-chips__scroll {
+    padding-inline: 0 0.5rem;
+    margin-inline: 0;
+    scroll-padding-inline: 0 0.5rem;
+  }
+  body.tax-product_cat .mnsk7-plp-search,
+  body.tax-product_tag .mnsk7-plp-search,
+  body.tax-product_cat .mnsk7-plp-trust-wrap,
+  body.tax-product_tag .mnsk7-plp-trust-wrap {
+    margin-left: 0;
+    margin-right: 0;
   }
 }
 
