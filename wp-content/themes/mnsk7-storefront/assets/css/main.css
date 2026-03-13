@@ -3527,7 +3527,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 /* Dlaczego kupujący + Program rabatowy — beżowe tło full-bleed (bez bocznych odstępów) */
 .mnsk7-section--trust.mnsk7-section--light,
 .mnsk7-section--loyalty.mnsk7-section--light,
-.mnsk7-section--catalog.mnsk7-section--light {
+.mnsk7-section--catalog.mnsk7-section--light,
+.mnsk7-section--insta {
   margin-left: -1rem;
   margin-right: -1rem;
   width: calc(100% + 2rem);
@@ -3537,7 +3538,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 @media (min-width: 768px) {
   .mnsk7-section--trust.mnsk7-section--light,
   .mnsk7-section--loyalty.mnsk7-section--light,
-  .mnsk7-section--catalog.mnsk7-section--light {
+  .mnsk7-section--catalog.mnsk7-section--light,
+  .mnsk7-section--insta {
     margin-left: -2rem;
     margin-right: -2rem;
     width: calc(100% + 4rem);
@@ -8234,6 +8236,25 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table .mnsk7-table-cell--action {
   vertical-align: middle;
 }
+
+/* Desktop: przycisk „Dodaj do koszyka” w jednej linii z ceną (41,00 zł), stanem (1 szt.), ilością */
+@media (min-width: 769px) {
+  .mnsk7-product-table tbody .mnsk7-table-cell--price,
+  .mnsk7-product-table tbody .mnsk7-table-cell--stock,
+  .mnsk7-product-table tbody .mnsk7-table-cell--qty,
+  .mnsk7-product-table tbody .mnsk7-table-cell--action {
+    vertical-align: middle;
+  }
+  .mnsk7-product-table tbody .mnsk7-table-cell--action .mnsk7-table-addcart-form {
+    margin: 0;
+  }
+  .mnsk7-product-table tbody .mnsk7-table-cell--action .button,
+  .mnsk7-product-table tbody .mnsk7-table-cell--action .add_to_cart_button,
+  .mnsk7-product-table tbody .mnsk7-table-cell--action .mnsk7-table-addcart-btn {
+    margin: 0;
+  }
+}
+
 .mnsk7-product-table .mnsk7-table-cell--action .button,
 .mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button,
 .mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn {

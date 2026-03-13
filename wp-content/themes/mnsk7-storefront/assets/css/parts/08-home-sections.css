@@ -195,7 +195,8 @@
 /* Dlaczego kupujący + Program rabatowy — beżowe tło full-bleed (bez bocznych odstępów) */
 .mnsk7-section--trust.mnsk7-section--light,
 .mnsk7-section--loyalty.mnsk7-section--light,
-.mnsk7-section--catalog.mnsk7-section--light {
+.mnsk7-section--catalog.mnsk7-section--light,
+.mnsk7-section--insta {
   margin-left: -1rem;
   margin-right: -1rem;
   width: calc(100% + 2rem);
@@ -205,7 +206,8 @@
 @media (min-width: 768px) {
   .mnsk7-section--trust.mnsk7-section--light,
   .mnsk7-section--loyalty.mnsk7-section--light,
-  .mnsk7-section--catalog.mnsk7-section--light {
+  .mnsk7-section--catalog.mnsk7-section--light,
+  .mnsk7-section--insta {
     margin-left: -2rem;
     margin-right: -2rem;
     width: calc(100% + 4rem);
