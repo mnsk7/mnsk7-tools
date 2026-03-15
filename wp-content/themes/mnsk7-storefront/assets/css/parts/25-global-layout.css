@@ -3,22 +3,26 @@
    Task 7: !important celowo — nadpisanie Woo/Storefront (kolejność ładowania); nie usuwać bez zmiany specyficzności lub kolejności plików. */
 
 /* Page top — jedyne źródło odstępu header→treść: padding-top #content (header.php zamyka #content, wewnątrz main/hero).
-   Brak margin-top na main/.mnsk7-hero; biała wstęga = ten padding. Root cause: docs/ROOT-CAUSE-WHITE-STRIP-HOME.md */
+   Root cause: docs/ROOT-CAUSE-WHITE-STRIP-HOME.md. Główna NIGDY nie dostaje padding-top — ustawiamy go tylko dla body:not(.home). */
 #content,
 .site-content,
 .mnsk7-content {
-  padding-top: var(--space-page-top);
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   box-sizing: border-box;
 }
-/* Strona główna: zerujemy padding-top #content (biała wstęga header→hero). */
+body:not(.home) #content,
+body:not(.home) .site-content,
+body:not(.home) .mnsk7-content {
+  padding-top: var(--space-page-top);
+}
+/* Strona główna: brak odstępu górnego (hero od razu pod headerem). Zerujemy padding i margin. */
 body.home #content,
 body.home .site-content,
 body.home .mnsk7-content {
   padding-top: 0;
+  margin-top: 0;
 }
-/* Mobile: padding-top tylko dla stron innych niż główna — główna nie dostaje 1.25rem, więc nie trzeba go nadpisywać (bez !important). */
 @media (max-width: 768px) {
   #content,
   .site-content,
