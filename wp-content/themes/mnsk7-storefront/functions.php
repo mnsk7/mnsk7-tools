@@ -854,6 +854,7 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( $fragments ) {
 	</a>
 	<?php
 	$fragments['a.mnsk7-header__cart-trigger'] = ob_get_clean();
+	$fragments['a.cart-contents'] = $fragments['a.mnsk7-header__cart-trigger'];
 	$fragments['.mnsk7-header__cart-summary'] = function_exists( 'mnsk7_header_cart_summary_html' )
 		? mnsk7_header_cart_summary_html( $cart_count, $cart_total, $loyalty_discount )
 		: '<div class="mnsk7-header__cart-summary">' . ( $cart_count > 0 && $cart_total ? sprintf( _n( '%1$d produkt · %2$s', '%1$d produktów · %2$s', $cart_count, 'mnsk7-storefront' ), $cart_count, $cart_total ) : esc_html__( 'Koszyk jest pusty', 'mnsk7-storefront' ) ) . '</div>';
@@ -1042,9 +1043,36 @@ add_action( 'wp_footer', function () {
 				}
 			}
 		}
+		function normalizeCartTrigger() {
+			var wrap = document.querySelector('.mnsk7-header__cart');
+			if (!wrap) return null;
+			var cartLink = wrap.querySelector('a.cart-contents, a.mnsk7-header__cart-trigger');
+			if (!cartLink) return null;
+			if (!cartLink.classList.contains('mnsk7-header__cart-trigger')) {
+				cartLink.classList.add('mnsk7-header__cart-trigger');
+			}
+			if (!cartLink.querySelector('.mnsk7-header__cart-icon')) {
+				var countNode = cartLink.querySelector('.mnsk7-header__cart-count, .count');
+				var countText = countNode ? (countNode.textContent || '0') : '0';
+				var count = parseInt(String(countText).replace(/[^\d]/g, ''), 10);
+				if (isNaN(count)) count = 0;
+				cartLink.innerHTML =
+					'<span class=\"mnsk7-header__cart-icon\" aria-hidden=\"true\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z\"></path><line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"></line><path d=\"M16 10a4 4 0 0 1-8 0\"></path></svg></span>' +
+					'<span class=\"mnsk7-header__cart-count\" aria-hidden=\"true\">' + count + '</span>';
+			}
+			return cartLink;
+		}
+
+		normalizeCartTrigger();
+		if (window.jQuery && window.jQuery(document.body).on) {
+			window.jQuery(document.body).on('wc_fragments_refreshed wc_fragments_loaded added_to_cart', function() {
+				normalizeCartTrigger();
+			});
+		}
+
 		var cartWrap = document.querySelector('.mnsk7-header__cart');
 		if (cartWrap) {
-			var trigger = cartWrap.querySelector('.mnsk7-header__cart-trigger');
+			var trigger = normalizeCartTrigger() || cartWrap.querySelector('.mnsk7-header__cart-trigger, .cart-contents');
 			var dropdown = cartWrap.querySelector('.mnsk7-header__cart-dropdown');
 			if (trigger && dropdown) {
 				function setCartExpanded(open) {

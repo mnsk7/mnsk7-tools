@@ -1613,7 +1613,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__menu-toggle,
   .mnsk7-header__search-toggle,
   .mnsk7-header__link--account,
-  .mnsk7-header__cart-trigger {
+  .mnsk7-header__cart-trigger,
+  .mnsk7-header__cart .cart-contents {
     display: inline-flex !important;
     align-items: center;
     justify-content: center;
@@ -1635,7 +1636,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     width: 44px;
     height: 44px;
   }
-  .mnsk7-header__cart-trigger {
+  .mnsk7-header__cart-trigger,
+  .mnsk7-header__cart .cart-contents {
     gap: 0.25rem;
     padding: 0 0.35rem;
     min-width: 44px;
@@ -1655,14 +1657,16 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__menu-toggle:hover,
   .mnsk7-header__search-toggle:hover,
   .mnsk7-header__link--account:hover,
-  .mnsk7-header__cart-trigger:hover {
+  .mnsk7-header__cart-trigger:hover,
+  .mnsk7-header__cart .cart-contents:hover {
     background: rgba(0, 0, 0, 0.04);
     border-color: var(--color-border);
   }
   .mnsk7-header__menu-toggle:focus-visible,
   .mnsk7-header__search-toggle:focus-visible,
   .mnsk7-header__link--account:focus-visible,
-  .mnsk7-header__cart-trigger:focus-visible {
+  .mnsk7-header__cart-trigger:focus-visible,
+  .mnsk7-header__cart .cart-contents:focus-visible {
     outline: 2px solid var(--color-focus, var(--color-primary));
     outline-offset: 2px;
   }
@@ -1828,6 +1832,23 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     background: rgba(0, 0, 0, 0.04);
     color: var(--color-primary);
   }
+  /* Cart fragments fallback: jeśli Woo podmieni markup na amount/count, zachowaj ikonowy przycisk */
+  .mnsk7-header__cart .cart-contents .woocommerce-Price-amount,
+  .mnsk7-header__cart .cart-contents .count {
+    display: none !important;
+  }
+  .mnsk7-header__cart .cart-contents,
+  .mnsk7-header__cart-trigger {
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
+    padding: 0;
+    gap: 0;
+    justify-content: center;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+  }
   .mnsk7-header__cart-trigger,
   .mnsk7-header__cart .cart-contents {
     text-decoration: none;
@@ -1839,12 +1860,12 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     .mnsk7-header__cart .count {
       display: none !important;
     }
-    .mnsk7-header__cart-trigger {
-      width: 44px;
-      min-width: 44px;
-      padding: 0;
-      gap: 0;
-      justify-content: center;
+    .mnsk7-header__cart-trigger,
+    .mnsk7-header__cart .cart-contents {
+      width: 40px;
+      min-width: 40px;
+      height: 40px;
+      min-height: 40px;
     }
   }
   /* Mobile menu panel: below header, full width, vertical nav list, left-aligned, normal spacing — not empty block */
