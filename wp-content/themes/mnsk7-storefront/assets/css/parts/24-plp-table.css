@@ -241,6 +241,7 @@ body.woocommerce .mnsk7-plp-toolbar:not(.mnsk7-plp-toolbar--top):not(.mnsk7-plp-
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: flex-start;
   gap: 0.25rem;
   margin: 0;
   padding: 0;
@@ -301,7 +302,17 @@ body.woocommerce .mnsk7-plp-toolbar:not(.mnsk7-plp-toolbar--top):not(.mnsk7-plp-
   }
   .mnsk7-plp-toolbar--bottom .woocommerce-pagination {
     margin-left: 0;
-    justify-content: flex-start;
+    width: 100%;
+  }
+  .mnsk7-plp-toolbar--bottom .woocommerce-pagination ul {
+    gap: 0.35rem;
+  }
+  .mnsk7-plp-toolbar--bottom .woocommerce-pagination a,
+  .mnsk7-plp-toolbar--bottom .woocommerce-pagination span {
+    min-width: 2rem;
+    min-height: 2rem;
+    padding: 0.3rem 0.45rem;
+    font-size: var(--fs-xs);
   }
 }
 
@@ -432,31 +443,23 @@ body.tax-product_tag .mnsk7-catalog-filters {
     width: 100%;
     min-width: 0;
     display: flex;
-    flex-wrap: nowrap !important;
+    flex-wrap: wrap;
     align-items: center;
     gap: 0.5rem;
     padding: 0.15rem 0;
-    padding-inline: max(0.75rem, env(safe-area-inset-left)) 1rem;
+    padding-inline: 0;
     margin: 0;
-    margin-inline: -0.5rem 0;
-    overflow-x: auto;
-    overflow-y: hidden;
-    -webkit-overflow-scrolling: touch;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-    scroll-snap-type: x proximity;
-    scroll-padding-inline: max(0.75rem, env(safe-area-inset-left)) 1rem;
-    mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
-    -webkit-mask-image: linear-gradient(to right, black calc(100% - 2rem), transparent 100%);
-  }
-  .mnsk7-plp-chips__scroll::-webkit-scrollbar {
-    display: none;
-    height: 0;
+    margin-inline: 0;
+    overflow: visible;
+    scroll-snap-type: none;
+    scroll-padding-inline: 0;
+    mask-image: none;
+    -webkit-mask-image: none;
   }
   .mnsk7-plp-chips--nav .mnsk7-plp-chip,
   .mnsk7-plp-chips--attrs .mnsk7-plp-chip {
     flex-shrink: 0;
-    scroll-snap-align: start;
+    scroll-snap-align: none;
     scroll-snap-stop: normal;
   }
   .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
@@ -1160,7 +1163,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   outline-offset: 2px;
 }
 
-.mnsk7-product-table .mnsk7-table-cell--price {
+.mnsk7-product-table td.mnsk7-table-cell--price {
   font-weight: 700;
   color: var(--color-primary-dark);
 }
@@ -1274,15 +1277,77 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
     margin-bottom: 0.75rem;
   }
   .mnsk7-product-table {
-    min-width: 560px;
+    display: block;
+    width: 100%;
+    min-width: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+  }
+  .mnsk7-product-table tbody {
+    display: block;
+  }
+  .mnsk7-product-table tbody tr {
+    display: grid;
+  }
+  .mnsk7-product-table tbody td {
+    display: block;
+  }
+  .mnsk7-product-table thead {
+    display: none;
+  }
+  .mnsk7-product-table tbody {
+    gap: 0.75rem;
+  }
+  .mnsk7-product-table tbody tr {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    gap: 0.25rem 0.75rem;
+    padding: 0.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    background: var(--color-white);
   }
   .mnsk7-product-table .mnsk7-table-cell {
-    padding: 0.4rem 0.5rem;
+    padding: 0;
+    border: none;
   }
   .mnsk7-product-table .mnsk7-table-cell--thumb {
+    grid-column: 1;
+    grid-row: 1 / span 3;
     width: 56px;
   }
   .mnsk7-product-table .mnsk7-table-cell--thumb a {
-    max-width: 48px;
+    max-width: 56px;
+  }
+  .mnsk7-product-table .mnsk7-table-cell--title {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .mnsk7-product-table .mnsk7-table-cell--price,
+  .mnsk7-product-table .mnsk7-table-cell--stock {
+    grid-column: 2;
+    grid-row: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: var(--fs-sm);
+  }
+  .mnsk7-product-table .mnsk7-table-cell--qty {
+    display: none;
+  }
+  .mnsk7-product-table .mnsk7-table-cell--action {
+    grid-column: 1 / -1;
+    margin-top: 0.25rem;
+  }
+  .mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-form {
+    display: flex;
+    width: 100%;
+  }
+  .mnsk7-product-table .mnsk7-table-cell--action .button,
+  .mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button,
+  .mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn {
+    width: 100%;
+    justify-content: center;
   }
 }

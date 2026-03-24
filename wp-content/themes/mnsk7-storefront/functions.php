@@ -1886,6 +1886,7 @@ add_action( 'woocommerce_single_product_summary', function () {
 /** Trust badges HTML (PDP i PLP — wspólna treść: dostawa, faktura, zwroty) */
 function mnsk7_render_trust_badges( $wrapper_class = 'mnsk7-pdp-trust' ) {
 	$eta_label = function_exists( 'mnsk7_delivery_eta_badge_label' ) ? mnsk7_delivery_eta_badge_label() : __( 'Dostawa jutro', 'mnsk7-storefront' );
+	$eta_label = preg_replace( '/\s*[-–—]+\s*$/u', '', (string) $eta_label );
 	$item_class = $wrapper_class . '__item';
 	echo '<div class="' . esc_attr( $wrapper_class ) . '" role="list">';
 	echo '<span class="' . esc_attr( $item_class ) . '">' . esc_html( $eta_label ) . '</span>';
@@ -1894,6 +1895,57 @@ function mnsk7_render_trust_badges( $wrapper_class = 'mnsk7-pdp-trust' ) {
 	echo '<span class="' . esc_attr( $item_class ) . '">' . esc_html__( 'Zwroty 30 dni', 'mnsk7-storefront' ) . '</span>';
 	echo '</div>';
 }
+
+/**
+ * Product imagery hardening:
+ * - fallback alt text for Woo thumbnails when media alt is empty/hash-like,
+ * - disable lazy placeholders for Woo thumbnails on PLP/PDP to avoid gray boxes.
+ */
+add_filter( 'wp_get_attachment_image_attributes', function ( $attr, $attachment ) {
+	if ( is_admin() || ! is_array( $attr ) ) {
+		return $attr;
+	}
+
+	if ( ! function_exists( 'is_product' ) || ! function_exists( 'is_shop' ) || ! function_exists( 'is_product_taxonomy' ) ) {
+		return $attr;
+	}
+
+	$is_woo_catalog_context = is_product() || is_shop() || is_product_taxonomy();
+	if ( ! $is_woo_catalog_context ) {
+		return $attr;
+	}
+
+	$class = isset( $attr['class'] ) ? (string) $attr['class'] : '';
+	$is_loop_thumb = strpos( $class, 'attachment-woocommerce_thumbnail' ) !== false;
+	if ( ! $is_loop_thumb ) {
+		return $attr;
+	}
+
+	$alt = isset( $attr['alt'] ) ? trim( (string) $attr['alt'] ) : '';
+	$needs_alt_fallback = ( $alt === '' ) || (bool) preg_match( '/^[a-f0-9]{20,}$/i', $alt );
+	if ( $needs_alt_fallback ) {
+		$product_title = '';
+		global $product;
+		if ( $product instanceof WC_Product ) {
+			$product_title = (string) $product->get_name();
+		}
+		if ( $product_title === '' ) {
+			$post_id = get_the_ID();
+			if ( $post_id && get_post_type( $post_id ) === 'product' ) {
+				$product_title = (string) get_the_title( $post_id );
+			}
+		}
+		if ( $product_title !== '' ) {
+			$attr['alt'] = $product_title;
+		}
+	}
+
+	$attr['loading'] = 'eager';
+	$attr['fetchpriority'] = 'auto';
+	$attr['data-no-lazy'] = '1';
+
+	return $attr;
+}, 20, 2 );
 
 /* 10. PDP — trust strip pod CTA (fallback gdy brak mu-plugina) */
 add_action( 'woocommerce_single_product_summary', function () {
