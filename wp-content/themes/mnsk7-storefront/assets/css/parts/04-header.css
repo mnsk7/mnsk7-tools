@@ -244,10 +244,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   width: 22px;
   height: 18px;
   margin: 0 auto;
-  margin-top: 2px; /* optical centering w .mnsk7-header__menu-toggle 44×44 */
   flex-shrink: 0;
   position: relative;
   box-sizing: border-box;
+  color: currentColor;
+  background: linear-gradient(currentColor, currentColor) center / 100% 2px no-repeat;
 }
 .mnsk7-header__hamburger::before,
 .mnsk7-header__hamburger::after {
@@ -261,11 +262,9 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 .mnsk7-header__hamburger::before {
   top: 0;
-  box-shadow: 0 16px 0 currentColor;
 }
 .mnsk7-header__hamburger::after {
-  top: 50%;
-  margin-top: -1px;
+  bottom: 0;
 }
 
 /* Sklep dropdown — megamenu style: 2 columns, wider (audit: "grouped categories") */
