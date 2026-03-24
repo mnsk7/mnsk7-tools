@@ -88,6 +88,9 @@ ul.products.columns-4::before,
 #masthead.mnsk7-header {
   background: #fff !important;
   border-bottom: 1px solid var(--color-border, #e9e8cc);
+  padding-top: 0;
+  padding-bottom: 0;
+  margin-bottom: 0;
 }
 
 /* Desktop (1025px): jeden search/menu — bez duplikatu, bez zależności od JS */
