@@ -1590,6 +1590,84 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 
+/* Mobile icon-size normalization (top-level media, no nested-at-rule ambiguity). */
+@media (max-width: 430px) {
+  .mnsk7-header__menu-toggle,
+  .mnsk7-header__search-toggle,
+  .mnsk7-header__link--account,
+  .mnsk7-header__cart-trigger,
+  .mnsk7-header__cart .cart-contents {
+    width: 40px;
+    height: 40px;
+    min-width: 40px;
+    min-height: 40px;
+    padding: 0;
+    gap: 0;
+    justify-content: center;
+  }
+  .mnsk7-header__search-icon,
+  .mnsk7-header__search-icon svg,
+  .mnsk7-header__account-icon,
+  .mnsk7-header__account-icon svg,
+  .mnsk7-header__cart-icon,
+  .mnsk7-header__cart-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+@media (max-width: 360px) {
+  .mnsk7-header__menu-toggle,
+  .mnsk7-header__search-toggle,
+  .mnsk7-header__link--account,
+  .mnsk7-header__cart-trigger,
+  .mnsk7-header__cart .cart-contents {
+    width: 36px;
+    height: 36px;
+    min-width: 36px;
+    min-height: 36px;
+    padding: 0;
+    gap: 0;
+    justify-content: center;
+  }
+  .mnsk7-header__search-icon,
+  .mnsk7-header__search-icon svg,
+  .mnsk7-header__account-icon,
+  .mnsk7-header__account-icon svg,
+  .mnsk7-header__cart-icon,
+  .mnsk7-header__cart-icon svg,
+  .mnsk7-header__hamburger {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+@media (max-width: 320px) {
+  .mnsk7-header__menu-toggle,
+  .mnsk7-header__search-toggle,
+  .mnsk7-header__link--account,
+  .mnsk7-header__cart-trigger,
+  .mnsk7-header__cart .cart-contents {
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    min-height: 34px;
+    padding: 0;
+    gap: 0;
+    justify-content: center;
+  }
+  .mnsk7-header__search-icon,
+  .mnsk7-header__search-icon svg,
+  .mnsk7-header__account-icon,
+  .mnsk7-header__account-icon svg,
+  .mnsk7-header__cart-icon,
+  .mnsk7-header__cart-icon svg,
+  .mnsk7-header__hamburger {
+    width: 16px;
+    height: 16px;
+  }
+}
+
 /* Mobile search panel (Pattern B): below header, in flow — pushes content down. Attached to header visually. */
 .mnsk7-header-search-panel {
   display: none;
