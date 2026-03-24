@@ -1308,6 +1308,64 @@ add_action( 'wp_footer', function () {
 	<?php
 }, 20 );
 
+/* PLP layout sync: when viewport crosses mobile breakpoint, reload once to render proper server layout (table/list). */
+add_action( 'wp_footer', function () {
+	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_category() && ! is_product_tag() ) ) {
+		return;
+	}
+	?>
+	<script>
+	(function() {
+		var mq = window.matchMedia('(max-width: 768px)');
+		var syncKey = 'mnsk7_plp_layout_sync_once';
+		var reloaded = false;
+
+		function viewportMode() {
+			return window.innerWidth <= 768 ? 'mobile' : 'desktop';
+		}
+
+		function renderedMode() {
+			if (document.querySelector('.mnsk7-plp-grid-mobile')) return 'mobile';
+			if (document.querySelector('.mnsk7-product-table')) return 'desktop';
+			return 'unknown';
+		}
+
+		function scheduleReload(reason, fromMode, toMode) {
+			if (reloaded) return;
+			var marker = [window.location.pathname, reason, fromMode, toMode].join('|');
+			try {
+				if (sessionStorage.getItem(syncKey) === marker) return;
+				sessionStorage.setItem(syncKey, marker);
+			} catch (e) {}
+			reloaded = true;
+			window.location.reload();
+		}
+
+		var initialViewport = viewportMode();
+		var initialRendered = renderedMode();
+		if (initialRendered !== 'unknown' && initialRendered !== initialViewport) {
+			scheduleReload('boot-mismatch', initialRendered, initialViewport);
+		}
+
+		function handleViewportSwitch() {
+			var currentViewport = viewportMode();
+			if (currentViewport !== initialViewport) {
+				scheduleReload('viewport-switch', initialViewport, currentViewport);
+			}
+		}
+
+		if (typeof mq.addEventListener === 'function') {
+			mq.addEventListener('change', handleViewportSwitch);
+		} else if (typeof mq.addListener === 'function') {
+			mq.addListener(handleViewportSwitch);
+		}
+
+		window.addEventListener('resize', handleViewportSwitch, { passive: true });
+	})();
+	</script>
+	<?php
+}, 21 );
+
 /* 1e bis. PLP chips „Więcej” / „Więcej filtrów”: pokaż/ukryj dodatkowe chipy i blok filtrów. Scroll do wyników po filter/category/tag. */
 add_action( 'wp_footer', function () {
 	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_category() && ! is_product_tag() ) ) {
