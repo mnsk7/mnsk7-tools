@@ -1,0 +1,22 @@
+{
+  "version": 1,
+  "hooks": {
+    "afterFileEdit": [
+      {
+        "command": "node .cursor/hooks/after-file-edit-enforce-verify.js"
+      }
+    ],
+    "subagentStart": [
+      {
+        "command": "node .cursor/hooks/subagent-start-log.js"
+      }
+    ],
+    "stop": [
+      {
+        "command": "node .cursor/hooks/stop-enforce-verify.js",
+        "loop_limit": 10
+      }
+    ]
+  }
+}
+

@@ -40,7 +40,8 @@
   --color-text-muted:     #666666;
   --color-border:         #e9e8cc;
   --color-border-strong:  #d4d3b8;
-  --color-primary:        #0c7ddb;
+  /* Darkened primary to satisfy WCAG AA contrast with white text on 15px buttons */
+  --color-primary:        #0b74c9;
   --color-primary-hover:   #0a6bc2;
   --color-primary-pressed: #09508a;
   --color-primary-dark:    #0a5a9e;

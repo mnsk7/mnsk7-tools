@@ -6,9 +6,19 @@
   "scripts": {
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:e2e:headed": "playwright test --headed"
+    "test:e2e:headed": "playwright test --headed",
+    "verify:preflight": "bash scripts/verify/preflight.sh",
+    "verify:l0": "bash scripts/verify/l0.sh",
+    "verify:l1": "playwright test e2e/woo-flow.spec.js --project=chromium",
+    "verify:a11y": "playwright test e2e/a11y-smoke.spec.js --project=chromium",
+    "verify:l2": "playwright test e2e/header-layout.spec.js e2e/mobile-design.spec.js --project=chromium",
+    "verify:all": "bash scripts/verify/run-all.sh"
   },
   "devDependencies": {
-    "@playwright/test": "^1.49.0"
+    "@axe-core/playwright": "^4.10.2",
+    "@lhci/cli": "^0.15.0",
+    "@playwright/test": "^1.49.0",
+    "lighthouse": "^12.6.0",
+    "linkinator": "^6.1.2"
   }
 }

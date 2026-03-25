@@ -1498,6 +1498,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     .mnsk7-header__cart .count {
       display: none !important;
     }
+    /* Audit task 11 wins on narrow screens: при пустой корзине "0" остаётся видимым */
+    .mnsk7-header__cart--empty .mnsk7-header__cart-count {
+      display: inline-flex !important;
+    }
     .mnsk7-header__cart-trigger,
     .mnsk7-header__cart .cart-contents {
       width: 40px;
