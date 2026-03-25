@@ -34,15 +34,32 @@ body.home .mnsk7-content {
   body:not(.home) .site-content,
   body:not(.home) .mnsk7-content {
     margin-top: var(--header-h);
-    padding-top: var(--space-page-top);
+    /* Mobile: sticky header already reserves space via margin-top; avoid double top-gap. */
+    padding-top: 0;
+  }
+  body.mnsk7-has-promo:not(.home) #content,
+  body.mnsk7-has-promo:not(.home) .site-content,
+  body.mnsk7-has-promo:not(.home) .mnsk7-content {
+    margin-top: calc(var(--header-h) + var(--mnsk7-promo-h, 2.5rem));
   }
 }
 @media (min-width: 768px) {
   #content,
   .site-content,
   .mnsk7-content {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    /* UI policy: 8/16/24 rhythm — desktop uses 24px padding */
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* UI policy: very narrow mobile uses 8px padding */
+@media (max-width: 360px) {
+  #content,
+  .site-content,
+  .mnsk7-content {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 }
 

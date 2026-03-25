@@ -27,3 +27,32 @@ require_once $mnsk7_inc . 'checkout.php';
 require_once $mnsk7_inc . 'woo-ux.php';
 require_once $mnsk7_inc . 'pages-seed.php';
 require_once $mnsk7_inc . 'performance.php';
+
+/**
+ * Legacy URL compatibility (preprod readiness):
+ * `/polityka-prywatnosci/` existed historically; on staging/prod the actual page slug may differ.
+ * If the request is a 404 for that legacy path, redirect to the configured Privacy Policy URL
+ * (or a safe fallback that exists on staging).
+ */
+add_action( 'template_redirect', function () {
+	if ( ! function_exists( 'is_404' ) || ! is_404() ) {
+		return;
+	}
+	$path = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
+	$path = wp_parse_url( $path, PHP_URL_PATH );
+	if ( ! is_string( $path ) ) {
+		return;
+	}
+	if ( untrailingslashit( $path ) !== '/polityka-prywatnosci' ) {
+		return;
+	}
+
+	$target = function_exists( 'get_privacy_policy_url' ) ? (string) get_privacy_policy_url() : '';
+	if ( $target === '' ) {
+		$target = home_url( '/privacy-policy/' );
+	}
+	if ( $target !== '' ) {
+		wp_safe_redirect( $target, 301 );
+		exit;
+	}
+}, 1 );

@@ -25,6 +25,8 @@ if ( taxonomy_exists( 'product_cat' ) ) {
 $dostawa_url = home_url( '/dostawa-i-platnosci/' );
 $kontakt_url = home_url( '/kontakt/' );
 $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
+$privacy_policy_url = function_exists( 'get_privacy_policy_url' ) ? get_privacy_policy_url() : '';
+$privacy_policy_url = $privacy_policy_url ? $privacy_policy_url : home_url( '/privacy-policy/' );
 ?>
 	</div><!-- #content -->
 
@@ -47,7 +49,7 @@ $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
 					<li><a href="<?php echo esc_url( $kontakt_url ); ?>"><?php esc_html_e( 'Kontakt', 'mnsk7-storefront' ); ?></a></li>
 					<li><a href="<?php echo esc_url( $regulamin_zwroty_url ); ?>"><?php esc_html_e( 'Zwroty i reklamacje', 'mnsk7-storefront' ); ?></a></li>
 					<li><a href="<?php echo esc_url( home_url( '/regulamin/' ) ); ?>"><?php esc_html_e( 'Regulamin', 'mnsk7-storefront' ); ?></a></li>
-					<li><a href="<?php echo esc_url( home_url( '/polityka-prywatnosci/' ) ); ?>"><?php esc_html_e( 'Polityka prywatności', 'mnsk7-storefront' ); ?></a></li>
+					<li><a href="<?php echo esc_url( $privacy_policy_url ); ?>"><?php esc_html_e( 'Polityka prywatności', 'mnsk7-storefront' ); ?></a></li>
 				</ul>
 				</div>
 			</div>

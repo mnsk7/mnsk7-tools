@@ -38,36 +38,51 @@ if [[ -z "$CHANGED" ]]; then
   exit 1
 fi
 
+SHOULD_RUN=0
+HAS_NON_TOOLING=0
+
 while IFS= read -r f; do
   case "$f" in
-    # verify plumbing / docs-only: НЕ запускаем a11y автоматически
-    # (слишком дорого и тормозит агентов). Форс — через VERIFY_A11Y=1.
+    # verify plumbing / docs-only: не является причиной запускать a11y,
+    # но и НЕ должно отменять запуск, если в diff есть UI/Woo изменения.
     package.json|playwright.config.*|scripts/verify/*|docs/*|.cursor/*)
-      exit 1
       ;;
 
     # Theme / templates / CSS / JS
     wp-content/themes/*/*.php|wp-content/themes/*/header.php|wp-content/themes/*/footer.php)
-      exit 0
+      SHOULD_RUN=1
+      HAS_NON_TOOLING=1
       ;;
     wp-content/themes/*/assets/css/*|wp-content/themes/*/assets/css/parts/*)
-      exit 0
+      SHOULD_RUN=1
+      HAS_NON_TOOLING=1
       ;;
     wp-content/themes/*/assets/js/*)
-      exit 0
+      SHOULD_RUN=1
+      HAS_NON_TOOLING=1
       ;;
 
     # Woo templates in theme
     wp-content/themes/*/woocommerce/*)
-      exit 0
+      SHOULD_RUN=1
+      HAS_NON_TOOLING=1
       ;;
 
     # Runtime plugins can affect frontend UI too (messages/buttons)
     wp-content/mu-plugins/*|wp-content/plugins/*)
-      exit 0
+      SHOULD_RUN=1
+      HAS_NON_TOOLING=1
+      ;;
+
+    *)
+      HAS_NON_TOOLING=1
       ;;
   esac
 done <<< "$CHANGED"
+
+if [[ "$SHOULD_RUN" == "1" ]]; then
+  exit 0
+fi
 
 exit 1
 

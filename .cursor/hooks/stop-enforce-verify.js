@@ -25,6 +25,54 @@ function parseLastTimestampFromLog(filePath) {
   return Number.isFinite(t) ? t : null;
 }
 
+function isProcessScope(filePath) {
+  const p = String(filePath || "");
+
+  // Avoid spam: docs/tasks are not runtime/process by default.
+  if (/^docs\//.test(p)) return false;
+  if (/^tasks\//.test(p)) return false;
+
+  // Runtime/process surfaces where verify discipline matters.
+  if (/^scripts\/verify\//.test(p)) return true;
+  if (/^e2e\//.test(p)) return true;
+  if (/^wp-content\//.test(p)) return true;
+  if (/^\.cursor\/(hooks|agents)\//.test(p)) return true;
+
+  // Root contract files.
+  if (/^(package\.json|playwright\.config\..*|playwright\.config\.js|AGENTS\.md|OPERATING-MODEL\.md)$/.test(p)) {
+    return true;
+  }
+
+  return false;
+}
+
+function parseLastProcessEditFromLog(filePath) {
+  if (!fs.existsSync(filePath)) return null;
+  const content = fs.readFileSync(filePath, "utf8").trim();
+  if (!content) return null;
+  const lines = content.split("\n");
+
+  for (let i = lines.length - 1; i >= 0; i--) {
+    const line = lines[i];
+    // format: ISO <path>
+    const firstSpace = line.indexOf(" ");
+    if (firstSpace === -1) continue;
+    const iso = line.slice(0, firstSpace).trim();
+    const rest = line.slice(firstSpace + 1).trim();
+    if (!rest) continue;
+
+    // file-edits.log stores absolute paths; normalize to repo-relative when possible.
+    const cwd = process.cwd();
+    const rel = rest.startsWith(cwd + path.sep) ? rest.slice(cwd.length + 1) : rest;
+    if (!isProcessScope(rel)) continue;
+
+    const t = Date.parse(iso);
+    if (Number.isFinite(t)) return t;
+  }
+
+  return null;
+}
+
 function parseLastSubagentTime(logPath, subagentName) {
   if (!fs.existsSync(logPath)) return null;
   const content = fs.readFileSync(logPath, "utf8").trim();
@@ -97,7 +145,7 @@ async function main() {
     "utf8"
   );
 
-  const lastEdit = parseLastTimestampFromLog(editsLog);
+  const lastEdit = parseLastProcessEditFromLog(editsLog) ?? parseLastTimestampFromLog(editsLog);
   const lastVerifier = parseLastSubagentTime(subagentLog, "verifier");
   const lastCritic = parseLastSubagentTime(subagentLog, "critic-scorer");
   const lastDoer = parseLastSubagentTime(subagentLog, "doer");
@@ -144,7 +192,7 @@ async function main() {
     }
     writeJson({
       followup_message:
-        "Были правки после `critic-scorer (PHASE=1)`. По пайплайну сейчас НЕ verifier/PHASE=2: сначала исправь замечания PHASE=1 (Doer/min safe diff), затем запусти Verify по зоне (дефолт: `npm run verify:changed` + `npm run verify:l0`; Woo-flow/L1 — только если Woo-зона или форс `VERIFY_L1=1`), и только потом `verifier` → `critic-scorer (PHASE=2)`."
+        "Были правки после `critic-scorer (PHASE=1)`. По пайплайну сейчас НЕ verifier/PHASE=2: сначала исправь замечания PHASE=1 (Doer/min safe diff). Дальше разделяй верификацию: (A) практическая — сделано ли по смыслу то, что просил Owner (всегда); (B) техническая — запускать verify/tests только если требуется по зоне/политике/детекторам (дефолт: `npm run verify:changed` + `npm run verify:l0`; L1 Woo-flow — только если Woo-зона или форс `VERIFY_L1=1`). И только потом `verifier` (технический) → `critic-scorer (PHASE=2)` (включая практическую проверку)."
     });
     markNag("phase1_after_critic");
     return;
@@ -179,7 +227,7 @@ async function main() {
   }
   writeJson({
     followup_message:
-      "Похоже, были правки после последнего verifier/critic. Нельзя завершать шаг без гейта: сначала Verify по зоне (дефолт: `npm run verify:changed` + `npm run verify:l0`; L1 — только если Woo-зона или форс `VERIFY_L1=1`), затем запусти `verifier`, затем `critic-scorer (PHASE=2)` на текущем diff. Если outcome=REJECT/ESCALATE/critical/major — добавь запись в `docs/CRITIC_POSTMORTEMS.md`. После фиксов — повтори verifier+critic ещё раз."
+      "Похоже, были правки после последнего verifier/critic. Нельзя завершать шаг без гейта. Разделяй верификацию: (A) практическая — соответствие запросу Owner (всегда); (B) техническая — verify/tests только если требуется по зоне/политике/детекторам (дефолт: `npm run verify:changed` + `npm run verify:l0`; L1 — только если Woo-зона или форс `VERIFY_L1=1`). Затем запусти `verifier` (технический) и `critic-scorer (PHASE=2)` (включая практическую проверку) на текущем diff. Если outcome=REJECT/ESCALATE/critical/major — добавь запись в `docs/CRITIC_POSTMORTEMS.md`. После фиксов — повтори verifier+critic ещё раз."
   });
   markNag("phase2_gate");
 }

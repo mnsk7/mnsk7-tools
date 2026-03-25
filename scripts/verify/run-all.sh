@@ -19,6 +19,8 @@ export BASE_URL
 FAIL=0
 REQUIRE_A11Y="${REQUIRE_A11Y:-}"
 ALLOW_SKIP_A11Y="${ALLOW_SKIP_A11Y:-0}"
+REQUIRE_L1="${REQUIRE_L1:-}"
+ALLOW_SKIP_L1="${ALLOW_SKIP_L1:-0}"
 
 run_step () {
   local name="$1"
@@ -43,6 +45,7 @@ run_step_capture () {
 
   local out
   out="$("$@" 2>&1)" || true
+  local code="${PIPESTATUS[0]:-0}"
   echo "$out"
 
   if echo "$out" | grep -qiE '(^|[^a-z])flaky([^a-z]|$)'; then
@@ -51,7 +54,7 @@ run_step_capture () {
     return 1
   fi
 
-  if echo "$out" | grep -qiE '(^|[^a-z])failed([^a-z]|$)'; then
+  if [[ "$code" != "0" ]]; then
     echo "=== RESULT: ${name}: FAIL ==="
     FAIL=1
     return 1
@@ -74,8 +77,23 @@ else
   FAIL=1
 fi
 
-if bash scripts/verify/should-run-l1-woo.sh; then
-  run_step_capture "l1 (woo flow)" npm run verify:l1 || true
+if [[ -z "${REQUIRE_L1}" ]]; then
+  if bash scripts/verify/should-run-l1-woo.sh; then
+    REQUIRE_L1="1"
+  else
+    REQUIRE_L1="0"
+  fi
+fi
+export REQUIRE_L1
+
+if [[ "${VERIFY_L1:-0}" == "1" || "${REQUIRE_L1}" == "1" ]]; then
+  if [[ "${ALLOW_SKIP_L1}" == "1" && "${VERIFY_L1:-0}" != "1" ]]; then
+    echo ""
+    echo "=== VERIFY: l1 (woo flow) ==="
+    echo "=== RESULT: l1 (woo flow): SKIP (required by policy, but ALLOW_SKIP_L1=1) ==="
+  else
+    run_step_capture "l1 (woo flow)" npm run verify:l1 || true
+  fi
 else
   echo ""
   echo "=== VERIFY: l1 (woo flow) ==="

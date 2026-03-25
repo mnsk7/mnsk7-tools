@@ -34,7 +34,8 @@
 						<li><a href="<?php echo esc_url( home_url( '/dostawa-i-platnosci/' ) ); ?>"><?php esc_html_e( 'Dostawa i platnosci', 'tech-storefront' ); ?></a></li>
 						<li><a href="<?php echo esc_url( home_url( '/kontakt/' ) ); ?>"><?php esc_html_e( 'Kontakt', 'tech-storefront' ); ?></a></li>
 						<li><a href="<?php echo esc_url( home_url( '/regulamin/' ) ); ?>"><?php esc_html_e( 'Regulamin', 'tech-storefront' ); ?></a></li>
-						<li><a href="<?php echo esc_url( home_url( '/polityka-prywatnosci/' ) ); ?>"><?php esc_html_e( 'Polityka prywatnosci', 'tech-storefront' ); ?></a></li>
+						<?php $privacy_policy_url = function_exists( 'get_privacy_policy_url' ) ? get_privacy_policy_url() : ''; ?>
+						<li><a href="<?php echo esc_url( $privacy_policy_url ? $privacy_policy_url : home_url( '/privacy-policy/' ) ); ?>"><?php esc_html_e( 'Polityka prywatnosci', 'tech-storefront' ); ?></a></li>
 					</ul>
 					<p class="mnsk7-site-footer-block__social">
 						<a href="<?php echo esc_url( defined( 'MNK7_INSTAGRAM_URL' ) ? MNK7_INSTAGRAM_URL : 'https://www.instagram.com/mnsk7tools/' ); ?>" target="_blank" rel="noopener" aria-label="Instagram">
