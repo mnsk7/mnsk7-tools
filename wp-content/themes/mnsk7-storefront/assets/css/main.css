@@ -8566,7 +8566,8 @@ body.home .mnsk7-content {
   body:not(.home) #content,
   body:not(.home) .site-content,
   body:not(.home) .mnsk7-content {
-    padding-top: calc(var(--header-h) + var(--space-page-top));
+    margin-top: var(--header-h);
+    padding-top: var(--space-page-top);
   }
 }
 @media (min-width: 768px) {
