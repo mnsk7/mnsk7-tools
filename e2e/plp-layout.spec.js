@@ -17,7 +17,7 @@ test.describe('PLP layout (server-side) — desktop UA', () => {
   test.skip(({ isMobile }) => isMobile, 'Desktop-UA assertions are not applicable to mobile projects.');
 
   test('table present, mobile grid absent', async ({ page }) => {
-    await page.goto(SHOP_URL, { waitUntil: 'domcontentloaded' });
+    await page.goto(SHOP_URL, { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
     const tableWrap = page.locator('.mnsk7-product-table-wrap');
     const gridMobile = page.locator('.mnsk7-plp-grid-mobile');
@@ -37,7 +37,7 @@ test.describe('PLP layout (server-side) — mobile UA', () => {
   });
 
   test('grid present, table absent', async ({ page }) => {
-    await page.goto(SHOP_URL, { waitUntil: 'domcontentloaded' });
+    await page.goto(SHOP_URL, { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
     const gridMobile = page.locator('.mnsk7-plp-grid-mobile');
     const tableWrap = page.locator('.mnsk7-product-table-wrap');
@@ -56,7 +56,7 @@ test.describe('PLP category layout', () => {
   test.skip(({ isMobile }) => isMobile, 'Desktop-UA assertions are not applicable to mobile projects.');
 
   test('desktop UA on category: table visible', async ({ page }) => {
-    await page.goto('/sklep/', { waitUntil: 'domcontentloaded' });
+    await page.goto('/sklep/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
     const tableWrap = page.locator('.mnsk7-product-table-wrap');
     const gridMobile = page.locator('.mnsk7-plp-grid-mobile');

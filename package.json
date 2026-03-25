@@ -12,7 +12,8 @@
     "verify:l1": "playwright test e2e/woo-flow.spec.js --project=chromium",
     "verify:a11y": "playwright test e2e/a11y-smoke.spec.js --project=chromium",
     "verify:l2": "playwright test e2e/header-layout.spec.js e2e/mobile-design.spec.js --project=chromium",
-    "verify:all": "bash scripts/verify/run-all.sh"
+    "verify:changed": "bash scripts/verify/run-changed-e2e.sh",
+    "verify:all": "bash -lc 'set -o pipefail; out_dir=artifacts/verify; mkdir -p \"$out_dir\"; out=\"$out_dir/verify-all.log\"; export BASE_URL=${BASE_URL:-https://staging.mnsk7-tools.pl}; bash scripts/verify/run-all.sh 2>&1 | tee \"$out\"; code=${PIPESTATUS[0]}; VERIFY_ALL_EXIT_CODE=$code BASE_URL=\"$BASE_URL\" node scripts/verify/verify-report.mjs < \"$out\" >/dev/null || true; exit $code'"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.10.2",

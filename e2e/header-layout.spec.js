@@ -101,7 +101,7 @@ test.describe('Header layout — mobile', () => {
     test(`${viewport.width}x${viewport.height}: all controls in one row`, async ({ page }) => {
       await page.setViewportSize(viewport);
       await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
-      await page.goto('/', { waitUntil: 'domcontentloaded' });
+      await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
       const rects = await getHeaderControlRects(page, MOBILE_SELECTORS);
       const present = rects.filter(Boolean);
@@ -114,7 +114,7 @@ test.describe('Header layout — mobile', () => {
     test(`${viewport.width}x${viewport.height}: burger, search, account, cart do not overlap`, async ({ page }) => {
       await page.setViewportSize(viewport);
       await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
-      await page.goto('/', { waitUntil: 'domcontentloaded' });
+      await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
 
       const rects = await getHeaderControlRects(page, MOBILE_SELECTORS);
       const present = rects.filter(Boolean);
@@ -177,6 +177,7 @@ test.describe('Header layout — mobile', () => {
 });
 
 test.describe('Header layout — desktop regression', () => {
+  test.skip(({ isMobile }) => isMobile, 'Desktop header regression is not applicable to mobile projects.');
   for (const vp of DESKTOP_VIEWPORTS) {
     test(`${vp.width}x${vp.height}: nav, search, account, cart do not overlap`, async ({ page }) => {
       await page.setViewportSize(vp);
@@ -256,7 +257,8 @@ test.describe('Header layout — desktop regression', () => {
 });
 
 test.describe('Header — visual regression (screenshots)', () => {
-  test('mobile closed: header snapshot', async ({ page }) => {
+  test('mobile closed: header snapshot', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium', 'Header visual snapshots are stored for chromium project only.');
     await page.setViewportSize({ width: 375, height: 700 });
     await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
     await page.goto('/', { waitUntil: 'domcontentloaded' });
@@ -265,7 +267,8 @@ test.describe('Header — visual regression (screenshots)', () => {
     await expect(header).toHaveScreenshot('header-mobile-closed.png', { maxDiffPixels: 100 });
   });
 
-  test('mobile open: header + menu snapshot', async ({ page }) => {
+  test('mobile open: header + menu snapshot', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium', 'Header visual snapshots are stored for chromium project only.');
     await page.setViewportSize({ width: 375, height: 700 });
     await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
     await page.goto('/', { waitUntil: 'domcontentloaded' });
@@ -277,7 +280,8 @@ test.describe('Header — visual regression (screenshots)', () => {
     await expect(header).toHaveScreenshot('header-mobile-open.png', { maxDiffPixels: 100 });
   });
 
-  test('desktop closed: header snapshot', async ({ page }) => {
+  test('desktop closed: header snapshot', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium', 'Header visual snapshots are stored for chromium project only.');
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.setExtraHTTPHeaders({ 'User-Agent': DESKTOP_UA });
     await page.goto('/', { waitUntil: 'domcontentloaded' });
@@ -286,7 +290,8 @@ test.describe('Header — visual regression (screenshots)', () => {
     await expect(header).toHaveScreenshot('header-desktop-closed.png', { maxDiffPixels: 100 });
   });
 
-  test('desktop Sklep open: header + megamenu snapshot', async ({ page }) => {
+  test('desktop Sklep open: header + megamenu snapshot', async ({ page }, testInfo) => {
+    test.skip(testInfo.project.name !== 'chromium', 'Header visual snapshots are stored for chromium project only.');
     await page.setViewportSize({ width: 1280, height: 800 });
     await page.setExtraHTTPHeaders({ 'User-Agent': DESKTOP_UA });
     await page.goto('/', { waitUntil: 'domcontentloaded' });

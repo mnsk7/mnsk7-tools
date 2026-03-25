@@ -16,55 +16,28 @@
 
 ---
 
-### 2026-03-25 — ESCALATE: a11y fix not deploy-verified
+### 2026-03-25 — REJECT/ESCALATE: a11y (color-contrast) на remote staging без post-deploy evidence
 
-- **Context**: UI/UX fixes + пайплайн дисциплина. Локально изменены CSS tokens (контраст primary), и обновлены e2e проверки (`woo-flow`, `a11y-smoke`) для корректного покрытия checkout.
+- **Context**: правки UI/UX (CSS tokens/CTA) и e2e; проверки запускались против remote staging (`BASE_URL=https://staging.mnsk7-tools.pl`).
 - **Severity**: critical
 - **What slipped**:
-  - A11y smoke (`axe`) продолжает падать на **remote staging** по `color-contrast` (например `.mnsk7-header__search-submit`), потому что staging ещё **не содержит** наши локальные CSS изменения.
-  - Верификация пыталась оценивать “исправление” без деплоя/кэш-баста, то есть без проверки на целевой среде.
+  - A11y smoke (`axe`) продолжает падать на remote staging по `color-contrast` (например `.mnsk7-header__search-submit`, `.woocommerce-message > .wc-forward.button`) из-за несоответствия версии (деплой/кэш) и/или реального дефекта контраста.
+  - Верификация пыталась оценивать “исправление” без post-deploy подтверждения версии (deploy → purge/bust cache → rerun на той же среде).
+  - `verify:all` мог быть “зелёным”, когда a11y был SKIP по умолчанию.
 - **Why it slipped**:
-  - Проверки запускаются против `BASE_URL=https://staging.mnsk7-tools.pl`, но изменения ещё не задеплоены туда; результат теста отражает старую версию.
-  - Не было явного шага “deploy → purge cache → rerun a11y” как обязательного для a11y-багфикса.
+  - Remote staging отдавал CSS со старым `bgColor #0c7ddb` (деплой/кэш), поэтому локальные изменения не подтверждались на целевой среде.
+  - Не было жёсткого контракта “a11y для UI/CTA не может быть SKIP”.
 - **Evidence**:
-  - `npx playwright test e2e/woo-flow.spec.js --project=chromium` → **3 passed** (функциональная часть ок).
-  - `npx playwright test e2e/a11y-smoke.spec.js --project=chromium` → **FAIL**: `axe` `color-contrast`, `bgColor #0c7ddb` (remote staging).
-  - Critic+Scorer PHASE=2 outcome = **ESCALATE**: требование деплоя и повторного прогона a11y на той же среде.
+  - `npm run verify:a11y` → FAIL: `axe` `color-contrast`, `contrastRatio 4.22`, `expected 4.5:1`, `bgColor #0c7ddb`.
+  - `npm run verify:all` → OK, но `a11y: SKIP`.
 - **Mitigation (now)**:
-  - Зафиксировано как ESCALATE до получения post-deploy evidence.
-  - Уточнены локальные e2e шаги для checkout (предусловие add_to_cart).
+  - Не принимать PHASE=2 как ACCEPT без post-deploy evidence: deploy → purge/bust cache → `VERIFY_A11Y=1 npm run verify:all` или `npm run verify:a11y` PASS на том же `BASE_URL`.
 - **Prevention (process)**:
-  - **verify**: для a11y-багфикса обязательная последовательность: deploy → cache bust/purge → a11y smoke (PASS) → только после этого ACCEPT.
+  - **verify**: remote a11y должен быть deploy-aware: в `scripts/verify/preflight.sh`/`scripts/verify/verify-report.mjs` фиксировать маркер версии (URL/хэш/headers) в `artifacts/verify/verify-report.json` и фейлить как `not-deployed`, если версия не подтверждена.
+  - **verify**: если затронуты UI/CTA (theme/CSS/header/footer/buttons) — a11y обязателен, SKIP = FAIL без явного allow-флага.
   - **process**: явно отличать “локальный diff готов” от “staging подтверждён” и не смешивать evidence разных версий.
-# Critic postmortems (pipeline learning log)
-
-Этот документ ведётся **Critic+Scorer** после выявления существенных проблем в пайплайне или результате.
-
-## Когда писать постмортем
-
-Пишем запись, если:
-- verdict = `REJECT` или `ESCALATE`
-- либо обнаружены **critical/major** проблемы (в т.ч. “fake completion”, обход verify, сломанный Woo flow)
-- либо пришлось делать существенный refайн процесса (новые rules/skills/MCP), чтобы не повторять ошибку
-
-## Формат записи (шаблон)
-
-### YYYY-MM-DD — <короткий заголовок>
-
-- **Context**: какая задача/изменение
-- **Severity**: critical | major | minor
-- **What slipped**: что пропустили (конкретно)
-- **Why it slipped**: почему это стало возможно (процесс/инструменты/контекст/человеческий фактор)
-- **Evidence**: какие артефакты это доказали (Playwright trace/report, Lighthouse, console, diff)
-- **Mitigation (now)**: что сделали сразу
-- **Prevention (process)**:
-  - **rules**: что добавить/уточнить в `.cursor/rules/*`
-  - **skills**: что добавить/усилить в `.cursor/skills/*`
-  - **mcp/tools**: какой MCP/инструмент подключить/использовать (например Chrome DevTools MCP)
-  - **verify**: какие проверки L0/L1/L2 добавить/ужесточить
 
 ---
-
 ### 2026-03-25 — Pipeline discipline slips (no auto-run)
 
 - **Context**: изменения процесса/структуры (миграция legacy слоя, MCP конфиг, требования к постмортемам).
@@ -75,30 +48,13 @@
   - повторяющиеся замечания Owner “почему не запустил verifier/critic”
   - критик требовал VERIFY_REPORT и не мог дать ACCEPT
 - **Mitigation (now)**:
-  - добавлено alwaysApply правило автозапуска пайплайна (`.cursor/rules/10-autostart-pipeline.mdc`)
-  - добавлен `docs/CRITIC_POSTMORTEMS.md` + обязательство критика писать постмортем при REJECT/ESCALATE
-  - прогон `npm run verify:all` показал FAIL по a11y (реальная проблема, не поломка пайплайна)
+  - закреплён операционный гейт через `.cursor/hooks/after-file-edit-enforce-verify.js` (напоминание/требование verify-дисциплины)
+  - закреплено в `.cursor/agents/critic-scorer.md`: без `artifacts/verify/verify-report.json` outcome не ACCEPT
 - **Prevention (process)**:
-  - **rules**: держать `.cursor/rules/85-verify-critic-loop.mdc` как обязательный гейт; не принимать изменения процесса без верификации
-  - **skills**: фиксировать “как запускать verify” и “как читать PASS/FAIL/SKIP” в `START_HERE`
-  - **mcp/tools**: использовать DevTools MCP для evidence (perf/a11y/console) при спорных кейсах
-  - **verify**: стандартизировать VERIFY_REPORT (структурированный) перед любым ACCEPT
-
----
-
-### 2026-03-25 — Large migration without structured VERIFY_REPORT
-
-- **Context**: массовая миграция процесса/структуры (удаление `.agents`, добавление `.cursor/hooks`, MCP, новые skills).
-- **Severity**: major
-- **What slipped**: изменения такого масштаба были сделаны без структурированного `VERIFY_REPORT` и без доказуемого “green run” verify-уровней.
-- **Why it slipped**: не было автоматической генерации `VERIFY_REPORT.json` в `verify:all`, а критик не имел жёсткого правила “без VERIFY_REPORT — не ACCEPT”.
-- **Evidence**: Critic+Scorer PHASE=2 требовал VERIFY_REPORT и указал на непроверенный риск слома workflows/CI.
-- **Mitigation (now)**:
-  - в `.cursor/agents/critic-scorer.md` закреплено: без `VERIFY_REPORT` outcome не ACCEPT
-  - добавляем генерацию `VERIFY_REPORT.json` как часть `verify:all`
-- **Prevention (process)**:
-  - **rules**: требовать `VERIFY_REPORT.json` для любых process/runtime изменений
-  - **verify**: `verify:all` должен генерировать PASS/FAIL/SKIP отчёт + пути артефактов
+  - **process**: без свежего `artifacts/verify/verify-report.json` (создаётся `npm run verify:all`) не запрашивать PHASE=2/ACCEPT.
+  - **hooks**: `.cursor/hooks/after-file-edit-enforce-verify.js` должен явно требовать “run verify + приложи артефакты” при изменениях процесса/verify tooling.
+  - **mcp/tools**: использовать DevTools MCP для evidence (perf/a11y/console) при спорных кейсах.
+  - **verify**: стандартизировать `VERIFY_REPORT` (структурированный: passed/failed/skipped counts + ссылки на артефакты) перед любым ACCEPT.
 
 ---
 
