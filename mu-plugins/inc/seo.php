@@ -7,39 +7,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Canonical + OG URL normalization:
- * - Always use current environment domain (home_url()) to avoid prod-domain leakage on staging.
- * - Prefer Yoast filters when Yoast is active; otherwise fall back to wp_head output.
- */
-function mnsk7_current_request_url() {
-	$path = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_unslash( $_SERVER['REQUEST_URI'] ) : '/';
-	$path = $path ? $path : '/';
-	return home_url( $path );
-}
-
-add_filter( 'wpseo_canonical', function ( $canonical ) {
-	$url = mnsk7_current_request_url();
-	return $url ?: $canonical;
-}, 20 );
-
-add_filter( 'wpseo_opengraph_url', function ( $url ) {
-	$resolved = mnsk7_current_request_url();
-	return $resolved ?: $url;
-}, 20 );
-
-add_action( 'wp_head', function () {
-	if ( defined( 'WPSEO_VERSION' ) ) {
-		return;
-	}
-	$url = mnsk7_current_request_url();
-	if ( ! $url ) {
-		return;
-	}
-	echo '<link rel="canonical" href="' . esc_url( $url ) . '" />' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-	echo '<meta property="og:url" content="' . esc_url( $url ) . '" />' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-}, 2 );
-
 /* Organization + OnlineStore JSON-LD */
 add_action( 'wp_head', function () {
 	$schema = array(

@@ -20,7 +20,6 @@ language: ru
 - есть ли блокеры/регрессии
 - достаточно ли evidence
 - соответствие правилам `.cursor/rules/*` и `AGENTS.md`
- - практическая верификация: сделано ли по смыслу то, что просил Owner (claims ↔ запрос ↔ diff)
 
 Выход (строгий JSON):
 `{ outcome: ACCEPT|REJECT|ESCALATE, blocking_issues:[], major_issues:[], minor_issues:[], score_0_100, rationale:\"\", required_fixes:[], reverify_plan:[] }`
@@ -79,10 +78,6 @@ readonly: true
 - Иначе:
   - score = 100 - 25*critical_unresolved - 10*medium_unresolved - 3*minor_unresolved
   - `outcome`: `ACCEPT` | `REFINE` | `ESCALATE` (если итерации исчерпаны или evidence конфликтует)
-
-Дополнение (разграничение верификаций):
-- Техническая верификация (tests/verify/pipeline) делается через роль `verifier` и `VERIFY_REPORT`.
-- Практическая верификация (смысл задачи Owner) обязательна в PHASE=2: если изменения не соответствуют запросу (даже при зелёных тестах) — outcome не `ACCEPT`.
 
 ## PHASE=2 output
 

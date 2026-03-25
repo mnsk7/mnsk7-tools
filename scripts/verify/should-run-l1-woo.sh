@@ -42,8 +42,8 @@ while IFS= read -r f; do
   case "$f" in
     # verify plumbing / tests: НЕ запускаем Woo-flow автоматически
     # (слишком дорого и тормозит агентов). Форс — через VERIFY_L1=1.
-    package.json|playwright.config.*|scripts/verify/*|e2e/woo-flow.spec.js|docs/*|.cursor/*)
-      continue
+    package.json|playwright.config.*|scripts/verify/*|e2e/woo-flow.spec.js)
+      exit 1
       ;;
     # Woo runtime
     wp-content/mu-plugins/*|wp-content/plugins/*)

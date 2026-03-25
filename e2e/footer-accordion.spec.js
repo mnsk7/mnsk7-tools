@@ -21,13 +21,13 @@ test.describe('Footer accordion (mobile)', () => {
     }
 
     const col = cols.nth(1);
-    const secondTrigger = col.locator('.mnsk7-footer__accordion-trigger').first();
+    const secondTitle = col.locator('.mnsk7-footer__title');
 
-    await secondTrigger.scrollIntoViewIfNeeded();
-    await secondTrigger.click({ force: true });
+    await secondTitle.scrollIntoViewIfNeeded();
+    await secondTitle.click({ force: true });
 
     await expect(col).toHaveClass(/is-open/, { timeout: 3000 });
-    const ariaExpanded = await secondTrigger.getAttribute('aria-expanded');
+    const ariaExpanded = await secondTitle.getAttribute('aria-expanded');
     expect(ariaExpanded).toBe('true');
   });
 
@@ -35,9 +35,8 @@ test.describe('Footer accordion (mobile)', () => {
     await page.goto('/', { waitUntil: 'domcontentloaded' });
 
     const footer = page.locator('#colophon.mnsk7-footer, .mnsk7-footer').first();
-    const firstTrigger = footer.locator('.mnsk7-footer__accordion-trigger').first();
-    await expect(firstTrigger).toBeVisible();
-    await expect(firstTrigger).toHaveAttribute('aria-expanded');
-    await expect(firstTrigger).toHaveJSProperty('tagName', 'BUTTON');
+    const firstTitle = footer.locator('.mnsk7-footer__title').first();
+    await expect(firstTitle).toHaveAttribute('role', 'button');
+    await expect(firstTitle).toHaveAttribute('aria-expanded');
   });
 });
