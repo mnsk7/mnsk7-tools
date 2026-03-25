@@ -142,7 +142,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   min-height: var(--header-h);
   max-width: var(--content-max, 1200px);
   margin: 0 auto;
-  padding: 0 1rem;
+  /* hdr-01: match #content horizontal padding (25-global-layout) */
+  padding: 0 1.5rem;
   box-sizing: border-box;
   min-width: 0;
   overflow: visible;
@@ -211,6 +212,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   font-weight: 500;
+  line-height: 1.35;
   color: var(--color-text);
   text-decoration: none;
   border-bottom: none;
@@ -1200,7 +1202,6 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 @media (max-width: 900px) {
   .mnsk7-header__inner {
     gap: 0.5rem;
-    padding: 0 0.75rem;
   }
   .mnsk7-header__menu a {
     padding: 0.4rem 0.5rem;
@@ -1836,6 +1837,23 @@ body .site .site-content {
     min-height: 44px;
     display: flex;
     align-items: center;
+  }
+}
+
+/* hdr-01: inline padding jak #content / .site-content (25-global-layout) — nadpisuje węższe paddingi z bloków ≤1024px */
+@media (min-width: 769px) {
+  .mnsk7-header__inner {
+    padding-inline: max(1.5rem, env(safe-area-inset-left)) max(1.5rem, env(safe-area-inset-right));
+  }
+}
+@media (max-width: 768px) {
+  .mnsk7-header__inner {
+    padding-inline: max(1rem, env(safe-area-inset-left)) max(1rem, env(safe-area-inset-right));
+  }
+}
+@media (max-width: 360px) {
+  .mnsk7-header__inner {
+    padding-inline: max(0.5rem, env(safe-area-inset-left)) max(0.5rem, env(safe-area-inset-right));
   }
 }
 

@@ -3,7 +3,8 @@
    Task 7: !important celowo — nadpisanie Woo/Storefront (kolejność ładowania); nie usuwać bez zmiany specyficzności lub kolejności plików. */
 
 /* Page top — jedyne źródło odstępu header→treść: padding-top #content (header.php zamyka #content, wewnątrz main/hero).
-   Root cause: docs/ROOT-CAUSE-WHITE-STRIP-HOME.md. Główna NIGDY nie dostaje padding-top — ustawiamy go tylko dla body:not(.home). */
+   Root cause: docs/ROOT-CAUSE-WHITE-STRIP-HOME.md. Główna NIGDY nie dostaje padding-top — ustawiamy go tylko dla body:not(.home).
+   Archiwa produktów (shop / kategoria / tag): kompaktowy padding-top z 24-plp-table.css — nie nadpisywać tutaj (plp-01). */
 #content,
 .site-content,
 .mnsk7-content {
@@ -11,9 +12,9 @@
   padding-right: 1.5rem;
   box-sizing: border-box;
 }
-body:not(.home) #content,
-body:not(.home) .site-content,
-body:not(.home) .mnsk7-content {
+body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-product_tag) #content,
+body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-product_tag) .site-content,
+body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-product_tag) .mnsk7-content {
   padding-top: var(--space-page-top);
 }
 /* Strona główna: brak odstępu górnego (hero od razu pod headerem). Zerujemy padding i margin. */
@@ -34,7 +35,11 @@ body.home .mnsk7-content {
   body:not(.home) .site-content,
   body:not(.home) .mnsk7-content {
     margin-top: var(--header-h);
-    /* Mobile: sticky header already reserves space via margin-top; avoid double top-gap. */
+  }
+  body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-product_tag) #content,
+  body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-product_tag) .site-content,
+  body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-product_tag) .mnsk7-content {
+    /* Mobile: sticky header already reserves space via margin-top; avoid double top-gap. PLP archiwa: padding-top z 24-plp-table. */
     padding-top: 0;
   }
   body.mnsk7-has-promo:not(.home) #content,

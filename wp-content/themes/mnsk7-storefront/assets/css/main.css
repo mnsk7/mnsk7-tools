@@ -1,6 +1,6 @@
 /* =================================================================
    MNK7 Storefront — main.css (built from parts)
-   Build: 2026-03-24
+   Build: 2026-03-25
    Run: scripts/build-main-css.sh
    ================================================================= */
 /* === 00-fonts-inter.css === */
@@ -504,7 +504,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   min-height: var(--header-h);
   max-width: var(--content-max, 1200px);
   margin: 0 auto;
-  padding: 0 1rem;
+  /* hdr-01: match #content horizontal padding (25-global-layout) */
+  padding: 0 1.5rem;
   box-sizing: border-box;
   min-width: 0;
   overflow: visible;
@@ -573,6 +574,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   padding: 0.5rem 0.75rem;
   font-size: 0.875rem;
   font-weight: 500;
+  line-height: 1.35;
   color: var(--color-text);
   text-decoration: none;
   border-bottom: none;
@@ -1562,7 +1564,6 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 @media (max-width: 900px) {
   .mnsk7-header__inner {
     gap: 0.5rem;
-    padding: 0 0.75rem;
   }
   .mnsk7-header__menu a {
     padding: 0.4rem 0.5rem;
@@ -2194,6 +2195,23 @@ body .site .site-content {
     min-height: 44px;
     display: flex;
     align-items: center;
+  }
+}
+
+/* hdr-01: inline padding jak #content / .site-content (25-global-layout) — nadpisuje węższe paddingi z bloków ≤1024px */
+@media (min-width: 769px) {
+  .mnsk7-header__inner {
+    padding-inline: max(1.5rem, env(safe-area-inset-left)) max(1.5rem, env(safe-area-inset-right));
+  }
+}
+@media (max-width: 768px) {
+  .mnsk7-header__inner {
+    padding-inline: max(1rem, env(safe-area-inset-left)) max(1rem, env(safe-area-inset-right));
+  }
+}
+@media (max-width: 360px) {
+  .mnsk7-header__inner {
+    padding-inline: max(0.5rem, env(safe-area-inset-left)) max(0.5rem, env(safe-area-inset-right));
   }
 }
 
@@ -8536,7 +8554,8 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
    Task 7: !important celowo — nadpisanie Woo/Storefront (kolejność ładowania); nie usuwać bez zmiany specyficzności lub kolejności plików. */
 
 /* Page top — jedyne źródło odstępu header→treść: padding-top #content (header.php zamyka #content, wewnątrz main/hero).
-   Root cause: docs/ROOT-CAUSE-WHITE-STRIP-HOME.md. Główna NIGDY nie dostaje padding-top — ustawiamy go tylko dla body:not(.home). */
+   Root cause: docs/ROOT-CAUSE-WHITE-STRIP-HOME.md. Główna NIGDY nie dostaje padding-top — ustawiamy go tylko dla body:not(.home).
+   Archiwa produktów (shop / kategoria / tag): kompaktowy padding-top z 24-plp-table.css — nie nadpisywać tutaj (plp-01). */
 #content,
 .site-content,
 .mnsk7-content {
@@ -8544,9 +8563,9 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   padding-right: 1.5rem;
   box-sizing: border-box;
 }
-body:not(.home) #content,
-body:not(.home) .site-content,
-body:not(.home) .mnsk7-content {
+body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-product_tag) #content,
+body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-product_tag) .site-content,
+body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-product_tag) .mnsk7-content {
   padding-top: var(--space-page-top);
 }
 /* Strona główna: brak odstępu górnego (hero od razu pod headerem). Zerujemy padding i margin. */
@@ -8567,15 +8586,36 @@ body.home .mnsk7-content {
   body:not(.home) .site-content,
   body:not(.home) .mnsk7-content {
     margin-top: var(--header-h);
-    padding-top: var(--space-page-top);
+  }
+  body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-product_tag) #content,
+  body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-product_tag) .site-content,
+  body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-product_tag) .mnsk7-content {
+    /* Mobile: sticky header already reserves space via margin-top; avoid double top-gap. PLP archiwa: padding-top z 24-plp-table. */
+    padding-top: 0;
+  }
+  body.mnsk7-has-promo:not(.home) #content,
+  body.mnsk7-has-promo:not(.home) .site-content,
+  body.mnsk7-has-promo:not(.home) .mnsk7-content {
+    margin-top: calc(var(--header-h) + var(--mnsk7-promo-h, 2.5rem));
   }
 }
 @media (min-width: 768px) {
   #content,
   .site-content,
   .mnsk7-content {
-    padding-left: 2rem;
-    padding-right: 2rem;
+    /* UI policy: 8/16/24 rhythm — desktop uses 24px padding */
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+/* UI policy: very narrow mobile uses 8px padding */
+@media (max-width: 360px) {
+  #content,
+  .site-content,
+  .mnsk7-content {
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
   }
 }
 
