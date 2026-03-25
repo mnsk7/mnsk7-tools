@@ -6376,6 +6376,8 @@ body.woocommerce-account .col-full {
 .woocommerce-info.darmowa-dostawa,
 .woocommerce .cart-subtotal + .woocommerce-info,
 .woocommerce-cart .woocommerce-info,
+.woocommerce-checkout .woocommerce-info,
+.woocommerce > .woocommerce-info[role="status"],
 .woocommerce-cart .woocommerce-message {
   background: var(--color-surface) !important;
   color: var(--color-text) !important;
@@ -6394,7 +6396,9 @@ body.woocommerce-account .col-full {
 
 /* Wyłączenie ewentualnej ikony z rodzica (Storefront) — unikamy nałożenia na tekst */
 .woocommerce-cart .woocommerce-notices-wrapper .woocommerce-message::before,
-.woocommerce-cart .woocommerce-notices-wrapper .woocommerce-info::before {
+.woocommerce-cart .woocommerce-notices-wrapper .woocommerce-info::before,
+.woocommerce-checkout .woocommerce-notices-wrapper .woocommerce-info::before,
+.woocommerce-checkout .woocommerce-notices-wrapper .woocommerce-message::before {
   display: none;
 }
 
