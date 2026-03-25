@@ -6394,6 +6394,13 @@ body.woocommerce-account .col-full {
   text-decoration: underline;
 }
 
+/* Checkout toggle links sit on beige surface — use darker primary for AA contrast */
+.woocommerce-checkout .woocommerce-info a,
+.woocommerce .woocommerce-info[role="status"] a {
+  color: var(--color-primary-pressed) !important;
+  text-decoration: underline;
+}
+
 /* Wyłączenie ewentualnej ikony z rodzica (Storefront) — unikamy nałożenia na tekst */
 .woocommerce-cart .woocommerce-notices-wrapper .woocommerce-message::before,
 .woocommerce-cart .woocommerce-notices-wrapper .woocommerce-info::before,
