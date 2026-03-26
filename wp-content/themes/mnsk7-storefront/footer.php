@@ -171,8 +171,31 @@ if ( $show_cookie_bar_markup ) :
 		var bar = document.getElementById('mnsk7-cookie-bar');
 		if (!bar) return;
 		var key = 'mnsk7_cookie_consent';
-		function show() { bar.removeAttribute('hidden'); bar.setAttribute('aria-hidden', 'false'); var acceptBtn = bar.querySelector('.mnsk7-cookie-bar-accept'); if (acceptBtn) setTimeout(function() { acceptBtn.focus(); }, 100); }
-		function hide() { bar.setAttribute('hidden', ''); bar.setAttribute('aria-hidden', 'true'); }
+		function setBarHeightVar(px) {
+			try {
+				document.documentElement.style.setProperty('--mnsk7-cookie-bar-h', (px || 0) + 'px');
+			} catch (e) {}
+		}
+		function refreshBarHeight() {
+			if (bar.hasAttribute('hidden')) { setBarHeightVar(0); return; }
+			var h = bar.offsetHeight || 0;
+			setBarHeightVar(h);
+		}
+		function show() {
+			bar.removeAttribute('hidden');
+			bar.setAttribute('aria-hidden', 'false');
+			document.body.classList.add('mnsk7-cookie-bar-visible');
+			refreshBarHeight();
+			requestAnimationFrame(refreshBarHeight);
+			var acceptBtn = bar.querySelector('.mnsk7-cookie-bar-accept');
+			if (acceptBtn) setTimeout(function() { acceptBtn.focus(); }, 100);
+		}
+		function hide() {
+			bar.setAttribute('hidden', '');
+			bar.setAttribute('aria-hidden', 'true');
+			document.body.classList.remove('mnsk7-cookie-bar-visible');
+			setBarHeightVar(0);
+		}
 		var valAccept = 'accept';
 		var valReject = 'reject';
 		function setConsent(value) {
@@ -200,6 +223,7 @@ if ( $show_cookie_bar_markup ) :
 			setTimeout(show, 3500);
 		}
 		window.mnsk7CookieConsent = null;
+		window.addEventListener('resize', function() { refreshBarHeight(); }, { passive: true });
 		function onChoice(e, value) {
 			if (e) { e.preventDefault(); e.stopPropagation(); }
 			setConsent(value);

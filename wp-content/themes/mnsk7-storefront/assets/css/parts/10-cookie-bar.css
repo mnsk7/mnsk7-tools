@@ -1,5 +1,9 @@
 /* 10-cookie-bar — widoczny pasek, Ustawienia (GDPR), safe-area (iPhone). Bar poza #page (fixed względem viewport). */
 
+:root {
+  --mnsk7-cookie-bar-h: 0px;
+}
+
 .mnsk7-cookie-bar {
   position: fixed;
   bottom: 0;
