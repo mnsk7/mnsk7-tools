@@ -20,6 +20,7 @@ language: ru
 - есть ли блокеры/регрессии
 - достаточно ли evidence
 - соответствие правилам `.cursor/rules/*` и `AGENTS.md`
+ - практическая приемка: решена ли задача Owner по смыслу (через Verifier MODE=practical)
 
 Выход (строгий JSON):
 `{ outcome: ACCEPT|REJECT|ESCALATE, blocking_issues:[], major_issues:[], minor_issues:[], score_0_100, rationale:\"\", required_fixes:[], reverify_plan:[] }`
@@ -55,6 +56,8 @@ readonly: true
 - ISSUE_INPUT (issue_map или final_issue_list)
 - DOER_SUMMARY (если PHASE=2)
 - VERIFY_REPORT (если PHASE=2)
+ - VERIFIER_PRACTICAL (если PHASE=2)
+ - VERIFIER_TECHNICAL (если PHASE=2)
 
 ## Общие требования
 
@@ -74,6 +77,8 @@ readonly: true
 
 ## PHASE=2 rules
 
+- Если нет `VERIFIER_PRACTICAL` или его `outcome` != `ACCEPT` → outcome не может быть `ACCEPT`.
+- Если нет `VERIFIER_TECHNICAL` или его `outcome` != `ACCEPT` → outcome не может быть `ACCEPT`.
 - Если `VERIFY_REPORT.blocking.failed_rules` не пуст → `score=0`, `outcome="REJECT"`.
 - Иначе:
   - score = 100 - 25*critical_unresolved - 10*medium_unresolved - 3*minor_unresolved
