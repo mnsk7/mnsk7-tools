@@ -21,12 +21,26 @@ echo "=== L0: php-lint ==="
 if command -v php >/dev/null 2>&1; then
   if bash scripts/validate-theme-php.sh; then pass "l0:php-lint"; else fail "l0:php-lint"; FAIL=1; fi
 else
-  if [[ "$REQUIRE_PHP" == "1" ]]; then
-    echo "php not found in PATH."
-    fail "l0:php-lint"; FAIL=1
+  if command -v docker >/dev/null 2>&1; then
+    echo "php not found in PATH. Falling back to Docker php:8.2-cli."
+    if docker image inspect php:8.2-cli >/dev/null 2>&1 || docker pull php:8.2-cli >/dev/null; then
+      if docker run --rm -v "$ROOT":/app -w /app php:8.2-cli bash scripts/validate-theme-php.sh; then
+        pass "l0:php-lint"
+      else
+        fail "l0:php-lint"; FAIL=1
+      fi
+    else
+      echo "Docker is available but php:8.2-cli image could not be pulled."
+      if [[ "$REQUIRE_PHP" == "1" ]]; then fail "l0:php-lint"; FAIL=1; else skip "l0:php-lint"; fi
+    fi
   else
-    echo "php not found in PATH (allowed)."
-    skip "l0:php-lint"
+    if [[ "$REQUIRE_PHP" == "1" ]]; then
+      echo "php not found in PATH."
+      fail "l0:php-lint"; FAIL=1
+    else
+      echo "php not found in PATH (allowed)."
+      skip "l0:php-lint"
+    fi
   fi
 fi
 
