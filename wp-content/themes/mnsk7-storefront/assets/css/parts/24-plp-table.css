@@ -27,6 +27,15 @@ body.tax-product_tag [class*="category-image"] {
   line-height: 1.3;
   color: var(--color-text);
 }
+/* Wyższa specyficzność niż 05-plp-cards (body… #content h1.page-title → --fs-2xl) — archiwa Sklep/kategoria/tag */
+body.post-type-archive-product #content h1.woocommerce-products-header__title.page-title,
+body.post-type-archive-product .mnsk7-content h1.woocommerce-products-header__title.page-title,
+body.tax-product_cat #content h1.woocommerce-products-header__title.page-title,
+body.tax-product_cat .mnsk7-content h1.woocommerce-products-header__title.page-title,
+body.tax-product_tag #content h1.woocommerce-products-header__title.page-title,
+body.tax-product_tag .mnsk7-content h1.woocommerce-products-header__title.page-title {
+  font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+}
 
 /* =================================================================
    Archive vertical rhythm (compact) — tylko archiwa towarów
