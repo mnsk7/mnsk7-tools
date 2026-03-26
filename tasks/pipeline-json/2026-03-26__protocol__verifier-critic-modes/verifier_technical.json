@@ -1,0 +1,53 @@
+{
+  "mode": "technical",
+  "outcome": "ACCEPT",
+  "checks": [
+    {
+      "id": "claims_vs_diff_plp",
+      "result": "PASS",
+      "details": "Commit `ec30ba8` changes exactly match scope: restores compact PLP H1 via higher-specificity CSS for shop/category/tag archives and stabilizes PLP filter parity E2E by resolving an existing category URL when slug env is missing."
+    },
+    {
+      "id": "claims_vs_diff_pipeline",
+      "result": "PASS",
+      "details": "Commit `47124d8` adds verifier MODE=practical/technical strict-JSON outputs, updates critic PHASE=2 requirements to require both verifier outputs, and adds `tasks/pipeline-json` scaffold."
+    },
+    {
+      "id": "verify_all_artifacts_present",
+      "result": "PASS",
+      "details": "Both `artifacts/verify/verify-all.log` and `artifacts/verify/verify-report.json` exist."
+    },
+    {
+      "id": "verify_all_ok_marker",
+      "result": "PASS",
+      "details": "`artifacts/verify/verify-all.log` contains `=== VERIFY ALL: OK ===`."
+    },
+    {
+      "id": "verify_report_exit_code",
+      "result": "PASS",
+      "details": "`artifacts/verify/verify-report.json` has `exit_code: 0`."
+    },
+    {
+      "id": "policy_minimums_for_scope",
+      "result": "PASS",
+      "details": "UI/Woo-relevant changes: L1 (woo flow) is PASS (3 tests). L0 suite is PASS (with allowed SKIPs). a11y is PASS (forced=true per report). L2 is SKIP (optional unless policy requires)."
+    }
+  ],
+  "evidence": [
+    "Artifacts: artifacts/verify/verify-all.log includes `=== VERIFY ALL: OK ===`.",
+    "Artifacts: artifacts/verify/verify-report.json shows `exit_code: 0`, base_url = staging, PASS for l1 and a11y, and PASS for l0 with SKIPs tracked.",
+    "Diff: commit `ec30ba8` modifies e2e/plp-filter-url-parity.spec.js and adds PLP H1 override in theme CSS.",
+    "Diff: commit `47124d8` updates .cursor agent docs and adds tasks/pipeline-json scaffold."
+  ],
+  "missing_evidence": [],
+  "risks": [
+    "`php` not found caused `l0:php-lint` SKIP (allowed). This can hide PHP syntax errors if not run in CI/another environment.",
+    "`l0:link-check` and `l0:lighthouse-smoke` were SKIP (disabled by default).",
+    "`resolveCategoryUrl()` uses a hardcoded staging origin only for parsing absolute hrefs; pathname is returned."
+  ],
+  "required_next_steps": [
+    "If you want stricter L0 coverage: ensure PHP is available in PATH (so `php -l` runs) or run `verify:l0` in CI where PHP is installed.",
+    "If release policy requires them: run with `VERIFY_LINKCHECK=1` and/or `VERIFY_LIGHTHOUSE=1` and attach resulting artifacts."
+  ]
+}
+

@@ -1,0 +1,19 @@
+{
+  "outcome": "ACCEPT",
+  "blocking_issues": [],
+  "major_issues": [],
+  "minor_issues": [
+    "No direct visual/computed-style confirmation captured for PLP H1 sizing on staging (Shop + category/tag); current evidence is verify artifacts + code-level plausibility.",
+    "Pipeline JSON scaffold was initially unexercised; this run adds concrete JSON artifacts to `tasks/pipeline-json/.../` to make the convention tangible.",
+    "PLP H1 sizing override duplicated across `assets/css/main.css` and `assets/css/parts/24-plp-table.css`, creating drift risk.",
+    "`resolveCategoryUrl()` auto-picks the first category link on `/sklep/`; could still be flaky if DOM/link order changes or no suitable links exist (fallback helps but not a guarantee)."
+  ],
+  "score_0_100": 88,
+  "rationale": "VERIFY_REPORT indicates `verify:all` OK with `exit_code=0` and PASS for Woo flow (L1) and a11y (forced). No blocking rule failures were reported. Remaining items are non-blocking evidence/process hardening and maintainability risks.",
+  "required_fixes": [],
+  "reverify_plan": [
+    "Optional: capture a staging check (Shop + one category + one tag) and record computed `font-size` for `h1.woocommerce-products-header__title.page-title`.",
+    "Optional: de-duplicate PLP H1 override into a single CSS source and rerun `verify:all`."
+  ]
+}
+

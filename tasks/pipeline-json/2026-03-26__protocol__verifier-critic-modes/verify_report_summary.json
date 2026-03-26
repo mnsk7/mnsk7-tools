@@ -1,0 +1,23 @@
+{
+  "base_url": "https://staging.mnsk7-tools.pl",
+  "source_files": [
+    "artifacts/verify/verify-report.json",
+    "artifacts/verify/verify-all.log"
+  ],
+  "exit_code": 0,
+  "steps": [
+    { "name": "preflight", "status": "PASS" },
+    { "name": "l0:php-lint", "status": "SKIP", "note": "php not found (allowed)" },
+    { "name": "l0:link-check", "status": "SKIP", "note": "disabled by default" },
+    { "name": "l0:lighthouse-smoke", "status": "SKIP", "note": "disabled by default" },
+    { "name": "l0 (static/smoke)", "status": "PASS" },
+    { "name": "l1 (woo flow)", "status": "PASS" },
+    { "name": "a11y", "status": "PASS", "note": "forced via VERIFY_A11Y=1" },
+    { "name": "l2 (visual/regression)", "status": "SKIP", "note": "optional unless VERIFY_L2=1" }
+  ],
+  "blocking": {
+    "failed_rules": [],
+    "skipped_rules": []
+  }
+}
+

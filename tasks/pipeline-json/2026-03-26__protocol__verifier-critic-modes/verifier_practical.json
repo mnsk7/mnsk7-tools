@@ -1,0 +1,23 @@
+{
+  "mode": "practical",
+  "outcome": "ACCEPT",
+  "checks": [
+    "PLP H1 compact typography restored on archive pages by adding higher-specificity rules for `h1.woocommerce-products-header__title.page-title` on `body.post-type-archive-product`, `body.tax-product_cat`, `body.tax-product_tag` to override the larger `--fs-2xl` rule coming from `05-plp-cards.css`.",
+    "Change targets the intended PLP surfaces (Shop archive + product category/tag archives) rather than global H1 styling.",
+    "PLP filter parity E2E stability improved by making category URL discovery resilient: when `PLP_CATEGORY_SLUG` is not set, the spec auto-discovers a category URL via `/sklep/` links and falls back safely."
+  ],
+  "gaps": [
+    "No direct visual confirmation captured here that computed H1 font-size is compact in the browser on staging across Shop + category/tag (only code-level plausibility).",
+    "`tasks/pipeline-json/2026-03-26__protocol__verifier-critic-modes/` contains only `.gitkeep` (scaffold present, but no actual run JSON artifacts recorded there yet)."
+  ],
+  "risks": [
+    "Duplicate H1 sizing rule appears in both `assets/css/main.css` and `assets/css/parts/24-plp-table.css`; future edits could drift and reintroduce inconsistency.",
+    "`resolveCategoryUrl()` picks the first matching category link on `/sklep/`; if the first match is not representative (or the page has no such links), the test may still be flaky (though it has a fallback)."
+  ],
+  "required_next_steps": [
+    "Add a minimal pipeline-json run folder with the expected JSON filenames (even stubbed) for the current run, so the scaffold is exercised end-to-end.",
+    "Optionally de-duplicate the PLP H1 override into a single source of truth (either keep it only in the PLP part file or only in main.css) to reduce drift risk.",
+    "If you want this practical verdict upgraded to ‘visually confirmed’, capture a staging check: open Shop + one category/tag and confirm computed H1 font-size matches the clamp range."
+  ]
+}
+
