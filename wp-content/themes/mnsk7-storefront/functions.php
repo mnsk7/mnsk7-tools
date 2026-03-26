@@ -689,8 +689,8 @@ add_action( 'wp_enqueue_scripts', function () {
 	}
 	wp_enqueue_style( 'mnsk7-storefront-style', get_stylesheet_uri(), $child_deps, $v );
 	wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( 'mnsk7-storefront-style' ), $v );
-	// Footer accordion: init inline w footer.php (niezawodne na mobile); zewnętrzny plik opcjonalnie jako backup.
-	// wp_enqueue_script( 'mnsk7-footer-accordion', get_stylesheet_directory_uri() . '/assets/js/footer-accordion.js', array(), $v, true );
+	// Footer accordion: single source of truth = external script (mobile-only behavior inside JS).
+	wp_enqueue_script( 'mnsk7-footer-accordion', get_stylesheet_directory_uri() . '/assets/js/footer-accordion.js', array(), $v, true );
 	/* Inline: tylko Instagram karta — tylko gdy na stronie jest shortcode (front page lub treść z [mnsk7_instagram_feed]). */
 	$need_insta_inline = is_front_page();
 	if ( ! $need_insta_inline && is_singular() ) {
@@ -825,9 +825,6 @@ add_action( 'wp_enqueue_scripts', function () {
 	if ( function_exists( 'is_cart' ) && function_exists( 'is_checkout' ) && ( is_cart() || is_checkout() ) ) {
 		return;
 	}
-	if ( is_front_page() ) {
-		return;
-	}
 	wp_enqueue_script( 'wc-cart-fragments' );
 }, 5 );
 
@@ -871,6 +868,68 @@ add_action( 'wp_footer', function () {
 		function runCritical() {
 		var menuToggle = document.querySelector('.mnsk7-header__menu-toggle');
 		var nav = document.querySelector('.mnsk7-header__nav');
+		var cartWrap = document.querySelector('.mnsk7-header__cart');
+		var searchToggle = document.querySelector('.mnsk7-header__search-toggle');
+		var searchDropdown = document.getElementById('mnsk7-header-search');
+		var searchPanel = document.getElementById('mnsk7-header-search-panel');
+
+		function closeMenu() {
+			if (!nav) return;
+			nav.classList.remove('is-open');
+			if (menuToggle) {
+				menuToggle.setAttribute('aria-expanded', 'false');
+				var menuOpenLabel = menuToggle.getAttribute('data-open-label');
+				if (menuOpenLabel) menuToggle.setAttribute('aria-label', menuOpenLabel);
+			}
+		}
+
+		function setSearchOpen(open) {
+			if (!searchToggle || !searchDropdown) return;
+			searchDropdown.hidden = !open;
+			searchToggle.setAttribute('aria-expanded', open);
+			var searchCloseLabel = searchToggle.getAttribute('data-close-label');
+			var searchOpenLabel = searchToggle.getAttribute('data-open-label');
+			if (searchCloseLabel && searchOpenLabel) searchToggle.setAttribute('aria-label', open ? searchCloseLabel : searchOpenLabel);
+			if (searchPanel) {
+				if (window.innerWidth < 1025) {
+					document.body.classList.toggle('mnsk7-search-open', open);
+					searchPanel.hidden = !open;
+					searchPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
+					if (open) {
+						var panelInput = document.getElementById('mnsk7-header-search-panel-input');
+						if (panelInput) { setTimeout(function() { panelInput.focus(); }, 50); }
+					}
+				} else {
+					document.body.classList.remove('mnsk7-search-open');
+					searchPanel.hidden = true;
+					searchPanel.setAttribute('aria-hidden', 'true');
+				}
+			}
+		}
+
+		function closeSearch() {
+			if (window.innerWidth < 1025 && document.body.classList.contains('mnsk7-search-open')) {
+				setSearchOpen(false);
+			} else if (window.innerWidth >= 1025 && searchDropdown && !searchDropdown.hidden) {
+				searchDropdown.hidden = true;
+				if (searchToggle) searchToggle.setAttribute('aria-expanded', 'false');
+			}
+		}
+
+		function closeCart() {
+			if (!cartWrap) return;
+			cartWrap.classList.remove('is-open');
+			var trigger = cartWrap.querySelector('.mnsk7-header__cart-trigger, .cart-contents');
+			if (trigger) trigger.setAttribute('aria-expanded', 'false');
+		}
+
+		function closeAllMobileOverlays(except) {
+			if (window.innerWidth >= 1025) return;
+			if (except !== 'menu') closeMenu();
+			if (except !== 'search') closeSearch();
+			if (except !== 'cart') closeCart();
+		}
+
 		if (menuToggle && nav) {
 			var menuOpenLabel = menuToggle.getAttribute('data-open-label') || 'Otwórz menu';
 			var menuCloseLabel = menuToggle.getAttribute('data-close-label') || 'Zamknij menu';
@@ -880,6 +939,9 @@ add_action( 'wp_footer', function () {
 				menuToggle.setAttribute('aria-label', open ? menuCloseLabel : menuOpenLabel);
 			}
 			menuToggle.addEventListener('click', function() {
+				if (window.innerWidth < 1025 && !nav.classList.contains('is-open')) {
+					closeAllMobileOverlays('menu');
+				}
 				nav.classList.toggle('is-open');
 				setMenuAria();
 			});
@@ -905,11 +967,13 @@ add_action( 'wp_footer', function () {
 				var li = a.closest('li.menu-item-has-children');
 				if (!li || !isParentItemLink(a, li)) return;
 				if (window.innerWidth <= 1024) {
-					e.preventDefault();
-					e.stopPropagation();
-					li.classList.toggle('is-open');
-					var open = li.classList.contains('is-open');
-					a.setAttribute('aria-expanded', open ? 'true' : 'false');
+					// Mobile: first tap opens submenu, second tap navigates (only for parent link).
+					if (!li.classList.contains('is-open')) {
+						e.preventDefault();
+						e.stopPropagation();
+						li.classList.add('is-open');
+						a.setAttribute('aria-expanded', 'true');
+					}
 				}
 			}, true);
 			// Mega menu (Sklep): hover delay 400ms na desktop — Baymard/NNG, bez flicker przy przejściu na panel
@@ -959,32 +1023,7 @@ add_action( 'wp_footer', function () {
 				if (menuToggle) { menuToggle.setAttribute('aria-expanded', 'false'); if (menuToggle.getAttribute('data-open-label')) menuToggle.setAttribute('aria-label', menuToggle.getAttribute('data-open-label')); }
 			});
 		}
-		var searchToggle = document.querySelector('.mnsk7-header__search-toggle');
-		var searchDropdown = document.getElementById('mnsk7-header-search');
-		var searchPanel = document.getElementById('mnsk7-header-search-panel');
 		if (searchToggle && searchDropdown) {
-			function setSearchOpen(open) {
-				searchDropdown.hidden = !open;
-				searchToggle.setAttribute('aria-expanded', open);
-				var searchCloseLabel = searchToggle.getAttribute('data-close-label');
-				var searchOpenLabel = searchToggle.getAttribute('data-open-label');
-				if (searchCloseLabel && searchOpenLabel) searchToggle.setAttribute('aria-label', open ? searchCloseLabel : searchOpenLabel);
-				if (searchPanel) {
-					if (window.innerWidth < 1025) {
-						document.body.classList.toggle('mnsk7-search-open', open);
-						searchPanel.hidden = !open;
-						searchPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
-						if (open) {
-							var panelInput = document.getElementById('mnsk7-header-search-panel-input');
-							if (panelInput) { setTimeout(function() { panelInput.focus(); }, 50); }
-						}
-					} else {
-						document.body.classList.remove('mnsk7-search-open');
-						searchPanel.hidden = true;
-						searchPanel.setAttribute('aria-hidden', 'true');
-					}
-				}
-			}
 			function updateSearchDesktop() {
 				if (window.innerWidth >= 1025) {
 					searchDropdown.removeAttribute('hidden');
@@ -1005,6 +1044,9 @@ add_action( 'wp_footer', function () {
 			updateSearchDesktop();
 			searchToggle.addEventListener('click', function() {
 				if (window.innerWidth >= 1025) return;
+				if (!document.body.classList.contains('mnsk7-search-open')) {
+					closeAllMobileOverlays('search');
+				}
 				var open = document.body.classList.contains('mnsk7-search-open');
 				setSearchOpen(!open);
 			});
@@ -1044,7 +1086,7 @@ add_action( 'wp_footer', function () {
 			}
 		}
 		function normalizeCartTrigger() {
-			var wrap = document.querySelector('.mnsk7-header__cart');
+			var wrap = cartWrap;
 			if (!wrap) return null;
 			var cartLink = wrap.querySelector('a.cart-contents, a.mnsk7-header__cart-trigger');
 			if (!cartLink) return null;
@@ -1070,7 +1112,6 @@ add_action( 'wp_footer', function () {
 			});
 		}
 
-		var cartWrap = document.querySelector('.mnsk7-header__cart');
 		if (cartWrap) {
 			var trigger = normalizeCartTrigger() || cartWrap.querySelector('.mnsk7-header__cart-trigger, .cart-contents');
 			var dropdown = cartWrap.querySelector('.mnsk7-header__cart-dropdown');
@@ -1091,10 +1132,21 @@ add_action( 'wp_footer', function () {
 						trigger.focus();
 					}
 				});
+				// Mobile: Escape closes any active overlay
+				document.addEventListener('keydown', function(e) {
+					if (e.key === 'Escape' && window.innerWidth < 1025) {
+						if (cartWrap.classList.contains('is-open')) { cartWrap.classList.remove('is-open'); setCartExpanded(false); return; }
+						if (document.body.classList.contains('mnsk7-search-open')) { setSearchOpen(false); return; }
+						if (nav && nav.classList.contains('is-open')) { closeMenu(); return; }
+					}
+				});
 				// Mobile: klik na trigger otwiera/zamyka dropdown (na desktop tylko hover)
 				trigger.addEventListener('click', function(e) {
 					if (window.innerWidth < 1025) {
 						e.preventDefault();
+						if (!cartWrap.classList.contains('is-open')) {
+							closeAllMobileOverlays('cart');
+						}
 						cartWrap.classList.toggle('is-open');
 						setCartExpanded(cartWrap.classList.contains('is-open'));
 					}
@@ -1181,25 +1233,17 @@ add_action( 'wp_footer', function () {
 			}
 		}
 		}
-		// Pass 2b: nie wywoływać runCritical() synchronicznie — powodowało długie zadania i regresję TBT na home. Na archive: cały init w jednym rIC (timeout 150) — mniej long tasks, niższy TBT.
-		if (window.mnsk7IsArchive) {
-			var runBoth = function() { runCritical(); runDeferred(); };
-			if (typeof requestIdleCallback === 'function') {
-				requestIdleCallback(runBoth, { timeout: 150 });
-			} else {
-				setTimeout(runBoth, 0);
-			}
+		// Critical header controls должны быть готовы сразу (без requestIdleCallback), иначе возможен "dead click".
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', runCritical);
 		} else {
-			if (typeof requestIdleCallback === 'function') {
-				requestIdleCallback(runCritical, { timeout: 100 });
-			} else {
-				setTimeout(runCritical, 0);
-			}
-			if (typeof requestIdleCallback === 'function') {
-				requestIdleCallback(runDeferred, { timeout: 2000 });
-			} else {
-				setTimeout(runDeferred, 1);
-			}
+			runCritical();
+		}
+		// Deferred: promo/shrink/instagram — можно отложить.
+		if (typeof requestIdleCallback === 'function') {
+			requestIdleCallback(runDeferred, { timeout: 2000 });
+		} else {
+			setTimeout(runDeferred, 1);
 		}
 	})();
 	</script>
@@ -1220,11 +1264,24 @@ add_action( 'wp_footer', function () {
 	(function() {
 		var btn = document.getElementById('mnsk7-cart-checkout-button') || document.querySelector('.woocommerce-cart a.checkout-button');
 		if (!btn || !btn.href) return;
+		var checkoutUrl = <?php echo json_encode( $url ); ?>;
+		function normalizePath(u) {
+			try {
+				var url = new URL(u, window.location.href);
+				var path = (url.pathname || '/');
+				path = path.replace(/\/+$/, '') || '/';
+				return url.origin + path;
+			} catch (e) {
+				return '';
+			}
+		}
+		var checkoutKey = normalizePath(checkoutUrl);
 		btn.addEventListener('click', function(e) {
-			var href = this.getAttribute('href');
-			if (href && href.indexOf('zamowienie') !== -1) {
+			var href = this.getAttribute('href') || this.href;
+			if (!href) return;
+			if (checkoutKey && normalizePath(href) === checkoutKey) {
 				e.preventDefault();
-				window.location.href = href;
+				window.location.href = checkoutUrl;
 			}
 		}, true);
 	})();
@@ -1864,18 +1921,11 @@ add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 		}
 	}
 
-	// Na archiwum (kategoria, tag, sklep): ostatni element okruszków linkuje do bieżącego URL (z filtrami), żeby klik nie gubił filtrów.
+	// Na archiwum (kategoria, tag, sklep): nie linkuj ostatniego crumb do URL z parametrami filtrów (SEO: duplikaty).
 	if ( function_exists( 'mnsk7_is_plp' ) && mnsk7_is_plp() && ! empty( $_GET ) && count( $crumbs ) > 0 ) {
-		$req_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
-		if ( $req_uri !== '' ) {
-			$current_url = home_url( $req_uri );
-			$safe        = esc_url_raw( $current_url );
-			if ( $safe !== '' ) {
-				$last_idx = count( $crumbs ) - 1;
-				if ( isset( $crumbs[ $last_idx ][1] ) ) {
-					$crumbs[ $last_idx ][1] = $safe;
-				}
-			}
+		$last_idx = count( $crumbs ) - 1;
+		if ( isset( $crumbs[ $last_idx ][1] ) ) {
+			$crumbs[ $last_idx ][1] = '';
 		}
 	}
 
@@ -2026,8 +2076,21 @@ add_filter( 'wp_get_attachment_image_attributes', function ( $attr, $attachment 
 		}
 	}
 
-	$attr['loading'] = 'eager';
-	$attr['fetchpriority'] = 'auto';
+	// Perf: eager only for above-the-fold thumbnails on PLP (first 4). Everything else: lazy/auto.
+	$is_plp = function_exists( 'is_shop' ) && ( is_shop() || is_product_taxonomy() );
+	if ( $is_plp && function_exists( 'wc_get_loop_prop' ) ) {
+		$current = (int) wc_get_loop_prop( 'current' );
+		if ( $current > 0 && $current <= 4 ) {
+			$attr['loading']       = 'eager';
+			$attr['fetchpriority'] = 'high';
+		} else {
+			$attr['loading']       = 'lazy';
+			$attr['fetchpriority'] = 'auto';
+		}
+	} else {
+		$attr['loading']       = 'lazy';
+		$attr['fetchpriority'] = 'auto';
+	}
 	$attr['data-no-lazy'] = '1';
 
 	return $attr;

@@ -122,7 +122,10 @@ $privacy_policy_url = $privacy_policy_url ? $privacy_policy_url : home_url( '/pr
 					<input type="email" id="mnsk7-newsletter-email" name="mnsk7_newsletter_email" placeholder="<?php esc_attr_e( 'Twój e-mail', 'mnsk7-storefront' ); ?>" required class="mnsk7-footer__newsletter-input" />
 					<button type="submit" class="mnsk7-footer__newsletter-btn"><?php esc_html_e( 'Zapisz się', 'mnsk7-storefront' ); ?></button>
 				</form>
-				<p class="mnsk7-footer__newsletter-privacy"><?php esc_html_e( 'Możesz w każdej chwili wypisać się. Zobacz politykę prywatności.', 'mnsk7-storefront' ); ?></p>
+				<p class="mnsk7-footer__newsletter-privacy">
+					<?php esc_html_e( 'Możesz w każdej chwili wypisać się.', 'mnsk7-storefront' ); ?>
+					<a href="<?php echo esc_url( $privacy_policy_url ); ?>"><?php esc_html_e( 'Zobacz politykę prywatności.', 'mnsk7-storefront' ); ?></a>
+				</p>
 				</div>
 			</div>
 		</div>
@@ -137,36 +140,6 @@ $privacy_policy_url = $privacy_policy_url ? $privacy_policy_url : home_url( '/pr
 		</div>
 	</div>
 </footer>
-<script>
-(function() {
-	var mq = window.matchMedia('(max-width: 768px)');
-	function initFooterAccordion() {
-		var footer = document.getElementById('colophon') || document.querySelector('.mnsk7-footer');
-		if (!footer) return;
-		function toggle(trigger) {
-			var col = trigger && trigger.closest('.mnsk7-footer__col');
-			if (!col) return;
-			var open = col.classList.toggle('is-open');
-			trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
-		}
-		footer.addEventListener('click', function(e) {
-			if (!mq.matches) return;
-			var t = e.target && e.target.closest && e.target.closest('.mnsk7-footer__accordion-trigger');
-			if (t) { e.preventDefault(); e.stopPropagation(); toggle(t); }
-		});
-		footer.addEventListener('keydown', function(e) {
-			if (!mq.matches) return;
-			var t = e.target && e.target.closest && e.target.closest('.mnsk7-footer__accordion-trigger');
-			if (t && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); toggle(t); }
-		});
-	}
-	if (document.readyState === 'loading') {
-		document.addEventListener('DOMContentLoaded', initFooterAccordion);
-	} else {
-		initFooterAccordion();
-	}
-})();
-</script>
 
 </div><!-- #page -->
 <?php
@@ -198,8 +171,8 @@ if ( $show_cookie_bar_markup ) :
 		var bar = document.getElementById('mnsk7-cookie-bar');
 		if (!bar) return;
 		var key = 'mnsk7_cookie_consent';
-		function show() { bar.removeAttribute('hidden'); bar.setAttribute('aria-hidden', 'false'); document.body.classList.add('mnsk7-cookie-bar-visible'); var acceptBtn = bar.querySelector('.mnsk7-cookie-bar-accept'); if (acceptBtn) setTimeout(function() { acceptBtn.focus(); }, 100); }
-		function hide() { bar.setAttribute('hidden', ''); bar.setAttribute('aria-hidden', 'true'); document.body.classList.remove('mnsk7-cookie-bar-visible'); }
+		function show() { bar.removeAttribute('hidden'); bar.setAttribute('aria-hidden', 'false'); var acceptBtn = bar.querySelector('.mnsk7-cookie-bar-accept'); if (acceptBtn) setTimeout(function() { acceptBtn.focus(); }, 100); }
+		function hide() { bar.setAttribute('hidden', ''); bar.setAttribute('aria-hidden', 'true'); }
 		var valAccept = 'accept';
 		var valReject = 'reject';
 		function setConsent(value) {

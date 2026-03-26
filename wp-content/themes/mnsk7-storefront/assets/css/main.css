@@ -5322,11 +5322,6 @@ body.page #colophon.mnsk7-footer {
   display: none !important;
 }
 
-/* Gdy pasek widoczny — odsunięcie treści od dołu (footer nie wchodzi pod pasek) */
-body.mnsk7-cookie-bar-visible #page {
-  padding-bottom: max(56px, calc(56px + env(safe-area-inset-bottom)));
-}
-
 .mnsk7-cookie-bar__inner {
   display: flex;
   align-items: center;
@@ -6820,8 +6815,9 @@ textarea:focus-visible {
     position: sticky;
     bottom: 0;
     z-index: 100;
-    margin: 0 -1rem;
+    margin: 0;
     padding: 0.75rem 1rem;
+    padding-bottom: max(0.75rem, calc(0.75rem + env(safe-area-inset-bottom)));
     background: var(--color-white);
     border-top: 1px solid var(--color-border);
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.06);

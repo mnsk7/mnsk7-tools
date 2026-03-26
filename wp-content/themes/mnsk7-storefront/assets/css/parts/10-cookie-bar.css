@@ -28,11 +28,6 @@
   display: none !important;
 }
 
-/* Gdy pasek widoczny — odsunięcie treści od dołu (footer nie wchodzi pod pasek) */
-body.mnsk7-cookie-bar-visible #page {
-  padding-bottom: max(56px, calc(56px + env(safe-area-inset-bottom)));
-}
-
 .mnsk7-cookie-bar__inner {
   display: flex;
   align-items: center;
