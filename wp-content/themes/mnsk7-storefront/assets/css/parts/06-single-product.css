@@ -597,6 +597,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   border-top: 1px solid var(--color-border);
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
   padding: 0.75rem var(--space-16);
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
   align-items: center;
   justify-content: space-between;
   gap: var(--space-16);

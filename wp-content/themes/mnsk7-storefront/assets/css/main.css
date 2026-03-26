@@ -1,6 +1,6 @@
 /* =================================================================
    MNK7 Storefront — main.css (built from parts)
-   Build: 2026-03-25
+   Build: 2026-03-26
    Run: scripts/build-main-css.sh
    ================================================================= */
 /* === 00-fonts-inter.css === */
@@ -370,7 +370,7 @@ a {
   font-weight: 500;
   padding: 0.35rem 1rem;
   position: sticky;
-  top: 0;
+  top: env(safe-area-inset-top, 0px);
   z-index: 1001;
   box-sizing: border-box;
 }
@@ -467,7 +467,7 @@ a {
 .site-header.mnsk7-header {
   background: var(--color-white);
   position: sticky;
-  top: 0;
+  top: env(safe-area-inset-top, 0px);
   z-index: 1000;
   border-bottom: 1px solid var(--color-border);
   box-shadow: 0 1px 3px rgba(0,0,0,0.06);
@@ -488,10 +488,10 @@ a {
 .mnsk7-header--sticky,
 .site-header.mnsk7-header.mnsk7-header--sticky {
   position: sticky !important;
-  top: 0;
+  top: env(safe-area-inset-top, 0px);
 }
 body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
-  top: var(--mnsk7-promo-h, 2.5rem);
+  top: calc(env(safe-area-inset-top, 0px) + var(--mnsk7-promo-h, 2.5rem));
 }
 
 /* Header layout: desktop = brand | nav (flex:1 center) | actions. Mobile (≤1024px) = osobny blok — logo | burger+search+account+cart, bez wpływu na desktop. */
@@ -1861,6 +1861,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     .mnsk7-header__cart .count {
       display: none !important;
     }
+    /* Audit task 11 wins on narrow screens: при пустой корзине "0" остаётся видимым */
+    .mnsk7-header__cart--empty .mnsk7-header__cart-count {
+      display: inline-flex !important;
+    }
     .mnsk7-header__cart-trigger,
     .mnsk7-header__cart .cart-contents {
       width: 40px;
@@ -3140,6 +3144,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   border-top: 1px solid var(--color-border);
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.08);
   padding: 0.75rem var(--space-16);
+  padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));
   align-items: center;
   justify-content: space-between;
   gap: var(--space-16);
