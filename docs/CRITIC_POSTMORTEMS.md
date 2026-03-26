@@ -32,6 +32,23 @@
 - **Prevention (process)**:
   - Для любых fixed/sticky overlay на mobile: требовать L2/визуальный чек на iOS Safari (или минимальный evidence: скрин/видео) + верификацию “CTA не перекрыт” как blocking rule.
 
+---
+
+### 2026-03-26 — ESCALATE: не хватило формального evidence (VERIFY_REPORT/L2) для mobile UI
+
+- **Context**: серия правок в теме (header/cookie bar/sticky CTA) + изменения verify tooling; обсуждение “можно ли завершать шаг гейта”.
+- **Severity**: major
+- **What slipped**:
+  - Были запуски отдельных команд (`verify:l0`, `verify:l1`), но не было единого структурированного `VERIFY_REPORT` с артефактами (raw log + summary), и не было L2 evidence для mobile (header/cookie bar overlay).
+- **Why it slipped**:
+  - Прогоны шли итеративно, часть проверок была SKIP/прервана, а “one source of evidence” (`npm run verify:all` → `artifacts/verify/verify-report.json`) не был перегенерирован на финальном состоянии.
+- **Evidence**:
+  - Critic PHASE=2 outcome `ESCALATE`: недостаточно формального evidence по mobile overlay/CTA и отсутствует структурированный отчёт.
+- **Mitigation (now)**:
+  - Прогнать `VERIFY_L1=1 VERIFY_L2=1 npm run verify:all` (и при необходимости `VERIFY_LINKCHECK=1 VERIFY_LIGHTHOUSE=1`) и приложить `artifacts/verify/verify-report.json` + `artifacts/verify/verify-all.log`.
+- **Prevention (process)**:
+  - Для изменений в header/cookie bar/cart/checkout: не считать шаг закрытым без L2 (или явного обоснования) и без свежего `verify:all` отчёта.
+
 ### 2026-03-25 — REJECT/ESCALATE: a11y (color-contrast) на remote staging без post-deploy evidence
 
 - **Context**: правки UI/UX (CSS tokens/CTA) и e2e; проверки запускались против remote staging (`BASE_URL=https://staging.mnsk7-tools.pl`).
