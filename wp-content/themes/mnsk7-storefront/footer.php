@@ -223,7 +223,23 @@ if ( $show_cookie_bar_markup ) :
 			setTimeout(show, 3500);
 		}
 		window.mnsk7CookieConsent = null;
-		window.addEventListener('resize', function() { refreshBarHeight(); }, { passive: true });
+		function setupObservers() {
+			// Keep height in sync on iOS Safari (URL bar changes, font load, wrapping) where resize may not fire.
+			try {
+				if (typeof ResizeObserver === 'function') {
+					var ro = new ResizeObserver(function() { refreshBarHeight(); });
+					ro.observe(bar);
+				}
+			} catch (e) {}
+			try {
+				if (window.visualViewport) {
+					window.visualViewport.addEventListener('resize', refreshBarHeight, { passive: true });
+					window.visualViewport.addEventListener('scroll', refreshBarHeight, { passive: true });
+				}
+			} catch (e) {}
+			window.addEventListener('resize', function() { refreshBarHeight(); }, { passive: true });
+		}
+		setupObservers();
 		function onChoice(e, value) {
 			if (e) { e.preventDefault(); e.stopPropagation(); }
 			setConsent(value);

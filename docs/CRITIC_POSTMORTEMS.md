@@ -16,6 +16,22 @@
 
 ---
 
+### 2026-03-26 — REJECT: cookie bar может перекрыть sticky CTA на iOS Safari (stale height)
+
+- **Context**: правки темы (cookie bar + sticky CTA корзины; mobile iPhone XR/Safari), деплой через push в `main` → staging.
+- **Severity**: major
+- **What slipped**:
+  - Высота cookie bar учитывалась только на show/hide и `window.resize`, что на iOS Safari может не отражать изменения viewport/переносов → переменная `--mnsk7-cookie-bar-h` могла стать stale, и sticky CTA в корзине/чекауте потенциально перекрывался.
+- **Why it slipped**:
+  - Полагались на `resize`, но на mobile Safari изменения UI (адресная строка/viewport) и перепаковка текста могут происходить без классического resize события.
+- **Evidence**:
+  - Critic PHASE=2 указал риск stale `--mnsk7-cookie-bar-h` и возможное перекрытие primary CTA на mobile при первом визите без consent.
+- **Mitigation (now)**:
+  - Добавили `ResizeObserver` и `visualViewport` listeners, чтобы поддерживать `--mnsk7-cookie-bar-h` актуальной.
+  - Sticky блок `wc-proceed-to-checkout` смещён на `bottom: var(--mnsk7-cookie-bar-h, 0px)`.
+- **Prevention (process)**:
+  - Для любых fixed/sticky overlay на mobile: требовать L2/визуальный чек на iOS Safari (или минимальный evidence: скрин/видео) + верификацию “CTA не перекрыт” как blocking rule.
+
 ### 2026-03-25 — REJECT/ESCALATE: a11y (color-contrast) на remote staging без post-deploy evidence
 
 - **Context**: правки UI/UX (CSS tokens/CTA) и e2e; проверки запускались против remote staging (`BASE_URL=https://staging.mnsk7-tools.pl`).
