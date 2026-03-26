@@ -1176,12 +1176,22 @@ add_action( 'wp_footer', function () {
 		// Promo bar: dismissible (sessionStorage). Critical CSS w header.php daje LCP; init tutaj bez rAF (corrective pass: rAF wiązał się z regresją TBT).
 		var promoBar = document.getElementById('mnsk7-promo-bar');
 		if (promoBar) {
+			function setPromoHeightVar() {
+				try {
+					document.body.style.setProperty('--mnsk7-promo-h', promoBar.offsetHeight + 'px');
+				} catch (e) {}
+			}
 			try {
 				if (sessionStorage.getItem('mnsk7_promo_dismissed') === '1') {
 					promoBar.remove();
 					document.body.classList.remove('mnsk7-has-promo');
 				} else {
-					document.body.style.setProperty('--mnsk7-promo-h', promoBar.offsetHeight + 'px');
+					setPromoHeightVar();
+					if (window.ResizeObserver) {
+						try { new ResizeObserver(setPromoHeightVar).observe(promoBar); } catch (e) {}
+					} else {
+						window.addEventListener('resize', setPromoHeightVar, { passive: true });
+					}
 					var closeBtn = promoBar.querySelector('.mnsk7-promo-bar__close');
 					if (closeBtn) {
 						closeBtn.addEventListener('click', function() {
@@ -1304,10 +1314,33 @@ add_action( 'wp_footer', function () {
 		var stickyPrice = sticky.querySelector('.mnsk7-pdp-sticky-cta__price');
 		var stickyBtn = sticky.querySelector('.mnsk7-pdp-sticky-cta__btn');
 		function isMobile() { return window.matchMedia('(max-width: 768px)').matches; }
+		function setStickyHeightVar() {
+			try { document.body.style.setProperty('--mnsk7-sticky-cta-h', sticky.offsetHeight + 'px'); } catch (e) {}
+		}
+		function clearStickyHeightVar() {
+			try { document.body.style.removeProperty('--mnsk7-sticky-cta-h'); } catch (e) {}
+		}
 		function setStickyVisible(visible) {
-			if (!isMobile()) { sticky.setAttribute('hidden', ''); sticky.classList.remove('is-visible'); return; }
-			if (visible) { sticky.removeAttribute('hidden'); sticky.classList.add('is-visible'); sticky.setAttribute('aria-hidden', 'false'); }
-			else { sticky.setAttribute('hidden', ''); sticky.classList.remove('is-visible'); sticky.setAttribute('aria-hidden', 'true'); }
+			if (!isMobile()) {
+				sticky.setAttribute('hidden', '');
+				sticky.classList.remove('is-visible');
+				document.body.classList.remove('mnsk7-pdp-sticky-cta-visible');
+				clearStickyHeightVar();
+				return;
+			}
+			if (visible) {
+				sticky.removeAttribute('hidden');
+				sticky.classList.add('is-visible');
+				sticky.setAttribute('aria-hidden', 'false');
+				document.body.classList.add('mnsk7-pdp-sticky-cta-visible');
+				setStickyHeightVar();
+			} else {
+				sticky.setAttribute('hidden', '');
+				sticky.classList.remove('is-visible');
+				sticky.setAttribute('aria-hidden', 'true');
+				document.body.classList.remove('mnsk7-pdp-sticky-cta-visible');
+				clearStickyHeightVar();
+			}
 		}
 		var observer = new IntersectionObserver(function(entries) {
 			if (!isMobile()) return;
@@ -1319,12 +1352,17 @@ add_action( 'wp_footer', function () {
 			form.scrollIntoView({ behavior: 'smooth', block: 'center' });
 			setTimeout(function() { mainBtn.focus(); }, 400);
 		});
+		window.addEventListener('resize', function() {
+			if (!isMobile()) { setStickyVisible(false); return; }
+			if (sticky.classList.contains('is-visible')) setStickyHeightVar();
+		}, { passive: true });
 		// Sync ceny przy wariacjach (variable product)
 		var summaryPrice = document.querySelector('.single-product .summary .price');
 		if (summaryPrice && stickyPrice && document.querySelector('.single-product form.variations_form')) {
 			document.body.addEventListener('show_variation', function(ev) {
 				if (ev.target && ev.target.closest && ev.target.closest('.single-product') && ev.data && ev.data.display_price) {
 					stickyPrice.innerHTML = ev.data.price_html || summaryPrice.innerHTML;
+					if (sticky.classList.contains('is-visible')) setStickyHeightVar();
 				}
 			});
 		}

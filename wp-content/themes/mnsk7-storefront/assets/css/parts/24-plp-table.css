@@ -174,15 +174,15 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   body.tax-product_cat .mnsk7-content,
   body.tax-product_tag #content,
   body.tax-product_tag .mnsk7-content {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
   }
   /* Chips: bez dodatkowego wcięcia — Rodzaje frezów i chipy startują pod „F” w tytule */
   body.tax-product_cat .mnsk7-plp-chips__scroll,
   body.tax-product_tag .mnsk7-plp-chips__scroll {
-    padding-inline: 0 0.5rem;
+    padding-inline: 0 1rem;
     margin-inline: 0;
-    scroll-padding-inline: 0 0.5rem;
+    scroll-padding-inline: 0 1rem;
   }
   body.tax-product_cat .mnsk7-plp-search,
   body.tax-product_tag .mnsk7-plp-search,

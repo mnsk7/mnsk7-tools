@@ -611,6 +611,12 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   display: flex !important;
 }
 
+@media (max-width: 768px) {
+  body.mnsk7-pdp-sticky-cta-visible {
+    padding-bottom: calc(var(--mnsk7-sticky-cta-h, 88px) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
 .mnsk7-pdp-sticky-cta__left {
   display: flex;
   flex-direction: column;
