@@ -57,7 +57,7 @@ defined( 'ABSPATH' ) || exit;
 <body <?php body_class(); ?>>
 <?php
 // Wersja w komentarzu — po deployu widać w View Source, którą wersję headera serwuje cache.
-$mnsk7_header_ver = defined( 'MNSK7_THEME_VERSION' ) ? MNSK7_THEME_VERSION : '3.0.9';
+$mnsk7_header_ver = defined( 'MNSK7_THEME_VERSION' ) ? MNSK7_THEME_VERSION : '3.0.10';
 echo '<!-- mnsk7-header v' . esc_attr( $mnsk7_header_ver ) . ' -->' . "\n";
 ?>
 <?php wp_body_open(); ?>
