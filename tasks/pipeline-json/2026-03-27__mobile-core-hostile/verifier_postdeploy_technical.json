@@ -1,0 +1,26 @@
+{
+  "mode": "technical",
+  "outcome": "REJECT",
+  "checks": [
+    "L0 PASS_WITH_SKIPS",
+    "L1 PASS",
+    "L2 REJECT due header visual snapshot diffs"
+  ],
+  "evidence": [
+    "verify_summary.json (this cycle)",
+    "terminal run: verify:l2 exit_code=1, 4 failed, 106 passed"
+  ],
+  "missing_evidence": [
+    "trusted visual baseline for current header state",
+    "explicit product signoff for any snapshot baseline update"
+  ],
+  "risks": [
+    "Without trusted baseline, visual diff can indicate intended change or regression.",
+    "Updating snapshots without product signoff violates governance."
+  ],
+  "required_next_steps": [
+    "Get product signoff or fix visuals to match approved state.",
+    "Re-run L2 to terminal PASS on trusted baseline.",
+    "Repeat technical verifier."
+  ]
+}

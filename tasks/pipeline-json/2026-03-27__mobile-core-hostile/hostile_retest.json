@@ -1,0 +1,82 @@
+{
+  "cycle": "post-fix hostile re-test",
+  "base_url": "https://staging.mnsk7-tools.pl",
+  "rule": "No 'all good' without explicit scenario statuses",
+  "blocks": [
+    {
+      "block": "header_geometry",
+      "scenarios": {
+        "first_open": "PASS (controls render in one row in geometry tests)",
+        "second_open": "PARTIAL (visual snapshots fail; state acceptable but not product-signed)",
+        "scroll": "PARTIAL (shrink logic moved to critical; visual acceptance still blocked)",
+        "back": "NOT_VERIFIED",
+        "reopen": "PARTIAL",
+        "sticky_behavior": "PARTIAL",
+        "cta_honesty": "N/A",
+        "desktop_mobile_parity": "PARTIAL (1024 checks pass geometry, visual still fail)",
+        "visual_consistency": "FAIL (L2 snapshot diffs)"
+      }
+    },
+    {
+      "block": "mega_menu",
+      "scenarios": {
+        "first_open": "PARTIAL",
+        "second_open": "PARTIAL",
+        "scroll": "NOT_VERIFIED",
+        "back": "NOT_VERIFIED",
+        "reopen": "PARTIAL",
+        "sticky_behavior": "N/A",
+        "cta_honesty": "N/A",
+        "desktop_mobile_parity": "PARTIAL",
+        "visual_consistency": "FAIL (desktop sklep-open snapshot diff)"
+      }
+    },
+    {
+      "block": "search_mobile",
+      "scenarios": {
+        "first_open": "PASS (branching normalized to 1024)",
+        "second_open": "PARTIAL",
+        "scroll": "NOT_VERIFIED",
+        "back": "NOT_VERIFIED",
+        "reopen": "PARTIAL",
+        "sticky_behavior": "N/A",
+        "cta_honesty": "PASS",
+        "desktop_mobile_parity": "PARTIAL",
+        "visual_consistency": "PARTIAL"
+      }
+    },
+    {
+      "block": "sticky_pdp_cta",
+      "scenarios": {
+        "first_open": "NOT_VERIFIED",
+        "second_open": "NOT_VERIFIED",
+        "scroll": "NOT_VERIFIED",
+        "back": "NOT_VERIFIED",
+        "reopen": "NOT_VERIFIED",
+        "sticky_behavior": "NOT_VERIFIED",
+        "cta_honesty": "FAIL (owner bug remains not_fixed)",
+        "desktop_mobile_parity": "NOT_VERIFIED",
+        "visual_consistency": "NOT_VERIFIED"
+      }
+    },
+    {
+      "block": "cart_mobile",
+      "scenarios": {
+        "first_open": "PASS",
+        "second_open": "PASS",
+        "scroll": "PARTIAL",
+        "back": "NOT_VERIFIED",
+        "reopen": "PASS",
+        "sticky_behavior": "N/A",
+        "cta_honesty": "PASS (L1 flow green)",
+        "desktop_mobile_parity": "PARTIAL",
+        "visual_consistency": "PARTIAL (header-level visual gate still red)"
+      }
+    }
+  ],
+  "still_may_be_broken": [
+    "PDP sticky CTA can still be dishonest under overlay/reopen conditions.",
+    "Mega-menu reopen/top-position behavior after navigation back is not fully proven.",
+    "Header visual state is not product-accepted until trusted baseline/signoff."
+  ]
+}

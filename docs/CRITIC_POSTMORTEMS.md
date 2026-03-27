@@ -2,6 +2,29 @@
 
 Этот документ ведётся после outcome `REJECT`/`ESCALATE` или при **critical/major** проблемах, чтобы не повторять ошибки в пайплайне и верификации.
 
+### 2026-03-27 — REJECT (mobile-core hostile cycle): L2 visual gate failed with untrusted baseline
+
+- **Context**: hostile-цикл по mobile core (`header + search + mega-menu + sticky CTA + cart mobile`) после фиксов коммита `333e436`.
+- **Severity**: major
+- **What slipped**:
+  - Post-deploy verify: `L0 PASS_WITH_SKIPS`, `L1 PASS`, но `L2 REJECT` (4 падения snapshot по header).
+  - Baseline для visual в этом цикле изначально считался недоверенным; обновление snapshot без product signoff запрещено.
+  - В owner ledger остаются `partially_fixed/not_fixed` (в т.ч. sticky PDP CTA honesty).
+- **Why it slipped**:
+  - Технические фиксы геометрии/брейкпоинтов изменили вид хедера, но продуктовый signoff целевого визуального состояния не был зафиксирован до visual-gate.
+  - Цикл discovery/fix прошёл быстрее, чем контур ручной продуктовой валидации для остаточных owner-багов.
+- **Evidence**:
+  - `tasks/pipeline-json/2026-03-27__mobile-core-hostile/verify_summary.json` (`l2.result = REJECT`).
+  - `tasks/pipeline-json/2026-03-27__mobile-core-hostile/verifier_postdeploy_practical.json` (`outcome = REJECT`).
+  - `tasks/pipeline-json/2026-03-27__mobile-core-hostile/verifier_postdeploy_technical.json` (`outcome = REJECT`).
+  - `tasks/pipeline-json/2026-03-27__mobile-core-hostile/critic_phase2.json` (`outcome = REJECT`).
+- **Mitigation (now)**:
+  - Зафиксирован hostile re-test с по-сценарным статусом и списком residual risks.
+  - Не выполнялся snapshot update, чтобы не легализовать дефект без product signoff.
+- **Prevention (process)**:
+  - До следующего L2-гейта сначала завершать product-verifier signoff по целевому UI-state.
+  - Для owner-критичных багов (`sticky CTA honesty`, `mega-menu reopen/back`) держать отдельные hostile replay checks обязательными до `PRODUCT_ACCEPT=true`.
+
 ### 2026-03-27 — REJECT (post-deploy gate): deploy success, but technical evidence insufficient for ACCEPT
 
 - **Context**: после коммитов и push в `main` деплой на staging завершился `success`; выполнен post-deploy technical verifier и `critic-scorer PHASE=2`.

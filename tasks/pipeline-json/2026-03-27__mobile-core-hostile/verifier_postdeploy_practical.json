@@ -1,0 +1,24 @@
+{
+  "mode": "practical",
+  "outcome": "REJECT",
+  "product_accept": false,
+  "checks": [
+    "L0 PASS baseline and L1 PASS 3/3 confirm core Woo flow remains alive.",
+    "Owner bug ledger exists and tracks fixed/partial/not_fixed states.",
+    "Discovery quota met: agent_found_bugs found_count=12."
+  ],
+  "gaps": [
+    "OWNER-003 remains not_fixed (sticky PDP CTA honesty).",
+    "OWNER-001 and OWNER-004 remain partially_fixed without trusted visual confirmation.",
+    "L2 visual evidence is failing and baseline is intentionally untrusted in this cycle."
+  ],
+  "risks": [
+    "Snapshot diffs cannot be accepted as truth without product signoff.",
+    "Core conversion flows may pass while mobile UX defects remain."
+  ],
+  "required_next_steps": [
+    "Run dedicated hostile replay for OWNER-003 on PDP with overlays and reopen states.",
+    "Close OWNER-001/004 with explicit replay evidence across target viewports.",
+    "Only after product signoff decide whether baseline updates are allowed."
+  ]
+}

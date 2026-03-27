@@ -1,0 +1,27 @@
+{
+  "process_accept": false,
+  "product_accept": false,
+  "final_accept": false,
+  "outcome": "REJECT",
+  "blocking_issues": [
+    "L2 visual gate failed (4 header snapshot failures).",
+    "Baseline is explicitly untrusted; snapshots cannot be accepted without product signoff.",
+    "Snapshot update is forbidden in this cycle without signoff."
+  ],
+  "major_issues": [
+    "Owner ledger still has partially_fixed/not_fixed product bugs."
+  ],
+  "minor_issues": [
+    "L0 optional link/lighthouse remained SKIP."
+  ],
+  "score_0_100": 40,
+  "rationale": "L0/L1 confirm technical flow safety, but hostile mobile-core acceptance remains blocked by unresolved product defects and untrusted visual baseline with failing L2.",
+  "required_fixes": [
+    "Close OWNER-003, and close/waive OWNER-001/004 with explicit evidence.",
+    "Establish trusted visual baseline with product signoff or resolve visual regressions before re-running L2."
+  ],
+  "reverify_plan": [
+    "Repeat hostile replay scenarios per block after fixes.",
+    "Run post-deploy L0/L1/L2 again and regenerate verifier/critic artifacts."
+  ]
+}
