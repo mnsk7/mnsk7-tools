@@ -103,6 +103,33 @@
 
 ---
 
+### 2026-03-27 — REJECT: repeated gate run still blocked (L2 + Safari/product)
+
+- **Context**: повторный обязательный гейт без новых runtime-правок после последнего цикла: predeploy verifier -> postdeploy `L0/L1/L2` -> `critic-scorer PHASE=2`.
+- **Severity**: critical
+- **What slipped**:
+  - predeploy practical verifier дал `REJECT` (`overall_readiness_for_deploy=NOT_READY`) из-за незакрытых продуктовых блокеров.
+  - postdeploy `L2` снова `FAIL`: 4 snapshot failure в `e2e/header-layout.spec.js` (mobile closed/open, desktop closed, desktop sklep open).
+  - `PRODUCT_ACCEPT` остаётся заблокирован (`safari_mobile_status.json`: `product_accept_allowed=false`, `cta_honesty=FAIL`; `OWNER-003` не закрыт).
+  - `L1` снова не полностью чистый (`3 passed, 1 skipped`).
+- **Why it slipped**:
+  - Корневые продуктовые блокеры не были устранены до повторного прогона.
+  - Визуальный header-state продолжает расходиться с baseline без product signoff на обновление snapshot.
+- **Evidence**:
+  - predeploy verifier: practical=`REJECT`, technical=`ACCEPT`, readiness=`NOT_READY`.
+  - `npm run verify:l0` -> PASS_WITH_SKIPS.
+  - `BASE_URL=https://staging.mnsk7-tools.pl npm run verify:l1` -> `3 passed, 1 skipped`.
+  - `BASE_URL=https://staging.mnsk7-tools.pl npm run verify:l2` -> `4 failed, 106 passed`.
+  - critic phase2: `outcome=REJECT`, `process_accept=false`, `product_accept=false`, `final_accept=false`.
+- **Mitigation (now)**:
+  - Зафиксирован повторный `REJECT` как отдельный postmortem (без маскировки “почти зелёного” статуса).
+- **Prevention (process)**:
+  - Не запускать “формальный повтор” без предварительного закрытия конкретных блокеров (`OWNER-003`, Safari `cta_honesty`, L2 header snapshots/signoff).
+  - Для следующего цикла требовать `L1` без skip по критичному PDP-mobile сценарию или явное scope-обоснование skip.
+  - Обновление snapshot — только после явного owner/product signoff на целевой visual state.
+
+---
+
 ### 2026-03-27 — REJECT: mobile header/PDP pass blocked by L2 + product gate
 
 - **Context**: внедрён пакет правок mobile header + mobile PDP sticky CTA + новый mobile PDP add-to-cart e2e. Пройден цепочный гейт: predeploy verifier -> deploy -> postdeploy L0/L1/L2 -> critic PHASE=2.
