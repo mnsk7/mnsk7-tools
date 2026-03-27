@@ -36,7 +36,7 @@ defined( 'ABSPATH' ) || exit;
 	.mnsk7-header__brand a{display:flex;align-items:center;font-size:1.125rem;font-weight:700;color:#000;text-decoration:none!important;border-bottom:none}
 	.mnsk7-header__brand img{max-height:36px;width:auto;max-width:100%;display:block;vertical-align:middle}
 	@media (min-width:1024px){.mnsk7-header__menu-toggle{display:none!important}.mnsk7-header__search-toggle{display:none!important}#mnsk7-header-search.mnsk7-header__search-dropdown{position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;margin:0!important;padding:0!important;min-width:240px;border:none!important;box-shadow:none!important}}
-	@media (max-width:1023px){.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:flex!important}}
+	@media (max-width:1023px){.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:flex!important}.mnsk7-header__brand{margin-right:auto}.mnsk7-header__nav{flex:0 0 auto}.mnsk7-header__actions{flex:0 0 auto}}
 	/* Touch fallback: some mobile browsers can render "desktop width"; force mobile header controls on coarse-pointer devices. */
 	@media (hover:none) and (pointer:coarse){.mnsk7-header__menu-toggle{display:flex!important}.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__search-toggle{display:inline-flex!important}#mnsk7-header-search.mnsk7-header__search-dropdown{display:none!important}}
 	/* Archive LCP pass: promo bar = LCP candidate — krytyczne style bez czekania na main.css */

@@ -320,13 +320,25 @@ test.describe('WOO_FLOW (blocking)', () => {
 
     await page.setViewportSize({ width: 390, height: 844 });
 
-    const discovered = await discoverProductUrl({ request: page.request, baseURL });
-    if (!discovered) {
-      test.skip(true, 'No product URL discovered from sitemap.');
-      return;
+    let targetProductUrl = await discoverProductUrl({ request: page.request, baseURL });
+    if (!targetProductUrl) {
+      await gotoWithRetries(page, urlJoin(baseURL, WOO_PLP_PATH), { timeout: 45_000, retries: 2 });
+      await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {});
+      const firstProductUrl = await page.evaluate(() => {
+        const anchors = Array.from(document.querySelectorAll('a[href]'));
+        for (const a of anchors) {
+          const href = a.getAttribute('href') || '';
+          if (/\/sklep\/[^/]+\/?$/.test(href) && !href.includes('/sklep/page/')) return href;
+        }
+        return null;
+      });
+      if (!firstProductUrl) {
+        throw new Error('Could not discover product URL from sitemap or PLP for mobile PDP add-to-cart flow.');
+      }
+      targetProductUrl = new URL(firstProductUrl, baseURL).toString();
     }
 
-    await gotoWithRetries(page, discovered, { timeout: 45_000, retries: 2 });
+    await gotoWithRetries(page, targetProductUrl, { timeout: 45_000, retries: 2 });
     await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {});
 
     if (await page.locator('form.variations_form').count()) {

@@ -1228,13 +1228,12 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 
-/* Tablet + mobile (≤1024px): one row — logo | burger, search, account, cart (icons only). Bez wychodzenia poza viewport. */
+/* Mobile (<=1023px): logo left, all 4 icon buttons grouped right with equal gaps. */
 @media (max-width: 1023px) {
   .mnsk7-header__inner {
     display: flex;
     flex-wrap: nowrap;
     align-items: center;
-    justify-content: space-between;
     gap: var(--space-8);
     min-height: var(--header-h);
     padding-inline: max(var(--space-12), env(safe-area-inset-left)) max(var(--space-12), env(safe-area-inset-right));
@@ -1242,8 +1241,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     overflow: visible;
   }
   .mnsk7-header__brand {
-    order: 0;
-    flex-shrink: 1;
+    flex: 0 1 auto;
+    margin-right: auto;
     min-width: 0;
     max-width: calc(100vw - 12rem);
   }
@@ -1252,15 +1251,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     object-fit: contain;
   }
   .mnsk7-header__nav {
-    order: 0;
-    flex-shrink: 0;
-    width: auto;
+    flex: 0 0 auto;
     min-width: 0;
   }
   .mnsk7-header__actions {
-    order: 0;
-    flex-shrink: 0;
-    margin-left: auto;
+    flex: 0 0 auto;
     min-width: 0;
     gap: var(--space-8);
     display: flex;
