@@ -874,7 +874,18 @@ add_action( 'wp_footer', function () {
 		var searchPanel = document.getElementById('mnsk7-header-search-panel');
 		var header = document.getElementById('masthead');
 		var promoBar = document.getElementById('mnsk7-promo-bar');
-		var DESKTOP_MIN = 1024;
+		var DESKTOP_MIN = <?php echo (int) MNSK7_BREAKPOINT_MOBILE; ?>;
+		var MOBILE_MAX = DESKTOP_MIN - 1;
+		var menu = document.getElementById('mnsk7-primary-menu');
+
+		function closeMobileSubmenus() {
+			if (!menu) return;
+			menu.querySelectorAll('li.menu-item-has-children.is-open').forEach(function(li) {
+				li.classList.remove('is-open');
+				var parentLink = li.firstElementChild && li.firstElementChild.tagName === 'A' ? li.firstElementChild : li.querySelector('a');
+				if (parentLink) parentLink.setAttribute('aria-expanded', 'false');
+			});
+		}
 
 		// First-open correctness: sync promo offset and sticky shrink before deferred tasks.
 		if (promoBar) {
@@ -901,6 +912,7 @@ add_action( 'wp_footer', function () {
 		function closeMenu() {
 			if (!nav) return;
 			nav.classList.remove('is-open');
+			closeMobileSubmenus();
 			if (menuToggle) {
 				menuToggle.setAttribute('aria-expanded', 'false');
 				var menuOpenLabel = menuToggle.getAttribute('data-open-label');
@@ -971,8 +983,7 @@ add_action( 'wp_footer', function () {
 				setMenuAria();
 			});
 		}
-		// Mobile (≤1024): tap na parent z submenu (np. „Sklep”) rozwijá submenu; bez przejścia po URL. Capture phase + pewne wykrycie linku (tap może dać target = tekst/child).
-		var menu = document.getElementById('mnsk7-primary-menu');
+		// Mobile (<=1023): tap na parent z submenu (np. „Sklep”) rozwija submenu; bez przejścia po URL. Capture phase + pewne wykrycie linku (tap może dać target = tekst/child).
 		if (menu) {
 			function getLinkFromEvent(ev, root) {
 				var el = ev.target;
@@ -991,11 +1002,12 @@ add_action( 'wp_footer', function () {
 				if (!a || !a.href) return;
 				var li = a.closest('li.menu-item-has-children');
 				if (!li || !isParentItemLink(a, li)) return;
-				if (window.innerWidth <= 1024) {
+				if (window.innerWidth <= MOBILE_MAX) {
 					// Mobile: first tap opens submenu, second tap navigates (only for parent link).
 					if (!li.classList.contains('is-open')) {
 						e.preventDefault();
 						e.stopPropagation();
+						closeMobileSubmenus();
 						li.classList.add('is-open');
 						a.setAttribute('aria-expanded', 'true');
 					}
@@ -1041,7 +1053,7 @@ add_action( 'wp_footer', function () {
 			// Mobile: po kliknięciu w link (nie w parent „Sklep”) zamknij overlay — Przewodnik, Dostawa, Kontakt, podpunkty Sklep.
 			menu.addEventListener('click', function(e) {
 				var a = getLinkFromEvent(e, menu);
-				if (!a || !a.getAttribute('href') || window.innerWidth > 1024 || !nav) return;
+				if (!a || !a.getAttribute('href') || window.innerWidth >= DESKTOP_MIN || !nav) return;
 				var parentLi = a.closest('li.menu-item-has-children');
 				if (parentLi && isParentItemLink(a, parentLi)) return; // tap na parent (Sklep) — nie zamykaj, toggle obsłużył
 				nav.classList.remove('is-open');
@@ -1051,6 +1063,7 @@ add_action( 'wp_footer', function () {
 		if (searchToggle && searchDropdown) {
 			function updateSearchDesktop() {
 				if (window.innerWidth >= DESKTOP_MIN) {
+					closeMobileSubmenus();
 					searchDropdown.removeAttribute('hidden');
 					searchToggle.setAttribute('aria-expanded', 'true');
 					var searchOpenLabel = searchToggle.getAttribute('data-open-label');
@@ -1338,8 +1351,19 @@ add_action( 'wp_footer', function () {
 		var mainBtn = form ? form.querySelector('.single_add_to_cart_button') : null;
 		if (!sticky || !form || !mainBtn) return;
 		var stickyPrice = sticky.querySelector('.mnsk7-pdp-sticky-cta__price');
+		var stickyStock = sticky.querySelector('.mnsk7-pdp-sticky-cta__stock');
 		var stickyBtn = sticky.querySelector('.mnsk7-pdp-sticky-cta__btn');
+		var summaryPrice = document.querySelector('.single-product .summary .price');
+		var inlineAvailability = document.querySelector('.single-product .mnsk7-product-availability--inline');
+		var defaultStickyPrice = stickyPrice ? stickyPrice.innerHTML : '';
+		var defaultStickyStock = stickyStock ? stickyStock.textContent : '';
+		var isSubmitting = false;
 		function isMobile() { return window.matchMedia('(max-width: 768px)').matches; }
+		function isInViewport(el) {
+			if (!el) return false;
+			var r = el.getBoundingClientRect();
+			return r.top < (window.innerHeight || document.documentElement.clientHeight) && r.bottom > 0;
+		}
 		function setStickyHeightVar() {
 			try { document.body.style.setProperty('--mnsk7-sticky-cta-h', sticky.offsetHeight + 'px'); } catch (e) {}
 		}
@@ -1374,22 +1398,52 @@ add_action( 'wp_footer', function () {
 			setStickyVisible(!e.isIntersecting);
 		}, { root: null, rootMargin: '0px', threshold: 0.1 });
 		observer.observe(form);
+		function syncStickyMeta() {
+			if (stickyPrice && summaryPrice) {
+				stickyPrice.innerHTML = summaryPrice.innerHTML || defaultStickyPrice;
+			}
+			if (stickyStock && inlineAvailability) {
+				var stockText = (inlineAvailability.textContent || '').trim();
+				if (stockText) stickyStock.textContent = stockText.replace(/^\s*[✓✔]\s*/u, '');
+			}
+		}
+		function resetStickyMeta() {
+			if (stickyPrice) stickyPrice.innerHTML = summaryPrice ? (summaryPrice.innerHTML || defaultStickyPrice) : defaultStickyPrice;
+			if (stickyStock) stickyStock.textContent = defaultStickyStock;
+		}
 		stickyBtn.addEventListener('click', function() {
+			if (!isMobile() || isSubmitting) return;
+			isSubmitting = true;
+			var submitFromSticky = function() {
+				mainBtn.focus({ preventScroll: true });
+				mainBtn.click();
+				setTimeout(function() { isSubmitting = false; }, 400);
+			};
+			if (isInViewport(form)) {
+				submitFromSticky();
+				return;
+			}
 			form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-			setTimeout(function() { mainBtn.focus(); }, 400);
+			setTimeout(submitFromSticky, 420);
 		});
 		window.addEventListener('resize', function() {
 			if (!isMobile()) { setStickyVisible(false); return; }
 			if (sticky.classList.contains('is-visible')) setStickyHeightVar();
 		}, { passive: true });
-		// Sync ceny przy wariacjach (variable product)
-		var summaryPrice = document.querySelector('.single-product .summary .price');
-		if (summaryPrice && stickyPrice && document.querySelector('.single-product form.variations_form')) {
-			document.body.addEventListener('show_variation', function(ev) {
-				if (ev.target && ev.target.closest && ev.target.closest('.single-product') && ev.data && ev.data.display_price) {
-					stickyPrice.innerHTML = ev.data.price_html || summaryPrice.innerHTML;
-					if (sticky.classList.contains('is-visible')) setStickyHeightVar();
+		syncStickyMeta();
+		// Sync ceny i stocka przy wariacjach/reset.
+		if (document.querySelector('.single-product form.variations_form') && window.jQuery) {
+			window.jQuery(form).on('show_variation', function(_event, variation) {
+				if (stickyPrice) {
+					stickyPrice.innerHTML = (variation && variation.price_html) ? variation.price_html : (summaryPrice ? summaryPrice.innerHTML : defaultStickyPrice);
 				}
+				syncStickyMeta();
+				if (sticky.classList.contains('is-visible')) setStickyHeightVar();
+			});
+			window.jQuery(form).on('hide_variation reset_data', function() {
+				resetStickyMeta();
+				syncStickyMeta();
+				if (sticky.classList.contains('is-visible')) setStickyHeightVar();
 			});
 		}
 	})();

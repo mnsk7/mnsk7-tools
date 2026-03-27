@@ -158,6 +158,26 @@ async function discoverProductUrl({ request, baseURL }) {
   return null;
 }
 
+async function selectFirstVariationOptions(page) {
+  const selects = page.locator('form.variations_form table.variations select');
+  const count = await selects.count();
+  if (!count) return;
+  for (let i = 0; i < count; i += 1) {
+    const select = selects.nth(i);
+    const chosen = await select.evaluate((el) => {
+      const options = Array.from(el.querySelectorAll('option'));
+      const candidate = options.find((o) => o.value && !o.disabled);
+      if (!candidate) return null;
+      el.value = candidate.value;
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+      return candidate.value;
+    });
+    if (chosen) {
+      await page.waitForTimeout(150);
+    }
+  }
+}
+
 test.describe('WOO_FLOW (blocking)', () => {
   test('add_to_cart (server-side) → cart → checkout entry', async ({ page, baseURL }) => {
     // L1 should be fast and deterministic; avoid multi-minute hangs.
@@ -291,6 +311,39 @@ test.describe('WOO_FLOW (blocking)', () => {
     const count = await cartItems.count();
     if (count <= 0) {
       throw new Error(`Cart appears empty or cart markup not detected at ${cartUrl}.`);
+    }
+  });
+
+  test('pdp_mobile_add_to_cart: mobile PDP click path adds item', async ({ page, baseURL }) => {
+    test.setTimeout(120_000);
+    const cartUrl = urlJoin(baseURL, '/koszyk/');
+
+    await page.setViewportSize({ width: 390, height: 844 });
+
+    const discovered = await discoverProductUrl({ request: page.request, baseURL });
+    if (!discovered) {
+      test.skip(true, 'No product URL discovered from sitemap.');
+      return;
+    }
+
+    await gotoWithRetries(page, discovered, { timeout: 45_000, retries: 2 });
+    await page.waitForLoadState('networkidle', { timeout: 15_000 }).catch(() => {});
+
+    if (await page.locator('form.variations_form').count()) {
+      await selectFirstVariationOptions(page);
+      await page.waitForTimeout(250);
+    }
+
+    const addButton = page.locator('form.cart .single_add_to_cart_button').first();
+    await expect(addButton).toBeVisible({ timeout: 15000 });
+    await addButton.click();
+    await page.waitForTimeout(800);
+
+    await gotoWithRetries(page, cartUrl, { timeout: 45_000, retries: 2 });
+    const cartItems = page.locator('.cart_item, tr.woocommerce-cart-form__cart-item, .wc-block-cart-items__row');
+    const count = await cartItems.count();
+    if (count <= 0) {
+      throw new Error(`Cart appears empty after mobile PDP add-to-cart at ${cartUrl}.`);
     }
   });
 });

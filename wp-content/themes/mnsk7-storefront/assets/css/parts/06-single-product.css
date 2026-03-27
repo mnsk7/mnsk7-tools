@@ -663,7 +663,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   color: var(--color-white);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 769px) {
   .mnsk7-pdp-sticky-cta {
     display: none !important;
   }
