@@ -17,6 +17,9 @@ language: ru
 
 `{ mode:"practical", outcome: "ACCEPT"|"REJECT"|"ESCALATE", checks:[], gaps:[], risks:[], required_next_steps:[] }`
 
+Для post-deploy product-verifier дополнительно обязателен блок:
+`{ owner_bug_ledger:[{bug_id,reproduce,root_cause,fix,verify_on,status}], agent_found_bugs:[...], product_accept:true|false }`
+
 ### MODE=technical
 
 `{ mode:"technical", outcome: "ACCEPT"|"REJECT"|"ESCALATE", checks:[], evidence:[], missing_evidence:[], risks:[], required_next_steps:[] }`
@@ -27,6 +30,8 @@ language: ru
   - Всегда проверяй соответствие “что просили” ↔ “что сделано”.
   - Если запрос про дизайн/UX, считать дефектом “визуально сломано” даже при зелёных метриках/тестах.
   - Если изменения затрагивают только “технические” артефакты (tests/verify), practical может быть `ACCEPT`, но обязан явно написать, что это не меняет UI.
+  - В post-deploy режиме обязан выдать owner bug replay по каждому багу и список новых багов, найденных без owner hints.
+  - Если baseline snapshots обновлены, practical не может быть `ACCEPT` без явного signoff, что новый вид — целевой продуктовый state.
 
 - **MODE=technical**:
   - **Predeploy**: проверяй целостность diff/контекста/логов без обязательного локального e2e/`verify:*`.

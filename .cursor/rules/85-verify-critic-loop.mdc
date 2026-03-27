@@ -27,9 +27,17 @@ alwaysApply: true
 4. Запусти **Technical Verify multi-level на staging** (см. `.cursor/rules/60-verify-levels.mdc`):
    - минимум L0
    - L1/L2 — по риску и зоне влияния (для Woo flow — обязательно L1)
-5. Запусти **Critic+Scorer phase 2**: остатки/регрессии/risks + score.
-6. Если есть blocking issues или score ниже порога — внеси фиксы и повтори цикл.
-7. Останов:
-   - **ACCEPT** (все blocking rules зелёные, score >= threshold)
+5. Запусти **Product Verifier (post-deploy)**:
+   - owner bug replay ledger (reproduce/root cause/fix/verify/device/status)
+   - список новых дефектов, найденных агентом без owner hints
+6. Запусти **Critic+Scorer phase 2**: остатки/регрессии/risks + score.
+7. Если есть blocking issues или score ниже порога — внеси фиксы и повтори цикл.
+8. Останов:
+   - **ACCEPT** только при `PROCESS_ACCEPT=true` и `PRODUCT_ACCEPT=true`
    - или **ESCALATE** (достигнут лимит итераций/нет прогресса/нужна ручная проверка)
+
+## Snapshot update rule (blocking)
+
+- Если изменены baseline snapshots (`toHaveScreenshot`), без product signoff это считается **REJECT**.
+- Signoff должен явно указать: почему это целевое UI-состояние, какие owner-баги закрывает, на каких девайсах проверено.
 

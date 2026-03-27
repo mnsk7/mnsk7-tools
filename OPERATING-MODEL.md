@@ -19,6 +19,7 @@
 | Инженерные ограничения WP/Woo + что можно деплоить | `.cursorrules` |
 | Quality gates / кто блокирует релиз | `docs/QUALITY_GATES.md` |
 | Definition of Done | `docs/DEFINITION_OF_DONE.md` |
+| Bug discovery acceptance (process vs product) | `docs/BUG_DISCOVERY_ACCEPTANCE.md` |
 | E2E запуск/репорты | `docs/E2E-WORKFLOW.md` |
 | Staging/deploy safety | `docs/DEPLOY_SAFETY.md`, `docs/DEPLOY_PLAYBOOK.md`, `.github/workflows/deploy-staging.yml` |
 | Multi-level verify (L0/L1/L2) + blocking rules | `.cursor/rules/60-verify-levels.mdc` |
@@ -34,6 +35,7 @@
 - **Doer**: делает изменения **только** по финальному issue list, минимальным безопасным diff.
 - **Critic + Verifier (predeploy, practical+technical, no-tests)**: оценивает diff/контекст/логи без локального e2e/`verify:*`.
 - **Technical Verify (L0/L1/L2, post-deploy)**: истина о качестве из инструментов на staging.
+- **Product Verifier (post-deploy)**: истина о продукте (owner-баги и новые дефекты, найденные агентом).
 - **Critic+Scorer (phase 2)**: оценивает остатки/регрессии по staging verify-отчёту; применяет blocking rules и score gate.
 
 ## Default task flow (с петлями)
@@ -53,11 +55,19 @@
    - L0: линты/статические/быстрые аудиты
    - L1: Playwright критические user flows Woo
    - L2: visual/perf budgets и т.п.
-10. **Critic+Scorer phase 2** → score + blocking:
+10. **Product Verifier (post-deploy)**:
+   - owner bug ledger с явными статусами `fixed|partially_fixed|not_fixed`
+   - unknown bug hunt: обязательный список новых дефектов без owner hints
+11. **Critic+Scorer phase 2** → score + blocking:
    - если blocking → **REJECT (score=0)** и возвращаемся к финальному issue list
-   - иначе: если score >= threshold → **ACCEPT**
-11. **ACCEPT** → результат принят.
-12. **Если REJECT/ESCALATE/major** -> зафиксировать postmortem в `docs/CRITIC_POSTMORTEMS.md`.
+   - иначе: считаем `PROCESS_ACCEPT=true`
+12. **Dual verdict**:
+   - `PROCESS_ACCEPT` (пайплайн и verify-gates)
+   - `PRODUCT_ACCEPT` (реальное закрытие owner-багов + discovery-блок)
+   - финальный `ACCEPT` возможен только если оба true
+13. **Snapshot governance**:
+   - baseline update разрешён только после product signoff, что это целевой UI-state
+14. **Если REJECT/ESCALATE/major** -> зафиксировать postmortem в `docs/CRITIC_POSTMORTEMS.md`.
 
 ## Принципы (что создаёт качество)
 

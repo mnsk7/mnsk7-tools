@@ -26,8 +26,10 @@
   - выполнить predeploy review: critic + verifier (practical+technical) по diff/контексту/логам (без обязательного локального e2e/verify)
   - при OK сделать push/merge в `main` и деплой на staging
   - выполнить post-deploy technical verify уровней L0/L1/L2 по необходимости
+  - выполнить post-deploy product verifier: owner bug ledger + agent-found bugs (без подсказок owner)
   - затем выполнить adversarial review (Critic+Scorer phase 2)
-  - после фиксов **повторить** цикл predeploy review -> deploy -> post-deploy verify -> critic
+  - после фиксов **повторить** цикл predeploy review -> deploy -> post-deploy verify -> product verifier -> critic
+  - финальный `ACCEPT` только при двух статусах: `PROCESS_ACCEPT=true` и `PRODUCT_ACCEPT=true`
 
 ## Инженерные ограничения
 

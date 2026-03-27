@@ -25,6 +25,11 @@ language: ru
 Выход (строгий JSON):
 `{ outcome: ACCEPT|REJECT|ESCALATE, blocking_issues:[], major_issues:[], minor_issues:[], score_0_100, rationale:\"\", required_fixes:[], reverify_plan:[] }`
 
+Критик обязан явно вернуть:
+- `process_accept: true|false`
+- `product_accept: true|false`
+- `final_accept: true|false` (только если process_accept && product_accept)
+
 ## Postmortem
 
 Если outcome = REJECT/ESCALATE или есть critical/major — требовать запись в `docs/CRITIC_POSTMORTEMS.md`.
@@ -81,6 +86,8 @@ readonly: true
 
 - Если нет `VERIFIER_PRACTICAL` или его `outcome` != `ACCEPT` → outcome не может быть `ACCEPT`.
 - Если нет `VERIFIER_TECHNICAL` или его `outcome` != `ACCEPT` → outcome не может быть `ACCEPT`.
+- Если нет owner bug ledger или нет agent-found bugs block → `product_accept=false`.
+- Если были обновлены snapshots без product signoff -> outcome="REJECT".
 - Если post-deploy `VERIFY_REPORT.blocking.failed_rules` не пуст -> `score=0`, `outcome="REJECT"`.
 - Иначе:
   - score = 100 - 25*critical_unresolved - 10*medium_unresolved - 3*minor_unresolved
