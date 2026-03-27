@@ -1,0 +1,293 @@
+{
+  "issue_map": {
+    "business": { "critical": [], "medium": [], "minor": [] },
+    "tech": { "critical": [], "medium": [], "minor": [] },
+    "ui": {
+      "critical": [
+        {
+          "id": "ui-header-balance-overflow-risk",
+          "domain": "ui",
+          "severity": "critical",
+          "title": "Mobile header: cramped/unstable action cluster risk (wrapping/clipping) due to tight critical CSS constraints",
+          "layer": "standards",
+          "ui_category": "header_balance_problem",
+          "location": { "url": "https://staging.mnsk7-tools.pl/", "selector": ".mnsk7-header__inner", "viewport": "390x700" },
+          "evidence": "Code: inline critical CSS in `wp-content/themes/mnsk7-storefront/header.php` sets `.mnsk7-header__inner{gap:1rem;padding:0 1rem;min-height:52px}` and logo image `max-height:42px`. Hypothesis: at 390px width this can force wrap/clipping when cart count visible.",
+          "repro_steps": "Mobile 390x700: open home + PDP + cart + checkout. Check header stays 1-row; no overlaps; cart count badge does not clip; no horizontal scroll.",
+          "expected": "Single-row header, stable spacing, all primary actions tappable.",
+          "suggested_fix": "Theme: make header layout explicitly nowrap on mobile; reduce gaps at <=390; cap logo width; ensure action cluster has fixed hit areas and doesn't wrap.",
+          "tests_to_add": [ "e2e: header_mobile_no_wrap (bbox/row)", "visual: header_mobile_empty_vs_nonempty_cart" ],
+          "effort": "M",
+          "risk": "high"
+        },
+        {
+          "id": "ui-pdp-action-cluster-wrap-break",
+          "domain": "ui",
+          "severity": "critical",
+          "title": "PDP action cluster: stock/qty/add-to-cart can wrap into unclear purchase block on mobile",
+          "layer": "standards",
+          "ui_category": "product_action_cluster_broken",
+          "location": { "url": "https://staging.mnsk7-tools.pl/sklep/<product>/", "selector": "form.cart, .woocommerce-variation-add-to-cart, .quantity .qty, .single_add_to_cart_button", "viewport": "390x700" },
+          "evidence": "Code: PDP buybox is customized (`woocommerce/content-single-product.php` + `assets/css/parts/06-single-product.css`); variation add-to-cart is flex-wrap; touch targets enforce 44px min height (`assets/css/parts/22-touch-targets.css`). Hypothesis: combined min-heights + wrap => misalignment/weak CTA clarity.",
+          "repro_steps": "Mobile 390x700: open variable PDP, select variation, verify qty + button grouping is coherent and button is fully visible/enabled.",
+          "expected": "One cohesive purchase cluster; predictable stacking; no cramped wrap.",
+          "suggested_fix": "Theme CSS: define explicit mobile layout for add-to-cart cluster (stack button full-width, qty next to it or above; consistent gaps; align availability inline).",
+          "tests_to_add": [ "e2e: pdp_variable_action_cluster_visible", "visual: pdp_action_cluster_states" ],
+          "effort": "M",
+          "risk": "high"
+        },
+        {
+          "id": "ui-sticky-cta-collision-recos",
+          "domain": "ui",
+          "severity": "critical",
+          "title": "Sticky PDP CTA: enforce bottom safe-area so last interactive element is never obscured (recos/footer)",
+          "layer": "standards",
+          "ui_category": "sticky_collision",
+          "location": { "url": "https://staging.mnsk7-tools.pl/sklep/<product>/", "selector": "#mnsk7-pdp-sticky-cta, .related, .upsells, footer", "viewport": "390x700" },
+          "evidence": "Code: sticky CTA exists in `woocommerce/content-single-product.php` as `#mnsk7-pdp-sticky-cta` (hidden by default). Hypothesis: when shown it can cover recos/footer unless bottom spacing is reserved.",
+          "repro_steps": "Mobile 390x700: on a PDP where sticky CTA becomes visible, scroll to bottom; verify last related card CTA/footer link is fully visible and tappable (not under sticky).",
+          "expected": "No occlusion; bottom padding compensates sticky height + safe-area inset.",
+          "suggested_fix": "Theme CSS: reserve bottom padding using a CSS var for sticky height; optionally hide/compact sticky near footer/related section end.",
+          "tests_to_add": [ "e2e: pdp_bottom_not_occluded_by_sticky" ],
+          "effort": "M",
+          "risk": "high"
+        }
+      ],
+      "medium": [
+        {
+          "id": "ui-plp-first-screen-density",
+          "domain": "ui",
+          "severity": "medium",
+          "title": "PLP first screen: products + filter/sort entry are delayed by header/chips/controls (dead space)",
+          "layer": "heuristics",
+          "ui_category": "dead_space",
+          "location": { "url": "https://staging.mnsk7-tools.pl/sklep/", "selector": ".woocommerce-products-header, .storefront-sorting", "viewport": "390x700" },
+          "evidence": "Code pointers: PLP layout split across `assets/css/parts/24-plp-table.css`, `05-plp-cards.css`, `25-global-layout.css` and archive template `woocommerce/archive-product.php`. Hypothesis: stacked controls/chips reduce above-fold product density.",
+          "repro_steps": "Mobile 390x700: open /sklep/ and a category/tag. Check how quickly first product card appears and whether filter/sort entry is obvious.",
+          "expected": "Catalog-first: first product appears early; controls compact.",
+          "suggested_fix": "Theme: compress PLP header/chips on mobile; convert chips to one scroll row or collapsed drawer; keep sort/filter in compact bar.",
+          "tests_to_add": [ "visual: plp_mobile_above_fold" ],
+          "effort": "M",
+          "risk": "medium"
+        },
+        {
+          "id": "ui-pdp-related-cards-composition",
+          "domain": "ui",
+          "severity": "medium",
+          "title": "PDP related/upsells cards: ragged title wrapping and uneven hierarchy reduce scanability (card composition)",
+          "layer": "heuristics",
+          "ui_category": "card_composition_problem",
+          "location": { "url": "https://staging.mnsk7-tools.pl/sklep/<product>/", "selector": ".related.products li.product, .upsells.products li.product", "viewport": "390x700" },
+          "evidence": "Code pointers: card styling in `assets/css/parts/12-related-products.css` and shared PLP card styles (`05-plp-cards.css`). Hypothesis: titles with separators wrap unpredictably; CTA alignment inconsistent.",
+          "repro_steps": "Mobile 390x700: on PDP scroll to related/upsells. Check title wrapping consistency, card heights, price/CTA placement alignment.",
+          "expected": "Predictable card rhythm: 2-line clamp title, consistent price + CTA placement, uniform heights.",
+          "suggested_fix": "Theme CSS: line-clamp titles; normalize spacing; set consistent thumbnail ratio; align CTA to bottom.",
+          "tests_to_add": [ "visual: pdp_related_cards_mobile" ],
+          "effort": "S",
+          "risk": "medium"
+        },
+        {
+          "id": "ui-cart-first-screen-cta",
+          "domain": "ui",
+          "severity": "medium",
+          "title": "Cart first screen: checkout CTA should be visible without scroll (mobile)",
+          "layer": "heuristics",
+          "ui_category": "weak_cta_hierarchy",
+          "location": { "url": "https://staging.mnsk7-tools.pl/koszyk/", "selector": ".cart_totals .checkout-button", "viewport": "390x700" },
+          "evidence": "Code pointers: cart/checkout styles in `assets/css/parts/18-cart-checkout.css` + Woo templates.",
+          "repro_steps": "Mobile 390x700: open /koszyk/ with item. Verify checkout button visible above fold.",
+          "expected": "Primary CTA visible immediately.",
+          "suggested_fix": "Theme CSS: reorder/compact cart blocks on mobile; optionally sticky summary.",
+          "tests_to_add": [ "e2e: cart_mobile_checkout_cta_visible" ],
+          "effort": "M",
+          "risk": "medium"
+        },
+        {
+          "id": "ui-checkout-mobile-single-column",
+          "domain": "ui",
+          "severity": "medium",
+          "title": "Checkout mobile: enforce single-column and compact notice stack to prioritize form start",
+          "layer": "heuristics",
+          "ui_category": "layout_break",
+          "location": { "url": "https://staging.mnsk7-tools.pl/zamowienie/", "selector": "#customer_details, #order_review, .woocommerce-info", "viewport": "390x700" },
+          "evidence": "Code pointers: checkout styles in `assets/css/parts/18-cart-checkout.css` + notices `16-woo-notices.css`.",
+          "repro_steps": "Mobile 390x700: open /zamowienie/. Verify form fields start quickly and layout is single column.",
+          "expected": "Single column; notices compact/collapsible.",
+          "suggested_fix": "Theme CSS: force single column; reduce notice padding/typography on mobile.",
+          "tests_to_add": [ "visual: checkout_mobile_above_fold" ],
+          "effort": "M",
+          "risk": "medium"
+        },
+        {
+          "id": "ui-taste-technical-mode-header",
+          "domain": "ui",
+          "severity": "minor",
+          "title": "Taste: header should feel task-first (technical-industrial commerce), not desktop scaled-down",
+          "layer": "taste",
+          "ui_category": "header_balance_problem",
+          "location": { "url": "https://staging.mnsk7-tools.pl/sklep/", "selector": ".mnsk7-header__inner", "viewport": "390x700" },
+          "evidence": "Heuristic/taste hypothesis based on header structure and dense action cluster on mobile.",
+          "repro_steps": "Mobile 390x700: evaluate header focus vs products (does header dominate?)",
+          "expected": "Compact utility bar: Search/Categories/Cart.",
+          "suggested_fix": "Theme: mobile header variant (collapse nav links into one trigger; keep search/cart).",
+          "tests_to_add": [ "visual: header_mobile_variant" ],
+          "effort": "M",
+          "risk": "low"
+        }
+      ],
+      "minor": [
+        {
+          "id": "ui-home-first-screen-hero-entry",
+          "domain": "ui",
+          "severity": "minor",
+          "title": "Home first screen: hero + primary entry to shop/catalog should read clearly without excess header dead space",
+          "layer": "heuristics",
+          "ui_category": "dead_space",
+          "location": { "url": "https://staging.mnsk7-tools.pl/", "selector": ".hero, .site-main, .entry-content, .mnsk7-header__inner", "viewport": "390x700" },
+          "evidence": "Orchestrator targets home hero/first screen; gap vs PLP/PDP focus. Hypothesis: header + hero stack may push first actionable content down.",
+          "repro_steps": "Mobile 390x700: open home. Note first screen: header height, hero, first CTA/link to shop.",
+          "expected": "Task-first: user sees brand + clear path to catalog within first screen.",
+          "suggested_fix": "Theme: tighten hero top margin on mobile if needed; ensure one obvious primary CTA.",
+          "tests_to_add": [ "visual: home_mobile_first_screen" ],
+          "effort": "S",
+          "risk": "low"
+        },
+        {
+          "id": "ui-footer-mobile-links-composition",
+          "domain": "ui",
+          "severity": "minor",
+          "title": "Footer: link groups and tap spacing readable on mobile (no cramped columns)",
+          "layer": "heuristics",
+          "ui_category": "layout_break",
+          "location": { "url": "https://staging.mnsk7-tools.pl/", "selector": "footer.site-footer, .footer-widgets, .site-info", "viewport": "390x700" },
+          "evidence": "Sticky CTA issue references footer visibility; footer is end-of-flow anchor for trust/links.",
+          "repro_steps": "Mobile 390x700: scroll to footer on home + PDP. Check link tap areas and wrapping.",
+          "expected": "Footer links tappable; adequate spacing; no horizontal scroll.",
+          "suggested_fix": "Theme CSS: single-column or stacked footer groups on narrow widths.",
+          "tests_to_add": [ "visual: footer_mobile" ],
+          "effort": "S",
+          "risk": "low"
+        }
+      ]
+    },
+    "seo": { "critical": [], "medium": [], "minor": [] },
+    "perf": {
+      "critical": [],
+      "medium": [
+        {
+          "id": "perf-hypothesis-lcp-hero-header",
+          "domain": "perf",
+          "severity": "medium",
+          "title": "LCP risk (hypothesis): home/PLP first paint dominated by header inline critical CSS + hero imagery",
+          "layer": "hypothesis",
+          "location": { "url": "https://staging.mnsk7-tools.pl/", "selector": "header, .hero img, .site-main", "viewport": "390x700" },
+          "evidence": "Header uses inline critical CSS; LCP element may be logo or hero image depending on template.",
+          "verify_plan": [
+            "Lighthouse navigation (mobile): record LCP element and time; repeat on / and /sklep/",
+            "If LCP is hero image: confirm width/height or aspect-ratio to avoid late resize"
+          ],
+          "metrics": [ "LCP" ],
+          "linked_issue_ids": [ "ui-home-first-screen-hero-entry", "ui-plp-first-screen-density" ],
+          "effort": "S",
+          "risk": "medium"
+        },
+        {
+          "id": "perf-hypothesis-cls-sticky-pdp",
+          "domain": "perf",
+          "severity": "medium",
+          "title": "CLS / jank risk (hypothesis): sticky PDP CTA show/hide or cart badge updates shift layout",
+          "layer": "hypothesis",
+          "location": { "url": "https://staging.mnsk7-tools.pl/sklep/<product>/", "selector": "#mnsk7-pdp-sticky-cta, .woocommerce-message, .cart-contents-count", "viewport": "390x700" },
+          "evidence": "Sticky CTA toggles visibility; Woo notices and header cart count can inject height changes.",
+          "verify_plan": [
+            "Performance panel: CLS during add-to-cart and scroll on PDP",
+            "Scroll to related/footer: check layout thrash when sticky appears"
+          ],
+          "metrics": [ "CLS", "INP" ],
+          "linked_issue_ids": [ "ui-sticky-cta-collision-recos", "ui-pdp-action-cluster-wrap-break" ],
+          "effort": "S",
+          "risk": "medium"
+        }
+      ],
+      "minor": []
+    },
+    "a11y": {
+      "critical": [],
+      "medium": [
+        {
+          "id": "a11y-header-icon-buttons-accessible-name",
+          "domain": "a11y",
+          "severity": "medium",
+          "title": "Mobile header: icon-only controls (search, menu, cart) need visible labels or aria-label consistent with purpose",
+          "layer": "standards",
+          "location": { "url": "https://staging.mnsk7-tools.pl/", "selector": ".mnsk7-header__inner a, .mnsk7-header__inner button", "viewport": "390x700" },
+          "evidence": "Dense action cluster; WCAG 4.1.2 Name, Role, Value — icons without text must expose accessible names.",
+          "verify_plan": [
+            "axe DevTools or equivalent: critical/serious violations on home + PDP",
+            "Screen reader spot-check: cart and search announce shop-relevant names"
+          ],
+          "repro_steps": "Inspect header controls in accessibility tree; tab through focus order.",
+          "expected": "Each control has descriptive accessible name; focus visible.",
+          "suggested_fix": "Theme: aria-label on icon links/buttons; ensure one h1 per page elsewhere.",
+          "linked_issue_ids": [ "ui-header-balance-overflow-risk" ],
+          "effort": "S",
+          "risk": "medium"
+        },
+        {
+          "id": "a11y-pdp-sticky-cta-footer-not-occluded",
+          "domain": "a11y",
+          "severity": "medium",
+          "title": "When sticky CTA is visible, last focusable content (related/footer links) must remain reachable and not covered",
+          "layer": "standards",
+          "location": { "url": "https://staging.mnsk7-tools.pl/sklep/<product>/", "selector": "#mnsk7-pdp-sticky-cta, footer a", "viewport": "390x700" },
+          "evidence": "Keyboard/switch users can reach footer; overlap is both UI and a11y failure (2.4.7 Focus visible / obstruction).",
+          "verify_plan": [
+            "Keyboard: Tab from main content through related and footer with sticky CTA shown",
+            "Check scroll-padding-bottom / focus scroll-into-view not hidden under sticky"
+          ],
+          "repro_steps": "Keyboard-only: on PDP scroll until sticky appears; continue to footer links.",
+          "expected": "No focused element hidden under sticky bar; scroll-padding or layout reserves space.",
+          "suggested_fix": "Theme CSS: scroll-padding-bottom; match ui-sticky-cta-collision-recos fix.",
+          "linked_issue_ids": [ "ui-sticky-cta-collision-recos", "ui-footer-mobile-links-composition" ],
+          "effort": "M",
+          "risk": "medium"
+        }
+      ],
+      "minor": []
+    }
+  },
+  "flow_risks": {
+    "add_to_cart": { "risk": "high", "notes": "PDP action cluster layout + sticky CTA behavior are primary risks on mobile." },
+    "cart_update": { "risk": "medium", "notes": "Cart CTA visibility and control spacing on mobile needs validation." },
+    "checkout_entry": { "risk": "high", "notes": "Header and cart/checkout above-fold composition can block or delay checkout entry." }
+  },
+  "woo_blocking_map": {
+    "cta": {
+      "pass_criteria": "Primary CTAs (add to cart, proceed to checkout, place order entry) are visible, not clipped, min ~44px hit area; sticky/header do not permanently cover them.",
+      "fail_criteria": "Purchase or checkout CTA off-screen without alternative; CTA overlapped by sticky bar or header overflow.",
+      "issue_ids": [ "ui-pdp-action-cluster-wrap-break", "ui-cart-first-screen-cta", "ui-sticky-cta-collision-recos" ]
+    },
+    "add_to_cart": {
+      "pass_criteria": "Simple/variable PDP: quantity + add-to-cart form one coherent cluster; button enabled when purchasable; no broken wrap hiding controls.",
+      "fail_criteria": "Add to cart missing, disabled without cause, or layout wrap hides qty/button; variation selection unusable.",
+      "issue_ids": [ "ui-pdp-action-cluster-wrap-break", "ui-header-balance-overflow-risk" ]
+    },
+    "cart": {
+      "pass_criteria": "Header cart icon/count readable; /koszyk/ shows line items and checkout CTA in first screen on typical cart.",
+      "fail_criteria": "Cart badge clipped; cannot open cart; checkout CTA requires scroll on normal 1–3 line cart.",
+      "issue_ids": [ "ui-header-balance-overflow-risk", "ui-cart-first-screen-cta" ]
+    },
+    "checkout_entry": {
+      "pass_criteria": "From cart, path to /zamowienie/ is clear; checkout form and notices stack in single column; form fields start without excessive scroll.",
+      "fail_criteria": "Wrong column order; notices push form below fold; layout blocks completing customer details.",
+      "issue_ids": [ "ui-checkout-mobile-single-column", "ui-cart-first-screen-cta" ]
+    }
+  },
+  "top_priorities": [
+    { "issue_id": "ui-sticky-cta-collision-recos", "why": "Woo woo_blocking_map.cta + a11y: sticky must not occlude recos/footer or last CTAs." },
+    { "issue_id": "ui-pdp-action-cluster-wrap-break", "why": "Woo woo_blocking_map.add_to_cart: purchase cluster must stay coherent on mobile." },
+    { "issue_id": "ui-header-balance-overflow-risk", "why": "Woo woo_blocking_map.cart: global header/cart stability on all routes." },
+    { "issue_id": "a11y-header-icon-buttons-accessible-name", "why": "Icon-only header controls need names before tightening layout further." },
+    { "issue_id": "ui-checkout-mobile-single-column", "why": "Woo woo_blocking_map.checkout_entry: form must win first screen." }
+  ]
+}

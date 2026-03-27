@@ -52,7 +52,7 @@ async function main() {
   // into the conversation context so the agent cannot "forget" the gate.
   writeJson({
     additional_context:
-      "Изменены файлы в зоне runtime/process. Следуй пайплайну: Critic PHASE=1 → фиксы (Doer) → Verify по зоне (дефолт: `npm run verify:changed` + `npm run verify:l0`; L1 Woo-flow — ТОЛЬКО если изменения реально в Woo/checkout/cart/product зоне или форс `VERIFY_L1=1`) → Verifier → Critic PHASE=2. Gate verifier/PHASE=2 обязателен ПЕРЕД завершением, но НЕ вместо фикса замечаний PHASE=1."
+      "Изменены файлы в зоне runtime/process. Следуй owner-пайплайну по текущему этапу: Orchestrator -> Analyzer -> Critic PHASE=1 -> Doer (без локальных e2e/verify) -> Critic+Verifier predeploy (practical+technical, по diff/контексту/логам) -> push/merge в main и deploy на staging -> Technical Verify на staging (L0/L1/L2) -> Critic PHASE=2."
   });
 }
 

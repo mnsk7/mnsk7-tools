@@ -1,0 +1,16 @@
+{
+  "ok_to_proceed": true,
+  "score_0_100": 88,
+  "blocking_gaps": [],
+  "nonblocking_gaps": [
+    "Нет явной фиксации конкретного PDP URL/продукта в анализе (orchestrator: PDP_SAMPLE_TBD); reliance на auto-discovery из /sklep/ ок, но усложняет ручную верификацию и воспроизводимость вне e2e.",
+    "A11y покрытие пока на уровне гипотез/ручных шагов: нет явного автоматизированного axe-smoke в verify suite (хотя рекомендовано в analyzer).",
+    "Footer coverage не выделено как отдельная зона (кроме косвенного риска «PDP bottom/footer under sticky CTA»); нет отдельной проверки footer/header consistency на ключевых страницах."
+  ],
+  "next_actions": [
+    "В Final Issue List явно прописать покрытия страниц: home (/), shop/PLP (/sklep/), category/tag PLP, PDP (auto-discovered), cart (/koszyk/), checkout (/zamowienie/), header+promo sitewide, footer (минимум: не перекрыт sticky CTA на PDP).",
+    "Добавить в план тестов явный post-deploy a11y smoke (axe) минимум для checkout и PDP на viewport 414x896 (можно как отдельный verify:* или как часть L1/L2).",
+    "Для ручной проверки дополнить acceptance: конкретный пример PDP slug (выбранный один раз) + чек «доскролл до footer при видимой sticky CTA».",
+    "Уточнить в тестах cookie bar: сценарий на checkout/cart, где bar видим, и проверка что он не блокирует primary CTA/формы (уже добавлено) — сохранить как P0 Woo gating."
+  ]
+}

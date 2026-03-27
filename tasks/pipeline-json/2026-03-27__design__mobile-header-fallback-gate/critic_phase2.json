@@ -1,0 +1,28 @@
+{
+  "outcome": "REJECT",
+  "blocking_issues": [
+    "Technical verifier returned REJECT due to incomplete changed-scope verification evidence.",
+    "e2e/footer-accordion spec failed by timeout.",
+    "e2e/header-layout spec failed at desktop 1024x768 dropdown visibility."
+  ],
+  "major_issues": [
+    "Header-layout run ended early with not-run tests.",
+    "Verification remains non-green despite mobile-design pass."
+  ],
+  "minor_issues": [
+    "Optional L0 checks (link-check, lighthouse) were skipped."
+  ],
+  "score_0_100": 0,
+  "rationale": "Acceptance is blocked by explicit test failures in footer and header regression paths; both verifiers remain REJECT.",
+  "required_fixes": [
+    "Fix footer accordion timeout issue.",
+    "Fix desktop 1024 Sklep dropdown visibility/hover issue in header.",
+    "Rerun targeted and changed verify suites; then rerun verifier and critic."
+  ],
+  "reverify_plan": [
+    "Run verify changed in stable mode.",
+    "Collect artifacts and re-run practical + technical verifier.",
+    "Run critic phase 2 on updated evidence."
+  ]
+}
+

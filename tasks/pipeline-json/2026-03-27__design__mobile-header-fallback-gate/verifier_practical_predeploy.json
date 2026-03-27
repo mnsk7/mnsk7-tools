@@ -1,0 +1,29 @@
+{
+  "mode": "practical",
+  "stage": "predeploy",
+  "outcome": "REJECT",
+  "checks": [
+    "Проверено соответствие заявленной цели: убрать регрессию хедера на границе mobile/desktop (1024).",
+    "Проверено, что runtime-правки действительно присутствуют в теме (header.php, 04-header.css, main.css).",
+    "Проверено, что деплойный путь в проекте работает от origin/main (GitHub Actions push/workflow_dispatch)."
+  ],
+  "gaps": [
+    "Изменения не зафиксированы в коммите и не доставлены в origin/main, значит staging не может получить эти правки через штатный deploy workflow.",
+    "Смысловой дефект (Sklep/1024) по последнему доступному evidence остается нерешенным для целевого окружения."
+  ],
+  "risks": [
+    "Деплой без попадания изменений в origin/main даст ложноположительную готовность.",
+    "Риск сохранения UX-дефекта в хедере на desktop-tablet boundary."
+  ],
+  "required_next_steps": [
+    "Подготовить deployable state: коммит релевантных правок и push в origin/main.",
+    "Выполнить deploy на staging из этого состояния.",
+    "После deploy запустить technical verify L0/L1/L2 и только затем critic-scorer PHASE=2."
+  ],
+  "deploy_readiness": {
+    "ready": false,
+    "decision": "BLOCK_DEPLOY",
+    "reason": "Predeploy practical gate failed: текущий diff не задеплоен в source-of-truth (origin/main) и не подтвержден на целевом окружении."
+  },
+  "postmortem_required": true
+}

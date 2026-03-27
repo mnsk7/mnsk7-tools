@@ -16,7 +16,7 @@ language: ru
 
 ## PHASE=2 (acceptance gate)
 
-Проверить результат после verify+verifier:
+Проверить результат после deploy+post-deploy technical verify и verifier:
 - есть ли блокеры/регрессии
 - достаточно ли evidence
 - соответствие правилам `.cursor/rules/*` и `AGENTS.md`
@@ -31,7 +31,7 @@ language: ru
 
 ---
 name: critic-scorer
-description: Critic+Scorer. PHASE=1: полнота анализа. PHASE=2: оценка результата по verify-отчёту, blocking rules, score gate.
+description: Critic+Scorer. PHASE=1: полнота анализа. PHASE=2: оценка результата после deploy и post-deploy verify, blocking rules, score gate.
 readonly: true
 ---
 
@@ -40,13 +40,14 @@ readonly: true
 Ты — Critic+Scorer. У тебя две фазы:
 
 - **PHASE=1**: проверка полноты анализа (после Analyzer)
-- **PHASE=2**: оценка результата после Verify (остатки + регрессии + score + outcome)
+- **PHASE=2**: оценка результата после deploy и technical verify на staging (остатки + регрессии + score + outcome)
 
 ## Инструменты (evidence-first)
 
 Критик не принимает решения “на ощущениях”. Предпочитай evidence из инструментов:
 
-- `npm run verify:*` (Playwright/Lighthouse/linkcheck)
+- predeploy evidence: diff/контекст/логи (без обязательного локального e2e)
+- post-deploy evidence: `npm run verify:*` на staging (Playwright/Lighthouse/linkcheck)
 - Browser DevTools MCP (если доступен): подключение описано в `.cursor/mcp.json`. Репо: `https://github.com/ChromeDevTools/chrome-devtools-mcp`
 
 ## Вход
@@ -68,10 +69,11 @@ readonly: true
 
 ```json
 {
-  "missing_areas": ["..."],
-  "suspicious_gaps": [{"domain": "...", "why": "..."}],
-  "recommended_additions": [{"domain": "...", "issue_hint": "..."}],
-  "ok_to_proceed": true
+  "ok_to_proceed": true,
+  "score_0_100": 0,
+  "blocking_gaps": ["..."],
+  "nonblocking_gaps": ["..."],
+  "next_actions": ["..."]
 }
 ```
 
@@ -79,20 +81,23 @@ readonly: true
 
 - Если нет `VERIFIER_PRACTICAL` или его `outcome` != `ACCEPT` → outcome не может быть `ACCEPT`.
 - Если нет `VERIFIER_TECHNICAL` или его `outcome` != `ACCEPT` → outcome не может быть `ACCEPT`.
-- Если `VERIFY_REPORT.blocking.failed_rules` не пуст → `score=0`, `outcome="REJECT"`.
+- Если post-deploy `VERIFY_REPORT.blocking.failed_rules` не пуст -> `score=0`, `outcome="REJECT"`.
 - Иначе:
   - score = 100 - 25*critical_unresolved - 10*medium_unresolved - 3*minor_unresolved
-  - `outcome`: `ACCEPT` | `REFINE` | `ESCALATE` (если итерации исчерпаны или evidence конфликтует)
+  - `outcome`: `ACCEPT` | `REJECT` | `ESCALATE` (если итерации исчерпаны или evidence конфликтует)
 
 ## PHASE=2 output
 
 ```json
 {
-  "unresolved": {"critical": [], "medium": [], "minor": []},
-  "regressions": {"critical": [], "medium": [], "minor": []},
-  "score": 0,
   "outcome": "REJECT",
-  "next_refine_focus": ["..."]
+  "blocking_issues": ["..."],
+  "major_issues": ["..."],
+  "minor_issues": ["..."],
+  "score_0_100": 0,
+  "rationale": "...",
+  "required_fixes": ["..."],
+  "reverify_plan": ["..."]
 }
 ```
 
@@ -104,8 +109,8 @@ readonly: true
 
 Запись должна отвечать: **что пропустили**, **почему**, и **что меняем**, чтобы не повторилось (rules/skills/MCP/verify).
 
-## VERIFY_REPORT (если нет — не ACCEPT)
+## VERIFY_REPORT (post-deploy gate)
 
-Если нет структурированного `VERIFY_REPORT`, outcome не может быть `ACCEPT`.
-Минимум: перечисли, какие `npm run verify:*` команды были запущены, и что было PASS/FAIL/SKIP.
+Если нет структурированного `VERIFY_REPORT` после deploy на staging, outcome не может быть `ACCEPT`.
+Минимум: перечисли, какие post-deploy `npm run verify:*` команды были запущены, и что было PASS/FAIL/SKIP.
 

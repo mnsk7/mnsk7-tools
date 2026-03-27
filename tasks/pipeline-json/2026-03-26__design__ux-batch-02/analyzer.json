@@ -1,0 +1,449 @@
+{
+  "issue_map": {
+    "business": {
+      "critical": [
+        {
+          "id": "B2-BUS-001",
+          "domain": "business",
+          "severity": "critical",
+          "title": "HYPOTHESIS: PDP sticky CTA может перекрывать/блокировать основной CTA или важные сообщения (add_to_cart) на iPhone XR",
+          "location": {
+            "url": "/sklep/<auto-discovered-first-product>/",
+            "selector": ".mnsk7-pdp-sticky-cta, .single_add_to_cart_button, form.cart",
+            "viewport": "iPhone XR 414x896"
+          },
+          "evidence": "CSS: sticky CTA fixed bottom без компенсации контенту `position: fixed; bottom: 0; z-index: 999; padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));` в `wp-content/themes/mnsk7-storefront/assets/css/parts/06-single-product.css` L588-L604. Нет видимой в этом файле/указанных файлах системной `padding-bottom`/`scroll-padding-bottom` для body/content при показе CTA.",
+          "repro_steps": [
+            "Открыть `/sklep/` на staging и перейти в первый PDP по ссылке формата `/sklep/<slug>/` (см. e2e/woo-flow.spec.js:208-215 — этот URL детерминированно извлекается из списка).",
+            "Открыть найденный PDP URL в браузере",
+            "В DevTools включить эмуляцию iPhone XR 414x896 (Safari/Chrome), прокрутить вниз до момента появления `.mnsk7-pdp-sticky-cta.is-visible`",
+            "Попробовать нажать основной `.single_add_to_cart_button`/взаимодействовать с form.cart и посмотреть, не перекрыты ли элементы снизу (уведомления Woo, footer, last accordion row)"
+          ],
+          "expected": "Sticky CTA не перекрывает интерактивные элементы и не скрывает важные сообщения/контент; клики по CTA/форме всегда доступны.",
+          "suspected_root_cause": "PDP sticky CTA (`06-single-product.css`) фиксируется поверх контента; отсутствует гарантированная компенсация нижнего отступа у страницы/контейнера при видимой CTA (вероятно нужен body-класс/переменная высоты CTA).",
+          "suggested_fix": "Минимальный safe diff: (1) добавить CSS-компенсацию снизу на mobile только когда CTA реально видима (через body-класс, который уже может ставиться JS-логикой sticky CTA): `body.mnsk7-pdp-sticky-cta-visible { padding-bottom: calc(var(--mnsk7-sticky-cta-h, 80px) + env(safe-area-inset-bottom, 0px)); }` (2) обеспечить установку/снятие класса при toggle `.is-visible` (в templates/JS темы). Не менять таблицу вариаций near price (инвариант).",
+          "tests_to_add": [
+            "Playwright L1: PDP add_to_cart на mobile viewport 414x896, проверка что `.single_add_to_cart_button` кликабельна, и что `.mnsk7-pdp-sticky-cta` не перекрывает её (bounding boxes не пересекаются / click succeeds).",
+            "Playwright: скриншот PDP bottom state с видимой sticky CTA (visual/L2 post-deploy)."
+          ],
+          "effort": "M",
+          "risk": "high"
+        }
+      ],
+      "medium": [
+        {
+          "id": "B2-BUS-002",
+          "domain": "business",
+          "severity": "medium",
+          "title": "HYPOTHESIS: /sklep/ выглядит «как другой контейнер» из-за отдельной системы вертикального ритма/отступов для архивов",
+          "location": {
+            "url": "/sklep/",
+            "selector": "body.post-type-archive-product #content, .mnsk7-plp-content",
+            "viewport": "iPhone XR 414x896"
+          },
+          "evidence": "Архивы продуктов исключены из общего page-top padding: `body:not(.home):not(.post-type-archive-product)... #content { padding-top: var(--space-page-top); }` в `25-global-layout.css` L15-L19. Для архивов задаётся отдельный `padding-top` через переменные: `body.post-type-archive-product #content { padding-top: var(--archive-gap-page-top); }` в `24-plp-table.css` L61-L68 и системные `--archive-gap-*` L47-L60, L157-L171. Taste (нишевой): для магазина фрез важно ощущение «профессионального каталога» без скачков сетки/контейнера — иначе падает доверие и сложнее сканировать фильтры/подбор (см. `.cursor/skills/discovery-frezes/SKILL.md` и `.cursor/skills/marketing-positioning/SKILL.md`).",
+          "repro_steps": [
+            "Открыть `/sklep/` на iPhone XR 414x896",
+            "Сравнить горизонтальные и вертикальные отступы (header→H1, H1→chips, chips→filters) с любой не-архивной страницей (например, `/moje-konto/`)",
+            "Оценить, не создаётся ли ощущение «другой сетки/контейнера» из-за отличающегося page-top и боковых padding"
+          ],
+          "expected": "Визуально единая сетка: одинаковые «левый/правый край контента» и предсказуемый top spacing между страницами; исключения для PLP должны быть осознанными и не ломать консистентность.",
+          "suspected_root_cause": "Намеренно отдельная система PLP-архивов (24-plp-table.css) + общая система page spacing (25-global-layout.css). На mobile дополнительно меняется механизм top-spacing: `margin-top: var(--header-h)` вместо `padding-top` (`25-global-layout.css` L34-L44).",
+          "suggested_fix": "Минимальный safe diff: явно задокументировать и синхронизировать «контейнер» для /sklep/ с global: (1) убедиться что горизонтальные padding #content совпадают (не переопределяются внутри PLP), (2) привести `--archive-gap-page-top` к значению, которое визуально соответствует `--space-page-top` на non-PLP, (3) если на mobile используется `margin-top`, согласовать PLP top-gap так, чтобы не было резкого отличия.",
+          "tests_to_add": [
+            "Playwright visual (post-deploy): /sklep/ vs /moje-konto/ на 414x896 — сравнение видимых левых/правых краёв контента и top gap (header→H1)."
+          ],
+          "effort": "M",
+          "risk": "medium"
+        }
+      ],
+      "minor": []
+    },
+    "tech": {
+      "critical": [],
+      "medium": [
+        {
+          "id": "B2-TECH-001",
+          "domain": "tech",
+          "severity": "medium",
+          "title": "Потенциальный конфликт каскада: header padding задаётся несколькими правилами для overlapping брейкпоинтов",
+          "location": {
+            "url": "sitewide",
+            "selector": ".mnsk7-header__inner",
+            "viewport": "iPhone XR 414x896"
+          },
+          "evidence": "В `04-header.css` есть: базовое `padding: 0 1.5rem;` (L136-L147), затем в `@media (max-width: 1024px)` задаётся `padding-inline: max(var(--space-12), env(...)) ...` (L1213-L1222), затем ниже — отдельные overrides `@media (min-width: 769px)` (L1671-L1675), `@media (max-width: 768px)` (L1676-L1680), `@media (max-width: 360px)` (L1681-L1685).",
+          "repro_steps": [
+            "Открыть любую страницу на 414x896",
+            "В DevTools проверить computed `padding-left/right` у `.mnsk7-header__inner`",
+            "Сравнить с computed `padding-left/right` у `#content`/`.site-content` (из `25-global-layout.css` L8-L14 и L27-L33)"
+          ],
+          "expected": "Одна «истина» для horizontal padding header, синхронизированная с content padding (как заявлено в комментарии hdr-01).",
+          "suspected_root_cause": "Слишком много перекрывающихся media-правил для одного и того же свойства (`padding-inline`), что затрудняет поддержку и может давать неожиданные значения на границах (например, 769/768/360/430).",
+          "suggested_fix": "Минимальный safe diff: оставить один набор правил для `padding-inline` только в брейкпоинтах, совпадающих с `25-global-layout.css` (<=768, <=360, else), и убрать/свести к минимуму дублирование в `@media (max-width:1024px)` если оно не нужно именно для safe-area.",
+          "tests_to_add": [
+            "Unit-like CSS regression (post-deploy manual/visual): check computed paddings на 360, 414, 768, 1024 ширинах."
+          ],
+          "effort": "S",
+          "risk": "medium"
+        }
+      ],
+      "minor": [
+        {
+          "id": "B2-TECH-002",
+          "domain": "tech",
+          "severity": "minor",
+          "title": "HYPOTHESIS: promo/header sticky offset зависит от корректности CSS-переменной `--mnsk7-promo-h`",
+          "location": {
+            "url": "sitewide",
+            "selector": "body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky",
+            "viewport": "iPhone XR 414x896"
+          },
+          "evidence": "Header sticky top учитывает promo height: `top: calc(env(safe-area-inset-top, 0px) + var(--mnsk7-promo-h, 2.5rem));` в `04-header.css` L131-L133. Высота promo bar в CSS явно не фиксирована (зависит от wrap/2-lines на mobile: `@media (max-width: 480px) .mnsk7-promo-bar__inner { flex-wrap: wrap; }` L83-L95).",
+          "repro_steps": [
+            "Открыть `/` на iPhone XR 414x896",
+            "Убедиться, что promo bar переносится в 2 строки (если текст длинный)",
+            "Проверить, не «наезжает» ли header на promo или не появляется ли лишний зазор между promo и header при scroll (когда добавляется `--sticky`/`--scrolled`)"
+          ],
+          "expected": "Promo bar и header не перекрывают друг друга и не создают скачков при скролле/переносе текста.",
+          "suspected_root_cause": "Fallback `--mnsk7-promo-h: 2.5rem` может не соответствовать реальной высоте promo bar на iPhone XR при wrap, а header offset рассчитывается именно от этой переменной.",
+          "suggested_fix": "Минимальный safe diff: обеспечить установку `--mnsk7-promo-h` из реального `offsetHeight` promo bar (в JS темы) или переписать layout так, чтобы header top зависел от фактической sticky-геометрии (например, promo+header в общей sticky-обёртке).",
+          "tests_to_add": [
+            "Playwright (post-deploy): на 414x896 проверить отсутствие overlap между `.mnsk7-promo-bar` и `.mnsk7-header` (rects не пересекаются) при scroll."
+          ],
+          "effort": "M",
+          "risk": "medium"
+        }
+      ]
+    },
+    "ui": {
+      "critical": [
+        {
+          "id": "B2-UI-001",
+          "domain": "ui",
+          "severity": "critical",
+          "title": "HYPOTHESIS: sticky CTA на PDP может скрывать нижнюю часть контента (footer/аккордеоны) на mobile",
+          "location": {
+            "url": "/sklep/<auto-discovered-first-product>/",
+            "selector": ".mnsk7-pdp-sticky-cta",
+            "viewport": "iPhone XR 414x896"
+          },
+          "evidence": "Sticky CTA фиксирована внизу и имеет заметную высоту + safe-area padding: `padding: 0.75rem var(--space-16); padding-bottom: calc(0.75rem + env(safe-area-inset-bottom, 0px));` в `06-single-product.css` L589-L604. В `25-global-layout.css` нет sitewide `padding-bottom`/`scroll-padding-bottom` для mobile, который учитывал бы fixed bottom UI.",
+          "repro_steps": [
+            "Открыть `/sklep/` и перейти в первый PDP по ссылке `/sklep/<slug>/` (как в e2e/woo-flow.spec.js:208-215).",
+            "Открыть найденный PDP URL на 414x896",
+            "Доскроллить до конца страницы при видимой `.mnsk7-pdp-sticky-cta.is-visible`",
+            "Проверить, видны ли полностью последние элементы (tabs/accordion/footer) или они остаются под CTA"
+          ],
+          "expected": "При fixed CTA пользователь всё равно может дочитать и кликнуть элементы внизу; последний контент не скрыт под CTA.",
+          "suspected_root_cause": "Fixed bottom элемент без гарантированной нижней «подушки» у контента на страницах PDP.",
+          "suggested_fix": "Минимальный CSS: добавить `padding-bottom` (или `scroll-padding-bottom`) для PDP mobile когда sticky CTA может появляться; предпочтительно включать только при видимости CTA (через body-класс).",
+          "tests_to_add": [
+            "Playwright visual (post-deploy): PDP bottom-of-page screenshot при видимой sticky CTA."
+          ],
+          "effort": "S",
+          "risk": "high"
+        }
+      ],
+      "medium": [
+        {
+          "id": "B2-UI-000",
+          "domain": "ui",
+          "severity": "medium",
+          "title": "HYPOTHESIS: iPhone XR — header выглядит плохо (строки/высота/переполнение/визуальная сетка)",
+          "location": {
+            "url": "/ (home) и /sklep/",
+            "selector": "#masthead.mnsk7-header, .mnsk7-header__inner, .mnsk7-header__brand, .mnsk7-header__actions",
+            "viewport": "iPhone XR 414x896"
+          },
+          "evidence": "Косвенно из каскада/брейкпоинтов: `.mnsk7-header__inner` имеет несколько перекрывающихся правил padding/min-height в `04-header.css` (base + <=1024 + <=768 + <=360) и должен матчить `#content` padding из `25-global-layout.css`. Это сочетание часто проявляется на 414px как «почти tablet / почти mobile» (визуально другая сетка). Taste (нишевой): для инструмента/фрез важна строгая «инженерная» подача — ровная сетка, читабельность, без ощущения хрупкости интерфейса (см. `.cursor/skills/visual-design-woo/SKILL.md`, `.cursor/skills/discovery-frezes/SKILL.md`).",
+          "repro_steps": [
+            "Открыть `/` на iPhone XR 414x896 (promo on/off если есть).",
+            "Проверить: (a) влезает ли логотип без сжатия, (b) не уезжают ли иконки/счётчик, (c) нет ли лишнего вертикального места в header, (d) совпадает ли левый край контента и header inner.",
+            "Повторить на `/sklep/` (первый экран)."
+          ],
+          "expected": "Header на XR выглядит как единая сетка: логотип+иконки без ‘сломанного’ baseline, одинаковый horizontal padding с контентом, без неожиданных переносов/обрезки.",
+          "suspected_root_cause": "Перекрывающиеся правила `padding-inline`/`min-height` для `.mnsk7-header__inner` + различная логика контейнера PLP vs non-PLP.",
+          "suggested_fix": "Минимальный safe diff: свести `padding-inline` header к тем же брейкпоинтам, что и global layout (<=768, <=360, else), и убрать дублирующее правило <=1024 если оно не нужно для safe-area. Отдельно проверить promo+sticky top offset на XR (см. B2-TECH-002).",
+          "tests_to_add": [
+            "Playwright visual (post-deploy): `/` и `/sklep/` на 414x896 (header in-fold, promo state)."
+          ],
+          "effort": "M",
+          "risk": "medium"
+        },
+        {
+          "id": "B2-UI-002",
+          "domain": "ui",
+          "severity": "medium",
+          "title": "HYPOTHESIS: iPhone XR promo bar выглядит плохо из-за absolute close-кнопки и центрирования текста при переносе",
+          "location": {
+            "url": "/",
+            "selector": ".mnsk7-promo-bar__inner, .mnsk7-promo-bar__close, .mnsk7-promo-bar__text",
+            "viewport": "iPhone XR 414x896"
+          },
+          "evidence": "Promo: close позиционируется `position:absolute; right:0; top:50%; transform: translateY(-50%);` (`04-header.css` L32-L37). На mobile включается wrap: `@media (max-width: 480px) .mnsk7-promo-bar__inner { flex-wrap: wrap; }` и текст становится `flex: 1 1 100%` (`04-header.css` L83-L95). Это сочетание часто даёт визуальную асимметрию/перекрытие при 2 строках. Taste (нишевой): промо в магазине фрез должно выглядеть «технически-аккуратно» и не ломать центрирование/симметрию — иначе это воспринимается как кустарность (см. `.cursor/skills/visual-design-woo/SKILL.md` + доверие/оффер из `.cursor/skills/marketing-positioning/SKILL.md`).",
+          "repro_steps": [
+            "Открыть `/` на iPhone XR 414x896",
+            "Найти состояние, где promo bar переносится в 2 строки",
+            "Проверить: (a) не перекрывает ли close текст, (b) не выглядит ли текст не по центру, (c) не «прыгает» ли высота при закрытии"
+          ],
+          "expected": "Promo bar: читабельный текст, визуально центрирован; close не перекрывает и не ломает выравнивание.",
+          "suspected_root_cause": "Абсолютное позиционирование close внутри flex-wrap контейнера + padding-right hacks (`padding-right: 3rem` на <=1024, `padding: 0.5rem 3rem 0.5rem 1rem` на <=480) (`04-header.css` L58-L62, L77-L82).",
+          "suggested_fix": "Минимальный safe diff: на <=480 перевести `.mnsk7-promo-bar__inner` на CSS grid `grid-template-columns: 1fr auto;` и убрать absolute у close (или фиксировать close сверху справа без translateY). Сохранить min hit-area 44px.",
+          "tests_to_add": [
+            "Playwright visual (post-deploy): home promo bar snapshot на 414x896 (2-line state)."
+          ],
+          "effort": "M",
+          "risk": "medium"
+        },
+        {
+          "id": "B2-UI-003",
+          "domain": "ui",
+          "severity": "medium",
+          "title": "Inconsistency: category/tag archives на mobile имеют другие боковые padding, чем /sklep/ и другие страницы",
+          "location": {
+            "url": "/sklep/ и /product-category/<CATEGORY_SLUG>/ (или /kategoria-produktu/<...>/)",
+            "selector": "body.tax-product_cat #content, body.tax-product_tag #content",
+            "viewport": "iPhone XR 414x896"
+          },
+          "evidence": "Global на <=768: `#content { padding-left/right: 1rem; }` (`25-global-layout.css` L27-L33). Но для tax archives на <=768: `padding-left/right: 0.5rem;` (`24-plp-table.css` L172-L179). На <=360 global тоже 0.5rem (`25-global-layout.css` L62-L68), но iPhone XR = 414px, значит получаем расхождение.",
+          "repro_steps": [
+            "Открыть `/sklep/` на 414x896 и запомнить левый край контента (H1/chips)",
+            "Открыть категорию `/product-category/<CATEGORY_SLUG>/` (по умолчанию `frezy-cnc` в e2e/plp-filter-url-parity.spec.js; если 404 — возьми первую найденную категорию по ссылкам на `/sklep/`).",
+            "Сравнить: левый/правый отступы у заголовка и чипов"
+          ],
+          "expected": "Единый горизонтальный контейнер на мобильных; исключения должны быть оправданы и одинаковы для /sklep/, категорий и тегов (если это один PLP-опыт).",
+          "suspected_root_cause": "Специальное правило для tax archives уменьшает padding до 0.5rem (вероятно для выравнивания чипов под первой буквой заголовка), но оно не применяется к /sklep/ (post-type archive).",
+          "suggested_fix": "Минимальный safe diff: либо (A) поднять tax archives padding до 1rem как global, либо (B) привести /sklep/ к 0.5rem на mobile, либо (C) сделать единый PLP-container с внутренними alignment rules (предпочтительно) без изменения #content padding.",
+          "tests_to_add": [
+            "Playwright visual (post-deploy): сравнение /sklep/ и категории на 414x896 по левому краю H1/chips."
+          ],
+          "effort": "S",
+          "risk": "medium"
+        },
+        {
+          "id": "B2-UI-004",
+          "domain": "ui",
+          "severity": "medium",
+          "title": "HYPOTHESIS: /sklep/ ощущается «другим контейнером» из-за выборочного обнуления padding у блоков только для tax archives",
+          "location": {
+            "url": "/sklep/ vs tax archives",
+            "selector": "body.tax-product_cat .woocommerce-products-header, body.tax-product_cat .mnsk7-plp-archive-wrap",
+            "viewport": "iPhone XR 414x896"
+          },
+          "evidence": "Для tax archives явно обнуляют padding у header/обёртки: `padding-left/right: 0;` (`24-plp-table.css` L81-L88). Для /sklep/ такого обнуления нет, поэтому визуальная сетка может отличаться (особенно если внутри есть дополнительные внутренние padding/margins).",
+          "repro_steps": [
+            "Открыть `/sklep/` и категорию `/kategoria/<...>/` на 414x896",
+            "Сравнить выравнивание заголовка, чипов, фильтров относительно краёв экрана",
+            "Проверить, нет ли ощущения, что /sklep/ «в другом контейнере»"
+          ],
+          "expected": "Одинаковая сетка для всех PLP страниц (shop/cat/tag) или чётко объяснимые, но аккуратные отличия.",
+          "suspected_root_cause": "Разные правила wrapper padding для разных типов архивов в `24-plp-table.css`.",
+          "suggested_fix": "Минимальный safe diff: унифицировать padding поведения `.woocommerce-products-header`/`.mnsk7-plp-archive-wrap` между `post-type-archive-product` и `tax-product_*` (не трогая таблицу).",
+          "tests_to_add": [
+            "Playwright: /sklep/ и /kategoria/ — визуальные снимки одного и того же блока (H1+chips)."
+          ],
+          "effort": "S",
+          "risk": "medium"
+        },
+        {
+          "id": "B2-UI-005",
+          "domain": "ui",
+          "severity": "medium",
+          "title": "Global spacing inconsistency: на mobile top spacing реализован через `margin-top` у #content, что может визуально расходиться с desktop и с PLP",
+          "location": {
+            "url": "sitewide (non-home)",
+            "selector": "body:not(.home) #content",
+            "viewport": "iPhone XR 414x896"
+          },
+          "evidence": "На <=768 для non-home: `body:not(.home) #content { margin-top: var(--header-h); }` (`25-global-layout.css` L34-L38) и одновременно `padding-top: 0` для большинства non-PLP страниц (`25-global-layout.css` L39-L44). Для PLP архивов top-gap задаётся `padding-top: var(--archive-gap-page-top);` (`24-plp-table.css` L61-L68).",
+          "repro_steps": [
+            "Открыть `/moje-konto/` на 414x896 и измерить расстояние от нижней границы header до первого контента",
+            "Открыть `/sklep/` на 414x896 и измерить то же",
+            "Сравнить с desktop поведением (где используется `padding-top: var(--space-page-top)` для non-PLP)"
+          ],
+          "expected": "Предсказуемая и консистентная вертикальная логика: либо везде margin-top под sticky header, либо везде padding-top (с учётом исключений), без «ощущения разных страниц».",
+          "suspected_root_cause": "Смешение механик: на mobile non-PLP uses margin-top, PLP uses padding-top; это может восприниматься как разная сетка и «несовпадение контейнера».",
+          "suggested_fix": "Минимальный safe diff: стандартизировать mobile top-spacing стратегию (например, всегда через margin-top) и адаптировать PLP archive top gap так, чтобы она не конфликтовала и не давала другой «контейнер».",
+          "tests_to_add": [
+            "Playwright visual (post-deploy): снимки top-of-page для /moje-konto/ и /sklep/ на 414x896."
+          ],
+          "effort": "M",
+          "risk": "medium"
+        }
+      ],
+      "minor": [
+        {
+          "id": "B2-UI-006",
+          "domain": "ui",
+          "severity": "minor",
+          "title": "PDP container padding отличается от global content padding (может усиливать ощущение «разных отступов» между страницами)",
+          "location": {
+            "url": "/produkt/<PDP_SAMPLE_TBD>",
+            "selector": ".single-product div.product",
+            "viewport": "desktop+mobile"
+          },
+          "evidence": "PDP wrapper имеет `padding: 0 1rem 1.5rem;` в `06-single-product.css` L17-L26, в то время как global `#content` использует 1.5rem desktop / 1rem mobile (`25-global-layout.css` L8-L14, L27-L33). Это может давать разные «контейнеры» внутри одной и той же ширины контента.",
+          "repro_steps": [
+            "Открыть PDP и любую обычную страницу",
+            "Сравнить левый край текста/контента относительно края viewport на desktop и mobile"
+          ],
+          "expected": "Единый горизонтальный ритм: либо PDP контент следует #content padding без дополнительного внутреннего padding, либо делает это осознанно и согласованно.",
+          "suspected_root_cause": "Дополнительный padding у PDP внутреннего контейнера поверх глобального layout.",
+          "suggested_fix": "Минимальный safe diff: привести PDP wrapper padding к использованию токенов/переменных, согласованных с global layout (или убрать дублирование padding, если #content уже задаёт нужное).",
+          "tests_to_add": [
+            "Visual snapshot PDP vs standard page (desktop + 414x896)."
+          ],
+          "effort": "S",
+          "risk": "low"
+        }
+      ]
+    },
+    "a11y": {
+      "critical": [],
+      "medium": [
+        {
+          "id": "B2-A11Y-001",
+          "domain": "a11y",
+          "severity": "medium",
+          "title": "HYPOTHESIS: sticky элементы (promo/header/CTA) могут ухудшать доступность фокуса/читаемости при перекрытиях",
+          "location": {
+            "url": "sitewide + PDP",
+            "selector": ".mnsk7-promo-bar, .mnsk7-header, .mnsk7-pdp-sticky-cta",
+            "viewport": "iPhone XR 414x896"
+          },
+          "evidence": "Много sticky/fixed слоёв с разными z-index: promo z=1001 (`04-header.css` L10-L13), header z=1000 (`04-header.css` L107-L110), sticky CTA z=999 (`06-single-product.css` L591-L599). При отсутствии строгой стратегии компенсации отступов возможны перекрытия интерактивных зон и «неочевидные» таб-ловушки (HYPOTHESIS).",
+          "repro_steps": [
+            "На iPhone XR 414x896 открыть `/` и PDP",
+            "Пройтись keyboard-navigation (Tab/Shift+Tab) в эмуляции, особенно когда sticky CTA видима",
+            "Проверить, не перекрывают ли sticky элементы фокусируемые элементы/подсказки/сообщения"
+          ],
+          "expected": "Фокус видим, элементы не перекрываются, sticky UI не блокирует интеракции и не создаёт ловушек.",
+          "suspected_root_cause": "Слоистая sticky/fixed архитектура без гарантированной компоновки/резерва пространства.",
+          "suggested_fix": "Минимальный safe diff: унифицировать стратегию резервирования пространства (top и bottom) и добавить проверки на перекрытие интерактивных элементов.",
+          "tests_to_add": [
+            "Axe smoke (post-deploy) на PDP и /sklep/ для 414x896 + ручной focus walkthrough."
+          ],
+          "effort": "M",
+          "risk": "medium"
+        }
+      ],
+      "minor": []
+    },
+    "perf": {
+      "critical": [],
+      "medium": [],
+      "minor": [
+        {
+          "id": "B2-PERF-001",
+          "domain": "perf",
+          "severity": "minor",
+          "title": "HYPOTHESIS: дополнительные sticky/fixed слои могут увеличивать repaint/scroll jank на mobile",
+          "location": {
+            "url": "sitewide + PDP",
+            "selector": ".mnsk7-promo-bar, .mnsk7-header, .mnsk7-pdp-sticky-cta",
+            "viewport": "iPhone XR 414x896"
+          },
+          "evidence": "Promo и header используют sticky, CTA fixed; тени/box-shadow присутствуют (`04-header.css` L110-L114, `06-single-product.css` L597-L599). Без runtime метрик это HYPOTHESIS.",
+          "repro_steps": [
+            "После деплоя: открыть `/` и PDP на реальном iPhone XR или эмуляции",
+            "Прокручивать вверх/вниз, обратить внимание на плавность",
+            "Снять performance trace при необходимости"
+          ],
+          "expected": "Плавный скролл без заметных подлагиваний.",
+          "suspected_root_cause": "Box-shadow на sticky/fixed элементах + частые состояния (scrolled/open).",
+          "suggested_fix": "Если подтвердится: уменьшить/оптимизировать тени на mobile (например, softer shadow или conditional), избегать дорогих эффектов при scroll.",
+          "tests_to_add": [
+            "Post-deploy perf spot-check: scroll smoothness на 414x896 (manual + trace при необходимости)."
+          ],
+          "effort": "S",
+          "risk": "low"
+        }
+      ]
+    },
+    "seo": {
+      "critical": [],
+      "medium": [],
+      "minor": []
+    }
+  },
+  "tests_to_add": [
+    {
+      "id": "T-B2-001",
+      "type": "e2e",
+      "scope": "post-deploy",
+      "title": "Mobile PDP sticky CTA does not block add_to_cart",
+      "details": "Playwright: viewport 414x896; открыть PDP; проскроллить до появления `.mnsk7-pdp-sticky-cta.is-visible`; кликнуть `.single_add_to_cart_button`; ожидать, что товар добавлен (cart count/notice), и что click не перехвачен overlay."
+    },
+    {
+      "id": "T-B2-001b",
+      "type": "e2e",
+      "scope": "post-deploy",
+      "title": "PLP add_to_cart (Woo blocking): click is not blocked by sticky layers",
+      "details": "Playwright L1: viewport 414x896; открыть `/sklep/`, найти первый доступный add-to-cart в listing (кнопка/форма) и кликнуть; затем открыть `/koszyk/` и убедиться что есть item row. Если cookie bar показан — сначала закрыть/принять, затем повторить клик, чтобы исключить блокировку."
+    },
+    {
+      "id": "T-B2-006",
+      "type": "e2e",
+      "scope": "post-deploy",
+      "title": "Cookie bar does not overlap primary CTAs on mobile",
+      "details": "Playwright L1: viewport 414x896; на `/koszyk/` и `/zamowienie/` при видимом cookie bar убедиться, что primary CTA/`form.woocommerce-checkout` видимы и кликабельны; cookie bar не блокирует клик (rect overlap false / click succeeds)."
+    },
+    {
+      "id": "T-B2-004",
+      "type": "e2e",
+      "scope": "post-deploy",
+      "title": "cart_update (Woo blocking): item present after qty change",
+      "details": "Playwright L1: viewport 414x896; add_to_cart через server-side `/?add-to-cart=<id>` (как в e2e/woo-flow.spec.js), затем `/koszyk/`: изменить quantity (classic cart), нажать Update cart, убедиться что item остаётся и количество обновлено/не падает в 0."
+    },
+    {
+      "id": "T-B2-005",
+      "type": "e2e",
+      "scope": "post-deploy",
+      "title": "checkout_entry (Woo blocking): checkout form visible, no sticky overlap",
+      "details": "Playwright L1: viewport 414x896; обеспечить non-empty cart (как в e2e/woo-flow.spec.js), открыть `/zamowienie/`, убедиться что `form.woocommerce-checkout` видима и не перекрыта sticky header/promo/cookie/CTA."
+    },
+    {
+      "id": "T-B2-002",
+      "type": "visual",
+      "scope": "post-deploy",
+      "title": "Header + promo bar on iPhone XR",
+      "details": "Playwright screenshot: `/` в 414x896 с promo bar; состояние с переносом текста (если возможно); проверка что close не перекрывает текст."
+    },
+    {
+      "id": "T-B2-003",
+      "type": "visual",
+      "scope": "post-deploy",
+      "title": "PLP container consistency: /sklep/ vs category",
+      "details": "Playwright screenshots: `/sklep/` и `/kategoria/<...>/` на 414x896; сравнить левый/правый край H1/chips/filters."
+    }
+  ],
+  "flow_risks": {
+    "add_to_cart": {
+      "risk": "high",
+      "notes": "Carry-over PDP sticky CTA overlap/stacking риск: fixed bottom CTA может перекрывать кнопки/сообщения; без post-deploy e2e это остаётся HYPOTHESIS, но потенциально блокирующее."
+    },
+    "cart_update": {
+      "risk": "medium",
+      "notes": "В batch #2 есть риск перекрытий sticky (header/promo/cookie) и различий контейнера/отступов; post-deploy L1 cart_update обязателен (см. T-B2-004)."
+    },
+    "checkout_entry": {
+      "risk": "medium",
+      "notes": "Sticky promo/header и глобальная логика top spacing могут влиять на видимость формы/CTA на checkout на mobile; post-deploy L1 checkout_entry обязателен (см. T-B2-005)."
+    }
+  },
+  "top_priorities": [
+    {
+      "issue_id": "B2-BUS-001",
+      "why": "Потенциальный blocker конверсии: если sticky CTA/оверлей мешает add_to_cart на mobile, это P0 по правилам Woo flow."
+    },
+    {
+      "issue_id": "B2-UI-002",
+      "why": "Заявленная проблема iPhone XR promo+header; влияет на первое впечатление и навигацию."
+    },
+    {
+      "issue_id": "B2-UI-003",
+      "why": "Глобальная консистентность отступов на PLP (shop vs category/tag) напрямую влияет на ощущение качества и доверие, особенно на mobile."
+    }
+  ]
+}

@@ -1,0 +1,112 @@
+{
+  "task_mode": "ui",
+  "task_scope": "flow",
+  "targets": {
+    "home": {
+      "url_key": "home",
+      "focus": [
+        "mobile header",
+        "hero/first screen",
+        "dead space"
+      ]
+    },
+    "shop": {
+      "url_key": "shop",
+      "focus": [
+        "mobile header consistency",
+        "spacing/empty states"
+      ]
+    },
+    "product": {
+      "url_key": "pdp",
+      "focus": [
+        "PDP action cluster: stock/qty/add-to-cart",
+        "sticky collisions with recommendations",
+        "dead space"
+      ]
+    },
+    "cart": {
+      "url_key": "cart",
+      "focus": [
+        "mobile header",
+        "sticky overlaps sanity-check"
+      ]
+    },
+    "checkout": {
+      "url_key": "checkout",
+      "focus": [
+        "mobile header",
+        "no layout regressions"
+      ]
+    },
+    "account": {
+      "url_key": "account",
+      "focus": [
+        "mobile header consistency"
+      ]
+    }
+  },
+  "constraints": {
+    "repo_rules": [
+      "Do not edit WP core or 3rd-party plugins",
+      "Allowed zones: theme + mu-plugins + custom plugin (if exists); for this cycle prefer theme/mu-plugins only",
+      "Woo custom logic only via hooks/filters (custom plugin) — avoid unless required by UI polish",
+      "Staging must keep mu-plugin staging-safety enabled (mail/payments blocked, blog_public=0)",
+      "Deploy scope (later): wp-content/themes/<theme>, wp-content/themes/storefront, wp-content/mu-plugins, wp-content/plugins/<custom>",
+      "Fonts: Inter served from theme assets; preload only if file_exists"
+    ],
+    "git_ops": {
+      "push": false,
+      "note": "No remote operations in this cycle."
+    },
+    "pipeline_exceptions": {
+      "technical_verifier": "deferred",
+      "reason": "git CLI broken",
+      "replacement_gates_now": [
+        "practical_verifier",
+        "design_critic"
+      ],
+      "recheck_later": [
+        "technical_verifier"
+      ]
+    },
+    "device_priority": [
+      "mobile_first"
+    ],
+    "non_goals": [
+      "SEO",
+      "performance tuning beyond obvious layout shifts",
+      "new features"
+    ]
+  },
+  "design_gate": {
+    "enabled": true,
+    "brand_mode": "technical-industrial-commerce"
+  },
+  "verify_suite": {
+    "now": {
+      "L0": [
+        "Build/check: ensure no PHP fatal errors after edits (load key pages)",
+        "Visual smoke: mobile viewport snapshots of header + hero + PDP action cluster"
+      ],
+      "L1": [
+        "Practical Woo flow (mobile): home → PLP → PDP (select qty) → add-to-cart → cart → checkout (stop before payment)",
+        "Collision checks (mobile): sticky header / sticky ATC vs recommendations/upsells, ensure no occluded CTAs",
+        "Dead space audit: above-the-fold hero and PDP action area (no excessive padding/margins)"
+      ],
+      "L2": [
+        "Only if regressions observed: repeat L1 across 2 breakpoints (e.g., 360px and 414px) + orientation switch"
+      ]
+    },
+    "later": {
+      "tech_gate": [
+        "Re-enable technical verifier when git CLI fixed: git status/diff + lint/style checks used in repo",
+        "Confirm deploy-eligible file zones only (theme/storefront/mu-plugins/custom plugin)"
+      ],
+      "regression_recheck": [
+        "Repeat L1 Woo flow on latest changeset after tech gate passes"
+      ]
+    }
+  }
+}
+

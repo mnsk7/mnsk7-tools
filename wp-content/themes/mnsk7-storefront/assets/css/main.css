@@ -1,6 +1,6 @@
 /* =================================================================
    MNK7 Storefront — main.css (built from parts)
-   Build: 2026-03-26
+   Build: 2026-03-27
    Run: scripts/build-main-css.sh
    ================================================================= */
 /* === 00-fonts-inter.css === */
@@ -435,6 +435,25 @@ a {
   }
 }
 
+/* Touch fallback: force mobile header pattern on real phones even if browser uses desktop-width layout viewport. */
+@media (hover: none) and (pointer: coarse) {
+  .mnsk7-header__menu-toggle {
+    display: inline-flex !important;
+  }
+  .mnsk7-header__search-toggle {
+    display: inline-flex !important;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu {
+    display: none !important;
+  }
+  .mnsk7-header__nav.is-open .mnsk7-header__menu {
+    display: flex !important;
+  }
+  .mnsk7-header__search-dropdown {
+    display: none !important;
+  }
+}
+
 /* Mobile: promo bar — 2-line layout jeśli potrzeba, close nie najeżdża */
 @media (max-width: 480px) {
   .mnsk7-promo-bar {
@@ -816,7 +835,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   box-shadow: inset 0 -2px 0 var(--color-primary);
 }
 /* Desktop: megamenu tylko po hover delay (JS .mnsk7-megamenu-open) lub focus-within — bez flicker (Baymard) */
-@media (min-width: 1025px) {
+@media (min-width: 1024px) {
   .mnsk7-header__menu li.menu-item-has-children:hover .sub-menu.mnsk7-megamenu {
     opacity: 0;
     visibility: hidden;
@@ -1107,7 +1126,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 
 /* Od 1025px (desktop): pole wyszukiwania w jednej linii z headerem; do 1024px — ikona + panel */
-@media (min-width: 1025px) {
+@media (min-width: 1024px) {
   .mnsk7-header__search-toggle {
     display: none;
   }
@@ -1526,7 +1545,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   transform: translateY(0);
 }
 /* Desktop: account link z tekstem — przywróć min-width i padding */
-@media (min-width: 1025px) {
+@media (min-width: 1024px) {
   .mnsk7-header__link.mnsk7-header__link--account {
     min-width: 7.5em;
     padding: 0 0.5rem;
@@ -1572,7 +1591,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 
 /* Tablet + mobile (≤1024px): one row — logo | burger, search, account, cart (icons only). Bez wychodzenia poza viewport. */
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .mnsk7-header__inner {
     display: flex;
     flex-wrap: nowrap;
@@ -1952,7 +1971,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 /* Tablet (769–1024px): search row zawsze widoczna — druga linia pod headerem, jeden składany control (input + przycisk bez szpary) */
-@media (min-width: 769px) and (max-width: 1024px) {
+@media (min-width: 769px) and (max-width: 1023px) {
   .mnsk7-header-search-panel {
     display: block !important;
     box-shadow: none;
@@ -1977,7 +1996,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     display: block !important;
   }
 }
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   /* Jeden komponent: form ma obramowanie i radius, overflow:hidden — input i przycisk bez własnego bordera */
   .mnsk7-header-search-panel__form {
     display: flex;
@@ -2092,7 +2111,7 @@ body .site .site-content {
 }
 
 /* Mobile Sklep: gwarancja widoczności submenu po tap (li.is-open) — wygrywa z innymi regułami */
-@media (max-width: 1024px) {
+@media (max-width: 1023px) {
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children.is-open > .sub-menu.mnsk7-megamenu {
     display: flex !important;
     visibility: visible !important;

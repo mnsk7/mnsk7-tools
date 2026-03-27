@@ -1,0 +1,164 @@
+{
+  "context": {
+    "pipeline_cycle_id": "postdeploy-batch-03",
+    "raw_task_summary": "Post-deploy на staging: собрать реальные mobile UX/UI баги (header/menu/search/PDP sticky CTA/cart/login), подтвердить воспроизведение как у Owner на телефоне; усилить behavioral проверки, не полагаться только на visual baseline.",
+    "constraints": {
+      "code_changes_allowed_only_in": [
+        "wp-content/themes/mnsk7-storefront/**"
+      ],
+      "disallowed_changes": [
+        "WordPress core (любые файлы вне wp-content/themes/mnsk7-storefront)",
+        "сторонние плагины (wp-content/plugins/** кроме кастом-плагина проекта, если есть — но тут запрещено по задаче)",
+        "mu-plugins (wp-content/mu-plugins/**) — по задаче запрещено",
+        "родительская тема storefront (wp-content/themes/storefront/**) — по задаче запрещено"
+      ],
+      "post_deploy_checks_allowed": [
+        "URL checks",
+        "Playwright e2e",
+        "a11y smoke",
+        "optional lighthouse smoke"
+      ]
+    },
+    "allowed_code_zones": [
+      "wp-content/themes/mnsk7-storefront/**"
+    ],
+    "disallowed_zones": [
+      "wp-admin/**",
+      "wp-includes/**",
+      "wp-content/plugins/**",
+      "wp-content/mu-plugins/**",
+      "wp-content/themes/storefront/**",
+      "vendor/**"
+    ],
+    "target_urls": {
+      "home": "/",
+      "shop": "/sklep/",
+      "product": "AUTO-DISCOVER_FROM_SHOP (/sklep/) -> first in-stock/simple product PDP",
+      "cart": "/koszyk/",
+      "checkout": "/zamowienie/",
+      "account": "/moje-konto/"
+    },
+    "device_priority": {
+      "primary": "mobile",
+      "secondary": "desktop",
+      "mobile_viewports": [
+        "iPhone 12/13 (390x844)",
+        "iPhone SE (375x667) for tight header/CTA overlaps"
+      ]
+    },
+    "invariants": [
+      "Не редактировать WP core и сторонние плагины; любые правки (если понадобятся) строго в wp-content/themes/mnsk7-storefront/**",
+      "Woo conversion flow не должен быть сломан: add_to_cart, cart_update, checkout_entry (blocking rules)",
+      "Mobile drawer/mega menu reopen: всегда открывается с начала (scrollTop=0)",
+      "Header control system: единые border/radius/height/padding/weight; оптическое выравнивание logo vs icons",
+      "Mobile search parity: консистентен с desktop (component parity)",
+      "Sticky header реально sticky и не ломается из-за overflow/transform",
+      "PDP sticky CTA: честное действие (пытается add_to_cart); скроллит к форме только если невалидно",
+      "Cookie-bar/overlays не блокируют primary CTA (особенно PDP sticky CTA и checkout actions)",
+      "Pixel-tests риск: visual snapshots не считаются доказательством фикса; нужны behavioral assertions (не только toHaveScreenshot)"
+    ],
+    "artifacts_to_save": [
+      "playwright-report/ (HTML)",
+      "test-results/** (screenshots, videos if enabled, traces for failures)",
+      "Lighthouse JSON outputs (если запускался smoke)",
+      "a11y/axe output (если генерируется в verify)"
+    ],
+    "stop_conditions": "ACCEPT"
+  },
+  "classification": {
+    "task_mode": "mixed",
+    "task_scope": "flow",
+    "domains": [
+      "wordpress_woocommerce",
+      "ui",
+      "business_flow",
+      "a11y",
+      "perf"
+    ]
+  },
+  "capabilities": {
+    "can_change_code": false,
+    "can_run_verification": true,
+    "notes": [
+      "Этот orchestrator описывает post-deploy цикл: сбор багов + усиление verify. Кодовые правки не выполняются на этом шаге (но допускаются в будущем только в разрешённой зоне)."
+    ]
+  },
+  "active_domains": [
+    "ui",
+    "business",
+    "tech",
+    "a11y",
+    "perf"
+  ],
+  "verify_suite": {
+    "L0": [
+      {
+        "id": "l0_verify",
+        "command": "npm run verify:l0",
+        "artifacts_expected": [
+          "logs from verify:l0",
+          "theme PHP lint output (if included by script)",
+          "optional lighthouse smoke JSON if wired in l0"
+        ],
+        "purpose": "Быстрый sanity: базовые проверки перед углублением в e2e."
+      }
+    ],
+    "L1": [
+      {
+        "id": "l1_woo_flow",
+        "command": "VERIFY_L1=1 npm run verify:all",
+        "artifacts_expected": [
+          "playwright-report/",
+          "test-results/** (traces for failures)"
+        ],
+        "purpose": "Обязательный функциональный уровень для Woo/mobile UX: add_to_cart, cart_update, checkout_entry + сценарии header/menu/search."
+      },
+      {
+        "id": "l1_behavioral_assertions_guard",
+        "command": "npm test --silent",
+        "artifacts_expected": [
+          "test logs indicating behavioral assertions executed (not only snapshots)"
+        ],
+        "purpose": "Гейт против 'pixel tests' риска: зафиксировать, что есть поведенческие ассерты (scrollTop=0, sticky, overlays not blocking, sticky CTA behavior)."
+      }
+    ],
+    "L2": [
+      {
+        "id": "l2_visual_header_layout",
+        "command": "VERIFY_L2=1 npm run verify:all",
+        "artifacts_expected": [
+          "visual snapshot diffs (if any)",
+          "playwright-report/"
+        ],
+        "purpose": "Визуальные регрессии по header-layout (mobile). Не является заменой behavioral проверок."
+      },
+      {
+        "id": "l2_a11y_smoke_checkout",
+        "command": "A11Y_SMOKE=1 npm run verify:all",
+        "artifacts_expected": [
+          "axe/a11y report artifacts (if configured)",
+          "playwright-report/"
+        ],
+        "purpose": "Минимум a11y smoke для checkout (и опционально home/shop/cart при наличии)."
+      },
+      {
+        "id": "l2_optional_lighthouse_smoke",
+        "command": "bash scripts/verify/lighthouse-smoke.sh",
+        "artifacts_expected": [
+          "lighthouse JSON reports (paths as emitted by script)"
+        ],
+        "purpose": "Опциональный perf smoke на ключевых URL после деплоя."
+      }
+    ]
+  },
+  "loop_control": {
+    "max_iter": 3,
+    "min_delta": 5,
+    "score_threshold": 85
+  },
+  "notes": [
+    "Ключевой фокус postdeploy-batch-03: подтвердить баги 'как у Owner на телефоне' и перевести их в проверяемые, воспроизводимые утверждения (behavioral assertions).",
+    "Blocking acceptance: любое падение add_to_cart/cart_update/checkout_entry или перекрытие primary CTA на mobile => outcome=REJECT (в следующем цикле).",
+    "Если visual snapshots 'зелёные', но behavioral assertions ловят дефект, дефект считается реальным (baseline мог закрепить баг)."
+  ]
+}

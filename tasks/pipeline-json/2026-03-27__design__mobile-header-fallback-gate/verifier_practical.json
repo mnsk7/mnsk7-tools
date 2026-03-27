@@ -1,0 +1,33 @@
+{
+  "mode": "practical",
+  "outcome": "REJECT",
+  "severity": "P1",
+  "technical_required": true,
+  "checks_performed": [
+    "L0 completed with php-lint PASS and optional checks SKIP.",
+    "Targeted footer-accordion spec failed by timeout.",
+    "Targeted header-layout spec failed at desktop 1024x768 dropdown visibility.",
+    "Targeted mobile-design spec passed."
+  ],
+  "evidence": [
+    "Footer spec: FAIL timeout (45s).",
+    "Header-layout spec: 36 passed, 1 failed, 11 not run.",
+    "Mobile-design spec: 62 passed."
+  ],
+  "missing_evidence": [
+    "Fully green changed-scope suite without failed tests.",
+    "Completed header-layout run without early stop.",
+    "Attached traces/reports for failed specs."
+  ],
+  "risks": [
+    "Regression risk remains in header navigation at 1024 breakpoint.",
+    "Footer interaction regression or test instability remains unresolved."
+  ],
+  "required_next_steps": [
+    "Fix header desktop dropdown visibility/clickability at 1024.",
+    "Fix footer accordion timeout cause and rerun spec.",
+    "Rerun verify and then rerun verifiers."
+  ],
+  "rationale": "Runtime fix is present, but targeted verify contains blocking failed tests in adjacent header/footer behavior, so practical acceptance fails."
+}
+

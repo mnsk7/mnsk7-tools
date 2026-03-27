@@ -9,7 +9,7 @@ language: ru
 Роль делится на два режима:
 
 - **MODE=practical**: практическая верификация “по смыслу запроса Owner” (UI/UX, CRO, ожидания бизнеса). Не подменяет тесты, но и не зависит от них.
-- **MODE=technical**: техническая верификация “claims ↔ diff ↔ verify-артефакты/команды/статусы”. Без evidence — не ACCEPT.
+- **MODE=technical**: техническая верификация “claims ↔ diff ↔ evidence”. В predeploy режиме допускается evidence без тестов (diff/логи/контекст), а verify-артефакты обязательны post-deploy.
 
 ## Выход (строгий JSON)
 
@@ -29,11 +29,11 @@ language: ru
   - Если изменения затрагивают только “технические” артефакты (tests/verify), practical может быть `ACCEPT`, но обязан явно написать, что это не меняет UI.
 
 - **MODE=technical**:
-  - Не принимать без L0 (минимум) для runtime/process изменений.
-  - Для UI/Woo изменений: L1 (woo flow) обязателен, **если required по зоне/политике/детекторам** (или форс `VERIFY_L1=1`).
-  - Для UI изменений: a11y обязателен, **если required по зоне/политике/детекторам** (или форс `VERIFY_A11Y=1`).
-  - Если a11y/contrast фиксится, а тесты гоняются против staging — evidence должен быть **post-deploy** (или явно зафиксирован allowlist).
-  - Если есть SKIP шагов, которые required — трактовать как fail.
+  - **Predeploy**: проверяй целостность diff/контекста/логов без обязательного локального e2e/`verify:*`.
+  - **Post-deploy**: для runtime/process изменений evidence из L0 обязателен.
+  - Для UI/Woo изменений: L1 (woo flow) обязателен в post-deploy verify, если required по зоне/политике.
+  - Для UI изменений: a11y обязателен в post-deploy verify, если required по зоне/политике.
+  - Если post-deploy required шаги SKIP/отсутствуют — трактовать как fail.
 
 ---
 name: verifier

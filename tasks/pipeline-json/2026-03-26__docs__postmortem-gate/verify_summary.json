@@ -1,0 +1,25 @@
+{
+  "scope": "docs-only",
+  "diff_paths": [
+    "docs/CRITIC_POSTMORTEMS.md"
+  ],
+  "verify": {
+    "l0": {
+      "command": "npm run verify:l0",
+      "result": "PASS",
+      "notes": [
+        "php-lint used Docker php:8.2-cli fallback",
+        "link-check SKIP (VERIFY_LINKCHECK=1 required)",
+        "lighthouse-smoke SKIP (VERIFY_LIGHTHOUSE=1 required)"
+      ]
+    },
+    "changed": {
+      "command": "npm run verify:changed",
+      "result": "SKIP",
+      "notes": [
+        "no relevant changes detected"
+      ]
+    }
+  }
+}
+

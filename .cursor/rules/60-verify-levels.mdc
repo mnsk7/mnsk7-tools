@@ -1,0 +1,57 @@
+---
+description: "Verify L0/L1/L2 + blocking rules для WP/Woo: e2e flows, visual, perf/seo/a11y, static checks."
+alwaysApply: true
+---
+
+# Verify multi-level (L0/L1/L2) + blocking rules
+
+## Цель
+
+Verify — это не один чек. Это уровни проверок, где **истина качества** берётся из инструментов.
+В текущей owner-модели эти проверки — **post-deploy на staging**, а не predeploy локально.
+
+## Уровни
+
+### L0 (post-deploy baseline)
+
+Минимум для любых правок после деплоя на staging:
+- PHP syntax lint (theme + mu-plugins): `bash scripts/validate-theme-php.sh` (+ CI делает `php -l`)
+- быстрый smoke Lighthouse (1–4 ключевых URL) с сохранением JSON артефактов (**обязательно в CI/strict**; локально может быть SKIP)
+- (опционально) link check для ключевых страниц/меню (локально по умолчанию SKIP; включать по риску или в CI)
+
+### L1 (функциональный / бизнес, post-deploy)
+
+Обязателен для правок, влияющих на Woo UX/layout/шаблоны/JS:
+- Playwright: критические сценарии Woo:
+  - **add_to_cart** (из PLP или PDP)
+  - **cart_update** (минимум: корзина открывается и содержит товар)
+  - **checkout_entry** (страница checkout открывается, форма видима)
+
+Практика для скорости:
+- если изменения **не затрагивают** Woo/checkout/cart/templates/plugins — L1 можно SKIP; форсировать запуск: `VERIFY_L1=1 npm run verify:all`.
+- predeploy-этап не обязан запускать L1 локально; обязательность относится к post-deploy verify на staging.
+
+Рекомендуется (как отдельный шаг, может быть включён в L1/L2 по риску):
+- axe a11y smoke для checkout (и опционально home/shop/cart)
+
+### L2 (регрессии качества, post-deploy)
+
+Для изменений с UX/визуальным риском:
+- Playwright visual snapshots (`toHaveScreenshot`) на ключевых страницах
+- perf budgets (Lighthouse CI / budgets) при наличии CI wiring
+
+## Blocking rules (невозможно принять результат)
+
+Если выполняется хотя бы одно — outcome = REJECT, score = 0:
+- add_to_cart не добавляет товар (PLP/PDP) **или** кнопка/CTA перекрыт и клик не проходит
+- cart не отображает добавленный товар / критически сломан
+- checkout entry не открывается или форма отсутствует
+- критические JS ошибки на cart/checkout/product (если они ломают UX/flow)
+- layout перекрывает primary CTA на mobile (например, хедер перекрывает кнопку/форму)
+
+## Артефакты (что сохранять)
+
+- Playwright report + trace для падений
+- Скриншоты/diffs для visual
+- Lighthouse JSON (и краткая сводка)
+

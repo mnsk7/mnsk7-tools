@@ -20,7 +20,7 @@ language: ru
 - `classification`: `{ task_mode, task_scope, domains[] }`
 - `allowed_code_zones[]` и `disallowed_zones[]`
 - `target_urls{}` (home/shop/product/cart/checkout/account + что релевантно)
-- `verify_suite`: L0/L1/L2 с командами/артефактами
+- `postdeploy_verify_suite`: L0/L1/L2 на staging с командами/артефактами
 - `invariants[]` (blocking rules Woo/UI)
 - `artifacts_to_save[]`
 - `stop_conditions`: ACCEPT/ESCALATE
@@ -29,8 +29,8 @@ language: ru
 
 - Не редактировать WP core и сторонние плагины.
 - Любая кастом-логика Woo — hooks/filters или custom plugin.
-- Для UI/Woo: L1 обязателен (woo flow), L2 по риску.
-- Не “чинить на глаз” — всё через verify → verifier → critic.
+- Для UI/Woo: L1 обязателен в post-deploy verify (woo flow), L2 по риску.
+- Не “чинить на глаз”: predeploy verifier/critic по diff + post-deploy technical verify + critic.
 
 ---
 name: orchestrator
@@ -57,8 +57,8 @@ readonly: true
    - целевые URL (минимум: home, PLP, PDP, cart, checkout)
    - device priority (mobile-first для UX задач)
 3. Определи **active domains**: `business`, `tech`, `ui`, `seo`, `perf`, `a11y`.
-4. Определи **verify suite**:
-   - всегда L0
+4. Определи **post-deploy verify suite**:
+   - всегда L0 (на staging после deploy)
    - L1 обязательно для Woo flow/UX правок
    - L2 для визуальных/перф рисков
 5. Запусти этапы по operating model (см. `OPERATING-MODEL.md`).
@@ -76,7 +76,7 @@ readonly: true
   "classification": {},
   "capabilities": {},
   "active_domains": [],
-  "verify_suite": {
+  "postdeploy_verify_suite": {
     "L0": [],
     "L1": [],
     "L2": []

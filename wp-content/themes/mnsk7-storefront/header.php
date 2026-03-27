@@ -35,8 +35,10 @@ defined( 'ABSPATH' ) || exit;
 	.mnsk7-header__brand{flex-shrink:0;min-width:0}
 	.mnsk7-header__brand a{display:flex;align-items:center;font-size:1.125rem;font-weight:700;color:#000;text-decoration:none!important;border-bottom:none}
 	.mnsk7-header__brand img{max-height:42px;width:auto;max-width:100%;display:block;vertical-align:middle}
-	@media (min-width:1025px){.mnsk7-header__menu-toggle{display:none!important}.mnsk7-header__search-toggle{display:none!important}#mnsk7-header-search.mnsk7-header__search-dropdown{position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;margin:0!important;padding:0!important;min-width:240px;border:none!important;box-shadow:none!important}}
-	@media (max-width:1024px){.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:flex!important}}
+	@media (min-width:1024px){.mnsk7-header__menu-toggle{display:none!important}.mnsk7-header__search-toggle{display:none!important}#mnsk7-header-search.mnsk7-header__search-dropdown{position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;margin:0!important;padding:0!important;min-width:240px;border:none!important;box-shadow:none!important}}
+	@media (max-width:1023px){.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:flex!important}}
+	/* Touch fallback: some mobile browsers can render "desktop width"; force mobile header controls on coarse-pointer devices. */
+	@media (hover:none) and (pointer:coarse){.mnsk7-header__menu-toggle{display:flex!important}.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__search-toggle{display:inline-flex!important}#mnsk7-header-search.mnsk7-header__search-dropdown{display:none!important}}
 	/* Archive LCP pass: promo bar = LCP candidate — krytyczne style bez czekania na main.css */
 	.mnsk7-promo-bar{background:#0c7ddb;color:#fff;font-size:0.8125rem;font-weight:500;padding:0.35rem 1rem;position:sticky;top:env(safe-area-inset-top,0px);z-index:1001;box-sizing:border-box}
 	.mnsk7-promo-bar__inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:center;gap:1rem;position:relative}

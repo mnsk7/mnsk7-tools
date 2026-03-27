@@ -1,0 +1,36 @@
+{
+  "mode": "technical",
+  "stage": "predeploy",
+  "outcome": "REJECT",
+  "checks": [
+    "Подтвержден runtime-diff в разрешенной зоне темы: wp-content/themes/mnsk7-storefront/*.",
+    "Подтверждено, что CI deploy workflow берет источник только из origin/main.",
+    "Predeploy режим соблюден: локальные e2e/verify не использовались как обязательный gate для принятия deploy readiness."
+  ],
+  "evidence": [
+    "git status: локальные изменения присутствуют, ветка main не ahead origin/main.",
+    "git diff: изменения в header.php, assets/css/parts/04-header.css, assets/css/main.css.",
+    ".github/workflows/deploy-staging.yml: deploy запускается от main/workflow_dispatch и синкает тему на staging."
+  ],
+  "missing_evidence": [
+    "Нет commit SHA с этими правками в origin/main.",
+    "Нет факта deploy на staging именно с этим diff.",
+    "Нет post-deploy verify evidence (ожидаемо для predeploy, но это блокирует финальную приемку)."
+  ],
+  "risks": [
+    "Если выполнить deploy сейчас, на staging уйдет старый код из origin/main, а не текущие локальные правки.",
+    "Технически невозможно валидно завершить post-deploy gates для незадеплоенного diff."
+  ],
+  "required_next_steps": [
+    "Сделать deployable snapshot в source-of-truth (commit + push в main).",
+    "Запустить deploy to staging.",
+    "Собрать post-deploy verify: минимум L0, для UI/Woo обязательно L1, L2 по зоне (header/mobile-design).",
+    "Запустить verifier MODE=technical (post-deploy) и затем critic-scorer PHASE=2."
+  ],
+  "deploy_readiness": {
+    "ready": false,
+    "decision": "BLOCK_DEPLOY",
+    "reason": "Predeploy technical gate failed: отсутствует deployable SHA в origin/main для текущего diff."
+  },
+  "postmortem_required": true
+}

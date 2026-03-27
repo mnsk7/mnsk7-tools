@@ -1,0 +1,558 @@
+{
+  "issue_map": {
+    "business": {
+      "critical": [
+        {
+          "id": "biz-001",
+          "domain": "business",
+          "severity": "critical",
+          "title": "Home: licznik koszyka może nie aktualizować się po add_to_cart (cart fragments nie są ładowane na front page)",
+          "location": {
+            "url": "/",
+            "selector": ".mnsk7-header__cart-count",
+            "viewport": "mobile-first (375x812)"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/functions.php:820-832 (wc-cart-fragments nie jest enqueue na is_front_page); header pokazuje licznik w header.php:189-215",
+          "repro_steps": "HYPOTHESIS (bez URL testów pre-deploy). Plan weryfikacji post-deploy: otwórz `/` na iPhone viewport, kliknij Add to cart na pierwszym produkcie w bestsellerach, sprawdź czy `.mnsk7-header__cart-count` wzrosło bez reload.",
+          "expected": "Po dodaniu produktu do koszyka licznik w headerze aktualizuje się natychmiast (bez przeładowania), bo to sygnał sukcesu i skraca drogę do checkout.",
+          "suggested_fix": "W functions.php zmienić warunek is_front_page(): pozwolić enqueue `wc-cart-fragments` na home albo dodać lekki własny fragment updater tylko dla licznika (bez pełnych fragmentów). Minimalny diff tylko w temacie.",
+          "tests_to_add": [
+            "e2e: home_add_to_cart_updates_header_count"
+          ],
+          "effort": "M",
+          "risk": "high"
+        }
+      ],
+      "medium": [
+        {
+          "id": "biz-002",
+          "domain": "business",
+          "severity": "medium",
+          "title": "Newsletter: tekst o polityce prywatności bez linka (spadek zaufania / compliance UX)",
+          "location": {
+            "url": "sitewide (footer)",
+            "selector": ".mnsk7-footer__newsletter-privacy",
+            "viewport": "mobile-first (375x812)"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/footer.php:125-126 (tekst “Zobacz politykę prywatności” bez <a>)",
+          "repro_steps": "Otwórz dowolną stronę, przewiń do footera, znajdź blok Newsletter, sprawdź czy da się kliknąć w politykę prywatności z tekstu pod formularzem.",
+          "expected": "Czytelny link do polityki prywatności bez szukania w innych sekcjach footera.",
+          "suggested_fix": "Zamienić część tekstu na link do `$privacy_policy_url` (już jest dostępny w footer.php).",
+          "tests_to_add": [
+            "dom: footer_newsletter_privacy_contains_link"
+          ],
+          "effort": "S",
+          "risk": "low"
+        },
+        {
+          "id": "biz-003",
+          "domain": "business",
+          "severity": "medium",
+          "title": "Allegro CTA na home może prowadzić do “#” gdy brak stałej MNK7_ALLEGRO_SELLER_URL (martwy CTA)",
+          "location": {
+            "url": "/",
+            "selector": ".mnsk7-trust-cta__btn",
+            "viewport": "mobile-first (375x812)"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/front-page.php:92-96 (fallback MNK7_ALLEGRO_SELLER_URL to '#')",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: sprawdź atrybut href dla przycisku “Zobacz profil i opinie na Allegro →” w View Source / inspector.",
+          "expected": "CTA zawsze prowadzi do realnego profilu sprzedawcy (albo blok jest ukryty, jeśli URL nie jest skonfigurowany).",
+          "suggested_fix": "Warunkowo renderować `.mnsk7-trust-cta` tylko gdy URL nie jest pusty i nie jest '#'.",
+          "tests_to_add": [
+            "unit/dom: home_allegro_cta_not_placeholder_href"
+          ],
+          "effort": "S",
+          "risk": "medium"
+        }
+      ],
+      "minor": [
+        {
+          "id": "biz-004",
+          "domain": "business",
+          "severity": "minor",
+          "title": "Promo bar dismiss zapamiętywany tylko w sessionStorage (wraca po nowej sesji) — potencjalne zmęczenie UX",
+          "location": {
+            "url": "sitewide (header)",
+            "selector": "#mnsk7-promo-bar .mnsk7-promo-bar__close",
+            "viewport": "mobile-first (375x812)"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/functions.php:1124-1140 (sessionStorage mnsk7_promo_dismissed)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: zamknij promo bar, odśwież w tej samej karcie (powinno zostać), zamknij przeglądarkę/nowa sesja (wraca).",
+          "expected": "Opcjonalnie: zapamiętanie zamknięcia na dłużej (np. 7 dni) jeśli promo nie jest krytyczne.",
+          "suggested_fix": "Zamienić sessionStorage na localStorage z TTL lub cookie, przy zachowaniu prywatności (bez identyfikatorów).",
+          "tests_to_add": [
+            "e2e: promo_bar_dismiss_persists_across_reload"
+          ],
+          "effort": "S",
+          "risk": "low"
+        }
+      ]
+    },
+    "tech": {
+      "critical": [
+        {
+          "id": "tech-001",
+          "domain": "tech",
+          "severity": "critical",
+          "title": "Automatyczny mobile layout audit jest niestabilny (net::ERR_ABORTED / context closed) — brak wiarygodnych metryk przed handoff",
+          "location": {
+            "url": "N/A (artifact pipeline)",
+            "selector": null,
+            "viewport": "mobile audit runner"
+          },
+          "evidence": "artifacts/design-audit/mobile/layout.json:6-54 (home/shop/pdp/cart/checkout ok=false; ERR_ABORTED / context closed)",
+          "repro_steps": "W CI/lokalnie uruchomić ten sam runner, który generuje `artifacts/design-audit/mobile/layout.json`, na tych samych URLach; zebrać logi Playwright i ewentualne HAR/screenshoty.",
+          "expected": "Stabilny pipeline artefaktów (>=90% runów bez crash), żeby porównywać regresje UI/CLS/header overlap.",
+          "suggested_fix": "Naprawa w tooling (poza tematem) jako follow-up: retry/backoff na page.goto, wydłużone timeouts, izolacja kontekstu per URL, capture trace na fail. W tym cyklu: przynajmniej dodać check w orchestratorze, że artifact jest ‘unstable’ i blokuje ‘green’ bez manual QA.",
+          "tests_to_add": [
+            "pipeline: mobile_layout_audit_runner_reliability_smoke"
+          ],
+          "effort": "M",
+          "risk": "high"
+        }
+      ],
+      "medium": [
+        {
+          "id": "tech-002",
+          "domain": "tech",
+          "severity": "medium",
+          "title": "Footer accordion zaimplementowany podwójnie (inline script + assets/js/footer-accordion.js) — ryzyko podwójnego toggle / trudny debugging",
+          "location": {
+            "url": "sitewide (footer)",
+            "selector": ".mnsk7-footer__accordion-trigger",
+            "viewport": "mobile-first (375x812)"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/footer.php:140-169 (inline accordion JS) + wp-content/themes/mnsk7-storefront/assets/js/footer-accordion.js:1-75 (druga implementacja)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: na mobile kliknij akordeon w footerze wielokrotnie i obserwuj czy sekcja nie ‘przeskakuje’ (otwiera i natychmiast zamyka) lub czy aria-expanded nie desynchronizuje się z klasą.",
+          "expected": "Jedno źródło prawdy dla zachowania akordeonu, spójne aria-expanded.",
+          "suggested_fix": "Usunąć inline JS z footer.php i zostawić tylko `assets/js/footer-accordion.js` (lub odwrotnie), upewniając się że skrypt jest enqueue i działa na wszystkich stopkach (footer-shop.php też).",
+          "tests_to_add": [
+            "e2e: footer_accordion_single_toggle_per_click"
+          ],
+          "effort": "S",
+          "risk": "medium"
+        },
+        {
+          "id": "tech-003",
+          "domain": "tech",
+          "severity": "medium",
+          "title": "JS “pewne przejście na checkout” zależy od substringu 'zamowienie' w URL — krucha logika przy zmianie sluga/języka",
+          "location": {
+            "url": "/koszyk/",
+            "selector": "#mnsk7-cart-checkout-button",
+            "viewport": "mobile-first (375x812)"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/functions.php:1210-1229 (href.indexOf('zamowienie') !== -1)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: sprawdź slug checkout w Woo, a następnie kliknij CTA z koszyka; zmień slug (na staging) i sprawdź czy handler nie psuje nawigacji.",
+          "expected": "Handler działa niezależnie od sluga (bazuje na wc_get_checkout_url lub porównaniu origin+path).",
+          "suggested_fix": "Przekazać do JS bezpośrednio `wc_get_checkout_url()` (już jest w PHP) i porównywać z `btn.href` po normalizacji, bez magic string.",
+          "tests_to_add": [
+            "e2e: cart_checkout_button_navigates_to_checkout_without_slug_assumption"
+          ],
+          "effort": "S",
+          "risk": "medium"
+        }
+      ],
+      "minor": [
+        {
+          "id": "tech-004",
+          "domain": "tech",
+          "severity": "minor",
+          "title": "send_headers ustawia Vary: User-Agent bez walidacji istniejącego Vary — ryzyko konfliktu z cache/CDN (edge case)",
+          "location": {
+            "url": "PLP (/sklep/, /kategoria/, /tag/)",
+            "selector": null,
+            "viewport": "N/A"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/functions.php:1759-1765 (header('Vary: User-Agent', false))",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: sprawdź nagłówki odpowiedzi na PLP czy Vary ma poprawną listę (np. Accept-Encoding, Cookie, etc.) i czy nie jest duplikowany.",
+          "expected": "Vary jest poprawny i nie obniża hit-rate cache niepotrzebnie.",
+          "suggested_fix": "Jeśli potrzebne: dopisać logikę łączenia istniejącego Vary zamiast bezpośredniego header() albo ograniczyć do konkretnych ścieżek i tylko gdy caching wymaga UA split.",
+          "tests_to_add": [
+            "http: plp_vary_header_contains_user_agent_without_dropping_existing_vary"
+          ],
+          "effort": "M",
+          "risk": "low"
+        }
+      ]
+    },
+    "ui": {
+      "critical": [
+        {
+          "id": "ui-001",
+          "domain": "ui",
+          "severity": "critical",
+          "title": "PDP: sticky CTA fixed-bottom może zasłaniać elementy UI (zwłaszcza na małych ekranach) — wymaga twardej weryfikacji overlap",
+          "location": {
+            "url": "/sklep/<produkt>/",
+            "selector": "#mnsk7-pdp-sticky-cta",
+            "viewport": "mobile (360x800) + iPhone (375x812)"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/woocommerce/content-single-product.php:65-78 (markup sticky CTA) + assets/css/parts/06-single-product.css:588-664 (position:fixed bottom, z-index:999, padding safe-area-bottom)",
+          "repro_steps": "HYPOTHESIS (brak runtime). Plan weryfikacji post-deploy: na PDP przewiń tak, aby główny formularz add_to_cart wyszedł poza viewport → sticky CTA powinien się pojawić; sprawdź czy nie zasłania cookie bar, systemowych sticky elementów, lub ważnych komunikatów/notice; sprawdź landscape.",
+          "expected": "Sticky CTA nie zasłania żadnych krytycznych CTA ani pól formularza; w razie konfliktu ma regułę priorytetu i odpowiedni offset.",
+          "suggested_fix": "Dodać globalną strategię ‘stacking’ sticky elementów: np. kiedy cookie bar widoczny (`body.mnsk7-cookie-bar-visible`) sticky CTA podnosi bottom offset; kiedy cart sticky proceed widoczny na /koszyk/ — PDP CTA nie dotyczy; dodać testy overlap.",
+          "tests_to_add": [
+            "e2e: pdp_sticky_cta_does_not_cover_primary_cta_or_notices"
+          ],
+          "effort": "M",
+          "risk": "high"
+        }
+      ],
+      "medium": [
+        {
+          "id": "ui-002",
+          "domain": "ui",
+          "severity": "medium",
+          "title": "Global layout: na mobile non-home używa margin-top: var(--header-h) (layout zależy od stałej wysokości headera) — ryzyko błędów przy shrink/promo",
+          "location": {
+            "url": "sitewide (non-home)",
+            "selector": "#content, .mnsk7-content",
+            "viewport": "mobile (375x812)"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/assets/css/parts/25-global-layout.css:27-50 (margin-top var(--header-h), promo adds calc(header+promo)) + header shrink w CSS: assets/css/parts/04-header.css:117-124",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: na stronie nie-home przewijaj minimalnie (header shrink), obserwuj czy nie pojawia się ‘skok’/dziura pod headerem lub czy content nie wchodzi pod header.",
+          "expected": "Stabilny odstęp pod sticky headerem niezależnie od shrink i promo bar (bez ‘white strip’ i bez overlap).",
+          "suggested_fix": "Zastąpić stały margin-top mechanizmem opartym o CSS `scroll-margin-top`/`padding-top` i realną wysokość headera (CSS var aktualizowana w JS) lub uprościć do jednego modelu per breakpoint (bez mieszania margin-top i padding-top).",
+          "tests_to_add": [
+            "visual: non_home_header_shrink_no_gap_no_overlap"
+          ],
+          "effort": "L",
+          "risk": "medium"
+        },
+        {
+          "id": "ui-003",
+          "domain": "ui",
+          "severity": "medium",
+          "title": "PLP: backend wybór layoutu (mobile=grid, desktop=table) zależy od user-agent — ryzyko błędnej wersji przy cache/UA spoof oraz ‘desktop on mobile’",
+          "location": {
+            "url": "/sklep/ (i taxonomy archives)",
+            "selector": ".mnsk7-product-table-wrap, .mnsk7-plp-grid-mobile",
+            "viewport": "mobile-first (375x812)"
+          },
+          "evidence": "woocommerce/archive-product.php:240-285 (mnsk7_is_mobile_request determinuje DOM) + functions.php:1751-1765 (Vary: User-Agent dla PLP)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: wejść na PLP na mobile i desktop, upewnić się, że DOM nie zawiera drugiego layoutu, i że cache nie miesza wersji między urządzeniami.",
+          "expected": "Zawsze właściwy layout per device, bez przypadków ‘tabela na mobile’ lub ‘grid na desktop’ przez cache.",
+          "suggested_fix": "Preferować responsywny CSS (jeden DOM) albo Vary po Client Hints / segmentacja cache; jeśli zostaje UA: dodatkowy guard (np. query param debug) i monitoring mismatch.",
+          "tests_to_add": [
+            "e2e: plp_mobile_renders_grid_only",
+            "e2e: plp_desktop_renders_table_only"
+          ],
+          "effort": "L",
+          "risk": "high"
+        },
+        {
+          "id": "ui-004",
+          "domain": "ui",
+          "severity": "medium",
+          "title": "Header: mini-cart dropdown na mobile jest full-width i może kolidować z otwartym menu/search (zależność od klas body/nav)",
+          "location": {
+            "url": "sitewide",
+            "selector": ".mnsk7-header__cart.is-open .mnsk7-header__cart-dropdown",
+            "viewport": "mobile (375x812)"
+          },
+          "evidence": "assets/css/parts/04-header.css:1589-1595 (cart dropdown left/right 0 na ≤1024) + functions.php:1073-1120 (toggle is-open, click outside closes) + functions.php:962-1030 (search-open body class)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: na mobile otwórz menu, potem cart; otwórz search panel, potem cart; sprawdź czy dropdowny nie nakładają się i czy zamykają się przewidywalnie (Escape/outside click).",
+          "expected": "Tylko jeden overlay/dropdown aktywny naraz; pozostałe są zamykane automatycznie.",
+          "suggested_fix": "Dodać w JS mutual-exclusion: otwierając cart zamknąć menu i search; otwierając menu zamknąć cart/search, itd.",
+          "tests_to_add": [
+            "e2e: mobile_header_overlays_are_mutually_exclusive"
+          ],
+          "effort": "M",
+          "risk": "medium"
+        },
+        {
+          "id": "ui-005",
+          "domain": "ui",
+          "severity": "medium",
+          "title": "Cart: sticky proceed-to-checkout na mobile używa negatywnych marginów -1rem (ryzyko niedopasowania do global padding i safe-area)",
+          "location": {
+            "url": "/koszyk/",
+            "selector": ".woocommerce-cart .wc-proceed-to-checkout",
+            "viewport": "mobile (375x812)"
+          },
+          "evidence": "assets/css/parts/18-cart-checkout.css:263-276 (position:sticky bottom:0; margin:0 -1rem; padding:0.75rem 1rem; safe-area nie uwzględniona)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: na iPhone z safe-area przewiń koszyk, obserwuj sticky CTA przy dolnej krawędzi i czy nie zasłania systemowych elementów / cookie bar / czy nie wychodzi poza tło strony.",
+          "expected": "Sticky CTA jest w 100% czytelne, bez ‘edge bleed’ i bez zasłaniania przez safe-area/cookie bar.",
+          "suggested_fix": "Dodać `padding-bottom: max(0.75rem, env(safe-area-inset-bottom))` dla sticky CTA wrappera i zharmonizować szerokość z global padding (bez margin:-1rem) poprzez użycie `width: calc(100% + 2*var(--content-padding))` lub wrapper breakout kontrolowany tokenami.",
+          "tests_to_add": [
+            "visual: cart_sticky_checkout_cta_safe_area_ok"
+          ],
+          "effort": "M",
+          "risk": "medium"
+        }
+      ],
+      "minor": [
+        {
+          "id": "ui-006",
+          "domain": "ui",
+          "severity": "minor",
+          "title": "Mega menu ‘Sklep’: na mobile tap na parent link zawsze blokuje przejście do /sklep/ (może być nieoczekiwane)",
+          "location": {
+            "url": "sitewide",
+            "selector": "a.mnsk7-menu-item-sklep",
+            "viewport": "mobile (375x812)"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/functions.php:887-914 (preventDefault na parent item <=1024) + header.php:99-147 (parent link do sklepu ma submenu)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: na mobile kliknij w ‘Sklep’ w headerze; sprawdź czy da się przejść na /sklep/ bez wybierania podmenu (np. drugim tapem lub osobnym elementem).",
+          "expected": "Użytkownik ma prostą drogę do strony sklepu jednym tapem.",
+          "suggested_fix": "Dodać w submenu wyraźny pierwszy element ‘Wszystkie produkty’ (już jest) + rozważyć: drugi tap na parent przechodzi do sklepu (first tap opens, second navigates) albo dodać osobną ikonę chevron do rozwijania, a link zostawić nawigacyjny.",
+          "tests_to_add": [
+            "e2e: mobile_shop_menu_parent_allows_navigation"
+          ],
+          "effort": "M",
+          "risk": "low"
+        }
+      ]
+    },
+    "seo": {
+      "critical": [],
+      "medium": [
+        {
+          "id": "seo-001",
+          "domain": "seo",
+          "severity": "medium",
+          "title": "Brak twardych dowodów na meta canonical/OG/robots w warstwie tematu — ryzyko zależności od pluginów bez gwarancji na prod",
+          "location": {
+            "url": "sitewide",
+            "selector": "head",
+            "viewport": "N/A"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/header.php:11-26 (tylko viewport + wp_head, bez własnych meta/OG/canonical) + functions.php:1890-1932 (tytuły tylko przez document_title_parts)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: View Source na `/`, `/sklep/`, PDP, `/koszyk/`, `/zamowienie/` i sprawdzić `<title>`, `<meta name=description>`, `<link rel=canonical>`, OG/Twitter, `<meta name=robots>` oraz canonical dla URL z parametrami filtrów.",
+          "expected": "Każda kluczowa strona ma poprawny title/description/canonical; strony systemowe (cart/checkout/account) są noindex; parametry filtrów mają canonical do czystej wersji lub poprawną strategię indexacji.",
+          "suggested_fix": "Jeśli brak SEO pluginu na prod: dodać minimalny SEO layer w temacie (wp_head hook) dla title/description/og/canonical + noindex dla cart/checkout. Jeśli plugin jest gwarantowany: dodać checklist + assertions w verify.",
+          "tests_to_add": [
+            "seo: view_source_has_canonical_and_og_on_key_pages"
+          ],
+          "effort": "L",
+          "risk": "high"
+        },
+        {
+          "id": "seo-002",
+          "domain": "seo",
+          "severity": "medium",
+          "title": "PLP: breadcrumbs i ‘ostatni crumb linkuje do bieżącego URL z filtrami’ może tworzyć wewnętrzne linki do stron z parametrami (crawl budget/duplikaty)",
+          "location": {
+            "url": "/sklep/ (z filtrami GET)",
+            "selector": ".woocommerce-breadcrumb a:last-child (lub ostatni element breadcrumbs)",
+            "viewport": "N/A"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/functions.php:1867-1878 (ostatni crumb URL = REQUEST_URI z GET) + woocommerce/archive-product.php:15-22 (breadcrumbs renderowane niezależnie od hooków)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: na PLP ustaw filtry (GET), sprawdź HTML breadcrumbs i gdzie prowadzi ostatni link; sprawdź czy istnieje canonical/noindex dla tych URL.",
+          "expected": "Breadcrumbs wspierają nawigację, ale nie zwiększają liczby indeksowalnych URL z parametrami bez kontroli canonical/robots.",
+          "suggested_fix": "Zamiast linkować ostatni crumb do URL z parametrami: renderować go jako tekst (bez linka) lub linkować do canonical (bez filtrów) i osobno utrzymywać ‘back to filtered results’ przez cookie (już jest dla tag).",
+          "tests_to_add": [
+            "seo: breadcrumbs_do_not_introduce_indexable_filter_param_urls"
+          ],
+          "effort": "M",
+          "risk": "medium"
+        }
+      ],
+      "minor": [
+        {
+          "id": "seo-003",
+          "domain": "seo",
+          "severity": "minor",
+          "title": "Front page title fallback istnieje, ale brak w temacie fallback meta description (jeśli brak pluginu)",
+          "location": {
+            "url": "/",
+            "selector": "head meta[name=description]",
+            "viewport": "N/A"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/functions.php:1924-1932 (tylko title fallback)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: View Source na `/` i sprawdzić meta description.",
+          "expected": "Meta description obecne i sprzedażowe (frezy CNC + dostawa + USP).",
+          "suggested_fix": "Dodać minimalny description generator dla home + PLP/PDP jeśli nie zapewnia go Yoast/RankMath.",
+          "tests_to_add": [
+            "seo: home_has_meta_description"
+          ],
+          "effort": "M",
+          "risk": "low"
+        }
+      ]
+    },
+    "perf": {
+      "critical": [],
+      "medium": [
+        {
+          "id": "perf-001",
+          "domain": "perf",
+          "severity": "medium",
+          "title": "Woo thumbnails wymuszane jako loading=eager na PLP/PDP — ryzyko gorszego LCP/INP na mobile (za dużo obrazów ładowanych natychmiast)",
+          "location": {
+            "url": "/sklep/ i PDP",
+            "selector": "img.attachment-woocommerce_thumbnail",
+            "viewport": "mobile (slow 4G simulation post-deploy)"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/functions.php:1985-2033 (wp_get_attachment_image_attributes: loading='eager' dla woocommerce_thumbnail)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: Lighthouse mobile na PLP i PDP, sprawdzić LCP element i liczbę obrazów pobranych w pierwszych 2s; porównać eager vs lazy dla below-the-fold.",
+          "expected": "Tylko hero/LCP-image ma priorytet; reszta obrazów below-the-fold lazy.",
+          "suggested_fix": "Ograniczyć eager do pierwszych N produktów above-the-fold (np. 1–4) lub tylko do PDP głównego obrazu; resztę zostawić jako lazy/auto + `fetchpriority=high` tylko dla LCP.",
+          "tests_to_add": [
+            "perf: plp_does_not_set_eager_on_all_thumbnails"
+          ],
+          "effort": "M",
+          "risk": "medium"
+        },
+        {
+          "id": "perf-002",
+          "domain": "perf",
+          "severity": "medium",
+          "title": "Header init odpalany w requestIdleCallback może opóźnić pierwszą interakcję (menu/search/cart) na urządzeniach bez rIC lub przy długich taskach",
+          "location": {
+            "url": "sitewide",
+            "selector": ".mnsk7-header__menu-toggle, .mnsk7-header__search-toggle, .mnsk7-header__cart-trigger",
+            "viewport": "mobile low-end"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/functions.php:1184-1202 (runCritical() przez requestIdleCallback/setTimeout)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: nagrać Performance trace mobile, kliknąć menu/search zaraz po załadowaniu i zobaczyć czy event listeners są już podpięte; sprawdzić opóźnienie do responsu.",
+          "expected": "Menu/search/cart działa natychmiast po pierwszym paint (bez ‘dead click’).",
+          "suggested_fix": "Podpiąć krytyczne listenery synchronicznie po DOMContentLoaded (mały kod) a cięższe rzeczy (promo height, shrink, instagram) zostawić w rIC.",
+          "tests_to_add": [
+            "e2e: header_controls_work_immediately_after_load"
+          ],
+          "effort": "M",
+          "risk": "medium"
+        }
+      ],
+      "minor": [
+        {
+          "id": "perf-003",
+          "domain": "perf",
+          "severity": "minor",
+          "title": "Cookie bar show po 3.5s: potencjalny CLS (pojawia się fixed element + padding-bottom na #page)",
+          "location": {
+            "url": "sitewide",
+            "selector": "#mnsk7-cookie-bar",
+            "viewport": "mobile-first (375x812)"
+          },
+          "evidence": "wp-content/themes/mnsk7-storefront/footer.php:223-228 (setTimeout show 3500) + assets/css/parts/10-cookie-bar.css:31-34 (body.mnsk7-cookie-bar-visible #page padding-bottom)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: uruchomić Lighthouse/trace i sprawdzić CLS po 3.5s; wizualnie zobaczyć czy content ‘podskakuje’.",
+          "expected": "Brak zauważalnego przesunięcia layoutu; jeśli bar musi się pojawić — robi to bez CLS (np. overlay nad treścią bez zmiany document flow).",
+          "suggested_fix": "Zamiast zmieniać padding-bottom #page w momencie show: utrzymywać stałą rezerwę miejsca albo animować transform/opacity bez wpływu na layout.",
+          "tests_to_add": [
+            "perf: cookie_bar_does_not_increase_cls_over_threshold"
+          ],
+          "effort": "M",
+          "risk": "low"
+        }
+      ]
+    },
+    "a11y": {
+      "critical": [],
+      "medium": [
+        {
+          "id": "a11y-001",
+          "domain": "a11y",
+          "severity": "medium",
+          "title": "Promo bar close i inne kontrolki mają focus-visible, ale brak twardej weryfikacji focus order dla nakładających się overlay (menu/search/cart)",
+          "location": {
+            "url": "sitewide",
+            "selector": ".mnsk7-header__menu-toggle, .mnsk7-header__search-toggle, .mnsk7-header__cart-trigger, .mnsk7-promo-bar__close",
+            "viewport": "mobile + desktop keyboard"
+          },
+          "evidence": "header.php:62-63 (skip link) + assets/css/parts/04-header.css:622-625,672-675,920-923,972-976 (focus-visible styles) + functions.php:945-950 (Escape close megamenu) + functions.php:1087-1092 (Escape close cart)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: klawiaturą (Tab/Shift+Tab) przejść przez header; otworzyć menu i sprawdzić czy focus nie ucieka pod overlay; Escape powinien zamykać i przywracać focus na trigger.",
+          "expected": "Przewidywalny focus management dla overlay: focus trap lub przynajmniej focus return + aria-expanded zgodne ze stanem.",
+          "suggested_fix": "Dodać minimalny focus-management: po otwarciu menu ustawić focus na pierwszym linku, po zamknięciu wrócić na trigger; analogicznie search panel/cart dropdown; rozważyć aria-modal dla paneli jeśli zachowują się jak dialog.",
+          "tests_to_add": [
+            "a11y-e2e: header_overlays_keyboard_escape_and_focus_return"
+          ],
+          "effort": "M",
+          "risk": "medium"
+        }
+      ],
+      "minor": [
+        {
+          "id": "a11y-002",
+          "domain": "a11y",
+          "severity": "minor",
+          "title": "Touch targets: ogólne min-height 44px istnieje, ale header na ultra-narrow ma 34–40px (potencjalnie poniżej 44px guideline)",
+          "location": {
+            "url": "sitewide",
+            "selector": ".mnsk7-header__menu-toggle, .mnsk7-header__search-toggle, .mnsk7-header__link--account, .mnsk7-header__cart-trigger",
+            "viewport": "mobile narrow (320px i mniej)"
+          },
+          "evidence": "assets/css/parts/22-touch-targets.css:8-17 (44px policy) + assets/css/parts/04-header.css:1316-1397 i 1424-1451 (40px/36px/34px sizes na wąskich)",
+          "repro_steps": "HYPOTHESIS. Plan weryfikacji post-deploy: na 320px szerokości sprawdzić computed size przycisków w headerze i wygodę tap.",
+          "expected": "Najważniejsze kontrolki headera (menu/search/cart) trzymają >=44px, nawet kosztem mniejszego logo.",
+          "suggested_fix": "Zachować 44px dla kluczowych kontrolek, a na ultra-narrow redukować tylko padding/ikony/tekst; ewentualnie ustawić 44px minimum dla menu/search/cart, a tylko account może spaść jeśli konieczne.",
+          "tests_to_add": [
+            "a11y: header_tap_targets_min_44px_on_mobile"
+          ],
+          "effort": "M",
+          "risk": "low"
+        }
+      ]
+    }
+  },
+  "tests_to_add": [
+    {
+      "id": "e2e-home-add-to-cart-fragments",
+      "type": "e2e",
+      "scope": "Woo conversion",
+      "description": "На home dodanie do koszyka aktualizuje licznik w headerze bez reload."
+    },
+    {
+      "id": "e2e-mobile-header-overlays",
+      "type": "e2e",
+      "scope": "Header UX",
+      "description": "Na mobile menu/search/cart nie nakładają się; tylko jeden overlay aktywny; Escape/outside click działa."
+    },
+    {
+      "id": "seo-head-basics",
+      "type": "seo",
+      "scope": "Indexation",
+      "description": "Key pages mają canonical/OG/title/description; cart/checkout noindex; parametry filtrów kontrolowane."
+    },
+    {
+      "id": "perf-thumbnail-loading-policy",
+      "type": "perf",
+      "scope": "LCP",
+      "description": "Nie wszystkie woocommerce_thumbnail są eager; tylko above-the-fold."
+    },
+    {
+      "id": "dom-footer-newsletter-privacy-link",
+      "type": "dom",
+      "scope": "Compliance UX",
+      "description": "Footer newsletter privacy ma klikalny link do polityki."
+    }
+  ],
+  "flow_risks": {
+    "add_to_cart": {
+      "risk": "medium",
+      "notes": "Ryzyko: na home licznik koszyka może nie aktualizować się (wc-cart-fragments wyłączone na front page). PDP sticky CTA i overlay headera wymagają sanity check, ale markup/CSS wygląda przygotowany."
+    },
+    "cart_update": {
+      "risk": "medium",
+      "notes": "Ryzyko: sticky checkout CTA na mobile (position:sticky) + negatywne marginesy i brak explicit safe-area może powodować edge-case overlap; sprawdzić też czy update_cart disabled state jest czytelny."
+    },
+    "checkout_entry": {
+      "risk": "medium",
+      "notes": "Ryzyko: JS ‘pewne przejście na checkout’ opiera się o substring 'zamowienie' w URL; przy zmianie sluga może nie działać zgodnie z intencją. Weryfikacja post-deploy obowiązkowa."
+    }
+  },
+  "top_priorities": [
+    {
+      "issue_id": "biz-001",
+      "why": "Bez natychmiastowej informacji “dodano do koszyka” na home spada zaufanie i rośnie drop-off (bezpośrednio wpływa na konwersję)."
+    },
+    {
+      "issue_id": "tech-001",
+      "why": "Brak stabilnych artefaktów audytu blokuje pewny handoff i kontrolę regresji UI/CLS/header overlap."
+    },
+    {
+      "issue_id": "seo-001",
+      "why": "Jeśli meta/canonical/robots nie są gwarantowane przez prod stack, można wprowadzić krytyczne ryzyka indexacji i duplikacji URL (zwłaszcza przy filtrach)."
+    },
+    {
+      "issue_id": "ui-001",
+      "why": "Sticky CTA na PDP to bezpośredni element konwersyjny; overlap lub konflikt z innymi sticky elementami może blokować zakup na mobile."
+    },
+    {
+      "issue_id": "tech-002",
+      "why": "Podwójny footer accordion to typowa przyczyna ‘flaky’ zachowania na mobile i trudnych do odtworzenia bugów UI."
+    }
+  ]
+}

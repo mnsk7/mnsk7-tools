@@ -1,0 +1,156 @@
+{
+  "context": {
+    "batch": "2",
+    "environment": "staging.mnsk7-tools.pl",
+    "raw_task_additions": [
+      "iPhone XR (414x896): promo bar выглядит плохо.",
+      "iPhone XR: header выглядит плохо.",
+      "На /sklep/ ощущение, что контейнер/ширина/паддинги «не такие как должны быть» (как будто другой контейнер).",
+      "Отступы на всех страницах выглядят разными (top/bottom/left/right) — перепроверить и если подтвердится, исправить.",
+      "Оставшиеся пункты из analyzer предыдущего batch (напр. PDP sticky CTA overlap/stacking и т.п.)."
+    ],
+    "constraints": {
+      "code_scope_only": [
+        "wp-content/themes/mnsk7-storefront/**"
+      ],
+      "do_not_change": [
+        "variants table near price on PDP"
+      ],
+      "pre_deploy_restrictions": [
+        "Не запускать URL-based проверки (lighthouse/link-check) до деплоя",
+        "Не запускать e2e/Playwright до деплоя"
+      ],
+      "device_priority": [
+        "mobile-first",
+        "iPhone XR 414x896 (critical)"
+      ]
+    },
+    "assumptions": [
+      "Batch #1 уже в main/задеплоен или будет задеплоен отдельно; Batch #2 не расширяет scope за пределы указанных UI/spacing/container issues + carry-over из analyzer batch #1.",
+      "Фиксы будут реализованы CSS/темплейтами в дочерней теме без правок WP core/плагинов."
+    ]
+  },
+  "classification": {
+    "task_mode": "mixed",
+    "task_scope": "sitewide",
+    "domains": [
+      "wordpress_woocommerce",
+      "ui",
+      "business_flow",
+      "a11y",
+      "perf"
+    ]
+  },
+  "capabilities": {
+    "can_edit_code": false,
+    "orchestrator_only": true,
+    "notes": [
+      "Дальше по pipeline v3.0: Analyzer -> Critic/Scorer P1 -> Final Issue List -> Doer (edits) -> Verify/Verifier -> Critic/Scorer P2."
+    ]
+  },
+  "active_domains": [
+    "ui",
+    "business",
+    "tech",
+    "a11y",
+    "perf"
+  ],
+  "allowed_code_zones": [
+    "wp-content/themes/mnsk7-storefront/**"
+  ],
+  "disallowed_zones": [
+    "wordpress core (any)",
+    "wp-content/plugins/** (third-party)",
+    "wp-content/themes/storefront/**",
+    "wp-content/mu-plugins/**"
+  ],
+  "target_urls": {
+    "home": "/",
+    "shop": "/sklep/",
+    "product": {
+      "pdp_sample": "PDP_SAMPLE_TBD (должен быть реальный продукт)",
+      "notes": [
+        "Нужен PDP где проявляется sticky CTA overlap/stacking (carry-over из batch #1 analyzer)."
+      ]
+    },
+    "cart": "/koszyk/",
+    "checkout": "/zamowienie/",
+    "account": "/moje-konto/"
+  },
+  "invariants": [
+    "Не трогать variants table near price на PDP.",
+    "Не ломать Woo critical flow: add_to_cart, cart_update, checkout_entry (blocking).",
+    "Не допускать перекрытия primary CTA на mobile (blocking).",
+    "Не редактировать WP core и сторонние плагины; кастом-логика Woo только hooks/filters (но в рамках темы — минимально и безопасно).",
+    "Scope-control: правки только по заявленным пунктам + carry-over из analyzer batch #1."
+  ],
+  "verify_suite": {
+    "L0": [
+      {
+        "id": "php_syntax_lint_theme",
+        "when": "pre-deploy (local)",
+        "command": "bash scripts/validate-theme-php.sh",
+        "artifacts": []
+      }
+    ],
+    "L1": [
+      {
+        "id": "woo_flow_playwright",
+        "when": "post-deploy only (blocked pre-deploy by constraints)",
+        "command": "VERIFY_L1=1 npm run verify:all",
+        "expects": [
+          "add_to_cart (PLP or PDP)",
+          "cart_update",
+          "checkout_entry (form visible)"
+        ],
+        "artifacts": [
+          "playwright-report/",
+          "test-results/** (traces on failure)"
+        ]
+      }
+    ],
+    "L2": [
+      {
+        "id": "mobile_visual_regression_if_risky",
+        "when": "post-deploy only (recommended due to header/promo bar/sitewide spacing risk)",
+        "command": "VERIFY_L2=1 npm run verify:all",
+        "artifacts": [
+          "screenshots/diffs (Playwright visual, if configured)"
+        ]
+      },
+      {
+        "id": "lighthouse_smoke_key_urls",
+        "when": "post-deploy only (URL-based blocked pre-deploy)",
+        "command": "bash scripts/verify/lighthouse-smoke.sh",
+        "artifacts": [
+          "lighthouse json reports (as produced by script)"
+        ]
+      },
+      {
+        "id": "link_check_key_urls_optional",
+        "when": "post-deploy only (optional; enable by risk)",
+        "command": "bash scripts/verify/link-check.sh",
+        "artifacts": [
+          "link-check output (as produced by script)"
+        ]
+      }
+    ]
+  },
+  "artifacts_to_save": [
+    "playwright-report/",
+    "test-results/** (trace/video/screenshots on failure)",
+    "lighthouse JSON outputs from scripts/verify/lighthouse-smoke.sh",
+    "Before/after screenshots for iPhone XR 414x896 of: promo bar, header, /sklep/ container, PDP sticky CTA area"
+  ],
+  "loop_control": {
+    "max_iter": 3,
+    "min_delta": 5,
+    "score_threshold": 85
+  },
+  "stop_conditions": "ACCEPT",
+  "notes": [
+    "Batch #2 focus: iPhone XR promo bar + header, /sklep/ container consistency, global spacing consistency, carry-over PDP sticky CTA overlap/stacking.",
+    "Verify gating: любые URL/e2e проверки строго post-deploy; до деплоя только не-URL локальные проверки (например PHP lint).",
+    "Приоритизация в следующем шаге (Analyzer): P0 = Woo CTA overlap/checkout/cart blockers; P1 = header/promo bar iPhone XR; P1 = /sklep/ container mismatch; P2 = глобальные отступы (если подтверждено измерениями)."
+  ]
+}

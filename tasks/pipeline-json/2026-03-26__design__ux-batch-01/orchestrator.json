@@ -1,0 +1,107 @@
+{
+  "context": {
+    "raw_task": [
+      "Найти и исправить все баги по дизайну/верстке UI/UX (mobile-first) пакетно.",
+      "Включить SEO/marketing анализ (структура, внутренние ссылки, мета); код-правки делать только в теме wp-content/themes/mnsk7-storefront.",
+      "Исключение: таблица вариантов рядом с ценой на PDP — НЕ трогаем.",
+      "Важно: до деплоя НЕ запускать URL/e2e проверки; порядок: Analyzer → Critic(PHASE=1) → Doer → push в main; после деплоя: Verify/Verifier/Critic(PHASE=2)."
+    ],
+    "constraints": [
+      "Не редактировать WP core и файлы сторонних плагинов.",
+      "Любая кастом-логика Woo — hooks/filters; в этом цикле предпочитаем правки только в теме.",
+      "Blocking invariants Woo: add_to_cart, cart_update, checkout_entry не должны ломаться; CTA не перекрывать на mobile."
+    ],
+    "device_priority": "mobile_first",
+    "target_urls": {
+      "home": "/",
+      "shop": "/sklep/",
+      "product": "/sklep/… (любой PDP на staging)",
+      "cart": "/koszyk/",
+      "checkout": "/zamowienie/",
+      "account": null
+    },
+    "allowed_code_zones": [
+      "wp-content/themes/mnsk7-storefront/**"
+    ],
+    "disallowed_zones": [
+      "wp-admin/**",
+      "wp-includes/**",
+      "wp-content/plugins/**",
+      "wp-content/mu-plugins/**",
+      "wp-content/themes/storefront/** (не правим в рамках этого цикла, только дочерняя тема)",
+      "**/vendor/**",
+      "**/node_modules/**"
+    ],
+    "explicit_exclusions": [
+      "PDP: таблица вариантов рядом с ценой (любой шаблон/блок/виджет, который отвечает за variants table near price) — не изменять"
+    ],
+    "pipeline_ordering": {
+      "pre_deploy": [
+        "Analyzer",
+        "Critic (PHASE=1)",
+        "Doer",
+        "push to main"
+      ],
+      "post_deploy_only": [
+        "Verify",
+        "Verifier",
+        "Critic (PHASE=2)"
+      ],
+      "pre_deploy_url_or_e2e": "forbidden"
+    }
+  },
+  "classification": {
+    "task_mode": "mixed",
+    "task_scope": "sitewide",
+    "domains": [
+      "wordpress_woocommerce",
+      "ui",
+      "a11y",
+      "seo",
+      "marketing"
+    ]
+  },
+  "capabilities": {
+    "change_policy": "theme_only",
+    "woocommerce_custom_logic_policy": "hooks_filters_prefer_theme_this_cycle",
+    "no_core_or_third_party_edits": true,
+    "no_predeploy_url_or_e2e": true,
+    "staging_environment": true
+  },
+  "active_domains": [
+    "ui",
+    "a11y",
+    "seo",
+    "business",
+    "tech"
+  ],
+  "verify_suite": {
+    "L0": [
+      "pre-deploy (локально/CI без URL/e2e): PHP lint / syntax check theme files (artifact: lint log)",
+      "pre-deploy: search for forbidden edits outside wp-content/themes/mnsk7-storefront (artifact: touched-files list)",
+      "pre-deploy: build/asset compilation only if project uses it (artifact: build log)"
+    ],
+    "L1": [
+      "POST-DEPLOY ONLY (manual Woo flow on staging): PDP add_to_cart → cart_update → checkout_entry (artifacts: checklist + screenshots/video)",
+      "POST-DEPLOY ONLY (responsive QA, mobile-first): header/nav, CTA visibility (no overlap), mini-cart/cart totals, checkout form usability (artifacts: screenshots per URL)",
+      "POST-DEPLOY ONLY: regression check on /, /sklep/, PDP sample, /koszyk/, /zamowienie/ (artifacts: before/after captures)"
+    ],
+    "L2": [
+      "POST-DEPLOY ONLY (SEO sanity): view-source/meta (title/description/canonical/robots), internal linking crawl spot-check (artifacts: notes + page HTML excerpts)",
+      "POST-DEPLOY ONLY (perf/UX spot): Lighthouse snapshot mobile for / and PDP sample if permitted (artifacts: report html/json)"
+    ],
+    "notes": [
+      "URL-тесты/браузерные проверки/е2е — строго только после деплоя (Verify/Verifier/Critic PHASE=2). До деплоя допускаются только статические/локальные проверки без HTTP навигации."
+    ]
+  },
+  "loop_control": {
+    "max_iter": 3,
+    "min_delta": 5,
+    "score_threshold": 85
+  },
+  "notes": [
+    "Invariants (blocking): add_to_cart/cart_update/checkout_entry не деградируют; на mobile CTA не перекрывается/не уходит за safe-area; не ухудшаем e-commerce UX (категории/навигация/поиск/корзина доступны).",
+    "Scope guard: любые изменения должны быть локализованы в wp-content/themes/mnsk7-storefront; любые потребности в hooks/filters вне темы — фиксируются как follow-up, но не реализуются в этом цикле.",
+    "Stop_conditions: ACCEPT если (a) все найденные UI/UX баги в зоне темы исправлены, (b) исключение PDP variants table near price не затронуто, (c) post-deploy L1 пройден. ESCALATE если нет прогресса ≥ min_delta между итерациями или требуется правка вне разрешённой зоны."
+  ]
+}

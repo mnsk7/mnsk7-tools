@@ -1,0 +1,50 @@
+{
+  "scope": "theme runtime (header mobile fallback)",
+  "changed_files": [
+    "wp-content/themes/mnsk7-storefront/header.php",
+    "wp-content/themes/mnsk7-storefront/assets/css/parts/04-header.css",
+    "wp-content/themes/mnsk7-storefront/assets/css/main.css"
+  ],
+  "verify": {
+    "changed": {
+      "command": "npm run verify:changed",
+      "result": "ESCALATE",
+      "notes": [
+        "playwright changed suite started but had unstable/hanging behavior"
+      ]
+    },
+    "l0": {
+      "command": "npm run verify:l0",
+      "result": "PASS_WITH_SKIPS",
+      "notes": [
+        "php-lint PASS",
+        "link-check SKIP",
+        "lighthouse-smoke SKIP"
+      ]
+    },
+    "targeted_specs": {
+      "footer_accordion": {
+        "command": "npx playwright test e2e/footer-accordion.spec.js --project=chromium --retries=0 --max-failures=1 --timeout=45000",
+        "result": "FAIL",
+        "notes": [
+          "timeout waiting for footer accordion title locator scroll/click"
+        ]
+      },
+      "header_layout": {
+        "command": "npx playwright test e2e/header-layout.spec.js --project=chromium --retries=0 --max-failures=1 --timeout=45000",
+        "result": "FAIL",
+        "notes": [
+          "36 passed, 1 failed at desktop 1024x768 Sklep dropdown hover visibility, 11 not run"
+        ]
+      },
+      "mobile_design": {
+        "command": "npx playwright test e2e/mobile-design.spec.js --project=chromium --retries=0 --max-failures=1 --timeout=45000",
+        "result": "PASS",
+        "notes": [
+          "62 passed"
+        ]
+      }
+    }
+  }
+}
+

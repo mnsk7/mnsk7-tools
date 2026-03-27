@@ -1,0 +1,18 @@
+{
+  "mode": "practical",
+  "outcome": "ACCEPT",
+  "checks": [
+    "Изменение относится только к процессу: добавлена запись постмортема для ранее зафиксированного REJECT predeploy.",
+    "Не заявлялись исправления UX/вёрстки/flow в рамках этого шага."
+  ],
+  "gaps": [
+    "UX/flow acceptance для Batch #2 невозможен до Doer+деплоя и post-deploy verify (L1 Woo)."
+  ],
+  "risks": [
+    "Риск неверной интерпретации ACCEPT как 'всё исправлено' — это ACCEPT только для docs/process шага."
+  ],
+  "required_next_steps": [
+    "Запустить Doer Batch #2 (runtime правки в теме).",
+    "После деплоя: Verify (минимум L1 Woo) → Verifier (practical+technical) → Critic PHASE=2."
+  ]
+}

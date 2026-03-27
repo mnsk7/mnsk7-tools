@@ -1,0 +1,31 @@
+{
+  "mode": "technical",
+  "outcome": "REJECT",
+  "technical_required": true,
+  "checks": [
+    "Runtime header CSS/PHP changes are present in theme files.",
+    "Targeted verification produced failed specs in footer and header desktop regression.",
+    "Mobile-design spec passed but does not override failed required checks."
+  ],
+  "evidence": [
+    "Theme diff includes header fallback in header.php, 04-header.css, and rebuilt main.css.",
+    "L0 run completed with php-lint PASS.",
+    "footer-accordion spec failed timeout.",
+    "header-layout spec failed at desktop 1024 dropdown visibility."
+  ],
+  "missing_evidence": [
+    "Green rerun of footer-accordion and header-layout.",
+    "Full changed-scope completion without early stop.",
+    "Attached Playwright traces/report for failed runs."
+  ],
+  "risks": [
+    "Header behavior regression at desktop-tablet boundary may impact navigation.",
+    "Footer interaction instability can mask broader UI issues."
+  ],
+  "required_next_steps": [
+    "Fix failing footer and header tests.",
+    "Rerun changed-scope suite and capture artifacts.",
+    "Repeat technical verifier after all required checks pass."
+  ]
+}
+

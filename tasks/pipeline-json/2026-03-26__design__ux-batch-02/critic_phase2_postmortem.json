@@ -1,0 +1,12 @@
+{
+  "outcome": "ACCEPT",
+  "blocking_issues": [],
+  "major_issues": [],
+  "minor_issues": [
+    "verify:l0 содержит SKIP для php/linkcheck/lighthouse; это допустимо для docs-only, но не является runtime evidence (важно не трактовать ACCEPT как готовность Batch #2 по UX/Woo)."
+  ],
+  "score_0_100": 100,
+  "rationale": "Scope заявлен как docs-only (постмортем). VERIFIER_PRACTICAL=ACCEPT и VERIFIER_TECHNICAL=ACCEPT. В VERIFY_REPORT нет проваленных blocking rules; зафиксированные SKIP ожидаемы для docs-only и не влияют на приемку документационного изменения.",
+  "required_fixes": [],
+  "reverify_plan": []
+}

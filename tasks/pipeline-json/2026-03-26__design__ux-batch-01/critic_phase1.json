@@ -1,0 +1,18 @@
+{
+  "ok_to_proceed": true,
+  "score_0_100": 86,
+  "blocking_gaps": [
+    "Woo blocking rules są opisane w `flow_risks`, ale brakuje jawnego mapowania: które konkretne issue’y mogą zablokować **CTA clickability / add_to_cart / cart_update / checkout_entry** (1:1 link issue_id → invariant) oraz jakie są minimalne acceptance checks dla każdego invariantu."
+  ],
+  "nonblocking_gaps": [
+    "Część issue ma `HYPOTHESIS` (bez runtime evidence) — jest plan weryfikacji post-deploy, ale brakuje ujednoliconego acceptance kryterium w formie: PASS/FAIL warunek + gdzie zbieramy artefakt (screenshot/video/trace).",
+    "`tech-001` dotyczy tooling/pipeline poza dozwoloną strefą zmian (theme-only). Jest oznaczony jako follow-up, ale w issue_map nie ma pola/flag (np. `out_of_scope: true`) ani jasnego planu obsługi w tym cyklu (tylko notatka).",
+    "Pokrycie stron jest szerokie (home/shop=PLP/PDP/cart/checkout/header/footer), ale brak osobnego punktu dla “footer on checkout/cart” (często inny markup/ukrycia) — ryzyko dla akordeonu i linków compliance."
+  ],
+  "next_actions": [
+    "Dodać w Analyzer sekcję `blocking_rules_map` z listą: { invariant, related_issue_ids, acceptance_checks, required_artifacts } dla: CTA_not_covered, add_to_cart, cart_update, checkout_entry.",
+    "Dodać pole `acceptance_criteria` per issue (konkretne PASS/FAIL, bez ogólników) i wskazać artefakt post-deploy (np. screenshot name / video) dla każdej hipotezy.",
+    "Oznaczyć `tech-001` jako `out_of_scope_followup` (tooling) i doprecyzować, co robimy w tym cyklu w granicach tematu (np. tylko manual QA + zapis w docs), aby nie naruszać scope.",
+    "Dodać jawny check/issue dla footer na `/koszyk/` i `/zamowienie/` (akordeon + privacy link + focus/overlay) jako osobne acceptance kroki."
+  ]
+}

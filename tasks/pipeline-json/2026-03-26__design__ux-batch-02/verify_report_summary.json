@@ -1,0 +1,21 @@
+{
+  "scope": "docs-only (postmortem entry)",
+  "commands": [
+    {
+      "command": "npm run verify:l0",
+      "result": {
+        "php_lint": "SKIP (php not found in PATH; allowed by repo policy/context)",
+        "link_check": "SKIP (disabled by default)",
+        "lighthouse_smoke": "SKIP (disabled by default)"
+      }
+    },
+    {
+      "command": "npm run verify:changed",
+      "result": "SKIP (no relevant changes detected)"
+    }
+  ],
+  "notes": [
+    "No tracked runtime changes were present; verify:changed SKIP is expected.",
+    "This report is not evidence of runtime behavior; it only documents the verify gate execution for a docs-only change."
+  ]
+}

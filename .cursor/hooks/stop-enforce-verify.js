@@ -64,19 +64,6 @@ function parseLastCriticPhase(logPath) {
   return null;
 }
 
-function getMtimeMs(filePath) {
-  try {
-    return fs.statSync(filePath).mtimeMs;
-  } catch {
-    return null;
-  }
-}
-
-function maxFinite(...vals) {
-  const nums = vals.filter((v) => Number.isFinite(v));
-  return nums.length ? Math.max(...nums) : null;
-}
-
 async function main() {
   const raw = await readStdin();
   const input = raw ? JSON.parse(raw) : {};
@@ -85,10 +72,6 @@ async function main() {
   const editsLog = path.join(stateDir, "file-edits.log");
   const subagentLog = path.join(stateDir, "subagent-events.log");
   const nagStatePath = path.join(stateDir, "nag-state.json");
-
-  // Evidence files written by verify tooling (when present).
-  const verifyAllLog = path.join(process.cwd(), "artifacts", "verify", "verify-all.log");
-  const verifyReport = path.join(process.cwd(), "artifacts", "verify", "verify-report.json");
 
   fs.mkdirSync(stateDir, { recursive: true });
   fs.appendFileSync(
@@ -102,8 +85,6 @@ async function main() {
   const lastCritic = parseLastSubagentTime(subagentLog, "critic-scorer");
   const lastDoer = parseLastSubagentTime(subagentLog, "doer");
   const lastCriticPhase = parseLastCriticPhase(subagentLog);
-
-  const verifyEvidenceTime = maxFinite(getMtimeMs(verifyAllLog), getMtimeMs(verifyReport));
 
   // De-spam: remember when we last emitted each nag.
   let nagState = {};
@@ -134,17 +115,15 @@ async function main() {
   // - We only enforce the "verifier -> critic (PHASE=2)" gate when the last critic observed was PHASE=2
   //   (or when we have no phase markers at all but we have verifier markers).
   const editAfterCritic = lastEdit != null && lastCritic != null && lastEdit > lastCritic;
-  // Only nag about "PHASE=1 -> Doer -> Verify" if we DO NOT already have fresh verify evidence after critic.
-  const hasVerifyAfterCritic =
-    verifyEvidenceTime != null && lastCritic != null && verifyEvidenceTime > lastCritic;
-  if (editAfterCritic && lastCriticPhase === 1 && !hasVerifyAfterCritic) {
+  // In owner-flow, PHASE=1 is followed by Doer and predeploy verifier/critic without mandatory local verify.
+  if (editAfterCritic && lastCriticPhase === 1) {
     if (alreadyNaggedSinceEdit("phase1_after_critic")) {
       writeJson({});
       return;
     }
     writeJson({
       followup_message:
-        "Были правки после `critic-scorer (PHASE=1)`. По пайплайну сейчас НЕ verifier/PHASE=2: сначала исправь замечания PHASE=1 (Doer/min safe diff), затем запусти Verify по зоне (дефолт: `npm run verify:changed` + `npm run verify:l0`; Woo-flow/L1 — только если Woo-зона или форс `VERIFY_L1=1`), и только потом `verifier` → `critic-scorer (PHASE=2)`."
+        "Были правки после `critic-scorer (PHASE=1)`. По owner-пайплайну сначала закрой замечания PHASE=1 (Doer/min safe diff), затем запусти predeploy verifier (practical+technical, без локальных e2e/verify) и только после этого переходи к push/deploy и post-deploy `critic-scorer (PHASE=2)`."
     });
     markNag("phase1_after_critic");
     return;
@@ -179,7 +158,7 @@ async function main() {
   }
   writeJson({
     followup_message:
-      "Похоже, были правки после последнего verifier/critic. Нельзя завершать шаг без гейта: сначала Verify по зоне (дефолт: `npm run verify:changed` + `npm run verify:l0`; L1 — только если Woo-зона или форс `VERIFY_L1=1`), затем запусти `verifier`, затем `critic-scorer (PHASE=2)` на текущем diff. Если outcome=REJECT/ESCALATE/critical/major — добавь запись в `docs/CRITIC_POSTMORTEMS.md`. После фиксов — повтори verifier+critic ещё раз."
+      "Похоже, были правки после последнего verifier/critic. Нельзя завершать шаг без гейта: сначала predeploy `verifier` (practical+technical, без локальных e2e/verify) и решение по готовности к deploy, затем после deploy на staging запусти technical verify (L0/L1/L2 по зоне) и только потом `critic-scorer (PHASE=2)`. Если outcome=REJECT/ESCALATE/critical/major — добавь запись в `docs/CRITIC_POSTMORTEMS.md`."
   });
   markNag("phase2_gate");
 }

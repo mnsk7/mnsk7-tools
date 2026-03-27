@@ -1,0 +1,35 @@
+---
+description: "После каждого существенного изменения: Critic/Verifier (predeploy, no-tests) -> deploy -> Technical Verify on staging -> Critic+Scorer."
+alwaysApply: true
+---
+
+# Mandatory predeploy critic + postdeploy verify loop (blocking)
+
+## Scope
+
+Применяется к любому изменению, которое:
+- меняет runtime поведение (PHP/JS/CSS темы, mu-plugins, прод-скрипты деплоя/верификации)
+- меняет поведенческие/контрактные документы (verify, deploy, acceptance, workflow)
+
+Не требует полного цикла только для:
+- чистых опечаток без влияния на поведение/контракт
+- форматирования без смысловых изменений
+
+Если есть сомнения — **цикл обязателен**.
+
+## Required sequence (всегда)
+
+1. Сделай **минимальный безопасный diff**.
+2. Запусти **Critic + Verifier (predeploy, practical+technical, no-tests)**:
+   - проверка по diff/контексту/логам без локального e2e/Lighthouse/`npm run verify:*`
+   - если predeploy gate не пройден -> вернись к фиксам
+3. При predeploy OK: push/merge в `main` и деплой на staging.
+4. Запусти **Technical Verify multi-level на staging** (см. `.cursor/rules/60-verify-levels.mdc`):
+   - минимум L0
+   - L1/L2 — по риску и зоне влияния (для Woo flow — обязательно L1)
+5. Запусти **Critic+Scorer phase 2**: остатки/регрессии/risks + score.
+6. Если есть blocking issues или score ниже порога — внеси фиксы и повтори цикл.
+7. Останов:
+   - **ACCEPT** (все blocking rules зелёные, score >= threshold)
+   - или **ESCALATE** (достигнут лимит итераций/нет прогресса/нужна ручная проверка)
+
