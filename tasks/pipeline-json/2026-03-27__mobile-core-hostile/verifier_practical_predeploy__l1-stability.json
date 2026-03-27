@@ -1,0 +1,21 @@
+{
+  "mode": "practical",
+  "outcome": "ACCEPT",
+  "deploy_candidate_sha": "d2573ef",
+  "checks": [
+    "Diff scope ограничен e2e/L1 тестом (e2e/woo-flow.spec.js), runtime WP/Woo код не изменён.",
+    "Правка устраняет flaky ожидание: вместо fixed timeout теперь ждём реальный completion signal add-to-cart.",
+    "Изменение не расширяет продуктовый scope и направлено на стабильность проверки конверсионного пути."
+  ],
+  "gaps": [
+    "Нужно подтвердить эффект на staging post-deploy прогоном L1."
+  ],
+  "risks": [
+    "Сценарий может оставаться нестабильным на отдельных PDP при variation edge-cases."
+  ],
+  "required_next_steps": [
+    "Сделать deploy candidate в main (commit + push).",
+    "Запустить post-deploy technical verify L0/L1/L2.",
+    "Передать результаты в critic-scorer PHASE=2."
+  ]
+}

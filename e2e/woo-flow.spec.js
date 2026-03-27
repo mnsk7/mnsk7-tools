@@ -348,8 +348,23 @@ test.describe('WOO_FLOW (blocking)', () => {
 
     const addButton = page.locator('form.cart .single_add_to_cart_button').first();
     await expect(addButton).toBeVisible({ timeout: 15000 });
+    // Add-to-cart can be either AJAX or full navigation depending on Woo/theme/plugins.
+    // Wait for a real completion signal to avoid flakes on slower staging/mobile.
+    const ajaxAdded = page
+      .waitForResponse((r) => r.url().includes('wc-ajax=add_to_cart') && r.ok(), { timeout: 10_000 })
+      .catch(() => null);
+    const navigated = page
+      .waitForNavigation({ waitUntil: 'domcontentloaded', timeout: 10_000 })
+      .catch(() => null);
+    const noticeShown = page
+      .locator('.woocommerce-message, .wc-block-components-notice-banner, .woocommerce-notices-wrapper')
+      .first()
+      .waitFor({ state: 'visible', timeout: 10_000 })
+      .catch(() => null);
+
     await addButton.click();
-    await page.waitForTimeout(800);
+    await Promise.race([ajaxAdded, navigated, noticeShown]);
+    await page.waitForTimeout(400);
 
     await gotoWithRetries(page, cartUrl, { timeout: 45_000, retries: 2 });
     const cartItems = page.locator('.cart_item, tr.woocommerce-cart-form__cart-item, .wc-block-cart-items__row');

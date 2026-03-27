@@ -1,0 +1,25 @@
+{
+  "mode": "technical",
+  "outcome": "ACCEPT",
+  "deploy_candidate_sha": "d2573ef",
+  "checks": [
+    "Predeploy проверка выполнена по diff/контексту без запуска локальных e2e/verify как gate.",
+    "git diff показывает 1 файл изменения: e2e/woo-flow.spec.js (16 insertions, 1 deletion).",
+    "Изменение технически корректно: добавлено ожидание ajax/navigation/notice completion вместо blind timeout."
+  ],
+  "evidence": [
+    "git status -sb",
+    "git diff -- e2e/woo-flow.spec.js"
+  ],
+  "missing_evidence": [
+    "Post-deploy verify результаты L0/L1/L2 для этого SHA."
+  ],
+  "risks": [
+    "L1 может оставаться red на staging из-за data/environment effects, не связанных с wait-logic."
+  ],
+  "required_next_steps": [
+    "Создать deployable SHA и push в main.",
+    "Выполнить post-deploy technical verify L0/L1/L2.",
+    "Запустить critic-scorer PHASE=2 по фактическим результатам."
+  ]
+}

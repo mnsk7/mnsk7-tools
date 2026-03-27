@@ -1,0 +1,15 @@
+{
+  "gate": "predeploy_verifier_practical_plus_technical",
+  "deploy_candidate_sha": "d2573ef",
+  "overall_readiness_for_deploy": "READY",
+  "decision": "PROCEED_TO_DEPLOY",
+  "reasons": [
+    "verifier_practical_predeploy__l1-stability.outcome = ACCEPT",
+    "verifier_technical_predeploy__l1-stability.outcome = ACCEPT"
+  ],
+  "next": [
+    "Commit + push changes to main",
+    "Run post-deploy technical verify L0/L1/L2",
+    "Run critic-scorer PHASE=2"
+  ]
+}
