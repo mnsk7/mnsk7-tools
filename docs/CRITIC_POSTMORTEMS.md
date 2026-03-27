@@ -479,3 +479,28 @@
   - Перед любым новым deploy требовать predeploy verifier `ACCEPT` в обоих режимах.
   - Только после `READY` запускать post-deploy `L0/L1/L2` и затем `critic-scorer PHASE=2`.
 
+### 2026-03-27 — REJECT: post-deploy L1 mobile PDP add-to-cart FAIL + L2 header snapshot regressions
+
+- **Context**: коммит `d2573ef` запушен в `main`; выполнен post-deploy технический verify на staging (`npm run verify:l0`, `npm run verify:l1`, `npm run verify:l2`).
+- **Severity**: critical
+- **What slipped**:
+  - `L1 (woo flow)` упал на блокирующем сценарии: `pdp_mobile_add_to_cart` — после клика “Dodaj do koszyka” корзина на `/koszyk/` остаётся пустой.
+  - `L2 (visual)` упал на 4 snapshot failures в `e2e/header-layout.spec.js` (mobile closed/open, desktop closed, desktop Sklep open). Во всех случаях наблюдается расхождение высоты header baseline: ожидается 53px, получаем 57px.
+- **Why it slipped**:
+  - Проверка мобильного PDP add-to-cart обнаружила, что на staging путь добавления товара с PDP на mobile нестабилен/не срабатывает (conversion blocker).
+  - Visual baseline для header всё ещё расходится с текущим runtime state (обновлять snapshots без product signoff нельзя).
+- **Evidence**:
+  - `npm run verify:l0`: PASS (php-lint PASS; linkcheck/lighthouse SKIP).
+  - `npm run verify:l1`: FAIL — `e2e/woo-flow.spec.js:317` (`Cart appears empty after mobile PDP add-to-cart at https://staging.mnsk7-tools.pl/koszyk/`), артефакты в `test-results/woo-flow-*/trace.zip`, `video.webm`, `test-failed-1.png`.
+  - `npm run verify:l2`: FAIL — 4 падения `toHaveScreenshot`:
+    - `header-mobile-closed.png`
+    - `header-mobile-open.png`
+    - `header-desktop-closed.png`
+    - `header-desktop-sklep-open.png`
+    Артефакты диффов/actual в `test-results/header-layout-*/**/*-diff.png` и `*-actual.png`.
+- **Mitigation (now)**:
+  - Verdict зафиксирован как `REJECT`, без попытки “протащить” acceptance.
+- **Prevention (process)**:
+  - Сначала закрыть conversion blocker L1 (`pdp_mobile_add_to_cart`) и повторить L1 до PASS.
+  - По L2: либо вернуть header к baseline, либо оформить product signoff на новый целевой header state и только затем обновлять snapshots.
+
