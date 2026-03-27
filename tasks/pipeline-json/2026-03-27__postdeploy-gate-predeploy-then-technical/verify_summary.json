@@ -1,0 +1,41 @@
+{
+  "predeploy_verifier": {
+    "practical": {
+      "outcome": "ACCEPT",
+      "ready_to_deploy": true
+    },
+    "technical": {
+      "outcome": "ACCEPT",
+      "ready_to_deploy": true
+    }
+  },
+  "postdeploy_verify": {
+    "base_url": "https://staging.mnsk7-tools.pl",
+    "l0": {
+      "command": "BASE_URL=https://staging.mnsk7-tools.pl npm run verify:l0",
+      "result": "PASS_WITH_SKIPS",
+      "notes": [
+        "php-lint PASS",
+        "link-check SKIP",
+        "lighthouse-smoke SKIP"
+      ]
+    },
+    "l1": {
+      "command": "BASE_URL=https://staging.mnsk7-tools.pl VERIFY_L1=1 npm run verify:l1",
+      "result": "PASS",
+      "notes": [
+        "woo-flow 3/3 passed"
+      ]
+    },
+    "l2": {
+      "command": "BASE_URL=https://staging.mnsk7-tools.pl VERIFY_L2=1 npm run verify:l2",
+      "result": "REJECT",
+      "notes": [
+        "run started, multiple failures/timeouts markers",
+        "no final exit footer",
+        "manual stop due to hang"
+      ]
+    }
+  }
+}
+
