@@ -103,6 +103,32 @@
 
 ---
 
+### 2026-03-27 — REJECT: post-deploy L2 visual gate + Safari product gate
+
+- **Context**: после правок process/product-verdict артефактов был выполнен обязательный цикл: predeploy verifier (no local e2e gate) -> push/deploy -> post-deploy technical verify (`L0/L1/L2`) -> `critic-scorer PHASE=2`.
+- **Severity**: critical
+- **What slipped**:
+  - post-deploy `L2` упал на 4 snapshot regression в `e2e/header-layout.spec.js` (mobile closed/open, desktop closed, desktop Sklep open).
+  - `PRODUCT_ACCEPT` заблокирован по новым правилам: `safari_mobile_status` содержит `cta_honesty=FAIL`, `back=NOT_VERIFIED`, `product_accept_allowed=false`.
+  - в owner scoreboard остаются незакрытые статусы (`partial`/`not_fixed`), включая `OWNER-003`.
+- **Why it slipped**:
+  - визуальное состояние header изменено относительно baseline (ожидаемо после прошлых правок геометрии), но нет product signoff на новый target state.
+  - hostile Safari replay не закрыт до полного PASS по сценариям.
+- **Evidence**:
+  - `npm run verify:l0` -> PASS_WITH_SKIPS (php-lint PASS, link-check SKIP, lighthouse SKIP).
+  - `BASE_URL=https://staging.mnsk7-tools.pl npm run verify:l1` -> PASS (3/3).
+  - `BASE_URL=https://staging.mnsk7-tools.pl npm run verify:l2` -> FAIL (4 failed, 106 passed, ~6.3m).
+  - Артефакты: `tasks/pipeline-json/2026-03-27__mobile-core-hostile/l2_failure_breakdown.json`, `owner_bug_scoreboard.json`, `safari_mobile_status.json`.
+- **Mitigation (now)**:
+  - зафиксирован REJECT verdict (`process_accept=false`, `product_accept=false`, `final_accept=false`) и сохранён postmortem.
+  - добавлен явный `safari_mobile_status.json` и очищена фильтрация `agent_found_bugs_filtered.json` (дубли не считаются как net-new).
+- **Prevention (process)**:
+  - не обновлять baseline snapshots без owner/product signoff на целевой визуальный state.
+  - закрывать Safari hostile-сценарии до уровня, где `cta_honesty` не FAIL и ключевые сценарии не `NOT_VERIFIED`.
+  - для фаз с визуальным риском включать post-deploy L0 lighthouse/linkcheck (или явно документировать scoped SKIP).
+
+---
+
 ### 2026-03-27 — REJECT: header mobile fallback без завершённого verify:changed
 
 - **Context**: Doer-внесён runtime фикс хедера (touch fallback для mobile state) в `mnsk7-storefront` (`header.php`, `04-header.css`, rebuilt `main.css`).
