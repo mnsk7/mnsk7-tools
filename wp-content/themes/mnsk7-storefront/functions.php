@@ -2266,13 +2266,20 @@ add_filter( 'rocket_delay_js_exclusions', function ( $exclusions ) {
 	if ( ! is_array( $exclusions ) ) {
 		$exclusions = array();
 	}
+	// Theme inline scripts must run immediately (mobile Safari + bfcache stability).
+	$exclusions[] = 'mnsk7-';
 	$exclusions[] = 'mnsk7IsArchive';
 	$exclusions[] = 'runCritical';
 	$exclusions[] = 'mnsk7-pdp-sticky-cta';
-	$exclusions[] = 'mnsk7_checkout_url';
-	$exclusions[] = 'mnsk7PLP';
-	$exclusions[] = 'mnsk7-chips-toggle';
-	$exclusions[] = 'mnsk7-wc-notice';
+	// Exact markers that exist in our inline script bodies.
+	$exclusions[] = 'checkoutUrl';
+	$exclusions[] = 'initCatalogChipsToggles';
+	$exclusions[] = 'mnsk7-plp-chips-toggle';
+	// WooCommerce: variable product add-to-cart relies on variation JS to enable the submit button.
+	// If delayed, mobile PDP click path can fail (button remains disabled / no variation_id set).
+	$exclusions[] = 'add-to-cart-variation';
+	$exclusions[] = 'wc-add-to-cart-variation';
+	$exclusions[] = 'wc-add-to-cart';
 	$exclusions[] = 'embed.js';
 	$exclusions[] = 'instagram.com';
 	return $exclusions;

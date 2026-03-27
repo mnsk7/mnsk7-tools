@@ -187,7 +187,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   outline-offset: 2px;
 }
 .mnsk7-header__brand img {
-  max-height: 42px; /* +30% от 32px */
+  max-height: 42px; /* desktop default; mobile overrides below */
   width: auto;
   max-width: 100%;
   display: block;
