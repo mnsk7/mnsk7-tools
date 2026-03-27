@@ -504,3 +504,27 @@
   - Сначала закрыть conversion blocker L1 (`pdp_mobile_add_to_cart`) и повторить L1 до PASS.
   - По L2: либо вернуть header к baseline, либо оформить product signoff на новый целевой header state и только затем обновлять snapshots.
 
+### 2026-03-27 — REJECT: predeploy verifier blocked (new runtime edits after last verifier/critic)
+
+- **Context**: запрошен обязательный порядок `predeploy verifier -> deploy -> post-deploy technical verify -> critic PHASE=2` после появления новых правок.
+- **Severity**: major
+- **What slipped**:
+  - На predeploy шаге обнаружен новый незакоммиченный runtime-diff в:
+    - `wp-content/themes/mnsk7-storefront/assets/css/parts/01-tokens.css`
+    - `wp-content/themes/mnsk7-storefront/functions.php`
+    - `wp-content/themes/mnsk7-storefront/header.php`
+  - Также появились новые untracked gate-артефакты в `tasks/pipeline-json/2026-03-27__mobile-core-hostile/` (`verifier_postdeploy_*__l1-stability.json`, `verify_summary__l1-stability.json`), не закреплённые в source-of-truth.
+  - Следовательно, predeploy readiness = `NOT_READY` (нельзя корректно продолжать до deploy/post-deploy verify для этого состояния).
+- **Why it slipped**:
+  - После последнего verifier/critic возникли новые локальные изменения и артефакты, не оформленные в единый deployable candidate.
+  - Пайплайн снова оказался в промежуточном состоянии “часть evidence локально, часть в main”.
+- **Evidence**:
+  - `git status --porcelain`: modified runtime files + untracked verifier/summary artifacts.
+  - `git diff --stat`: runtime changes (tokens/header/functions).
+  - `npm run verify:l0`: PASS, но этого недостаточно для predeploy readiness без фиксированного deploy-candidate.
+- **Mitigation (now)**:
+  - Формально зафиксирован `REJECT` на predeploy gate; deploy шаг не продолжался.
+- **Prevention (process)**:
+  - До запуска predeploy verifier всегда приводить workspace к одному deployable candidate (commit-ready state).
+  - Не смешивать новые verifier/summary файлы с runtime-дивом без явного решения о включении их в текущий цикл.
+
