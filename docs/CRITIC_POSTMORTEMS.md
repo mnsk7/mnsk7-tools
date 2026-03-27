@@ -2,6 +2,29 @@
 
 Этот документ ведётся после outcome `REJECT`/`ESCALATE` или при **critical/major** проблемах, чтобы не повторять ошибки в пайплайне и верификации.
 
+### 2026-03-27 — REJECT (postdeploy gate): нет Product Verifier + критичные SKIP в technical verify
+
+- **Context**: выполнен цикл `predeploy verifier -> deploy -> postdeploy technical verify -> critic-scorer PHASE=2` для текущего `main` без локальных code diff.
+- **Severity**: major
+- **What slipped**:
+  - `critic-scorer PHASE=2` вернул `REJECT`: отсутствует post-deploy Product Verifier (`owner_bug_ledger`, `agent_found_bugs`, `agent_found_bugs_filtered`, `safari_mobile_status`).
+  - В postdeploy technical verify много SKIP: `l1 (woo flow)`, `l2 (visual/regression)`, `a11y`, `l0:link-check`, `l0:lighthouse-smoke`.
+  - Практический verifier в этом прогоне был predeploy-контекста и не закрывал post-deploy product acceptance.
+- **Why it slipped**:
+  - Процесс выполнил deploy и базовый L0, но acceptance попытались завершить без обязательного product-блока и без форсированного L1/L2 по e-commerce рискам.
+  - `verify:all` с policy по умолчанию допускает SKIP, что недостаточно для финального PHASE=2 gate.
+- **Evidence**:
+  - GitHub Actions deploy run: `23650586684` (success).
+  - `artifacts/verify/verify-report.json`: `l0 PASS`, `l1 SKIP`, `l2 SKIP`, `a11y SKIP`, `blocking.failed_rules=[]`.
+  - `critic-scorer PHASE=2`: `outcome=REJECT`, `process_accept=false`, `product_accept=false`, `final_accept=false`.
+- **Mitigation (now)**:
+  - Результат зафиксирован как `REJECT` (без ложного ACCEPT).
+  - Добавлен postmortem с конкретными required fixes на следующий цикл.
+- **Prevention (process)**:
+  - Перед PHASE=2 всегда выполнять post-deploy Product Verifier с обязательными полями (включая `safari_mobile_status`).
+  - Для Woo-зоны форсировать `VERIFY_L1=1` (и при визуальном риске `VERIFY_L2=1`, `VERIFY_A11Y=1`) вместо опоры на default SKIP.
+  - Считать `verify:all` с критичными SKIP неполным evidence для acceptance gate.
+
 ### 2026-03-27 — REJECT (mobile-core hostile cycle): L2 visual gate failed with untrusted baseline
 
 - **Context**: hostile-цикл по mobile core (`header + search + mega-menu + sticky CTA + cart mobile`) после фиксов коммита `333e436`.

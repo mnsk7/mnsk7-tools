@@ -15,25 +15,25 @@
 .mnsk7-promo-bar__inner {
   max-width: var(--content-max, 1200px);
   margin: 0 auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-16);
-  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: start;
+  column-gap: var(--space-8);
 }
 .mnsk7-promo-bar__text {
-  flex: 1;
-  text-align: center;
+  min-width: 0;
+  text-align: left;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  line-height: 1.35;
 }
 .mnsk7-promo-bar__text a {
   color: inherit;
   text-decoration: underline;
 }
 .mnsk7-promo-bar__close {
-  position: absolute;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
+  position: static;
   background: transparent;
   border: none;
   color: inherit;
@@ -45,6 +45,7 @@
   min-width: 44px;
   min-height: 44px;
   box-sizing: border-box;
+  align-self: start;
   border-radius: var(--r-sm);
   transition: opacity 0.15s ease, background 0.15s ease;
 }
@@ -57,19 +58,13 @@
 @media (max-width: 1023px) {
   .mnsk7-promo-bar {
     padding: 0.35rem 0.75rem;
-    padding-right: 3rem;
     font-size: var(--fs-xs);
   }
   .mnsk7-promo-bar__inner {
     gap: 0.5rem;
-    padding-right: 0;
   }
   .mnsk7-promo-bar__text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    min-width: 0;
-    padding-right: 0.5rem;
+    line-height: 1.35;
   }
 }
 
@@ -95,27 +90,20 @@
 /* Mobile: promo bar — 2-line layout jeśli potrzeba, close nie najeżdża */
 @media (max-width: 480px) {
   .mnsk7-promo-bar {
-    padding: 0.5rem 3rem 0.5rem 1rem;
+    padding: 0.5rem 0.75rem 0.5rem 1rem;
     min-height: 44px;
     box-sizing: border-box;
   }
   .mnsk7-promo-bar__inner {
-    flex-wrap: wrap;
-    justify-content: center;
-    text-align: center;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: start;
   }
   .mnsk7-promo-bar__text {
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    flex: 1 1 100%;
-    padding-right: 0;
+    text-align: left;
     line-height: 1.4;
   }
   .mnsk7-promo-bar__close {
-    right: 0.25rem;
-    top: 50%;
-    transform: translateY(-50%);
+    margin-top: -0.125rem;
   }
 }
 
