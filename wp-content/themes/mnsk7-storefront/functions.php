@@ -887,6 +887,11 @@ add_action( 'wp_footer', function () {
 			});
 		}
 
+		function resetMobileMenuPosition() {
+			if (!menu) return;
+			try { menu.scrollTop = 0; } catch (e) {}
+		}
+
 		// First-open correctness: sync promo offset and sticky shrink before deferred tasks.
 		if (promoBar) {
 			try {
@@ -913,6 +918,7 @@ add_action( 'wp_footer', function () {
 			if (!nav) return;
 			nav.classList.remove('is-open');
 			closeMobileSubmenus();
+			resetMobileMenuPosition();
 			if (menuToggle) {
 				menuToggle.setAttribute('aria-expanded', 'false');
 				var menuOpenLabel = menuToggle.getAttribute('data-open-label');
@@ -979,6 +985,8 @@ add_action( 'wp_footer', function () {
 				var willOpen = !nav.classList.contains('is-open');
 				if (window.innerWidth < DESKTOP_MIN && willOpen) {
 					closeAllMobileOverlays('menu');
+					closeMobileSubmenus();
+					resetMobileMenuPosition();
 				}
 				nav.classList.toggle('is-open');
 				if (!willOpen) closeMobileSubmenus();
@@ -986,10 +994,11 @@ add_action( 'wp_footer', function () {
 			});
 		}
 		window.addEventListener('pageshow', function(e) {
-			if (!e.persisted) return;
-			closeMenu();
-			closeSearch();
-			closeCart();
+			if (window.innerWidth < DESKTOP_MIN) {
+				closeMenu();
+				closeSearch();
+				closeCart();
+			}
 		});
 		// Mobile (<=1023): tap na parent z submenu (np. „Sklep”) rozwija submenu; bez przejścia po URL. Capture phase + pewne wykrycie linku (tap może dać target = tekst/child).
 		if (menu) {
