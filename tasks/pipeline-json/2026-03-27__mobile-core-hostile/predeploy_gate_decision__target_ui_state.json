@@ -1,0 +1,16 @@
+{
+  "gate": "predeploy_verifier_practical_plus_technical",
+  "deploy_candidate_sha": "5fefd0edd8160dc49befcb85062fdcea83ffe279",
+  "overall_readiness_for_deploy": "READY",
+  "decision": "PROCEED_TO_DEPLOY",
+  "reasons": [
+    "verifier_practical_predeploy__target_ui_state.outcome = ACCEPT",
+    "verifier_technical_predeploy__target_ui_state.outcome = ACCEPT",
+    "deployable SHA exists; next step is push to trigger staging deploy"
+  ],
+  "next": [
+    "Push в origin/main",
+    "Post-deploy technical verify: L0/L1/L2 по зоне",
+    "critic-scorer PHASE=2"
+  ]
+}

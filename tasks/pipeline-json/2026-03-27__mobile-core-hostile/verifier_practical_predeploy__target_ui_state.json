@@ -1,0 +1,23 @@
+{
+  "mode": "practical",
+  "outcome": "ACCEPT",
+  "deploy_candidate_sha": "5fefd0edd8160dc49befcb85062fdcea83ffe279",
+  "checks": [
+    "Scope diff: только theme CSS/header runtime и техническая стабильность add-to-cart (WP Rocket delay exclusions).",
+    "Соответствует target state: mobile controls 44x44, единый ритм иконок, cart badge как overlay; no state magic требующий кликов с задержкой.",
+    "PDP add-to-cart устойчивость: критичные inline scripts и variation add-to-cart не должны быть отложены/сломаны оптимизатором."
+  ],
+  "gaps": [
+    "Полный Safari hostile replay (iPhone Safari) будет подтверждён post-deploy.",
+    "L2 visual baseline/signoff — post-deploy decision (если snapshots отличаются от старого baseline)."
+  ],
+  "risks": [
+    "L2 snapshots могут упасть из-за смены целевого UI-state (ожидаемо, baseline ранее не был эталонным).",
+    "Mobile PDP click path зависит от окружения (кэш/оптимизатор), поэтому post-deploy verify обязателен."
+  ],
+  "required_next_steps": [
+    "Deploy candidate SHA на staging (push в main).",
+    "Post-deploy technical verify: L0/L1/L2 по зоне (Woo header + PDP).",
+    "После verify — critic-scorer PHASE=2."
+  ]
+}

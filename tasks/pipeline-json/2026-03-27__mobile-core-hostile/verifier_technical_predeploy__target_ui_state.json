@@ -1,0 +1,26 @@
+{
+  "mode": "technical",
+  "outcome": "ACCEPT",
+  "deploy_candidate_sha": "5fefd0edd8160dc49befcb85062fdcea83ffe279",
+  "checks": [
+    "Repo state: deployable SHA exists and working tree is clean (main ahead of origin/main by 1).",
+    "Diff is constrained to allowed zones: wp-content/themes/mnsk7-storefront (CSS + functions.php).",
+    "Change intent matches target state: header mobile geometry/hit areas; prevent optimizer delaying critical inline scripts affecting Woo add-to-cart."
+  ],
+  "evidence": [
+    "git status -sb показывает main...origin/main [ahead 1]",
+    "commit 5fefd0e включает только: main.css, parts/04-header.css, functions.php"
+  ],
+  "missing_evidence": [
+    "Post-deploy verify on staging for this SHA (L0/L1/L2)."
+  ],
+  "risks": [
+    "Без staging verify нельзя подтвердить отсутствие регрессий на реальном окружении.",
+    "L2 snapshot diffs могут быть ожидаемы (baseline не эталонный) и потребуют signoff/обновления."
+  ],
+  "required_next_steps": [
+    "Push SHA в origin/main для запуска deploy-staging workflow.",
+    "После deploy: запустить L0/L1/L2 verify на staging и сохранить артефакты.",
+    "Затем critic-scorer PHASE=2 по фактическим verify результатам."
+  ]
+}
