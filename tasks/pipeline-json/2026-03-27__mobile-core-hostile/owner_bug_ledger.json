@@ -1,0 +1,70 @@
+{
+  "scope": "mobile-core",
+  "base_url": "https://staging.mnsk7-tools.pl",
+  "bugs": [
+    {
+      "bug_id": "OWNER-001",
+      "title": "Mobile mega menu opens from wrong state / inconsistent top position",
+      "reproduce": "Open header menu on mobile, open Sklep submenu, close, reopen after scroll/back.",
+      "root_cause": "Mixed breakpoints and mobile submenu state handling in JS/CSS.",
+      "fix": "JS breakpoint normalization to 1024 and overlay-state unification for menu/search/cart paths",
+      "verify_on": [
+        "390x844",
+        "430x932",
+        "1024x768 parity"
+      ],
+      "status": "partially_fixed"
+    },
+    {
+      "bug_id": "OWNER-002",
+      "title": "Sticky header proportions/buttons look uneven on mobile",
+      "reproduce": "Load page on 320/360/390/430 and compare burger/search/account/cart geometry.",
+      "root_cause": "Per-breakpoint button sizes 34/36/40/44 and icon-size divergence.",
+      "fix": "Header button geometry normalized to 44x44 across narrow breakpoints, tokens updated to 56/48, critical CSS aligned",
+      "verify_on": [
+        "320x700",
+        "360x700",
+        "390x844",
+        "430x932"
+      ],
+      "status": "fixed"
+    },
+    {
+      "bug_id": "OWNER-003",
+      "title": "Sticky PDP CTA can be dishonest (label vs action)",
+      "reproduce": "On PDP tap sticky CTA after scrolling and after reopen.",
+      "root_cause": "Needs explicit hostile retest against add-to-cart behavior under overlays.",
+      "fix": "No runtime CTA logic change in this pass; requires hostile PDP flow retest post-deploy",
+      "verify_on": [
+        "390x844",
+        "430x932"
+      ],
+      "status": "not_fixed"
+    },
+    {
+      "bug_id": "OWNER-004",
+      "title": "Mobile search is not fully aligned with desktop interaction language",
+      "reproduce": "Compare first open/second open/close behavior and focus management mobile vs desktop.",
+      "root_cause": "Split implementation (dropdown vs panel) and 1025-based JS branching.",
+      "fix": "Search state branching aligned to DESKTOP_MIN=1024; panel/dropdown logic unified at boundary",
+      "verify_on": [
+        "390x844",
+        "1024x768 parity"
+      ],
+      "status": "partially_fixed"
+    },
+    {
+      "bug_id": "OWNER-005",
+      "title": "Cart mobile visual hierarchy is unstable",
+      "reproduce": "Open header cart on small viewports and inspect icon/badge/readability.",
+      "root_cause": "Badge hidden at <=600 and trigger geometry varies by breakpoint.",
+      "fix": "Cart badge remains visible <=600 with compact size; cart trigger geometry normalized to 44x44",
+      "verify_on": [
+        "320x700",
+        "360x700",
+        "390x844"
+      ],
+      "status": "fixed"
+    }
+  ]
+}

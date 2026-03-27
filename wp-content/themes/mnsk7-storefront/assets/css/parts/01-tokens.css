@@ -65,8 +65,8 @@
 
   /* Layout (UI_SPEC_V2 §3.3: mobile padding 16, desktop max 1200) */
   --content-max: 1200px;
-  --header-h:            52px;
-  --header-h-scrolled:   44px;
+  --header-h:            56px;
+  --header-h-scrolled:   48px;
 
   /* Breakpoints — jeden źródło (wartość używana w media queries i w PHP/JS).
    * W @media trzeba wpisać wartość liczbową (CSS nie obsługuje var() w media queries).

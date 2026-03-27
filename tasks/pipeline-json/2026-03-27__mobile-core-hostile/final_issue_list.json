@@ -1,0 +1,82 @@
+{
+  "scope": "mobile-core",
+  "p0": [
+    {
+      "id": "FIX-001",
+      "from_issue": "A-001",
+      "title": "Normalize mobile control hit areas to >=44px",
+      "target_files": [
+        "wp-content/themes/mnsk7-storefront/assets/css/parts/04-header.css"
+      ],
+      "acceptance": [
+        "menu/search/account/cart controls are at least 44x44 at 320/360/390/430",
+        "no overlap and no clipping"
+      ]
+    },
+    {
+      "id": "FIX-002",
+      "from_issue": "A-002",
+      "title": "Unify JS mobile threshold to <1024 to match CSS contract",
+      "target_files": [
+        "wp-content/themes/mnsk7-storefront/functions.php"
+      ],
+      "acceptance": [
+        "menu/search/cart first-open/second-open and reopen are consistent at 390/430 and 1024 parity",
+        "no contradictory behavior around 1024 boundary"
+      ]
+    }
+  ],
+  "p1": [
+    {
+      "id": "FIX-003",
+      "from_issue": "A-003",
+      "title": "Move promo height and shrink initialization to critical phase",
+      "target_files": [
+        "wp-content/themes/mnsk7-storefront/functions.php"
+      ],
+      "acceptance": [
+        "sticky top offset is correct on first paint with promo",
+        "scroll shrink engages deterministically on first interaction"
+      ]
+    },
+    {
+      "id": "FIX-004",
+      "from_issue": "A-004",
+      "title": "Make cart trigger geometry consistent with other action buttons",
+      "target_files": [
+        "wp-content/themes/mnsk7-storefront/assets/css/parts/04-header.css"
+      ],
+      "acceptance": [
+        "cart trigger has the same visual box and baseline as adjacent controls on mobile"
+      ]
+    },
+    {
+      "id": "FIX-005",
+      "from_issue": "A-009",
+      "title": "Keep cart badge visible on mobile with compact sizing",
+      "target_files": [
+        "wp-content/themes/mnsk7-storefront/assets/css/parts/04-header.css"
+      ],
+      "acceptance": [
+        "cart quantity remains visible on <=600 without overflow",
+        "badge stays readable and aligned"
+      ]
+    },
+    {
+      "id": "FIX-006",
+      "from_issue": "A-005",
+      "title": "Lock icon size and action gap rhythm across mobile breakpoints",
+      "target_files": [
+        "wp-content/themes/mnsk7-storefront/assets/css/parts/04-header.css",
+        "wp-content/themes/mnsk7-storefront/header.php"
+      ],
+      "acceptance": [
+        "icon size stays consistent, spacing looks even at 320/360/390/430"
+      ]
+    }
+  ],
+  "do_not_do": [
+    "No snapshot baseline update as proof of product fix",
+    "No scope expansion outside mobile core in this cycle"
+  ]
+}

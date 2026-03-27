@@ -28,13 +28,13 @@ defined( 'ABSPATH' ) || exit;
 	// (cache/CDN może serwować stronę bez pełnego CSS; te reguły zapobiegają „złamaniu” headera).
 	?>
 	<style id="mnsk7-header-critical">
-	#masthead.mnsk7-header{background:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:1000;border-bottom:1px solid #e9e8cc;box-shadow:0 1px 3px rgba(0,0,0,.06);min-height:52px;box-sizing:border-box;padding-top:0;padding-bottom:0;margin-bottom:0}
+	#masthead.mnsk7-header{background:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:1000;border-bottom:1px solid #e9e8cc;box-shadow:0 1px 3px rgba(0,0,0,.06);min-height:56px;box-sizing:border-box;padding-top:0;padding-bottom:0;margin-bottom:0}
 	/* When promo bar exists: reserve its height so header doesn't "jump" or visually stack oddly on mobile. */
 	body.mnsk7-has-promo #masthead.mnsk7-header.mnsk7-header--sticky{top:calc(env(safe-area-inset-top,0px) + var(--mnsk7-promo-h,2.5rem))}
-	.mnsk7-header__inner{display:flex;align-items:center;gap:1rem;max-width:1200px;margin:0 auto;padding:0 1rem;min-height:52px;box-sizing:border-box;min-width:0}
+	.mnsk7-header__inner{display:flex;align-items:center;gap:1rem;max-width:1200px;margin:0 auto;padding:0 1rem;min-height:56px;box-sizing:border-box;min-width:0}
 	.mnsk7-header__brand{flex-shrink:0;min-width:0}
 	.mnsk7-header__brand a{display:flex;align-items:center;font-size:1.125rem;font-weight:700;color:#000;text-decoration:none!important;border-bottom:none}
-	.mnsk7-header__brand img{max-height:42px;width:auto;max-width:100%;display:block;vertical-align:middle}
+	.mnsk7-header__brand img{max-height:36px;width:auto;max-width:100%;display:block;vertical-align:middle}
 	@media (min-width:1024px){.mnsk7-header__menu-toggle{display:none!important}.mnsk7-header__search-toggle{display:none!important}#mnsk7-header-search.mnsk7-header__search-dropdown{position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;margin:0!important;padding:0!important;min-width:240px;border:none!important;box-shadow:none!important}}
 	@media (max-width:1023px){.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:flex!important}}
 	/* Touch fallback: some mobile browsers can render "desktop width"; force mobile header controls on coarse-pointer devices. */

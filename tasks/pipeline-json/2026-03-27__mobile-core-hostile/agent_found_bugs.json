@@ -1,0 +1,102 @@
+{
+  "min_required": 10,
+  "found_count": 12,
+  "issues": [
+    {
+      "id": "A-001",
+      "category": "interaction",
+      "severity": "P0",
+      "title": "Mobile button hit areas drop below 44px at narrow breakpoints",
+      "evidence": "Before fix controls were 40/36/34px in <=430/<=360/<=320; this cycle normalizes to 44px.",
+      "root_cause": "Narrow-breakpoint overrides in 04-header.css violate target size standard."
+    },
+    {
+      "id": "A-002",
+      "category": "interaction",
+      "severity": "P0",
+      "title": "Search/menu/cart overlay logic branches by <1025 while CSS mobile mode is <=1023",
+      "evidence": "Before fix JS used window.innerWidth < 1025 in overlay control while CSS switched at 1023/1024; this cycle aligns JS to 1024.",
+      "root_cause": "Breakpoint contract mismatch between JS and CSS."
+    },
+    {
+      "id": "A-003",
+      "category": "interaction",
+      "severity": "P1",
+      "title": "Promo height and shrink behavior initialized in deferred phase",
+      "evidence": "Before fix promo/shrink sync depended on deferred path; this cycle moves first sync to runCritical and keeps deferred as guarded fallback.",
+      "root_cause": "First-open behavior depended on requestIdleCallback timing."
+    },
+    {
+      "id": "A-004",
+      "category": "visual_consistency",
+      "severity": "P1",
+      "title": "Cart trigger is visually taller than sibling controls",
+      "evidence": "Before fix cart trigger kept min-height var(--header-h)=52 while siblings were overridden to narrower sizes; this cycle normalizes cart trigger to 44px.",
+      "root_cause": "Mixed component-level sizing plus inherited min-height created unequal button boxes."
+    },
+    {
+      "id": "A-005",
+      "category": "visual_consistency",
+      "severity": "P1",
+      "title": "Icon sizes drift by breakpoint (16/18/20/22)",
+      "evidence": "Icon and hamburger dimensions vary heavily across narrow media queries.",
+      "root_cause": "Per-breakpoint hand-tuning without a locked tokenized scale."
+    },
+    {
+      "id": "A-006",
+      "category": "visual_consistency",
+      "severity": "P1",
+      "title": "Critical CSS and main CSS use different horizontal rhythm for header inner",
+      "evidence": "header.php critical uses padding 1rem, main header CSS defaults to 1.5rem.",
+      "root_cause": "Dual style source without single mobile spacing contract."
+    },
+    {
+      "id": "A-007",
+      "category": "mobile_desktop_parity",
+      "severity": "P1",
+      "title": "Desktop media rules mix 1024 and 1025 thresholds",
+      "evidence": "Some desktop blocks are @media(min-width:1024), others @media(min-width:1025).",
+      "root_cause": "Unnormalized parity breakpoint strategy."
+    },
+    {
+      "id": "A-008",
+      "category": "mobile_desktop_parity",
+      "severity": "P2",
+      "title": "Search panel behavior differs at tablet boundary from JS expectation",
+      "evidence": "CSS opens panel in 769-1023 flow while JS close/open logic uses <1025 threshold.",
+      "root_cause": "State authority split between body class and width branches."
+    },
+    {
+      "id": "A-009",
+      "category": "regression_risk",
+      "severity": "P1",
+      "title": "Cart count hidden on mobile <=600 (except empty state fallback)",
+      "evidence": "Before fix rule hid .mnsk7-header__cart-count and .count on <=600; this cycle keeps compact visible badge.",
+      "root_cause": "Space-saving decision creates CTA honesty/readability risk."
+    },
+    {
+      "id": "A-010",
+      "category": "regression_risk",
+      "severity": "P1",
+      "title": "Content top-spacing contract mixes 768 and header/promo variables",
+      "evidence": "25-global-layout uses margin-top var(--header-h) for mobile and promo calc with 2.5rem fallback.",
+      "root_cause": "Multiple spacing authorities can drift under sticky/promo updates."
+    },
+    {
+      "id": "A-011",
+      "category": "interaction",
+      "severity": "P2",
+      "title": "Mega-menu parent first/second tap relies on class state with no explicit reopen reset for all branches",
+      "evidence": "is-open toggled on li; close flows differ between overlay closures.",
+      "root_cause": "Reopen path consistency not centrally normalized."
+    },
+    {
+      "id": "A-012",
+      "category": "visual_consistency",
+      "severity": "P2",
+      "title": "Logo max-width compression can become too aggressive on 320 viewport",
+      "evidence": "max-width calc and icon density squeeze logo down to 80px at <=320.",
+      "root_cause": "Aggressive narrow-screen packing to preserve four actions in one row."
+    }
+  ]
+}

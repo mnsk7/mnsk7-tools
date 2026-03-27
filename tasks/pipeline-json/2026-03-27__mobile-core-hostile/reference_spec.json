@@ -1,0 +1,67 @@
+{
+  "scope": "mobile-core",
+  "components": [
+    "header",
+    "search",
+    "mega-menu",
+    "sticky-pdp-cta",
+    "cart-mobile"
+  ],
+  "source_of_truth": {
+    "mode": "reference-spec-first",
+    "baseline_snapshots_trusted": false,
+    "snapshot_update_policy": "forbidden_without_product_signoff"
+  },
+  "viewports": {
+    "mobile": [
+      "320x700",
+      "360x700",
+      "390x844",
+      "430x932"
+    ],
+    "parity_control": [
+      "1024x768"
+    ]
+  },
+  "design_criteria": {
+    "technical": [
+      "no_overlap_or_clip_for_primary_controls",
+      "stable_sticky_header_with_and_without_promo",
+      "predictable_open_close_state_for_menu_search_cart",
+      "cta_honesty_click_result_matches_label"
+    ],
+    "heuristic": [
+      "first_open_second_open_consistency",
+      "scroll_back_reopen_state_consistency",
+      "desktop_mobile_parity_for_core_interactions"
+    ],
+    "taste": [
+      "balanced_icon_button_rhythm",
+      "optical_alignment_between_logo_and_actions",
+      "visual_consistency_across_mobile_breakpoints"
+    ],
+    "apple_hig": [
+      "touch_targets_min_44x44"
+    ]
+  },
+  "header_spec": {
+    "target_height_default_px": 56,
+    "target_height_scrolled_px": 48,
+    "action_button_size_px": 44,
+    "action_button_gap_px": 8,
+    "icon_size_px": 20,
+    "logo_max_height_mobile_px": 36,
+    "badge_visibility": "visible_on_mobile"
+  },
+  "required_scenarios_per_block": [
+    "first_open",
+    "second_open",
+    "scroll",
+    "back",
+    "reopen",
+    "sticky_behavior",
+    "cta_honesty",
+    "desktop_mobile_parity",
+    "visual_consistency"
+  ]
+}

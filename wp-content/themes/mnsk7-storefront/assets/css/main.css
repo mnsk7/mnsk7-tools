@@ -85,8 +85,8 @@
 
   /* Layout (UI_SPEC_V2 §3.3: mobile padding 16, desktop max 1200) */
   --content-max: 1200px;
-  --header-h:            52px;
-  --header-h-scrolled:   44px;
+  --header-h:            56px;
+  --header-h-scrolled:   48px;
 
   /* Breakpoints — jeden źródło (wartość używana w media queries i w PHP/JS).
    * W @media trzeba wpisać wartość liczbową (CSS nie obsługuje var() w media queries).
@@ -1329,7 +1329,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   gap: 0.35rem;
   font-size: var(--fs-xs);
   font-weight: 600;
-  min-height: var(--header-h);
+  min-height: 44px;
   box-sizing: border-box;
   color: var(--color-text);
   text-decoration: none;
@@ -1610,7 +1610,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     max-width: calc(100vw - 12rem);
   }
   .mnsk7-header__brand img {
-    max-height: 42px;
+    max-height: 36px;
     object-fit: contain;
   }
   .mnsk7-header__nav {
@@ -1823,10 +1823,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__link--account,
   .mnsk7-header__cart-trigger,
   .mnsk7-header__cart .cart-contents {
-    width: 40px;
-    height: 40px;
-    min-width: 40px;
-    min-height: 40px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
     padding: 0;
     gap: 0;
     justify-content: center;
@@ -1869,10 +1869,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__link--account,
   .mnsk7-header__cart-trigger,
   .mnsk7-header__cart .cart-contents {
-    width: 36px;
-    height: 36px;
-    min-width: 36px;
-    min-height: 36px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
     padding: 0;
     gap: 0;
     justify-content: center;
@@ -1918,10 +1918,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__link--account,
   .mnsk7-header__cart-trigger,
   .mnsk7-header__cart .cart-contents {
-    width: 34px;
-    height: 34px;
-    min-width: 34px;
-    min-height: 34px;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
     padding: 0;
     gap: 0;
     justify-content: center;
@@ -1941,18 +1941,18 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 @media (max-width: 600px) {
   .mnsk7-header__cart .mnsk7-header__cart-count,
   .mnsk7-header__cart .count {
-    display: none !important;
-  }
-  /* Audit task 11 wins on narrow screens: при пустой корзине "0" остаётся видимым */
-  .mnsk7-header__cart--empty .mnsk7-header__cart-count {
     display: inline-flex !important;
+    min-width: 16px;
+    height: 16px;
+    font-size: 0.625rem;
+    padding: 0 0.2rem;
   }
   .mnsk7-header__cart-trigger,
   .mnsk7-header__cart .cart-contents {
-    width: 40px;
-    min-width: 40px;
-    height: 40px;
-    min-height: 40px;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    min-height: 44px;
   }
 }
 
