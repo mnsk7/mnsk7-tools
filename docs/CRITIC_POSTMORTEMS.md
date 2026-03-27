@@ -103,6 +103,33 @@
 
 ---
 
+### 2026-03-27 — REJECT: mobile header/PDP pass blocked by L2 + product gate
+
+- **Context**: внедрён пакет правок mobile header + mobile PDP sticky CTA + новый mobile PDP add-to-cart e2e. Пройден цепочный гейт: predeploy verifier -> deploy -> postdeploy L0/L1/L2 -> critic PHASE=2.
+- **Severity**: critical
+- **What slipped**:
+  - `L2` снова красный: 4 snapshot failure в `e2e/header-layout.spec.js` (`mobile closed`, `mobile open`, `desktop closed`, `desktop sklep open`).
+  - `PRODUCT_ACCEPT` заблокирован: в `safari_mobile_status.json` остаётся `cta_honesty=FAIL`, `product_accept_allowed=false`.
+  - `owner_bug_scoreboard.json` содержит `OWNER-003 = not_fixed` (sticky PDP CTA honesty).
+  - `L1` не полностью чистый: `3 passed, 1 skipped` (добавленный mobile PDP path-test).
+- **Why it slipped**:
+  - Визуальный baseline header не синхронизирован с текущим целевым состоянием UI (без явного product signoff обновлять snapshots нельзя).
+  - Продуктовый блокер (`cta_honesty`) не закрыт до этого цикла, несмотря на технические улучшения sticky CTA.
+- **Evidence**:
+  - `npm run verify:l0` -> PASS_WITH_SKIPS.
+  - `BASE_URL=https://staging.mnsk7-tools.pl npm run verify:l1` -> `3 passed, 1 skipped`.
+  - `BASE_URL=https://staging.mnsk7-tools.pl npm run verify:l2` -> `4 failed, 106 passed`.
+  - `critic-scorer PHASE=2` -> `REJECT`, `process_accept=false`, `product_accept=false`, `final_accept=false`.
+- **Mitigation (now)**:
+  - Зафиксирован REJECT с явной привязкой к L2 и Safari/product gate.
+  - Сохранён postmortem как блокирующий outcome текущего прохода.
+- **Prevention (process)**:
+  - Закрыть `OWNER-003` и hostile Safari сценарии до статуса без `cta_honesty=FAIL`.
+  - Для следующего прохода убрать `skip` из L1 (или жёстко обосновать scope-исключение).
+  - По L2: либо вернуть UI в baseline, либо получить явный owner/product signoff на новый header state и только затем обновлять snapshots.
+
+---
+
 ### 2026-03-27 — REJECT: post-deploy L2 visual gate + Safari product gate
 
 - **Context**: после правок process/product-verdict артефактов был выполнен обязательный цикл: predeploy verifier (no local e2e gate) -> push/deploy -> post-deploy technical verify (`L0/L1/L2`) -> `critic-scorer PHASE=2`.
