@@ -2259,6 +2259,11 @@ add_filter( 'rocket_delay_js_exclusions', function ( $exclusions ) {
 	}
 	$exclusions[] = 'mnsk7IsArchive';
 	$exclusions[] = 'runCritical';
+	$exclusions[] = 'mnsk7-pdp-sticky-cta';
+	$exclusions[] = 'mnsk7_checkout_url';
+	$exclusions[] = 'mnsk7PLP';
+	$exclusions[] = 'mnsk7-chips-toggle';
+	$exclusions[] = 'mnsk7-wc-notice';
 	$exclusions[] = 'embed.js';
 	$exclusions[] = 'instagram.com';
 	return $exclusions;
