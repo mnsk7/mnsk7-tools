@@ -73,7 +73,13 @@ if ( isset( $product ) && is_a( $product, 'WC_Product' ) && $product->is_purchas
 			<span class="mnsk7-pdp-sticky-cta__price"><?php echo $product->get_price_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
 			<span class="mnsk7-pdp-sticky-cta__stock"><?php echo esc_html( $stock_text ); ?></span>
 		</div>
-		<button type="button" class="mnsk7-pdp-sticky-cta__btn" aria-label="<?php esc_attr_e( 'Dodaj do koszyka — przewiń do formularza', 'mnsk7-storefront' ); ?>"><?php esc_html_e( 'Dodaj do koszyka', 'mnsk7-storefront' ); ?></button>
+		<?php
+		$is_variable   = $product->is_type( 'variable' );
+		$cta_label     = $is_variable ? __( 'Wybierz wariant', 'mnsk7-storefront' ) : __( 'Dodaj do koszyka', 'mnsk7-storefront' );
+		$cta_aria      = $is_variable ? __( 'Wybierz wariant — przewiń do opcji', 'mnsk7-storefront' ) : __( 'Dodaj do koszyka', 'mnsk7-storefront' );
+		$cta_action    = $is_variable ? 'choose' : 'add';
+		?>
+		<button type="button" class="mnsk7-pdp-sticky-cta__btn" data-action="<?php echo esc_attr( $cta_action ); ?>" aria-label="<?php echo esc_attr( $cta_aria ); ?>"><?php echo esc_html( $cta_label ); ?></button>
 	</div>
 	<?php
 }

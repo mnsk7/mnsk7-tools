@@ -4,9 +4,9 @@
    § GLOBAL RESET & TYPOGRAPHY
    ----------------------------------------------------------------- */
 
-/* Task 8: zapobiegaj poziomemu przewijaniu (np. gdy element wymusza szerszą szerokość) */
+/* Task 8: zapobiegaj poziomemu przewijaniu. clip (not hidden) — nie tworzy scroll container, nie łamie position:sticky. */
 html {
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100%;
 }
 body,

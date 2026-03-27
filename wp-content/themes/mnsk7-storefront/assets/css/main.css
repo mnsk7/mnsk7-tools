@@ -130,9 +130,9 @@
    § GLOBAL RESET & TYPOGRAPHY
    ----------------------------------------------------------------- */
 
-/* Task 8: zapobiegaj poziomemu przewijaniu (np. gdy element wymusza szerszą szerokość) */
+/* Task 8: zapobiegaj poziomemu przewijaniu. clip (not hidden) — nie tworzy scroll container, nie łamie position:sticky. */
 html {
-  overflow-x: hidden;
+  overflow-x: clip;
   max-width: 100%;
 }
 body,
@@ -6929,19 +6929,19 @@ nav.woocommerce-breadcrumb {
 
 
 /* === 21-responsive-mobile.css === */
-/* 21-responsive-mobile — Mobile: 2 kolumny gdzie sensowne, overflow-x hidden, 1 kol. tylko na bardzo wąskich.
-   Task 8: overflow-x: hidden — zapobiega przewijaniu w poziomie na wąskich ekranach (szerokie tabele/obrazy). */
+/* 21-responsive-mobile — Mobile: 2 kolumny gdzie sensowne, overflow-x clip, 1 kol. tylko na bardzo wąskich.
+   Task 8: overflow-x: clip — zapobiega przewijaniu w poziomie bez łamania position:sticky. */
 
 @media (max-width: 768px) {
   body,
   .site,
   #page {
-    overflow-x: hidden;
+    overflow-x: clip;
   }
   #content,
   .site-content,
   .mnsk7-content {
-    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100%;
   }
   /* Product grids: 2 kolumny tylko PLP. Recommendation blocks: 12-related-products.css. */

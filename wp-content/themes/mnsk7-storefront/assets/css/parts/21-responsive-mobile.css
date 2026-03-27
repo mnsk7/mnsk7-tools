@@ -5,12 +5,12 @@
   body,
   .site,
   #page {
-    overflow-x: hidden;
+    overflow-x: clip;
   }
   #content,
   .site-content,
   .mnsk7-content {
-    overflow-x: hidden;
+    overflow-x: clip;
     max-width: 100%;
   }
   /* Product grids: 2 kolumny tylko PLP. Recommendation blocks: 12-related-products.css. */

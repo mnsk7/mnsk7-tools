@@ -1420,38 +1420,58 @@ add_action( 'wp_footer', function () {
 			if (stickyPrice) stickyPrice.innerHTML = summaryPrice ? (summaryPrice.innerHTML || defaultStickyPrice) : defaultStickyPrice;
 			if (stickyStock) stickyStock.textContent = defaultStickyStock;
 		}
+		var variationsForm = document.querySelector('.single-product form.variations_form');
+		var defaultBtnLabel = stickyBtn ? stickyBtn.textContent : '';
+		var chooseLbl = <?php echo json_encode( __( 'Wybierz wariant', 'mnsk7-storefront' ) ); ?>;
+		function isVariationChosen() {
+			if (!variationsForm) return true;
+			var selects = variationsForm.querySelectorAll('.variations select');
+			for (var i = 0; i < selects.length; i++) {
+				if (!selects[i].value) return false;
+			}
+			return true;
+		}
+		function updateStickyBtnState() {
+			if (!stickyBtn) return;
+			if (variationsForm && !isVariationChosen()) {
+				stickyBtn.textContent = chooseLbl;
+				stickyBtn.dataset.action = 'choose';
+			} else {
+				stickyBtn.textContent = defaultBtnLabel;
+				stickyBtn.dataset.action = 'add';
+			}
+		}
+		updateStickyBtnState();
 		stickyBtn.addEventListener('click', function() {
 			if (!isMobile() || isSubmitting) return;
-			isSubmitting = true;
-			var submitFromSticky = function() {
-				mainBtn.focus({ preventScroll: true });
-				mainBtn.click();
-				setTimeout(function() { isSubmitting = false; }, 400);
-			};
-			if (isInViewport(form)) {
-				submitFromSticky();
+			if (stickyBtn.dataset.action === 'choose') {
+				form.scrollIntoView({ behavior: 'smooth', block: 'center' });
+				var firstEmpty = variationsForm ? variationsForm.querySelector('.variations select:not([value=""])') || variationsForm.querySelector('.variations select') : null;
+				if (firstEmpty) setTimeout(function() { firstEmpty.focus(); }, 350);
 				return;
 			}
-			form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-			setTimeout(submitFromSticky, 420);
+			isSubmitting = true;
+			mainBtn.click();
+			setTimeout(function() { isSubmitting = false; }, 600);
 		});
 		window.addEventListener('resize', function() {
 			if (!isMobile()) { setStickyVisible(false); return; }
 			if (sticky.classList.contains('is-visible')) setStickyHeightVar();
 		}, { passive: true });
 		syncStickyMeta();
-		// Sync ceny i stocka przy wariacjach/reset.
-		if (document.querySelector('.single-product form.variations_form') && window.jQuery) {
+		if (variationsForm && window.jQuery) {
 			window.jQuery(form).on('show_variation', function(_event, variation) {
 				if (stickyPrice) {
 					stickyPrice.innerHTML = (variation && variation.price_html) ? variation.price_html : (summaryPrice ? summaryPrice.innerHTML : defaultStickyPrice);
 				}
 				syncStickyMeta();
+				updateStickyBtnState();
 				if (sticky.classList.contains('is-visible')) setStickyHeightVar();
 			});
 			window.jQuery(form).on('hide_variation reset_data', function() {
 				resetStickyMeta();
 				syncStickyMeta();
+				updateStickyBtnState();
 				if (sticky.classList.contains('is-visible')) setStickyHeightVar();
 			});
 		}
