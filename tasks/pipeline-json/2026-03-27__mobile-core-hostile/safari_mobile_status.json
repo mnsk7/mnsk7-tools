@@ -1,0 +1,26 @@
+{
+  "device": "iPhone Safari",
+  "cycle": "2026-03-27__mobile-core-hostile",
+  "source": "hostile_retest + owner_bug_scoreboard",
+  "scenarios": {
+    "first_open": "PARTIAL",
+    "second_open": "PARTIAL",
+    "scroll": "PARTIAL",
+    "back": "NOT_VERIFIED",
+    "reopen": "PARTIAL",
+    "sticky_behavior": "PARTIAL",
+    "cta_honesty": "FAIL"
+  },
+  "owner_bug_status": {
+    "OWNER-001": "partial",
+    "OWNER-002": "fixed",
+    "OWNER-003": "not_fixed",
+    "OWNER-004": "partial",
+    "OWNER-005": "fixed"
+  },
+  "product_accept_allowed": false,
+  "notes": [
+    "Gate present as required by policy.",
+    "PRODUCT_ACCEPT=true is forbidden while cta_honesty remains FAIL."
+  ]
+}

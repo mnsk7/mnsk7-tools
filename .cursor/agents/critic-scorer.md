@@ -87,6 +87,8 @@ readonly: true
 - Если нет `VERIFIER_PRACTICAL` или его `outcome` != `ACCEPT` → outcome не может быть `ACCEPT`.
 - Если нет `VERIFIER_TECHNICAL` или его `outcome` != `ACCEPT` → outcome не может быть `ACCEPT`.
 - Если нет owner bug ledger или нет agent-found bugs block → `product_accept=false`.
+- Если нет явного `safari_mobile_status` (iPhone Safari) -> `product_accept=false`.
+- Если discovery блок не отфильтрован (real_product vs technical/cosmetic/duplicates) -> `product_accept=false`.
 - Если были обновлены snapshots без product signoff -> outcome="REJECT".
 - Если post-deploy `VERIFY_REPORT.blocking.failed_rules` не пуст -> `score=0`, `outcome="REJECT"`.
 - Иначе:

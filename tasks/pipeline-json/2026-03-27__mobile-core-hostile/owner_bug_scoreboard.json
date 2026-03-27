@@ -1,0 +1,97 @@
+{
+  "cycle": "2026-03-27__mobile-core-hostile",
+  "base_url": "https://staging.mnsk7-tools.pl",
+  "bugs": [
+    {
+      "bug_id": "OWNER-001",
+      "title": "Mobile mega menu opens from wrong state / inconsistent top position",
+      "status": "partial",
+      "before": "Submenu open/close state and top-position behavior were inconsistent across reopen/overlay states near mobile breakpoint boundary.",
+      "after": "JS threshold normalization to 1024 reduced branch mismatch and improved overlay state consistency, but hostile replay for back/reopen is still incomplete.",
+      "reproduce_steps": [
+        "Open mobile header menu.",
+        "Open Sklep submenu.",
+        "Close menu, scroll page, reopen menu.",
+        "Navigate back and reopen submenu."
+      ],
+      "evidence_refs": [
+        "tasks/pipeline-json/2026-03-27__mobile-core-hostile/owner_bug_ledger.json",
+        "tasks/pipeline-json/2026-03-27__mobile-core-hostile/hostile_retest.json",
+        "wp-content/themes/mnsk7-storefront/functions.php"
+      ],
+      "remaining_risk": "Back/reopen state drift may still appear in edge navigation paths."
+    },
+    {
+      "bug_id": "OWNER-002",
+      "title": "Sticky header proportions/buttons look uneven on mobile",
+      "status": "fixed",
+      "before": "Action controls had mixed sizes (34/36/40/44), uneven rhythm, and inconsistent header proportion.",
+      "after": "Controls normalized to 44x44, header tokens moved to 56/48, critical CSS aligned to product sizing intent.",
+      "reproduce_steps": [
+        "Load page on 320/360/390/430 widths.",
+        "Compare burger/search/account/cart sizes and spacing.",
+        "Scroll to check sticky/scrolled proportion."
+      ],
+      "evidence_refs": [
+        "wp-content/themes/mnsk7-storefront/assets/css/parts/04-header.css",
+        "wp-content/themes/mnsk7-storefront/assets/css/main.css",
+        "wp-content/themes/mnsk7-storefront/assets/css/parts/01-tokens.css",
+        "wp-content/themes/mnsk7-storefront/header.php"
+      ],
+      "remaining_risk": "Visual signoff on exact pixels still pending because baseline snapshots are untrusted."
+    },
+    {
+      "bug_id": "OWNER-003",
+      "title": "Sticky PDP CTA can be dishonest (label vs action)",
+      "status": "not_fixed",
+      "before": "Risk that sticky CTA behavior differs from promise under overlay/reopen conditions.",
+      "after": "No direct PDP CTA runtime fix in this cycle.",
+      "reproduce_steps": [
+        "Open PDP on mobile viewport.",
+        "Scroll until sticky CTA is active.",
+        "Open/close header overlays, then tap sticky CTA.",
+        "Verify that action is real add-to-cart, not unrelated scroll/focus."
+      ],
+      "evidence_refs": [
+        "tasks/pipeline-json/2026-03-27__mobile-core-hostile/owner_bug_ledger.json",
+        "tasks/pipeline-json/2026-03-27__mobile-core-hostile/hostile_retest.json"
+      ],
+      "remaining_risk": "High: product_accept cannot be true while this remains unresolved."
+    },
+    {
+      "bug_id": "OWNER-004",
+      "title": "Mobile search not fully aligned with desktop interaction language",
+      "status": "partial",
+      "before": "Search open/close logic had boundary mismatch with CSS contract around 1024/1025.",
+      "after": "JS normalized to DESKTOP_MIN=1024 and branch consistency improved, but parity replay remains incomplete.",
+      "reproduce_steps": [
+        "Open search on mobile.",
+        "Close and reopen search.",
+        "Repeat at 1024 parity viewport and compare behavior."
+      ],
+      "evidence_refs": [
+        "wp-content/themes/mnsk7-storefront/functions.php",
+        "tasks/pipeline-json/2026-03-27__mobile-core-hostile/hostile_retest.json"
+      ],
+      "remaining_risk": "Some first/second-open parity gaps may remain until full hostile replay passes."
+    },
+    {
+      "bug_id": "OWNER-005",
+      "title": "Cart mobile visual hierarchy is unstable",
+      "status": "fixed",
+      "before": "Cart badge could be hidden at <=600 and cart trigger geometry drifted from adjacent controls.",
+      "after": "Badge remains visible with compact sizing on narrow screens; cart trigger normalized to 44x44 pattern.",
+      "reproduce_steps": [
+        "Open header cart on 320/360/390 widths.",
+        "Check badge visibility and readability.",
+        "Compare cart button geometry to neighbor controls."
+      ],
+      "evidence_refs": [
+        "wp-content/themes/mnsk7-storefront/assets/css/parts/04-header.css",
+        "wp-content/themes/mnsk7-storefront/assets/css/main.css",
+        "tasks/pipeline-json/2026-03-27__mobile-core-hostile/verify_summary.json"
+      ],
+      "remaining_risk": "Visual signoff still required for final pixel acceptance."
+    }
+  ]
+}

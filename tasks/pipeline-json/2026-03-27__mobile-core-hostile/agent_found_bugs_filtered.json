@@ -1,0 +1,45 @@
+{
+  "source_file": "agent_found_bugs.json",
+  "total_input": 12,
+  "classification": {
+    "real_product_issues": [
+      "A-001",
+      "A-002",
+      "A-003",
+      "A-005",
+      "A-007",
+      "A-010",
+      "A-012"
+    ],
+    "technical_process_issues": [
+      "A-006"
+    ],
+    "cosmetic_issues": [],
+    "owner_bug_duplicates": [
+      {
+        "issue_id": "A-004",
+        "duplicates_owner_bug": "OWNER-002"
+      },
+      {
+        "issue_id": "A-008",
+        "duplicates_owner_bug": "OWNER-004"
+      },
+      {
+        "issue_id": "A-009",
+        "duplicates_owner_bug": "OWNER-005"
+      },
+      {
+        "issue_id": "A-011",
+        "duplicates_owner_bug": "OWNER-001"
+      }
+    ]
+  },
+  "counts": {
+    "real_product_issues": 7,
+    "technical_process_issues": 1,
+    "cosmetic_issues": 0,
+    "owner_bug_duplicates": 4
+  },
+  "net_new_real_product_issues": 7,
+  "filtering_rule": "Quota for agent-found discovery should be counted on non-duplicate real product issues; duplicates are tracked but not counted as new discovery value."
+}

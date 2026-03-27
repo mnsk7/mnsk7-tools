@@ -31,6 +31,8 @@ alwaysApply: true
 10) **Product Verifier (post-deploy)**: отдельный verdict по продукту (не по раннерам):
    - `owner_bug_ledger[]`: по каждому багу Owner -> reproduce/root cause/fix/verify/device/status(fixed|partial|not_fixed)
    - `agent_found_bugs[]`: минимум 10 новых дефектов без owner hints (3 interaction, 3 visual consistency, 2 mobile/desktop parity, 2 regression risk)
+   - `agent_found_bugs_filtered[]`: обязательная фильтрация (real_product|technical|cosmetic|owner_duplicate)
+   - `safari_mobile_status`: явный статус hostile-сценариев на iPhone Safari
 11) **Dual acceptance**:
    - `PROCESS_ACCEPT`: pipeline/артефакты/гейты выполнены
    - `PRODUCT_ACCEPT`: owner-баги реально закрыты и discovery-блок выполнен
@@ -45,4 +47,5 @@ alwaysApply: true
 - запускать локальные e2e/`npm run verify:*` как обязательный predeploy gate
 - обновлять baseline snapshots без подтверждённого Product Verifier signoff
 - выдавать финальный `ACCEPT`, если есть только process-результат без product-результата
+- выдавать `PRODUCT_ACCEPT=true` без явного статуса iPhone Safari
 

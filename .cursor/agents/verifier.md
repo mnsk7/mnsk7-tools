@@ -19,6 +19,8 @@ language: ru
 
 Для post-deploy product-verifier дополнительно обязателен блок:
 `{ owner_bug_ledger:[{bug_id,reproduce,root_cause,fix,verify_on,status}], agent_found_bugs:[...], product_accept:true|false }`
+и
+`{ safari_mobile_status:{device:"iPhone Safari", scenarios:{first_open,second_open,scroll,back,reopen,sticky_behavior,cta_honesty}}, agent_found_bugs_filtered:{real_product,technical,cosmetic,owner_duplicates} }`
 
 ### MODE=technical
 
@@ -31,6 +33,8 @@ language: ru
   - Если запрос про дизайн/UX, считать дефектом “визуально сломано” даже при зелёных метриках/тестах.
   - Если изменения затрагивают только “технические” артефакты (tests/verify), practical может быть `ACCEPT`, но обязан явно написать, что это не меняет UI.
   - В post-deploy режиме обязан выдать owner bug replay по каждому багу и список новых багов, найденных без owner hints.
+  - Без явного статуса iPhone Safari practical не может выставить `product_accept=true`.
+  - Обязан отделять реальные продуктовые баги от технических/косметики/дублей owner-багов.
   - Если baseline snapshots обновлены, practical не может быть `ACCEPT` без явного signoff, что новый вид — целевой продуктовый state.
 
 - **MODE=technical**:

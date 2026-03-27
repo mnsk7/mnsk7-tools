@@ -1,0 +1,48 @@
+{
+  "cycle": "2026-03-27__mobile-core-hostile",
+  "l2_result": "REJECT",
+  "summary": {
+    "exit_code": 1,
+    "failed": 4,
+    "passed": 106
+  },
+  "failures": [
+    {
+      "id": "L2-001",
+      "test": "mobile closed: header snapshot",
+      "where_diff": "Header element screenshot differs from stored baseline in closed mobile state.",
+      "interpretation": "uncertainty",
+      "visual_acceptance_now": false,
+      "owner_signoff_required": true,
+      "note": "Could be intentional improvement after geometry normalization or regression; baseline is untrusted."
+    },
+    {
+      "id": "L2-002",
+      "test": "mobile open: header + menu snapshot",
+      "where_diff": "Header + opened mobile menu visual state differs from baseline.",
+      "interpretation": "uncertainty",
+      "visual_acceptance_now": false,
+      "owner_signoff_required": true,
+      "note": "No baseline update allowed without explicit product signoff."
+    },
+    {
+      "id": "L2-003",
+      "test": "desktop closed: header snapshot",
+      "where_diff": "Expected 1280x53, received 1280x57; geometry/pixel diff on desktop closed header.",
+      "interpretation": "likely_improvement_from_intent_but_unverified",
+      "visual_acceptance_now": false,
+      "owner_signoff_required": true,
+      "note": "Header height token increased (52->56), so diff is expected technically, but still needs product signoff."
+    },
+    {
+      "id": "L2-004",
+      "test": "desktop Sklep open: header + megamenu snapshot",
+      "where_diff": "Expected 1280x53, received 1280x57 with pixel diff in open megamenu state.",
+      "interpretation": "uncertainty",
+      "visual_acceptance_now": false,
+      "owner_signoff_required": true,
+      "note": "Open-state geometry changed; must be accepted by product verifier before any baseline update."
+    }
+  ],
+  "decision_rule": "Until owner/product signoff exists for target UI state, all four failures remain non-acceptable and block product_accept."
+}

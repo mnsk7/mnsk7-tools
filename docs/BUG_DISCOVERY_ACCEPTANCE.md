@@ -29,6 +29,16 @@
 
 Если блок пустой или формальный — `PRODUCT_ACCEPT=false`.
 
+### Фильтрация quality (обязательно)
+
+Для `agent_found_bugs` нужен отдельный filtered-файл с разложением:
+- реальные продуктовые,
+- технические (process/tooling),
+- косметика,
+- дубли owner-багов.
+
+`PRODUCT_ACCEPT=true` запрещён, если discovery-квота набрана в основном дублями/мусором.
+
 ## Snapshot governance (blocking)
 
 - Обновление baseline snapshots запрещено без product signoff.
@@ -38,3 +48,12 @@
   - на каких девайсах/viewport это подтверждено.
 
 Без signoff обновление baseline трактуется как легализация дефекта (`REJECT`).
+
+## Safari/mobile gate (blocking)
+
+Без явного статуса по **iPhone Safari** `PRODUCT_ACCEPT=true` запрещён.
+
+Минимум требуется:
+- device/browser: `iPhone Safari`,
+- статусы для hostile-сценариев: `first_open`, `second_open`, `scroll`, `back`, `reopen`, `sticky_behavior`, `cta_honesty`,
+- результат по каждому owner-багу: `fixed|partial|not_fixed`.
