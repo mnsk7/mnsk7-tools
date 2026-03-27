@@ -2257,6 +2257,8 @@ add_filter( 'rocket_delay_js_exclusions', function ( $exclusions ) {
 	if ( ! is_array( $exclusions ) ) {
 		$exclusions = array();
 	}
+	$exclusions[] = 'mnsk7IsArchive';
+	$exclusions[] = 'runCritical';
 	$exclusions[] = 'embed.js';
 	$exclusions[] = 'instagram.com';
 	return $exclusions;
