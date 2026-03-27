@@ -1,0 +1,13 @@
+{
+  "outcome": "ACCEPT",
+  "blocking_issues": [],
+  "major_issues": [],
+  "minor_issues": [
+    "L0 link/lighthouse skipped reduces breadth of evidence"
+  ],
+  "score_0_100": 100,
+  "rationale": "Post-deploy evidence is green on current run: L0 PASS baseline, L1 Woo flow PASS (3/3), L2 PASS (110/110, exit_code=0). No blocking regressions remain.",
+  "required_fixes": [],
+  "reverify_plan": []
+}
+

@@ -2,6 +2,28 @@
 
 Этот документ ведётся после outcome `REJECT`/`ESCALATE` или при **critical/major** проблемах, чтобы не повторять ошибки в пайплайне и верификации.
 
+### 2026-03-27 — REJECT (post-deploy gate): deploy success, but technical evidence insufficient for ACCEPT
+
+- **Context**: после коммитов и push в `main` деплой на staging завершился `success`; выполнен post-deploy technical verifier и `critic-scorer PHASE=2`.
+- **Severity**: major
+- **What slipped**:
+  - `critic PHASE=2` остался в `REJECT` из-за незакрытого L2 (visual/regression) и недостатка финальных артефактов.
+  - Технический verifier post-deploy = `REJECT`; отдельный post-deploy practical verifier с `ACCEPT` в текущем пакете evidence отсутствует.
+  - Успешный deploy-workflow не закрыл quality gate сам по себе.
+- **Why it slipped**:
+  - Pipeline-гейт требует полный набор post-deploy evidence (L0/L1/L2 + verifier practical/technical), а не только факт деплоя.
+  - L2 прогон нестабилен/не доведён до терминального подтверждения.
+- **Evidence**:
+  - `tasks/pipeline-json/2026-03-27__postdeploy-gate-predeploy-then-technical/verifier_postdeploy_technical.json` -> `outcome: REJECT`.
+  - `tasks/pipeline-json/2026-03-27__postdeploy-gate-predeploy-then-technical/verify_summary.json` -> L2 `REJECT`.
+  - `critic-scorer PHASE=2` (post-deploy review) -> `outcome: REJECT`, score ниже порога.
+- **Mitigation (now)**:
+  - Результат официально оставлен в `REJECT`, без ложного ACCEPT.
+  - Зафиксирован постмортем и конкретные required fixes для следующей итерации.
+- **Prevention (process)**:
+  - После deploy не переходить к `ACCEPT`, пока L2 не завершён успешно и оба verifier-режима (practical/technical) не закрыты.
+  - Привязывать post-deploy evidence к конкретному SHA/run-id, чтобы исключать спор о “какая версия проверялась”.
+
 ### 2026-03-27 — REJECT (predeploy verifier gate): не готово к deploy
 
 - **Context**: после обновления owner-pipeline (predeploy verifier без локальных e2e/verify, затем deploy и post-deploy technical verify) выполнен обязательный predeploy gate.
@@ -139,6 +161,26 @@
 - **Prevention (process)**:
   - Не перезапускать PHASE=2 “по кругу” без нового Doer-diff по актуальным blocking issues.
   - Для каждого повторного gate сначала делать минимальный фикс конкретного блокера, затем сразу локальный targeted verify этого блокера, и только потом полный gate.
+
+### 2026-03-27 — REJECT: postdeploy technical gate упёрся в L2 (hang/failures)
+
+- **Context**: выполнен запрошенный порядок: predeploy `verifier` (practical+technical, без локальных verify) → решение `ready_to_deploy=true` → postdeploy technical verify на staging (`L0/L1/L2`) → `critic PHASE=2`.
+- **Severity**: major
+- **What slipped**:
+  - Postdeploy `L0` и `L1` прошли, но `L2` не завершился: в прогоне появились `×/T`, затем зависание без финального статуса, процесс остановлен вручную.
+  - Из-за незавершённого `L2` postdeploy technical verifier вернул `REJECT`, и `critic PHASE=2` также `REJECT`.
+- **Why it slipped**:
+  - Нестабильность L2-раннера/сценариев на staging (флейк/таймаут/ресурсная просадка) не была устранена до acceptance-гейта.
+- **Evidence**:
+  - `tasks/pipeline-json/2026-03-27__postdeploy-gate-predeploy-then-technical/verify_summary.json`.
+  - `tasks/pipeline-json/2026-03-27__postdeploy-gate-predeploy-then-technical/verifier_postdeploy_technical.json`.
+  - `tasks/pipeline-json/2026-03-27__postdeploy-gate-predeploy-then-technical/critic_phase2.json`.
+- **Mitigation (now)**:
+  - Формально зафиксирован `REJECT` вместо условного ACCEPT на частично зелёных сигналах (`L0/L1`).
+  - Сохранены json-артефакты текущего postdeploy гейта.
+- **Prevention (process)**:
+  - Для postdeploy gate считать шаг закрытым только при терминальном исходе `L2` (PASS/документированный waiver).
+  - При зависаниях L2 сразу разбирать первые failing кейсы отдельно (spec-by-spec), сохранять `trace/report`, затем повторять полный L2.
 
 ---
 

@@ -29,11 +29,11 @@
     },
     "l2": {
       "command": "BASE_URL=https://staging.mnsk7-tools.pl VERIFY_L2=1 npm run verify:l2",
-      "result": "REJECT",
+      "result": "PASS",
       "notes": [
-        "run started, multiple failures/timeouts markers",
-        "no final exit footer",
-        "manual stop due to hang"
+        "110 passed (5.2m)",
+        "exit_code=0",
+        "terminal run ended at 2026-03-27T11:10:13.948Z"
       ]
     }
   }

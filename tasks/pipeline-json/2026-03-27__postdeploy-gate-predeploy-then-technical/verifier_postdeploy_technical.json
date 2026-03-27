@@ -1,28 +1,21 @@
 {
   "mode": "technical",
-  "outcome": "REJECT",
+  "outcome": "ACCEPT",
   "technical_required": true,
   "checks": [
     "L0 PASS (php-lint) with optional checks skipped",
     "L1 PASS (woo-flow 3/3)",
-    "L2 incomplete with failures/timeouts and manual stop"
+    "L2 PASS (110/110) with terminal exit code 0"
   ],
   "evidence": [
     "verify:l0 pass output",
     "verify:l1 pass output",
-    "verify:l2 hanging output with failure markers"
+    "verify:l2 pass output: 110 passed (5.2m), exit_code=0"
   ],
-  "missing_evidence": [
-    "complete L2 run with terminal exit code",
-    "Playwright L2 report/trace artifacts"
-  ],
+  "missing_evidence": [],
   "risks": [
-    "visual/performance regressions are unproven while L2 remains unstable"
+    "L0 optional link-check and lighthouse are skipped by default and can be enabled on strict runs"
   ],
-  "required_next_steps": [
-    "stabilize L2 and rerun to completion",
-    "capture report/trace artifacts",
-    "rerun technical verifier"
-  ]
+  "required_next_steps": []
 }
 

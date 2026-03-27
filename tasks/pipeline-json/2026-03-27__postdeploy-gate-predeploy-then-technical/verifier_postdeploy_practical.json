@@ -1,0 +1,14 @@
+{
+  "mode": "practical",
+  "outcome": "ACCEPT",
+  "checks": [
+    "Post-deploy Woo core flow is confirmed by L1 (3/3 passed)",
+    "Header/mobile visual regression suite is green on the latest run (L2: 110 passed)",
+    "No blocking CTA overlap or checkout-entry breakage indicated by current evidence"
+  ],
+  "gaps": [],
+  "risks": [
+    "Optional L0 checks (link-check, lighthouse) are skipped in this pass and can be enabled for stricter release gates"
+  ],
+  "required_next_steps": []
+}
