@@ -1346,11 +1346,43 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     justify-content: center;
     border: 1px solid var(--color-border);
     border-radius: var(--r-sm);
+    position: relative;
   }
   .mnsk7-header__cart-trigger,
   .mnsk7-header__cart .cart-contents {
     text-decoration: none;
     border-bottom: none;
+  }
+  /* Unified icon size: 20px across all mobile breakpoints (FIX-006) */
+  .mnsk7-header__search-icon,
+  .mnsk7-header__search-icon svg,
+  .mnsk7-header__account-icon,
+  .mnsk7-header__account-icon svg,
+  .mnsk7-header__cart-icon,
+  .mnsk7-header__cart-icon svg {
+    width: 20px;
+    height: 20px;
+  }
+  .mnsk7-header__hamburger {
+    width: 20px;
+    height: 16px;
+  }
+  .mnsk7-header__hamburger::before,
+  .mnsk7-header__hamburger::after {
+    width: 20px;
+  }
+  /* Cart badge: overlay on icon for consistent 44x44 button geometry (FIX-004/FIX-005) */
+  .mnsk7-header__cart .mnsk7-header__cart-count {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    min-width: 16px;
+    height: 16px;
+    font-size: 0.625rem;
+    font-weight: 700;
+    padding: 0 0.25rem;
+    line-height: 16px;
+    z-index: 1;
   }
   /* Mobile menu panel: below header, full width, vertical nav list, left-aligned, normal spacing — not empty block */
   .mnsk7-header__nav .mnsk7-header__menu {
@@ -1451,36 +1483,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     max-height: 36px;
     max-width: 120px;
   }
-  .mnsk7-header__menu-toggle,
-  .mnsk7-header__search-toggle,
-  .mnsk7-header__link--account,
-  .mnsk7-header__cart-trigger,
-  .mnsk7-header__cart .cart-contents {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
-    padding: 0;
-    gap: 0;
-    justify-content: center;
-  }
-  .mnsk7-header__search-icon,
-  .mnsk7-header__search-icon svg,
-  .mnsk7-header__account-icon,
-  .mnsk7-header__account-icon svg,
-  .mnsk7-header__cart-icon,
-  .mnsk7-header__cart-icon svg {
-    width: 20px;
-    height: 20px;
-  }
-  .mnsk7-header__cart .mnsk7-header__cart-count,
-  .mnsk7-header__cart .count {
-    min-width: 18px;
-    height: 18px;
-    font-size: 0.6875rem;
-    padding: 0 0.25rem;
-  }
 }
+
 
 @media (max-width: 360px) {
   .mnsk7-header__inner {
@@ -1496,38 +1500,6 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__brand img {
     max-height: 36px;
     max-width: 95px;
-  }
-  .mnsk7-header__menu-toggle,
-  .mnsk7-header__search-toggle,
-  .mnsk7-header__link--account,
-  .mnsk7-header__cart-trigger,
-  .mnsk7-header__cart .cart-contents {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
-    padding: 0;
-    gap: 0;
-    justify-content: center;
-  }
-  .mnsk7-header__search-icon,
-  .mnsk7-header__search-icon svg,
-  .mnsk7-header__account-icon,
-  .mnsk7-header__account-icon svg,
-  .mnsk7-header__cart-icon,
-  .mnsk7-header__cart-icon svg,
-  .mnsk7-header__hamburger {
-    width: 18px;
-    height: 18px;
-  }
-  /* Very narrow: cart icon + badge only; badge smaller so block doesn't overflow */
-  .mnsk7-header__cart .mnsk7-header__cart-count,
-  .mnsk7-header__cart .count {
-    display: inline-flex !important;
-    min-width: 16px;
-    height: 16px;
-    font-size: 0.625rem;
-    padding: 0 0.2rem;
   }
 }
 
@@ -1545,47 +1517,6 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__brand img {
     max-height: 36px;
     max-width: 80px;
-  }
-  .mnsk7-header__menu-toggle,
-  .mnsk7-header__search-toggle,
-  .mnsk7-header__link--account,
-  .mnsk7-header__cart-trigger,
-  .mnsk7-header__cart .cart-contents {
-    width: 44px;
-    height: 44px;
-    min-width: 44px;
-    min-height: 44px;
-    padding: 0;
-    gap: 0;
-    justify-content: center;
-  }
-  .mnsk7-header__search-icon,
-  .mnsk7-header__search-icon svg,
-  .mnsk7-header__account-icon,
-  .mnsk7-header__account-icon svg,
-  .mnsk7-header__cart-icon,
-  .mnsk7-header__cart-icon svg,
-  .mnsk7-header__hamburger {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-@media (max-width: 600px) {
-  .mnsk7-header__cart .mnsk7-header__cart-count,
-  .mnsk7-header__cart .count {
-    display: inline-flex !important;
-    min-width: 16px;
-    height: 16px;
-    font-size: 0.625rem;
-    padding: 0 0.2rem;
-  }
-  .mnsk7-header__cart-trigger,
-  .mnsk7-header__cart .cart-contents {
-    width: 44px;
-    min-width: 44px;
-    height: 44px;
-    min-height: 44px;
   }
 }
 

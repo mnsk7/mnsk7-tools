@@ -976,13 +976,21 @@ add_action( 'wp_footer', function () {
 				menuToggle.setAttribute('aria-label', open ? menuCloseLabel : menuOpenLabel);
 			}
 			menuToggle.addEventListener('click', function() {
-				if (window.innerWidth < DESKTOP_MIN && !nav.classList.contains('is-open')) {
+				var willOpen = !nav.classList.contains('is-open');
+				if (window.innerWidth < DESKTOP_MIN && willOpen) {
 					closeAllMobileOverlays('menu');
 				}
 				nav.classList.toggle('is-open');
+				if (!willOpen) closeMobileSubmenus();
 				setMenuAria();
 			});
 		}
+		window.addEventListener('pageshow', function(e) {
+			if (!e.persisted) return;
+			closeMenu();
+			closeSearch();
+			closeCart();
+		});
 		// Mobile (<=1023): tap na parent z submenu (np. „Sklep”) rozwija submenu; bez przejścia po URL. Capture phase + pewne wykrycie linku (tap może dać target = tekst/child).
 		if (menu) {
 			function getLinkFromEvent(ev, root) {
@@ -1055,7 +1063,8 @@ add_action( 'wp_footer', function () {
 				var a = getLinkFromEvent(e, menu);
 				if (!a || !a.getAttribute('href') || window.innerWidth >= DESKTOP_MIN || !nav) return;
 				var parentLi = a.closest('li.menu-item-has-children');
-				if (parentLi && isParentItemLink(a, parentLi)) return; // tap na parent (Sklep) — nie zamykaj, toggle obsłużył
+				if (parentLi && isParentItemLink(a, parentLi)) return;
+				closeMobileSubmenus();
 				nav.classList.remove('is-open');
 				if (menuToggle) { menuToggle.setAttribute('aria-expanded', 'false'); if (menuToggle.getAttribute('data-open-label')) menuToggle.setAttribute('aria-label', menuToggle.getAttribute('data-open-label')); }
 			});
