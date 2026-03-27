@@ -45,12 +45,12 @@ defined( 'ABSPATH' ) || exit;
 	.mnsk7-promo-bar__text{min-width:0;text-align:left;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35}
 	.mnsk7-promo-bar__text a{color:inherit;text-decoration:underline}
 	.mnsk7-promo-bar__close{position:static;border:0;background:transparent;color:inherit;font-size:1.25rem;line-height:1;padding:.25rem .5rem;min-width:44px;min-height:44px;z-index:2;align-self:start}
-	@media (max-width:1024px){.mnsk7-promo-bar{padding:.35rem .75rem}.mnsk7-promo-bar__inner{gap:.5rem}.mnsk7-promo-bar__text{line-height:1.35}}
+	@media (max-width:1023px){.mnsk7-promo-bar{padding:.35rem .75rem}.mnsk7-promo-bar__inner{gap:.5rem}.mnsk7-promo-bar__text{line-height:1.35}}
 	@media (max-width:480px){.mnsk7-promo-bar{padding:.5rem .75rem .5rem 1rem;min-height:44px}.mnsk7-promo-bar__inner{grid-template-columns:minmax(0,1fr) auto;align-items:start}.mnsk7-promo-bar__text{text-align:left;line-height:1.4}.mnsk7-promo-bar__close{margin-top:-.125rem}}
 	/* Archive: kompaktowy promo bar — mniejszy wpływ na LCP, pierwszy blok produktów może być LCP. */
 	.mnsk7-archive .mnsk7-promo-bar{font-size:0.75rem;padding:0.25rem 0.75rem}
 	.mnsk7-archive .mnsk7-promo-bar__text{font-size:inherit}
-	@media (max-width:1024px){.mnsk7-archive .mnsk7-promo-bar{padding:0.25rem 2.5rem 0.25rem 0.5rem}}
+	@media (max-width:1023px){.mnsk7-archive .mnsk7-promo-bar{padding:0.25rem 2.5rem 0.25rem 0.5rem}}
 	@media (max-width:480px){.mnsk7-archive .mnsk7-promo-bar{min-height:36px;padding:0.35rem 2.5rem 0.35rem 0.5rem}}
 	</style>
 </head>

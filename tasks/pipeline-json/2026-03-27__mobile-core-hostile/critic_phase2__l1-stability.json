@@ -1,0 +1,26 @@
+{
+  "outcome": "REJECT",
+  "process_accept": false,
+  "product_accept": false,
+  "final_accept": false,
+  "blocking_issues": [
+    "L2 visual regression gate failed (4 snapshot failures).",
+    "Snapshot governance blocks acceptance without explicit product signoff."
+  ],
+  "major_issues": [
+    "Post-deploy technical verifier outcome is REJECT.",
+    "Post-deploy practical verifier outcome is REJECT."
+  ],
+  "minor_issues": [],
+  "score_0_100": 35,
+  "rationale": "L1 stabilization succeeded and deploy is healthy, but L2 remains red on canonical header snapshots. Under current governance this prevents both process and product acceptance.",
+  "required_fixes": [
+    "Resolve 4 L2 header snapshot diffs or approve and update baseline with explicit product signoff.",
+    "Repeat post-deploy technical verify and practical verifier after L2 resolution."
+  ],
+  "reverify_plan": [
+    "Run: BASE_URL=https://staging.mnsk7-tools.pl npm run verify:l2 -- --reporter=list",
+    "If signoff approved, run snapshot update flow and rerun L2.",
+    "Then rerun verifier_postdeploy_technical + verifier_postdeploy_practical and critic phase2."
+  ]
+}

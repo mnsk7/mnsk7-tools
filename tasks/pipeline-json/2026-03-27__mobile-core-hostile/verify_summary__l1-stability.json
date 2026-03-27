@@ -1,0 +1,39 @@
+{
+  "deploy_commit": "2a8a314",
+  "deploy_run_id": "23653128595",
+  "base_url": "https://staging.mnsk7-tools.pl",
+  "postdeploy_verify": {
+    "l0": {
+      "command": "BASE_URL=https://staging.mnsk7-tools.pl npm run verify:l0",
+      "result": "PASS_WITH_SKIPS",
+      "notes": [
+        "php-lint PASS (docker php:8.2-cli fallback)",
+        "link-check SKIP",
+        "lighthouse-smoke SKIP"
+      ]
+    },
+    "l1": {
+      "command": "BASE_URL=https://staging.mnsk7-tools.pl npm run verify:l1 -- --reporter=list",
+      "result": "PASS",
+      "notes": [
+        "4/4 passed",
+        "pdp_mobile_add_to_cart passed after stabilization change"
+      ]
+    },
+    "l2": {
+      "command": "BASE_URL=https://staging.mnsk7-tools.pl npm run verify:l2 -- --reporter=list",
+      "result": "REJECT",
+      "notes": [
+        "exit_code=1",
+        "4 failed header visual snapshots",
+        "106 passed"
+      ],
+      "failed_tests": [
+        "mobile closed: header snapshot",
+        "mobile open: header + menu snapshot",
+        "desktop closed: header snapshot",
+        "desktop Sklep open: header + megamenu snapshot"
+      ]
+    }
+  }
+}

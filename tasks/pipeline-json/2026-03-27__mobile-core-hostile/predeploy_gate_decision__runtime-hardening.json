@@ -1,0 +1,14 @@
+{
+  "gate": "predeploy_verifier_practical_plus_technical",
+  "overall_readiness_for_deploy": "READY",
+  "decision": "PROCEED_TO_DEPLOY",
+  "reasons": [
+    "verifier_practical_predeploy__runtime-hardening.outcome = ACCEPT",
+    "verifier_technical_predeploy__runtime-hardening.outcome = ACCEPT"
+  ],
+  "next": [
+    "Commit and push runtime hardening diff to main",
+    "Run post-deploy technical verify L0/L1/L2 on staging",
+    "Run critic-scorer PHASE=2"
+  ]
+}

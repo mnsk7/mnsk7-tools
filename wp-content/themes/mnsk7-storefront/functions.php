@@ -1122,7 +1122,7 @@ add_action( 'wp_footer', function () {
 				if (window.innerWidth >= DESKTOP_MIN) return;
 				var wrap = searchToggle && searchToggle.closest('.mnsk7-header__search-wrap');
 				var panel = searchPanel && searchPanel.contains(e.target);
-				if (document.body.classList.contains('mnsk7-search-open') && !wrap.contains(e.target) && !panel) {
+				if (document.body.classList.contains('mnsk7-search-open') && wrap && !wrap.contains(e.target) && !panel) {
 					setSearchOpen(false);
 				}
 			});
@@ -1455,7 +1455,17 @@ add_action( 'wp_footer', function () {
 			if (!isMobile() || isSubmitting) return;
 			if (stickyBtn.dataset.action === 'choose') {
 				form.scrollIntoView({ behavior: 'smooth', block: 'center' });
-				var firstEmpty = variationsForm ? variationsForm.querySelector('.variations select:not([value=""])') || variationsForm.querySelector('.variations select') : null;
+				var firstEmpty = null;
+				if (variationsForm) {
+					var selects = variationsForm.querySelectorAll('.variations select');
+					for (var i = 0; i < selects.length; i++) {
+						if (!selects[i].value) {
+							firstEmpty = selects[i];
+							break;
+						}
+					}
+					if (!firstEmpty) firstEmpty = variationsForm.querySelector('.variations select');
+				}
 				if (firstEmpty) setTimeout(function() { firstEmpty.focus(); }, 350);
 				return;
 			}
@@ -1469,6 +1479,10 @@ add_action( 'wp_footer', function () {
 		}, { passive: true });
 		syncStickyMeta();
 		if (variationsForm && window.jQuery) {
+			variationsForm.addEventListener('change', function() {
+				updateStickyBtnState();
+				syncStickyMeta();
+			});
 			window.jQuery(form).on('show_variation', function(_event, variation) {
 				if (stickyPrice) {
 					stickyPrice.innerHTML = (variation && variation.price_html) ? variation.price_html : (summaryPrice ? summaryPrice.innerHTML : defaultStickyPrice);

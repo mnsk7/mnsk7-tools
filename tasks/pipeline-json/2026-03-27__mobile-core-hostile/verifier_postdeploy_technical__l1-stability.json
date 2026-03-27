@@ -1,0 +1,25 @@
+{
+  "mode": "technical",
+  "outcome": "REJECT",
+  "checks": [
+    "L0 PASS_WITH_SKIPS",
+    "L1 PASS (4/4)",
+    "L2 REJECT (4 failed header visual snapshots)"
+  ],
+  "evidence": [
+    "GitHub deploy run 23653128595 (success)",
+    "verify_summary__l1-stability.json",
+    "playwright output: 4 failed, 106 passed in verify:l2"
+  ],
+  "missing_evidence": [
+    "Trusted visual baseline/signoff for current header visual state"
+  ],
+  "risks": [
+    "L2 red keeps visual regression gate open.",
+    "Without product signoff, snapshot update governance blocks acceptance."
+  ],
+  "required_next_steps": [
+    "Either align UI to approved baseline or get explicit product signoff for new visual state.",
+    "Re-run L2 to PASS (or approved baseline update), then repeat technical verifier."
+  ]
+}

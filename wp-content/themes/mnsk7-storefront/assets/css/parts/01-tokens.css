@@ -72,6 +72,7 @@
    * W @media trzeba wpisać wartość liczbową (CSS nie obsługuje var() w media queries).
    * Odpowiednik w PHP: MNSK7_BREAKPOINT_MOBILE. */
   --breakpoint-mobile:   768px;
+  --breakpoint-header-mobile: 1024px; /* Header contract: desktop >=1024, mobile <=1023 */
   --breakpoint-mobile-narrow: 360px;
   --breakpoint-tablet:   900px;
   --space-4:  4px;

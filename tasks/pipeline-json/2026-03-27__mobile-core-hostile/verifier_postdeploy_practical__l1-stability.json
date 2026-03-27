@@ -1,0 +1,20 @@
+{
+  "mode": "practical",
+  "outcome": "REJECT",
+  "product_accept": false,
+  "checks": [
+    "Requested objective for this cycle (L1 stability) is achieved: mobile PDP add-to-cart test now passes in L1.",
+    "Core Woo flow on staging remains alive (4/4 in L1)."
+  ],
+  "gaps": [
+    "L2 visual gate still failing on 4 header snapshots.",
+    "No explicit product signoff recorded for current header visual state."
+  ],
+  "risks": [
+    "Accepting now would legalize unresolved visual diffs against governance rules."
+  ],
+  "required_next_steps": [
+    "Get product signoff for target header visuals or match approved baseline.",
+    "Re-run L2 and then practical verifier."
+  ]
+}
