@@ -2,6 +2,31 @@
 
 Этот документ ведётся после outcome `REJECT`/`ESCALATE` или при **critical/major** проблемах, чтобы не повторять ошибки в пайплайне и верификации.
 
+### 2026-03-27 — REJECT (promo banner cycle): postdeploy L1/a11y/L2 failed after main push
+
+- **Context**: коммит `f982f87` (responsive fix промо-баннера) запушен в `main`; deploy на staging прошёл (`23650862750`), после чего выполнен postdeploy `verify:all` с форсом `VERIFY_L1=1 VERIFY_L2=1 VERIFY_A11Y=1`.
+- **Severity**: critical
+- **What slipped**:
+  - `critic-scorer PHASE=2` вернул `REJECT`, `score_0_100=0`, `process_accept=false`, `product_accept=false`.
+  - Blocking rules сработали: `l1 (woo flow)=FAIL`, `a11y=FAIL`, `l2 (visual/regression)=FAIL`.
+  - L1: `Cart appears empty after mobile PDP add-to-cart` на `/koszyk/` (блокирующий конверсионный флоу).
+  - L2: 4 visual snapshot failures в `e2e/header-layout.spec.js` (mobile closed/open, desktop closed, desktop sklep open).
+  - Product Verifier блок не выполнен (нет `owner_bug_ledger`, `agent_found_bugs`, `agent_found_bugs_filtered`, `safari_mobile_status`).
+- **Why it slipped**:
+  - Исправление промо-бара затронуло header-состояния, но визуальный baseline и поведенческие Woo/a11y сценарии не прошли постдеплойный гейт.
+  - Пайплайн дошёл до PHASE=2 корректно, но acceptance попытка была раньше закрытия всех обязательных postdeploy доказательств.
+- **Evidence**:
+  - Deploy run: `https://github.com/mnsk7/mnsk7-tools/actions/runs/23650862750` (success).
+  - `artifacts/verify/verify-report.json`: `exit_code=1`, `blocking.failed_rules=["l1 (woo flow)","a11y","l2 (visual/regression)"]`.
+  - `artifacts/verify/verify-all.log`: L1 empty cart error, a11y serious/critical failures, L2 header snapshot regressions.
+  - `critic-scorer PHASE=2`: `outcome=REJECT`.
+- **Mitigation (now)**:
+  - Итог зафиксирован как `REJECT`, добавлен постмортем, ложный `ACCEPT` не выставлялся.
+- **Prevention (process)**:
+  - Для header/promo правок всегда считать L1+a11y+L2 обязательными postdeploy блокерами до PASS.
+  - Не переходить к финальному PHASE=2 без Product Verifier JSON-блока (включая `safari_mobile_status`).
+  - Следующий цикл начинать с фикса корневой причины empty-cart на mobile PDP и затем повторного полного verify.
+
 ### 2026-03-27 — REJECT (postdeploy gate): нет Product Verifier + критичные SKIP в technical verify
 
 - **Context**: выполнен цикл `predeploy verifier -> deploy -> postdeploy technical verify -> critic-scorer PHASE=2` для текущего `main` без локальных code diff.
@@ -430,4 +455,27 @@
   - **rules**: закрепить “skipped на L1 = fail” как blocking rule для любых UI/Woo изменений.
   - **verify**: в `VERIFY_REPORT` всегда сохранять counts (passed/failed/flaky/skipped) + явный summary; отсутствие counts трактовать как FAIL.
   - **verify**: добавить self-test для verify tooling и запускать его при изменениях `scripts/verify/*`.
+
+### 2026-03-27 — REJECT: правки verdict-артефактов после последнего verifier/critic без нового evidence
+
+- **Context**: после предыдущего post-deploy цикла были внесены новые правки в `tasks/pipeline-json/2026-03-27__mobile-core-hostile/*.json`; запрошен обязательный predeploy gate перед возможным deploy.
+- **Severity**: major
+- **What slipped**:
+  - Изменены продуктовые статусы (`OWNER-003`, `cta_honesty`) в scoreboard/safari файлах без нового hostile replay evidence.
+  - На predeploy этапе нет достаточного подтверждения claims ↔ evidence, поэтому practical+technical verifier закономерно дали `REJECT`.
+  - Из-за `BLOCK_DEPLOY` нельзя переходить к post-deploy technical verify и `critic-scorer PHASE=2` для этого diff.
+- **Why it slipped**:
+  - Попытка обновить verdict-артефакты опередила новый валидирующий цикл (Safari/hostile replay).
+  - В артефактах произошло “status uplift” без подкрепления новым доказательным пакетом.
+- **Evidence**:
+  - `tasks/pipeline-json/2026-03-27__mobile-core-hostile/verifier_practical_predeploy.json` -> `outcome: REJECT`.
+  - `tasks/pipeline-json/2026-03-27__mobile-core-hostile/verifier_technical_predeploy.json` -> `outcome: REJECT`.
+  - `tasks/pipeline-json/2026-03-27__mobile-core-hostile/predeploy_gate_decision.json` -> `overall_readiness_for_deploy: NOT_READY`, `decision: BLOCK_DEPLOY`.
+- **Mitigation (now)**:
+  - Gate остановлен на predeploy шаге, deploy не выполнен.
+  - Добавлены формальные predeploy verifier-артефакты и зафиксирован postmortem.
+- **Prevention (process)**:
+  - Не менять `owner_bug_scoreboard`/`safari_mobile_status` в сторону “лучше”, пока не приложен новый replay evidence.
+  - Перед любым новым deploy требовать predeploy verifier `ACCEPT` в обоих режимах.
+  - Только после `READY` запускать post-deploy `L0/L1/L2` и затем `critic-scorer PHASE=2`.
 
