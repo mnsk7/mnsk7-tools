@@ -48,6 +48,15 @@ body.home .mnsk7-content {
     margin-top: calc(var(--header-h) + var(--mnsk7-promo-h, 2.5rem));
   }
   /* Product archives already sit below sticky promo/header in normal flow; extra margin-top creates a false white block. */
+  body.mnsk7-has-promo.post-type-archive-product #content,
+  body.mnsk7-has-promo.post-type-archive-product .site-content,
+  body.mnsk7-has-promo.post-type-archive-product .mnsk7-content,
+  body.mnsk7-has-promo.tax-product_cat #content,
+  body.mnsk7-has-promo.tax-product_cat .site-content,
+  body.mnsk7-has-promo.tax-product_cat .mnsk7-content,
+  body.mnsk7-has-promo.tax-product_tag #content,
+  body.mnsk7-has-promo.tax-product_tag .site-content,
+  body.mnsk7-has-promo.tax-product_tag .mnsk7-content,
   body.post-type-archive-product #content,
   body.post-type-archive-product .site-content,
   body.post-type-archive-product .mnsk7-content,
@@ -57,7 +66,7 @@ body.home .mnsk7-content {
   body.tax-product_tag #content,
   body.tax-product_tag .site-content,
   body.tax-product_tag .mnsk7-content {
-    margin-top: 0;
+    margin-top: 0 !important;
   }
 }
 @media (min-width: 768px) {
