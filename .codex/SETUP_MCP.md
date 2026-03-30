@@ -10,7 +10,7 @@ Server:
 
 ## Why this config looks this way on Windows
 
-The official Chrome DevTools MCP docs recommend a Windows-friendly wrapper using:
+The current setup uses a Windows-friendly wrapper:
 
 - `cmd /c npx -y chrome-devtools-mcp@latest`
 - `SystemRoot`
@@ -28,6 +28,10 @@ Use Chrome DevTools MCP for:
 - layout/debug traces
 - performance traces
 - DOM inspection on staging
+
+## Activation
+
+See `docs/CHROME_DEVTOOLS_MCP_SETUP.md` for the step-by-step activation flow for Cursor and Codex.
 
 ## Safety
 

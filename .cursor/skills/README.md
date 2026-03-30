@@ -10,6 +10,9 @@ Use these first for normal delivery work:
 - `scope-control`
 - `requirements-to-tasks`
 - `qa-smoke-woo`
+- `repo-risk-triage`
+- `staging-smoke-runner`
+- `mcp-and-tool-safety`
 - `cyberfolks-deploy-playbook`
 - `github-actions-wp`
 - `performance-corewebvitals`
@@ -20,6 +23,7 @@ Use these first for normal delivery work:
 
 Use only when the task clearly needs them:
 
+- `background-agent-setup`
 - `woo-templates-checkout`
 - `visual-design-woo`
 - `ecommerce-header-footer-guidelines`
