@@ -324,7 +324,6 @@ add_action( 'wp', function () {
 		return;
 	}
 	remove_action( 'woocommerce_before_main_content', 'woocommerce_breadcrumb', 20 );
-	add_action( 'woocommerce_single_product_summary', 'woocommerce_breadcrumb', 5 );
 	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10 );
 } );
 

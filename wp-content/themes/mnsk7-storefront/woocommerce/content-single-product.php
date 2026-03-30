@@ -25,11 +25,17 @@ if ( post_password_required() ) {
 	<?php do_action( 'woocommerce_before_single_product_summary' ); ?>
 
 	<div class="summary entry-summary mnsk7-pdp-buybox">
+		<?php if ( function_exists( 'woocommerce_breadcrumb' ) ) : ?>
+			<div class="mnsk7-pdp-breadcrumb-slot">
+				<?php woocommerce_breadcrumb(); ?>
+			</div>
+		<?php endif; ?>
+
 		<?php
 		/**
 		 * Buy box: tytuł → cena → dostępność → parametry → CTA → trust (product_card_visual, WOO_CONVERSION_REWORK_PLAN).
 		 * woocommerce_single_product_summary hooks (priority):
-		 *  5  – rating
+		 *  5  – (wolne; breadcrumbs renderujemy bezpośrednio w template, nad hookami)
 		 *  8  – mnsk7_single_product_availability
 		 * 10  – title
 		 * 15  – price (moved up for above-fold)
