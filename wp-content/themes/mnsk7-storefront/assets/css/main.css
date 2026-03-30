@@ -7624,7 +7624,10 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   }
   body.post-type-archive-product .mnsk7-breadcrumb-wrap,
   body.tax-product_cat .mnsk7-breadcrumb-wrap,
-  body.tax-product_tag .mnsk7-breadcrumb-wrap {
+  body.tax-product_tag .mnsk7-breadcrumb-wrap,
+  body.post-type-archive-product .woocommerce-breadcrumb,
+  body.tax-product_cat .woocommerce-breadcrumb,
+  body.tax-product_tag .woocommerce-breadcrumb {
     display: none;
   }
   /* Chips: bez dodatkowego wcięcia — Rodzaje frezów i chipy startują pod „F” w tytule */
