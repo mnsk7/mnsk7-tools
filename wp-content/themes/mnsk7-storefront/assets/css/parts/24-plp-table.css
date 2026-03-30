@@ -1080,13 +1080,15 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
     min-height: 46px;
     padding: 0.65rem 0.75rem;
     border: none;
-    border-radius: 0;
+    border-radius: var(--r-md) 0 0 var(--r-md) !important;
+    appearance: none;
     font-size: var(--fs-sm);
   }
   .mnsk7-plp-search--priority .mnsk7-plp-search__submit {
     min-height: 46px;
     padding-inline: 1rem;
-    border-radius: 0;
+    border-radius: 0 var(--r-md) var(--r-md) 0 !important;
+    appearance: none;
   }
   .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs) {
     gap: 0.3rem;
