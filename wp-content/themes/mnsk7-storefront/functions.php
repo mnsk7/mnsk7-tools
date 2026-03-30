@@ -927,6 +927,11 @@ add_action( 'wp_footer', function () {
 		function resetMobileMenuPosition() {
 			if (!menu) return;
 			try { menu.scrollTop = 0; } catch (e) {}
+			try { menu.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) {}
+			menu.querySelectorAll('.sub-menu').forEach(function(subMenu) {
+				try { subMenu.scrollTop = 0; } catch (e) {}
+				try { subMenu.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) {}
+			});
 		}
 
 		// First-open correctness: sync promo offset and sticky shrink before deferred tasks.

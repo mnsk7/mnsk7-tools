@@ -643,6 +643,24 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   }
 }
 
+/* Touch fallback: real phones with desktop-width layout viewport still need mobile PDP stack. */
+@media (hover: none) and (pointer: coarse) {
+  .single-product div.product {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .single-product div.product .images,
+  .single-product div.product .summary.mnsk7-pdp-buybox {
+    max-width: 100%;
+    min-width: 0;
+    flex-basis: 100%;
+  }
+  .single-product div.product .images {
+    position: static;
+    top: auto;
+  }
+}
+
 @media (max-width: 768px) {
   .single-product div.product {
     padding: 0 1rem 1.5rem;
