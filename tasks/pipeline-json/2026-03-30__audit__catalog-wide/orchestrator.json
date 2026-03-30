@@ -1,0 +1,266 @@
+{
+  "context": {
+    "date": "2026-03-30",
+    "environment": "staging.mnsk7-tools.pl",
+    "mode": "orchestrator_only",
+    "source_artifact": "tasks/pipeline-json/2026-03-30__audit__catalog-wide/analyzer.json",
+    "repo_pipeline": [
+      "docs/REPO_PIPELINE.md",
+      "docs/DEFINITION_OF_DONE.md",
+      "docs/QUALITY_GATES.md",
+      "docs/BUG_DISCOVERY_ACCEPTANCE.md"
+    ]
+  },
+  "task_classification": {
+    "task_mode": "mixed",
+    "task_scope": "catalog_wide",
+    "risk_level": "high",
+    "why_high_risk": [
+      "P0 mobile header touches shared navigation contract",
+      "PLP hierarchy changes are adjacent to add-to-cart/cart/checkout paths",
+      "SEO head changes affect shared archive contract"
+    ],
+    "allowed_code_zones": [
+      "wp-content/themes/mnsk7-storefront/**",
+      "mu-plugins/**"
+    ],
+    "non_negotiable_guards": [
+      "add to cart from PLP or PDP",
+      "cart visibility and cart update",
+      "checkout entry and visible checkout form",
+      "staging safety guarantees"
+    ]
+  },
+  "subagent_evidence": {
+    "technical_runtime": {
+      "status": "completed",
+      "confirmed_items": [
+        "CAT-006 root cause is split mobile header contract across header.php, 04-header.css and runtime behavior assumptions",
+        "CAT-005 empty-state is structurally delayed because filter/chip UI renders before no-products-found flow",
+        "CAT-008 is structural PLP overload, not a cosmetic-only issue"
+      ]
+    },
+    "seo_meta": {
+      "status": "completed",
+      "confirmed_items": [
+        "CAT-001 should be handled through existing archive title filters in theme",
+        "CAT-002 should be handled through canonical filters in theme or mu-plugin SEO layer",
+        "CAT-003 is better treated as staging SEO policy unless separate release evidence makes it blocking"
+      ]
+    },
+    "heuristic_taste": {
+      "status": "completed",
+      "confirmed_items": [
+        "For Polish B2B CNC ecommerce first-screen priority should favor product finding over promo weight",
+        "CAT-009 is a low-risk hierarchy quick win",
+        "CAT-007 and CAT-010 are lower priority than header stabilization",
+        "CAT-004 materially affects findability, not just aesthetics"
+      ]
+    }
+  },
+  "workstreams": [
+    {
+      "stream_id": "P0-header-contract",
+      "priority": "critical",
+      "findings": [
+        "CAT-006"
+      ],
+      "owner_role": "implementer",
+      "ownership_zone": [
+        "wp-content/themes/mnsk7-storefront/header.php",
+        "wp-content/themes/mnsk7-storefront/assets/css/parts/04-header.css"
+      ],
+      "goal": "Unify mobile header geometry contract and remove divergence between inline critical CSS and runtime CSS without breaking menu, search or cart entry.",
+      "safe_diff_rules": [
+        "Do not edit functions.php unless header stabilization is blocked without it",
+        "Prefer reducing duplicated geometry in inline critical CSS over adding more fallback rules",
+        "Do not change header feature scope"
+      ],
+      "verify_gate": {
+        "L0": [
+          "PHP/template syntax check for touched theme files",
+          "diff review for header geometry duplication"
+        ],
+        "L1": [
+          "manual smoke: mobile menu open/close",
+          "manual smoke: header search open/close",
+          "manual smoke: header cart trigger and dropdown",
+          "manual smoke: add-to-cart, cart, checkout entry still accessible"
+        ],
+        "L2": [
+          "real-device retest on iPhone XR Safari",
+          "real-device retest on iPhone XR Telegram in-app browser"
+        ]
+      },
+      "status": "ready_for_implementer"
+    },
+    {
+      "stream_id": "P1-seo-archives",
+      "priority": "major",
+      "findings": [
+        "CAT-001",
+        "CAT-002"
+      ],
+      "owner_role": "implementer",
+      "ownership_zone": [
+        "wp-content/themes/mnsk7-storefront/functions.php",
+        "mu-plugins/inc/seo.php"
+      ],
+      "goal": "Establish commerce-grade title and canonical contract for shop/category/tag archives without template string injection.",
+      "safe_diff_rules": [
+        "Do not touch CAT-003 schema domain policy in this stream",
+        "Use filters and existing SEO extension points",
+        "Do not add manual head markup in templates"
+      ],
+      "verify_gate": {
+        "L0": [
+          "inspect rendered head/source on shop, category and tag archives",
+          "inspect paged and filtered variants for canonical stability"
+        ],
+        "L1": [],
+        "L2": []
+      },
+      "status": "ready_after_P0_or_parallel_if_no_file_conflict"
+    },
+    {
+      "stream_id": "P1-plp-hierarchy-and-recovery",
+      "priority": "major",
+      "findings": [
+        "CAT-005",
+        "CAT-009"
+      ],
+      "owner_role": "implementer",
+      "ownership_zone": [
+        "wp-content/themes/mnsk7-storefront/woocommerce/archive-product.php",
+        "wp-content/themes/mnsk7-storefront/woocommerce/loop/no-products-found.php",
+        "wp-content/themes/mnsk7-storefront/assets/css/parts/24-plp-table.css",
+        "mu-plugins/mnsk7-catalog-core.php"
+      ],
+      "goal": "Make empty-state recovery and search entry primary before overloaded filter/chip stacks, using template flow rather than CSS hiding.",
+      "safe_diff_rules": [
+        "Keep Woo add-to-cart mechanics untouched",
+        "If result count is zero, recovery-first layout should own the first-screen message",
+        "Treat search reprioritization as layout ordering, not new functionality"
+      ],
+      "verify_gate": {
+        "L0": [
+          "empty-result smoke on filtered PLP",
+          "archive render smoke on shop, category, tag, page 2"
+        ],
+        "L1": [
+          "PLP add-to-cart still works from valid-result state",
+          "cart and checkout entry remain intact"
+        ],
+        "L2": [
+          "mobile visual check for first-screen hierarchy"
+        ]
+      },
+      "status": "ready_after_P0"
+    },
+    {
+      "stream_id": "P1-chips-normalization",
+      "priority": "major",
+      "findings": [
+        "CAT-004"
+      ],
+      "owner_role": "implementer",
+      "ownership_zone": [
+        "wp-content/themes/mnsk7-storefront/functions.php",
+        "wp-content/themes/mnsk7-storefront/woocommerce/archive-product.php",
+        "wp-content/themes/mnsk7-storefront/assets/css/parts/24-plp-table.css"
+      ],
+      "goal": "Normalize units/labels and bound visible chip volume based on archive business priority.",
+      "safe_diff_rules": [
+        "Prefer single formatter/source-of-truth",
+        "Do not solve label duplication only in CSS",
+        "Keep scope limited to visible archive filters"
+      ],
+      "verify_gate": {
+        "L0": [
+          "scan tag/category archives for duplicate display formats such as 50 mm vs 50mm"
+        ],
+        "L1": [
+          "archive filter interaction smoke if filter logic visibility changes"
+        ],
+        "L2": [
+          "visual review of filter discoverability on mobile and desktop"
+        ]
+      },
+      "status": "ready_after_P1-PLP"
+    },
+    {
+      "stream_id": "P2-visual-polish",
+      "priority": "minor",
+      "findings": [
+        "CAT-007",
+        "CAT-010"
+      ],
+      "owner_role": "implementer",
+      "ownership_zone": [
+        "wp-content/themes/mnsk7-storefront/header.php",
+        "wp-content/themes/mnsk7-storefront/assets/css/parts/04-header.css",
+        "wp-content/themes/mnsk7-storefront/functions.php",
+        "mu-plugins/inc/woo-ux.php"
+      ],
+      "goal": "Polish promo hierarchy and cart summary language only after header contract is stable.",
+      "safe_diff_rules": [
+        "Do not start before P0 header stream is verified",
+        "Treat promo compact mode as hierarchy tuning, not feature expansion",
+        "Cart summary changes require cart-open smoke"
+      ],
+      "verify_gate": {
+        "L0": [
+          "visual diff review",
+          "cart dropdown smoke"
+        ],
+        "L1": [],
+        "L2": [
+          "mobile visual pass on PLP first screen"
+        ]
+      },
+      "status": "deferred"
+    },
+    {
+      "stream_id": "policy-only",
+      "priority": "minor",
+      "findings": [
+        "CAT-003"
+      ],
+      "owner_role": "reviewer",
+      "goal": "Treat staging schema domain mismatch as documented staging SEO policy unless production release evidence makes it blocking.",
+      "safe_diff_rules": [
+        "No HTML post-processing hacks",
+        "Only escalate to code if policy decision changes"
+      ],
+      "verify_gate": {
+        "L0": [
+          "document residual risk honestly in delivery summary"
+        ],
+        "L1": [],
+        "L2": []
+      },
+      "status": "document_only"
+    }
+  ],
+  "execution_order": [
+    "P0-header-contract",
+    "P1-seo-archives",
+    "P1-plp-hierarchy-and-recovery",
+    "P1-chips-normalization",
+    "P2-visual-polish"
+  ],
+  "reviewer_handoff": {
+    "required_checks": [
+      "scope stayed inside allowed zones",
+      "Woo conversion guards still hold",
+      "verification depth matches stream risk",
+      "staging safety unchanged",
+      "no unrelated cleanup entered the diff"
+    ]
+  },
+  "tooling_note": {
+    "status": "partial",
+    "note": "Investigative subagent outputs were captured successfully. Executor handoff should proceed from this artifact because direct implementer launch was unstable in-session."
+  },
+  "overall_status": "orchestration_complete_ready_for_executor"
+}

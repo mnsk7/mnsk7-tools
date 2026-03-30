@@ -1,0 +1,357 @@
+{
+  "meta": {
+    "date": "2026-03-30",
+    "env": "staging",
+    "scope": "wide_catalog_pass",
+    "language": "ru",
+    "rubric_version": "catalog-audit-v1",
+    "urls": [
+      "https://staging.mnsk7-tools.pl/sklep/",
+      "https://staging.mnsk7-tools.pl/kategoria-produktu/frez-spiralny/",
+      "https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/#mnsk7-plp-results"
+    ],
+    "states_covered": [
+      "desktop_baseline",
+      "mobile_risk_profile_iphone_xr_and_telegram_inapp",
+      "filtered_state_filter_srednica",
+      "empty_state_candidate",
+      "pagination_page_2",
+      "header_menu_search_cart_entry_contract_review"
+    ],
+    "artifacts": {
+      "snapshot_dir": "tasks/pipeline-json/2026-03-30__audit__catalog-wide/snapshots",
+      "html_snapshots": [
+        "sklep_baseline.html",
+        "category_frez_spiralny_baseline.html",
+        "tag_frez_do_metalu_hash_results.html",
+        "sklep_filter_empty_candidate.html",
+        "sklep_page2.html"
+      ],
+      "http_signals": {
+        "status_codes": {
+          "sklep": 200,
+          "category_frez_spiralny": 200,
+          "tag_frez_do_metalu": 200,
+          "filter_srednica_candidate": 200,
+          "sklep_page_2": 200
+        },
+        "cache_control": "public, max-age=0",
+        "x_litespeed_cache_header_present": false
+      }
+    },
+    "notes": [
+      "Аудит выполнен без изменения runtime-кода.",
+      "На хеше #mnsk7-plp-results сервер отдает ту же HTML-страницу, поведение якоря проверено по inline JS в snapshot.",
+      "Реальная интерактивная проверка Safari/Telegram browser отмечена как risk-profile на основе кода + пользовательского факта о смещении header."
+    ]
+  },
+  "findings": [
+    {
+      "id": "CAT-001",
+      "page_url": "https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/#mnsk7-plp-results",
+      "surface": "seo_meta",
+      "severity": "major",
+      "is_critical": false,
+      "current_behavior": "Title страницы тега формируется как «Archiwa Frez do metalu |» без нормального брендинга и продающего контекста.",
+      "why_bug": "Снижается CTR из SERP/вкладок и теряется коммерческий контекст страницы категории инструмента.",
+      "expected_behavior": "Title должен быть формата коммерческой PLP-страницы, например «Frez do metalu – sklep CNC | Mnsk7-tools.pl».",
+      "non_hacky_solution": "Сделать единый генератор title для product_tag в теме/SEO-слое через явный шаблон, а не оставлять fallback «Archiwa ...».",
+      "dimension_scores": {
+        "technical": 3,
+        "heuristic": 4,
+        "taste_fit_pl_cnc_b2b": 4
+      },
+      "evidence": "snapshot tag_frez_do_metalu_hash_results.html: <title>Archiwa Frez do metalu |</title>",
+      "acceptance_criteria": "Title всех product_tag страниц не содержит «Archiwa», включает понятную коммерческую формулировку и бренд.",
+      "implementation_hint": "Использовать фильтр document_title_parts для archive tag и шаблонную строку с term name + brand."
+    },
+    {
+      "id": "CAT-002",
+      "page_url": "https://staging.mnsk7-tools.pl/sklep/",
+      "surface": "seo_meta",
+      "severity": "major",
+      "is_critical": false,
+      "current_behavior": "В HTML целевых PLP не обнаружен явный <link rel=\"canonical\">.",
+      "why_bug": "Повышается риск дублирования URL-состояний (paged/filter/hash-вариации) и размывания индексации.",
+      "expected_behavior": "Каждая PLP имеет канонический URL, стабильно заданный в head.",
+      "non_hacky_solution": "Настроить canonical как часть SEO-контракта на архивы: shop/category/tag + поведение для filter_* и paged.",
+      "dimension_scores": {
+        "technical": 4,
+        "heuristic": 3,
+        "taste_fit_pl_cnc_b2b": 2
+      },
+      "evidence": "HTTP/HTML сигналы по sklep/category/tag: canonical пустой в выборке.",
+      "acceptance_criteria": "На shop/category/tag присутствует корректный rel=canonical, предсказуемый для paged/filter.",
+      "implementation_hint": "Сконфигурировать canonical в Yoast/theme filters без ручных строковых вставок в шаблон."
+    },
+    {
+      "id": "CAT-003",
+      "page_url": "https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/#mnsk7-plp-results",
+      "surface": "seo_meta",
+      "severity": "minor",
+      "is_critical": false,
+      "current_behavior": "В JSON-LD на staging встречаются production URL (mnsk7-tools.pl) при текущем домене staging.mnsk7-tools.pl.",
+      "why_bug": "Для staging это создает шум в технической диагностике и затрудняет верификацию SEO-сигналов перед релизом.",
+      "expected_behavior": "На staging schema URLs либо консистентно staging, либо явно документированная политика с отдельным режимом.",
+      "non_hacky_solution": "Выбрать и зафиксировать единую SEO-политику для staging (domain mapping в SEO плагине + doc).",
+      "dimension_scores": {
+        "technical": 3,
+        "heuristic": 1,
+        "taste_fit_pl_cnc_b2b": 1
+      },
+      "evidence": "snapshot tag_frez_do_metalu_hash_results.html: schema graph @id/url с https://mnsk7-tools.pl/...",
+      "acceptance_criteria": "SEO-schema на staging соответствует согласованному доменному правилу и не ломает pre-release проверку.",
+      "implementation_hint": "Настроить environment-aware site URL для SEO-генерации вместо точечных постобработок HTML."
+    },
+    {
+      "id": "CAT-004",
+      "page_url": "https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/#mnsk7-plp-results",
+      "surface": "chips",
+      "severity": "major",
+      "is_critical": false,
+      "current_behavior": "Chips на tag PLP перегружены: десятки значений, смешанные форматы (50 mm/50mm, 20,5 mm/20,5mm, kat/kat-skosu и др.).",
+      "why_bug": "Сканирование фильтров становится тяжелым, растет когнитивная нагрузка и падает вероятность быстрого выбора подходящей фрезы.",
+      "expected_behavior": "Чипсы показывают нормализованные, ограниченные и наиболее полезные для выбора параметры в чистом формате.",
+      "non_hacky_solution": "Нормализовать формат значений атрибутов на уровне источника данных + ограничить приоритетные фильтры на tag PLP.",
+      "dimension_scores": {
+        "technical": 3,
+        "heuristic": 5,
+        "taste_fit_pl_cnc_b2b": 5
+      },
+      "evidence": "snapshot tag_frez_do_metalu_hash_results.html: длинный блок chips, примеры «50mm», «75mm», «kat», «zastosowanie».",
+      "acceptance_criteria": "У каждого фильтра единый формат единиц/десятичности, число видимых chip-групп ограничено business-priority.",
+      "implementation_hint": "Сделать нормализацию в одном месте (term label formatter) и матрицу приоритетов фильтров по типу архива."
+    },
+    {
+      "id": "CAT-005",
+      "page_url": "https://staging.mnsk7-tools.pl/sklep/?filter_srednica=999999",
+      "surface": "filter",
+      "severity": "major",
+      "is_critical": false,
+      "current_behavior": "В empty state сначала показывается массив chips/filters, и только затем блок «Nie znaleziono produktów...».",
+      "why_bug": "Пользователь с пустой выдачей получает перегруженный экран и поздний сигнал о том, что товаров нет.",
+      "expected_behavior": "При пустой выдаче фокус должен быть на восстановлении сценария: clear filters, top suggestions, быстрые CTA.",
+      "non_hacky_solution": "Выделить отдельный layout empty-PLP: компактный фильтр-резюме + явный reset/рекомендованные категории.",
+      "dimension_scores": {
+        "technical": 3,
+        "heuristic": 5,
+        "taste_fit_pl_cnc_b2b": 4
+      },
+      "evidence": "snapshot sklep_filter_empty_candidate.html: chips блок перед <div class=\"woocommerce-no-products-found mnsk7-plp-empty...\">.",
+      "acceptance_criteria": "На empty PLP первично виден блок восстановления поиска, а не длинный список chips.",
+      "implementation_hint": "Условный рендер empty-state в archive-product flow через единый template branch."
+    },
+    {
+      "id": "CAT-006",
+      "page_url": "https://staging.mnsk7-tools.pl/sklep/",
+      "surface": "header",
+      "severity": "critical",
+      "is_critical": true,
+      "current_behavior": "На реальном iPhone XR/Telegram in-app browser пользователь наблюдает смещение логотипа вправо и нехватку места под иконки.",
+      "why_bug": "Ломается главный навигационный слой каталога на мобильном устройстве в реальном пользовательском контуре.",
+      "expected_behavior": "Header сохраняет стабильную геометрию на iPhone XR/Safari/Telegram browser без уезда логотипа и с полным набором кнопок.",
+      "non_hacky_solution": "Упростить и унифицировать mobile-header contract: единая геометрия в одном источнике, минимизировать дубли critical/runtime CSS.",
+      "dimension_scores": {
+        "technical": 5,
+        "heuristic": 5,
+        "taste_fit_pl_cnc_b2b": 4
+      },
+      "evidence": "user report + snapshots содержат большой inline critical блок header и отдельный runtime блок с перекрывающимися mobile правилами.",
+      "acceptance_criteria": "На iPhone XR (Safari + Telegram browser) header без визуальных сдвигов; иконки не обрезаются; меню/поиск/корзина доступны.",
+      "implementation_hint": "Свести mobile layout к единому CSS contract и применить его и в critical, и в main без расхождения семантики."
+    },
+    {
+      "id": "CAT-007",
+      "page_url": "https://staging.mnsk7-tools.pl/sklep/",
+      "surface": "visual",
+      "severity": "major",
+      "is_critical": false,
+      "current_behavior": "Промо-баннер «DOSTAWA / Gratis od 300 zł...» визуально доминирует над каталогом и выбивается из общего ритма.",
+      "why_bug": "Для нишевого B2B/CNC каталога приоритет должен быть на быстром сканировании ассортимента и параметров, а не на широкой верхней плашке.",
+      "expected_behavior": "Промо-зона поддерживает конверсию, но не конкурирует с PLP-навигацией и фильтрами.",
+      "non_hacky_solution": "Сделать адаптивную hierarchy-версию баннера: compact mode на PLP/mobile + нормированная типографика и вертикальные отступы.",
+      "dimension_scores": {
+        "technical": 2,
+        "heuristic": 4,
+        "taste_fit_pl_cnc_b2b": 5
+      },
+      "evidence": "snapshot sklep_baseline.html: promo bar с badge/value/meta/cta занимает заметный верхний фокус над списком.",
+      "acceptance_criteria": "На PLP mobile баннер не съедает первый экран и не ухудшает считываемость каталожной структуры.",
+      "implementation_hint": "Ввести токенизированные display-modes для promo bar по контексту страницы (archive/home/checkout)."
+    },
+    {
+      "id": "CAT-008",
+      "page_url": "https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/#mnsk7-plp-results",
+      "surface": "plp_table",
+      "severity": "major",
+      "is_critical": false,
+      "current_behavior": "Tag PLP использует плотный table-like listing с большим числом фильтров и активным load-more; первый экран перегружен управлением.",
+      "why_bug": "Снижается скорость первичного решения «подходит/не подходит» и растет время до первого add-to-cart.",
+      "expected_behavior": "На mobile/узких экранах первый экран должен показывать компактный набор controls и явный путь к товарам.",
+      "non_hacky_solution": "Сделать адаптивную стратегию PLP: progressive disclosure filters + компактный hero-row + оптимизированный листинг.",
+      "dimension_scores": {
+        "technical": 3,
+        "heuristic": 5,
+        "taste_fit_pl_cnc_b2b": 4
+      },
+      "evidence": "snapshot tag_frez_do_metalu_hash_results.html: множественные chips-группы + filters toggle + search toolbar + load more в одном потоке.",
+      "acceptance_criteria": "На mobile PLP время до первого релевантного действия сокращается, визуальная иерархия читается за 2-3 секунды.",
+      "implementation_hint": "Переразложить блоки по приоритету job-to-be-done и ограничить начальную видимость фильтров."
+    },
+    {
+      "id": "CAT-009",
+      "page_url": "https://staging.mnsk7-tools.pl/sklep/",
+      "surface": "search",
+      "severity": "minor",
+      "is_critical": false,
+      "current_behavior": "На PLP search toolbar визуально тонет между chips/filters и не выделен как быстрый сценарий подбора.",
+      "why_bug": "Часть пользователей, ищущих по размеру/типу фрезы, не получает приоритетного и очевидного пути.",
+      "expected_behavior": "Поиск на PLP должен быть заметным быстрым входом и смыслово отделен от продвинутых фильтров.",
+      "non_hacky_solution": "Перестроить toolbar hierarchy: prominent search first, filters as secondary progressive controls.",
+      "dimension_scores": {
+        "technical": 2,
+        "heuristic": 3,
+        "taste_fit_pl_cnc_b2b": 3
+      },
+      "evidence": "snapshot sklep_baseline.html: mnsk7-plp-row-search-toolbar расположен после длинного блока chips.",
+      "acceptance_criteria": "Search entry воспринимается как primary control на первом экране PLP.",
+      "implementation_hint": "Не добавлять новый поиск, а переупорядочить существующий toolbar в template/layout."
+    },
+    {
+      "id": "CAT-010",
+      "page_url": "https://staging.mnsk7-tools.pl/sklep/",
+      "surface": "cart_entry",
+      "severity": "minor",
+      "is_critical": false,
+      "current_behavior": "В header cart entry есть только иконка/badge и мини-саммари без явного денежного контекста на пустом состоянии.",
+      "why_bug": "Для B2B-покупателя полезно видеть более явный переход к следующему шагу покупки уже в шапке.",
+      "expected_behavior": "Cart entry сохраняет компактность, но дает ясный прогресс и CTA-контекст (особенно при непустой корзине).",
+      "non_hacky_solution": "Единый micro-copy/state model для empty/non-empty cart в header dropdown.",
+      "dimension_scores": {
+        "technical": 2,
+        "heuristic": 2,
+        "taste_fit_pl_cnc_b2b": 2
+      },
+      "evidence": "snapshot sklep_baseline.html: «Koszyk jest pusty», cart trigger доступен через aria-controls mnsk7-header-cart-dropdown.",
+      "acceptance_criteria": "Header-cart в каждом состоянии дает понятный next-step без визуального шума.",
+      "implementation_hint": "Доработать компонент summary через текущие helper-функции header cart, не трогая Woo core."
+    }
+  ],
+  "summary": {
+    "counts_by_severity": {
+      "critical": 1,
+      "major": 6,
+      "minor": 3
+    },
+    "critical_count": 1,
+    "major_count": 6,
+    "quick_wins_count": 4,
+    "quick_wins": [
+      "CAT-001",
+      "CAT-002",
+      "CAT-004",
+      "CAT-009"
+    ],
+    "top_risks_for_woo_flow": [
+      "mobile header stability on real iPhone/Telegram browser (CAT-006)",
+      "overloaded PLP control stack on mobile before first product action (CAT-008)",
+      "empty-state recovery friction after filter miss (CAT-005)"
+    ]
+  },
+  "prioritized_task_list": [
+    {
+      "task_id": "TASK-CAT-P0-01",
+      "priority": "critical",
+      "is_critical": true,
+      "type": "major",
+      "title": "Стабилизировать mobile header на iPhone XR/Safari/Telegram browser",
+      "behavior_current": "Логотип и иконки конфликтуют по геометрии в реальном девайсе.",
+      "why_bug": "Ломается первичная навигация каталога.",
+      "behavior_expected": "Header без смещений и обрезаний, все действия доступны.",
+      "non_hacky_solution": "Единый mobile header contract (critical + runtime) без дублирующих противоречивых правил.",
+      "regression_risk": "high"
+    },
+    {
+      "task_id": "TASK-CAT-P1-01",
+      "priority": "major",
+      "is_critical": false,
+      "type": "major",
+      "title": "Нормализовать title/canonical для shop/category/tag",
+      "behavior_current": "Теги имеют слабый title, canonical не зафиксирован в выборке.",
+      "why_bug": "Проблемы индексации и CTR.",
+      "behavior_expected": "Единый SEO-контракт title/canonical для PLP.",
+      "non_hacky_solution": "Шаблонизированный SEO слой на archive-типах через фильтры/конфиг.",
+      "regression_risk": "medium"
+    },
+    {
+      "task_id": "TASK-CAT-P1-02",
+      "priority": "major",
+      "is_critical": false,
+      "type": "major",
+      "title": "Привести chips/filter taxonomy к чистому формату и ограничить объем",
+      "behavior_current": "Разнобой единиц/лейблов и перегрузка фильтрами.",
+      "why_bug": "Падает скорость выбора товара.",
+      "behavior_expected": "Краткие, единообразные, полезные chips по контексту архива.",
+      "non_hacky_solution": "Централизованный formatter + приоритизация filter groups.",
+      "regression_risk": "medium"
+    },
+    {
+      "task_id": "TASK-CAT-P1-03",
+      "priority": "major",
+      "is_critical": false,
+      "type": "major",
+      "title": "Переделать empty state PLP как recovery-first",
+      "behavior_current": "Пустая выдача тонет под длинными chips.",
+      "why_bug": "Пользователь не получает быстрый выход из тупика.",
+      "behavior_expected": "Ясный reset/переход в релевантные категории в верхней зоне.",
+      "non_hacky_solution": "Отдельная ветка empty layout в archive template pipeline.",
+      "regression_risk": "low"
+    },
+    {
+      "task_id": "TASK-CAT-P2-01",
+      "priority": "minor",
+      "is_critical": false,
+      "type": "minor",
+      "title": "Сделать compact-mode промо-баннера для PLP/mobile",
+      "behavior_current": "Промо-плашка перетягивает фокус с каталога.",
+      "why_bug": "Для B2B CNC нарушается визуальная иерархия каталога.",
+      "behavior_expected": "Промо поддерживает оффер, но не мешает выбору инструмента.",
+      "non_hacky_solution": "Контекстный display-mode баннера по типу страницы и viewport.",
+      "regression_risk": "low"
+    },
+    {
+      "task_id": "TASK-CAT-P2-02",
+      "priority": "minor",
+      "is_critical": false,
+      "type": "minor",
+      "title": "Поднять приоритет PLP search в визуальной иерархии",
+      "behavior_current": "Поиск визуально вторичен относительно длинного блока filters.",
+      "why_bug": "Медленнее путь к точному SKU/размеру.",
+      "behavior_expected": "Поиск заметен как быстрый вход.",
+      "non_hacky_solution": "Перестановка существующих блоков toolbar/chips без добавления новых сущностей.",
+      "regression_risk": "low"
+    }
+  ],
+  "behavior_checklist": [
+    {
+      "state": "desktop_baseline",
+      "status": "completed",
+      "notes": "shop/category/tag рендерятся, breadcrumbs/chips/load-more присутствуют."
+    },
+    {
+      "state": "mobile_baseline_iphone_xr_class",
+      "status": "risk_profile",
+      "notes": "Оценено по контракту CSS/JS и пользовательскому сигналу о смещении header на живом устройстве."
+    },
+    {
+      "state": "filtered_state_filter_srednica",
+      "status": "completed",
+      "notes": "Сценарий пустой выдачи воспроизведен; найден блок mnsk7-plp-empty."
+    },
+    {
+      "state": "navigation_menu_mega_search_cart",
+      "status": "contract_review_completed",
+      "notes": "Проверены aria/contracts и JS-хендлеры в snapshot коде; нужен реальный device retest на Safari/Telegram."
+    }
+  ]
+}

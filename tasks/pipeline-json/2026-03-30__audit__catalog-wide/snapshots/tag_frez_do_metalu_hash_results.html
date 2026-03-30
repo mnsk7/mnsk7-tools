@@ -1,0 +1,2113 @@
+<!DOCTYPE html>
+<html lang="pl-PL">
+<head><meta charset="UTF-8"><script>if(navigator.userAgent.match(/MSIE|Internet Explorer/i)||navigator.userAgent.match(/Trident\/7\..*?rv:11/i)){var href=document.location.href;if(!href.match(/[?&]nowprocket/)){if(href.indexOf("?")==-1){if(href.indexOf("#")==-1){document.location.href=href+"?nowprocket=1"}else{document.location.href=href.replace("#","?nowprocket=1#")}}else{if(href.indexOf("#")==-1){document.location.href=href+"&nowprocket=1"}else{document.location.href=href.replace("#","&nowprocket=1#")}}}}</script><script>class RocketLazyLoadScripts{constructor(){this.v="1.2.3",this.triggerEvents=["keydown","mousedown","mousemove","touchmove","touchstart","touchend","wheel"],this.userEventHandler=this._triggerListener.bind(this),this.touchStartHandler=this._onTouchStart.bind(this),this.touchMoveHandler=this._onTouchMove.bind(this),this.touchEndHandler=this._onTouchEnd.bind(this),this.clickHandler=this._onClick.bind(this),this.interceptedClicks=[],window.addEventListener("pageshow",t=>{this.persisted=t.persisted}),window.addEventListener("DOMContentLoaded",()=>{this._preconnect3rdParties()}),this.delayedScripts={normal:[],async:[],defer:[]},this.trash=[],this.allJQueries=[]}_addUserInteractionListener(t){if(document.hidden){t._triggerListener();return}this.triggerEvents.forEach(e=>window.addEventListener(e,t.userEventHandler,{passive:!0})),window.addEventListener("touchstart",t.touchStartHandler,{passive:!0}),window.addEventListener("mousedown",t.touchStartHandler),document.addEventListener("visibilitychange",t.userEventHandler)}_removeUserInteractionListener(){this.triggerEvents.forEach(t=>window.removeEventListener(t,this.userEventHandler,{passive:!0})),document.removeEventListener("visibilitychange",this.userEventHandler)}_onTouchStart(t){"HTML"!==t.target.tagName&&(window.addEventListener("touchend",this.touchEndHandler),window.addEventListener("mouseup",this.touchEndHandler),window.addEventListener("touchmove",this.touchMoveHandler,{passive:!0}),window.addEventListener("mousemove",this.touchMoveHandler),t.target.addEventListener("click",this.clickHandler),this._renameDOMAttribute(t.target,"onclick","rocket-onclick"),this._pendingClickStarted())}_onTouchMove(t){window.removeEventListener("touchend",this.touchEndHandler),window.removeEventListener("mouseup",this.touchEndHandler),window.removeEventListener("touchmove",this.touchMoveHandler,{passive:!0}),window.removeEventListener("mousemove",this.touchMoveHandler),t.target.removeEventListener("click",this.clickHandler),this._renameDOMAttribute(t.target,"rocket-onclick","onclick"),this._pendingClickFinished()}_onTouchEnd(t){window.removeEventListener("touchend",this.touchEndHandler),window.removeEventListener("mouseup",this.touchEndHandler),window.removeEventListener("touchmove",this.touchMoveHandler,{passive:!0}),window.removeEventListener("mousemove",this.touchMoveHandler)}_onClick(t){t.target.removeEventListener("click",this.clickHandler),this._renameDOMAttribute(t.target,"rocket-onclick","onclick"),this.interceptedClicks.push(t),t.preventDefault(),t.stopPropagation(),t.stopImmediatePropagation(),this._pendingClickFinished()}_replayClicks(){window.removeEventListener("touchstart",this.touchStartHandler,{passive:!0}),window.removeEventListener("mousedown",this.touchStartHandler),this.interceptedClicks.forEach(t=>{t.target.dispatchEvent(new MouseEvent("click",{view:t.view,bubbles:!0,cancelable:!0}))})}_waitForPendingClicks(){return new Promise(t=>{this._isClickPending?this._pendingClickFinished=t:t()})}_pendingClickStarted(){this._isClickPending=!0}_pendingClickFinished(){this._isClickPending=!1}_renameDOMAttribute(t,e,r){t.hasAttribute&&t.hasAttribute(e)&&(event.target.setAttribute(r,event.target.getAttribute(e)),event.target.removeAttribute(e))}_triggerListener(){this._removeUserInteractionListener(this),"loading"===document.readyState?document.addEventListener("DOMContentLoaded",this._loadEverythingNow.bind(this)):this._loadEverythingNow()}_preconnect3rdParties(){let t=[];document.querySelectorAll("script[type=rocketlazyloadscript]").forEach(e=>{if(e.hasAttribute("src")){let r=new URL(e.src).origin;r!==location.origin&&t.push({src:r,crossOrigin:e.crossOrigin||"module"===e.getAttribute("data-rocket-type")})}}),t=[...new Map(t.map(t=>[JSON.stringify(t),t])).values()],this._batchInjectResourceHints(t,"preconnect")}async _loadEverythingNow(){this.lastBreath=Date.now(),this._delayEventListeners(this),this._delayJQueryReady(this),this._handleDocumentWrite(),this._registerAllDelayedScripts(),this._preloadAllScripts(),await this._loadScriptsFromList(this.delayedScripts.normal),await this._loadScriptsFromList(this.delayedScripts.defer),await this._loadScriptsFromList(this.delayedScripts.async);try{await this._triggerDOMContentLoaded(),await this._triggerWindowLoad()}catch(t){console.error(t)}window.dispatchEvent(new Event("rocket-allScriptsLoaded")),this._waitForPendingClicks().then(()=>{this._replayClicks()}),this._emptyTrash()}_registerAllDelayedScripts(){document.querySelectorAll("script[type=rocketlazyloadscript]").forEach(t=>{t.hasAttribute("data-rocket-src")?t.hasAttribute("async")&&!1!==t.async?this.delayedScripts.async.push(t):t.hasAttribute("defer")&&!1!==t.defer||"module"===t.getAttribute("data-rocket-type")?this.delayedScripts.defer.push(t):this.delayedScripts.normal.push(t):this.delayedScripts.normal.push(t)})}async _transformScript(t){return new Promise((await this._littleBreath(),navigator.userAgent.indexOf("Firefox/")>0||""===navigator.vendor)?e=>{let r=document.createElement("script");[...t.attributes].forEach(t=>{let e=t.nodeName;"type"!==e&&("data-rocket-type"===e&&(e="type"),"data-rocket-src"===e&&(e="src"),r.setAttribute(e,t.nodeValue))}),t.text&&(r.text=t.text),r.hasAttribute("src")?(r.addEventListener("load",e),r.addEventListener("error",e)):(r.text=t.text,e());try{t.parentNode.replaceChild(r,t)}catch(i){e()}}:async e=>{function r(){t.setAttribute("data-rocket-status","failed"),e()}try{let i=t.getAttribute("data-rocket-type"),n=t.getAttribute("data-rocket-src");t.text,i?(t.type=i,t.removeAttribute("data-rocket-type")):t.removeAttribute("type"),t.addEventListener("load",function r(){t.setAttribute("data-rocket-status","executed"),e()}),t.addEventListener("error",r),n?(t.removeAttribute("data-rocket-src"),t.src=n):t.src="data:text/javascript;base64,"+window.btoa(unescape(encodeURIComponent(t.text)))}catch(s){r()}})}async _loadScriptsFromList(t){let e=t.shift();return e&&e.isConnected?(await this._transformScript(e),this._loadScriptsFromList(t)):Promise.resolve()}_preloadAllScripts(){this._batchInjectResourceHints([...this.delayedScripts.normal,...this.delayedScripts.defer,...this.delayedScripts.async],"preload")}_batchInjectResourceHints(t,e){var r=document.createDocumentFragment();t.forEach(t=>{let i=t.getAttribute&&t.getAttribute("data-rocket-src")||t.src;if(i){let n=document.createElement("link");n.href=i,n.rel=e,"preconnect"!==e&&(n.as="script"),t.getAttribute&&"module"===t.getAttribute("data-rocket-type")&&(n.crossOrigin=!0),t.crossOrigin&&(n.crossOrigin=t.crossOrigin),t.integrity&&(n.integrity=t.integrity),r.appendChild(n),this.trash.push(n)}}),document.head.appendChild(r)}_delayEventListeners(t){let e={};function r(t,r){!function t(r){!e[r]&&(e[r]={originalFunctions:{add:r.addEventListener,remove:r.removeEventListener},eventsToRewrite:[]},r.addEventListener=function(){arguments[0]=i(arguments[0]),e[r].originalFunctions.add.apply(r,arguments)},r.removeEventListener=function(){arguments[0]=i(arguments[0]),e[r].originalFunctions.remove.apply(r,arguments)});function i(t){return e[r].eventsToRewrite.indexOf(t)>=0?"rocket-"+t:t}}(t),e[t].eventsToRewrite.push(r)}function i(t,e){let r=t[e];Object.defineProperty(t,e,{get:()=>r||function(){},set(i){t["rocket"+e]=r=i}})}r(document,"DOMContentLoaded"),r(window,"DOMContentLoaded"),r(window,"load"),r(window,"pageshow"),r(document,"readystatechange"),i(document,"onreadystatechange"),i(window,"onload"),i(window,"onpageshow")}_delayJQueryReady(t){let e;function r(r){if(r&&r.fn&&!t.allJQueries.includes(r)){r.fn.ready=r.fn.init.prototype.ready=function(e){return t.domReadyFired?e.bind(document)(r):document.addEventListener("rocket-DOMContentLoaded",()=>e.bind(document)(r)),r([])};let i=r.fn.on;r.fn.on=r.fn.init.prototype.on=function(){if(this[0]===window){function t(t){return t.split(" ").map(t=>"load"===t||0===t.indexOf("load.")?"rocket-jquery-load":t).join(" ")}"string"==typeof arguments[0]||arguments[0]instanceof String?arguments[0]=t(arguments[0]):"object"==typeof arguments[0]&&Object.keys(arguments[0]).forEach(e=>{let r=arguments[0][e];delete arguments[0][e],arguments[0][t(e)]=r})}return i.apply(this,arguments),this},t.allJQueries.push(r)}e=r}r(window.jQuery),Object.defineProperty(window,"jQuery",{get:()=>e,set(t){r(t)}})}async _triggerDOMContentLoaded(){this.domReadyFired=!0,await this._littleBreath(),document.dispatchEvent(new Event("rocket-DOMContentLoaded")),await this._littleBreath(),window.dispatchEvent(new Event("rocket-DOMContentLoaded")),await this._littleBreath(),document.dispatchEvent(new Event("rocket-readystatechange")),await this._littleBreath(),document.rocketonreadystatechange&&document.rocketonreadystatechange()}async _triggerWindowLoad(){await this._littleBreath(),window.dispatchEvent(new Event("rocket-load")),await this._littleBreath(),window.rocketonload&&window.rocketonload(),await this._littleBreath(),this.allJQueries.forEach(t=>t(window).trigger("rocket-jquery-load")),await this._littleBreath();let t=new Event("rocket-pageshow");t.persisted=this.persisted,window.dispatchEvent(t),await this._littleBreath(),window.rocketonpageshow&&window.rocketonpageshow({persisted:this.persisted})}_handleDocumentWrite(){let t=new Map;document.write=document.writeln=function(e){let r=document.currentScript;r||console.error("WPRocket unable to document.write this: "+e);let i=document.createRange(),n=r.parentElement,s=t.get(r);void 0===s&&(s=r.nextSibling,t.set(r,s));let a=document.createDocumentFragment();i.setStart(a,0),a.appendChild(i.createContextualFragment(e)),n.insertBefore(a,s)}}async _littleBreath(){Date.now()-this.lastBreath>45&&(await this._requestAnimFrame(),this.lastBreath=Date.now())}async _requestAnimFrame(){return document.hidden?new Promise(t=>setTimeout(t)):new Promise(t=>requestAnimationFrame(t))}_emptyTrash(){this.trash.forEach(t=>t.remove())}static run(){let t=new RocketLazyLoadScripts;t._addUserInteractionListener(t)}}RocketLazyLoadScripts.run();</script>
+	
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+	<link rel="profile" href="https://gmpg.org/xfn/11">
+			<link rel="preload" href="https://staging.mnsk7-tools.pl/wp-content/themes/mnsk7-storefront/assets/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+			<meta name='robots' content='noindex, nofollow' />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	
+<!-- Google Tag Manager for WordPress by gtm4wp.com -->
+<script data-cfasync="false" data-pagespeed-no-defer>
+	var gtm4wp_datalayer_name = "dataLayer";
+	var dataLayer = dataLayer || [];
+	const gtm4wp_use_sku_instead = 1;
+	const gtm4wp_currency = 'PLN';
+	const gtm4wp_product_per_impression = 10;
+	const gtm4wp_clear_ecommerce = true;
+	const gtm4wp_datalayer_max_timeout = 2000;
+
+	const gtm4wp_scrollerscript_debugmode         = false;
+	const gtm4wp_scrollerscript_callbacktime      = 100;
+	const gtm4wp_scrollerscript_readerlocation    = 150;
+	const gtm4wp_scrollerscript_contentelementid  = "content";
+	const gtm4wp_scrollerscript_scannertime       = 60;
+</script>
+<!-- End Google Tag Manager for WordPress by gtm4wp.com -->
+	<!-- This site is optimized with the Yoast SEO plugin v27.1.1 - https://yoast.com/product/yoast-seo-wordpress/ -->
+	<title>Archiwa Frez do metalu |</title>
+	<meta property="og:locale" content="pl_PL" />
+	<meta property="og:type" content="article" />
+	<meta property="og:title" content="Archiwa Frez do metalu |" />
+	<meta property="og:url" content="https://mnsk7-tools.pl/tag-produktu/frez-do-metalu/" />
+	<meta property="og:image" content="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/08/Logo640.png" />
+	<meta property="og:image:width" content="640" />
+	<meta property="og:image:height" content="640" />
+	<meta property="og:image:type" content="image/png" />
+	<meta name="twitter:card" content="summary_large_image" />
+	<script type="application/ld+json" class="yoast-schema-graph">{"@context":"https://schema.org","@graph":[{"@type":"CollectionPage","@id":"https://mnsk7-tools.pl/tag-produktu/frez-do-metalu/","url":"https://mnsk7-tools.pl/tag-produktu/frez-do-metalu/","name":"Archiwa Frez do metalu |","isPartOf":{"@id":"https://mnsk7-tools.pl/#website"},"primaryImageOfPage":{"@id":"https://mnsk7-tools.pl/tag-produktu/frez-do-metalu/#primaryimage"},"image":{"@id":"https://mnsk7-tools.pl/tag-produktu/frez-do-metalu/#primaryimage"},"thumbnailUrl":"https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/415c9d823450aa1751caa7d9e86932ed-1-png.avif","breadcrumb":{"@id":"https://mnsk7-tools.pl/tag-produktu/frez-do-metalu/#breadcrumb"},"inLanguage":"pl-PL"},{"@type":"ImageObject","inLanguage":"pl-PL","@id":"https://mnsk7-tools.pl/tag-produktu/frez-do-metalu/#primaryimage","url":"https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/415c9d823450aa1751caa7d9e86932ed-1-png.avif","contentUrl":"https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/415c9d823450aa1751caa7d9e86932ed-1-png.avif","width":1200,"height":1200},{"@type":"BreadcrumbList","@id":"https://mnsk7-tools.pl/tag-produktu/frez-do-metalu/#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Strona g³ówna","item":"https://mnsk7-tools.pl/"},{"@type":"ListItem","position":2,"name":"Frez do metalu"}]},{"@type":"WebSite","@id":"https://mnsk7-tools.pl/#website","url":"https://mnsk7-tools.pl/","name":"Mnsk7-tools.pl","description":"Profesjonalne narzêdzia do ka¿dej obr&oacute;bki frezarskiej","publisher":{"@id":"https://mnsk7-tools.pl/#organization"},"alternateName":"Mnsk7-tools.pl","potentialAction":[{"@type":"SearchAction","target":{"@type":"EntryPoint","urlTemplate":"https://mnsk7-tools.pl/?s={search_term_string}"},"query-input":{"@type":"PropertyValueSpecification","valueRequired":true,"valueName":"search_term_string"}}],"inLanguage":"pl-PL"},{"@type":"Organization","@id":"https://mnsk7-tools.pl/#organization","name":"Mnsk7-tools.pl","alternateName":"Mnsk7-tools.pl","url":"https://mnsk7-tools.pl/","logo":{"@type":"ImageObject","inLanguage":"pl-PL","@id":"https://mnsk7-tools.pl/#/schema/logo/image/","url":"https://mnsk7-tools.pl/wp-content/uploads/2024/08/Logo640.png","contentUrl":"https://mnsk7-tools.pl/wp-content/uploads/2024/08/Logo640.png","width":640,"height":640,"caption":"Mnsk7-tools.pl"},"image":{"@id":"https://mnsk7-tools.pl/#/schema/logo/image/"}}]}</script>
+	<!-- / Yoast SEO plugin. -->
+
+
+<link rel="manifest" href="/pwa-manifest.json">
+<link rel="apple-touch-icon" sizes="512x512" href="https://mnsk7-tools.pl/wp-content/plugins/pwa-for-wp/images/logo-512x512.png">
+<link rel="apple-touch-icon-precomposed" sizes="192x192" href="https://mnsk7-tools.pl/wp-content/uploads/2024/08/Logo640.png">
+
+<link rel="dns-prefetch" href="https://www.googletagmanager.com">
+<link rel="dns-prefetch" href="https://www.google-analytics.com">
+<link rel="dns-prefetch" href="https://www.instagram.com">
+<link rel="dns-prefetch" href="https://allegro.pl">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":["Organization","OnlineStore"],"name":"MNK7 Tools","legalName":"MNSK7 SPÓ£KA Z OGRANICZON¥ ODPOWIEDZIALNOŒCI¥","url":"https://staging.mnsk7-tools.pl/","logo":{"@type":"ImageObject","url":"https://staging.mnsk7-tools.pl/wp-content/themes/tech-storefront/assets/images/logo.png"},"contactPoint":{"@type":"ContactPoint","telephone":"+48 451696511","email":"office@mnsk7.pl","contactType":"customer service","availableLanguage":["Polish"],"hoursAvailable":[{"@type":"OpeningHoursSpecification","dayOfWeek":["Monday","Tuesday","Wednesday","Thursday","Friday"],"opens":"09:00","closes":"17:00"},{"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"10:00","closes":"12:00"}]},"address":{"@type":"PostalAddress","streetAddress":"ul. Williama Heerleina Lindleya 16/512","addressLocality":"Warszawa","postalCode":"02-013","addressCountry":"PL"},"vatID":"PL5242991741","taxID":"5242991741","sameAs":["https://www.instagram.com/mnsk7tools/","https://allegro.pl/uzytkownik/mnsk7-tools_pl"],"areaServed":{"@type":"Country","name":"Poland"},"description":"Sklep z frezami CNC i narzêdziami do obróbki drewna, MDF, aluminium, stali i tworzyw sztucznych. Dostawa nastêpnego dnia, faktura VAT."}</script>
+<style id='wp-img-auto-sizes-contain-inline-css'>
+img:is([sizes=auto i],[sizes^="auto," i]){contain-intrinsic-size:3000px 1500px}
+/*# sourceURL=wp-img-auto-sizes-contain-inline-css */
+</style>
+<style id='classic-theme-styles-inline-css'>
+/*! This file is auto-generated */
+.wp-block-button__link{color:#fff;background-color:#32373c;border-radius:9999px;box-shadow:none;text-decoration:none;padding:calc(.667em + 2px) calc(1.333em + 2px);font-size:1.125em}.wp-block-file__button{background:#32373c;color:#fff;text-decoration:none}
+/*# sourceURL=/wp-includes/css/classic-themes.min.css */
+</style>
+<link data-minify="1" rel='stylesheet' id='wc-blocks-style-css' href='https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/woocommerce/assets/client/blocks/wc-blocks.css?ver=1774871296' media='all' />
+
+<link data-minify="1" rel='stylesheet' id='storefront-gutenberg-blocks-css' href='https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/themes/storefront/assets/css/base/gutenberg-blocks.css?ver=1774871296' media='all' />
+<style id='storefront-gutenberg-blocks-inline-css'>
+
+				.wp-block-button__link:not(.has-text-color) {
+					color: #333333;
+				}
+
+				.wp-block-button__link:not(.has-text-color):hover,
+				.wp-block-button__link:not(.has-text-color):focus,
+				.wp-block-button__link:not(.has-text-color):active {
+					color: #333333;
+				}
+
+				.wp-block-button__link:not(.has-background) {
+					background-color: #eeeeee;
+				}
+
+				.wp-block-button__link:not(.has-background):hover,
+				.wp-block-button__link:not(.has-background):focus,
+				.wp-block-button__link:not(.has-background):active {
+					border-color: #d5d5d5;
+					background-color: #d5d5d5;
+				}
+
+				.wc-block-grid__products .wc-block-grid__product .wp-block-button__link {
+					background-color: #eeeeee;
+					border-color: #eeeeee;
+					color: #333333;
+				}
+
+				.wp-block-quote footer,
+				.wp-block-quote cite,
+				.wp-block-quote__citation {
+					color: #6d6d6d;
+				}
+
+				.wp-block-pullquote cite,
+				.wp-block-pullquote footer,
+				.wp-block-pullquote__citation {
+					color: #6d6d6d;
+				}
+
+				.wp-block-image figcaption {
+					color: #6d6d6d;
+				}
+
+				.wp-block-separator.is-style-dots::before {
+					color: #333333;
+				}
+
+				.wp-block-file a.wp-block-file__button {
+					color: #333333;
+					background-color: #eeeeee;
+					border-color: #eeeeee;
+				}
+
+				.wp-block-file a.wp-block-file__button:hover,
+				.wp-block-file a.wp-block-file__button:focus,
+				.wp-block-file a.wp-block-file__button:active {
+					color: #333333;
+					background-color: #d5d5d5;
+				}
+
+				.wp-block-code,
+				.wp-block-preformatted pre {
+					color: #6d6d6d;
+				}
+
+				.wp-block-table:not( .has-background ):not( .is-style-stripes ) tbody tr:nth-child(2n) td {
+					background-color: #fdfdfd;
+				}
+
+				.wp-block-cover .wp-block-cover__inner-container h1:not(.has-text-color),
+				.wp-block-cover .wp-block-cover__inner-container h2:not(.has-text-color),
+				.wp-block-cover .wp-block-cover__inner-container h3:not(.has-text-color),
+				.wp-block-cover .wp-block-cover__inner-container h4:not(.has-text-color),
+				.wp-block-cover .wp-block-cover__inner-container h5:not(.has-text-color),
+				.wp-block-cover .wp-block-cover__inner-container h6:not(.has-text-color) {
+					color: #000000;
+				}
+
+				div.wc-block-components-price-slider__range-input-progress,
+				.rtl .wc-block-components-price-slider__range-input-progress {
+					--range-color: #7f54b3;
+				}
+
+				/* Target only IE11 */
+				@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+					.wc-block-components-price-slider__range-input-progress {
+						background: #7f54b3;
+					}
+				}
+
+				.wc-block-components-button:not(.is-link) {
+					background-color: #333333;
+					color: #ffffff;
+				}
+
+				.wc-block-components-button:not(.is-link):hover,
+				.wc-block-components-button:not(.is-link):focus,
+				.wc-block-components-button:not(.is-link):active {
+					background-color: #1a1a1a;
+					color: #ffffff;
+				}
+
+				.wc-block-components-button:not(.is-link):disabled {
+					background-color: #333333;
+					color: #ffffff;
+				}
+
+				.wc-block-cart__submit-container {
+					background-color: #ffffff;
+				}
+
+				.wc-block-cart__submit-container::before {
+					color: rgba(220,220,220,0.5);
+				}
+
+				.wc-block-components-order-summary-item__quantity {
+					background-color: #ffffff;
+					border-color: #6d6d6d;
+					box-shadow: 0 0 0 2px #ffffff;
+					color: #6d6d6d;
+				}
+			
+/*# sourceURL=storefront-gutenberg-blocks-inline-css */
+</style>
+<style id='global-styles-inline-css'>
+:root{--wp--preset--aspect-ratio--square: 1;--wp--preset--aspect-ratio--4-3: 4/3;--wp--preset--aspect-ratio--3-4: 3/4;--wp--preset--aspect-ratio--3-2: 3/2;--wp--preset--aspect-ratio--2-3: 2/3;--wp--preset--aspect-ratio--16-9: 16/9;--wp--preset--aspect-ratio--9-16: 9/16;--wp--preset--color--black: #000000;--wp--preset--color--cyan-bluish-gray: #abb8c3;--wp--preset--color--white: #ffffff;--wp--preset--color--pale-pink: #f78da7;--wp--preset--color--vivid-red: #cf2e2e;--wp--preset--color--luminous-vivid-orange: #ff6900;--wp--preset--color--luminous-vivid-amber: #fcb900;--wp--preset--color--light-green-cyan: #7bdcb5;--wp--preset--color--vivid-green-cyan: #00d084;--wp--preset--color--pale-cyan-blue: #8ed1fc;--wp--preset--color--vivid-cyan-blue: #0693e3;--wp--preset--color--vivid-purple: #9b51e0;--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple: linear-gradient(135deg,rgb(6,147,227) 0%,rgb(155,81,224) 100%);--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan: linear-gradient(135deg,rgb(122,220,180) 0%,rgb(0,208,130) 100%);--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange: linear-gradient(135deg,rgb(252,185,0) 0%,rgb(255,105,0) 100%);--wp--preset--gradient--luminous-vivid-orange-to-vivid-red: linear-gradient(135deg,rgb(255,105,0) 0%,rgb(207,46,46) 100%);--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray: linear-gradient(135deg,rgb(238,238,238) 0%,rgb(169,184,195) 100%);--wp--preset--gradient--cool-to-warm-spectrum: linear-gradient(135deg,rgb(74,234,220) 0%,rgb(151,120,209) 20%,rgb(207,42,186) 40%,rgb(238,44,130) 60%,rgb(251,105,98) 80%,rgb(254,248,76) 100%);--wp--preset--gradient--blush-light-purple: linear-gradient(135deg,rgb(255,206,236) 0%,rgb(152,150,240) 100%);--wp--preset--gradient--blush-bordeaux: linear-gradient(135deg,rgb(254,205,165) 0%,rgb(254,45,45) 50%,rgb(107,0,62) 100%);--wp--preset--gradient--luminous-dusk: linear-gradient(135deg,rgb(255,203,112) 0%,rgb(199,81,192) 50%,rgb(65,88,208) 100%);--wp--preset--gradient--pale-ocean: linear-gradient(135deg,rgb(255,245,203) 0%,rgb(182,227,212) 50%,rgb(51,167,181) 100%);--wp--preset--gradient--electric-grass: linear-gradient(135deg,rgb(202,248,128) 0%,rgb(113,206,126) 100%);--wp--preset--gradient--midnight: linear-gradient(135deg,rgb(2,3,129) 0%,rgb(40,116,252) 100%);--wp--preset--font-size--small: 14px;--wp--preset--font-size--medium: 23px;--wp--preset--font-size--large: 26px;--wp--preset--font-size--x-large: 42px;--wp--preset--font-size--normal: 16px;--wp--preset--font-size--huge: 37px;--wp--preset--spacing--20: 0.44rem;--wp--preset--spacing--30: 0.67rem;--wp--preset--spacing--40: 1rem;--wp--preset--spacing--50: 1.5rem;--wp--preset--spacing--60: 2.25rem;--wp--preset--spacing--70: 3.38rem;--wp--preset--spacing--80: 5.06rem;--wp--preset--shadow--natural: 6px 6px 9px rgba(0, 0, 0, 0.2);--wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);--wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);--wp--preset--shadow--outlined: 6px 6px 0px -3px rgb(255, 255, 255), 6px 6px rgb(0, 0, 0);--wp--preset--shadow--crisp: 6px 6px 0px rgb(0, 0, 0);}:root :where(.is-layout-flow) > :first-child{margin-block-start: 0;}:root :where(.is-layout-flow) > :last-child{margin-block-end: 0;}:root :where(.is-layout-flow) > *{margin-block-start: 24px;margin-block-end: 0;}:root :where(.is-layout-constrained) > :first-child{margin-block-start: 0;}:root :where(.is-layout-constrained) > :last-child{margin-block-end: 0;}:root :where(.is-layout-constrained) > *{margin-block-start: 24px;margin-block-end: 0;}:root :where(.is-layout-flex){gap: 24px;}:root :where(.is-layout-grid){gap: 24px;}body .is-layout-flex{display: flex;}.is-layout-flex{flex-wrap: wrap;align-items: center;}.is-layout-flex > :is(*, div){margin: 0;}body .is-layout-grid{display: grid;}.is-layout-grid > :is(*, div){margin: 0;}.has-black-color{color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-color{color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-color{color: var(--wp--preset--color--white) !important;}.has-pale-pink-color{color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-color{color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-color{color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-color{color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-color{color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-color{color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-color{color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-color{color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-color{color: var(--wp--preset--color--vivid-purple) !important;}.has-black-background-color{background-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-background-color{background-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-background-color{background-color: var(--wp--preset--color--white) !important;}.has-pale-pink-background-color{background-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-background-color{background-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-background-color{background-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-background-color{background-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-background-color{background-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-background-color{background-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-background-color{background-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-background-color{background-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-background-color{background-color: var(--wp--preset--color--vivid-purple) !important;}.has-black-border-color{border-color: var(--wp--preset--color--black) !important;}.has-cyan-bluish-gray-border-color{border-color: var(--wp--preset--color--cyan-bluish-gray) !important;}.has-white-border-color{border-color: var(--wp--preset--color--white) !important;}.has-pale-pink-border-color{border-color: var(--wp--preset--color--pale-pink) !important;}.has-vivid-red-border-color{border-color: var(--wp--preset--color--vivid-red) !important;}.has-luminous-vivid-orange-border-color{border-color: var(--wp--preset--color--luminous-vivid-orange) !important;}.has-luminous-vivid-amber-border-color{border-color: var(--wp--preset--color--luminous-vivid-amber) !important;}.has-light-green-cyan-border-color{border-color: var(--wp--preset--color--light-green-cyan) !important;}.has-vivid-green-cyan-border-color{border-color: var(--wp--preset--color--vivid-green-cyan) !important;}.has-pale-cyan-blue-border-color{border-color: var(--wp--preset--color--pale-cyan-blue) !important;}.has-vivid-cyan-blue-border-color{border-color: var(--wp--preset--color--vivid-cyan-blue) !important;}.has-vivid-purple-border-color{border-color: var(--wp--preset--color--vivid-purple) !important;}.has-vivid-cyan-blue-to-vivid-purple-gradient-background{background: var(--wp--preset--gradient--vivid-cyan-blue-to-vivid-purple) !important;}.has-light-green-cyan-to-vivid-green-cyan-gradient-background{background: var(--wp--preset--gradient--light-green-cyan-to-vivid-green-cyan) !important;}.has-luminous-vivid-amber-to-luminous-vivid-orange-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-amber-to-luminous-vivid-orange) !important;}.has-luminous-vivid-orange-to-vivid-red-gradient-background{background: var(--wp--preset--gradient--luminous-vivid-orange-to-vivid-red) !important;}.has-very-light-gray-to-cyan-bluish-gray-gradient-background{background: var(--wp--preset--gradient--very-light-gray-to-cyan-bluish-gray) !important;}.has-cool-to-warm-spectrum-gradient-background{background: var(--wp--preset--gradient--cool-to-warm-spectrum) !important;}.has-blush-light-purple-gradient-background{background: var(--wp--preset--gradient--blush-light-purple) !important;}.has-blush-bordeaux-gradient-background{background: var(--wp--preset--gradient--blush-bordeaux) !important;}.has-luminous-dusk-gradient-background{background: var(--wp--preset--gradient--luminous-dusk) !important;}.has-pale-ocean-gradient-background{background: var(--wp--preset--gradient--pale-ocean) !important;}.has-electric-grass-gradient-background{background: var(--wp--preset--gradient--electric-grass) !important;}.has-midnight-gradient-background{background: var(--wp--preset--gradient--midnight) !important;}.has-small-font-size{font-size: var(--wp--preset--font-size--small) !important;}.has-medium-font-size{font-size: var(--wp--preset--font-size--medium) !important;}.has-large-font-size{font-size: var(--wp--preset--font-size--large) !important;}.has-x-large-font-size{font-size: var(--wp--preset--font-size--x-large) !important;}
+/*# sourceURL=global-styles-inline-css */
+</style>
+
+<link data-minify="1" rel='stylesheet' id='wcmamtx-frontend-unique-css' href='https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/customize-my-account-for-woocommerce/assets/css/frontend-unique.css?ver=1774871296' media='all' />
+<style id='dominant-color-styles-inline-css'>
+img[data-dominant-color]:not(.has-transparency) { background-color: var(--dominant-color); }
+/*# sourceURL=dominant-color-styles-inline-css */
+</style>
+<style id='woocommerce-inline-inline-css'>
+.woocommerce form .form-row .required { visibility: visible; }
+/*# sourceURL=woocommerce-inline-inline-css */
+</style>
+<link data-minify="1" rel='stylesheet' id='p24-styles-css' href='https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/woo-przelewy24/assets/css/styles.css?ver=1774871296' media='all' />
+<link data-minify="1" rel='stylesheet' id='storefront-style-css' href='https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/themes/storefront/style.css?ver=1774871296' media='all' />
+<style id='storefront-style-inline-css'>
+
+			.main-navigation ul li a,
+			.site-title a,
+			ul.menu li a,
+			.site-branding h1 a,
+			button.menu-toggle,
+			button.menu-toggle:hover,
+			.handheld-navigation .dropdown-toggle {
+				color: #333333;
+			}
+
+			button.menu-toggle,
+			button.menu-toggle:hover {
+				border-color: #333333;
+			}
+
+			.main-navigation ul li a:hover,
+			.main-navigation ul li:hover > a,
+			.site-title a:hover,
+			.site-header ul.menu li.current-menu-item > a {
+				color: #747474;
+			}
+
+			table:not( .has-background ) th {
+				background-color: #f8f8f8;
+			}
+
+			table:not( .has-background ) tbody td {
+				background-color: #fdfdfd;
+			}
+
+			table:not( .has-background ) tbody tr:nth-child(2n) td,
+			fieldset,
+			fieldset legend {
+				background-color: #fbfbfb;
+			}
+
+			.site-header,
+			.secondary-navigation ul ul,
+			.main-navigation ul.menu > li.menu-item-has-children:after,
+			.secondary-navigation ul.menu ul,
+			.storefront-handheld-footer-bar,
+			.storefront-handheld-footer-bar ul li > a,
+			.storefront-handheld-footer-bar ul li.search .site-search,
+			button.menu-toggle,
+			button.menu-toggle:hover {
+				background-color: #ffffff;
+			}
+
+			p.site-description,
+			.site-header,
+			.storefront-handheld-footer-bar {
+				color: #404040;
+			}
+
+			button.menu-toggle:after,
+			button.menu-toggle:before,
+			button.menu-toggle span:before {
+				background-color: #333333;
+			}
+
+			h1, h2, h3, h4, h5, h6, .wc-block-grid__product-title {
+				color: #333333;
+			}
+
+			.widget h1 {
+				border-bottom-color: #333333;
+			}
+
+			body,
+			.secondary-navigation a {
+				color: #6d6d6d;
+			}
+
+			.widget-area .widget a,
+			.hentry .entry-header .posted-on a,
+			.hentry .entry-header .post-author a,
+			.hentry .entry-header .post-comments a,
+			.hentry .entry-header .byline a {
+				color: #727272;
+			}
+
+			a {
+				color: #7f54b3;
+			}
+
+			a:focus,
+			button:focus,
+			.button.alt:focus,
+			input:focus,
+			textarea:focus,
+			input[type="button"]:focus,
+			input[type="reset"]:focus,
+			input[type="submit"]:focus,
+			input[type="email"]:focus,
+			input[type="tel"]:focus,
+			input[type="url"]:focus,
+			input[type="password"]:focus,
+			input[type="search"]:focus {
+				outline-color: #7f54b3;
+			}
+
+			button, input[type="button"], input[type="reset"], input[type="submit"], .button, .widget a.button {
+				background-color: #eeeeee;
+				border-color: #eeeeee;
+				color: #333333;
+			}
+
+			button:hover, input[type="button"]:hover, input[type="reset"]:hover, input[type="submit"]:hover, .button:hover, .widget a.button:hover {
+				background-color: #d5d5d5;
+				border-color: #d5d5d5;
+				color: #333333;
+			}
+
+			button.alt, input[type="button"].alt, input[type="reset"].alt, input[type="submit"].alt, .button.alt, .widget-area .widget a.button.alt {
+				background-color: #333333;
+				border-color: #333333;
+				color: #ffffff;
+			}
+
+			button.alt:hover, input[type="button"].alt:hover, input[type="reset"].alt:hover, input[type="submit"].alt:hover, .button.alt:hover, .widget-area .widget a.button.alt:hover {
+				background-color: #1a1a1a;
+				border-color: #1a1a1a;
+				color: #ffffff;
+			}
+
+			.pagination .page-numbers li .page-numbers.current {
+				background-color: #e6e6e6;
+				color: #636363;
+			}
+
+			#comments .comment-list .comment-content .comment-text {
+				background-color: #f8f8f8;
+			}
+
+			.site-footer {
+				background-color: #f0f0f0;
+				color: #6d6d6d;
+			}
+
+			.site-footer a:not(.button):not(.components-button) {
+				color: #333333;
+			}
+
+			.site-footer .storefront-handheld-footer-bar a:not(.button):not(.components-button) {
+				color: #333333;
+			}
+
+			.site-footer h1, .site-footer h2, .site-footer h3, .site-footer h4, .site-footer h5, .site-footer h6, .site-footer .widget .widget-title, .site-footer .widget .widgettitle {
+				color: #333333;
+			}
+
+			.page-template-template-homepage.has-post-thumbnail .type-page.has-post-thumbnail .entry-title {
+				color: #000000;
+			}
+
+			.page-template-template-homepage.has-post-thumbnail .type-page.has-post-thumbnail .entry-content {
+				color: #000000;
+			}
+
+			@media screen and ( min-width: 768px ) {
+				.secondary-navigation ul.menu a:hover {
+					color: #595959;
+				}
+
+				.secondary-navigation ul.menu a {
+					color: #404040;
+				}
+
+				.main-navigation ul.menu ul.sub-menu,
+				.main-navigation ul.nav-menu ul.children {
+					background-color: #f0f0f0;
+				}
+
+				.site-header {
+					border-bottom-color: #f0f0f0;
+				}
+			}
+/*# sourceURL=storefront-style-inline-css */
+</style>
+<link data-minify="1" rel='stylesheet' id='storefront-icons-css' href='https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/themes/storefront/assets/css/base/icons.css?ver=1774871296' media='all' />
+<link rel='stylesheet' id='mnsk7-storefront-style-css' href='https://staging.mnsk7-tools.pl/wp-content/themes/mnsk7-storefront/style.css?ver=3.0.10' media='all' />
+<link data-minify="1" rel='stylesheet' id='mnsk7-main-css' href='https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/themes/mnsk7-storefront/assets/css/main.css?ver=1774871296' media='all' />
+<link data-minify="1" rel='stylesheet' id='storefront-woocommerce-style-css' href='https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/themes/storefront/assets/css/woocommerce/woocommerce.css?ver=1774871296' media='all' />
+<style id='storefront-woocommerce-style-inline-css'>
+@font-face {
+				font-family: star;
+				src: url(https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/fonts/star.eot);
+				src:
+					url(https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/fonts/star.eot?#iefix) format("embedded-opentype"),
+					url(https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/fonts/star.woff) format("woff"),
+					url(https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/fonts/star.ttf) format("truetype"),
+					url(https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/fonts/star.svg#star) format("svg");
+				font-weight: 400;
+				font-style: normal;
+			}
+			@font-face {
+				font-family: WooCommerce;
+				src: url(https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/fonts/WooCommerce.eot);
+				src:
+					url(https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/fonts/WooCommerce.eot?#iefix) format("embedded-opentype"),
+					url(https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/fonts/WooCommerce.woff) format("woff"),
+					url(https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/fonts/WooCommerce.ttf) format("truetype"),
+					url(https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/fonts/WooCommerce.svg#WooCommerce) format("svg");
+				font-weight: 400;
+				font-style: normal;
+			}
+
+			a.cart-contents,
+			.site-header-cart .widget_shopping_cart a {
+				color: #333333;
+			}
+
+			a.cart-contents:hover,
+			.site-header-cart .widget_shopping_cart a:hover,
+			.site-header-cart:hover > li > a {
+				color: #747474;
+			}
+
+			table.cart td.product-remove,
+			table.cart td.actions {
+				border-top-color: #ffffff;
+			}
+
+			.storefront-handheld-footer-bar ul li.cart .count {
+				background-color: #333333;
+				color: #ffffff;
+				border-color: #ffffff;
+			}
+
+			.woocommerce-tabs ul.tabs li.active a,
+			ul.products li.product .price,
+			.onsale,
+			.wc-block-grid__product-onsale,
+			.widget_search form:before,
+			.widget_product_search form:before {
+				color: #6d6d6d;
+			}
+
+			.woocommerce-breadcrumb a,
+			a.woocommerce-review-link,
+			.product_meta a {
+				color: #727272;
+			}
+
+			.wc-block-grid__product-onsale,
+			.onsale {
+				border-color: #6d6d6d;
+			}
+
+			.star-rating span:before,
+			.quantity .plus, .quantity .minus,
+			p.stars a:hover:after,
+			p.stars a:after,
+			.star-rating span:before,
+			#payment .payment_methods li input[type=radio]:first-child:checked+label:before {
+				color: #7f54b3;
+			}
+
+			.widget_price_filter .ui-slider .ui-slider-range,
+			.widget_price_filter .ui-slider .ui-slider-handle {
+				background-color: #7f54b3;
+			}
+
+			.order_details {
+				background-color: #f8f8f8;
+			}
+
+			.order_details > li {
+				border-bottom: 1px dotted #e3e3e3;
+			}
+
+			.order_details:before,
+			.order_details:after {
+				background: -webkit-linear-gradient(transparent 0,transparent 0),-webkit-linear-gradient(135deg,#f8f8f8 33.33%,transparent 33.33%),-webkit-linear-gradient(45deg,#f8f8f8 33.33%,transparent 33.33%)
+			}
+
+			#order_review {
+				background-color: #ffffff;
+			}
+
+			#payment .payment_methods > li .payment_box,
+			#payment .place-order {
+				background-color: #fafafa;
+			}
+
+			#payment .payment_methods > li:not(.woocommerce-notice) {
+				background-color: #f5f5f5;
+			}
+
+			#payment .payment_methods > li:not(.woocommerce-notice):hover {
+				background-color: #f0f0f0;
+			}
+
+			.woocommerce-pagination .page-numbers li .page-numbers.current {
+				background-color: #e6e6e6;
+				color: #636363;
+			}
+
+			.wc-block-grid__product-onsale,
+			.onsale,
+			.woocommerce-pagination .page-numbers li .page-numbers:not(.current) {
+				color: #6d6d6d;
+			}
+
+			p.stars a:before,
+			p.stars a:hover~a:before,
+			p.stars.selected a.active~a:before {
+				color: #6d6d6d;
+			}
+
+			p.stars.selected a.active:before,
+			p.stars:hover a:before,
+			p.stars.selected a:not(.active):before,
+			p.stars.selected a.active:before {
+				color: #7f54b3;
+			}
+
+			.single-product div.product .woocommerce-product-gallery .woocommerce-product-gallery__trigger {
+				background-color: #eeeeee;
+				color: #333333;
+			}
+
+			.single-product div.product .woocommerce-product-gallery .woocommerce-product-gallery__trigger:hover {
+				background-color: #d5d5d5;
+				border-color: #d5d5d5;
+				color: #333333;
+			}
+
+			.button.added_to_cart:focus,
+			.button.wc-forward:focus {
+				outline-color: #7f54b3;
+			}
+
+			.added_to_cart,
+			.site-header-cart .widget_shopping_cart a.button,
+			.wc-block-grid__products .wc-block-grid__product .wp-block-button__link {
+				background-color: #eeeeee;
+				border-color: #eeeeee;
+				color: #333333;
+			}
+
+			.added_to_cart:hover,
+			.site-header-cart .widget_shopping_cart a.button:hover,
+			.wc-block-grid__products .wc-block-grid__product .wp-block-button__link:hover {
+				background-color: #d5d5d5;
+				border-color: #d5d5d5;
+				color: #333333;
+			}
+
+			.added_to_cart.alt, .added_to_cart, .widget a.button.checkout {
+				background-color: #333333;
+				border-color: #333333;
+				color: #ffffff;
+			}
+
+			.added_to_cart.alt:hover, .added_to_cart:hover, .widget a.button.checkout:hover {
+				background-color: #1a1a1a;
+				border-color: #1a1a1a;
+				color: #ffffff;
+			}
+
+			.button.loading {
+				color: #eeeeee;
+			}
+
+			.button.loading:hover {
+				background-color: #eeeeee;
+			}
+
+			.button.loading:after {
+				color: #333333;
+			}
+
+			@media screen and ( min-width: 768px ) {
+				.site-header-cart .widget_shopping_cart,
+				.site-header .product_list_widget li .quantity {
+					color: #404040;
+				}
+
+				.site-header-cart .widget_shopping_cart .buttons,
+				.site-header-cart .widget_shopping_cart .total {
+					background-color: #f5f5f5;
+				}
+
+				.site-header-cart .widget_shopping_cart {
+					background-color: #f0f0f0;
+				}
+			}
+				.storefront-product-pagination a {
+					color: #6d6d6d;
+					background-color: #ffffff;
+				}
+				.storefront-sticky-add-to-cart {
+					color: #6d6d6d;
+					background-color: #ffffff;
+				}
+
+				.storefront-sticky-add-to-cart a:not(.button) {
+					color: #333333;
+				}
+/*# sourceURL=storefront-woocommerce-style-inline-css */
+</style>
+<link rel='stylesheet' id='storefront-child-style-css' href='https://staging.mnsk7-tools.pl/wp-content/themes/mnsk7-storefront/style.css?ver=1.0.0' media='all' />
+<link rel='stylesheet' id='pwaforwp-style-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/pwa-for-wp/assets/css/pwaforwp-main.min.css?ver=1.7.84' media='all' />
+<link data-minify="1" rel='stylesheet' id='storefront-woocommerce-brands-style-css' href='https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/themes/storefront/assets/css/woocommerce/extensions/brands.css?ver=1774871296' media='all' />
+<link rel='stylesheet' id='um_modal-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/css/um-modal.min.css?ver=2.11.2' media='all' />
+<link rel='stylesheet' id='um_ui-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/jquery-ui/jquery-ui.min.css?ver=1.13.2' media='all' />
+<link rel='stylesheet' id='um_tipsy-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/tipsy/tipsy.min.css?ver=1.0.0a' media='all' />
+<link data-minify="1" rel='stylesheet' id='um_raty-css' href='https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/ultimate-member/assets/libs/raty/um-raty.min.css?ver=1774871296' media='all' />
+<link rel='stylesheet' id='select2-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/select2/select2.min.css?ver=4.0.13' media='all' />
+<link rel='stylesheet' id='um_fileupload-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/css/um-fileupload.min.css?ver=2.11.2' media='all' />
+<link rel='stylesheet' id='um_confirm-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/um-confirm/um-confirm.min.css?ver=1.0' media='all' />
+<link rel='stylesheet' id='um_datetime-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/pickadate/default.min.css?ver=3.6.2' media='all' />
+<link rel='stylesheet' id='um_datetime_date-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/pickadate/default.date.min.css?ver=3.6.2' media='all' />
+<link rel='stylesheet' id='um_datetime_time-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/pickadate/default.time.min.css?ver=3.6.2' media='all' />
+<link data-minify="1" rel='stylesheet' id='um_fonticons_ii-css' href='https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/ultimate-member/assets/libs/legacy/fonticons/fonticons-ii.min.css?ver=1774871296' media='all' />
+<link data-minify="1" rel='stylesheet' id='um_fonticons_fa-css' href='https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/ultimate-member/assets/libs/legacy/fonticons/fonticons-fa.min.css?ver=1774871296' media='all' />
+<link data-minify="1" rel='stylesheet' id='um_fontawesome-css' href='https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/ultimate-member/assets/css/um-fontawesome.min.css?ver=1774871296' media='all' />
+<link rel='stylesheet' id='um_common-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/css/common.min.css?ver=2.11.2' media='all' />
+<link rel='stylesheet' id='um_responsive-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/css/um-responsive.min.css?ver=2.11.2' media='all' />
+<link rel='stylesheet' id='um_styles-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/css/um-styles.min.css?ver=2.11.2' media='all' />
+<link rel='stylesheet' id='um_crop-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/cropper/cropper.min.css?ver=1.6.1' media='all' />
+<link rel='stylesheet' id='um_profile-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/css/um-profile.min.css?ver=2.11.2' media='all' />
+<link rel='stylesheet' id='um_account-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/css/um-account.min.css?ver=2.11.2' media='all' />
+<link rel='stylesheet' id='um_misc-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/css/um-misc.min.css?ver=2.11.2' media='all' />
+<link rel='stylesheet' id='um_default_css-css' href='https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/css/um-old-default.min.css?ver=2.11.2' media='all' />
+<style id='rocket-lazyload-inline-css'>
+.rll-youtube-player{position:relative;padding-bottom:56.23%;height:0;overflow:hidden;max-width:100%;}.rll-youtube-player:focus-within{outline: 2px solid currentColor;outline-offset: 5px;}.rll-youtube-player iframe{position:absolute;top:0;left:0;width:100%;height:100%;z-index:100;background:0 0}.rll-youtube-player img{bottom:0;display:block;left:0;margin:auto;max-width:100%;width:100%;position:absolute;right:0;top:0;border:none;height:auto;-webkit-transition:.4s all;-moz-transition:.4s all;transition:.4s all}.rll-youtube-player img:hover{-webkit-filter:brightness(75%)}.rll-youtube-player .play{height:100%;width:100%;left:0;top:0;position:absolute;background:url(https://staging.mnsk7-tools.pl/wp-content/plugins/wp-rocket/assets/img/youtube.png) no-repeat center;background-color: transparent !important;cursor:pointer;border:none;}.wp-embed-responsive .wp-has-aspect-ratio .rll-youtube-player{position:absolute;padding-bottom:0;width:100%;height:100%;top:0;bottom:0;left:0;right:0}
+/*# sourceURL=rocket-lazyload-inline-css */
+</style>
+<script src="https://staging.mnsk7-tools.pl/wp-includes/js/jquery/jquery.min.js?ver=3.7.1" id="jquery-core-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-includes/js/jquery/jquery-migrate.min.js?ver=3.4.1" id="jquery-migrate-js" defer></script>
+<script data-minify="1" src="https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/customize-my-account-for-woocommerce/assets/js/frontend-unique.js?ver=1774871296" id="wcmamtx-frontend-unique-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/js/js-cookie/js.cookie.min.js?ver=2.1.4-wc.10.5.3" id="wc-js-cookie-js" defer data-wp-strategy="defer"></script>
+<script id="wc-cart-fragments-js-extra">
+var wc_cart_fragments_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/?wc-ajax=%%endpoint%%","cart_hash_key":"wc_cart_hash_d5ace6adf96ddbd192b26bf8c48043d3","fragment_name":"wc_fragments_d5ace6adf96ddbd192b26bf8c48043d3","request_timeout":"5000"};
+//# sourceURL=wc-cart-fragments-js-extra
+</script>
+<script defer src="https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/js/frontend/cart-fragments.min.js?ver=10.5.3" id="wc-cart-fragments-js" defer data-wp-strategy="defer"></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/js/jquery-blockui/jquery.blockUI.min.js?ver=2.7.0-wc.10.5.3" id="wc-jquery-blockui-js" defer data-wp-strategy="defer"></script>
+<script id="wc-add-to-cart-js-extra">
+var wc_add_to_cart_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/?wc-ajax=%%endpoint%%","i18n_view_cart":"Zobacz koszyk","cart_url":"https://staging.mnsk7-tools.pl/koszyk/","is_cart":"","cart_redirect_after_add":"no"};
+//# sourceURL=wc-add-to-cart-js-extra
+</script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/js/frontend/add-to-cart.min.js?ver=10.5.3" id="wc-add-to-cart-js" defer data-wp-strategy="defer"></script>
+<script id="woocommerce-js-extra">
+var woocommerce_params = {"ajax_url":"/wp-admin/admin-ajax.php","wc_ajax_url":"/?wc-ajax=%%endpoint%%","i18n_password_show":"Poka\u017c has\u0142o","i18n_password_hide":"Ukryj has\u0142o"};
+//# sourceURL=woocommerce-js-extra
+</script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/js/frontend/woocommerce.min.js?ver=10.5.3" id="woocommerce-js" defer data-wp-strategy="defer"></script>
+<script data-minify="1" src="https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/duracelltomi-google-tag-manager/dist/js/analytics-talk-content-tracking.js?ver=1774871296" id="gtm4wp-scroll-tracking-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/js/um-gdpr.min.js?ver=2.11.2" id="um-gdpr-js" defer></script>
+<meta name="generator" content="auto-sizes 1.7.0">
+<meta name="generator" content="dominant-color-images 1.2.1">
+<meta name="generator" content="performance-lab 4.1.0; plugins: auto-sizes, dominant-color-images, image-prioritizer, speculation-rules, webp-uploads">
+<meta name="generator" content="webp-uploads 2.6.1">
+
+<!-- Google Tag Manager for WordPress by gtm4wp.com -->
+<!-- GTM Container placement set to automatic -->
+<script data-cfasync="false" data-pagespeed-no-defer>
+	var dataLayer_content = {"pagePostType":"product","pagePostType2":"tax-product","pageCategory":[],"customerTotalOrders":0,"customerTotalOrderValue":0,"customerFirstName":"","customerLastName":"","customerBillingFirstName":"","customerBillingLastName":"","customerBillingCompany":"","customerBillingAddress1":"","customerBillingAddress2":"","customerBillingCity":"","customerBillingState":"","customerBillingPostcode":"","customerBillingCountry":"","customerBillingEmail":"","customerBillingEmailHash":"","customerBillingPhone":"","customerShippingFirstName":"","customerShippingLastName":"","customerShippingCompany":"","customerShippingAddress1":"","customerShippingAddress2":"","customerShippingCity":"","customerShippingState":"","customerShippingPostcode":"","customerShippingCountry":""};
+	dataLayer.push( dataLayer_content );
+</script>
+<script type="rocketlazyloadscript" data-cfasync="false" data-pagespeed-no-defer>
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'//www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WTDD45W5');
+</script>
+<!-- End Google Tag Manager for WordPress by gtm4wp.com --><!-- Google site verification - Google for WooCommerce -->
+<meta name="google-site-verification" content="GYiKvR0oeIYUv1wKtZvg90qoDqDMXcatPbtQ9dzMeAc" />
+<meta name="generator" content="speculation-rules 1.6.0">
+	<noscript><style>.woocommerce-product-gallery{ opacity: 1 !important; }</style></noscript>
+	<meta name="pwaforwp" content="wordpress-plugin"/>
+        <meta name="theme-color" content="#D5E0EB">
+        <meta name="apple-mobile-web-app-title" content="">
+        <meta name="application-name" content="">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-status-bar-style" content="default">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-touch-fullscreen" content="yes">
+<link rel="apple-touch-icon" sizes="192x192" href="https://mnsk7-tools.pl/wp-content/uploads/2024/08/Logo640.png">
+<link rel="apple-touch-icon" sizes="512x512" href="https://mnsk7-tools.pl/wp-content/plugins/pwa-for-wp/images/logo-512x512.png">
+<noscript><style id="rocket-lazyload-nojs-css">.rll-youtube-player, [data-lazy-src]{display:none !important;}</style></noscript>		<style id="mnsk7-header-critical">
+	#masthead.mnsk7-header{background:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:1000;border-bottom:1px solid #e9e8cc;box-shadow:0 1px 3px rgba(0,0,0,.06);min-height:56px;box-sizing:border-box;padding-top:0;padding-bottom:0;margin-bottom:0}
+	/* When promo bar exists: reserve its height so header doesn't "jump" or visually stack oddly on mobile. */
+	body.mnsk7-has-promo #masthead.mnsk7-header.mnsk7-header--sticky{top:calc(env(safe-area-inset-top,0px) + var(--mnsk7-promo-h,2.5rem))}
+	.mnsk7-header__inner{display:flex;align-items:center;gap:1rem;max-width:1200px;margin:0 auto;padding:0 1rem;min-height:56px;box-sizing:border-box;min-width:0}
+	.mnsk7-header__brand{flex-shrink:0;min-width:0}
+	.mnsk7-header__brand a{display:flex;align-items:center;font-size:1.125rem;font-weight:700;color:#000;text-decoration:none!important;border-bottom:none}
+	.mnsk7-header__brand img{max-height:36px;width:auto;max-width:100%;display:block;vertical-align:middle}
+	@media (min-width:1024px){.mnsk7-header__menu-toggle{display:none!important}.mnsk7-header__search-toggle{display:none!important}#mnsk7-header-search.mnsk7-header__search-dropdown{position:static!important;display:flex!important;visibility:visible!important;opacity:1!important;margin:0!important;padding:0!important;min-width:240px;border:none!important;box-shadow:none!important}}
+	@media (max-width:1023px){.mnsk7-header__inner{justify-content:flex-start;gap:6px;padding:0 max(.75rem,env(safe-area-inset-right,0px)) 0 max(.75rem,env(safe-area-inset-left,0px))}.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__nav.is-open .mnsk7-header__menu{display:flex!important}.mnsk7-header__menu-toggle{display:inline-flex!important;align-items:center;justify-content:center;width:44px;min-width:44px;height:44px;min-height:44px;padding:0}.mnsk7-header__brand{flex:1 1 auto;min-width:0;max-width:min(38vw,140px);margin-right:0}.mnsk7-header__brand img{max-width:100%;max-height:36px}.mnsk7-header__nav{flex:0 0 auto;margin-left:auto}.mnsk7-header__actions{flex:0 0 auto;gap:6px}.mnsk7-header__search-toggle,.mnsk7-header__link--account,.mnsk7-header__cart-trigger,.mnsk7-header__cart .cart-contents{display:inline-flex!important;align-items:center;justify-content:center;width:44px;min-width:44px;height:44px;min-height:44px;padding:0}.mnsk7-header__link-text,.mnsk7-header__search-label{display:none!important}}
+	/* Touch fallback: some mobile browsers can render "desktop width"; force mobile header controls on coarse-pointer devices. */
+	@media (hover:none) and (pointer:coarse){.mnsk7-header__menu-toggle{display:flex!important}.mnsk7-header__nav .mnsk7-header__menu{display:none!important}.mnsk7-header__search-toggle{display:inline-flex!important}#mnsk7-header-search.mnsk7-header__search-dropdown{display:none!important}}
+	/* Archive LCP pass: promo bar = LCP candidate — krytyczne style bez czekania na main.css */
+	.mnsk7-promo-bar{background:#0c7ddb;color:#fff;font-size:0.8125rem;font-weight:500;padding:0.35rem 1rem;position:sticky;top:env(safe-area-inset-top,0px);z-index:1001;box-sizing:border-box}
+	.mnsk7-promo-bar__inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;column-gap:.5rem}
+	.mnsk7-promo-bar__text{min-width:0;text-align:left;display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35}
+	.mnsk7-promo-bar__badge{display:inline-flex;align-items:center;justify-content:center;min-height:1.35rem;padding:.1rem .45rem;border-radius:999px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.42);color:#fff;font-size:.625rem;letter-spacing:.08em;font-weight:700;white-space:nowrap}
+	.mnsk7-promo-bar__value{font-weight:700;letter-spacing:.01em}
+	.mnsk7-promo-bar__meta{opacity:.95}
+	.mnsk7-promo-bar__text a,.mnsk7-promo-bar__cta{color:inherit;text-decoration:none}
+	.mnsk7-promo-bar__cta{display:inline-flex;align-items:center;min-height:1.5rem;padding:.05rem .25rem;border-radius:6px;border:1px solid transparent;font-weight:600}
+	.mnsk7-promo-bar__cta:hover,.mnsk7-promo-bar__cta:focus-visible{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.32);text-decoration:none}
+	.mnsk7-promo-bar__close{position:static;border:0;background:transparent;color:inherit;font-size:1.25rem;line-height:1;padding:.25rem .5rem;min-width:44px;min-height:44px;z-index:2;align-self:start}
+	@media (max-width:1023px){.mnsk7-promo-bar{padding:.35rem .75rem}.mnsk7-promo-bar__inner{gap:.5rem}.mnsk7-promo-bar__text{line-height:1.35;gap:.4rem}.mnsk7-promo-bar__badge{font-size:.59375rem;min-height:1.25rem}}
+	@media (max-width:480px){.mnsk7-promo-bar{padding:.5rem .75rem .5rem 1rem;min-height:44px}.mnsk7-promo-bar__inner{grid-template-columns:minmax(0,1fr) auto;align-items:start}.mnsk7-promo-bar__text{text-align:left;line-height:1.4;gap:.35rem .45rem}.mnsk7-promo-bar__value{width:100%;order:2}.mnsk7-promo-bar__meta{order:3}.mnsk7-promo-bar__cta{order:4;padding-left:0}.mnsk7-promo-bar__close{margin-top:-.125rem}}
+	/* Archive: kompaktowy promo bar — mniejszy wp³yw na LCP, pierwszy blok produktów mo¿e byæ LCP. */
+	.mnsk7-archive .mnsk7-promo-bar{font-size:0.75rem;padding:0.25rem 0.75rem}
+	.mnsk7-archive .mnsk7-promo-bar__text{font-size:inherit}
+	@media (max-width:1023px){.mnsk7-archive .mnsk7-promo-bar{padding:0.25rem 2.5rem 0.25rem 0.5rem}}
+	@media (max-width:480px){.mnsk7-archive .mnsk7-promo-bar{min-height:36px;padding:0.35rem 2.5rem 0.35rem 0.5rem}}
+	</style>
+</head>
+<body class="archive tax-product_tag term-frez-do-metalu term-141 wp-custom-logo wp-embed-responsive wp-theme-storefront wp-child-theme-mnsk7-storefront theme-storefront mnsk7-has-promo mnsk7-cookie-bar-visible mnsk7-archive woocommerce woocommerce-page woocommerce-no-js storefront-full-width-content storefront-secondary-navigation storefront-align-wide right-sidebar woocommerce-active post-type-archive post-type-archive-product">
+<!-- mnsk7-header v3.0.10 -->
+
+<!-- GTM Container placement set to automatic -->
+<!-- Google Tag Manager (noscript) -->
+				<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WTDD45W5" height="0" width="0" style="display:none;visibility:hidden" aria-hidden="true"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) --><a class="mnsk7-skip-link skip-link" href="#main">PrzejdŸ do treœci</a>
+<div id="page" class="hfeed site">
+	<div id="mnsk7-promo-bar" class="mnsk7-promo-bar" role="complementary" aria-label="Promocja">
+		<div class="mnsk7-promo-bar__inner">
+			<span class="mnsk7-promo-bar__text"><span class="mnsk7-promo-bar__badge">DOSTAWA</span> <span class="mnsk7-promo-bar__value">Gratis od 300 z³</span> <span class="mnsk7-promo-bar__meta">na terenie Polski</span> <a class="mnsk7-promo-bar__cta" href="https://staging.mnsk7-tools.pl/dostawa-i-platnosci/">SprawdŸ warunki &rarr;</a></span>
+			<button type="button" class="mnsk7-promo-bar__close" aria-label="Zamknij">&times;</button>
+		</div>
+	</div>
+	
+<header id="masthead" class="site-header mnsk7-header mnsk7-header--sticky" role="banner">
+	<div class="mnsk7-header__inner">
+		<div class="mnsk7-header__brand">
+			<a href="https://staging.mnsk7-tools.pl/" class="custom-logo-link" rel="home"><img width="582" height="257" src="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20582%20257'%3E%3C/svg%3E" class="custom-logo has-transparency" alt="Mnsk7-tools.pl LOGO" decoding="async" fetchpriority="high" data-lazy-srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/08/cropped-Logo640-1.avif 582w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/08/cropped-Logo640-1-300x132.avif 300w" data-lazy-sizes="(max-width: 582px) 100vw, 582px" data-has-transparency="true" data-dominant-color="ccccd6" style="--dominant-color: #ccccd6;" data-lazy-src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/08/cropped-Logo640-1.avif" /><noscript><img width="582" height="257" src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/08/cropped-Logo640-1.avif" class="custom-logo has-transparency" alt="Mnsk7-tools.pl LOGO" decoding="async" fetchpriority="high" srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/08/cropped-Logo640-1.avif 582w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/08/cropped-Logo640-1-300x132.avif 300w" sizes="(max-width: 582px) 100vw, 582px" data-has-transparency="true" data-dominant-color="ccccd6" style="--dominant-color: #ccccd6;" loading="lazy" /></noscript></a>		</div>
+		<nav class="mnsk7-header__nav" role="navigation" aria-label="Menu g³ówne">
+			<button type="button" class="mnsk7-header__menu-toggle" aria-expanded="false" aria-controls="mnsk7-primary-menu" aria-label="Otwórz menu" data-close-label="Zamknij menu" data-open-label="Otwórz menu">
+				<span class="mnsk7-header__hamburger" aria-hidden="true"></span>
+			</button>
+			<ul id="mnsk7-primary-menu" class="mnsk7-header__menu">
+								<li class="current-menu-item menu-item-has-children">
+					<a href="https://staging.mnsk7-tools.pl/sklep/" class="mnsk7-menu-item-sklep" aria-haspopup="true" aria-expanded="false" aria-controls="mnsk7-menu-submenu-sklep" data-mnsk7="sklep-parent">Sklep</a>
+										<ul id="mnsk7-menu-submenu-sklep" class="sub-menu mnsk7-megamenu" role="menu" aria-label="Sklep — kategorie i tagi">
+												<li class="mnsk7-megamenu__group">
+							<span class="mnsk7-megamenu__heading">Rodzaje frezów</span>
+							<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--cols">
+								<li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-diamentowy/">Frez diamentowy</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-diamentowy-pcd/">Frez diamentowy PCD</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-do-gwintow/">Frez do gwintów</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-fazownik/">Frez fazownik</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-grawerski/">Frez grawerski</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-kulowy/">Frez kulowy</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-prosty/">Frez prosty</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-spiralny/">Frez spiralny</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-spiralny-stozkowo-kulowy/">Frez spiralny sto¿kowo kulowy</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-typ-u/">Frez typ U</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-typ-v/">Frez typ V</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-typ-v-z-rowkiem/">Frez typ V z rowkiem</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-wiertlo/">Frez wiert³o</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-z-lozyskiem/">Frez z ³o¿yskiem</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-z-wymiennymi-plytkami/">Frez z wymiennymi p³ytkami</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frezy-do-szlifierki/">Frezy do szlifierki</a></li>							</ul>
+						</li>
+																		<li class="mnsk7-megamenu__group">
+							<span class="mnsk7-megamenu__heading">Zastosowanie i materia³y</span>
+							<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--tags">
+								<li><a href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-drewna/">Frez do drewna</a></li><li><a href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/">Frez do metalu</a></li><li><a href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-plastiku/">Frez do plastiku</a></li><li><a href="https://staging.mnsk7-tools.pl/tag-produktu/frezy-uniwersalne-jednopiorowy/">Frez uniwersalny</a></li><li><a href="https://staging.mnsk7-tools.pl/tag-produktu/freza-dwuostrzowa/">Frez dwupiórowy</a></li><li><a href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-aluminium/">Frez do aluminium</a></li><li><a href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-mdf/">Frez do MDF</a></li><li><a href="https://staging.mnsk7-tools.pl/tag-produktu/freza-jednopiorowa/">Frez jednopiórowy</a></li><li><a href="https://staging.mnsk7-tools.pl/tag-produktu/dwupiorowa-freza/">Dwupiórowy frez</a></li>							</ul>
+						</li>
+												<li class="mnsk7-megamenu__footer">
+							<a href="https://staging.mnsk7-tools.pl/sklep/">Wszystkie produkty &rarr;</a>
+						</li>
+					</ul>
+									</li>
+				<li><a href="https://staging.mnsk7-tools.pl/przewodnik/">Przewodnik</a></li>
+				<li><a href="https://staging.mnsk7-tools.pl/dostawa-i-platnosci/">Dostawa i p³atnoœci</a></li>
+				<li><a href="https://staging.mnsk7-tools.pl/kontakt/">Kontakt</a></li>
+			</ul>
+		</nav>
+		<div class="mnsk7-header__actions">
+						<div class="mnsk7-header__search-wrap">
+				<button type="button" class="mnsk7-header__search-toggle" aria-expanded="false" aria-controls="mnsk7-header-search" aria-label="Szukaj" data-close-label="Zamknij wyszukiwanie" data-open-label="Szukaj">
+					<span class="mnsk7-header__search-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
+					<span class="mnsk7-header__search-label">Szukaj</span>
+				</button>
+				<div id="mnsk7-header-search" class="mnsk7-header__search-dropdown" hidden>
+					<form role="search" method="get" class="mnsk7-header__search-form" action="https://staging.mnsk7-tools.pl/">
+						<label for="mnsk7-header-search-input" class="screen-reader-text">Szukaj produktów</label>
+						<input type="search" id="mnsk7-header-search-input" class="mnsk7-header__search-input" placeholder="Szukaj produktów…" value="" name="s" />
+						<input type="hidden" name="post_type" value="product" />
+						<button type="submit" class="mnsk7-header__search-submit">Szukaj</button>
+					</form>
+				</div>
+			</div>
+			<a href="https://staging.mnsk7-tools.pl/moje-konto/" class="mnsk7-header__link mnsk7-header__link--account" aria-label="Moje konto / Zaloguj siê">
+				<span class="mnsk7-header__account-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></span>
+				<span class="mnsk7-header__link-text">Moje konto</span>
+			</a>				<div class="mnsk7-header__cart mnsk7-header__cart--empty">
+					<a href="https://staging.mnsk7-tools.pl/koszyk/" class="cart-contents mnsk7-header__cart-trigger" aria-label="Koszyk" aria-expanded="false" aria-controls="mnsk7-header-cart-dropdown">
+						<span class="mnsk7-header__cart-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
+						<span class="mnsk7-header__cart-count" aria-hidden="true">0</span>
+					</a>
+					<div id="mnsk7-header-cart-dropdown" class="mnsk7-header__cart-dropdown" role="region" aria-label="Koszyk">
+						<div class="mnsk7-header__cart-summary">Koszyk jest pusty</div>						<div class="widget_shopping_cart_content">
+							
+
+	<p class="woocommerce-mini-cart__empty-message">Brak produktów w koszyku.</p>
+
+
+						</div>
+					</div>
+				</div>
+						</div>
+	</div>
+</header>
+<div id="mnsk7-header-search-panel" class="mnsk7-header-search-panel" hidden aria-hidden="true">
+	<form role="search" method="get" class="mnsk7-header-search-panel__form" action="https://staging.mnsk7-tools.pl/">
+		<label for="mnsk7-header-search-panel-input" class="screen-reader-text">Szukaj produktów</label>
+		<input type="search" id="mnsk7-header-search-panel-input" class="mnsk7-header-search-panel__input" placeholder="Szukaj produktów…" value="" name="s" />
+		<input type="hidden" name="post_type" value="product" />
+		<button type="submit" class="mnsk7-header-search-panel__submit">Szukaj</button>
+	</form>
+</div>
+
+<div id="content" class="site-content mnsk7-content">
+<div class="storefront-breadcrumb"><div class="col-full"><nav class="woocommerce-breadcrumb" aria-label="okruszki"><a href="https://staging.mnsk7-tools.pl">Strona g³ówna</a><span class="breadcrumb-separator"> / </span><a href="https://staging.mnsk7-tools.pl/sklep/">Sklep</a><span class="breadcrumb-separator"> / </span><a href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/">Produkty oznaczone &ldquo;Frez do metalu&rdquo;</a></nav></div></div>		<div id="primary" class="content-area">
+			<main id="main" class="site-main" role="main">
+		<header class="woocommerce-products-header">
+			<h1 class="woocommerce-products-header__title page-title">Frez do metalu</h1>
+	
+	</header>
+<div class="mnsk7-plp-archive-wrap col-full"><div class="mnsk7-plp-content col-full"><div id="mnsk7-plp-results" class="mnsk7-plp-results-anchor" aria-hidden="true"></div><div class="mnsk7-plp-chips mnsk7-plp-chips--nav col-full" role="navigation" aria-label="Rodzaje frezów"><span class="mnsk7-plp-chips__label">Rodzaje frezów</span><div class="mnsk7-plp-chips__scroll"><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-diamentowy/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez diamentowy</a><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-diamentowy-pcd/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez diamentowy PCD</a><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-fazownik/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez fazownik</a><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-grawerski/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez grawerski</a><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-kulowy/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez kulowy</a><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-prosty/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez prosty</a><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-spiralny/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez spiralny</a><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-spiralny-stozkowo-kulowy/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez spiralny sto¿kowo kulowy</a><span class="mnsk7-plp-chips-more" id="mnsk7-plp-more-nav-rodzaje-frezow" hidden><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-typ-u/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez typ U</a><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-typ-v/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez typ V</a><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-wiertlo/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez wiert³o</a><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frezy-do-szlifierki/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frezy do szlifierki</a></span><button type="button" class="mnsk7-plp-chips-toggle" data-controls="mnsk7-plp-more-nav-rodzaje-frezow" aria-controls="mnsk7-plp-more-nav-rodzaje-frezow" aria-expanded="false">Wiêcej</button></div></div><div class="mnsk7-plp-chips mnsk7-plp-chips--nav col-full" role="navigation" aria-label="Zastosowanie i materia³y"><span class="mnsk7-plp-chips__label">Zastosowanie i materia³y</span><div class="mnsk7-plp-chips__scroll"><a href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-drewna/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez do drewna</a><a href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/#mnsk7-plp-results" class="mnsk7-plp-chip mnsk7-plp-chip--active">Frez do metalu</a><a href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-plastiku/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez do plastiku</a><a href="https://staging.mnsk7-tools.pl/tag-produktu/frezy-uniwersalne-jednopiorowy/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez uniwersalny</a><a href="https://staging.mnsk7-tools.pl/tag-produktu/freza-dwuostrzowa/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez dwupiórowy</a><a href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-aluminium/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez do aluminium</a><a href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-mdf/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez do MDF</a><a href="https://staging.mnsk7-tools.pl/tag-produktu/freza-jednopiorowa/#mnsk7-plp-results" class="mnsk7-plp-chip ">Frez jednopiórowy</a><span class="mnsk7-plp-chips-more" id="mnsk7-plp-more-nav-zastosowanie-i-materialy" hidden><a href="https://staging.mnsk7-tools.pl/tag-produktu/dwupiorowa-freza/#mnsk7-plp-results" class="mnsk7-plp-chip ">Dwupiórowy frez</a></span><button type="button" class="mnsk7-plp-chips-toggle" data-controls="mnsk7-plp-more-nav-zastosowanie-i-materialy" aria-controls="mnsk7-plp-more-nav-zastosowanie-i-materialy" aria-expanded="false">Wiêcej</button></div></div><div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="Filtruj: D³ugoœæ ca³kowita: "><span class="mnsk7-plp-chips__label">D³ugoœæ ca³kowita: </span><div class="mnsk7-plp-chips__scroll"><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita=23-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">23 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita=25-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">25 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita=27-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">27 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita=30-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">30 mm</a></div></div><div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="Filtruj: D³. ca³kowita (L): "><span class="mnsk7-plp-chips__label">D³. ca³kowita (L): </span><div class="mnsk7-plp-chips__scroll"><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=100-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">100 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=23-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">23 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=25-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">25 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=27-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">27 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=30-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">30 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=31-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">31 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=38-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">38 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=45-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">45 mm</a><span class="mnsk7-plp-chips-more" id="mnsk7-plp-more-filter_dlugosc-calkowita-l" hidden><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=50-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">50 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=50mm#mnsk7-plp-results" class="mnsk7-plp-chip ">50mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=60-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">60 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=66-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">66 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=75-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">75 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=75mm#mnsk7-plp-results" class="mnsk7-plp-chip ">75mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=79-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">79 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-calkowita-l=85-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">85 mm</a></span><button type="button" class="mnsk7-plp-chips-toggle" data-controls="mnsk7-plp-more-filter_dlugosc-calkowita-l" aria-controls="mnsk7-plp-more-filter_dlugosc-calkowita-l" aria-expanded="false">Wiêcej</button></div></div><div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="Filtruj: D³. czêœci roboczej: "><span class="mnsk7-plp-chips__label">D³. czêœci roboczej: </span><div class="mnsk7-plp-chips__scroll"><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-czesci-roboczej=10-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">10 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-czesci-roboczej=13-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">13 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-czesci-roboczej=15-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">15 mm</a></div></div><div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="Filtruj: D³ugoœæ robocza: "><span class="mnsk7-plp-chips__label">D³ugoœæ robocza: </span><div class="mnsk7-plp-chips__scroll"><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza=11-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">11 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza=13-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">13 mm</a></div></div><div class="mnsk7-plp-filters-toggle-wrap col-full"><button type="button" class="mnsk7-plp-chips-toggle mnsk7-plp-filters-toggle" data-controls="mnsk7-plp-more-filters" aria-controls="mnsk7-plp-more-filters" data-more-text="Wiêcej filtrów" data-less-text="Mniej filtrów" aria-expanded="false">Wiêcej filtrów</button></div><div class="mnsk7-plp-filters-more col-full" id="mnsk7-plp-more-filters" hidden><div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="Filtruj: D³. robocza (H): "><span class="mnsk7-plp-chips__label">D³. robocza (H): </span><div class="mnsk7-plp-chips__scroll"><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=10-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">10 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=10-5-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">10.5 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=12-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">12 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=13-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">13 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=15-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">15 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=16-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">16 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=2-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">2 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=20-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">20 mm</a><span class="mnsk7-plp-chips-more" id="mnsk7-plp-more-filter_dlugosc-robocza-h" hidden><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=205-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">20,5 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=205mm#mnsk7-plp-results" class="mnsk7-plp-chip ">20,5mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=25-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">25 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=26-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">26 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=27-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">27 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=3-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">3 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=30-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">30 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=305-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">30,5 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=37-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">37 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=4-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">4 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=47-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">47 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=6-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">6 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=60-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">60 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_dlugosc-robocza-h=8-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">8 mm</a></span><button type="button" class="mnsk7-plp-chips-toggle" data-controls="mnsk7-plp-more-filter_dlugosc-robocza-h" aria-controls="mnsk7-plp-more-filter_dlugosc-robocza-h" aria-expanded="false">Wiêcej</button></div></div><div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="Filtruj: Œrednica (fi): "><span class="mnsk7-plp-chips__label">Œrednica (fi): </span><div class="mnsk7-plp-chips__scroll"><a href="/tag-produktu/frez-do-metalu/?filter_fi=10-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">10 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_fi=3-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">3 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_fi=3175-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">3,175 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_fi=4-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">4 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_fi=6-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">6 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_fi=8mm#mnsk7-plp-results" class="mnsk7-plp-chip ">8 mm</a></div></div><div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="Filtruj: kat: "><span class="mnsk7-plp-chips__label">kat: </span><div class="mnsk7-plp-chips__scroll"><a href="/tag-produktu/frez-do-metalu/?filter_kat=15#mnsk7-plp-results" class="mnsk7-plp-chip ">15 °</a><a href="/tag-produktu/frez-do-metalu/?filter_kat=20#mnsk7-plp-results" class="mnsk7-plp-chip ">20°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat=45#mnsk7-plp-results" class="mnsk7-plp-chip ">45°</a></div></div><div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="Filtruj: K¹t skosu: "><span class="mnsk7-plp-chips__label">K¹t skosu: </span><div class="mnsk7-plp-chips__scroll"><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=095#mnsk7-plp-results" class="mnsk7-plp-chip ">0,95°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=188#mnsk7-plp-results" class="mnsk7-plp-chip ">1,88°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=191#mnsk7-plp-results" class="mnsk7-plp-chip ">1,91°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=10#mnsk7-plp-results" class="mnsk7-plp-chip ">10°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=15#mnsk7-plp-results" class="mnsk7-plp-chip ">15°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=239#mnsk7-plp-results" class="mnsk7-plp-chip ">2,39°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=244#mnsk7-plp-results" class="mnsk7-plp-chip ">2,44°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=28#mnsk7-plp-results" class="mnsk7-plp-chip ">2,8°</a><span class="mnsk7-plp-chips-more" id="mnsk7-plp-more-filter_kat-skosu" hidden><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=286#mnsk7-plp-results" class="mnsk7-plp-chip ">2,86°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=20#mnsk7-plp-results" class="mnsk7-plp-chip ">20°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=304#mnsk7-plp-results" class="mnsk7-plp-chip ">3,04°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=33#mnsk7-plp-results" class="mnsk7-plp-chip ">3,3°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=334#mnsk7-plp-results" class="mnsk7-plp-chip ">3,34°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=35#mnsk7-plp-results" class="mnsk7-plp-chip ">3,5°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=375#mnsk7-plp-results" class="mnsk7-plp-chip ">3,75°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=3-65#mnsk7-plp-results" class="mnsk7-plp-chip ">3.65°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=30#mnsk7-plp-results" class="mnsk7-plp-chip ">30°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=418#mnsk7-plp-results" class="mnsk7-plp-chip ">4,18°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=422#mnsk7-plp-results" class="mnsk7-plp-chip ">4,22°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=469#mnsk7-plp-results" class="mnsk7-plp-chip ">4,69°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=475#mnsk7-plp-results" class="mnsk7-plp-chip ">4,75°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=488#mnsk7-plp-results" class="mnsk7-plp-chip ">4,88°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=40#mnsk7-plp-results" class="mnsk7-plp-chip ">40°</a><a href="/tag-produktu/frez-do-metalu/?filter_kat-skosu=45#mnsk7-plp-results" class="mnsk7-plp-chip ">45°</a></span><button type="button" class="mnsk7-plp-chips-toggle" data-controls="mnsk7-plp-more-filter_kat-skosu" aria-controls="mnsk7-plp-more-filter_kat-skosu" aria-expanded="false">Wiêcej</button></div></div><div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="Filtruj: ksztalt: "><span class="mnsk7-plp-chips__label">ksztalt: </span><div class="mnsk7-plp-chips__scroll"><a href="/tag-produktu/frez-do-metalu/?filter_ksztalt=piramida#mnsk7-plp-results" class="mnsk7-plp-chip ">Piramida</a></div></div><div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="Filtruj: Promieñ R: "><span class="mnsk7-plp-chips__label">Promieñ R: </span><div class="mnsk7-plp-chips__scroll"><a href="/tag-produktu/frez-do-metalu/?filter_r=025-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">0,25 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_r=05-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">0,5 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_r=075-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">0,75 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_r=1-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">1 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_r=15-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">1,5 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_r=2-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">2 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_r=25-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">2,5 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_r=3-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">3 mm</a></div></div><div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="Filtruj: Œrednica: "><span class="mnsk7-plp-chips__label">Œrednica: </span><div class="mnsk7-plp-chips__scroll"><a href="/tag-produktu/frez-do-metalu/?filter_srednica=02-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">0,2 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_srednica=03-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">0,3 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_srednica=04-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">0,4 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_srednica=05-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">0,5 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_srednica=06-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">0,6 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_srednica=1-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">1 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_srednica=15-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">1,5 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_srednica=10-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">10 mm</a><span class="mnsk7-plp-chips-more" id="mnsk7-plp-more-filter_srednica" hidden><a href="/tag-produktu/frez-do-metalu/?filter_srednica=12-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">12 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_srednica=2-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">2 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_srednica=3-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">3 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_srednica=3175-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">3,175 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_srednica=4-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">4 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_srednica=6-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">6 mm</a><a href="/tag-produktu/frez-do-metalu/?filter_srednica=8-mm#mnsk7-plp-results" class="mnsk7-plp-chip ">8 mm</a></span><button type="button" class="mnsk7-plp-chips-toggle" data-controls="mnsk7-plp-more-filter_srednica" aria-controls="mnsk7-plp-more-filter_srednica" aria-expanded="false">Wiêcej</button></div></div><div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="Filtruj: Typ pilnika: "><span class="mnsk7-plp-chips__label">Typ pilnika: </span><div class="mnsk7-plp-chips__scroll"><a href="/tag-produktu/frez-do-metalu/?filter_typ-pilnika=a#mnsk7-plp-results" class="mnsk7-plp-chip ">A</a><a href="/tag-produktu/frez-do-metalu/?filter_typ-pilnika=c#mnsk7-plp-results" class="mnsk7-plp-chip ">C</a><a href="/tag-produktu/frez-do-metalu/?filter_typ-pilnika=d#mnsk7-plp-results" class="mnsk7-plp-chip ">D</a><a href="/tag-produktu/frez-do-metalu/?filter_typ-pilnika=f#mnsk7-plp-results" class="mnsk7-plp-chip ">F</a><a href="/tag-produktu/frez-do-metalu/?filter_typ-pilnika=g#mnsk7-plp-results" class="mnsk7-plp-chip ">G</a><a href="/tag-produktu/frez-do-metalu/?filter_typ-pilnika=l#mnsk7-plp-results" class="mnsk7-plp-chip ">L</a></div></div><div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="Filtruj: zastosowanie: "><span class="mnsk7-plp-chips__label">zastosowanie: </span><div class="mnsk7-plp-chips__scroll"><a href="/tag-produktu/frez-do-metalu/?filter_zastosowanie=maszyny-cnc#mnsk7-plp-results" class="mnsk7-plp-chip ">Maszyny CNC</a></div></div></div>				<div class="mnsk7-plp-row-search-toolbar col-full">
+					<div class="mnsk7-plp-search">
+						<form role="search" method="get" class="mnsk7-plp-search__form" action="https://staging.mnsk7-tools.pl/sklep/">
+							<label for="mnsk7-plp-search-input" class="screen-reader-text">Szukaj produktów</label>
+							<input type="search" id="mnsk7-plp-search-input" class="mnsk7-plp-search__input" name="s" value="" placeholder="Szukaj w tagu…" />
+															<input type="hidden" name="product_tag" value="frez-do-metalu" />
+														<button type="submit" class="mnsk7-plp-search__submit">Szukaj</button>
+						</form>
+					</div>
+					<div class="mnsk7-plp-toolbar mnsk7-plp-toolbar--top">
+						<p class="woocommerce-result-count" role="alert" aria-relevant="all" >
+	Wyœwietlanie 1&ndash;12 z 105 wyników</p>
+<form class="woocommerce-ordering" method="get">
+		<select
+		name="orderby"
+		class="orderby"
+					aria-label="Zamówienie w sklepie"
+			>
+					<option value="menu_order"  selected='selected'>Domyœlne sortowanie</option>
+					<option value="popularity" >Sortuj wg popularnoœci</option>
+					<option value="rating" >Sortuj wg œredniej oceny</option>
+					<option value="date" >Sortuj od najnowszych</option>
+					<option value="price" >Sortuj po cenie od najni¿szej</option>
+					<option value="price-desc" >Sortuj po cenie od najwy¿szej</option>
+			</select>
+	<input type="hidden" name="paged" value="1" />
+	</form>
+<nav class="woocommerce-pagination" aria-label="Paginacja produktów">
+	<ul class='page-numbers'>
+	<li><span aria-label="Strona 1" aria-current="page" class="page-numbers current">1</span></li>
+	<li><a aria-label="Strona 2" class="page-numbers" href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/page/2/">2</a></li>
+	<li><a aria-label="Strona 3" class="page-numbers" href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/page/3/">3</a></li>
+	<li><a aria-label="Strona 4" class="page-numbers" href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/page/4/">4</a></li>
+	<li><span class="page-numbers dots">&hellip;</span></li>
+	<li><a aria-label="Strona 7" class="page-numbers" href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/page/7/">7</a></li>
+	<li><a aria-label="Strona 8" class="page-numbers" href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/page/8/">8</a></li>
+	<li><a aria-label="Strona 9" class="page-numbers" href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/page/9/">9</a></li>
+	<li><a class="next page-numbers" href="https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/page/2/">&rarr;</a></li>
+</ul>
+</nav>
+					</div>
+				</div>
+				<div class="mnsk7-plp-trust-wrap col-full"><div class="mnsk7-plp-trust" role="list"><span class="mnsk7-plp-trust__item">Dostawa dziœ</span><span class="mnsk7-plp-trust__item">Faktura VAT</span><span class="mnsk7-plp-trust__item">Darmowa dostawa od 300 z³</span><span class="mnsk7-plp-trust__item">Zwroty 30 dni</span></div></div>			<div class="mnsk7-product-table-wrap col-full">
+				<table class="mnsk7-product-table shop_table">
+					<thead>
+						<tr>
+							<th class="mnsk7-table-cell--thumb">Zdjêcie</th>
+							<th class="mnsk7-table-cell--title">Produkt</th>
+							<th class="mnsk7-table-cell--price">Cena</th>
+							<th class="mnsk7-table-cell--stock">Na stanie</th>
+							<th class="mnsk7-table-cell--qty">Iloœæ</th>
+							<th class="mnsk7-table-cell--action">Akcja</th>
+						</tr>
+					</thead>
+					<tbody>
+					<tr class="product type-product post-3072 status-publish first instock product_cat-frez-diamentowy-pcd product_tag-frez-do-metalu product_tag-frezy-do-kamienia product_tag-sklep has-post-thumbnail shipping-taxable purchasable product-type-simple">
+	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-diamentowy-do-granitu-cnc-pcd-60341-90-huhao/">
+			<img width="324" height="324" src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/415c9d823450aa1751caa7d9e86932ed-1-350x350.avif" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail not-transparent" alt="Frez diamentowy PCD do granitu | trzpieñ 6 mm | fi 0,3 x 41 | 90° | CNC" loading="eager" fetchpriority="high" fetchpriority="auto" decoding="async" srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/415c9d823450aa1751caa7d9e86932ed-1-350x350.avif 350w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/415c9d823450aa1751caa7d9e86932ed-1-300x300.avif 300w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/415c9d823450aa1751caa7d9e86932ed-1-1024x1024.avif 1024w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/415c9d823450aa1751caa7d9e86932ed-1-150x150.avif 150w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/415c9d823450aa1751caa7d9e86932ed-1-768x768.avif 768w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/415c9d823450aa1751caa7d9e86932ed-1-600x600.avif 600w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/415c9d823450aa1751caa7d9e86932ed-1-100x100.avif 100w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/415c9d823450aa1751caa7d9e86932ed-1-png.avif 1200w" sizes="(max-width: 324px) 100vw, 324px" data-has-transparency="false" data-dominant-color="ededed" style="--dominant-color: #ededed;" data-no-lazy="1" />		</a>
+	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--title">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-diamentowy-do-granitu-cnc-pcd-60341-90-huhao/">Frez diamentowy PCD do granitu | trzpieñ 6 mm | fi 0,3 x 41 | 90° | CNC</a>
+					<span class="mnsk7-table-sku">3692</span>
+							<span class="mnsk7-table-sold">4 osób kupi³o</span>
+			</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--price">
+		<span class="woocommerce-Price-amount amount"><bdi>92,86&nbsp;<span class="woocommerce-Price-currencySymbol">&#122;&#322;</span></bdi></span>	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--stock">
+		1 szt.	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--qty">
+						<input type="number" form="mnsk7-addcart-3072" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="1" min="1" max="1" step="1" aria-label="Iloœæ" />
+						</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--action">
+					<form id="mnsk7-addcart-3072" method="post" action="" class="mnsk7-table-addcart-form">
+				<input type="hidden" id="woocommerce-add-to-cart-nonce" name="woocommerce-add-to-cart-nonce" value="6867d6a3e5" /><input type="hidden" name="_wp_http_referer" value="/tag-produktu/frez-do-metalu/" />				<input type="hidden" name="add-to-cart" value="3072" />
+								<button type="submit" class="button mnsk7-table-addcart-btn">Dodaj do koszyka</button>
+			</form>
+				</td>
+</tr>
+<tr class="product type-product post-3014 status-publish instock product_cat-frez-diamentowy-pcd product_tag-frez-do-metalu product_tag-frezy-do-kamienia product_tag-sklep has-post-thumbnail shipping-taxable purchasable product-type-simple">
+	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-diamentowy-do-granitu-cnc-pcd-60441-70-huhao/">
+			<img width="324" height="324" src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/7eb963cf1e6413492728bfafdac489fa-1-350x350.avif" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail not-transparent" alt="Frez diamentowy PCD do granitu | trzpieñ 6 mm | fi 0,4 x 41 | 70° | CNC" loading="lazy" fetchpriority="auto" decoding="async" srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/7eb963cf1e6413492728bfafdac489fa-1-350x350.avif 350w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/7eb963cf1e6413492728bfafdac489fa-1-300x300.avif 300w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/7eb963cf1e6413492728bfafdac489fa-1-1024x1024.avif 1024w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/7eb963cf1e6413492728bfafdac489fa-1-150x150.avif 150w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/7eb963cf1e6413492728bfafdac489fa-1-768x768.avif 768w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/7eb963cf1e6413492728bfafdac489fa-1-600x600.avif 600w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/7eb963cf1e6413492728bfafdac489fa-1-100x100.avif 100w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/7eb963cf1e6413492728bfafdac489fa-1-png.avif 1200w" sizes="(max-width: 324px) 100vw, 324px" data-has-transparency="false" data-dominant-color="eaeaea" style="--dominant-color: #eaeaea;" data-no-lazy="1" />		</a>
+	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--title">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-diamentowy-do-granitu-cnc-pcd-60441-70-huhao/">Frez diamentowy PCD do granitu | trzpieñ 6 mm | fi 0,4 x 41 | 70° | CNC</a>
+					<span class="mnsk7-table-sku">3691</span>
+							<span class="mnsk7-table-sold">4 osób kupi³o</span>
+			</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--price">
+		<span class="woocommerce-Price-amount amount"><bdi>91,57&nbsp;<span class="woocommerce-Price-currencySymbol">&#122;&#322;</span></bdi></span>	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--stock">
+		1 szt.	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--qty">
+						<input type="number" form="mnsk7-addcart-3014" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="1" min="1" max="1" step="1" aria-label="Iloœæ" />
+						</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--action">
+					<form id="mnsk7-addcart-3014" method="post" action="" class="mnsk7-table-addcart-form">
+				<input type="hidden" id="woocommerce-add-to-cart-nonce" name="woocommerce-add-to-cart-nonce" value="6867d6a3e5" /><input type="hidden" name="_wp_http_referer" value="/tag-produktu/frez-do-metalu/" />				<input type="hidden" name="add-to-cart" value="3014" />
+								<button type="submit" class="button mnsk7-table-addcart-btn">Dodaj do koszyka</button>
+			</form>
+				</td>
+</tr>
+<tr class="product type-product post-2677 status-publish last instock product_cat-frez-diamentowy-pcd product_tag-frez-do-metalu product_tag-frezy-do-kamienia product_tag-sklep has-post-thumbnail shipping-taxable purchasable product-type-simple">
+	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-diamentowy-do-granitu-cnc-pcd-60441-90-huhao/">
+			<img width="324" height="324" src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/df3f28cf24565d1a42bbc56da831f0a2-1-350x350.avif" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail not-transparent" alt="Frez diamentowy PCD do granitu | trzpieñ 6 mm | fi 0,4 x 41 | 90° | CNC" loading="lazy" fetchpriority="auto" decoding="async" srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/df3f28cf24565d1a42bbc56da831f0a2-1-350x350.avif 350w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/df3f28cf24565d1a42bbc56da831f0a2-1-300x300.avif 300w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/df3f28cf24565d1a42bbc56da831f0a2-1-1024x1024.avif 1024w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/df3f28cf24565d1a42bbc56da831f0a2-1-150x150.avif 150w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/df3f28cf24565d1a42bbc56da831f0a2-1-768x768.avif 768w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/df3f28cf24565d1a42bbc56da831f0a2-1-600x600.avif 600w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/df3f28cf24565d1a42bbc56da831f0a2-1-100x100.avif 100w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/df3f28cf24565d1a42bbc56da831f0a2-1-png.avif 1200w" sizes="(max-width: 324px) 100vw, 324px" data-has-transparency="false" data-dominant-color="ebebeb" style="--dominant-color: #ebebeb;" data-no-lazy="1" />		</a>
+	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--title">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-diamentowy-do-granitu-cnc-pcd-60441-90-huhao/">Frez diamentowy PCD do granitu | trzpieñ 6 mm | fi 0,4 x 41 | 90° | CNC</a>
+					<span class="mnsk7-table-sku">3693</span>
+							<span class="mnsk7-table-sold">1 osoba kupi³a</span>
+			</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--price">
+		<span class="woocommerce-Price-amount amount"><bdi>94,15&nbsp;<span class="woocommerce-Price-currencySymbol">&#122;&#322;</span></bdi></span>	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--stock">
+		4 szt.	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--qty">
+						<input type="number" form="mnsk7-addcart-2677" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="1" min="1" max="4" step="1" aria-label="Iloœæ" />
+						</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--action">
+					<form id="mnsk7-addcart-2677" method="post" action="" class="mnsk7-table-addcart-form">
+				<input type="hidden" id="woocommerce-add-to-cart-nonce" name="woocommerce-add-to-cart-nonce" value="6867d6a3e5" /><input type="hidden" name="_wp_http_referer" value="/tag-produktu/frez-do-metalu/" />				<input type="hidden" name="add-to-cart" value="2677" />
+								<button type="submit" class="button mnsk7-table-addcart-btn">Dodaj do koszyka</button>
+			</form>
+				</td>
+</tr>
+<tr class="product type-product post-2681 status-publish first instock product_cat-frez-diamentowy-pcd product_tag-frez-do-metalu product_tag-frezy-do-kamienia product_tag-sklep has-post-thumbnail shipping-taxable purchasable product-type-simple">
+	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-diamentowy-do-granitu-cnc-pcd-60541-90-huhao/">
+			<img width="324" height="324" src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/fd3f80044b83194de776a4c80ef8f85c-1-350x350.avif" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail not-transparent" alt="Frez diamentowy PCD do granitu | trzpieñ 6 mm | fi 0,5 x 41 | 90° | CNC" loading="lazy" fetchpriority="auto" decoding="async" srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/fd3f80044b83194de776a4c80ef8f85c-1-350x350.avif 350w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/fd3f80044b83194de776a4c80ef8f85c-1-300x300.avif 300w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/fd3f80044b83194de776a4c80ef8f85c-1-1024x1024.avif 1024w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/fd3f80044b83194de776a4c80ef8f85c-1-150x150.avif 150w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/fd3f80044b83194de776a4c80ef8f85c-1-768x768.avif 768w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/fd3f80044b83194de776a4c80ef8f85c-1-600x600.avif 600w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/fd3f80044b83194de776a4c80ef8f85c-1-100x100.avif 100w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/fd3f80044b83194de776a4c80ef8f85c-1-png.avif 1200w" sizes="(max-width: 324px) 100vw, 324px" data-has-transparency="false" data-dominant-color="eaeaea" style="--dominant-color: #eaeaea;" data-no-lazy="1" />		</a>
+	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--title">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-diamentowy-do-granitu-cnc-pcd-60541-90-huhao/">Frez diamentowy PCD do granitu | trzpieñ 6 mm | fi 0,5 x 41 | 90° | CNC</a>
+					<span class="mnsk7-table-sku">3694</span>
+							<span class="mnsk7-table-sold">2 osób kupi³o</span>
+			</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--price">
+		<span class="woocommerce-Price-amount amount"><bdi>94,80&nbsp;<span class="woocommerce-Price-currencySymbol">&#122;&#322;</span></bdi></span>	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--stock">
+		3 szt.	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--qty">
+						<input type="number" form="mnsk7-addcart-2681" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="1" min="1" max="3" step="1" aria-label="Iloœæ" />
+						</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--action">
+					<form id="mnsk7-addcart-2681" method="post" action="" class="mnsk7-table-addcart-form">
+				<input type="hidden" id="woocommerce-add-to-cart-nonce" name="woocommerce-add-to-cart-nonce" value="6867d6a3e5" /><input type="hidden" name="_wp_http_referer" value="/tag-produktu/frez-do-metalu/" />				<input type="hidden" name="add-to-cart" value="2681" />
+								<button type="submit" class="button mnsk7-table-addcart-btn">Dodaj do koszyka</button>
+			</form>
+				</td>
+</tr>
+<tr class="product type-product post-2685 status-publish instock product_cat-frez-diamentowy-pcd product_tag-frez-do-metalu product_tag-frezy-do-kamienia product_tag-sklep has-post-thumbnail shipping-taxable purchasable product-type-simple">
+	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-diamentowy-do-granitu-cnc-pcd-60641-90-huhao/">
+			<img width="324" height="324" src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/4e07c19ea3b6b08178d53c1193001f66-1-350x350.avif" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail not-transparent" alt="Frez diamentowy PCD do granitu | trzpieñ 6 mm | fi 0,6 x 41 | 90° | CNC" loading="lazy" fetchpriority="auto" decoding="async" srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/4e07c19ea3b6b08178d53c1193001f66-1-350x350.avif 350w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/4e07c19ea3b6b08178d53c1193001f66-1-300x300.avif 300w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/4e07c19ea3b6b08178d53c1193001f66-1-1024x1024.avif 1024w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/4e07c19ea3b6b08178d53c1193001f66-1-150x150.avif 150w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/4e07c19ea3b6b08178d53c1193001f66-1-768x768.avif 768w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/4e07c19ea3b6b08178d53c1193001f66-1-600x600.avif 600w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/4e07c19ea3b6b08178d53c1193001f66-1-100x100.avif 100w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/4e07c19ea3b6b08178d53c1193001f66-1-png.avif 1200w" sizes="(max-width: 324px) 100vw, 324px" data-has-transparency="false" data-dominant-color="efefee" style="--dominant-color: #efefee;" data-no-lazy="1" />		</a>
+	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--title">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-diamentowy-do-granitu-cnc-pcd-60641-90-huhao/">Frez diamentowy PCD do granitu | trzpieñ 6 mm | fi 0,6 x 41 | 90° | CNC</a>
+					<span class="mnsk7-table-sku">3695</span>
+							<span class="mnsk7-table-sold">4 osób kupi³o</span>
+			</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--price">
+		<span class="woocommerce-Price-amount amount"><bdi>95,44&nbsp;<span class="woocommerce-Price-currencySymbol">&#122;&#322;</span></bdi></span>	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--stock">
+		1 szt.	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--qty">
+						<input type="number" form="mnsk7-addcart-2685" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="1" min="1" max="1" step="1" aria-label="Iloœæ" />
+						</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--action">
+					<form id="mnsk7-addcart-2685" method="post" action="" class="mnsk7-table-addcart-form">
+				<input type="hidden" id="woocommerce-add-to-cart-nonce" name="woocommerce-add-to-cart-nonce" value="6867d6a3e5" /><input type="hidden" name="_wp_http_referer" value="/tag-produktu/frez-do-metalu/" />				<input type="hidden" name="add-to-cart" value="2685" />
+								<button type="submit" class="button mnsk7-table-addcart-btn">Dodaj do koszyka</button>
+			</form>
+				</td>
+</tr>
+<tr class="product type-product post-4206 status-publish last instock product_cat-frez-fazownik product_tag-frez-do-metalu product_tag-sklep has-post-thumbnail shipping-taxable purchasable product-type-simple">
+	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-fazownik-90-cnc-3f-4450-huhao/">
+			<img width="324" height="324" src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/684f85eca440c2fb55f24b26a506df7a-350x350.avif" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail not-transparent" alt="Frez fazownik 90 stopni 3P | 4 mm x 50 mm | CNC VHM HRC 55" loading="lazy" fetchpriority="auto" decoding="async" srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/684f85eca440c2fb55f24b26a506df7a-350x350.avif 350w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/684f85eca440c2fb55f24b26a506df7a-300x300.avif 300w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/684f85eca440c2fb55f24b26a506df7a-1024x1024.avif 1024w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/684f85eca440c2fb55f24b26a506df7a-150x150.avif 150w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/684f85eca440c2fb55f24b26a506df7a-768x768.avif 768w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/684f85eca440c2fb55f24b26a506df7a-600x600.avif 600w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/684f85eca440c2fb55f24b26a506df7a-100x100.avif 100w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/684f85eca440c2fb55f24b26a506df7a-png.avif 1200w" sizes="(max-width: 324px) 100vw, 324px" data-has-transparency="false" data-dominant-color="f3f2f1" style="--dominant-color: #f3f2f1;" data-no-lazy="1" />		</a>
+	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--title">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-fazownik-90-cnc-3f-4450-huhao/">Frez fazownik 90 stopni 3P | 4 mm x 50 mm | CNC VHM HRC 55</a>
+					<span class="mnsk7-table-sku">H131204050</span>
+							<span class="mnsk7-table-sold">24 osób kupi³o</span>
+			</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--price">
+		<span class="woocommerce-Price-amount amount"><bdi>22,88&nbsp;<span class="woocommerce-Price-currencySymbol">&#122;&#322;</span></bdi></span>	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--stock">
+		1 szt.	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--qty">
+						<input type="number" form="mnsk7-addcart-4206" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="1" min="1" max="1" step="1" aria-label="Iloœæ" />
+						</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--action">
+					<form id="mnsk7-addcart-4206" method="post" action="" class="mnsk7-table-addcart-form">
+				<input type="hidden" id="woocommerce-add-to-cart-nonce" name="woocommerce-add-to-cart-nonce" value="6867d6a3e5" /><input type="hidden" name="_wp_http_referer" value="/tag-produktu/frez-do-metalu/" />				<input type="hidden" name="add-to-cart" value="4206" />
+								<button type="submit" class="button mnsk7-table-addcart-btn">Dodaj do koszyka</button>
+			</form>
+				</td>
+</tr>
+<tr class="product type-product post-4216 status-publish first instock product_cat-frez-fazownik product_tag-frez-do-metalu product_tag-sklep has-post-thumbnail shipping-taxable purchasable product-type-simple">
+	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-fazownik-90-cnc-3f-6650-huhao/">
+			<img width="324" height="324" src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/8333c5684d28c15733dba1bf1dba1e65-350x350.avif" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail not-transparent" alt="Frez fazownik 90 stopni 3P | 6 mm x 50 mm | CNC VHM HRC 55" loading="lazy" fetchpriority="auto" decoding="async" srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/8333c5684d28c15733dba1bf1dba1e65-350x350.avif 350w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/8333c5684d28c15733dba1bf1dba1e65-300x300.avif 300w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/8333c5684d28c15733dba1bf1dba1e65-1024x1024.avif 1024w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/8333c5684d28c15733dba1bf1dba1e65-150x150.avif 150w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/8333c5684d28c15733dba1bf1dba1e65-768x768.avif 768w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/8333c5684d28c15733dba1bf1dba1e65-600x600.avif 600w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/8333c5684d28c15733dba1bf1dba1e65-100x100.avif 100w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/8333c5684d28c15733dba1bf1dba1e65-png.avif 1200w" sizes="(max-width: 324px) 100vw, 324px" data-has-transparency="false" data-dominant-color="eeedec" style="--dominant-color: #eeedec;" data-no-lazy="1" />		</a>
+	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--title">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-fazownik-90-cnc-3f-6650-huhao/">Frez fazownik 90 stopni 3P | 6 mm x 50 mm | CNC VHM HRC 55</a>
+					<span class="mnsk7-table-sku">H131206050</span>
+							<span class="mnsk7-table-sold">18 osób kupi³o</span>
+			</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--price">
+		<span class="woocommerce-Price-amount amount"><bdi>39,60&nbsp;<span class="woocommerce-Price-currencySymbol">&#122;&#322;</span></bdi></span>	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--stock">
+		7 szt.	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--qty">
+						<input type="number" form="mnsk7-addcart-4216" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="1" min="1" max="7" step="1" aria-label="Iloœæ" />
+						</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--action">
+					<form id="mnsk7-addcart-4216" method="post" action="" class="mnsk7-table-addcart-form">
+				<input type="hidden" id="woocommerce-add-to-cart-nonce" name="woocommerce-add-to-cart-nonce" value="6867d6a3e5" /><input type="hidden" name="_wp_http_referer" value="/tag-produktu/frez-do-metalu/" />				<input type="hidden" name="add-to-cart" value="4216" />
+								<button type="submit" class="button mnsk7-table-addcart-btn">Dodaj do koszyka</button>
+			</form>
+				</td>
+</tr>
+<tr class="product type-product post-2852 status-publish instock product_cat-frez-grawerski product_tag-frez-do-metalu product_tag-sklep has-post-thumbnail shipping-taxable purchasable product-type-simple">
+	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-2f-prosty-grawer-typu-v-cnc-43260-30-huhao/">
+			<img width="324" height="324" src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/81def5aea7a1bf4924f6a8a1d6fd0a9a-350x350.avif" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail not-transparent" alt="Frez grawer 2P | trzpieñ 4 mm | fi 0,5 x 32 x 60 | 30 stopni | VHM CNC" loading="lazy" fetchpriority="auto" decoding="async" srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/81def5aea7a1bf4924f6a8a1d6fd0a9a-350x350.avif 350w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/81def5aea7a1bf4924f6a8a1d6fd0a9a-300x300.avif 300w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/81def5aea7a1bf4924f6a8a1d6fd0a9a-1024x1024.avif 1024w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/81def5aea7a1bf4924f6a8a1d6fd0a9a-150x150.avif 150w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/81def5aea7a1bf4924f6a8a1d6fd0a9a-768x768.avif 768w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/81def5aea7a1bf4924f6a8a1d6fd0a9a-600x600.avif 600w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/81def5aea7a1bf4924f6a8a1d6fd0a9a-100x100.avif 100w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/81def5aea7a1bf4924f6a8a1d6fd0a9a-png.avif 1200w" sizes="(max-width: 324px) 100vw, 324px" data-has-transparency="false" data-dominant-color="f3f3f3" style="--dominant-color: #f3f3f3;" data-no-lazy="1" />		</a>
+	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--title">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-2f-prosty-grawer-typu-v-cnc-43260-30-huhao/">Frez grawer 2P | trzpieñ 4 mm | fi 0,5 x 32 x 60 | 30 stopni | VHM CNC</a>
+					<span class="mnsk7-table-sku">2790</span>
+							<span class="mnsk7-table-sold">11 osób kupi³o</span>
+			</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--price">
+		<span class="woocommerce-Price-amount amount"><bdi>22,89&nbsp;<span class="woocommerce-Price-currencySymbol">&#122;&#322;</span></bdi></span>	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--stock">
+		15 szt.	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--qty">
+						<input type="number" form="mnsk7-addcart-2852" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="1" min="1" max="15" step="1" aria-label="Iloœæ" />
+						</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--action">
+					<form id="mnsk7-addcart-2852" method="post" action="" class="mnsk7-table-addcart-form">
+				<input type="hidden" id="woocommerce-add-to-cart-nonce" name="woocommerce-add-to-cart-nonce" value="6867d6a3e5" /><input type="hidden" name="_wp_http_referer" value="/tag-produktu/frez-do-metalu/" />				<input type="hidden" name="add-to-cart" value="2852" />
+								<button type="submit" class="button mnsk7-table-addcart-btn">Dodaj do koszyka</button>
+			</form>
+				</td>
+</tr>
+<tr class="product type-product post-3732 status-publish last instock product_cat-frez-grawerski product_tag-frez-do-metalu product_tag-sklep has-post-thumbnail shipping-taxable purchasable product-type-simple">
+	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-2f-prosty-grawer-typu-v-cnc-60450-15-huhao/">
+			<img width="324" height="324" src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/b70f674074a40c43d8baec5c0b135843-350x350.avif" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail not-transparent" alt="Frez grawer 2P | trzpieñ 6 | fi 0,4 x 20 x 50 | 15 stopni | VHM CNC" loading="lazy" fetchpriority="auto" decoding="async" srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/b70f674074a40c43d8baec5c0b135843-350x350.avif 350w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/b70f674074a40c43d8baec5c0b135843-300x300.avif 300w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/b70f674074a40c43d8baec5c0b135843-1024x1024.avif 1024w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/b70f674074a40c43d8baec5c0b135843-150x150.avif 150w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/b70f674074a40c43d8baec5c0b135843-768x768.avif 768w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/b70f674074a40c43d8baec5c0b135843-600x600.avif 600w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/b70f674074a40c43d8baec5c0b135843-100x100.avif 100w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/10/b70f674074a40c43d8baec5c0b135843-png.avif 1200w" sizes="(max-width: 324px) 100vw, 324px" data-has-transparency="false" data-dominant-color="ededec" style="--dominant-color: #ededec;" data-no-lazy="1" />		</a>
+	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--title">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-2f-prosty-grawer-typu-v-cnc-60450-15-huhao/">Frez grawer 2P | trzpieñ 6 | fi 0,4 x 20 x 50 | 15 stopni | VHM CNC</a>
+					<span class="mnsk7-table-sku">5488</span>
+							<span class="mnsk7-table-sold">29 osób kupi³o</span>
+			</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--price">
+		<span class="woocommerce-Price-amount amount"><bdi>37,00&nbsp;<span class="woocommerce-Price-currencySymbol">&#122;&#322;</span></bdi></span>	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--stock">
+		4 szt.	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--qty">
+						<input type="number" form="mnsk7-addcart-3732" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="1" min="1" max="4" step="1" aria-label="Iloœæ" />
+						</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--action">
+					<form id="mnsk7-addcart-3732" method="post" action="" class="mnsk7-table-addcart-form">
+				<input type="hidden" id="woocommerce-add-to-cart-nonce" name="woocommerce-add-to-cart-nonce" value="6867d6a3e5" /><input type="hidden" name="_wp_http_referer" value="/tag-produktu/frez-do-metalu/" />				<input type="hidden" name="add-to-cart" value="3732" />
+								<button type="submit" class="button mnsk7-table-addcart-btn">Dodaj do koszyka</button>
+			</form>
+				</td>
+</tr>
+<tr class="product type-product post-2862 status-publish first instock product_cat-frez-grawerski product_tag-frez-do-metalu product_tag-sklep has-post-thumbnail shipping-taxable purchasable product-type-simple">
+	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-grawerski-piramida-3-krawedzi-cnc-3-1750-230-45-huhao/">
+			<img width="324" height="324" src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/f4a0f2affad3a551509d3364a37a04b2-350x350.avif" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail not-transparent" alt="Frez grawer 3P | trzpieñ 3.175 | fi 0,2 x 30 | 45 stopni | VHM CNC" loading="lazy" fetchpriority="auto" decoding="async" srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/f4a0f2affad3a551509d3364a37a04b2-350x350.avif 350w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/f4a0f2affad3a551509d3364a37a04b2-300x300.avif 300w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/f4a0f2affad3a551509d3364a37a04b2-1024x1024.avif 1024w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/f4a0f2affad3a551509d3364a37a04b2-150x150.avif 150w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/f4a0f2affad3a551509d3364a37a04b2-768x768.avif 768w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/f4a0f2affad3a551509d3364a37a04b2-600x600.avif 600w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/f4a0f2affad3a551509d3364a37a04b2-100x100.avif 100w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/f4a0f2affad3a551509d3364a37a04b2-png.avif 1200w" sizes="(max-width: 324px) 100vw, 324px" data-has-transparency="false" data-dominant-color="f3f3f2" style="--dominant-color: #f3f3f2;" data-no-lazy="1" />		</a>
+	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--title">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-grawerski-piramida-3-krawedzi-cnc-3-1750-230-45-huhao/">Frez grawer 3P | trzpieñ 3.175 | fi 0,2 x 30 | 45 stopni | VHM CNC</a>
+					<span class="mnsk7-table-sku">3668</span>
+							<span class="mnsk7-table-sold">26 osób kupi³o</span>
+			</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--price">
+		<span class="woocommerce-Price-amount amount"><bdi>11,28&nbsp;<span class="woocommerce-Price-currencySymbol">&#122;&#322;</span></bdi></span>	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--stock">
+		4 szt.	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--qty">
+						<input type="number" form="mnsk7-addcart-2862" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="1" min="1" max="4" step="1" aria-label="Iloœæ" />
+						</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--action">
+					<form id="mnsk7-addcart-2862" method="post" action="" class="mnsk7-table-addcart-form">
+				<input type="hidden" id="woocommerce-add-to-cart-nonce" name="woocommerce-add-to-cart-nonce" value="6867d6a3e5" /><input type="hidden" name="_wp_http_referer" value="/tag-produktu/frez-do-metalu/" />				<input type="hidden" name="add-to-cart" value="2862" />
+								<button type="submit" class="button mnsk7-table-addcart-btn">Dodaj do koszyka</button>
+			</form>
+				</td>
+</tr>
+<tr class="product type-product post-5630 status-publish instock product_cat-frez-grawerski product_tag-frez-do-metalu product_tag-sklep has-post-thumbnail shipping-taxable purchasable product-type-simple">
+	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-grawerski-piramida-cnc-3-1750-21023-10-tialn-huhao/">
+			<img width="324" height="324" src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/61be8e255871c5db23b8c5ce2e20aaee-350x350.avif" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail not-transparent" alt="Frez grawer CNC | trzpieñ 3.175 | fi 0,2 x 23 | 10 stopni | VHM TiAlN" loading="lazy" fetchpriority="auto" decoding="async" srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/61be8e255871c5db23b8c5ce2e20aaee-350x350.avif 350w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/61be8e255871c5db23b8c5ce2e20aaee-300x300.avif 300w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/61be8e255871c5db23b8c5ce2e20aaee-1024x1024.avif 1024w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/61be8e255871c5db23b8c5ce2e20aaee-150x150.avif 150w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/61be8e255871c5db23b8c5ce2e20aaee-768x768.avif 768w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/61be8e255871c5db23b8c5ce2e20aaee-600x600.avif 600w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/61be8e255871c5db23b8c5ce2e20aaee-100x100.avif 100w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/61be8e255871c5db23b8c5ce2e20aaee-png.avif 1200w" sizes="(max-width: 324px) 100vw, 324px" data-has-transparency="false" data-dominant-color="f7f6f3" style="--dominant-color: #f7f6f3;" data-no-lazy="1" />		</a>
+	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--title">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-grawerski-piramida-cnc-3-1750-21023-10-tialn-huhao/">Frez grawer CNC | trzpieñ 3.175 | fi 0,2 x 23 | 10 stopni | VHM TiAlN</a>
+					<span class="mnsk7-table-sku">3563</span>
+							<span class="mnsk7-table-sold">56 osób kupi³o</span>
+			</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--price">
+		<span class="woocommerce-Price-amount amount"><bdi>22,70&nbsp;<span class="woocommerce-Price-currencySymbol">&#122;&#322;</span></bdi></span>	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--stock">
+		10 szt.	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--qty">
+						<input type="number" form="mnsk7-addcart-5630" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="1" min="1" max="10" step="1" aria-label="Iloœæ" />
+						</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--action">
+					<form id="mnsk7-addcart-5630" method="post" action="" class="mnsk7-table-addcart-form">
+				<input type="hidden" id="woocommerce-add-to-cart-nonce" name="woocommerce-add-to-cart-nonce" value="6867d6a3e5" /><input type="hidden" name="_wp_http_referer" value="/tag-produktu/frez-do-metalu/" />				<input type="hidden" name="add-to-cart" value="5630" />
+								<button type="submit" class="button mnsk7-table-addcart-btn">Dodaj do koszyka</button>
+			</form>
+				</td>
+</tr>
+<tr class="product type-product post-5607 status-publish last instock product_cat-frez-grawerski product_tag-frez-do-metalu product_tag-sklep has-post-thumbnail shipping-taxable purchasable product-type-simple">
+	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-grawerski-piramida-cnc-3-1750-21125-45-tialn-huhao/">
+			<img width="324" height="324" src="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/b362325d5db586b330c2a32f9fad14d2-350x350.avif" class="attachment-woocommerce_thumbnail size-woocommerce_thumbnail not-transparent" alt="Frez grawer CNC | trzpieñ 3.175 | fi 0,2 x 25 | 45 stopni | VHM TiAlN" loading="lazy" fetchpriority="auto" decoding="async" srcset="https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/b362325d5db586b330c2a32f9fad14d2-350x350.avif 350w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/b362325d5db586b330c2a32f9fad14d2-300x300.avif 300w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/b362325d5db586b330c2a32f9fad14d2-1024x1024.avif 1024w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/b362325d5db586b330c2a32f9fad14d2-150x150.avif 150w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/b362325d5db586b330c2a32f9fad14d2-768x768.avif 768w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/b362325d5db586b330c2a32f9fad14d2-600x600.avif 600w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/b362325d5db586b330c2a32f9fad14d2-100x100.avif 100w, https://staging.mnsk7-tools.pl/wp-content/uploads/2024/11/b362325d5db586b330c2a32f9fad14d2-png.avif 1200w" sizes="(max-width: 324px) 100vw, 324px" data-has-transparency="false" data-dominant-color="f4f2ed" style="--dominant-color: #f4f2ed;" data-no-lazy="1" />		</a>
+	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--title">
+		<a href="https://staging.mnsk7-tools.pl/sklep/frez-grawerski-piramida-cnc-3-1750-21125-45-tialn-huhao/">Frez grawer CNC | trzpieñ 3.175 | fi 0,2 x 25 | 45 stopni | VHM TiAlN</a>
+					<span class="mnsk7-table-sku">3586</span>
+							<span class="mnsk7-table-sold">24 osób kupi³o</span>
+			</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--price">
+		<span class="woocommerce-Price-amount amount"><bdi>15,13&nbsp;<span class="woocommerce-Price-currencySymbol">&#122;&#322;</span></bdi></span>	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--stock">
+		11 szt.	</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--qty">
+						<input type="number" form="mnsk7-addcart-5607" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="1" min="1" max="11" step="1" aria-label="Iloœæ" />
+						</td>
+	<td class="mnsk7-table-cell mnsk7-table-cell--action">
+					<form id="mnsk7-addcart-5607" method="post" action="" class="mnsk7-table-addcart-form">
+				<input type="hidden" id="woocommerce-add-to-cart-nonce" name="woocommerce-add-to-cart-nonce" value="6867d6a3e5" /><input type="hidden" name="_wp_http_referer" value="/tag-produktu/frez-do-metalu/" />				<input type="hidden" name="add-to-cart" value="5607" />
+								<button type="submit" class="button mnsk7-table-addcart-btn">Dodaj do koszyka</button>
+			</form>
+				</td>
+</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="mnsk7-plp-load-more-wrap col-full" data-current-page="1" data-total-pages="9" data-taxonomy="product_tag" data-term="frez-do-metalu" data-per-page="12" data-total="105"><a href="/tag-produktu/frez-do-metalu/?paged=2" class="mnsk7-plp-load-more button">Poka¿ wiêcej</a></div></div><!-- .mnsk7-plp-content --></div><!-- .mnsk7-plp-archive-wrap -->			</main><!-- #main -->
+		</div><!-- #primary -->
+
+			</div><!-- #content -->
+
+<div id="mnsk7-shipping-zone-notice-placeholder" class="mnsk7-shipping-zone-placeholder"></div>
+<footer id="colophon" class="mnsk7-footer" role="contentinfo">
+	<div class="mnsk7-footer__top">
+		<div class="mnsk7-footer__inner">
+			<div id="footer-col-klient" class="mnsk7-footer__col mnsk7-footer__col--client is-open" aria-label="Linki dla klienta">
+				<button type="button" class="mnsk7-footer__accordion-trigger" id="footer-trigger-klient" aria-expanded="true" aria-controls="footer-panel-klient">
+					<span class="mnsk7-footer__accordion-title">Klient</span>
+					<span class="mnsk7-footer__accordion-icon" aria-hidden="true"></span>
+				</button>
+				<div id="footer-panel-klient" class="mnsk7-footer__accordion-panel" role="region" aria-labelledby="footer-trigger-klient">
+				<ul class="mnsk7-footer__links">
+					<li><a href="https://staging.mnsk7-tools.pl/sklep/">Sklep</a></li>
+										<li><a href="https://staging.mnsk7-tools.pl/moje-konto/">Moje konto</a></li>
+										<li><a href="https://staging.mnsk7-tools.pl/dostawa-i-platnosci/">Dostawa i p³atnoœci</a></li>
+					<li><a href="https://staging.mnsk7-tools.pl/kontakt/">Kontakt</a></li>
+					<li><a href="https://staging.mnsk7-tools.pl/regulamin/#zwroty">Zwroty i reklamacje</a></li>
+					<li><a href="https://staging.mnsk7-tools.pl/regulamin/">Regulamin</a></li>
+					<li><a href="https://staging.mnsk7-tools.pl/regulamin/privacy-policy/">Polityka prywatnoœci</a></li>
+				</ul>
+				</div>
+			</div>
+			<div id="footer-col-kategorie" class="mnsk7-footer__col mnsk7-footer__col--kategorie" aria-label="Kategorie produktów">
+				<button type="button" class="mnsk7-footer__accordion-trigger" id="footer-trigger-kategorie" aria-expanded="false" aria-controls="footer-panel-kategorie">
+					<span class="mnsk7-footer__accordion-title">Kategorie</span>
+					<span class="mnsk7-footer__accordion-icon" aria-hidden="true"></span>
+				</button>
+				<div id="footer-panel-kategorie" class="mnsk7-footer__accordion-panel" role="region" aria-labelledby="footer-trigger-kategorie">
+				<ul class="mnsk7-footer__links">
+					<li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-diamentowy/">Frez diamentowy</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-diamentowy-pcd/">Frez diamentowy PCD</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-fazownik/">Frez fazownik</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-grawerski/">Frez grawerski</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-kulowy/">Frez kulowy</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-prosty/">Frez prosty</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-spiralny/">Frez spiralny</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-spiralny-stozkowo-kulowy/">Frez spiralny sto¿kowo kulowy</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-typ-u/">Frez typ U</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-typ-v/">Frez typ V</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-wiertlo/">Frez wiert³o</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frezy-do-szlifierki/">Frezy do szlifierki</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/plytki-wieloostrzowe/">P³ytki wieloostrzowe</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/tuleje-zaciskowe/">Tuleje zaciskowe</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/zestawy/">Zestawy</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-do-gwintow/">Frez do gwintów</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-typ-v-z-rowkiem/">Frez typ V z rowkiem</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-z-lozyskiem/">Frez z ³o¿yskiem</a></li><li><a href="https://staging.mnsk7-tools.pl/kategoria-produktu/frez-z-wymiennymi-plytkami/">Frez z wymiennymi p³ytkami</a></li>				</ul>
+				</div>
+			</div>
+			<div id="footer-col-kontakt" class="mnsk7-footer__col mnsk7-footer__col--contact" aria-label="Dane kontaktowe">
+				<button type="button" class="mnsk7-footer__accordion-trigger" id="footer-trigger-kontakt" aria-expanded="false" aria-controls="footer-panel-kontakt">
+					<span class="mnsk7-footer__accordion-title">Kontakt</span>
+					<span class="mnsk7-footer__accordion-icon" aria-hidden="true"></span>
+				</button>
+				<div id="footer-panel-kontakt" class="mnsk7-footer__accordion-panel" role="region" aria-labelledby="footer-trigger-kontakt">
+				<p class="mnsk7-footer__address"><strong class="mnsk7-footer__legal-name">MNSK7 Spó³ka z o.o.</strong><br>ul. Williama Heerleina Lindleya 16/512, 02-013 Warszawa (Ochota)<br><span class="mnsk7-footer__legal-registry">KRS: 0001072755 &middot; NIP: 5242991741 &middot; REGON: 527101693</span></p>				<p class="mnsk7-footer__contact-page-link"><a href="https://staging.mnsk7-tools.pl/kontakt/">Formularz kontaktowy</a></p>
+				<ul class="mnsk7-footer__contact-list">
+					<li>
+						<span class="mnsk7-footer__icon mnsk7-footer__icon--email" aria-hidden="true"></span>
+						<a href="mailto:office@mnsk7.pl">office@mnsk7.pl</a>
+					</li>
+					<li>
+						<span class="mnsk7-footer__icon mnsk7-footer__icon--phone" aria-hidden="true"></span>
+						<a href="tel:+48451696511">+48 451696511</a>
+					</li>
+					<li class="mnsk7-footer__contact-item--hours">
+						<span class="mnsk7-footer__icon mnsk7-footer__icon--clock" aria-hidden="true"></span>
+						<dl class="mnsk7-footer__hours" aria-label="Godziny otwarcia">
+							<div class="mnsk7-footer__hours-row"><dt>pn.&nbsp;&ndash;&nbsp;pt.</dt><dd>9:00&nbsp;&ndash;&nbsp;17:00</dd></div><div class="mnsk7-footer__hours-row"><dt>sb.</dt><dd>10:00&nbsp;&ndash;&nbsp;12:00</dd></div><div class="mnsk7-footer__hours-row"><dt>nd.</dt><dd>zamkniête</dd></div>						</dl>
+					</li>
+					<li>
+						<span class="mnsk7-footer__icon mnsk7-footer__icon--instagram" aria-hidden="true"></span>
+						<a href="https://www.instagram.com/mnsk7tools/" target="_blank" rel="noopener">@mnsk7tools</a>
+					</li>
+				</ul>
+				</div>
+			</div>
+			<div id="footer-col-newsletter" class="mnsk7-footer__col mnsk7-footer__col--newsletter" aria-label="Zapisz siê do newslettera">
+				<button type="button" class="mnsk7-footer__accordion-trigger" id="footer-trigger-newsletter" aria-expanded="false" aria-controls="footer-panel-newsletter">
+					<span class="mnsk7-footer__accordion-title">Newsletter</span>
+					<span class="mnsk7-footer__accordion-icon" aria-hidden="true"></span>
+				</button>
+				<div id="footer-panel-newsletter" class="mnsk7-footer__accordion-panel" role="region" aria-labelledby="footer-trigger-newsletter">
+								<!-- mnsk7-footer newsletter -->
+				<p class="mnsk7-footer__newsletter-desc">Otrzymuj informacje o promocjach, nowoœciach i poradach.</p>
+				<form class="mnsk7-footer__newsletter-form" action="https://staging.mnsk7-tools.pl/" method="post" aria-label="Zapisz siê do newslettera">
+					<input type="hidden" id="mnsk7_newsletter_nonce" name="mnsk7_newsletter_nonce" value="e640eeb55b" /><input type="hidden" name="_wp_http_referer" value="/tag-produktu/frez-do-metalu/" />					<input type="hidden" name="mnsk7_newsletter" value="1" />
+					<label for="mnsk7-newsletter-email" class="screen-reader-text">Adres e-mail</label>
+					<input type="email" id="mnsk7-newsletter-email" name="mnsk7_newsletter_email" placeholder="Twój e-mail" required class="mnsk7-footer__newsletter-input" />
+					<button type="submit" class="mnsk7-footer__newsletter-btn">Zapisz siê</button>
+				</form>
+				<p class="mnsk7-footer__newsletter-privacy">
+					Mo¿esz w ka¿dej chwili wypisaæ siê.					<a href="https://staging.mnsk7-tools.pl/regulamin/privacy-policy/">Zobacz politykê prywatnoœci.</a>
+				</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="mnsk7-footer__bottom">
+		<div class="mnsk7-footer__bottom-inner">
+			<span class="mnsk7-footer__copy">&copy; 2026 mnsk7-tools.pl</span>
+						<a href="https://staging.mnsk7-tools.pl/regulamin/privacy-policy/#cookies" class="mnsk7-footer__cookie-link">Polityka cookie</a>
+		</div>
+	</div>
+</footer>
+
+</div><!-- #page -->
+<div id="mnsk7-cookie-bar" class="mnsk7-cookie-bar" hidden role="dialog" aria-label="Informacja o plikach cookie" aria-hidden="true">
+	<div class="mnsk7-cookie-bar__inner">
+		<p class="mnsk7-cookie-bar__text">
+			Ta strona u¿ywa plików cookie — niezbêdnych do dzia³ania sklepu oraz opcjonalnych (analityka). Mo¿esz zaakceptowaæ wszystkie, odrzuciæ opcjonalne lub zobaczyæ szczegó³y w							<a href="https://staging.mnsk7-tools.pl/regulamin/privacy-policy/">Polityce prywatnoœci</a>.
+					</p>
+		<div class="mnsk7-cookie-bar__buttons">
+			<button type="button" class="mnsk7-cookie-bar__btn mnsk7-cookie-bar-accept">Akceptujê wszystkie</button>
+			<button type="button" class="mnsk7-cookie-bar__btn mnsk7-cookie-bar-reject">Tylko niezbêdne</button>
+			<a href="https://staging.mnsk7-tools.pl/regulamin/privacy-policy/#cookies" class="mnsk7-cookie-bar__btn mnsk7-cookie-bar__btn--secondary">Ustawienia</a>
+		</div>
+	</div>
+</div>
+<script>
+(function() {
+	function init() {
+		var bar = document.getElementById('mnsk7-cookie-bar');
+		if (!bar) return;
+		var key = 'mnsk7_cookie_consent';
+		function setBarHeightVar(px) {
+			try {
+				document.documentElement.style.setProperty('--mnsk7-cookie-bar-h', (px || 0) + 'px');
+			} catch (e) {}
+		}
+		function refreshBarHeight() {
+			if (bar.hasAttribute('hidden')) { setBarHeightVar(0); return; }
+			var h = bar.offsetHeight || 0;
+			setBarHeightVar(h);
+		}
+		function show() {
+			bar.removeAttribute('hidden');
+			bar.setAttribute('aria-hidden', 'false');
+			document.body.classList.add('mnsk7-cookie-bar-visible');
+			refreshBarHeight();
+			requestAnimationFrame(refreshBarHeight);
+			var acceptBtn = bar.querySelector('.mnsk7-cookie-bar-accept');
+			if (acceptBtn) setTimeout(function() { acceptBtn.focus(); }, 100);
+		}
+		function hide() {
+			bar.setAttribute('hidden', '');
+			bar.setAttribute('aria-hidden', 'true');
+			document.body.classList.remove('mnsk7-cookie-bar-visible');
+			setBarHeightVar(0);
+		}
+		var valAccept = 'accept';
+		var valReject = 'reject';
+		function setConsent(value) {
+			try { localStorage.setItem(key, value); } catch(e) {}
+			try { document.cookie = key + '=' + encodeURIComponent(value) + '; path=/; max-age=31536000; SameSite=Lax'; } catch(e) {}
+			window.mnsk7CookieConsent = value;
+		}
+		function getStored() {
+			try { var s = localStorage.getItem(key); if (s) return s; } catch(e) {}
+			var m = document.cookie.match(new RegExp('(?:^|; )' + key.replace(/([.*+?^${}()|[\]\\])/g, '\\$1') + '=([^;]*)'));
+			return m ? decodeURIComponent(m[1].replace(/\+/g, ' ')) : null;
+		}
+		var stored = getStored();
+		if (stored === valAccept || stored === valReject) {
+			window.mnsk7CookieConsent = stored;
+			hide();
+			return;
+		}
+		var legacy = document.cookie.indexOf(key + '=1') !== -1 || (typeof localStorage !== 'undefined' && localStorage.getItem(key) === '1');
+		if (legacy) { setConsent(valAccept); hide(); return; }
+		// Performance: defer show so cookie bar is not LCP (home LCP was 6.9s = this element). Show after 3.5s so LCP picks content above.
+		if (typeof requestIdleCallback === 'function') {
+			requestIdleCallback(function() { setTimeout(show, 3500); }, { timeout: 4000 });
+		} else {
+			setTimeout(show, 3500);
+		}
+		window.mnsk7CookieConsent = null;
+		function setupObservers() {
+			// Keep height in sync on iOS Safari (URL bar changes, font load, wrapping) where resize may not fire.
+			try {
+				if (typeof ResizeObserver === 'function') {
+					var ro = new ResizeObserver(function() { refreshBarHeight(); });
+					ro.observe(bar);
+				}
+			} catch (e) {}
+			try {
+				if (window.visualViewport) {
+					window.visualViewport.addEventListener('resize', refreshBarHeight, { passive: true });
+					window.visualViewport.addEventListener('scroll', refreshBarHeight, { passive: true });
+				}
+			} catch (e) {}
+			window.addEventListener('resize', function() { refreshBarHeight(); }, { passive: true });
+		}
+		setupObservers();
+		function onChoice(e, value) {
+			if (e) { e.preventDefault(); e.stopPropagation(); }
+			setConsent(value);
+			hide();
+			document.dispatchEvent(new CustomEvent('mnsk7-cookie-consent', { detail: value }));
+		}
+		bar.addEventListener('click', function(e) {
+			var target = e.target && e.target.closest ? e.target.closest('button') : null;
+			if (!target) return;
+			if (target.classList.contains('mnsk7-cookie-bar-accept')) { onChoice(e, valAccept); return; }
+			if (target.classList.contains('mnsk7-cookie-bar-reject')) { onChoice(e, valReject); return; }
+		}, false);
+	}
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', init);
+	} else {
+		init();
+	}
+})();
+</script>
+
+<div id="um_upload_single" style="display:none;"></div>
+
+<div id="um_view_photo" style="display:none;">
+	<a href="javascript:void(0);" data-action="um_remove_modal" class="um-modal-close" aria-label="Close view photo modal">
+		<i class="um-faicon-times"></i>
+	</a>
+
+	<div class="um-modal-body photo">
+		<div class="um-modal-photo"></div>
+	</div>
+</div>
+<script type="speculationrules">
+{"prerender":[{"source":"document","where":{"and":[{"href_matches":"/*"},{"not":{"href_matches":["/wp-*.php","/wp-admin/*","/wp-content/uploads/*","/wp-content/*","/wp-content/plugins/*","/wp-content/themes/mnsk7-storefront/*","/wp-content/themes/storefront/*","/*\\?(.+)"]}},{"not":{"selector_matches":"a[rel~=\"nofollow\"]"}},{"not":{"selector_matches":".no-prerender, .no-prerender a"}},{"not":{"selector_matches":".no-prefetch, .no-prefetch a"}}]},"eagerness":"moderate"}]}
+</script>
+<script type="application/ld+json">{"@context":"https://schema.org/","@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","position":1,"item":{"name":"Strona g\u0142\u00f3wna","@id":"https://staging.mnsk7-tools.pl"}},{"@type":"ListItem","position":2,"item":{"name":"Sklep","@id":"https://staging.mnsk7-tools.pl/sklep/"}},{"@type":"ListItem","position":3,"item":{"name":"Produkty oznaczone &amp;ldquo;Frez do metalu&amp;rdquo;","@id":"https://staging.mnsk7-tools.pl/tag-produktu/frez-do-metalu/"}}]}</script>	<script type="rocketlazyloadscript">
+		(function () {
+			var c = document.body.className;
+			c = c.replace(/woocommerce-no-js/, 'woocommerce-js');
+			document.body.className = c;
+		})();
+	</script>
+		<script>
+	(function() {
+		function initPlpToggles() {
+			var toggles = document.querySelectorAll('.mnsk7-plp-chips-toggle');
+			var moreLabel = "Wi\u0119cej";
+			var lessLabel = "Mniej";
+			toggles.forEach(function(btn) {
+				var id = btn.getAttribute('data-controls');
+				if (!id) return;
+				var target = document.getElementById(id);
+				if (!target) return;
+				var btnMore = btn.getAttribute('data-more-text') || moreLabel;
+				var btnLess = btn.getAttribute('data-less-text') || lessLabel;
+				btn.addEventListener('click', function() {
+					var expanded = btn.getAttribute('aria-expanded') === 'true';
+					btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+					target.hidden = expanded;
+					btn.textContent = expanded ? btnMore : btnLess;
+				});
+			});
+		}
+		function scrollToResults() {
+			var el = document.getElementById('mnsk7-plp-results');
+			if (el && (window.location.hash === '#mnsk7-plp-results' || false)) {
+				el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+			}
+		}
+		function init() {
+			initPlpToggles();
+			scrollToResults();
+		}
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', init);
+		} else {
+			init();
+		}
+	})();
+	</script>
+	<script id="awdr-main-js-extra">
+var awdr_params = {"ajaxurl":"https://staging.mnsk7-tools.pl/wp-admin/admin-ajax.php","nonce":"84b5a94320","enable_update_price_with_qty":"show_when_matched","refresh_order_review":"0","custom_target_simple_product":"","custom_target_variable_product":"","js_init_trigger":"","awdr_opacity_to_bulk_table":"","awdr_dynamic_bulk_table_status":"0","awdr_dynamic_bulk_table_off":"on","custom_simple_product_id_selector":"","custom_variable_product_id_selector":""};
+//# sourceURL=awdr-main-js-extra
+</script>
+<script data-minify="1" src="https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/woo-discount-rules/v2/Assets/Js/site_main.js?ver=1774871296" id="awdr-main-js" defer></script>
+<script data-minify="1" src="https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/woo-discount-rules/v2/Assets/Js/awdr-dynamic-price.js?ver=1774871296" id="awdr-dynamic-price-js" defer></script>
+<script data-minify="1" src="https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/duracelltomi-google-tag-manager/dist/js/gtm4wp-ecommerce-generic.js?ver=1774871296" id="gtm4wp-ecommerce-generic-js" defer></script>
+<script data-minify="1" src="https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/duracelltomi-google-tag-manager/dist/js/gtm4wp-woocommerce.js?ver=1774871296" id="gtm4wp-woocommerce-js" defer></script>
+<script id="p24-installments-js-extra">
+var p24InstallmentsData = [];
+//# sourceURL=p24-installments-js-extra
+</script>
+<script data-minify="1" src="https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/woo-przelewy24/assets/js/installment.js?ver=1774871296" id="p24-installments-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-includes/js/dist/vendor/react.min.js?ver=18.3.1.1" id="react-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-includes/js/dist/html-entities.min.js?ver=e8b78b18a162491d5e5f" id="wp-html-entities-js" defer></script>
+<script data-minify="1" src="https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/woo-przelewy24/assets/js/block-checkout.js?ver=1774871296" id="p24-block-checkout-js" defer></script>
+<script data-minify="1" src="https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/woo-przelewy24/assets/js/online-payments.bundle.js?ver=1774871296" id="p24-online-payments-js" defer></script>
+<script id="rocket-browser-checker-js-after">
+"use strict";var _createClass=function(){function defineProperties(target,props){for(var i=0;i<props.length;i++){var descriptor=props[i];descriptor.enumerable=descriptor.enumerable||!1,descriptor.configurable=!0,"value"in descriptor&&(descriptor.writable=!0),Object.defineProperty(target,descriptor.key,descriptor)}}return function(Constructor,protoProps,staticProps){return protoProps&&defineProperties(Constructor.prototype,protoProps),staticProps&&defineProperties(Constructor,staticProps),Constructor}}();function _classCallCheck(instance,Constructor){if(!(instance instanceof Constructor))throw new TypeError("Cannot call a class as a function")}var RocketBrowserCompatibilityChecker=function(){function RocketBrowserCompatibilityChecker(options){_classCallCheck(this,RocketBrowserCompatibilityChecker),this.passiveSupported=!1,this._checkPassiveOption(this),this.options=!!this.passiveSupported&&options}return _createClass(RocketBrowserCompatibilityChecker,[{key:"_checkPassiveOption",value:function(self){try{var options={get passive(){return!(self.passiveSupported=!0)}};window.addEventListener("test",null,options),window.removeEventListener("test",null,options)}catch(err){self.passiveSupported=!1}}},{key:"initRequestIdleCallback",value:function(){!1 in window&&(window.requestIdleCallback=function(cb){var start=Date.now();return setTimeout(function(){cb({didTimeout:!1,timeRemaining:function(){return Math.max(0,50-(Date.now()-start))}})},1)}),!1 in window&&(window.cancelIdleCallback=function(id){return clearTimeout(id)})}},{key:"isDataSaverModeOn",value:function(){return"connection"in navigator&&!0===navigator.connection.saveData}},{key:"supportsLinkPrefetch",value:function(){var elem=document.createElement("link");return elem.relList&&elem.relList.supports&&elem.relList.supports("prefetch")&&window.IntersectionObserver&&"isIntersecting"in IntersectionObserverEntry.prototype}},{key:"isSlowConnection",value:function(){return"connection"in navigator&&"effectiveType"in navigator.connection&&("2g"===navigator.connection.effectiveType||"slow-2g"===navigator.connection.effectiveType)}}]),RocketBrowserCompatibilityChecker}();
+//# sourceURL=rocket-browser-checker-js-after
+</script>
+<script id="rocket-preload-links-js-extra">
+var RocketPreloadLinksConfig = {"excludeUris":"/(?:.+/)?feed(?:/(?:.+/?)?)?$|/(?:.+/)?embed/|/zamowienie/??(.*)|/koszyk/?|/moje-konto/??(.*)|/(index.php/)?(.*)wp-json(/.*|$)|/refer/|/go/|/recommend/|/recommends/","usesTrailingSlash":"1","imageExt":"jpg|jpeg|gif|png|tiff|bmp|webp|avif|pdf|doc|docx|xls|xlsx|php","fileExt":"jpg|jpeg|gif|png|tiff|bmp|webp|avif|pdf|doc|docx|xls|xlsx|php|html|htm","siteUrl":"https://staging.mnsk7-tools.pl","onHoverDelay":"100","rateThrottle":"3"};
+//# sourceURL=rocket-preload-links-js-extra
+</script>
+<script id="rocket-preload-links-js-after">
+(function() {
+"use strict";var r="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e},e=function(){function i(e,t){for(var n=0;n<t.length;n++){var i=t[n];i.enumerable=i.enumerable||!1,i.configurable=!0,"value"in i&&(i.writable=!0),Object.defineProperty(e,i.key,i)}}return function(e,t,n){return t&&i(e.prototype,t),n&&i(e,n),e}}();function i(e,t){if(!(e instanceof t))throw new TypeError("Cannot call a class as a function")}var t=function(){function n(e,t){i(this,n),this.browser=e,this.config=t,this.options=this.browser.options,this.prefetched=new Set,this.eventTime=null,this.threshold=1111,this.numOnHover=0}return e(n,[{key:"init",value:function(){!this.browser.supportsLinkPrefetch()||this.browser.isDataSaverModeOn()||this.browser.isSlowConnection()||(this.regex={excludeUris:RegExp(this.config.excludeUris,"i"),images:RegExp(".("+this.config.imageExt+")$","i"),fileExt:RegExp(".("+this.config.fileExt+")$","i")},this._initListeners(this))}},{key:"_initListeners",value:function(e){-1<this.config.onHoverDelay&&document.addEventListener("mouseover",e.listener.bind(e),e.listenerOptions),document.addEventListener("mousedown",e.listener.bind(e),e.listenerOptions),document.addEventListener("touchstart",e.listener.bind(e),e.listenerOptions)}},{key:"listener",value:function(e){var t=e.target.closest("a"),n=this._prepareUrl(t);if(null!==n)switch(e.type){case"mousedown":case"touchstart":this._addPrefetchLink(n);break;case"mouseover":this._earlyPrefetch(t,n,"mouseout")}}},{key:"_earlyPrefetch",value:function(t,e,n){var i=this,r=setTimeout(function(){if(r=null,0===i.numOnHover)setTimeout(function(){return i.numOnHover=0},1e3);else if(i.numOnHover>i.config.rateThrottle)return;i.numOnHover++,i._addPrefetchLink(e)},this.config.onHoverDelay);t.addEventListener(n,function e(){t.removeEventListener(n,e,{passive:!0}),null!==r&&(clearTimeout(r),r=null)},{passive:!0})}},{key:"_addPrefetchLink",value:function(i){return this.prefetched.add(i.href),new Promise(function(e,t){var n=document.createElement("link");n.rel="prefetch",n.href=i.href,n.onload=e,n.onerror=t,document.head.appendChild(n)}).catch(function(){})}},{key:"_prepareUrl",value:function(e){if(null===e||"object"!==(void 0===e?"undefined":r(e))||!1 in e||-1===["http:","https:"].indexOf(e.protocol))return null;var t=e.href.substring(0,this.config.siteUrl.length),n=this._getPathname(e.href,t),i={original:e.href,protocol:e.protocol,origin:t,pathname:n,href:t+n};return this._isLinkOk(i)?i:null}},{key:"_getPathname",value:function(e,t){var n=t?e.substring(this.config.siteUrl.length):e;return n.startsWith("/")||(n="/"+n),this._shouldAddTrailingSlash(n)?n+"/":n}},{key:"_shouldAddTrailingSlash",value:function(e){return this.config.usesTrailingSlash&&!e.endsWith("/")&&!this.regex.fileExt.test(e)}},{key:"_isLinkOk",value:function(e){return null!==e&&"object"===(void 0===e?"undefined":r(e))&&(!this.prefetched.has(e.href)&&e.origin===this.config.siteUrl&&-1===e.href.indexOf("?")&&-1===e.href.indexOf("#")&&!this.regex.excludeUris.test(e.href)&&!this.regex.images.test(e.href))}}],[{key:"run",value:function(){"undefined"!=typeof RocketPreloadLinksConfig&&new n(new RocketBrowserCompatibilityChecker({capture:!0,passive:!0}),RocketPreloadLinksConfig).init()}}]),n}();t.run();
+}());
+
+//# sourceURL=rocket-preload-links-js-after
+</script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/themes/storefront/assets/js/navigation.min.js?ver=4.6.2" id="storefront-navigation-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/js/sourcebuster/sourcebuster.min.js?ver=10.5.3" id="sourcebuster-js-js" defer></script>
+<script id="wc-order-attribution-js-extra">
+var wc_order_attribution = {"params":{"lifetime":1.0000000000000000818030539140313095458623138256371021270751953125e-5,"session":30,"base64":false,"ajaxurl":"https://staging.mnsk7-tools.pl/wp-admin/admin-ajax.php","prefix":"wc_order_attribution_","allowTracking":true},"fields":{"source_type":"current.typ","referrer":"current_add.rf","utm_campaign":"current.cmp","utm_source":"current.src","utm_medium":"current.mdm","utm_content":"current.cnt","utm_id":"current.id","utm_term":"current.trm","utm_source_platform":"current.plt","utm_creative_format":"current.fmt","utm_marketing_tactic":"current.tct","session_entry":"current_add.ep","session_start_time":"current_add.fd","session_pages":"session.pgs","session_count":"udata.vst","user_agent":"udata.uag"}};
+//# sourceURL=wc-order-attribution-js-extra
+</script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/woocommerce/assets/js/frontend/order-attribution.min.js?ver=10.5.3" id="wc-order-attribution-js" defer></script>
+<script data-minify="1" src="https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/themes/mnsk7-storefront/assets/js/footer-accordion.js?ver=1774871296" id="mnsk7-footer-accordion-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/themes/storefront/assets/js/woocommerce/header-cart.min.js?ver=4.6.2" id="storefront-header-cart-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/themes/storefront/assets/js/footer.min.js?ver=4.6.2" id="storefront-handheld-footer-bar-js" defer></script>
+<script id="pwaforwp-js-js-extra">
+var pwaforwp_js_obj = {"ajax_url":"https://staging.mnsk7-tools.pl/wp-admin/admin-ajax.php","pwa_ms_prefix":"","pwa_home_url":"https://staging.mnsk7-tools.pl/","loader_desktop":"0","loader_mobile":"0","loader_admin":"0","user_admin":"","loader_only_pwa":"0","reset_cookies":"0","force_rememberme":"0","swipe_navigation":"0","pwa_manifest_name":"pwa-manifest.json","is_desplay":"1","visibility_excludes":[],"utm_enabled":"0","utm_details":{"utm_source":"pwa-app","utm_medium":"pwa-app","utm_campaign":"pwa-campaign","utm_term":"pwa-term","utm_content":"pwa-content"}};
+//# sourceURL=pwaforwp-js-js-extra
+</script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/pwa-for-wp/assets/js/pwaforwp.min.js?ver=1.7.84" id="pwaforwp-js-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/pwa-for-wp/assets/js/pwaforwp-video.min.js?ver=1.7.84" id="pwaforwp-video-js-js" defer></script>
+<script id="pwaforwp-download-js-js-extra">
+var pwaforwp_download_js_obj = {"force_rememberme":"0"};
+//# sourceURL=pwaforwp-download-js-js-extra
+</script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/pwa-for-wp/assets/js/pwaforwp-download.min.js?ver=1.7.84" id="pwaforwp-download-js-js" defer></script>
+<script data-minify="1" src="https://staging.mnsk7-tools.pl/wp-content/cache/min/1/pwa-register-sw.js?ver=1774871296" id="pwa-main-script-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/themes/storefront/assets/js/woocommerce/extensions/brands.min.js?ver=4.6.2" id="storefront-woocommerce-brands-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-includes/js/underscore.min.js?ver=1.13.7" id="underscore-js" defer></script>
+<script id="wp-util-js-extra">
+var _wpUtilSettings = {"ajax":{"url":"/wp-admin/admin-ajax.php"}};
+//# sourceURL=wp-util-js-extra
+</script>
+<script src="https://staging.mnsk7-tools.pl/wp-includes/js/wp-util.min.js?ver=6.9.1" id="wp-util-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-includes/js/dist/hooks.min.js?ver=dd5603f07f9220ed27f1" id="wp-hooks-js"></script>
+<script src="https://staging.mnsk7-tools.pl/wp-includes/js/dist/i18n.min.js?ver=c26c3dc7bed366793375" id="wp-i18n-js"></script>
+<script id="wp-i18n-js-after">
+wp.i18n.setLocaleData( { 'text direction\u0004ltr': [ 'ltr' ] } );
+//# sourceURL=wp-i18n-js-after
+</script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/tipsy/tipsy.min.js?ver=1.0.0a" id="um_tipsy-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/um-confirm/um-confirm.min.js?ver=1.0" id="um_confirm-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/pickadate/picker.min.js?ver=3.6.2" id="um_datetime-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/pickadate/picker.date.min.js?ver=3.6.2" id="um_datetime_date-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/pickadate/picker.time.min.js?ver=3.6.2" id="um_datetime_time-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/pickadate/translations/pl_PL.min.js?ver=3.6.2" id="um_datetime_locale-js" defer></script>
+<script id="um_common-js-extra">
+var um_common_variables = {"locale":"pl_PL"};
+var um_common_variables = {"locale":"pl_PL"};
+//# sourceURL=um_common-js-extra
+</script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/js/common.min.js?ver=2.11.2" id="um_common-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/cropper/cropper.min.js?ver=1.6.1" id="um_crop-js" defer></script>
+<script id="um_frontend_common-js-extra">
+var um_frontend_common_variables = [];
+//# sourceURL=um_frontend_common-js-extra
+</script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/js/common-frontend.min.js?ver=2.11.2" id="um_frontend_common-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/js/um-modal.min.js?ver=2.11.2" id="um_modal-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/jquery-form/jquery-form.min.js?ver=2.11.2" id="um_jquery_form-js" defer></script>
+<script data-minify="1" src="https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/ultimate-member/assets/libs/fileupload/fileupload.js?ver=1774871296" id="um_fileupload-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/js/um-functions.min.js?ver=2.11.2" id="um_functions-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/js/um-responsive.min.js?ver=2.11.2" id="um_responsive-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/js/um-conditional.min.js?ver=2.11.2" id="um_conditional-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/select2/select2.full.min.js?ver=4.0.13" id="select2-js" defer></script>
+<script data-minify="1" src="https://staging.mnsk7-tools.pl/wp-content/cache/min/1/wp-content/plugins/ultimate-member/assets/libs/select2/i18n/pl.js?ver=1774871296" id="um_select2_locale-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/libs/raty/um-raty.min.js?ver=2.6.0" id="um_raty-js" defer></script>
+<script id="um_scripts-js-extra">
+var um_scripts = {"max_upload_size":"134217728","nonce":"91f8214cc5"};
+//# sourceURL=um_scripts-js-extra
+</script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/js/um-scripts.min.js?ver=2.11.2" id="um_scripts-js" defer></script>
+<script type="rocketlazyloadscript" id="um_profile-js-translations">
+( function( domain, translations ) {
+	var localeData = translations.locale_data[ domain ] || translations.locale_data.messages;
+	localeData[""].domain = domain;
+	wp.i18n.setLocaleData( localeData, domain );
+} )( "ultimate-member", {"translation-revision-date":"2025-07-24 05:08:32+0000","generator":"GlotPress\/4.0.1","domain":"messages","locale_data":{"messages":{"":{"domain":"messages","plural-forms":"nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);","lang":"pl"},"Upload a cover photo":["Prze\u015blij zdj\u0119cie w tle"]}},"comment":{"reference":"assets\/js\/um-profile.js"}} );
+//# sourceURL=um_profile-js-translations
+</script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/js/um-profile.min.js?ver=2.11.2" id="um_profile-js" defer></script>
+<script src="https://staging.mnsk7-tools.pl/wp-content/plugins/ultimate-member/assets/js/um-account.min.js?ver=2.11.2" id="um_account-js" defer></script>
+	<script>
+	window.mnsk7IsArchive = true;
+	(function() {
+		function runCritical() {
+		var menuToggle = document.querySelector('.mnsk7-header__menu-toggle');
+		var nav = document.querySelector('.mnsk7-header__nav');
+		var cartWrap = document.querySelector('.mnsk7-header__cart');
+		var searchToggle = document.querySelector('.mnsk7-header__search-toggle');
+		var searchDropdown = document.getElementById('mnsk7-header-search');
+		var searchPanel = document.getElementById('mnsk7-header-search-panel');
+		var header = document.getElementById('masthead');
+		var promoBar = document.getElementById('mnsk7-promo-bar');
+		var DESKTOP_MIN = 1024;
+		var MOBILE_MAX = DESKTOP_MIN - 1;
+		var menu = document.getElementById('mnsk7-primary-menu');
+
+		function closeMobileSubmenus() {
+			if (!menu) return;
+			menu.querySelectorAll('li.menu-item-has-children.is-open').forEach(function(li) {
+				li.classList.remove('is-open');
+				var parentLink = li.firstElementChild && li.firstElementChild.tagName === 'A' ? li.firstElementChild : li.querySelector('a');
+				if (parentLink) parentLink.setAttribute('aria-expanded', 'false');
+			});
+		}
+
+		function resetMobileMenuPosition() {
+			if (!menu) return;
+			try { menu.scrollTop = 0; } catch (e) {}
+		}
+
+		// First-open correctness: sync promo offset and sticky shrink before deferred tasks.
+		if (promoBar) {
+			try {
+				document.body.style.setProperty('--mnsk7-promo-h', promoBar.offsetHeight + 'px');
+			} catch (e) {}
+		}
+		if (header && header.classList.contains('mnsk7-header') && !header.dataset.mnsk7ShrinkInit) {
+			var SCROLL_ON = 70;
+			var SCROLL_OFF = 30;
+			var onScrollCritical = function() {
+				var y = window.scrollY;
+				if (y > SCROLL_ON) {
+					header.classList.add('mnsk7-header--scrolled');
+				} else if (y < SCROLL_OFF) {
+					header.classList.remove('mnsk7-header--scrolled');
+				}
+			};
+			onScrollCritical();
+			window.addEventListener('scroll', onScrollCritical, { passive: true });
+			header.dataset.mnsk7ShrinkInit = '1';
+		}
+
+		function closeMenu() {
+			if (!nav) return;
+			nav.classList.remove('is-open');
+			closeMobileSubmenus();
+			resetMobileMenuPosition();
+			if (menuToggle) {
+				menuToggle.setAttribute('aria-expanded', 'false');
+				var menuOpenLabel = menuToggle.getAttribute('data-open-label');
+				if (menuOpenLabel) menuToggle.setAttribute('aria-label', menuOpenLabel);
+			}
+		}
+
+		function setSearchOpen(open) {
+			if (!searchToggle || !searchDropdown) return;
+			searchDropdown.hidden = !open;
+			searchToggle.setAttribute('aria-expanded', open);
+			var searchCloseLabel = searchToggle.getAttribute('data-close-label');
+			var searchOpenLabel = searchToggle.getAttribute('data-open-label');
+			if (searchCloseLabel && searchOpenLabel) searchToggle.setAttribute('aria-label', open ? searchCloseLabel : searchOpenLabel);
+			if (searchPanel) {
+				if (window.innerWidth < DESKTOP_MIN) {
+					document.body.classList.toggle('mnsk7-search-open', open);
+					searchPanel.hidden = !open;
+					searchPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
+					if (open) {
+						var panelInput = document.getElementById('mnsk7-header-search-panel-input');
+						if (panelInput) { setTimeout(function() { panelInput.focus(); }, 50); }
+					}
+				} else {
+					document.body.classList.remove('mnsk7-search-open');
+					searchPanel.hidden = true;
+					searchPanel.setAttribute('aria-hidden', 'true');
+				}
+			}
+		}
+
+		function closeSearch() {
+			if (window.innerWidth < DESKTOP_MIN && document.body.classList.contains('mnsk7-search-open')) {
+				setSearchOpen(false);
+			} else if (window.innerWidth >= DESKTOP_MIN && searchDropdown && !searchDropdown.hidden) {
+				searchDropdown.hidden = true;
+				if (searchToggle) searchToggle.setAttribute('aria-expanded', 'false');
+			}
+		}
+
+		function closeCart() {
+			if (!cartWrap) return;
+			cartWrap.classList.remove('is-open');
+			var trigger = cartWrap.querySelector('.mnsk7-header__cart-trigger, .cart-contents');
+			if (trigger) trigger.setAttribute('aria-expanded', 'false');
+		}
+
+		function closeAllMobileOverlays(except) {
+			if (window.innerWidth >= DESKTOP_MIN) return;
+			if (except !== 'menu') closeMenu();
+			if (except !== 'search') closeSearch();
+			if (except !== 'cart') closeCart();
+		}
+
+		if (menuToggle && nav) {
+			var menuOpenLabel = menuToggle.getAttribute('data-open-label') || 'Otwórz menu';
+			var menuCloseLabel = menuToggle.getAttribute('data-close-label') || 'Zamknij menu';
+			function setMenuAria() {
+				var open = nav.classList.contains('is-open');
+				menuToggle.setAttribute('aria-expanded', open);
+				menuToggle.setAttribute('aria-label', open ? menuCloseLabel : menuOpenLabel);
+			}
+			menuToggle.addEventListener('click', function() {
+				var willOpen = !nav.classList.contains('is-open');
+				if (window.innerWidth < DESKTOP_MIN && willOpen) {
+					closeAllMobileOverlays('menu');
+					closeMobileSubmenus();
+					resetMobileMenuPosition();
+				}
+				nav.classList.toggle('is-open');
+				if (!willOpen) closeMobileSubmenus();
+				setMenuAria();
+			});
+		}
+		window.addEventListener('pageshow', function(e) {
+			if (window.innerWidth < DESKTOP_MIN) {
+				closeMenu();
+				closeSearch();
+				closeCart();
+			}
+		});
+		// Mobile (<=1023): tap na parent z submenu (np. „Sklep”) rozwija submenu; bez przejœcia po URL. Capture phase + pewne wykrycie linku (tap mo¿e daæ target = tekst/child).
+		if (menu) {
+			function getLinkFromEvent(ev, root) {
+				var el = ev.target;
+				while (el && el !== root) {
+					if (el.nodeType === 1 && el.tagName === 'A' && el.getAttribute('href')) return el;
+					el = el.parentElement;
+				}
+				return null;
+			}
+			function isParentItemLink(link, parentLi) {
+				if (!parentLi || !link) return false;
+				return link.getAttribute('data-mnsk7') === 'sklep-parent' || parentLi.firstElementChild === link;
+			}
+			menu.addEventListener('click', function(e) {
+				var a = getLinkFromEvent(e, menu);
+				if (!a || !a.href) return;
+				var li = a.closest('li.menu-item-has-children');
+				if (!li || !isParentItemLink(a, li)) return;
+				if (window.innerWidth <= MOBILE_MAX) {
+					// Mobile: first tap opens submenu, second tap navigates (only for parent link).
+					if (!li.classList.contains('is-open')) {
+						e.preventDefault();
+						e.stopPropagation();
+						closeMobileSubmenus();
+						li.classList.add('is-open');
+						a.setAttribute('aria-expanded', 'true');
+					}
+				}
+			}, true);
+			// Mega menu (Sklep): hover delay 400ms na desktop — Baymard/NNG, bez flicker przy przejœciu na panel
+			var megamenuLi = menu.querySelector('li.menu-item-has-children .sub-menu.mnsk7-megamenu');
+			if (megamenuLi) {
+				megamenuLi = megamenuLi.closest('li.menu-item-has-children');
+			}
+			if (megamenuLi) {
+				var openTimer, closeTimer;
+				var HOVER_OPEN_MS = 400;
+				var HOVER_CLOSE_MS = 150;
+				var megamenuLink = megamenuLi.firstElementChild && megamenuLi.firstElementChild.tagName === 'A' ? megamenuLi.firstElementChild : null;
+				function setMegamenuExpanded(open) {
+					if (megamenuLink) megamenuLink.setAttribute('aria-expanded', open ? 'true' : 'false');
+					if (open) megamenuLi.classList.add('mnsk7-megamenu-open'); else megamenuLi.classList.remove('mnsk7-megamenu-open');
+				}
+				function openMegamenu() {
+					clearTimeout(closeTimer);
+					if (window.innerWidth < DESKTOP_MIN) return;
+					openTimer = setTimeout(function() { setMegamenuExpanded(true); }, HOVER_OPEN_MS);
+				}
+				function closeMegamenu() {
+					clearTimeout(openTimer);
+					closeTimer = setTimeout(function() { setMegamenuExpanded(false); }, HOVER_CLOSE_MS);
+				}
+				megamenuLi.addEventListener('mouseenter', openMegamenu);
+				megamenuLi.addEventListener('mouseleave', closeMegamenu);
+				megamenuLi.addEventListener('focusin', function() { if (window.innerWidth >= DESKTOP_MIN) { clearTimeout(closeTimer); setMegamenuExpanded(true); } });
+				megamenuLi.addEventListener('focusout', function(e) {
+					if (window.innerWidth < DESKTOP_MIN) return;
+					setTimeout(function() { if (!megamenuLi.contains(document.activeElement)) setMegamenuExpanded(false); }, 0);
+				});
+				document.addEventListener('keydown', function(e) {
+					if (e.key === 'Escape' && megamenuLi.classList.contains('mnsk7-megamenu-open')) {
+						setMegamenuExpanded(false);
+						if (megamenuLink) megamenuLink.focus();
+					}
+				});
+			}
+			// Mobile: po klikniêciu w link (nie w parent „Sklep”) zamknij overlay — Przewodnik, Dostawa, Kontakt, podpunkty Sklep.
+			menu.addEventListener('click', function(e) {
+				var a = getLinkFromEvent(e, menu);
+				if (!a || !a.getAttribute('href') || window.innerWidth >= DESKTOP_MIN || !nav) return;
+				var parentLi = a.closest('li.menu-item-has-children');
+				if (parentLi && isParentItemLink(a, parentLi)) return;
+				closeMobileSubmenus();
+				nav.classList.remove('is-open');
+				if (menuToggle) { menuToggle.setAttribute('aria-expanded', 'false'); if (menuToggle.getAttribute('data-open-label')) menuToggle.setAttribute('aria-label', menuToggle.getAttribute('data-open-label')); }
+			});
+		}
+		if (searchToggle && searchDropdown) {
+			function updateSearchDesktop() {
+				if (window.innerWidth >= DESKTOP_MIN) {
+					closeMobileSubmenus();
+					searchDropdown.removeAttribute('hidden');
+					searchToggle.setAttribute('aria-expanded', 'true');
+					var searchOpenLabel = searchToggle.getAttribute('data-open-label');
+					if (searchOpenLabel) searchToggle.setAttribute('aria-label', searchOpenLabel);
+					document.body.classList.remove('mnsk7-search-open');
+					if (searchPanel) { searchPanel.hidden = true; searchPanel.setAttribute('aria-hidden', 'true'); }
+				} else {
+					searchDropdown.hidden = true;
+					if (!document.body.classList.contains('mnsk7-search-open') && searchPanel) {
+						searchPanel.hidden = true;
+						searchPanel.setAttribute('aria-hidden', 'true');
+					}
+				}
+			}
+			window.addEventListener('resize', updateSearchDesktop);
+			updateSearchDesktop();
+			searchToggle.addEventListener('click', function() {
+				if (window.innerWidth >= DESKTOP_MIN) return;
+				if (!document.body.classList.contains('mnsk7-search-open')) {
+					closeAllMobileOverlays('search');
+				}
+				var open = document.body.classList.contains('mnsk7-search-open');
+				setSearchOpen(!open);
+			});
+			document.addEventListener('keydown', function(e) {
+				if (e.key === 'Escape') {
+					if (window.innerWidth < DESKTOP_MIN && document.body.classList.contains('mnsk7-search-open')) {
+						setSearchOpen(false);
+						if (searchToggle.offsetParent !== null) searchToggle.focus();
+					} else if (window.innerWidth >= DESKTOP_MIN && !searchDropdown.hidden) {
+						searchDropdown.hidden = true;
+						searchToggle.setAttribute('aria-expanded', 'false');
+						if (searchToggle.offsetParent !== null) searchToggle.focus();
+					}
+				}
+			});
+			document.addEventListener('click', function(e) {
+				if (window.innerWidth >= DESKTOP_MIN) return;
+				var wrap = searchToggle && searchToggle.closest('.mnsk7-header__search-wrap');
+				var panel = searchPanel && searchPanel.contains(e.target);
+				if (document.body.classList.contains('mnsk7-search-open') && wrap && !wrap.contains(e.target) && !panel) {
+					setSearchOpen(false);
+				}
+			});
+			var searchForm = searchDropdown.querySelector('form');
+			if (searchForm) {
+				searchForm.addEventListener('submit', function() {
+					if (window.innerWidth < DESKTOP_MIN) setSearchOpen(false);
+				});
+			}
+			if (searchPanel) {
+				var panelForm = searchPanel.querySelector('form');
+				if (panelForm) {
+					panelForm.addEventListener('submit', function() {
+						if (window.innerWidth < DESKTOP_MIN) setSearchOpen(false);
+					});
+				}
+			}
+		}
+		function normalizeCartTrigger() {
+			var wrap = cartWrap;
+			if (!wrap) return null;
+			var cartLink = wrap.querySelector('a.cart-contents, a.mnsk7-header__cart-trigger');
+			if (!cartLink) return null;
+			if (!cartLink.classList.contains('mnsk7-header__cart-trigger')) {
+				cartLink.classList.add('mnsk7-header__cart-trigger');
+			}
+			if (!cartLink.querySelector('.mnsk7-header__cart-icon')) {
+				var countNode = cartLink.querySelector('.mnsk7-header__cart-count, .count');
+				var countText = countNode ? (countNode.textContent || '0') : '0';
+				var count = parseInt(String(countText).replace(/[^\d]/g, ''), 10);
+				if (isNaN(count)) count = 0;
+				cartLink.innerHTML =
+					'<span class=\"mnsk7-header__cart-icon\" aria-hidden=\"true\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z\"></path><line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"></line><path d=\"M16 10a4 4 0 0 1-8 0\"></path></svg></span>' +
+					'<span class=\"mnsk7-header__cart-count\" aria-hidden=\"true\">' + count + '</span>';
+			}
+			return cartLink;
+		}
+
+		normalizeCartTrigger();
+		if (window.jQuery && window.jQuery(document.body).on) {
+			window.jQuery(document.body).on('wc_fragments_refreshed wc_fragments_loaded added_to_cart', function() {
+				normalizeCartTrigger();
+			});
+		}
+
+		if (cartWrap) {
+			var trigger = normalizeCartTrigger() || cartWrap.querySelector('.mnsk7-header__cart-trigger, .cart-contents');
+			var dropdown = cartWrap.querySelector('.mnsk7-header__cart-dropdown');
+			if (trigger && dropdown) {
+				function setCartExpanded(open) {
+					trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+				}
+				document.addEventListener('click', function(e) {
+					if (!cartWrap.contains(e.target)) {
+						cartWrap.classList.remove('is-open');
+						setCartExpanded(false);
+					}
+				});
+				document.addEventListener('keydown', function(e) {
+					if (e.key === 'Escape' && cartWrap.classList.contains('is-open')) {
+						cartWrap.classList.remove('is-open');
+						setCartExpanded(false);
+						trigger.focus();
+					}
+				});
+				// Mobile: Escape closes any active overlay
+				document.addEventListener('keydown', function(e) {
+					if (e.key === 'Escape' && window.innerWidth < DESKTOP_MIN) {
+						if (cartWrap.classList.contains('is-open')) { cartWrap.classList.remove('is-open'); setCartExpanded(false); return; }
+						if (document.body.classList.contains('mnsk7-search-open')) { setSearchOpen(false); return; }
+						if (nav && nav.classList.contains('is-open')) { closeMenu(); return; }
+					}
+				});
+				// Mobile: klik na trigger otwiera/zamyka dropdown (na desktop tylko hover)
+				trigger.addEventListener('click', function(e) {
+					if (window.innerWidth < DESKTOP_MIN) {
+						e.preventDefault();
+						if (!cartWrap.classList.contains('is-open')) {
+							closeAllMobileOverlays('cart');
+						}
+						cartWrap.classList.toggle('is-open');
+						setCartExpanded(cartWrap.classList.contains('is-open'));
+					}
+				});
+				// Desktop: dropdown tylko przy hover na triggerze lub dropdownie (nie na ca³ym headerze/bannerze)
+				var cartOpenTimer;
+				function openCart() {
+					clearTimeout(cartOpenTimer);
+					if (window.innerWidth >= DESKTOP_MIN) { cartWrap.classList.add('is-open'); setCartExpanded(true); }
+				}
+				function closeCart() {
+					cartOpenTimer = setTimeout(function() {
+						cartWrap.classList.remove('is-open');
+						setCartExpanded(false);
+					}, 120);
+				}
+				function cancelClose() { clearTimeout(cartOpenTimer); }
+				trigger.addEventListener('mouseenter', openCart);
+				trigger.addEventListener('mouseleave', closeCart);
+				dropdown.addEventListener('mouseenter', cancelClose);
+				dropdown.addEventListener('mouseenter', openCart);
+				dropdown.addEventListener('mouseleave', closeCart);
+			}
+		}
+		}
+		function runDeferred() {
+		// Promo bar: dismissible (sessionStorage). Critical CSS w header.php daje LCP; init tutaj bez rAF (corrective pass: rAF wi¹za³ siê z regresj¹ TBT).
+		var promoBar = document.getElementById('mnsk7-promo-bar');
+		if (promoBar) {
+			function setPromoHeightVar() {
+				try {
+					document.body.style.setProperty('--mnsk7-promo-h', promoBar.offsetHeight + 'px');
+				} catch (e) {}
+			}
+			try {
+				if (sessionStorage.getItem('mnsk7_promo_dismissed') === '1') {
+					promoBar.remove();
+					document.body.classList.remove('mnsk7-has-promo');
+				} else {
+					setPromoHeightVar();
+					if (window.ResizeObserver) {
+						try { new ResizeObserver(setPromoHeightVar).observe(promoBar); } catch (e) {}
+					} else {
+						window.addEventListener('resize', setPromoHeightVar, { passive: true });
+					}
+					var closeBtn = promoBar.querySelector('.mnsk7-promo-bar__close');
+					if (closeBtn) {
+						closeBtn.addEventListener('click', function() {
+							try { sessionStorage.setItem('mnsk7_promo_dismissed', '1'); } catch (e) {}
+							document.body.classList.remove('mnsk7-has-promo');
+							document.body.style.removeProperty('--mnsk7-promo-h');
+							promoBar.remove();
+						});
+					}
+				}
+			} catch (e) {}
+		}
+		// Header shrink when scrolled (Visual Audit). Hysteresis: add at 70px, remove at 30px — zapobiega „trzêsieniu” przy pozycji ~50px.
+		var header = document.getElementById('masthead');
+		if (header && header.classList.contains('mnsk7-header') && !header.dataset.mnsk7ShrinkInit) {
+			var SCROLL_ON = 70;
+			var SCROLL_OFF = 30;
+			function onScroll() {
+				var y = window.scrollY;
+				if (y > SCROLL_ON) {
+					header.classList.add('mnsk7-header--scrolled');
+				} else if (y < SCROLL_OFF) {
+					header.classList.remove('mnsk7-header--scrolled');
+				}
+			}
+			onScroll();
+			window.addEventListener('scroll', onScroll, { passive: true });
+			header.dataset.mnsk7ShrinkInit = '1';
+		}
+		// Instagram card carousel (alesyatakun.by style)
+		var carousel = document.querySelector('.mnsk7-instagram-feed--card .mnsk7-instagram-feed__carousel');
+		if (carousel) {
+			var track = carousel.querySelector('.mnsk7-instagram-feed__track');
+			var dots = carousel.querySelectorAll('.mnsk7-instagram-feed__dot');
+			var slides = carousel.querySelectorAll('.mnsk7-instagram-feed__slide');
+			var n = slides.length;
+			if (n > 1 && track && dots.length === n) {
+				function goTo(idx) {
+					idx = Math.max(0, Math.min(idx, n - 1));
+					track.style.transform = 'translateX(-' + idx * 100 + '%)';
+					slides.forEach(function(s, i) { s.classList.toggle('is-active', i === idx); });
+					dots.forEach(function(d, i) {
+						d.classList.toggle('is-active', i === idx);
+						d.setAttribute('aria-selected', i === idx ? 'true' : 'false');
+					});
+				}
+				dots.forEach(function(dot, i) {
+					dot.addEventListener('click', function() { goTo(i); });
+				});
+			}
+		}
+		}
+		// Critical header controls ?????? ???? ?????? ????? (??? requestIdleCallback), ????? ???????? "dead click".
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', runCritical);
+		} else {
+			runCritical();
+		}
+		// Deferred: promo/shrink/instagram — ????? ????????.
+		if (typeof requestIdleCallback === 'function') {
+			requestIdleCallback(runDeferred, { timeout: 2000 });
+		} else {
+			setTimeout(runDeferred, 1);
+		}
+	})();
+	</script>
+		<script>
+	(function() {
+		var wrap = document.querySelector('.mnsk7-plp-load-more-wrap');
+		if (!wrap) return;
+		var btn = wrap.querySelector('.mnsk7-plp-load-more');
+		var tbody = document.querySelector('.mnsk7-product-table tbody');
+		if (!btn || !tbody) return;
+		var ajaxUrl = "https:\/\/staging.mnsk7-tools.pl\/wp-admin\/admin-ajax.php";
+		btn.addEventListener('click', function(e) {
+			e.preventDefault();
+			if (btn.disabled) return;
+			var currentPage = parseInt(wrap.dataset.currentPage || '1', 10);
+			var nextPage = currentPage + 1;
+			var taxonomy = wrap.dataset.taxonomy || '';
+			var term = wrap.dataset.term || '';
+			var orderbyEl = document.querySelector('.mnsk7-plp-toolbar select[name="orderby"], .woocommerce-ordering select[name="orderby"]');
+			var orderby = orderbyEl ? orderbyEl.value : 'menu_order';
+			var order = (orderby === 'price-desc' || orderby === 'rating') ? 'desc' : 'asc';
+			btn.disabled = true;
+			btn.classList.add('loading');
+			var form = new FormData();
+			form.append('action', 'mnsk7_plp_load_more');
+			form.append('page', nextPage);
+			form.append('taxonomy', taxonomy);
+			form.append('term', term);
+			form.append('orderby', orderby);
+			form.append('order', order);
+			fetch(ajaxUrl, { method: 'POST', body: form, credentials: 'same-origin' })
+				.then(function(r) { return r.json(); })
+				.then(function(data) {
+					if (data.success && data.data && data.data.html) {
+						tbody.insertAdjacentHTML('beforeend', data.data.html);
+						var rc = document.querySelectorAll('.woocommerce-result-count');
+						if (data.data.result_count && rc.length) {
+							rc.forEach(function(el) { el.textContent = data.data.result_count; });
+						}
+						wrap.dataset.currentPage = String(nextPage);
+						if (!data.data.has_next) {
+							wrap.style.display = 'none';
+						}
+					}
+				})
+				.catch(function() {})
+				.finally(function() {
+					btn.disabled = false;
+					btn.classList.remove('loading');
+				});
+		});
+	})();
+	</script>
+		<script>
+	(function() {
+		var mq = window.matchMedia('(max-width: 768px)');
+		var syncKey = 'mnsk7_plp_layout_sync_once';
+		var reloaded = false;
+
+		function viewportMode() {
+			return window.innerWidth <= 768 ? 'mobile' : 'desktop';
+		}
+
+		function renderedMode() {
+			if (document.querySelector('.mnsk7-plp-grid-mobile')) return 'mobile';
+			if (document.querySelector('.mnsk7-product-table')) return 'desktop';
+			return 'unknown';
+		}
+
+		function scheduleReload(reason, fromMode, toMode) {
+			if (reloaded) return;
+			var marker = [window.location.pathname, reason, fromMode, toMode].join('|');
+			try {
+				if (sessionStorage.getItem(syncKey) === marker) return;
+				sessionStorage.setItem(syncKey, marker);
+			} catch (e) {}
+			reloaded = true;
+			window.location.reload();
+		}
+
+		var initialViewport = viewportMode();
+		var initialRendered = renderedMode();
+		if (initialRendered !== 'unknown' && initialRendered !== initialViewport) {
+			scheduleReload('boot-mismatch', initialRendered, initialViewport);
+		}
+
+		function handleViewportSwitch() {
+			var currentViewport = viewportMode();
+			if (currentViewport !== initialViewport) {
+				scheduleReload('viewport-switch', initialViewport, currentViewport);
+			}
+		}
+
+		if (typeof mq.addEventListener === 'function') {
+			mq.addEventListener('change', handleViewportSwitch);
+		} else if (typeof mq.addListener === 'function') {
+			mq.addListener(handleViewportSwitch);
+		}
+
+		window.addEventListener('resize', handleViewportSwitch, { passive: true });
+	})();
+	</script>
+		<script>
+	(function() {
+		var placeholder = document.getElementById('mnsk7-shipping-zone-notice-placeholder');
+		if (!placeholder) return;
+		var notices = document.querySelectorAll('.woocommerce-info, .woocommerce-message');
+		var scrollY = window.scrollY;
+		for (var i = 0; i < notices.length; i++) {
+			var text = (notices[i].textContent || '').trim();
+			if (text.indexOf('Strefa wysy³ki') !== -1 || text.indexOf('dopasowana') !== -1) {
+				placeholder.appendChild(notices[i]);
+				placeholder.classList.add('has-notice');
+				requestAnimationFrame(function() { window.scrollTo(0, scrollY); });
+				break;
+			}
+		}
+	})();
+	</script>
+	<script>window.lazyLoadOptions=[{elements_selector:"img[data-lazy-src],.rocket-lazyload,iframe[data-lazy-src]",data_src:"lazy-src",data_srcset:"lazy-srcset",data_sizes:"lazy-sizes",class_loading:"lazyloading",class_loaded:"lazyloaded",threshold:300,callback_loaded:function(element){if(element.tagName==="IFRAME"&&element.dataset.rocketLazyload=="fitvidscompatible"){if(element.classList.contains("lazyloaded")){if(typeof window.jQuery!="undefined"){if(jQuery.fn.fitVids){jQuery(element).parent().fitVids()}}}}}},{elements_selector:".rocket-lazyload",data_src:"lazy-src",data_srcset:"lazy-srcset",data_sizes:"lazy-sizes",class_loading:"lazyloading",class_loaded:"lazyloaded",threshold:300,}];window.addEventListener('LazyLoad::Initialized',function(e){var lazyLoadInstance=e.detail.instance;if(window.MutationObserver){var observer=new MutationObserver(function(mutations){var image_count=0;var iframe_count=0;var rocketlazy_count=0;mutations.forEach(function(mutation){for(var i=0;i<mutation.addedNodes.length;i++){if(typeof mutation.addedNodes[i].getElementsByTagName!=='function'){continue}
+if(typeof mutation.addedNodes[i].getElementsByClassName!=='function'){continue}
+images=mutation.addedNodes[i].getElementsByTagName('img');is_image=mutation.addedNodes[i].tagName=="IMG";iframes=mutation.addedNodes[i].getElementsByTagName('iframe');is_iframe=mutation.addedNodes[i].tagName=="IFRAME";rocket_lazy=mutation.addedNodes[i].getElementsByClassName('rocket-lazyload');image_count+=images.length;iframe_count+=iframes.length;rocketlazy_count+=rocket_lazy.length;if(is_image){image_count+=1}
+if(is_iframe){iframe_count+=1}}});if(image_count>0||iframe_count>0||rocketlazy_count>0){lazyLoadInstance.update()}});var b=document.getElementsByTagName("body")[0];var config={childList:!0,subtree:!0};observer.observe(b,config)}},!1)</script><script data-no-minify="1" async src="https://staging.mnsk7-tools.pl/wp-content/plugins/wp-rocket/assets/js/lazyload/17.8.3/lazyload.min.js"></script><script>function lazyLoadThumb(e){var t='<img data-lazy-src="https://i.ytimg.com/vi/ID/hqdefault.jpg" alt="" width="480" height="360"><noscript><img src="https://i.ytimg.com/vi/ID/hqdefault.jpg" alt="" width="480" height="360"></noscript>',a='<button class="play" aria-label="play Youtube video"></button>';return t.replace("ID",e)+a}function lazyLoadYoutubeIframe(){var e=document.createElement("iframe"),t="ID?autoplay=1";t+=0===this.parentNode.dataset.query.length?'':'&'+this.parentNode.dataset.query;e.setAttribute("src",t.replace("ID",this.parentNode.dataset.src)),e.setAttribute("frameborder","0"),e.setAttribute("allowfullscreen","1"),e.setAttribute("allow", "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"),this.parentNode.parentNode.replaceChild(e,this.parentNode)}document.addEventListener("DOMContentLoaded",function(){var e,t,p,a=document.getElementsByClassName("rll-youtube-player");for(t=0;t<a.length;t++)e=document.createElement("div"),e.setAttribute("data-id",a[t].dataset.id),e.setAttribute("data-query", a[t].dataset.query),e.setAttribute("data-src", a[t].dataset.src),e.innerHTML=lazyLoadThumb(a[t].dataset.id),a[t].appendChild(e),p=e.querySelector('.play'),p.onclick=lazyLoadYoutubeIframe});</script></body>
+</html>
+
