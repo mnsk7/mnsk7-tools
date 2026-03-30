@@ -15,7 +15,7 @@ get_header();
 		<div class="mnsk7-hero__inner col-full">
 			<div class="mnsk7-hero__layout">
 				<div class="mnsk7-hero__content">
-					<p class="mnsk7-hero__eyebrow"><?php esc_html_e( 'MNK7 Tools • Sklep CNC', 'mnsk7-storefront' ); ?></p>
+					<p class="mnsk7-hero__eyebrow"><?php esc_html_e( 'MNSK7 Tools • Sklep CNC', 'mnsk7-storefront' ); ?></p>
 					<h1 class="mnsk7-hero__title"><?php esc_html_e( 'Frezy CNC do drewna, aluminium i tworzyw', 'mnsk7-storefront' ); ?></h1>
 					<p class="mnsk7-hero__sub"><?php esc_html_e( 'Szybka wysyłka 24h, faktura VAT i realne stany magazynowe.', 'mnsk7-storefront' ); ?></p>
 
