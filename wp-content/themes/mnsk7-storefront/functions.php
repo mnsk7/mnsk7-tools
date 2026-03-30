@@ -505,12 +505,11 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 		}
 	}
 	$dostawa_url = home_url( '/dostawa-i-platnosci/' );
-	$link = '<a href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Warunki dostawy', 'mnsk7-storefront' ) . ' &rarr;</a>';
-	return sprintf(
-		/* translators: 1: promo text, 2: link HTML to delivery page */
-		__( 'Darmowa dostawa od 300 zł. Tylko Polska. %1$s', 'mnsk7-storefront' ),
-		$link
-	);
+	$badge = '<span class="mnsk7-promo-bar__badge">' . esc_html__( 'DOSTAWA', 'mnsk7-storefront' ) . '</span>';
+	$value = '<span class="mnsk7-promo-bar__value">' . esc_html__( 'Gratis od 300 zł', 'mnsk7-storefront' ) . '</span>';
+	$meta  = '<span class="mnsk7-promo-bar__meta">' . esc_html__( 'na terenie Polski', 'mnsk7-storefront' ) . '</span>';
+	$cta   = '<a class="mnsk7-promo-bar__cta" href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Sprawdź warunki', 'mnsk7-storefront' ) . ' &rarr;</a>';
+	return $badge . ' ' . $value . ' ' . $meta . ' ' . $cta;
 }, 5 );
 
 /** Audit task 14: H1 na stronie Moje konto — jeden nagłówek (zalogowani: przed nawigacją; goście: przed formularzem). Bez duplikatu. */

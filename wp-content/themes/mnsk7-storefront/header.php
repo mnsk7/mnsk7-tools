@@ -42,11 +42,16 @@ defined( 'ABSPATH' ) || exit;
 	/* Archive LCP pass: promo bar = LCP candidate — krytyczne style bez czekania na main.css */
 	.mnsk7-promo-bar{background:#0c7ddb;color:#fff;font-size:0.8125rem;font-weight:500;padding:0.35rem 1rem;position:sticky;top:env(safe-area-inset-top,0px);z-index:1001;box-sizing:border-box}
 	.mnsk7-promo-bar__inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;column-gap:.5rem}
-	.mnsk7-promo-bar__text{min-width:0;text-align:left;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35}
-	.mnsk7-promo-bar__text a{color:inherit;text-decoration:underline}
+	.mnsk7-promo-bar__text{min-width:0;text-align:left;display:flex;flex-wrap:wrap;align-items:center;gap:.45rem;white-space:normal;overflow:visible;text-overflow:clip;line-height:1.35}
+	.mnsk7-promo-bar__badge{display:inline-flex;align-items:center;justify-content:center;min-height:1.35rem;padding:.1rem .45rem;border-radius:999px;background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.42);color:#fff;font-size:.625rem;letter-spacing:.08em;font-weight:700;white-space:nowrap}
+	.mnsk7-promo-bar__value{font-weight:700;letter-spacing:.01em}
+	.mnsk7-promo-bar__meta{opacity:.95}
+	.mnsk7-promo-bar__text a,.mnsk7-promo-bar__cta{color:inherit;text-decoration:none}
+	.mnsk7-promo-bar__cta{display:inline-flex;align-items:center;min-height:1.5rem;padding:.05rem .25rem;border-radius:6px;border:1px solid transparent;font-weight:600}
+	.mnsk7-promo-bar__cta:hover,.mnsk7-promo-bar__cta:focus-visible{background:rgba(255,255,255,.14);border-color:rgba(255,255,255,.32);text-decoration:none}
 	.mnsk7-promo-bar__close{position:static;border:0;background:transparent;color:inherit;font-size:1.25rem;line-height:1;padding:.25rem .5rem;min-width:44px;min-height:44px;z-index:2;align-self:start}
-	@media (max-width:1023px){.mnsk7-promo-bar{padding:.35rem .75rem}.mnsk7-promo-bar__inner{gap:.5rem}.mnsk7-promo-bar__text{line-height:1.35}}
-	@media (max-width:480px){.mnsk7-promo-bar{padding:.5rem .75rem .5rem 1rem;min-height:44px}.mnsk7-promo-bar__inner{grid-template-columns:minmax(0,1fr) auto;align-items:start}.mnsk7-promo-bar__text{text-align:left;line-height:1.4}.mnsk7-promo-bar__close{margin-top:-.125rem}}
+	@media (max-width:1023px){.mnsk7-promo-bar{padding:.35rem .75rem}.mnsk7-promo-bar__inner{gap:.5rem}.mnsk7-promo-bar__text{line-height:1.35;gap:.4rem}.mnsk7-promo-bar__badge{font-size:.59375rem;min-height:1.25rem}}
+	@media (max-width:480px){.mnsk7-promo-bar{padding:.5rem .75rem .5rem 1rem;min-height:44px}.mnsk7-promo-bar__inner{grid-template-columns:minmax(0,1fr) auto;align-items:start}.mnsk7-promo-bar__text{text-align:left;line-height:1.4;gap:.35rem .45rem}.mnsk7-promo-bar__value{width:100%;order:2}.mnsk7-promo-bar__meta{order:3}.mnsk7-promo-bar__cta{order:4;padding-left:0}.mnsk7-promo-bar__close{margin-top:-.125rem}}
 	/* Archive: kompaktowy promo bar — mniejszy wpływ na LCP, pierwszy blok produktów może być LCP. */
 	.mnsk7-archive .mnsk7-promo-bar{font-size:0.75rem;padding:0.25rem 0.75rem}
 	.mnsk7-archive .mnsk7-promo-bar__text{font-size:inherit}

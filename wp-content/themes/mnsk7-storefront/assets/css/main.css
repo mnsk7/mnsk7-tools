@@ -388,14 +388,56 @@ a {
 .mnsk7-promo-bar__text {
   min-width: 0;
   text-align: left;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
   white-space: normal;
   overflow: visible;
   text-overflow: clip;
   line-height: 1.35;
 }
-.mnsk7-promo-bar__text a {
+.mnsk7-promo-bar__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 1.35rem;
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  color: var(--color-white);
+  font-size: 0.625rem;
+  letter-spacing: 0.08em;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.mnsk7-promo-bar__value {
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+.mnsk7-promo-bar__meta {
+  opacity: 0.95;
+}
+.mnsk7-promo-bar__text a,
+.mnsk7-promo-bar__cta {
   color: inherit;
-  text-decoration: underline;
+  text-decoration: none;
+}
+.mnsk7-promo-bar__cta {
+  display: inline-flex;
+  align-items: center;
+  min-height: 1.5rem;
+  padding: 0.05rem 0.25rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  font-weight: 600;
+}
+.mnsk7-promo-bar__cta:hover,
+.mnsk7-promo-bar__cta:focus-visible {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.32);
+  text-decoration: none;
 }
 .mnsk7-promo-bar__close {
   position: static;
@@ -430,6 +472,11 @@ a {
   }
   .mnsk7-promo-bar__text {
     line-height: 1.35;
+    gap: 0.4rem;
+  }
+  .mnsk7-promo-bar__badge {
+    font-size: 0.59375rem;
+    min-height: 1.25rem;
   }
 }
 
@@ -466,6 +513,18 @@ a {
   .mnsk7-promo-bar__text {
     text-align: left;
     line-height: 1.4;
+    gap: 0.35rem 0.45rem;
+  }
+  .mnsk7-promo-bar__value {
+    width: 100%;
+    order: 2;
+  }
+  .mnsk7-promo-bar__meta {
+    order: 3;
+  }
+  .mnsk7-promo-bar__cta {
+    order: 4;
+    padding-left: 0;
   }
   .mnsk7-promo-bar__close {
     margin-top: -0.125rem;
