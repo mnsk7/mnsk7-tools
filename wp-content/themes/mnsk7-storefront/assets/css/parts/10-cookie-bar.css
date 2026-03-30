@@ -118,3 +118,33 @@
   color: var(--color-white);
 }
 
+@media (max-width: 768px) {
+  .mnsk7-cookie-bar {
+    padding: 0.5rem 0.75rem;
+    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
+    gap: 0.5rem 0.75rem;
+    font-size: var(--fs-xs);
+    line-height: 1.4;
+  }
+
+  .mnsk7-cookie-bar__inner {
+    gap: 0.5rem 0.75rem;
+  }
+
+  .mnsk7-cookie-bar__text {
+    flex-basis: 100%;
+    font-size: inherit;
+  }
+
+  .mnsk7-cookie-bar__buttons {
+    width: 100%;
+    gap: 0.4rem;
+  }
+
+  .mnsk7-cookie-bar__btn {
+    min-height: 44px;
+    padding: 0.45rem 0.85rem;
+    font-size: var(--fs-xs);
+    flex: 1 1 auto;
+  }
+}

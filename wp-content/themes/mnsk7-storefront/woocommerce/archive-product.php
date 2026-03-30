@@ -12,6 +12,8 @@ defined( 'ABSPATH' ) || exit;
 
 get_header();
 
+$plp_is_mobile_request = function_exists( 'mnsk7_is_mobile_request' ) && mnsk7_is_mobile_request();
+
 /* Okruszki w szablonie — niezależnie od hooków, żeby nic ich nie nadpisywało (sklep, kategoria, tag, wyszukiwanie). Jedno źródło: mnsk7_is_plp(). */
 if ( function_exists( 'woocommerce_breadcrumb' ) ) {
 	$show_breadcrumb = ( function_exists( 'mnsk7_is_plp' ) && mnsk7_is_plp() )
@@ -287,7 +289,7 @@ $use_table = is_shop() || $is_taxonomy;
 $GLOBALS['mnsk7_plp_use_table'] = $use_table;
 
 /* Jeden layout na request: mobile (user-agent) = karty, desktop = tabela. W DOM tylko jeden blok. */
-$plp_is_mobile = function_exists( 'mnsk7_is_mobile_request' ) && mnsk7_is_mobile_request();
+$plp_is_mobile = $plp_is_mobile_request;
 
 /* Na kategoria/tag (desktop): toolbar u góry w jednej linii z wyszukiwarką; na dole nie powielamy. */
 $plp_show_toolbar_at_top = false;
