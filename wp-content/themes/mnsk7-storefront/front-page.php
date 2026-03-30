@@ -228,7 +228,7 @@ get_header();
 	<section class="mnsk7-section mnsk7-section--insta">
 		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Obserwuj nas na Instagramie', 'mnsk7-storefront' ); ?></h2>
-			<?php echo do_shortcode( '[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]' ); ?>
+			<?php echo do_shortcode( '[mnsk7_instagram_feed limit="6" type="posts" title="Instagram @mnsk7tools"]' ); ?>
 		</div>
 	</section>
 
