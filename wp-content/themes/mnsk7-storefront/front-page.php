@@ -13,47 +13,61 @@ get_header();
 	<!-- HERO -->
 	<section class="mnsk7-hero">
 		<div class="mnsk7-hero__inner col-full">
-			<h1 class="mnsk7-hero__title"><?php esc_html_e( 'Frezy CNC i narzędzia skrawające', 'mnsk7-storefront' ); ?></h1>
-			<p class="mnsk7-hero__sub"><?php esc_html_e( 'Szybki wybór frezów do drewna, metalu i tworzyw. Dostawa 24h, faktura VAT, realne stany magazynowe.', 'mnsk7-storefront' ); ?></p>
-			<div class="mnsk7-hero__materials" aria-label="<?php esc_attr_e( 'Materiały', 'mnsk7-storefront' ); ?>">
-				<?php
-				$materials = array( 'Drewno', 'MDF', 'Aluminium', 'Stal', __( 'Tworzywa sztuczne', 'mnsk7-storefront' ) );
-				foreach ( $materials as $mat ) {
-					echo '<span class="mnsk7-hero__material-chip">' . esc_html( $mat ) . '</span>';
-				}
-				?>
+			<div class="mnsk7-hero__layout">
+				<div class="mnsk7-hero__content">
+					<p class="mnsk7-hero__eyebrow"><?php esc_html_e( 'MNK7 Tools • Sklep CNC', 'mnsk7-storefront' ); ?></p>
+					<h1 class="mnsk7-hero__title"><?php esc_html_e( 'Frezy CNC do drewna, aluminium i tworzyw', 'mnsk7-storefront' ); ?></h1>
+					<p class="mnsk7-hero__sub"><?php esc_html_e( 'Szybka wysyłka 24h, faktura VAT i realne stany magazynowe. Dobierz narzędzie do materiału i zamów bez zbędnego szukania.', 'mnsk7-storefront' ); ?></p>
+
+					<div class="mnsk7-hero__materials" aria-label="<?php esc_attr_e( 'Szybki wybór materiału', 'mnsk7-storefront' ); ?>">
+						<?php
+						$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
+						$materials = array(
+							array( 'label' => 'Drewno', 'slug' => 'drewno' ),
+							array( 'label' => 'MDF', 'slug' => 'mdf' ),
+							array( 'label' => 'Aluminium', 'slug' => 'aluminium' ),
+							array( 'label' => 'Stal', 'slug' => 'stal' ),
+							array( 'label' => __( 'Tworzywa', 'mnsk7-storefront' ), 'slug' => 'tworzywa-sztuczne' ),
+						);
+						foreach ( $materials as $material ) {
+							$term = taxonomy_exists( 'product_tag' ) ? get_term_by( 'slug', $material['slug'], 'product_tag' ) : false;
+							$link = ( $term && ! is_wp_error( $term ) ) ? get_term_link( $term ) : add_query_arg( 's', rawurlencode( $material['label'] ), $shop_url );
+							?>
+							<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-hero__material-chip"><?php echo esc_html( $material['label'] ); ?></a>
+							<?php
+						}
+						?>
+					</div>
+
+					<ul class="mnsk7-hero__usps" aria-label="<?php esc_attr_e( 'Najważniejsze informacje', 'mnsk7-storefront' ); ?>">
+						<li class="mnsk7-hero__usp"><?php esc_html_e( 'Wysyłka 24h', 'mnsk7-storefront' ); ?></li>
+						<li class="mnsk7-hero__usp"><?php esc_html_e( 'Faktura VAT', 'mnsk7-storefront' ); ?></li>
+						<li class="mnsk7-hero__usp"><?php esc_html_e( 'Realne stany magazynowe', 'mnsk7-storefront' ); ?></li>
+					</ul>
+
+					<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
+					<div class="mnsk7-hero__ctas">
+						<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="mnsk7-hero__btn mnsk7-hero__btn--primary">
+							<?php esc_html_e( 'Przejdź do sklepu', 'mnsk7-storefront' ); ?>
+						</a>
+						<a href="#mnsk7-home-catalog" class="mnsk7-hero__btn mnsk7-hero__btn--ghost">
+							<?php esc_html_e( 'Zobacz kategorie', 'mnsk7-storefront' ); ?>
+						</a>
+					</div>
+					<?php endif; ?>
+				</div>
+
+				<figure class="mnsk7-hero__media" aria-hidden="true">
+					<img
+						src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/img/hero-frez-cnc.svg' ); ?>"
+						alt=""
+						width="560"
+						height="420"
+						loading="eager"
+						decoding="async"
+					/>
+				</figure>
 			</div>
-			<div class="mnsk7-hero__usps">
-				<div class="mnsk7-hero__usp">
-					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
-					<span><?php esc_html_e( 'Darmowa dostawa od 300 zł', 'mnsk7-storefront' ); ?></span>
-				</div>
-				<div class="mnsk7-hero__usp">
-					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
-					<span><?php esc_html_e( 'Dostawa następnego dnia', 'mnsk7-storefront' ); ?></span>
-				</div>
-				<div class="mnsk7-hero__usp">
-					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
-					<span><?php esc_html_e( '100% pozytywnych opinii', 'mnsk7-storefront' ); ?></span>
-				</div>
-				<div class="mnsk7-hero__usp">
-					<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
-					<span><?php esc_html_e( 'Faktura VAT', 'mnsk7-storefront' ); ?></span>
-				</div>
-			</div>
-			<?php if ( is_user_logged_in() ) : $u = wp_get_current_user(); ?>
-			<p class="mnsk7-hero__welcome"><?php printf( esc_html__( 'Witaj, %s!', 'mnsk7-storefront' ), esc_html( $u->display_name ?: $u->user_login ) ); ?></p>
-			<?php endif; ?>
-			<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
-			<div class="mnsk7-hero__ctas">
-				<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="mnsk7-hero__btn mnsk7-hero__btn--primary">
-					<?php esc_html_e( 'Przejdź do sklepu', 'mnsk7-storefront' ); ?>
-				</a>
-				<a href="#mnsk7-home-catalog" class="mnsk7-hero__btn mnsk7-hero__btn--ghost">
-					<?php esc_html_e( 'Zobacz kategorie', 'mnsk7-storefront' ); ?>
-				</a>
-			</div>
-			<?php endif; ?>
 		</div>
 	</section>
 
