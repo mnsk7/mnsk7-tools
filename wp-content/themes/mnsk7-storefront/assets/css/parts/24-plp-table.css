@@ -432,6 +432,25 @@ body.tax-product_tag .mnsk7-catalog-filters {
   box-sizing: border-box;
 }
 
+/* Archive wrappers inherit page gutters from #content; nested col-full padding creates false side stripes. */
+body.post-type-archive-product .mnsk7-plp-archive-wrap.col-full,
+body.post-type-archive-product .mnsk7-plp-content.col-full,
+body.tax-product_cat .mnsk7-plp-archive-wrap.col-full,
+body.tax-product_cat .mnsk7-plp-content.col-full,
+body.tax-product_tag .mnsk7-plp-archive-wrap.col-full,
+body.tax-product_tag .mnsk7-plp-content.col-full {
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+body.post-type-archive-product .mnsk7-plp-content > .col-full,
+body.tax-product_cat .mnsk7-plp-content > .col-full,
+body.tax-product_tag .mnsk7-plp-content > .col-full {
+  padding-left: 0;
+  padding-right: 0;
+}
+
 /* Scroll target: górna granica strefy wyników (chips + search + USP). scroll-margin dla sticky header. */
 .mnsk7-plp-results-anchor {
   display: block;
@@ -804,29 +823,36 @@ body.tax-product_tag .mnsk7-catalog-filters {
 }
 .mnsk7-plp-search__form {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  align-items: center;
+  align-items: stretch;
+  flex-wrap: nowrap;
+  gap: 0;
+  width: 100%;
   max-width: 100%;
+  min-width: 0;
 }
 .mnsk7-plp-search__input {
   flex: 1;
-  min-width: 160px;
+  min-width: 0;
   padding: 0.5rem 0.75rem;
   font-size: var(--fs-base);
   font-family: var(--font-base);
   border: 1px solid var(--color-border);
-  border-radius: var(--r-sm);
+  border-right: none;
+  border-radius: var(--r-sm) 0 0 var(--r-sm);
+  background: var(--color-white);
+  box-sizing: border-box;
 }
 .mnsk7-plp-search__input:focus {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  outline: none;
   border-color: var(--color-primary);
   box-shadow: none; /* bez fioletowego glow z przeglądarki */
 }
 .mnsk7-plp-search__input:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 2px;
+  outline: none;
+}
+.mnsk7-plp-search__form:focus-within .mnsk7-plp-search__input,
+.mnsk7-plp-search__form:focus-within .mnsk7-plp-search__submit {
+  border-color: var(--color-primary);
 }
 .mnsk7-plp-search__submit {
   padding: 0.5rem 1.25rem;
@@ -835,14 +861,18 @@ body.tax-product_tag .mnsk7-catalog-filters {
   font-family: var(--font-base);
   background: var(--color-primary);
   color: var(--color-white);
-  border: none;
-  border-radius: var(--r-md);
+  border: 1px solid var(--color-border);
+  border-left: none;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0;
   cursor: pointer;
   min-height: 44px;
   box-sizing: border-box;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .mnsk7-plp-search__submit:hover {
   background: var(--color-primary-hover);
+  border-color: var(--color-primary-hover);
 }
 
 .mnsk7-plp-no-results {
