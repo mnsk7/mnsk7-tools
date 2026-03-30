@@ -1029,7 +1029,8 @@
 
 .mnsk7-section--insta .mnsk7-section__title {
   width: 100%;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.85rem;
+  letter-spacing: -0.02em;
 }
 
 .mnsk7-section--insta .col-full > * {
@@ -1206,21 +1207,26 @@
 
 /* Wariant profile: jeden iframe z embed profilu (jak kayer.pl) — ładuje się stabilnie bez embed.js */
 .mnsk7-instagram-feed--profile {
-  max-width: 1200px;
+  max-width: 680px;
   width: 100%;
 }
 .mnsk7-instagram-profile-embed {
   width: 100%;
-  border-radius: var(--r-md);
+  padding: 2px;
+  border-radius: clamp(14px, 2.5vw, 20px);
   overflow: hidden;
-  background: #fafafa;
+  background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+  box-shadow: 0 14px 34px rgba(17, 24, 39, 0.14);
+  line-height: 0;
 }
 .mnsk7-instagram-profile-embed iframe {
   display: block;
   width: 100%;
   max-width: 100%;
-  min-height: clamp(560px, 72vh, 760px);
-  height: clamp(560px, 72vh, 760px);
+  min-height: clamp(390px, 56vh, 540px);
+  height: clamp(390px, 56vh, 540px);
+  border-radius: calc(clamp(14px, 2.5vw, 20px) - 2px);
+  background: #fff;
   border: 0;
 }
 
@@ -1238,8 +1244,8 @@
   .mnsk7-instagram-profile-embed iframe {
     width: 1px;
     min-width: 100%;
-    min-height: clamp(520px, 68vh, 680px);
-    height: clamp(520px, 68vh, 680px);
+    min-height: clamp(360px, 50vh, 460px);
+    height: clamp(360px, 50vh, 460px);
   }
 }
 
