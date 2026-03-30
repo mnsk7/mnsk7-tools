@@ -221,9 +221,6 @@ add_filter( 'wpseo_canonical', function ( $canonical ) {
 }, 20 );
 
 add_action( 'wp_head', function () {
-	if ( defined( 'WPSEO_VERSION' ) ) {
-		return;
-	}
 	$catalog_canonical = function_exists( 'mnsk7_get_catalog_archive_canonical_url' ) ? mnsk7_get_catalog_archive_canonical_url() : '';
 	if ( $catalog_canonical === '' ) {
 		return;
