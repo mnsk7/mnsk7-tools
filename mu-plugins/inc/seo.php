@@ -7,6 +7,117 @@
 
 defined( 'ABSPATH' ) || exit;
 
+if ( ! function_exists( 'mnsk7_get_catalog_archive_seo_context' ) ) {
+	/**
+	 * Collects the current catalog archive context for SEO titles/canonicals.
+	 *
+	 * @return array{term: ?WP_Term, base_url: string, paged: int}
+	 */
+	function mnsk7_get_catalog_archive_seo_context() {
+		$context = array(
+			'term'     => null,
+			'base_url' => '',
+			'paged'    => 1,
+		);
+
+		if ( ! function_exists( 'is_shop' ) || ! function_exists( 'wc_get_page_permalink' ) ) {
+			return $context;
+		}
+
+		$paged = max( 1, (int) get_query_var( 'paged' ) );
+		if ( $paged < 1 ) {
+			$paged = 1;
+		}
+		$context['paged'] = $paged;
+
+		$term = null;
+		if ( function_exists( 'is_product_taxonomy' ) && is_product_taxonomy() ) {
+			$queried = get_queried_object();
+			if ( $queried instanceof WP_Term && in_array( $queried->taxonomy, array( 'product_cat', 'product_tag' ), true ) ) {
+				$term = $queried;
+			}
+		} elseif ( is_shop() ) {
+			foreach ( array( 'product_cat', 'product_tag' ) as $taxonomy ) {
+				if ( empty( $_GET[ $taxonomy ] ) ) {
+					continue;
+				}
+				$slug = sanitize_text_field( wp_unslash( $_GET[ $taxonomy ] ) );
+				if ( $slug === '' ) {
+					continue;
+				}
+				$maybe_term = get_term_by( 'slug', $slug, $taxonomy );
+				if ( $maybe_term && ! is_wp_error( $maybe_term ) ) {
+					$term = $maybe_term;
+					break;
+				}
+			}
+		}
+
+		if ( $term instanceof WP_Term ) {
+			$link = get_term_link( $term );
+			if ( ! is_wp_error( $link ) ) {
+				$context['term']     = $term;
+				$context['base_url'] = $link;
+				return $context;
+			}
+		}
+
+		if ( is_shop() ) {
+			$context['base_url'] = wc_get_page_permalink( 'shop' );
+		}
+
+		return $context;
+	}
+}
+
+if ( ! function_exists( 'mnsk7_get_catalog_archive_seo_title' ) ) {
+	/**
+	 * Builds a commercial title for the catalog archive context.
+	 *
+	 * @return string
+	 */
+	function mnsk7_get_catalog_archive_seo_title() {
+		$context = mnsk7_get_catalog_archive_seo_context();
+		if ( empty( $context['term'] ) || ! ( $context['term'] instanceof WP_Term ) ) {
+			return '';
+		}
+
+		$name = $context['term']->name;
+		if ( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ) {
+			$name = mnsk7_strip_wpf_filters_from_text( $name );
+		}
+		$name = trim( (string) $name );
+		if ( $name === '' ) {
+			return '';
+		}
+
+		return sprintf( '%1$s - %2$s', $name, __( 'sklep CNC', 'mnsk7-tools' ) );
+	}
+}
+
+if ( ! function_exists( 'mnsk7_get_catalog_archive_canonical_url' ) ) {
+	/**
+	 * Returns a clean canonical URL for shop/category/tag archive states.
+	 *
+	 * @return string
+	 */
+	function mnsk7_get_catalog_archive_canonical_url() {
+		$context = mnsk7_get_catalog_archive_seo_context();
+		if ( empty( $context['base_url'] ) || is_wp_error( $context['base_url'] ) ) {
+			return '';
+		}
+
+		$url = untrailingslashit( $context['base_url'] );
+		if ( ! empty( $context['paged'] ) && (int) $context['paged'] > 1 ) {
+			$url = trailingslashit( $url ) . user_trailingslashit( sprintf( 'page/%d', (int) $context['paged'] ), 'paged' );
+		} else {
+			$url = trailingslashit( $url );
+		}
+
+		return $url;
+	}
+}
+
 /* Organization + OnlineStore JSON-LD */
 add_action( 'wp_head', function () {
 	$schema = array(
@@ -92,6 +203,33 @@ add_filter( 'wpseo_metadesc', function ( $desc ) {
 		$cat->name, (int) $cat->count
 	);
 }, 21 );
+
+add_filter( 'wpseo_title', function ( $title ) {
+	$catalog_title = function_exists( 'mnsk7_get_catalog_archive_seo_title' ) ? mnsk7_get_catalog_archive_seo_title() : '';
+	if ( $catalog_title !== '' ) {
+		return $catalog_title;
+	}
+	return $title;
+}, 20 );
+
+add_filter( 'wpseo_canonical', function ( $canonical ) {
+	$catalog_canonical = function_exists( 'mnsk7_get_catalog_archive_canonical_url' ) ? mnsk7_get_catalog_archive_canonical_url() : '';
+	if ( $catalog_canonical !== '' ) {
+		return $catalog_canonical;
+	}
+	return $canonical;
+}, 20 );
+
+add_action( 'wp_head', function () {
+	if ( defined( 'WPSEO_VERSION' ) ) {
+		return;
+	}
+	$catalog_canonical = function_exists( 'mnsk7_get_catalog_archive_canonical_url' ) ? mnsk7_get_catalog_archive_canonical_url() : '';
+	if ( $catalog_canonical === '' ) {
+		return;
+	}
+	echo '<link rel="canonical" href="' . esc_url( $catalog_canonical ) . '">' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}, 2 );
 
 /* Opis archiwum taksonomii (kategoria, tag) — zastępuje domyślny WooCommerce hook */
 remove_action( 'woocommerce_archive_description', 'woocommerce_taxonomy_archive_description', 10 );

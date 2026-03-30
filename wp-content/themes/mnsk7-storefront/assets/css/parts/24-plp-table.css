@@ -120,6 +120,17 @@ body.tax-product_tag .mnsk7-plp-search {
   margin-top: var(--archive-gap-filters-results);
   margin-bottom: var(--archive-after-search);
 }
+body.post-type-archive-product .mnsk7-plp-search--priority,
+body.tax-product_cat .mnsk7-plp-search--priority,
+body.tax-product_tag .mnsk7-plp-search--priority {
+  margin-top: 0;
+  margin-bottom: var(--archive-gap-chips-filters);
+}
+body.post-type-archive-product .mnsk7-plp-search--priority + .mnsk7-plp-empty,
+body.tax-product_cat .mnsk7-plp-search--priority + .mnsk7-plp-empty,
+body.tax-product_tag .mnsk7-plp-search--priority + .mnsk7-plp-empty {
+  margin-top: 0;
+}
 body.post-type-archive-product .mnsk7-plp-row-search-toolbar,
 body.tax-product_cat .mnsk7-plp-row-search-toolbar,
 body.tax-product_tag .mnsk7-plp-row-search-toolbar {

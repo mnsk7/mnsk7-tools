@@ -2107,6 +2107,13 @@ add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 }, 5 );
 add_filter( 'the_content', 'mnsk7_strip_wpf_filters_from_text', 1 );
 add_filter( 'document_title_parts', function ( $parts ) {
+	if ( function_exists( 'mnsk7_get_catalog_archive_seo_title' ) ) {
+		$catalog_title = mnsk7_get_catalog_archive_seo_title();
+		if ( $catalog_title !== '' ) {
+			$parts['title'] = $catalog_title;
+			return $parts;
+		}
+	}
 	if ( function_exists( 'is_product_taxonomy' ) && is_product_taxonomy() && ! empty( $parts['title'] ) && is_string( $parts['title'] ) ) {
 		$parts['title'] = mnsk7_strip_wpf_filters_from_text( $parts['title'] );
 	}
@@ -2117,6 +2124,13 @@ add_filter( 'document_title_parts', function ( $parts ) {
 add_filter( 'document_title_parts', function ( $parts ) {
 	if ( ! function_exists( 'is_shop' ) || ! is_shop() ) {
 		return $parts;
+	}
+	if ( function_exists( 'mnsk7_get_catalog_archive_seo_title' ) ) {
+		$catalog_title = mnsk7_get_catalog_archive_seo_title();
+		if ( $catalog_title !== '' ) {
+			$parts['title'] = $catalog_title;
+			return $parts;
+		}
 	}
 	$slug = null;
 	$tax  = null;
@@ -2624,6 +2638,71 @@ function mnsk7_get_archive_product_ids_for_chips( $attrs_to_try ) {
 }
 
 /**
+ * Normalize displayed chip label for Polish CNC ecommerce.
+ *
+ * @param string $label Raw term name.
+ * @param string $taxonomy Attribute taxonomy.
+ * @return string
+ */
+function mnsk7_normalize_archive_chip_label( $label, $taxonomy = '' ) {
+	$label = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( (string) $label ) : (string) $label;
+	$label = html_entity_decode( $label, ENT_QUOTES, 'UTF-8' );
+	$label = str_replace( "\xc2\xa0", ' ', $label );
+	$label = trim( preg_replace( '/\s+/u', ' ', $label ) );
+	if ( $label === '' ) {
+		return '';
+	}
+
+	$label = preg_replace( '/(\d+(?:[.,]\d+)?)\s*(mm|cm|m|fi)\b/iu', '$1 $2', $label );
+	$label = preg_replace( '/(\d+)\s*°/u', '$1°', $label );
+
+	$taxonomy = (string) $taxonomy;
+	if ( in_array( $taxonomy, array( 'pa_kat-skosu', 'pa_kat_skosu' ), true ) ) {
+		$label = preg_replace( '/^(\d+(?:[.,]\d+)?)\s*(st|stopni|deg)?$/iu', '$1°', $label );
+	}
+
+	return trim( preg_replace( '/\s+/u', ' ', $label ) );
+}
+
+/**
+ * Business priority for archive filter rows.
+ *
+ * @param WP_Term $term Current archive term.
+ * @return string[]
+ */
+function mnsk7_get_archive_filter_priority( $term ) {
+	$base = array(
+		'pa_srednica',
+		'pa_fi',
+		'pa_srednica-trzpienia',
+		'pa_typ',
+		'pa_material',
+		'pa_dlugosc-robocza',
+		'pa_dlugosc-robocza-h',
+		'pa_dlugosc-calkowita',
+		'pa_dlugosc-calkowita-l',
+		'pa_kat-skosu',
+		'pa_kat_skosu',
+		'pa_r',
+		'pa_zastosowanie',
+	);
+
+	if ( $term instanceof WP_Term && isset( $term->taxonomy ) && $term->taxonomy === 'product_tag' ) {
+		return $base;
+	}
+
+	return array_merge(
+		array(
+			'pa_srednica',
+			'pa_typ',
+			'pa_material',
+			'pa_fi',
+		),
+		$base
+	);
+}
+
+/**
  * Attribute filter chips for PLP. Only attributes that have terms in the current archive's products are shown.
  * FB-02: when category is Zestawy, diameter filter row is hidden.
  * FB-03: only terms that have in-stock products in the current category are shown (no fallback to global terms).
@@ -2645,6 +2724,7 @@ function mnsk7_get_archive_attribute_filter_chips() {
 	$term_slug  = isset( $term->slug ) ? strtolower( (string) $term->slug ) : '';
 	$term_name  = isset( $term->name ) ? strtolower( (string) $term->name ) : '';
 	$is_zestawy = ( strpos( $term_slug, 'zestaw' ) !== false || strpos( $term_name, 'zestaw' ) !== false );
+	$priority_order = function_exists( 'mnsk7_get_archive_filter_priority' ) ? mnsk7_get_archive_filter_priority( $term ) : array();
 
 	$product_ids = mnsk7_get_archive_product_ids_for_chips( $attrs_to_try );
 	$filters     = array();
@@ -2684,15 +2764,40 @@ function mnsk7_get_archive_attribute_filter_chips() {
 		}
 		$chips = array();
 		foreach ( $terms as $t ) {
-			$chips[ $t->slug ] = $t->name;
+			$normalized_label = function_exists( 'mnsk7_normalize_archive_chip_label' ) ? mnsk7_normalize_archive_chip_label( $t->name, $tax ) : $t->name;
+			if ( $normalized_label === '' ) {
+				continue;
+			}
+			$chips[ $t->slug ] = $normalized_label;
+		}
+		if ( empty( $chips ) ) {
+			continue;
 		}
 		$param    = 'filter_' . str_replace( 'pa_', '', $tax );
 		$filters[] = array(
-			'label' => $label . ': ',
+			'taxonomy' => $tax,
+			'label' => $label,
 			'param' => $param,
 			'chips' => $chips,
 		);
 	}
+	if ( ! empty( $filters ) && ! empty( $priority_order ) ) {
+		$priority_map = array_flip( $priority_order );
+		usort( $filters, function ( $left, $right ) use ( $priority_map ) {
+			$left_tax  = isset( $left['taxonomy'] ) ? $left['taxonomy'] : '';
+			$right_tax = isset( $right['taxonomy'] ) ? $right['taxonomy'] : '';
+			$left_rank = isset( $priority_map[ $left_tax ] ) ? (int) $priority_map[ $left_tax ] : 999;
+			$right_rank = isset( $priority_map[ $right_tax ] ) ? (int) $priority_map[ $right_tax ] : 999;
+			if ( $left_rank === $right_rank ) {
+				return strcmp( (string) $left['label'], (string) $right['label'] );
+			}
+			return $left_rank <=> $right_rank;
+		} );
+	}
+	$filters = array_map( function ( $filter ) {
+		unset( $filter['taxonomy'] );
+		return $filter;
+	}, $filters );
 	$filter_params = array_column( $filters, 'param' );
 	return array( 'filters' => $filters, 'filter_params' => $filter_params );
 }
