@@ -48,15 +48,6 @@
     padding-top: 0.125rem;
   }
 
-  /* Hero adjustments */
-  .mnsk7-hero {
-    padding: var(--space-32) var(--space-16);
-  }
-
-  .mnsk7-hero__title {
-    font-size: var(--fs-xl);
-  }
-
   /* Cookie bar: bottom-sheet / stacked — bez obcięcia, bez overflow (P0) */
   .mnsk7-cookie-bar {
     flex-direction: column;

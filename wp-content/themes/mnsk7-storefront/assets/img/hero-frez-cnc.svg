@@ -1,0 +1,49 @@
+<svg width="560" height="420" viewBox="0 0 560 420" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">Frezy CNC</title>
+  <desc id="desc">Techniczna ilustracja frezu i obrabianego materiału.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="560" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#141C2E"/>
+      <stop offset="1" stop-color="#1F2D4A"/>
+    </linearGradient>
+    <linearGradient id="steel" x1="288" y1="62" x2="400" y2="248" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#D9E3F3"/>
+      <stop offset="1" stop-color="#7C8BA3"/>
+    </linearGradient>
+    <linearGradient id="cut" x1="170" y1="232" x2="520" y2="398" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#F59E0B"/>
+      <stop offset="1" stop-color="#F97316"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="560" height="420" rx="20" fill="url(#bg)"/>
+
+  <g opacity="0.2" stroke="#3A4B70" stroke-width="1">
+    <path d="M32 88H528"/>
+    <path d="M32 136H528"/>
+    <path d="M32 184H528"/>
+    <path d="M32 232H528"/>
+    <path d="M32 280H528"/>
+    <path d="M32 328H528"/>
+  </g>
+
+  <rect x="58" y="246" width="444" height="112" rx="14" fill="#2C3854" stroke="#4D5E84" stroke-width="2"/>
+  <path d="M72 346C130 324 188 308 246 300C301 292 356 291 412 294C441 296 470 299 500 304V358H72V346Z" fill="url(#cut)" opacity="0.55"/>
+
+  <g transform="translate(288 52)">
+    <rect x="40" y="8" width="72" height="268" rx="15" fill="url(#steel)"/>
+    <rect x="58" y="0" width="36" height="24" rx="8" fill="#9FB0CC"/>
+    <path d="M40 62L112 30V58L40 90V62Z" fill="#C8D4E7" opacity="0.85"/>
+    <path d="M40 118L112 86V114L40 146V118Z" fill="#C8D4E7" opacity="0.8"/>
+    <path d="M40 174L112 142V170L40 202V174Z" fill="#C8D4E7" opacity="0.75"/>
+    <path d="M40 230L112 198V226L40 258V230Z" fill="#C8D4E7" opacity="0.7"/>
+  </g>
+
+  <g stroke="#F59E0B" stroke-width="3" stroke-linecap="round" opacity="0.9">
+    <path d="M300 290L272 318"/>
+    <path d="M312 298L286 328"/>
+    <path d="M326 306L304 336"/>
+    <path d="M340 312L322 342"/>
+    <path d="M356 316L344 346"/>
+  </g>
+</svg>
