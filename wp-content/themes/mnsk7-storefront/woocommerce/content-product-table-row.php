@@ -21,6 +21,34 @@ $stock_html  = $product->is_in_stock()
 $total_sales = (int) $product->get_total_sales();
 $max_qty     = $product->get_max_purchase_quantity();
 $min_qty     = $product->get_min_purchase_quantity();
+$key_params  = array();
+if ( function_exists( 'mnsk7_get_key_param_attributes' ) ) {
+	foreach ( mnsk7_get_key_param_attributes() as $attr_slug => $attr_label ) {
+		if ( count( $key_params ) >= 4 ) {
+			break;
+		}
+		$value = $product->get_attribute( $attr_slug );
+		if ( (string) $value === '' && strpos( $attr_slug, 'pa_' ) === 0 ) {
+			$value = $product->get_attribute( str_replace( 'pa_', '', $attr_slug ) );
+		}
+		if ( (string) $value === '' ) {
+			continue;
+		}
+		$slug_key = str_replace( 'pa_', '', (string) $attr_slug );
+		$label    = function_exists( 'mnsk7_attribute_label_pl' ) ? mnsk7_attribute_label_pl( $slug_key ) : '';
+		if ( $label === '' ) {
+			$label = (string) $attr_label;
+		}
+		$key_params[] = array(
+			'label' => $label,
+			'value' => wp_strip_all_tags( (string) $value ),
+		);
+	}
+}
+$usage_value = $product->get_attribute( 'pa_zastosowanie' );
+if ( (string) $usage_value === '' ) {
+	$usage_value = $product->get_attribute( 'zastosowanie' );
+}
 
 // PERFORMANCE: pierwszy wiersz tabeli = LCP candidate na archive — eager + fetchpriority high.
 static $mnsk7_plp_row_index = 0;
@@ -36,6 +64,17 @@ $row_class = $product->is_sold_individually() ? 'mnsk7-row--fixed-qty' : '';
 	</td>
 	<td class="mnsk7-table-cell mnsk7-table-cell--title">
 		<a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a>
+		<?php if ( $usage_value ) : ?>
+			<span class="mnsk7-table-usage"><?php echo esc_html( wp_strip_all_tags( $usage_value ) ); ?></span>
+		<?php endif; ?>
+		<?php if ( ! empty( $key_params ) ) : ?>
+			<dl class="mnsk7-table-key-params" aria-label="<?php esc_attr_e( 'Kluczowe parametry', 'mnsk7-storefront' ); ?>">
+				<?php foreach ( $key_params as $param ) : ?>
+					<dt><?php echo esc_html( $param['label'] ); ?></dt>
+					<dd><?php echo esc_html( $param['value'] ); ?></dd>
+				<?php endforeach; ?>
+			</dl>
+		<?php endif; ?>
 		<?php if ( $product->get_sku() ) : ?>
 			<span class="mnsk7-table-sku"><?php echo esc_html( $product->get_sku() ); ?></span>
 		<?php endif; ?>
