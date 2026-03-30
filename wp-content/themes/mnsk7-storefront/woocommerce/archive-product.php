@@ -43,6 +43,15 @@ do_action( 'woocommerce_shop_loop_header' );
 echo '<div class="mnsk7-plp-archive-wrap col-full">';
 echo '<div class="mnsk7-plp-content col-full">';
 
+if ( is_shop() && ! $is_taxonomy ) {
+	echo '<p class="mnsk7-archive-context col-full">' . esc_html__( 'Katalog frezów CNC', 'mnsk7-storefront' ) . '</p>';
+} elseif ( $is_taxonomy && $current_term instanceof WP_Term ) {
+	$archive_context = ( $current_term->taxonomy === 'product_tag' )
+		? __( 'Zastosowanie i materiał', 'mnsk7-storefront' )
+		: __( 'Kategoria produktu', 'mnsk7-storefront' );
+	echo '<p class="mnsk7-archive-context col-full">' . esc_html( $archive_context ) . '</p>';
+}
+
 /* PLP-12: na stronie wyników wyszukiwania — link „Wyczyść wyszukiwanie" i liczba wyników */
 if ( is_search() && get_query_var( 'post_type' ) === 'product' ) {
 	global $wp_query;

@@ -379,6 +379,39 @@ add_filter( 'woocommerce_quantity_input_args', function ( $args, $product ) {
 	return $args;
 }, 10, 2 );
 
+/** Quantity steppers: + / - buttons for numeric quantity inputs in theme overrides. */
+add_action( 'wp_footer', function () {
+	if ( is_admin() ) {
+		return;
+	}
+	?>
+	<script id="mnsk7-quantity-stepper">
+	document.addEventListener('click', function(event) {
+		var button = event.target.closest('.mnsk7-qty-btn');
+		if (!button) return;
+		var wrap = button.closest('.quantity');
+		var input = wrap ? wrap.querySelector('input.qty:not([type="hidden"])') : null;
+		if (!input || input.disabled || input.readOnly) return;
+		var step = parseFloat(input.step || '1');
+		if (!isFinite(step) || step <= 0) step = 1;
+		var min = input.min !== '' ? parseFloat(input.min) : 0;
+		if (!isFinite(min)) min = 0;
+		var max = input.max !== '' ? parseFloat(input.max) : Infinity;
+		if (!isFinite(max)) max = Infinity;
+		var current = parseFloat(input.value || '');
+		if (!isFinite(current)) current = min || 0;
+		var next = current + (button.classList.contains('mnsk7-qty-btn--plus') ? step : -step);
+		next = Math.max(min, Math.min(max, next));
+		if (next === current) return;
+		var normalized = String(Math.round(next * 1000) / 1000).replace(/\.0+$/, '').replace(/(\.\d*?)0+$/, '$1');
+		input.value = normalized;
+		input.dispatchEvent(new Event('input', { bubbles: true }));
+		input.dispatchEvent(new Event('change', { bubbles: true }));
+	});
+	</script>
+	<?php
+}, 100 );
+
 /** PDP: related products pod opisem (po zakładkach), podtytuł w szablonie related.php */
 add_action( 'wp', function () {
 	if ( ! is_singular( 'product' ) ) {

@@ -16,13 +16,23 @@ defined( 'ABSPATH' ) || exit;
 
 /* translators: %s: Quantity. */
 $label = ! empty( $args['product_name'] ) ? sprintf( esc_html__( '%s quantity', 'woocommerce' ), wp_strip_all_tags( $args['product_name'] ) ) : esc_html__( 'Quantity', 'woocommerce' );
+$is_locked_qty = $readonly || $type === 'hidden' || ( isset( $min_value, $max_value ) && (string) $min_value !== '' && (string) $max_value !== '' && (float) $min_value === (float) $max_value );
+$quantity_classes = 'quantity' . ( $is_locked_qty ? ' quantity--locked' : ' quantity--stepper' );
+$quantity_display = sprintf(
+	/* translators: %s: quantity value */
+	__( '%s szt.', 'mnsk7-storefront' ),
+	wc_stock_amount( $input_value )
+);
 
 ?>
-<div class="quantity">
+<div class="<?php echo esc_attr( $quantity_classes ); ?>">
 	<?php
 	do_action( 'woocommerce_before_quantity_input_field' );
 	?>
 	<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $label ); ?></label>
+	<?php if ( ! $is_locked_qty ) : ?>
+		<button type="button" class="mnsk7-qty-btn mnsk7-qty-btn--minus" aria-label="<?php esc_attr_e( 'Zmniejsz ilość', 'mnsk7-storefront' ); ?>">−</button>
+	<?php endif; ?>
 	<input
 		type="<?php echo esc_attr( $type ); ?>"
 		<?php echo $readonly ? 'readonly="readonly"' : ''; ?>
@@ -45,6 +55,11 @@ $label = ! empty( $args['product_name'] ) ? sprintf( esc_html__( '%s quantity', 
 			autocomplete="<?php echo esc_attr( isset( $autocomplete ) ? $autocomplete : 'on' ); ?>"
 		<?php endif; ?>
 	/>
+	<?php if ( $is_locked_qty ) : ?>
+		<span class="mnsk7-quantity-lock" aria-hidden="true"><?php echo esc_html( $quantity_display ); ?></span>
+	<?php else : ?>
+		<button type="button" class="mnsk7-qty-btn mnsk7-qty-btn--plus" aria-label="<?php esc_attr_e( 'Zwiększ ilość', 'mnsk7-storefront' ); ?>">+</button>
+	<?php endif; ?>
 	<?php
 	do_action( 'woocommerce_after_quantity_input_field' );
 	?>

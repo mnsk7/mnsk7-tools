@@ -56,3 +56,7 @@ a.button.alt,
   padding: 0.5rem 0.75rem;
 }
 
+.mnsk7-qty-btn {
+  min-width: 44px;
+  min-height: 44px;
+}

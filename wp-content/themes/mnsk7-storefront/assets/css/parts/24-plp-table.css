@@ -227,6 +227,11 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   body.post-type-archive-product:not(.tax-product_cat):not(.tax-product_tag) .woocommerce-products-header {
     margin-bottom: 0.625rem;
   }
+  .mnsk7-archive-context {
+    margin-bottom: 0.25rem;
+    font-size: 0.6875rem;
+    letter-spacing: 0.09em;
+  }
   body.post-type-archive-product:not(.tax-product_cat):not(.tax-product_tag) .woocommerce-products-header__title.page-title {
     font-size: clamp(1.125rem, 5vw, 1.35rem);
     line-height: 1.25;
@@ -425,11 +430,29 @@ body.tax-product_tag .mnsk7-catalog-filters {
 .mnsk7-plp-content .mnsk7-plp-selected,
 .mnsk7-plp-content .mnsk7-plp-trust-wrap,
 .mnsk7-plp-content .mnsk7-plp-search,
+.mnsk7-plp-content .mnsk7-archive-context,
 .mnsk7-plp-content .mnsk7-product-table-wrap,
 .mnsk7-plp-content .mnsk7-plp-grid-mobile {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
+}
+
+.mnsk7-archive-context {
+  margin: 0 0 0.375rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-text-muted, #666);
+}
+
+body.post-type-archive-product .mnsk7-archive-context {
+  color: var(--color-primary);
+}
+
+body.tax-product_tag .mnsk7-archive-context {
+  color: #8a5600;
 }
 
 /* Archive wrappers inherit page gutters from #content; nested col-full padding creates false side stripes. */

@@ -74,6 +74,15 @@ endif;
 				<?php
 				$shop_url = ( function_exists( 'wc_get_page_permalink' ) ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
 				$is_shop_archive = function_exists( 'mnsk7_is_plp' ) && mnsk7_is_plp();
+				$current_archive_term_id = 0;
+				$current_archive_taxonomy = '';
+				if ( is_tax( 'product_cat' ) || is_tax( 'product_tag' ) ) {
+					$current_archive_term = get_queried_object();
+					if ( $current_archive_term instanceof WP_Term ) {
+						$current_archive_term_id = (int) $current_archive_term->term_id;
+						$current_archive_taxonomy = (string) $current_archive_term->taxonomy;
+					}
+				}
 				$sklep_class = $is_shop_archive ? ' class="current-menu-item menu-item-has-children"' : ' class="menu-item-has-children"';
 				?>
 				<li<?php echo $sklep_class; ?>>
@@ -100,7 +109,8 @@ endif;
 									$link = get_term_link( $term );
 									if ( is_wp_error( $link ) ) { continue; }
 									$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
-									echo '<li><a href="' . esc_url( $link ) . '">' . esc_html( $name ) . '</a></li>';
+									$link_class = ( $current_archive_taxonomy === 'product_cat' && $current_archive_term_id === (int) $term->term_id ) ? ' class="mnsk7-megamenu__link--active"' : '';
+									echo '<li><a href="' . esc_url( $link ) . '"' . $link_class . '>' . esc_html( $name ) . '</a></li>';
 								}
 								?>
 							</ul>
@@ -115,14 +125,15 @@ endif;
 									$link = get_term_link( $term );
 									if ( is_wp_error( $link ) ) { continue; }
 									$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
-									echo '<li><a href="' . esc_url( $link ) . '">' . esc_html( $name ) . '</a></li>';
+									$link_class = ( $current_archive_taxonomy === 'product_tag' && $current_archive_term_id === (int) $term->term_id ) ? ' class="mnsk7-megamenu__link--active"' : '';
+									echo '<li><a href="' . esc_url( $link ) . '"' . $link_class . '>' . esc_html( $name ) . '</a></li>';
 								}
 								?>
 							</ul>
 						</li>
 						<?php endif; ?>
 						<li class="mnsk7-megamenu__footer">
-							<a href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Wszystkie produkty', 'mnsk7-storefront' ); ?> &rarr;</a>
+							<a href="<?php echo esc_url( $shop_url ); ?>"<?php echo is_shop() ? ' class="mnsk7-megamenu__link--active"' : ''; ?>><?php esc_html_e( 'Wszystkie produkty', 'mnsk7-storefront' ); ?> &rarr;</a>
 						</li>
 					</ul>
 					<?php
