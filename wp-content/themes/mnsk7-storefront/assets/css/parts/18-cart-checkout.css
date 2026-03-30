@@ -177,6 +177,8 @@
   width: 3rem;
   text-align: center;
   padding: 0.4rem 0.25rem;
+  min-height: 44px;
+  border-radius: var(--r-pill);
 }
 
 /* Checkout CTA — wyraźna (4.4); audit: zawsze klikalna, nad innymi elementami */
@@ -287,5 +289,28 @@
   .woocommerce-cart .cart_totals .shipping-calculator-form input[type="text"] {
     max-width: 100%;
     box-sizing: border-box;
+  }
+}
+
+@media (max-width: 768px) {
+  .woocommerce-cart table.shop_table td,
+  .woocommerce-cart table.shop_table th,
+  .woocommerce-checkout .form-row label {
+    font-size: var(--fs-sm);
+  }
+
+  .woocommerce-checkout .form-row input,
+  .woocommerce-checkout .form-row textarea,
+  .woocommerce-checkout .form-row select {
+    font-size: var(--fs-base);
+  }
+
+  .woocommerce-cart .cart_totals,
+  .woocommerce-checkout #payment {
+    border-radius: var(--r-md);
+  }
+
+  .woocommerce-cart .mnsk7-cart-loyalty {
+    padding: 1rem;
   }
 }

@@ -326,6 +326,9 @@ body.page #colophon.mnsk7-footer {
    Mobile footer accordion (≤768px) — jeden mechanizm, bez duplikatów
    ----------------------------------------------------------------- */
 @media (max-width: 768px) {
+  .mnsk7-footer__top {
+    padding: 1.25rem 0 1rem;
+  }
   .mnsk7-footer__inner {
     grid-template-columns: 1fr;
     gap: 0;
@@ -345,7 +348,7 @@ body.page #colophon.mnsk7-footer {
   }
   .mnsk7-footer__accordion-trigger {
     margin: 0;
-    padding: 0.75rem 2.5rem 0.75rem 0;
+    padding: 0.95rem 2.5rem 0.95rem 0;
     min-height: 44px;
     box-sizing: border-box;
     display: flex;
@@ -415,7 +418,7 @@ body.page #colophon.mnsk7-footer {
    */
   .mnsk7-footer__accordion-panel {
     display: none !important;
-    padding-bottom: var(--space-12);
+    padding-bottom: 0.85rem;
   }
   .mnsk7-footer__col.is-open > .mnsk7-footer__accordion-panel {
     display: block !important;
@@ -429,10 +432,20 @@ body.page #colophon.mnsk7-footer {
     padding-bottom: 0;
   }
   .mnsk7-footer__accordion-panel p:first-child {
-    margin-top: 0.5rem;
+    margin-top: 0.35rem;
   }
   .mnsk7-footer__contact-list li {
-    margin-bottom: 0.6rem;
+    margin-bottom: 0.5rem;
+  }
+  .mnsk7-footer__links li {
+    margin-bottom: 0.3rem;
+  }
+  .mnsk7-footer__newsletter-form {
+    gap: 0.65rem;
+  }
+  .mnsk7-footer__newsletter-input,
+  .mnsk7-footer__newsletter-btn {
+    min-height: 44px;
   }
 
   .mnsk7-footer__bottom-inner {

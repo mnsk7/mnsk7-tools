@@ -318,6 +318,59 @@
   line-height: 1.6;
 }
 
+@media (max-width: 768px) {
+  .mnsk7-page-dostawa,
+  .mnsk7-page-kontakt {
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: 2rem;
+  }
+
+  .mnsk7-page-dostawa .entry-content,
+  .mnsk7-page-kontakt .entry-content {
+    margin-top: 0.25rem;
+  }
+
+  .mnsk7-page-dostawa__note,
+  .mnsk7-contact-form-wrapper,
+  .mnsk7-checkout-delivery-note {
+    border-radius: var(--r-md);
+  }
+
+  .mnsk7-contact-form-wrapper {
+    padding: 1.25rem 1rem;
+  }
+
+  .mnsk7-contact-info__title,
+  .mnsk7-contact-form__title {
+    font-size: var(--fs-base);
+  }
+
+  .mnsk7-contact-info p,
+  .mnsk7-contact-info .mnsk7-contact-info__line,
+  .mnsk7-contact-form__desc {
+    font-size: var(--fs-sm);
+  }
+
+  .woocommerce-account .entry-content,
+  .woocommerce-account .woocommerce-MyAccount-navigation,
+  .woocommerce-account .woocommerce-MyAccount-content {
+    padding-left: 0;
+    padding-right: 0;
+    padding-bottom: var(--space-24);
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-navigation ul {
+    gap: 0.4rem;
+  }
+
+  .woocommerce-account .woocommerce-MyAccount-navigation a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
 /* -----------------------------------------------------------------
    § MOJE KONTO — wymuszenie stylów (nagłówek, przyciski, padding)
    WooCommerce/Storefront ładują się później — wygrywamy !important.
@@ -365,5 +418,3 @@ body.woocommerce-account .col-full {
   padding-left: 0;
   padding-right: 0;
 }
-
-

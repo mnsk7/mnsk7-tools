@@ -1426,3 +1426,81 @@
   margin: 0 0 1.5rem;
 }
 
+@media (max-width: 768px) {
+  .mnsk7-hero {
+    padding: 2.75rem 1rem 3rem;
+  }
+
+  .mnsk7-hero__materials {
+    gap: 0.4rem 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .mnsk7-hero__material-chip {
+    padding: 0.3rem 0.75rem;
+    font-size: var(--fs-xs);
+  }
+
+  .mnsk7-hero__usps {
+    gap: 0.5rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .mnsk7-hero__usp {
+    padding: 0.45rem 0.85rem;
+    font-size: var(--fs-sm);
+  }
+
+  .mnsk7-section {
+    padding: 2.25rem 0;
+  }
+
+  .mnsk7-section__title {
+    margin-bottom: 0.75rem;
+    font-size: clamp(1.5rem, 7vw, 1.95rem);
+  }
+
+  .mnsk7-trust-stats {
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .mnsk7-trust-stats__item {
+    flex: 1 1 calc(50% - 0.75rem);
+    min-width: 0;
+    padding: 0.9rem 0.75rem;
+    background: rgba(255, 255, 255, 0.72);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+  }
+
+  .mnsk7-trust-stats__number {
+    font-size: clamp(1.5rem, 8vw, 2rem);
+  }
+
+  .mnsk7-trust-stats__label,
+  .mnsk7-trust-stats__sub,
+  .mnsk7-loyalty-intro,
+  .mnsk7-loyalty-cta__guest {
+    font-size: var(--fs-sm);
+  }
+
+  .mnsk7-catalog-aside__title,
+  .mnsk7-catalog-aside__title--cats {
+    margin-bottom: 0.85rem;
+  }
+
+  .mnsk7-loyalty-tiers {
+    gap: 0.75rem;
+  }
+
+  .mnsk7-loyalty-tier {
+    min-width: calc(50% - 0.75rem);
+    padding: 1rem 0.85rem;
+  }
+
+  .mnsk7-instagram-feed__grid {
+    gap: 0.75rem !important;
+    margin-top: 1rem;
+  }
+}
