@@ -17,33 +17,36 @@ get_header();
 				<div class="mnsk7-hero__content">
 					<p class="mnsk7-hero__eyebrow"><?php esc_html_e( 'MNK7 Tools • Sklep CNC', 'mnsk7-storefront' ); ?></p>
 					<h1 class="mnsk7-hero__title"><?php esc_html_e( 'Frezy CNC do drewna, aluminium i tworzyw', 'mnsk7-storefront' ); ?></h1>
-					<p class="mnsk7-hero__sub"><?php esc_html_e( 'Szybka wysyłka 24h, faktura VAT i realne stany magazynowe. Dobierz narzędzie do materiału i zamów bez zbędnego szukania.', 'mnsk7-storefront' ); ?></p>
-
-					<div class="mnsk7-hero__materials" aria-label="<?php esc_attr_e( 'Szybki wybór materiału', 'mnsk7-storefront' ); ?>">
-						<?php
-						$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
-						$materials = array(
-							array( 'label' => 'Drewno', 'slug' => 'drewno' ),
-							array( 'label' => 'MDF', 'slug' => 'mdf' ),
-							array( 'label' => 'Aluminium', 'slug' => 'aluminium' ),
-							array( 'label' => 'Stal', 'slug' => 'stal' ),
-							array( 'label' => __( 'Tworzywa', 'mnsk7-storefront' ), 'slug' => 'tworzywa-sztuczne' ),
-						);
-						foreach ( $materials as $material ) {
-							$term = taxonomy_exists( 'product_tag' ) ? get_term_by( 'slug', $material['slug'], 'product_tag' ) : false;
-							$link = ( $term && ! is_wp_error( $term ) ) ? get_term_link( $term ) : add_query_arg( 's', rawurlencode( $material['label'] ), $shop_url );
-							?>
-							<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-hero__material-chip"><?php echo esc_html( $material['label'] ); ?></a>
-							<?php
-						}
-						?>
-					</div>
+					<p class="mnsk7-hero__sub"><?php esc_html_e( 'Szybka wysyłka 24h, faktura VAT i realne stany magazynowe.', 'mnsk7-storefront' ); ?></p>
 
 					<ul class="mnsk7-hero__usps" aria-label="<?php esc_attr_e( 'Najważniejsze informacje', 'mnsk7-storefront' ); ?>">
 						<li class="mnsk7-hero__usp"><?php esc_html_e( 'Wysyłka 24h', 'mnsk7-storefront' ); ?></li>
 						<li class="mnsk7-hero__usp"><?php esc_html_e( 'Faktura VAT', 'mnsk7-storefront' ); ?></li>
 						<li class="mnsk7-hero__usp"><?php esc_html_e( 'Realne stany magazynowe', 'mnsk7-storefront' ); ?></li>
 					</ul>
+
+					<div class="mnsk7-hero__materials-wrap">
+						<p class="mnsk7-hero__group-label"><?php esc_html_e( 'Materiały', 'mnsk7-storefront' ); ?></p>
+						<div class="mnsk7-hero__materials" aria-label="<?php esc_attr_e( 'Szybki wybór materiału', 'mnsk7-storefront' ); ?>">
+							<?php
+							$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
+							$materials = array(
+								array( 'label' => 'Drewno', 'slug' => 'drewno' ),
+								array( 'label' => 'MDF', 'slug' => 'mdf' ),
+								array( 'label' => 'Aluminium', 'slug' => 'aluminium' ),
+								array( 'label' => 'Stal', 'slug' => 'stal' ),
+								array( 'label' => __( 'Tworzywa', 'mnsk7-storefront' ), 'slug' => 'tworzywa-sztuczne' ),
+							);
+							foreach ( $materials as $material ) {
+								$term = taxonomy_exists( 'product_tag' ) ? get_term_by( 'slug', $material['slug'], 'product_tag' ) : false;
+								$link = ( $term && ! is_wp_error( $term ) ) ? get_term_link( $term ) : add_query_arg( 's', rawurlencode( $material['label'] ), $shop_url );
+								?>
+								<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-hero__material-chip"><?php echo esc_html( $material['label'] ); ?></a>
+								<?php
+							}
+							?>
+						</div>
+					</div>
 
 					<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
 					<div class="mnsk7-hero__ctas">
@@ -58,14 +61,20 @@ get_header();
 				</div>
 
 				<figure class="mnsk7-hero__media" aria-hidden="true">
-					<img
-						src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/img/hero-frez-cnc.svg' ); ?>"
-						alt=""
-						width="560"
-						height="420"
-						loading="eager"
-						decoding="async"
-					/>
+					<picture>
+						<source
+							srcset="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/img/hero-frez-cnc.svg' ); ?>"
+							media="(max-width: 767px)"
+						/>
+						<img
+							src="<?php echo esc_url( get_stylesheet_directory_uri() . '/assets/img/hero-frez-cnc.svg' ); ?>"
+							alt=""
+							width="560"
+							height="420"
+							loading="eager"
+							decoding="async"
+						/>
+					</picture>
 				</figure>
 			</div>
 		</div>
