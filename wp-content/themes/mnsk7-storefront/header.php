@@ -109,6 +109,7 @@ endif;
 									$link = get_term_link( $term );
 									if ( is_wp_error( $link ) ) { continue; }
 									$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
+									$name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $name ) : $name;
 									$link_class = ( $current_archive_taxonomy === 'product_cat' && $current_archive_term_id === (int) $term->term_id ) ? ' class="mnsk7-megamenu__link--active"' : '';
 									echo '<li><a href="' . esc_url( $link ) . '"' . $link_class . '>' . esc_html( $name ) . '</a></li>';
 								}
@@ -125,6 +126,7 @@ endif;
 									$link = get_term_link( $term );
 									if ( is_wp_error( $link ) ) { continue; }
 									$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
+									$name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $name ) : $name;
 									$link_class = ( $current_archive_taxonomy === 'product_tag' && $current_archive_term_id === (int) $term->term_id ) ? ' class="mnsk7-megamenu__link--active"' : '';
 									echo '<li><a href="' . esc_url( $link ) . '"' . $link_class . '>' . esc_html( $name ) . '</a></li>';
 								}
@@ -208,16 +210,5 @@ endif;
 		</div>
 	</div>
 </header>
-<?php
-// Mobile search panel (Pattern B): below header, in document flow — pushes content down. One variant for all pages.
-?>
-<div id="mnsk7-header-search-panel" class="mnsk7-header-search-panel" hidden aria-hidden="true">
-	<form role="search" method="get" class="mnsk7-header-search-panel__form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
-		<label for="mnsk7-header-search-panel-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
-		<input type="search" id="mnsk7-header-search-panel-input" class="mnsk7-header-search-panel__input" placeholder="<?php esc_attr_e( 'Szukaj produktów…', 'mnsk7-storefront' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>" name="s" />
-		<input type="hidden" name="post_type" value="product" />
-		<button type="submit" class="mnsk7-header-search-panel__submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
-	</form>
-</div>
 
 <div id="content" class="site-content mnsk7-content">

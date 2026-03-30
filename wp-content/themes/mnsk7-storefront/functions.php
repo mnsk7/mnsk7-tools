@@ -559,6 +559,15 @@ add_action( 'woocommerce_before_customer_login_form', function () {
 	}
 	if ( ! is_user_logged_in() ) {
 		echo '<h1 class="mnsk7-account-title entry-title">' . esc_html__( 'Moje konto', 'mnsk7-storefront' ) . '</h1>';
+		echo '<aside class="mnsk7-login-benefits" aria-label="' . esc_attr__( 'Korzyści dla zalogowanych klientów', 'mnsk7-storefront' ) . '">';
+		echo '<h2 class="mnsk7-login-benefits__title">' . esc_html__( 'Dlaczego warto mieć konto MNSK7', 'mnsk7-storefront' ) . '</h2>';
+		echo '<ul class="mnsk7-login-benefits__list">';
+		echo '<li>' . esc_html__( 'Historia zamówień i szybkie ponowienie zakupu.', 'mnsk7-storefront' ) . '</li>';
+		echo '<li>' . esc_html__( 'Faktury VAT i dane firmy zawsze pod ręką.', 'mnsk7-storefront' ) . '</li>';
+		echo '<li>' . esc_html__( 'Program rabatowy dla stałych klientów.', 'mnsk7-storefront' ) . '</li>';
+		echo '<li>' . esc_html__( 'Szybsze przejście przez checkout.', 'mnsk7-storefront' ) . '</li>';
+		echo '</ul>';
+		echo '</aside>';
 	}
 }, 1 );
 
@@ -903,7 +912,6 @@ add_action( 'wp_footer', function () {
 		var cartWrap = document.querySelector('.mnsk7-header__cart');
 		var searchToggle = document.querySelector('.mnsk7-header__search-toggle');
 		var searchDropdown = document.getElementById('mnsk7-header-search');
-		var searchPanel = document.getElementById('mnsk7-header-search-panel');
 		var header = document.getElementById('masthead');
 		var promoBar = document.getElementById('mnsk7-promo-bar');
 		var DESKTOP_MIN = <?php echo (int) MNSK7_BREAKPOINT_MOBILE; ?>;
@@ -974,29 +982,18 @@ add_action( 'wp_footer', function () {
 			var searchCloseLabel = searchToggle.getAttribute('data-close-label');
 			var searchOpenLabel = searchToggle.getAttribute('data-open-label');
 			if (searchCloseLabel && searchOpenLabel) searchToggle.setAttribute('aria-label', open ? searchCloseLabel : searchOpenLabel);
-			if (searchPanel) {
-				if (window.innerWidth < DESKTOP_MIN) {
-					document.body.classList.toggle('mnsk7-search-open', open);
-					searchPanel.hidden = !open;
-					searchPanel.setAttribute('aria-hidden', open ? 'false' : 'true');
-					if (open) {
-						var panelInput = document.getElementById('mnsk7-header-search-panel-input');
-						if (panelInput) { setTimeout(function() { panelInput.focus(); }, 50); }
-					}
-				} else {
-					document.body.classList.remove('mnsk7-search-open');
-					searchPanel.hidden = true;
-					searchPanel.setAttribute('aria-hidden', 'true');
-				}
+			document.body.classList.toggle('mnsk7-search-open', open && window.innerWidth < DESKTOP_MIN);
+			if (open) {
+				var searchInput = document.getElementById('mnsk7-header-search-input');
+				if (searchInput) { setTimeout(function() { searchInput.focus(); }, 50); }
 			}
 		}
 
 		function closeSearch() {
 			if (window.innerWidth < DESKTOP_MIN && document.body.classList.contains('mnsk7-search-open')) {
 				setSearchOpen(false);
-			} else if (window.innerWidth >= DESKTOP_MIN && searchDropdown && !searchDropdown.hidden) {
-				searchDropdown.hidden = true;
-				if (searchToggle) searchToggle.setAttribute('aria-expanded', 'false');
+			} else if (searchDropdown && !searchDropdown.hidden) {
+				setSearchOpen(false);
 			}
 		}
 
@@ -1124,66 +1121,35 @@ add_action( 'wp_footer', function () {
 			});
 		}
 		if (searchToggle && searchDropdown) {
-			function updateSearchDesktop() {
-				if (window.innerWidth >= DESKTOP_MIN) {
-					closeMobileSubmenus();
-					searchDropdown.removeAttribute('hidden');
-					searchToggle.setAttribute('aria-expanded', 'true');
-					var searchOpenLabel = searchToggle.getAttribute('data-open-label');
-					if (searchOpenLabel) searchToggle.setAttribute('aria-label', searchOpenLabel);
-					document.body.classList.remove('mnsk7-search-open');
-					if (searchPanel) { searchPanel.hidden = true; searchPanel.setAttribute('aria-hidden', 'true'); }
-				} else {
-					searchDropdown.hidden = true;
-					if (!document.body.classList.contains('mnsk7-search-open') && searchPanel) {
-						searchPanel.hidden = true;
-						searchPanel.setAttribute('aria-hidden', 'true');
-					}
-				}
+			function updateSearchStateOnResize() {
+				setSearchOpen(false);
 			}
-			window.addEventListener('resize', updateSearchDesktop);
-			updateSearchDesktop();
+			window.addEventListener('resize', updateSearchStateOnResize);
+			updateSearchStateOnResize();
 			searchToggle.addEventListener('click', function() {
-				if (window.innerWidth >= DESKTOP_MIN) return;
-				if (!document.body.classList.contains('mnsk7-search-open')) {
+				if (window.innerWidth < DESKTOP_MIN && !document.body.classList.contains('mnsk7-search-open')) {
 					closeAllMobileOverlays('search');
 				}
-				var open = document.body.classList.contains('mnsk7-search-open');
+				var open = !searchDropdown.hidden;
 				setSearchOpen(!open);
 			});
 			document.addEventListener('keydown', function(e) {
 				if (e.key === 'Escape') {
-					if (window.innerWidth < DESKTOP_MIN && document.body.classList.contains('mnsk7-search-open')) {
+					if (document.body.classList.contains('mnsk7-search-open') || !searchDropdown.hidden) {
 						setSearchOpen(false);
-						if (searchToggle.offsetParent !== null) searchToggle.focus();
-					} else if (window.innerWidth >= DESKTOP_MIN && !searchDropdown.hidden) {
-						searchDropdown.hidden = true;
-						searchToggle.setAttribute('aria-expanded', 'false');
 						if (searchToggle.offsetParent !== null) searchToggle.focus();
 					}
 				}
 			});
 			document.addEventListener('click', function(e) {
-				if (window.innerWidth >= DESKTOP_MIN) return;
 				var wrap = searchToggle && searchToggle.closest('.mnsk7-header__search-wrap');
-				var panel = searchPanel && searchPanel.contains(e.target);
-				if (document.body.classList.contains('mnsk7-search-open') && wrap && !wrap.contains(e.target) && !panel) {
+				if (!searchDropdown.hidden && wrap && !wrap.contains(e.target)) {
 					setSearchOpen(false);
 				}
 			});
 			var searchForm = searchDropdown.querySelector('form');
 			if (searchForm) {
-				searchForm.addEventListener('submit', function() {
-					if (window.innerWidth < DESKTOP_MIN) setSearchOpen(false);
-				});
-			}
-			if (searchPanel) {
-				var panelForm = searchPanel.querySelector('form');
-				if (panelForm) {
-					panelForm.addEventListener('submit', function() {
-						if (window.innerWidth < DESKTOP_MIN) setSearchOpen(false);
-					});
-				}
+				searchForm.addEventListener('submit', function() { setSearchOpen(false); });
 			}
 		}
 		function normalizeCartTrigger() {
@@ -2543,19 +2509,23 @@ function mnsk7_get_product_attribute_taxonomy_names() {
  */
 function mnsk7_attribute_label_pl( $attr_name ) {
 	$labels = array(
-		'srednica'                => __( 'Średnica', 'mnsk7-storefront' ),
+		'srednica'                => __( 'Średnica robocza', 'mnsk7-storefront' ),
 		'srednica-trzpienia'      => __( 'Trzpień', 'mnsk7-storefront' ),
-		'wymiary-trzpienia'       => __( 'Wymiary trzpienia', 'mnsk7-storefront' ),
+		'wymiary-trzpienia'       => __( 'Trzpień', 'mnsk7-storefront' ),
 		'dlugosc-calkowita'       => __( 'Długość całkowita', 'mnsk7-storefront' ),
-		'dlugosc-calkowita-l'     => __( 'Dł. całkowita (L)', 'mnsk7-storefront' ),
-		'dlugosc-czesci-roboczej' => __( 'Dł. części roboczej', 'mnsk7-storefront' ),
+		'dlugosc-calkowita-l'     => __( 'Długość całkowita', 'mnsk7-storefront' ),
+		'dlugosc-czesci-roboczej' => __( 'Długość robocza', 'mnsk7-storefront' ),
 		'dlugosc-robocza'         => __( 'Długość robocza', 'mnsk7-storefront' ),
-		'dlugosc-robocza-h'       => __( 'Dł. robocza (H)', 'mnsk7-storefront' ),
-		'fi'                      => __( 'Średnica (fi)', 'mnsk7-storefront' ),
+		'dlugosc-robocza-h'       => __( 'Długość robocza', 'mnsk7-storefront' ),
+		'fi'                      => __( 'Średnica robocza', 'mnsk7-storefront' ),
 		'kat-skosu'               => __( 'Kąt skosu', 'mnsk7-storefront' ),
 		'kat_skosu'               => __( 'Kąt skosu', 'mnsk7-storefront' ),
 		'r'                       => __( 'Promień R', 'mnsk7-storefront' ),
 		'typ-pilnika'             => __( 'Typ pilnika', 'mnsk7-storefront' ),
+		'liczba-zebow'            => __( 'Liczba ostrzy', 'mnsk7-storefront' ),
+		'zastosowanie'            => __( 'Zastosowanie', 'mnsk7-storefront' ),
+		'material'                => __( 'Materiał', 'mnsk7-storefront' ),
+		'kompatybilnosc'          => __( 'Kompatybilność', 'mnsk7-storefront' ),
 	);
 	$key = strtolower( trim( (string) $attr_name ) );
 	if ( isset( $labels[ $key ] ) ) {
@@ -2569,6 +2539,36 @@ function mnsk7_attribute_label_pl( $attr_name ) {
 	$key_alt = str_replace( '-', '_', $key );
 	return isset( $labels[ $key_alt ] ) ? $labels[ $key_alt ] : '';
 }
+
+/**
+ * Canonical frontend labels for category/tag terms with legacy naming noise.
+ *
+ * @param string $name Source label.
+ * @return string
+ */
+function mnsk7_normalize_catalog_term_label( $name ) {
+	$normalized = trim( (string) $name );
+	if ( $normalized === '' ) {
+		return $normalized;
+	}
+	$map = array(
+		'Pilnik oborotowy' => 'Pilnik obrotowy',
+		'Pilniki oborotowe' => 'Pilniki obrotowe',
+	);
+	return isset( $map[ $normalized ] ) ? $map[ $normalized ] : $normalized;
+}
+
+add_filter( 'single_term_title', function ( $title ) {
+	return function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $title ) : $title;
+}, 20 );
+
+add_filter( 'get_the_archive_title', function ( $title ) {
+	if ( is_product_taxonomy() && function_exists( 'mnsk7_normalize_catalog_term_label' ) ) {
+		$title = str_replace( 'Pilnik oborotowy', mnsk7_normalize_catalog_term_label( 'Pilnik oborotowy' ), (string) $title );
+		$title = str_replace( 'Pilniki oborotowe', mnsk7_normalize_catalog_term_label( 'Pilniki oborotowe' ), (string) $title );
+	}
+	return $title;
+}, 20 );
 
 /**
  * All filter_* query param names for product attributes (for clearing filters / detecting active filter).
