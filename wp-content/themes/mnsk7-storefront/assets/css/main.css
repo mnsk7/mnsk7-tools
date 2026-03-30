@@ -3749,6 +3749,11 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   background: var(--color-surface);
 }
 
+/* Anchor offset for sticky header/promo when jumping from Hero CTA (#mnsk7-home-catalog). */
+#mnsk7-home-catalog {
+  scroll-margin-top: calc(var(--header-h, 56px) + var(--mnsk7-promo-h, 0px) + 0.75rem);
+}
+
 /* Dlaczego kupujący + Program rabatowy — beżowe tło full-bleed (bez bocznych odstępów) */
 .mnsk7-section--trust.mnsk7-section--light,
 .mnsk7-section--loyalty.mnsk7-section--light,
