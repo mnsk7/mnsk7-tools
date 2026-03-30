@@ -24,3 +24,9 @@ Use repo-level docs for shared process rules:
 - keep diffs minimal
 - match verification effort to risk
 - treat `.codex/` as an adapter layer, not the repo source of truth
+
+## Included templates
+
+- `templates/task-intake.md`
+- `templates/change-review.md`
+- `templates/staging-verify-handoff.md`
