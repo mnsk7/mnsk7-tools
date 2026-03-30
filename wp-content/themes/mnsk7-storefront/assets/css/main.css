@@ -497,6 +497,30 @@ a {
   .mnsk7-header__search-dropdown {
     display: none !important;
   }
+  .mnsk7-header__nav .mnsk7-header__menu {
+    display: none !important;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    right: auto;
+    width: 100vw;
+    max-width: 100vw;
+    transform: translateX(-50%);
+    margin: 0;
+    flex-direction: column;
+    align-items: stretch;
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+    padding: 0.5rem 0 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: 0;
+    text-align: left;
+  }
+  .mnsk7-header__nav.is-open .mnsk7-header__menu {
+    display: flex !important;
+  }
 }
 
 /* Mobile: promo bar — 2-line layout jeśli potrzeba, close nie najeżdża */
@@ -3101,6 +3125,24 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
   .single-product div.product .summary.mnsk7-pdp-buybox {
     max-width: 100%;
+  }
+}
+
+/* Touch fallback: real phones with desktop-width layout viewport still need mobile PDP stack. */
+@media (hover: none) and (pointer: coarse) {
+  .single-product div.product {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .single-product div.product .images,
+  .single-product div.product .summary.mnsk7-pdp-buybox {
+    max-width: 100%;
+    min-width: 0;
+    flex-basis: 100%;
+  }
+  .single-product div.product .images {
+    position: static;
+    top: auto;
   }
 }
 

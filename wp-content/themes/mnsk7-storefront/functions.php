@@ -751,7 +751,7 @@ add_action( 'wp_enqueue_scripts', function () {
 	$css .= 'body.woocommerce-account .mnsk7-footer__newsletter-btn{border-radius:var(--r-md)!important}';
 	$css .= 'body.woocommerce-account #content,body.woocommerce-account .mnsk7-content,body.woocommerce-account .site-main,body.woocommerce-account .mnsk7-main{max-width:var(--content-max);margin-left:auto;margin-right:auto;padding-left:1.5rem;padding-right:1.5rem;box-sizing:border-box}';
 	$css .= 'body.woocommerce-account .col-full{max-width:100%;padding-left:0;padding-right:0}';
-	$css .= '@media (max-width:768px){body.post-type-archive-product #content,body.post-type-archive-product .site-content,body.post-type-archive-product .mnsk7-content,body.tax-product_cat #content,body.tax-product_cat .site-content,body.tax-product_cat .mnsk7-content,body.tax-product_tag #content,body.tax-product_tag .site-content,body.tax-product_tag .mnsk7-content{margin-top:0!important}body.post-type-archive-product:not(.tax-product_cat):not(.tax-product_tag) .mnsk7-breadcrumb-wrap{display:none!important}}';
+	$css .= '@media (max-width:768px){body.post-type-archive-product #content,body.post-type-archive-product .site-content,body.post-type-archive-product .mnsk7-content,body.tax-product_cat #content,body.tax-product_cat .site-content,body.tax-product_cat .mnsk7-content,body.tax-product_tag #content,body.tax-product_tag .site-content,body.tax-product_tag .mnsk7-content{margin-top:0!important}}';
 	wp_add_inline_style( 'woocommerce-layout', $css );
 }, 20 );
 
@@ -923,6 +923,11 @@ add_action( 'wp_footer', function () {
 		function resetMobileMenuPosition() {
 			if (!menu) return;
 			try { menu.scrollTop = 0; } catch (e) {}
+			try { menu.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) {}
+			menu.querySelectorAll('.sub-menu').forEach(function(subMenu) {
+				try { subMenu.scrollTop = 0; } catch (e) {}
+				try { subMenu.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) {}
+			});
 		}
 
 		// First-open correctness: sync promo offset and sticky shrink before deferred tasks.
