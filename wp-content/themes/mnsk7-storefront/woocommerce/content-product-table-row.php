@@ -26,8 +26,9 @@ $min_qty     = $product->get_min_purchase_quantity();
 static $mnsk7_plp_row_index = 0;
 $mnsk7_plp_row_index++;
 $img_attr = ( $mnsk7_plp_row_index === 1 ) ? array( 'loading' => 'eager', 'fetchpriority' => 'high' ) : array();
+$row_class = $product->is_sold_individually() ? 'mnsk7-row--fixed-qty' : '';
 ?>
-<tr <?php wc_product_class( '', $product ); ?>>
+<tr <?php wc_product_class( $row_class, $product ); ?>>
 	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
 		<a href="<?php echo esc_url( get_permalink() ); ?>">
 			<?php echo $product->get_image( 'woocommerce_thumbnail', $img_attr ); ?>
@@ -54,7 +55,7 @@ $img_attr = ( $mnsk7_plp_row_index === 1 ) ? array( 'loading' => 'eager', 'fetch
 		if ( $product->is_purchasable() && $product->is_in_stock() ) :
 			if ( $product->is_sold_individually() ) :
 				?>
-				<span class="mnsk7-table-qty-implicit" aria-hidden="true">&mdash;</span>
+				<span class="mnsk7-table-qty-implicit mnsk7-table-qty-implicit--fixed" aria-hidden="true"></span>
 				<span class="screen-reader-text"><?php esc_html_e( 'Stała ilość: 1', 'mnsk7-storefront' ); ?></span>
 			<?php else : ?>
 				<input type="number" form="<?php echo esc_attr( $form_id ); ?>" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="<?php echo esc_attr( max( $min_qty, 1 ) ); ?>" min="<?php echo esc_attr( $min_qty ); ?>" max="<?php echo esc_attr( $max_qty > 0 ? $max_qty : 9999 ); ?>" step="1" aria-label="<?php esc_attr_e( 'Ilość', 'mnsk7-storefront' ); ?>" />
