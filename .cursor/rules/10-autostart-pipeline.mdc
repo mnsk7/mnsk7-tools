@@ -1,51 +1,56 @@
----
-description: "Автозапуск owner-pipeline: orchestrator→analyzer→critic(analysis)→doer→critic/verifier(no-tests)→main/deploy→technical-verify-on-staging."
+﻿---
+description: "Cursor adapter: follow the shared repo pipeline and choose process depth by risk."
 alwaysApply: true
 ---
 
-# Pipeline autostart (mandatory, owner flow)
+# Cursor workflow adapter
 
-## Цель
+## Purpose
 
-Когда Owner ставит задачу уровня “проанализируй и исправляй” (особенно UI/UX mobile/desktop), агент **не делает правки в обход пайплайна**.
+Cursor should follow the shared repo pipeline defined in `docs/REPO_PIPELINE.md`.
 
-## Когда применять
+This rule adapts the shared process to Cursor. It is not the source of truth for the repository.
 
-Всегда, если задача затрагивает:
-- UI/UX (CSS/JS/templates) темы
-- WooCommerce флоу (PLP/PDP/cart/checkout)
-- документы, описывающие runtime/verify/deploy
-- любые изменения, которые могут повлиять на конверсию/покупку
+## Default behavior
 
-## Обязательный порядок (автозапуск)
+1. Classify the task as low-risk or high-risk.
+2. Stay inside allowed code zones.
+3. Make the minimal safe diff.
+4. Perform a pre-push review.
+5. Push to `main` when the change is ready.
+6. Run post-deploy verification only to the level required by risk.
 
-1) **Orchestrator**: классификация (`task_mode`, `task_scope`), targets (URL), ограничения из `.cursorrules`.
-2) **Analyzer**: issue_map (строгий JSON) + evidence.
-3) **Critic+Scorer PHASE=1 (analysis gate)**: completeness gate. Если `ok_to_proceed=false` → вернуться к Analyzer.
-4) Сформировать **Final Issue List** (приоритеты P0/P1/P2).
-5) **Doer**: минимальный безопасный diff по Final Issue List (**без локальных e2e/verify**).
-6) **Critic + Verifier (predeploy, practical+technical, no-tests)**: проверка по diff/контексту/логам без запуска e2e/Lighthouse/`npm run verify:*`.
-7) **Deploy path**: если шаг 6 OK -> push/merge в `main` -> деплой на staging.
-8) **Technical Verify (post-deploy on staging)**: L0/L1/L2 на staging, сбор артефактов.
-9) **Critic+Scorer PHASE=2 (post-deploy)**: остатки/регрессии/score по staging verify.
-10) **Product Verifier (post-deploy)**: отдельный verdict по продукту (не по раннерам):
-   - `owner_bug_ledger[]`: по каждому багу Owner -> reproduce/root cause/fix/verify/device/status(fixed|partial|not_fixed)
-   - `agent_found_bugs[]`: минимум 10 новых дефектов без owner hints (3 interaction, 3 visual consistency, 2 mobile/desktop parity, 2 regression risk)
-   - `agent_found_bugs_filtered[]`: обязательная фильтрация (real_product|technical|cosmetic|owner_duplicate)
-   - `safari_mobile_status`: явный статус hostile-сценариев на iPhone Safari
-11) **Dual acceptance**:
-   - `PROCESS_ACCEPT`: pipeline/артефакты/гейты выполнены
-   - `PRODUCT_ACCEPT`: owner-баги реально закрыты и discovery-блок выполнен
-12) **Snapshot governance**: `--update-snapshots` разрешён только после явного signoff в Product Verifier, что это желаемый UI-state, а не легализация дефекта.
-13) **Postmortem (если нужно)**: при `REJECT/ESCALATE` или critical/major — запись в `docs/CRITIC_POSTMORTEMS.md`.
-14) **Loop**: если нет одновременно `PROCESS_ACCEPT` и `PRODUCT_ACCEPT` -> править только по блокерам/остаткам и повторять шаги 5-13.
+## Risk guidance
 
-## Запрещено
+### Low-risk
 
-- “починил на глаз” без Critic/Verifier (predeploy) и post-deploy technical verify
-- расширять scope после Final Issue List без явного решения Owner
-- запускать локальные e2e/`npm run verify:*` как обязательный predeploy gate
-- обновлять baseline snapshots без подтверждённого Product Verifier signoff
-- выдавать финальный `ACCEPT`, если есть только process-результат без product-результата
-- выдавать `PRODUCT_ACCEPT=true` без явного статуса iPhone Safari
+Examples:
+- docs/process updates
+- narrow styling changes with no Woo runtime impact
+- small content or markup fixes outside conversion flow
 
+Expected path:
+- no mandatory multi-agent loop
+- concise review is enough
+- selective verification only
+
+### High-risk
+
+Examples:
+- Woo flow
+- cart or checkout
+- JS behavior
+- mu-plugins
+- deploy scripts
+- workflow contracts that affect delivery behavior
+
+Expected path:
+- stronger review before push
+- staging confirmation after deploy
+- L1 verification when Woo flow is touched
+
+## Forbidden assumptions
+
+- Do not treat agent count as proof.
+- Do not force full L0/L1/L2 on every task.
+- Do not invent report requirements that are not needed for the actual ship decision.

@@ -1,10 +1,10 @@
-# Секреты и конфиг с паролями
+﻿# Secrets and local config
 .env
 .env.local
 .env.*.local
 wp-config.php
 
-# Ядро WordPress — не в репо (деплоим только тему/mu-plugins/скрипты)
+# WordPress core is not stored here
 index.php
 wp-admin/
 wp-includes/
@@ -12,13 +12,12 @@ wp-*.php
 xmlrpc.php
 readme.html
 license.txt
-# robots.txt tracked intentionally (production version; staging uses Disallow: / via deploy workflow)
 .htaccess
 .htaccess.*
 wp-content/index.php
 wp-content/languages/
 
-# WordPress content — не деплоим из git
+# WordPress runtime content
 wp-content/uploads/
 wp-content/cache/
 wp-content/debug.log
@@ -29,15 +28,12 @@ wp-content/object-cache.php
 wp-content/wp-rocket-config/
 wp-content/wflogs/
 *.log
-# Дубликат mu-plugins (источник истины — корневой mu-plugins/)
 wp-content/mu-plugins/
-# Дефолтные темы — не редактируем
 wp-content/themes/twentytwentyfive/
 wp-content/themes/twentytwentyfour/
-# Плагины — в репо только кастом (исключения через ! вручную при необходимости)
 wp-content/plugins/
 
-# Мусор сервера/плагинов
+# Server and plugin noise
 cgi-bin/
 seraphinite-accelerator-*.htaccess
 seraph-accel-img-compr-redir.conf
@@ -46,25 +42,31 @@ pwa-sw.js
 pwa-register-sw.js
 pwa-manifest.json
 
-# Устаревшие скрипты и черновые заметки
+# Old local notes
 ssh-run.sh
 sync-from-server.sh
 PORADKEK-DZIALAN.txt
 instalacje.txt
 staging-plan.txt
 
-# E2E (Playwright)
+# E2E artifacts
 node_modules/
 playwright-report/
 test-results/
 .playwright/
-
-# Локальные артефакты верификации (не коммитим)
 artifacts/
 
-# Локальное состояние Cursor hooks (не коммитим)
+# Cursor local artifacts
 .cursor/hooks/state/
+.cursor/*REPORT*.md
+.cursor/*PLAN*.md
 
-# Системные файлы
+# Codex local artifacts
+.codex/artifacts/
+.codex/state/
+.codex/tmp/
+.codex/*.local.*
+
+# System files
 .DS_Store
 Thumbs.db

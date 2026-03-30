@@ -1,43 +1,40 @@
----
-description: "После каждого существенного изменения: Critic/Verifier (predeploy, no-tests) -> deploy -> Technical Verify on staging -> Critic+Scorer."
+﻿---
+description: "Cursor reminder: use review and verification proportional to risk, not a fixed heavy loop."
 alwaysApply: true
 ---
 
-# Mandatory predeploy critic + postdeploy verify loop (blocking)
+# Review and verify loop
 
-## Scope
+## Purpose
 
-Применяется к любому изменению, которое:
-- меняет runtime поведение (PHP/JS/CSS темы, mu-plugins, прод-скрипты деплоя/верификации)
-- меняет поведенческие/контрактные документы (verify, deploy, acceptance, workflow)
+This repository no longer requires a fixed critic/verifier loop for every substantial change.
 
-Не требует полного цикла только для:
-- чистых опечаток без влияния на поведение/контракт
-- форматирования без смысловых изменений
+Use a loop only when it increases confidence for the actual risk.
 
-Если есть сомнения — **цикл обязателен**.
+## Required minimum
 
-## Required sequence (всегда)
+1. Make a minimal safe diff.
+2. Review the diff against scope, allowed zones, and Woo conversion guards.
+3. Push to `main` for staging deploy when the change is ready.
+4. Run post-deploy verification only at the level required by risk.
 
-1. Сделай **минимальный безопасный diff**.
-2. Запусти **Critic + Verifier (predeploy, practical+technical, no-tests)**:
-   - проверка по diff/контексту/логам без локального e2e/Lighthouse/`npm run verify:*`
-   - если predeploy gate не пройден -> вернись к фиксам
-3. При predeploy OK: push/merge в `main` и деплой на staging.
-4. Запусти **Technical Verify multi-level на staging** (см. `.cursor/rules/60-verify-levels.mdc`):
-   - минимум L0
-   - L1/L2 — по риску и зоне влияния (для Woo flow — обязательно L1)
-5. Запусти **Product Verifier (post-deploy)**:
-   - owner bug replay ledger (reproduce/root cause/fix/verify/device/status)
-   - список новых дефектов, найденных агентом без owner hints
-6. Запусти **Critic+Scorer phase 2**: остатки/регрессии/risks + score.
-7. Если есть blocking issues или score ниже порога — внеси фиксы и повтори цикл.
-8. Останов:
-   - **ACCEPT** только при `PROCESS_ACCEPT=true` и `PRODUCT_ACCEPT=true`
-   - или **ESCALATE** (достигнут лимит итераций/нет прогресса/нужна ручная проверка)
+## Stronger path for high-risk work
 
-## Snapshot update rule (blocking)
+Use a stricter loop when the change affects:
+- Woo flow
+- checkout or cart
+- JS runtime behavior
+- mu-plugins
+- deploy scripts
 
-- Если изменены baseline snapshots (`toHaveScreenshot`), без product signoff это считается **REJECT**.
-- Signoff должен явно указать: почему это целевое UI-состояние, какие owner-баги закрывает, на каких девайсах проверено.
+For those tasks:
+- do an explicit pre-push review
+- verify on staging after deploy
+- require L1 when purchase flow is touched
 
+## Not required by default
+
+- mandatory multi-agent handoffs
+- dual process/product acceptance flags
+- generated discovery bug quotas
+- fixed postmortem requirements for every rework

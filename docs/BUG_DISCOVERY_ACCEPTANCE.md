@@ -1,59 +1,42 @@
-# Bug Discovery Acceptance (anti-self-deception gate)
+﻿# Product Verification Expectations
 
-Этот документ отделяет продуктовую приемку от процессной.
+## Goal
 
-## Dual status (обязательно)
+Product verification should confirm that the requested outcome is real in the product.
 
-- `PROCESS_ACCEPT`: пайплайн/verify/артефакты выполнены.
-- `PRODUCT_ACCEPT`: реальные продуктовые баги закрыты и discovery выполнен.
+This repository no longer requires generated bug quotas or mandatory discovery lists for every task.
 
-Финальный `ACCEPT` возможен только при обоих true.
+## What product verification means
 
-## Обязательные блоки post-deploy
+For changes with visible or behavioral impact, confirm:
 
-1) **Owner bug ledger**
-- Для каждого бага Owner:
-  - `bug_id`
-  - `reproduce`
-  - `root_cause`
-  - `fix`
-  - `verify_on` (device/viewport/browser)
-  - `status`: `fixed` | `partially_fixed` | `not_fixed`
+- the requested user-facing result is actually present
+- the affected page or flow still behaves honestly
+- no obvious regression was introduced in the touched area
 
-2) **Agent-found bugs (without owner hints)**
-- Минимум 10 новых дефектов:
-  - 3 interaction
-  - 3 visual consistency
-  - 2 mobile/desktop parity
-  - 2 regression risk
+## Low-risk changes
 
-Если блок пустой или формальный — `PRODUCT_ACCEPT=false`.
+For low-risk work, product verification can be lightweight:
 
-### Фильтрация quality (обязательно)
+- targeted page check
+- focused smoke check
+- brief note in the delivery summary
 
-Для `agent_found_bugs` нужен отдельный filtered-файл с разложением:
-- реальные продуктовые,
-- технические (process/tooling),
-- косметика,
-- дубли owner-багов.
+## High-risk changes
 
-`PRODUCT_ACCEPT=true` запрещён, если discovery-квота набрана в основном дублями/мусором.
+For high-risk work, product verification should be explicit and staging-based when needed:
 
-## Snapshot governance (blocking)
+- confirm the changed user journey on staging
+- confirm the main CTA or flow still works
+- record unresolved risk honestly if evidence is partial
 
-- Обновление baseline snapshots запрещено без product signoff.
-- Signoff должен явно фиксировать:
-  - почему новый baseline отражает целевой UI-state;
-  - какие owner-баги это закрывает;
-  - на каких девайсах/viewport это подтверждено.
+## What is no longer required by default
 
-Без signoff обновление baseline трактуется как легализация дефекта (`REJECT`).
+- fixed quotas for newly discovered bugs
+- mandatory owner bug ledgers for every task
+- device-specific acceptance templates when the task does not require them
 
-## Safari/mobile gate (blocking)
+## Rule of honesty
 
-Без явного статуса по **iPhone Safari** `PRODUCT_ACCEPT=true` запрещён.
-
-Минимум требуется:
-- device/browser: `iPhone Safari`,
-- статусы для hostile-сценариев: `first_open`, `second_open`, `scroll`, `back`, `reopen`, `sticky_behavior`, `cta_honesty`,
-- результат по каждому owner-багу: `fixed|partial|not_fixed`.
+If verification is partial, say so.
+A change is not accepted just because artifacts exist; acceptance depends on evidence that matches the risk.

@@ -1,88 +1,41 @@
-# Staging: что в репо, деплой при пуше, секреты
+﻿# Staging and GitHub
 
-## 0. Если репозитория на GitHub ещё нет (максимум автоматом)
+## What lives in git
 
-У аккаунта [github.com/mnsk7](https://github.com/mnsk7) репозиториев пока нет. Создать репо и сразу запушить одной командой:
+Keep in git only what belongs to the repository contract or deployable code:
 
-```bash
-cd /Users/imac/staging.mnsk7-tools.pl
-gh auth login   # один раз, если ещё не логинился
-make github-create-repo REPO=mnsk7-tools
-```
+- `mu-plugins/`
+- `wp-content/themes/` project theme code
+- shared docs and workflow contracts
+- stable client overlay configuration for Cursor and Codex
 
-Или с именем репо по умолчанию (`mnsk7-tools`):
+Do not keep local runtime artifacts, secrets, or client session noise in git.
 
-```bash
-make github-create-repo
-```
+## Deploy model
 
-Скрипт создаст приватный репо, привяжет его как `origin` и выполнит `git push`. Дальше добавь секреты (раздел 3) — и при пуше в `main` будет деплой на стейдж.
+- Push to `main` triggers staging deploy.
+- GitHub Actions remains the deploy mechanism.
+- Local working branches are optional.
+- Pull requests are optional workflow tooling, not the mandatory repo contract.
 
-**Без gh:** установи `brew install gh`, затем `gh auth login`, после чего снова `make github-create-repo`.
+## Required GitHub secrets
 
----
+The deploy workflow still depends on:
 
-## 1. Что лежит в репо (редактируемое → деплой на стейдж)
+- `STAGING_SSH_KEY`
+- `STAGING_SSH_HOST`
+- `STAGING_SSH_USER`
+- `STAGING_SSH_PORT`
+- `STAGING_REMOTE_PATH`
 
-В Git коммитим только то, что правим и что должно уезжать на стейдж при пуше:
+## Safety
 
-| В репо | Куда деплоится при пуше в `main` |
-|--------|-----------------------------------|
-| `mu-plugins/` | `staging.../wp-content/mu-plugins/` |
-| `wp-content/themes/` (storefront, mnsk7-storefront; twenty* в .gitignore) | `staging.../wp-content/themes/` |
-| `scripts/`, `docs/`, `Makefile`, `.agents/`, `tasks/`, `.cursorrules` | только в репо (на сервер не копируются) |
+- staging must keep noindex and safety protections
+- staging mail must not leave the environment
+- live payments must remain disabled on staging
 
-**Не в репо:** ядро WP, `wp-config.php`, `.env`, `wp-content/uploads/`, `wp-content/plugins/` (плагины не версионируем; при локальном `make deploy-files` можно гнать плагины с машины на стейдж отдельно).
+## References
 
----
-
-## 2. Пуш в `main` = деплой на стейдж
-
-Включён **GitHub Actions** (`.github/workflows/deploy-staging.yml`): при каждом **push в ветку `main`** воркфлоу поднимается и по SSH делает rsync **mu-plugins** и **themes** на стейдж. Локально `make deploy-files` после пуша вызывать не обязательно.
-
----
-
-## 3. Секреты в GitHub (обязательно)
-
-Без них воркфлоу не сможет зайти на сервер. В репо: **Settings → Secrets and variables → Actions → New repository secret**. Добавь:
-
-| Имя секрета | Значение | Пример |
-|-------------|----------|--------|
-| `STAGING_SSH_KEY` | Приватный SSH-ключ целиком (с `-----BEGIN ... END-----`, с переносами строк) | `cat ~/.ssh/id_rsa_mnsk7_deploy` → скопировать всё в секрет |
-| `STAGING_SSH_HOST` | Хост сервера | `s56.cyber-folks.pl` |
-| `STAGING_SSH_USER` | SSH-пользователь | `llojjlcemq` |
-| `STAGING_SSH_PORT` | Порт SSH | `222` |
-| `STAGING_REMOTE_PATH` | Путь до каталога стейджа на сервере (без `~/`) | `domains/mnsk7-tools.pl/public_html/staging` |
-
-Публичный ключ должен быть добавлен на сервер (DirectAdmin → Klucze SSH или `ssh-copy-id`). В секрет **STAGING_SSH_KEY** вставь приватный ключ целиком: выполни `cat ~/.ssh/id_rsa_mnsk7_deploy`, скопируй вывод (включая строки -----BEGIN ... и -----END ...) и вставь в значение секрета — **сохрани переносы строк**.
-
----
-
-## 4. Локальный деплой (если нужно)
-
-Если хочешь гнать на стейдж с компа без пуша (в т.ч. плагины):
-
-```bash
-make deploy-files   # mu-plugins + themes + plugins из локальной папки
-```
-
-Плагины в репо не хранятся — на стейдж они попадают только при таком ручном деплое.
-
----
-
-## 5. Поисковики, почта, оплата на стейдже
-
-- **Поисковики:** в БД стейджа `blog_public = 0` (через `make staging-fix-db` или вручную в phpMyAdmin).
-- **Почта и оплата:** MU-плагин `staging-safety.php` (блокирует отправку писем и отключает платёжные методы на стейдже).
-
-После пуша в `main` воркфлоу заливает актуальный `mu-plugins/`, в том числе `staging-safety.php`.
-
----
-
-## 6. Ветки и PR
-
-- **main** — основная ветка; push в `main` запускает деплой на стейдж (GitHub Actions).
-- **feature/*** — фичи; мердж через PR в `main`. Шаблон PR: [.github/PULL_REQUEST_TEMPLATE.md](../.github/PULL_REQUEST_TEMPLATE.md).
-- Перед мерджем: PHP Lint (workflow `php-lint.yml`) и smoke по [QA_REPORT.md](QA_REPORT.md).
-
-Полный чеклист деплоя, отката и бэкапов: [DEPLOY_PLAYBOOK.md](DEPLOY_PLAYBOOK.md).
+- `docs/DEPLOY_PLAYBOOK.md`
+- `docs/DEPLOY_SAFETY.md`
+- `docs/REPO_PIPELINE.md`

@@ -1,69 +1,45 @@
-# Definition of Done (DoD)
+﻿# Definition of Done (DoD)
 
-Задача считается **выполненной**, если выполнены все пункты своей категории.
+## Applies to every change
 
----
+- The change stays inside the allowed code zones.
+- The requested outcome is actually implemented.
+- Scope did not expand without reason.
+- Runtime, deploy, or workflow contract changes are documented.
+- No obvious PHP or JS breakage was introduced.
+- Woo conversion guards still hold for the affected area.
 
-## Любая задача (минимум)
+## Low-risk change
 
-- [ ] Код/файлы закоммичены в ветку `feature/*` или `staging`.
-- [ ] Описание PR: что сделано, как протестировать, риск.
-- [ ] Нет PHP-ошибок в debug.log.
-- [ ] Smoke-тест пройден: корзина, чекаут (даже беглая проверка).
+A low-risk task is done when:
 
----
+- the diff is minimal and reviewable
+- the relevant page or artifact was checked
+- lightweight verification appropriate to the risk was completed
+- staging deploy is used if the change needs server confirmation
 
-## Задача на тему / frontend
+## High-risk change
 
-- [ ] Страница категории открывается без ошибок.
-- [ ] Карточка товара открывается без ошибок.
-- [ ] add_to_cart работает из категории и из карточки.
-- [ ] Изменения только в теме / mu-plugins / кастом-плагине (не в ядре/плагинах).
-- [ ] Проверено на мобильном (≤375px).
-- [ ] LCP/CLS не ухудшились (PageSpeed или визуально — хотя бы не хуже чем было).
-- [ ] Woo overrides через `/woocommerce/` в теме, не в шаблонах плагина.
+A high-risk task is done when:
 
----
+- the diff is minimal and reviewable
+- pre-push review explicitly checks Woo conversion risk
+- the change is pushed to `main`
+- staging deploy completes
+- targeted post-deploy verification is completed for the affected risk area
 
-## Задача на Woo (каталог / чекаут / лояльность)
+## Woo-specific completion checks
 
-- [ ] add_to_cart работает из категории и из карточки.
-- [ ] Чекаут проходит end-to-end: add_to_cart → checkout → заказ создан.
-- [ ] Статус заказа корректный после оформления (pending / processing).
-- [ ] Письмо заказа на staging перехвачено staging-safety (не ушло наружу).
-- [ ] Acceptance criteria из задачи выполнены.
+For tasks that touch Woo behavior, completion requires confidence that:
 
----
+- add to cart works from PLP or PDP when affected
+- cart remains accessible and usable when affected
+- checkout entry still opens and shows the form when affected
 
-## Задача на SEO / контент
+## Staging safety
 
-- [ ] Категории: Title, H1, Description прописаны по шаблону (см. seo_woocommerce).
-- [ ] Мусорные URL фильтров: noindex или canonical (не создают тонкого контента).
-- [ ] schema.org не ломает валидацию (Rich Results Test или schema.org/validator).
-- [ ] Не появились лишние noindex (проверить в Search Console после деплоя).
-- [ ] Внутренние ссылки добавлены (или явно не нужны — зафиксировано в задаче).
+A deployable task is not done if staging safety is compromised:
 
----
-
-## Деплой на staging
-
-- [ ] Backup БД: `wp db export /tmp/backup-$(date +%Y%m%d).sql`
-- [ ] Backup темы: `cp -a themes/<THEME> themes/<THEME>_prev` (на сервере перед rsync).
-- [ ] `make deploy-files` выполнен.
-- [ ] `make staging-refresh` выполнен (если нужно обновить БД).
-- [ ] blog_public = 0 (noindex на staging).
-- [ ] staging-safety.php активен (wp-content/mu-plugins/).
-- [ ] post-deploy: `wp cache flush`, `wp rewrite flush --hard`.
-- [ ] Smoke-тест: добавить в корзину → чекаут → проверить что заказ создан, письмо не ушло.
-
----
-
-## Деплой на prod
-
-- [ ] Staging протестирован и одобрен.
-- [ ] Backup сделан (DB + тема в _prev).
-- [ ] Rollback шаг проверен (знаем как откатить).
-- [ ] Деплой в рабочие часы (не в пятницу вечером).
-- [ ] post-deploy: `wp cache flush`, `wp rewrite flush --hard`.
-- [ ] blog_public = 1 на проде.
-- [ ] Smoke-тест после деплоя на проде.
+- `blog_public` must remain disabled on staging
+- customer mail must not go out from staging
+- live payments must not be enabled on staging

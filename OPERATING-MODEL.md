@@ -1,85 +1,95 @@
-# Operating Model (mnsk7-tools.pl)
+﻿# Operating Model (mnsk7-tools.pl)
 
 ## Что это
 
-Этот файл — **единый источник истины** о том, **как мы делаем изменения** в этом репозитории так, чтобы результат был **готов к деплою** и не ломал конверсию WooCommerce.
+Этот файл описывает **общую модель работы репозитория** для двух клиентов:
 
-Код и “кажется ок” не являются доказательством качества. В owner-flow predeploy решение принимается Critic+Verifier по diff+контексту, а истина по регрессиям закрепляется **post-deploy verify на staging**.
+- Cursor
+- Codex
 
-## Runtime stance
+Источник истины теперь находится на уровне репозитория, а не внутри конкретного client overlay.
 
-- Основной путь — **Cursor-native execution** (агенты/скиллы/инструменты).
-- Репозиторий добавляет **тонкий governance слой**: контракты, проверочные уровни, гейты, петли.
-- Ручной “дисковый” пайплайн (артефакты на диске) допустим как **fallback** для аудита, но не заменяет нативные возможности.
+## Core principles
 
-## Канонические источники (SSOT)
+- Один общий pipeline для Cursor и Codex.
+- `main` — единственный deploy branch для `staging.mnsk7-tools.pl`.
+- Изменения должны быть минимальными, проверяемыми и не расширять scope без причины.
+- WP core и сторонние плагины не редактируем.
+- Главный guardrail: не ломаем Woo conversion flow (`add_to_cart`, `cart_update`, `checkout_entry`).
+- Тяжёлые verify-циклы запускаются **по риску**, а не автоматически для каждой задачи.
 
-| Тема | Канонично |
+## Canonical sources
+
+| Topic | Canonical source |
 | --- | --- |
-| Инженерные ограничения WP/Woo + что можно деплоить | `.cursorrules` |
-| Quality gates / кто блокирует релиз | `docs/QUALITY_GATES.md` |
-| Definition of Done | `docs/DEFINITION_OF_DONE.md` |
-| Bug discovery acceptance (process vs product) | `docs/BUG_DISCOVERY_ACCEPTANCE.md` |
-| E2E запуск/репорты | `docs/E2E-WORKFLOW.md` |
+| Shared repo pipeline | `docs/REPO_PIPELINE.md` |
+| Client overlays and folder ownership | `docs/CLIENT_OVERLAYS.md` |
+| Shared stack map | `docs/STACK_MAP.md` |
+| Definition of done | `docs/DEFINITION_OF_DONE.md` |
+| Verify risk policy | `docs/QUALITY_GATES.md` |
+| Product verification expectations | `docs/BUG_DISCOVERY_ACCEPTANCE.md` |
 | Staging/deploy safety | `docs/DEPLOY_SAFETY.md`, `docs/DEPLOY_PLAYBOOK.md`, `.github/workflows/deploy-staging.yml` |
-| Multi-level verify (L0/L1/L2) + blocking rules | `.cursor/rules/60-verify-levels.mdc` |
-| Mandatory verify+critic loop | `.cursor/rules/85-verify-critic-loop.mdc` |
-| Owner pipeline autostart (orchestrator->...->post-deploy verify) | `.cursor/rules/10-autostart-pipeline.mdc` |
-| Agent roles / ожидания поведения | `AGENTS.md` + `.cursor/agents/*` |
+| Repo-wide rules for editable zones | `.cursorrules`, `AGENTS.md` |
+| Cursor-specific adapter | `.cursor/` |
+| Codex-specific adapter | `.codex/` |
 
-## Минимальные роли (v3.0 core)
+## Shared workflow
 
-- **Orchestrator**: классифицирует задачу (режим/скоуп), собирает контекст, запускает петли, держит лимиты итераций/эскалацию.
-- **Analyzer (multi-domain)**: возвращает **строго структурированный issue map** с evidence и списком тестов, которые надо добавить.
-- **Critic+Scorer (phase 1)**: gate полноты анализа — “не починил 1 баг, оставив 10”.
-- **Doer**: делает изменения **только** по финальному issue list, минимальным безопасным diff.
-- **Critic + Verifier (predeploy, practical+technical, no-tests)**: оценивает diff/контекст/логи без локального e2e/`verify:*`.
-- **Technical Verify (L0/L1/L2, post-deploy)**: истина о качестве из инструментов на staging.
-- **Product Verifier (post-deploy)**: истина о продукте (owner-баги и новые дефекты, найденные агентом).
-- **Critic+Scorer (phase 2)**: оценивает остатки/регрессии по staging verify-отчёту; применяет blocking rules и score gate.
+1. Task intake.
+2. Scope and risk classification.
+3. Minimal safe diff in allowed code zones.
+4. Pre-push review against scope, conversion guards, and deploy safety.
+5. Push to `main` for staging deploy.
+6. Post-deploy verification only to the level required by risk.
 
-## Default task flow (с петлями)
+## Risk model
 
-1. **Raw TASK** (в любой форме).
-2. **Orchestrator** → собирает контекст + определяет `task_mode`, `task_scope`, targets (URLs), ограничения (что можно/нельзя трогать).
-3. **Analyzer** → `issue_map` (JSON) + `tests_to_add`.
-4. **Critic+Scorer phase 1** → completeness gate:
-   - если `ok_to_proceed=false` → возврат к Analyzer.
-5. **Final Issue List** (приоритизированный).
-6. **Doer** → код (минимальный безопасный diff) без обязательных локальных e2e/verify.
-7. **Critic + Verifier (predeploy, practical+technical, no-tests)**:
-   - проверка только по diff/контексту/логам
-   - решение: готово/не готово к push/deploy
-8. **Push/merge в main** -> деплой на staging.
-9. **Technical Verify multi-level на staging**:
-   - L0: линты/статические/быстрые аудиты
-   - L1: Playwright критические user flows Woo
-   - L2: visual/perf budgets и т.п.
-10. **Product Verifier (post-deploy)**:
-   - owner bug ledger с явными статусами `fixed|partially_fixed|not_fixed`
-   - unknown bug hunt: обязательный список новых дефектов без owner hints
-11. **Critic+Scorer phase 2** → score + blocking:
-   - если blocking → **REJECT (score=0)** и возвращаемся к финальному issue list
-   - иначе: считаем `PROCESS_ACCEPT=true`
-12. **Dual verdict**:
-   - `PROCESS_ACCEPT` (пайплайн и verify-gates)
-   - `PRODUCT_ACCEPT` (реальное закрытие owner-багов + discovery-блок)
-   - финальный `ACCEPT` возможен только если оба true
-13. **Snapshot governance**:
-   - baseline update разрешён только после product signoff, что это целевой UI-state
-14. **Если REJECT/ESCALATE/major** -> зафиксировать postmortem в `docs/CRITIC_POSTMORTEMS.md`.
+### Low risk
 
-## Принципы (что создаёт качество)
+Examples:
+- docs/process updates
+- small copy changes
+- narrow CSS/template tweaks outside cart/checkout runtime
 
-- строгие **контракты данных** между этапами (JSON)
-- многоуровневые **проверки инструментами**
-- **блокирующие правила** (конверсионные флоу)
-- честная фиксация gaps и ограничений
+Expected path:
+- concise plan
+- minimal diff
+- pre-push review
+- selective manual or lightweight verification
 
-## Анти-принципы
+### High risk
 
-- “побольше агентов” вместо доказательств
-- принятие по vibes
-- prompt-only бизнес-логика
-- маскировка дефекта (scroll/hidden/“вроде стало лучше”) вместо исправления причины
+Examples:
+- Woo flow
+- cart/checkout/product runtime behavior
+- JS behavior changes
+- deploy scripts
+- mu-plugins
+- shared process contracts that can change delivery behavior
 
+Expected path:
+- concise plan
+- minimal diff
+- stricter pre-push review
+- post-deploy verification on staging
+- L1 Woo flow verification when purchase flow is affected
+
+## Roles
+
+Both clients may use the same conceptual roles, but roles are optional tools, not mandatory ritual steps:
+
+- intake/orchestrator
+- analyzer
+- implementer/doer
+- reviewer/verifier
+- critic/scorer
+
+The repo contract does **not** require every role on every task. Use only the amount of process that increases confidence for the actual risk.
+
+## Anti-patterns
+
+- treating agent count as proof of quality
+- generating reports that do not change ship decisions
+- running full verify suites for low-risk work by default
+- keeping client session artifacts in git
+- accepting change by vibes when Woo flow risk is present

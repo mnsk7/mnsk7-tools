@@ -1,4 +1,4 @@
-const fs = require("node:fs");
+﻿const fs = require("node:fs");
 const path = require("node:path");
 
 function readStdin() {
@@ -25,52 +25,12 @@ function parseLastTimestampFromLog(filePath) {
   return Number.isFinite(t) ? t : null;
 }
 
-function parseLastSubagentTime(logPath, subagentName) {
-  if (!fs.existsSync(logPath)) return null;
-  const content = fs.readFileSync(logPath, "utf8").trim();
-  if (!content) return null;
-  const lines = content.split("\n");
-  for (let i = lines.length - 1; i >= 0; i--) {
-    const line = lines[i];
-    const parts = line.split("|").map((s) => s.trim());
-    // format: ISO | subagent_type | task
-    const iso = parts[0];
-    const name = parts[1];
-    if (name === subagentName) {
-      const t = Date.parse(iso);
-      return Number.isFinite(t) ? t : null;
-    }
-  }
-  return null;
-}
-
-function parseLastCriticPhase(logPath) {
-  if (!fs.existsSync(logPath)) return null;
-  const content = fs.readFileSync(logPath, "utf8").trim();
-  if (!content) return null;
-  const lines = content.split("\n");
-  for (let i = lines.length - 1; i >= 0; i--) {
-    const line = lines[i];
-    const parts = line.split("|").map((s) => s.trim());
-    // format: ISO | subagent_type | task
-    const subagentType = parts[1];
-    const task = parts.slice(2).join(" | ");
-    if (subagentType !== "critic-scorer") continue;
-    if (/PHASE\s*=\s*1\b/i.test(task)) return 1;
-    if (/PHASE\s*=\s*2\b/i.test(task)) return 2;
-    // Unknown critic invocation (no explicit phase)
-    return null;
-  }
-  return null;
-}
-
 async function main() {
   const raw = await readStdin();
   const input = raw ? JSON.parse(raw) : {};
 
   const stateDir = path.join(process.cwd(), ".cursor", "hooks", "state");
   const editsLog = path.join(stateDir, "file-edits.log");
-  const subagentLog = path.join(stateDir, "subagent-events.log");
   const nagStatePath = path.join(stateDir, "nag-state.json");
 
   fs.mkdirSync(stateDir, { recursive: true });
@@ -81,12 +41,7 @@ async function main() {
   );
 
   const lastEdit = parseLastTimestampFromLog(editsLog);
-  const lastVerifier = parseLastSubagentTime(subagentLog, "verifier");
-  const lastCritic = parseLastSubagentTime(subagentLog, "critic-scorer");
-  const lastDoer = parseLastSubagentTime(subagentLog, "doer");
-  const lastCriticPhase = parseLastCriticPhase(subagentLog);
 
-  // De-spam: remember when we last emitted each nag.
   let nagState = {};
   try {
     if (fs.existsSync(nagStatePath)) {
@@ -96,72 +51,23 @@ async function main() {
     nagState = {};
   }
 
-  function alreadyNaggedSinceEdit(key) {
-    const lastNag = Number(nagState[key] || 0);
-    return Number.isFinite(lastEdit) && Number.isFinite(lastNag) && lastNag >= lastEdit;
-  }
-
-  function markNag(key) {
-    nagState[key] = Date.now();
-    try {
-      fs.writeFileSync(nagStatePath, JSON.stringify(nagState, null, 2) + "\n", "utf8");
-    } catch {
-      // ignore
-    }
-  }
-
-  // Pipeline discipline:
-  // - After Critic PHASE=1 the next step is fixing PHASE=1 feedback (Doer), not forcing Verifier/Critic PHASE=2.
-  // - We only enforce the "verifier -> critic (PHASE=2)" gate when the last critic observed was PHASE=2
-  //   (or when we have no phase markers at all but we have verifier markers).
-  const editAfterCritic = lastEdit != null && lastCritic != null && lastEdit > lastCritic;
-  // In owner-flow, PHASE=1 is followed by Doer and predeploy verifier/critic without mandatory local verify.
-  if (editAfterCritic && lastCriticPhase === 1) {
-    if (alreadyNaggedSinceEdit("phase1_after_critic")) {
-      writeJson({});
-      return;
-    }
-    writeJson({
-      followup_message:
-        "Были правки после `critic-scorer (PHASE=1)`. По owner-пайплайну сначала закрой замечания PHASE=1 (Doer/min safe diff), затем запусти predeploy verifier (practical+technical, без локальных e2e/verify) и только после этого переходи к push/deploy и post-deploy `critic-scorer (PHASE=2)`."
-    });
-    markNag("phase1_after_critic");
-    return;
-  }
-
-  // We enforce verifier/PHASE=2 gate only after Doer produced changes.
-  // Otherwise (no Doer yet), we're still in analysis/planning and should not block on verifier.
-  const editAfterDoer = lastEdit != null && lastDoer != null && lastEdit > lastDoer;
-  if (!editAfterDoer) {
+  const lastNag = Number(nagState.shared_pipeline || 0);
+  if (Number.isFinite(lastEdit) && Number.isFinite(lastNag) && lastNag >= lastEdit) {
     writeJson({});
     return;
   }
 
-  // If there was an edit after last verifier/critic(PHASE=2), force the gate.
-  const missingMarkers = lastVerifier == null || lastCritic == null;
-  const enforcePhase2Gate =
-    lastEdit != null &&
-    (missingMarkers ||
-      (lastVerifier != null && lastEdit > lastVerifier) ||
-      (lastCritic != null && lastEdit > lastCritic)) &&
-    // If we can detect critic phase, only enforce for phase 2.
-    (lastCriticPhase == null || lastCriticPhase === 2);
-
-  if (!enforcePhase2Gate) {
-    writeJson({});
-    return;
+  nagState.shared_pipeline = Date.now();
+  try {
+    fs.writeFileSync(nagStatePath, JSON.stringify(nagState, null, 2) + "\n", "utf8");
+  } catch {
+    // ignore
   }
 
-  if (alreadyNaggedSinceEdit("phase2_gate")) {
-    writeJson({});
-    return;
-  }
   writeJson({
     followup_message:
-      "Похоже, были правки после последнего verifier/critic. Нельзя завершать шаг без гейта: сначала predeploy `verifier` (practical+technical, без локальных e2e/verify) и решение по готовности к deploy, затем после deploy на staging запусти technical verify (L0/L1/L2 по зоне) и только потом `critic-scorer (PHASE=2)`. Если outcome=REJECT/ESCALATE/critical/major — добавь запись в `docs/CRITIC_POSTMORTEMS.md`."
+      "Перед завершением проверь shared workflow: scope под контролем, diff минимальный, verify depth соответствует риску. Для low-risk задач достаточно лёгкой проверки; для Woo/deploy/runtime изменений нужен staging-based verify после push в main."
   });
-  markNag("phase2_gate");
 }
 
 main().catch(() => writeJson({}));
-

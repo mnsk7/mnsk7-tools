@@ -1,71 +1,61 @@
-# Quality Gates — pipeline jakości, nie tylko aktywności
+﻿# Quality Gates
 
-**Problem:** Pipeline opisuje kogo uruchomić i jakie pliki mają powstać, ale nie co uznajemy za niedopuszczalny wynik ani kto może zablokować release.
+## Goal
 
-**Zasada:** Każdy etap ma gate — wynik musi przejść walidację. Artykuł agenta nie równa się krok zamknięty.
+Quality gates exist to make ship decisions clearer, not heavier.
 
----
+The repository uses **risk-based gates**. Stronger checks are required only when the risk justifies them.
 
-## 1. Niedopuszczalny wynik pośredni
+## Always-on gates
 
-- Discovery/Requirements: brak must-have vs nice-to-have; brak acceptance criteria per szablon.
-- Architecture: brak podziału theme / Woo overrides / mu-plugin; brak zasady nie edytujemy pluginów third-party.
-- UI spec: tylko kierunkowa notatka, bez visual hierarchy, spacing scale, button variants, card anatomy, header/footer exact behavior.
-- Implementation: ekrany bez checklisty ready/not ready; w publicznym menu widać account-flow (Edit Profile, Login, Register, Wishlist, Zamówienie).
-- QA: brak smoke, visual defects, regression list, conversion blockers.
+These checks apply to every change:
 
-Działanie: Gate keeper nie zamyka etapu, dopóki wynik nie spełnia DoD.
+- editable zones respected
+- scope controlled
+- no obvious breakage in the touched area
+- Woo conversion guards not violated
+- deploy contract preserved
 
----
+## Low-risk gate
 
-## 2. Kto może zablokować release
+Use a lightweight gate when the change is docs-only, process-only, or a narrow non-runtime change.
 
-- Product owner: brak akceptacji biznesowej.
-- Tech lead / 08_qa_security: smoke nie przechodzi; conversion blockers nie puste; brak visual/IA sign-off.
-- Release candidate = po przejściu wszystkich gateów. Nikt nie deployuje bez tego.
+Recommended proof:
 
----
+- diff review
+- targeted manual check
+- syntax/static check when applicable
 
-## 3. UI spec OK, staging wizualnie luźny
+Low-risk work should not require a mandatory full verify loop.
 
-- Nie zamykać etapu UI tylko dlatego, że dokument powstał.
-- Wymagane: SCREEN_REVIEW_PACK (docs/SCREEN_REVIEW_PACK.md) — per ekran: screenshot/mock, main CTA, hierarchy, mobile, critical defects, approved / rejected.
-- Jeśli rejected: backlog z defektami; poprawki; powtórny review.
-- Dokument created nie równa się ekran dopięty. Priorytet: ekran dopięty.
+## High-risk gate
 
----
+Use a stronger gate when the change affects Woo runtime, cart, checkout, JS behavior, mu-plugins, or deploy mechanics.
 
-## 4. Gate przed staging sign-off (4 sign-offy)
+Required proof:
 
-- Visual: spójność z UI_SPEC_V2; brak dupów; typografia.
-- IA: publiczna nawigacja tylko Sklep, O nas, Pomoc, Kontakt. Bez Edit Profile, Login, Register, Wishlist, Zamówienie. Footer bez dupów Kontakt.
-- Conversion: brak conversion blockers; główny CTA czytelny; trust przy checkout.
-- Smoke: smoke report wykonany; ścieżki home → category → product → cart → checkout OK.
+- explicit pre-push review
+- push to `main`
+- targeted post-deploy verification on staging
 
-QA_REPORT.md musi zawierać te sekcje oraz potwierdzenie dla każdego sign-offu.
+### Verification levels
 
----
+- `L0`: baseline syntax and smoke checks
+- `L1`: Woo functional flow checks
+- `L2`: visual, perf, a11y, or deeper regression checks when the changed area warrants them
 
-## 5. Kolejność gateów (jak doprowadzać)
+### Minimum expectations
 
-1. Discovery approved (REQUIREMENTS + acceptance per szablon).
-2. Requirements frozen.
-3. Architecture frozen (theme / Woo / mu-plugin; overrides inventory).
-4. UI approved (UI_SPEC_V2 + SCREEN_REVIEW_PACK).
-5. Shell implemented and reviewed (Header, Footer, nav — Screen Review approved).
-6. PLP/PDP implemented and reviewed (Screen Review approved).
-7. Checkout reviewed (conversion blockers usunięte).
-8. QA passed (wszystkie 4 sign-offy).
-9. Release candidate.
-10. Deploy (według DEPLOY_SAFETY).
+- Woo flow changes require `L1`
+- deploy script changes require staging confirmation
+- visible UI changes may require selected `L2` checks when the area is regression-prone
 
----
+## Blocking conditions
 
-## 6. Jedna aktualna specyfikacja UI
+Reject or rework the change if any of these happen:
 
-- Aktualna: docs/UI_SPEC_V2.md.
-- UI_SPEC.md — superseded (zastąpiony przez UI_SPEC_V2). Tylko odniesienie historyczne.
-
----
-
-Powiązane: START_HERE.md, SCREEN_REVIEW_PACK.md, DEFINITION_OF_DONE.md, BACKLOG_BY_TEMPLATES.md, DEPLOY_SAFETY.md.
+- add to cart is broken
+- cart is not usable after the change
+- checkout entry is broken or the form is missing
+- staging safety is compromised
+- evidence is weaker than the actual risk of the change

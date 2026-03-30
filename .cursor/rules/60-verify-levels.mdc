@@ -1,57 +1,49 @@
----
-description: "Verify L0/L1/L2 + blocking rules для WP/Woo: e2e flows, visual, perf/seo/a11y, static checks."
+﻿---
+description: "Risk-based verification levels for the shared repo pipeline."
 alwaysApply: true
 ---
 
-# Verify multi-level (L0/L1/L2) + blocking rules
+# Verify levels (L0/L1/L2)
 
-## Цель
+## Purpose
 
-Verify — это не один чек. Это уровни проверок, где **истина качества** берётся из инструментов.
-В текущей owner-модели эти проверки — **post-deploy на staging**, а не predeploy локально.
+Verification depth should match delivery risk.
 
-## Уровни
+Use the shared repo policy in `docs/QUALITY_GATES.md` and adapt it in Cursor only when needed.
 
-### L0 (post-deploy baseline)
+## L0
 
-Минимум для любых правок после деплоя на staging:
-- PHP syntax lint (theme + mu-plugins): `bash scripts/validate-theme-php.sh` (+ CI делает `php -l`)
-- быстрый smoke Lighthouse (1–4 ключевых URL) с сохранением JSON артефактов (**обязательно в CI/strict**; локально может быть SKIP)
-- (опционально) link check для ключевых страниц/меню (локально по умолчанию SKIP; включать по риску или в CI)
+Baseline checks for the touched area.
 
-### L1 (функциональный / бизнес, post-deploy)
+Examples:
+- syntax or static checks
+- targeted smoke confirmation
+- lightweight validation after deploy when server confirmation matters
 
-Обязателен для правок, влияющих на Woo UX/layout/шаблоны/JS:
-- Playwright: критические сценарии Woo:
-  - **add_to_cart** (из PLP или PDP)
-  - **cart_update** (минимум: корзина открывается и содержит товар)
-  - **checkout_entry** (страница checkout открывается, форма видима)
+## L1
 
-Практика для скорости:
-- если изменения **не затрагивают** Woo/checkout/cart/templates/plugins — L1 можно SKIP; форсировать запуск: `VERIFY_L1=1 npm run verify:all`.
-- predeploy-этап не обязан запускать L1 локально; обязательность относится к post-deploy verify на staging.
+Functional flow verification.
 
-Рекомендуется (как отдельный шаг, может быть включён в L1/L2 по риску):
-- axe a11y smoke для checkout (и опционально home/shop/cart)
+Required when the change affects Woo purchase flow, cart, checkout, or equivalent runtime behavior.
 
-### L2 (регрессии качества, post-deploy)
+Typical focus:
+- add to cart
+- cart visibility or cart update
+- checkout entry with visible form
 
-Для изменений с UX/визуальным риском:
-- Playwright visual snapshots (`toHaveScreenshot`) на ключевых страницах
-- perf budgets (Lighthouse CI / budgets) при наличии CI wiring
+## L2
 
-## Blocking rules (невозможно принять результат)
+Deeper regression checks used only when the changed area justifies them.
 
-Если выполняется хотя бы одно — outcome = REJECT, score = 0:
-- add_to_cart не добавляет товар (PLP/PDP) **или** кнопка/CTA перекрыт и клик не проходит
-- cart не отображает добавленный товар / критически сломан
-- checkout entry не открывается или форма отсутствует
-- критические JS ошибки на cart/checkout/product (если они ломают UX/flow)
-- layout перекрывает primary CTA на mobile (например, хедер перекрывает кнопку/форму)
+Examples:
+- visual snapshots
+- performance checks
+- accessibility checks
+- broader regression suites
 
-## Артефакты (что сохранять)
+## Rules
 
-- Playwright report + trace для падений
-- Скриншоты/diffs для visual
-- Lighthouse JSON (и краткая сводка)
-
+- Low-risk changes do not require the full verify stack by default.
+- High-risk Woo changes require `L1`.
+- Use `L2` only when the area is regression-prone or the change is visibly sensitive.
+- If verification is partial, report that honestly.

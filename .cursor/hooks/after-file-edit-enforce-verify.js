@@ -1,4 +1,4 @@
-const fs = require("node:fs");
+﻿const fs = require("node:fs");
 const path = require("node:path");
 
 function readStdin() {
@@ -17,7 +17,7 @@ function writeJson(payload) {
 function isInScope(filePath) {
   const p = String(filePath || "");
   return (
-    /^(\.cursor\/|docs\/|tasks\/|scripts\/|e2e\/|wp-content\/)/.test(p) ||
+    /^(\.cursor\/|\.codex\/|docs\/|tasks\/|scripts\/|e2e\/|wp-content\/|mu-plugins\/)/.test(p) ||
     /^(OPERATING-MODEL\.md|AGENTS\.md|package\.json|playwright\.config\.js)$/.test(p)
   );
 }
@@ -48,13 +48,10 @@ async function main() {
     return;
   }
 
-  // This doesn't run subagents directly, but it forces a follow-up instruction
-  // into the conversation context so the agent cannot "forget" the gate.
   writeJson({
     additional_context:
-      "Изменены файлы в зоне runtime/process. Следуй owner-пайплайну по текущему этапу: Orchestrator -> Analyzer -> Critic PHASE=1 -> Doer (без локальных e2e/verify) -> Critic+Verifier predeploy (practical+technical, по diff/контексту/логам) -> push/merge в main и deploy на staging -> Technical Verify на staging (L0/L1/L2) -> Critic PHASE=2."
+      "Изменены repo/process/runtime файлы. Следуй shared pipeline: оцени риск, сделай минимальный diff, выполни pre-push review и выбери verify depth по риску. Для Woo/deploy/runtime изменений после push в main нужна staging-проверка достаточной глубины."
   });
 }
 
 main().catch(() => writeJson({}));
-
