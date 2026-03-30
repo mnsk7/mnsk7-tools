@@ -8,6 +8,9 @@
 html {
   overflow-x: clip;
   max-width: 100%;
+  /* iOS Safari can auto-enlarge text and break tight header geometry. Keep scale consistent with desktop tests. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 body,
 #page {
@@ -151,4 +154,3 @@ img {
   outline: 2px solid var(--color-white);
   outline-offset: 2px;
 }
-

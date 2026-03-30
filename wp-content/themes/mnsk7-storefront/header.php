@@ -10,7 +10,7 @@ defined( 'ABSPATH' ) || exit;
 <html <?php language_attributes(); ?>>
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 	<?php
 	// Performance: preload main font for faster LCP (Inter). Tylko gdy plik istnieje (unika 404 + „preloaded but not used” na staging).
