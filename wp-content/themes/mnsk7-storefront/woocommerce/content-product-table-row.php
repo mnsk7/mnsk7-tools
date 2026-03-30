@@ -54,7 +54,8 @@ $img_attr = ( $mnsk7_plp_row_index === 1 ) ? array( 'loading' => 'eager', 'fetch
 		if ( $product->is_purchasable() && $product->is_in_stock() ) :
 			if ( $product->is_sold_individually() ) :
 				?>
-				<span class="mnsk7-table-qty-one">1</span>
+				<span class="mnsk7-table-qty-implicit" aria-hidden="true">&mdash;</span>
+				<span class="screen-reader-text"><?php esc_html_e( 'Stała ilość: 1', 'mnsk7-storefront' ); ?></span>
 			<?php else : ?>
 				<input type="number" form="<?php echo esc_attr( $form_id ); ?>" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="<?php echo esc_attr( max( $min_qty, 1 ) ); ?>" min="<?php echo esc_attr( $min_qty ); ?>" max="<?php echo esc_attr( $max_qty > 0 ? $max_qty : 9999 ); ?>" step="1" aria-label="<?php esc_attr_e( 'Ilość', 'mnsk7-storefront' ); ?>" />
 			<?php endif; ?>
@@ -66,10 +67,11 @@ $img_attr = ( $mnsk7_plp_row_index === 1 ) ? array( 'loading' => 'eager', 'fetch
 		<?php
 		if ( $product->is_purchasable() && $product->is_in_stock() ) {
 			?>
-			<form id="<?php echo esc_attr( $form_id ); ?>" method="post" action="" class="mnsk7-table-addcart-form">
+			<form id="<?php echo esc_attr( $form_id ); ?>" method="post" action="" class="mnsk7-table-addcart-form<?php echo $product->is_sold_individually() ? ' mnsk7-table-addcart-form--fixed-qty' : ''; ?>">
 				<?php wp_nonce_field( 'woocommerce-add-to-cart', 'woocommerce-add-to-cart-nonce' ); ?>
 				<input type="hidden" name="add-to-cart" value="<?php echo esc_attr( $product->get_id() ); ?>" />
 				<?php if ( $product->is_sold_individually() ) : ?>
+					<span class="mnsk7-table-qty-badge" aria-hidden="true"><?php esc_html_e( '1 szt.', 'mnsk7-storefront' ); ?></span>
 					<input type="hidden" name="quantity" value="1" />
 				<?php endif; ?>
 				<button type="submit" class="button mnsk7-table-addcart-btn"><?php esc_html_e( 'Dodaj do koszyka', 'mnsk7-storefront' ); ?></button>
