@@ -3432,8 +3432,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
 .mnsk7-front-page .mnsk7-hero { order: 10; }
 .mnsk7-front-page .mnsk7-section--bestsellers { order: 20; }
-.mnsk7-front-page .mnsk7-section--catalog { order: 30; }
-.mnsk7-front-page .mnsk7-section--trust { order: 40; }
+.mnsk7-front-page .mnsk7-section--trust { order: 30; }
+.mnsk7-front-page .mnsk7-section--catalog { order: 40; }
 .mnsk7-front-page .mnsk7-section--loyalty { order: 50; }
 .mnsk7-front-page .mnsk7-section--insta { order: 60; }
 }
@@ -3580,6 +3580,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   display: flex;
   justify-content: center;
   gap: var(--space-16);
+  flex-wrap: wrap;
 }
 
 /* CRO: główny CTA hero — wyraźnie dominujący (jeden przycisk) */
@@ -3612,6 +3613,19 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   text-decoration: none;
   transform: translateY(-2px);
   box-shadow: 0 6px 24px rgba(0,0,0,0.22), 0 2px 10px rgba(0,0,0,0.14);
+}
+
+.mnsk7-hero__btn--ghost {
+  background: rgba(255, 255, 255, 0.14);
+  color: var(--color-white);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+}
+
+.mnsk7-hero__btn--ghost:hover {
+  background: rgba(255, 255, 255, 0.24);
+  color: var(--color-white);
+  text-decoration: none;
 }
 
 /* Sections */
@@ -4886,6 +4900,15 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   .mnsk7-hero__usp {
     padding: 0.45rem 0.85rem;
     font-size: var(--fs-sm);
+  }
+
+  .mnsk7-hero__ctas {
+    gap: 0.625rem;
+  }
+
+  .mnsk7-hero__btn {
+    width: 100%;
+    max-width: 20rem;
   }
 
   .mnsk7-section {

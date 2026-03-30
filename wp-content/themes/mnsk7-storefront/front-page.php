@@ -14,6 +14,7 @@ get_header();
 	<section class="mnsk7-hero">
 		<div class="mnsk7-hero__inner col-full">
 			<h1 class="mnsk7-hero__title"><?php esc_html_e( 'Frezy CNC i narzędzia skrawające', 'mnsk7-storefront' ); ?></h1>
+			<p class="mnsk7-hero__sub"><?php esc_html_e( 'Szybki wybór frezów do drewna, metalu i tworzyw. Dostawa 24h, faktura VAT, realne stany magazynowe.', 'mnsk7-storefront' ); ?></p>
 			<div class="mnsk7-hero__materials" aria-label="<?php esc_attr_e( 'Materiały', 'mnsk7-storefront' ); ?>">
 				<?php
 				$materials = array( 'Drewno', 'MDF', 'Aluminium', 'Stal', __( 'Tworzywa sztuczne', 'mnsk7-storefront' ) );
@@ -47,6 +48,9 @@ get_header();
 			<div class="mnsk7-hero__ctas">
 				<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="mnsk7-hero__btn mnsk7-hero__btn--primary">
 					<?php esc_html_e( 'Przejdź do sklepu', 'mnsk7-storefront' ); ?>
+				</a>
+				<a href="#mnsk7-home-catalog" class="mnsk7-hero__btn mnsk7-hero__btn--ghost">
+					<?php esc_html_e( 'Zobacz kategorie', 'mnsk7-storefront' ); ?>
 				</a>
 			</div>
 			<?php endif; ?>
@@ -130,7 +134,7 @@ get_header();
 	$show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) );
 	if ( $show_catalog ) :
 	?>
-	<section class="mnsk7-section mnsk7-section--catalog mnsk7-section--light">
+	<section id="mnsk7-home-catalog" class="mnsk7-section mnsk7-section--catalog mnsk7-section--light">
 		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Przeglądaj asortyment', 'mnsk7-storefront' ); ?></h2>
 
