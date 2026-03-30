@@ -175,15 +175,15 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   body.post-type-archive-product,
   body.tax-product_cat,
   body.tax-product_tag {
-    --archive-gap-page-top: 0.625rem;        /* 10px */
-    --archive-gap-breadcrumbs-title: 0.625rem; /* 10px */
-    --archive-gap-title-chips: 0.875rem;     /* 14px */
-    --archive-gap-chips-filters: 0.75rem;    /* 12px */
-    --archive-gap-filter-rows: 0.5rem;       /* 8px */
-    --archive-gap-filters-results: 0.75rem;  /* 12px */
-    --archive-inner-breadcrumb: 0.35rem;
-    --archive-after-search: 0.35rem;
-    --archive-after-trust: 0.75rem;
+    --archive-gap-page-top: 0.375rem;
+    --archive-gap-breadcrumbs-title: 0.375rem;
+    --archive-gap-title-chips: 0.625rem;
+    --archive-gap-chips-filters: 0.625rem;
+    --archive-gap-filter-rows: 0.375rem;
+    --archive-gap-filters-results: 0.5rem;
+    --archive-inner-breadcrumb: 0.25rem;
+    --archive-after-search: 0.25rem;
+    --archive-after-trust: 0.625rem;
     --archive-after-table: 0.75rem;
   }
   /* Kategoria/tag: minimalne boczne odstępy; kontekst od „F” (wyrównanie z tytułem) */
@@ -191,8 +191,13 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   body.tax-product_cat .mnsk7-content,
   body.tax-product_tag #content,
   body.tax-product_tag .mnsk7-content {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0.875rem;
+    padding-right: 0.875rem;
+  }
+  body.post-type-archive-product .mnsk7-breadcrumb-wrap,
+  body.tax-product_cat .mnsk7-breadcrumb-wrap,
+  body.tax-product_tag .mnsk7-breadcrumb-wrap {
+    display: none;
   }
   /* Chips: bez dodatkowego wcięcia — Rodzaje frezów i chipy startują pod „F” w tytule */
   body.tax-product_cat .mnsk7-plp-chips__scroll,
@@ -221,14 +226,11 @@ body.tax-product_tag .mnsk7-product-table-wrap {
     padding-left: 0.875rem;
     padding-right: 0.875rem;
   }
-  body.post-type-archive-product:not(.tax-product_cat):not(.tax-product_tag) .mnsk7-breadcrumb-wrap {
-    display: none;
-  }
   body.post-type-archive-product:not(.tax-product_cat):not(.tax-product_tag) .woocommerce-products-header {
-    margin-bottom: 0.625rem;
+    margin-bottom: 0.5rem;
   }
   .mnsk7-archive-context {
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.125rem;
     font-size: 0.6875rem;
     letter-spacing: 0.09em;
   }
@@ -1065,10 +1067,10 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
 
 @media (max-width: 768px) {
   .mnsk7-archive-context {
-    margin-bottom: 0.125rem;
+    margin-bottom: 0.05rem;
   }
   .mnsk7-plp-search--priority {
-    margin-bottom: 0.375rem !important;
+    margin-bottom: 0.25rem !important;
   }
   .mnsk7-plp-search--priority .mnsk7-plp-search__form {
     gap: 0;
@@ -1101,8 +1103,8 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   }
   .mnsk7-plp-chips--nav .mnsk7-plp-chips__label,
   .mnsk7-plp-chips__label {
-    padding-bottom: 0.1rem;
-    font-size: 0.75rem;
+    padding-bottom: 0.05rem;
+    font-size: 0.6875rem;
     letter-spacing: 0.02em;
   }
   .mnsk7-plp-chips--nav .mnsk7-plp-chips__scroll,
@@ -1116,8 +1118,8 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   }
   .mnsk7-plp-chip {
     min-height: 44px;
-    padding: 0.3rem 0.65rem;
-    font-size: 0.75rem;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.6875rem;
   }
   .mnsk7-plp-filters-toggle-wrap {
     margin-bottom: 0.25rem;

@@ -116,7 +116,7 @@ if ( is_shop() || $is_taxonomy ) {
 }
 
 /* Render jednego rzędu chipów nawigacyjnych (kategorie/tagi): etykieta + poziomy scroll + opcjonalnie „Więcej”. */
-$plp_nav_chips_limit = 8;
+$plp_nav_chips_limit = $plp_is_mobile_request ? 5 : 8;
 $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $plp_nav_chips_limit ) {
 	if ( empty( $terms ) || ! is_array( $terms ) ) {
 		return;
@@ -188,8 +188,8 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 	}
 
 	$attr_data      = function_exists( 'mnsk7_get_archive_attribute_filter_chips' ) ? mnsk7_get_archive_attribute_filter_chips() : array( 'filters' => array(), 'filter_params' => array() );
-	$plp_chips_limit  = 6;
-	$plp_attr_visible = 3;
+	$plp_chips_limit  = $plp_is_mobile_request ? 4 : 6;
+	$plp_attr_visible = $plp_is_mobile_request ? 1 : 3;
 	$all_filters      = isset( $attr_data['filters'] ) ? $attr_data['filters'] : array();
 	$visible_filters  = array_slice( $all_filters, 0, $plp_attr_visible, true );
 	$hidden_filters   = array_slice( $all_filters, $plp_attr_visible, null, true );
