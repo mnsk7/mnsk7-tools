@@ -23,15 +23,15 @@ Implication for this repo:
 - keep a small set of role-specific agents
 - make research agents read-only
 - keep implementation agents separate from review agents
-- use background/parallel agents only when the work is truly independent
+- use background or parallel agents only when the work is truly independent
 
 ### 3. Background agents are powerful but high-risk
 
-Cursor's background-agent docs state that these agents run in isolated remote machines, have internet access, and can automatically run terminal commands. That is useful for long-running audits or setup, but it increases prompt-injection and exfiltration risk.
+Cursor's MCP and agent docs show how easily local and external tools can be connected and auto-run. That is useful for long-running audits or setup, but it increases prompt-injection and exfiltration risk if used carelessly.
 
 Implication for this repo:
-- use background agents for long-running research or environment setup, not as the default path for every task
-- keep repo write/deploy authority anchored in the shared workflow, not in autonomous background execution
+- use background or long-running agents for research, audits, or setup, not as the default path for every task
+- keep repo write and deploy authority anchored in the shared workflow, not in unbounded autonomy
 
 ### 4. Guardrails and structured outputs matter more than agent count
 
@@ -82,7 +82,7 @@ Purpose:
 - define allowed scenarios, branch expectations, package bootstrap, and stop conditions
 
 Why:
-- Cursor background agents are useful for long-running audits, but too dangerous as an unbounded default
+- long-running background execution is useful, but too dangerous as an unbounded default
 
 ### E. Add a `delivery-retrospective` template
 
@@ -110,5 +110,6 @@ Anything beyond that should be justified by real complexity, not habit.
 - OpenAI practical guide to building agents: https://cdn.openai.com/business-guides-and-resources/a-practical-guide-to-building-agents.pdf
 - OpenAI agent safety guidance: https://developers.openai.com/api/docs/guides/agent-builder-safety
 - OpenAI code-generation guide: https://developers.openai.com/api/docs/guides/code-generation
-- Cursor background agents docs: https://docs.cursor.com/en/background-agents
+- Cursor MCP docs: https://docs.cursor.com/en/context/mcp
+- Chrome DevTools MCP: https://github.com/ChromeDevTools/chrome-devtools-mcp
 - Claude Code subagents docs: https://code.claude.com/docs/en/sub-agents
