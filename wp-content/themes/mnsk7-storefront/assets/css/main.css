@@ -3419,9 +3419,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
 
 /* === 08-home-sections.css === */
-/* 08-home-sections — extracted from main.css */
-
-   § HOME PAGE SECTIONS
+/* 08-home-sections — extracted from main.css
+   HOME PAGE SECTIONS
    ----------------------------------------------------------------- */
 
 .mnsk7-front-page {
@@ -3436,7 +3435,6 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .mnsk7-front-page .mnsk7-section--catalog { order: 40; }
 .mnsk7-front-page .mnsk7-section--loyalty { order: 50; }
 .mnsk7-front-page .mnsk7-section--insta { order: 60; }
-}
 
 /* Hero — czytelny, full-bleed (bez białych pasów od padding #content). Audit task 6: overflow visible */
 .mnsk7-hero {

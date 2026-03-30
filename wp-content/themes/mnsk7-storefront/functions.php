@@ -710,7 +710,7 @@ function mnsk7_header_fallback_menu() {
  * Zawsze te same zasoby niezależnie od URL (cache). B1: theme ładuje się po WC (priority 20).
  */
 add_action( 'wp_enqueue_scripts', function () {
-	$v = defined( 'MNSK7_THEME_VERSION' ) ? MNSK7_THEME_VERSION : '3.0.10';
+	$v = defined( 'MNSK7_THEME_VERSION' ) ? MNSK7_THEME_VERSION : '3.0.11';
 	$child_deps = array();
 	if ( mnsk7_parent_storefront_available() ) {
 		wp_enqueue_style( 'storefront-style', get_template_directory_uri() . '/style.css' );
