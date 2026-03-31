@@ -1,11 +1,12 @@
-/* =================================================================
-   MNK7 Storefront ??? main.css (built from parts)
+﻿/* =================================================================
+   MNK7 Storefront - main.css (built from parts)
    Build: 2026-03-31
    Run: scripts/build-main-css.sh
    ================================================================= */
+
 /* === 00-fonts-inter.css === */
 /* =================================================================
-   Inter — local variable font (no Google Fonts dependency)
+   Inter â€” local variable font (no Google Fonts dependency)
    Source: @fontsource-variable/inter, SIL OFL 1.1
    ================================================================= */
 
@@ -18,28 +19,28 @@
 }
 
 /* === 01-tokens.css === */
-/* 01-tokens — extracted from main.css */
+/* 01-tokens â€” extracted from main.css */
 
 /* =================================================================
-   MNK7 Storefront — main.css  (child of WooCommerce Storefront)
-   Production build — 2026-03-05
+   MNK7 Storefront â€” main.css  (child of WooCommerce Storefront)
+   Production build â€” 2026-03-05
    ================================================================= */
 
 /* -----------------------------------------------------------------
-   § DESIGN TOKENS
+   Â§ DESIGN TOKENS
    ----------------------------------------------------------------- */
 
 :root {
   /* Palette: blue #0c7ddb, beige #e9e8cc, white, black */
   --color-bg:             #ffffff;
   --color-beige:          #e9e8cc;
-  --color-surface:        #e9e8cc;
-  --color-surface-2:      #e0dfc4;
+  --color-surface:        #f6f8fb;
+  --color-surface-2:      #eef2f7;
   --color-text:           #000000;
   --color-text-secondary: #333333;
   --color-text-muted:     #666666;
-  --color-border:         #e9e8cc;
-  --color-border-strong:  #d4d3b8;
+  --color-border:         #d9e2ec;
+  --color-border-strong:  #c7d3e0;
   /* Darkened primary to satisfy WCAG AA contrast with white text on 15px buttons */
   --color-primary:        #0b74c9;
   --color-primary-hover:   #0a6bc2;
@@ -52,7 +53,7 @@
   --color-white:          #ffffff;
   --color-black:          #000000;
 
-  /* Footer / dark UI (cookie bar, footer) — jeden zestaw dla spójności */
+  /* Footer / dark UI (cookie bar, footer) â€” jeden zestaw dla spĂłjnoĹ›ci */
   --color-footer-bg:      #1e293b;
   --color-footer-text:    #e2e8f0;
   --color-footer-link:    #60a5fa;
@@ -61,7 +62,7 @@
   --color-dark-bg:        #0f172a;
   --color-dark-border:    #475569;
 
-  /* Typography — Inter (slightly larger for readability, less "thin") */
+  /* Typography â€” Inter (slightly larger for readability, less "thin") */
   --font-base: "Inter", system-ui, -apple-system, sans-serif;
   --fs-xs:  0.8125rem; /* 13 px */
   --fs-sm:  0.9375rem; /* 15 px */
@@ -83,13 +84,13 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.10);
 
-  /* Layout (UI_SPEC_V2 §3.3: mobile padding 16, desktop max 1200) */
+  /* Layout (UI_SPEC_V2 Â§3.3: mobile padding 16, desktop max 1200) */
   --content-max: 1200px;
   --header-h:            56px;
   --header-h-scrolled:   48px;
 
-  /* Breakpoints — jeden źródło (wartość używana w media queries i w PHP/JS).
-   * W @media trzeba wpisać wartość liczbową (CSS nie obsługuje var() w media queries).
+  /* Breakpoints â€” jeden ĹşrĂłdĹ‚o (wartoĹ›Ä‡ uĹĽywana w media queries i w PHP/JS).
+   * W @media trzeba wpisaÄ‡ wartoĹ›Ä‡ liczbowÄ… (CSS nie obsĹ‚uguje var() w media queries).
    * Odpowiednik w PHP: MNSK7_BREAKPOINT_MOBILE. */
   --breakpoint-mobile:   768px;
   --breakpoint-header-mobile: 1024px; /* Header contract: desktop >=1024, mobile <=1023 */
@@ -105,14 +106,14 @@
   --space-48: 48px;
   --space-64: 64px;
 
-  /* Page top rhythm — единый вертикальный ритм от header до контента (все типы страниц) */
-  --space-page-top:        2rem;   /* 32px — отступ от header (или promo bar) до первого контента */
-  --space-breadcrumbs-bottom: 1rem;   /* отступ под breadcrumbs до заголовка/контента */
-  --space-title-bottom:    1.25rem;   /* отступ под H1 / page title до следующего блока */
-  --space-section-gap:    1.5rem;   /* интервал между крупными секциями (chips → listing и т.д.) */
+  /* Page top rhythm â€” ĐµĐ´Đ¸Đ˝Ń‹Đą Đ˛ĐµŃ€Ń‚Đ¸ĐşĐ°Đ»ŃŚĐ˝Ń‹Đą Ń€Đ¸Ń‚ĐĽ ĐľŃ‚ header Đ´Đľ ĐşĐľĐ˝Ń‚ĐµĐ˝Ń‚Đ° (Đ˛ŃĐµ Ń‚Đ¸ĐżŃ‹ ŃŃ‚Ń€Đ°Đ˝Đ¸Ń†) */
+  --space-page-top:        2rem;   /* 32px â€” ĐľŃ‚ŃŃ‚ŃĐż ĐľŃ‚ header (Đ¸Đ»Đ¸ promo bar) Đ´Đľ ĐżĐµŃ€Đ˛ĐľĐłĐľ ĐşĐľĐ˝Ń‚ĐµĐ˝Ń‚Đ° */
+  --space-breadcrumbs-bottom: 1rem;   /* ĐľŃ‚ŃŃ‚ŃĐż ĐżĐľĐ´ breadcrumbs Đ´Đľ Đ·Đ°ĐłĐľĐ»ĐľĐ˛ĐşĐ°/ĐşĐľĐ˝Ń‚ĐµĐ˝Ń‚Đ° */
+  --space-title-bottom:    1.25rem;   /* ĐľŃ‚ŃŃ‚ŃĐż ĐżĐľĐ´ H1 / page title Đ´Đľ ŃĐ»ĐµĐ´ŃŃŽŃ‰ĐµĐłĐľ Đ±Đ»ĐľĐşĐ° */
+  --space-section-gap:    1.5rem;   /* Đ¸Đ˝Ń‚ĐµŃ€Đ˛Đ°Đ» ĐĽĐµĐ¶Đ´Ń ĐşŃ€ŃĐżĐ˝Ń‹ĐĽĐ¸ ŃĐµĐşŃ†Đ¸ŃŹĐĽĐ¸ (chips â†’ listing Đ¸ Ń‚.Đ´.) */
 }
 
-/* prefers-reduced-motion: wyłącz/uprość animacje (WCAG, dostępność) */
+/* prefers-reduced-motion: wyĹ‚Ä…cz/uproĹ›Ä‡ animacje (WCAG, dostÄ™pnoĹ›Ä‡) */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -123,15 +124,14 @@
   }
 }
 
-
 /* === 02-reset-typography.css === */
-/* 02-reset-typography — extracted from main.css */
+/* 02-reset-typography â€” extracted from main.css */
 
 /* -----------------------------------------------------------------
-   § GLOBAL RESET & TYPOGRAPHY
+   Â§ GLOBAL RESET & TYPOGRAPHY
    ----------------------------------------------------------------- */
 
-/* Task 8: zapobiegaj poziomemu przewijaniu. clip (not hidden) — nie tworzy scroll container, nie łamie position:sticky. */
+/* Task 8: zapobiegaj poziomemu przewijaniu. clip (not hidden) â€” nie tworzy scroll container, nie Ĺ‚amie position:sticky. */
 html {
   overflow-x: clip;
   max-width: 100%;
@@ -155,7 +155,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
-/* Kolor zaznaczenia tekstu — primary (bez fioletu z domyślnych stylów przeglądarki) */
+/* Kolor zaznaczenia tekstu â€” primary (bez fioletu z domyĹ›lnych stylĂłw przeglÄ…darki) */
 ::selection {
   background: var(--color-primary);
   color: var(--color-white);
@@ -183,13 +183,13 @@ a:hover {
   text-decoration: underline;
 }
 
-/* Oбычный текст — без underline/focus артефактов, не выглядит редактируемым */
+/* OĐ±Ń‹Ń‡Đ˝Ń‹Đą Ń‚ĐµĐşŃŃ‚ â€” Đ±ĐµĐ· underline/focus Đ°Ń€Ń‚ĐµŃ„Đ°ĐşŃ‚ĐľĐ˛, Đ˝Đµ Đ˛Ń‹ĐłĐ»ŃŹĐ´Đ¸Ń‚ Ń€ĐµĐ´Đ°ĐşŃ‚Đ¸Ń€ŃĐµĐĽŃ‹ĐĽ */
 p, span, li, dd, dt {
   text-decoration: none;
 }
 
 /* Visual states (VISUAL_STATES_SPEC): normal, hover, active, focus-visible.
-   Outline only on :focus-visible (keyboard), not on mouse :focus — avoids "looks like selected" on click.
+   Outline only on :focus-visible (keyboard), not on mouse :focus â€” avoids "looks like selected" on click.
    Do not remove outline globally; keep focus-visible for a11y. */
 a:focus,
 button:focus,
@@ -222,7 +222,7 @@ summary,
 [role="button"] {
   -webkit-tap-highlight-color: transparent;
 }
-/* Caret only where it belongs — not on non-editable elements */
+/* Caret only where it belongs â€” not on non-editable elements */
 input:not([type="hidden"]),
 textarea,
 [contenteditable="true"] {
@@ -234,7 +234,7 @@ img {
   height: auto;
 }
 
-/* Storefront container override — centering + horizontal padding (UI_SPEC: mobile 16px) */
+/* Storefront container override â€” centering + horizontal padding (UI_SPEC: mobile 16px) */
 .col-full {
   max-width: var(--content-max);
   margin-left: auto;
@@ -249,7 +249,7 @@ img {
   }
 }
 
-/* Skip link (a11y): niewidoczny do momentu :focus (Tab). overflow: hidden + clip — standardowy wzorzec ukrycia wizualnego bez usuwania z a11y. */
+/* Skip link (a11y): niewidoczny do momentu :focus (Tab). overflow: hidden + clip â€” standardowy wzorzec ukrycia wizualnego bez usuwania z a11y. */
 .mnsk7-skip-link {
   position: absolute;
   width: 1px;
@@ -283,10 +283,10 @@ img {
 }
 
 /* === 03-storefront-overrides.css === */
-/* 03-storefront-overrides — extracted from main.css */
+/* 03-storefront-overrides â€” extracted from main.css */
 
 /* -----------------------------------------------------------------
-   § STOREFRONT OVERRIDES — Inter + palette everywhere
+   Â§ STOREFRONT OVERRIDES â€” Inter + palette everywhere
    Parent theme uses its own font variables; we force one source.
    ----------------------------------------------------------------- */
 
@@ -331,7 +331,7 @@ button,
   font-family: var(--font-base) !important;
 }
 
-/* Storefront: цвета ссылок и кнопок в палитру */
+/* Storefront: Ń†Đ˛ĐµŃ‚Đ° ŃŃŃ‹Đ»ĐľĐş Đ¸ ĐşĐ˝ĐľĐżĐľĐş Đ˛ ĐżĐ°Đ»Đ¸Ń‚Ń€Ń */
 .woocommerce a.button,
 .woocommerce button.button,
 .woocommerce input.button,
@@ -363,9 +363,9 @@ a {
 
 
 /* === 04-header.css === */
-/* 04-header — sticky, shrink on scroll, promo bar, visible search desktop, megamenu (Visual Audit) */
+/* 04-header â€” sticky, shrink on scroll, promo bar, visible search desktop, megamenu (Visual Audit) */
 
-/* Promo bar: zawsze nad treścią; warstwa nad headerem (jak na normalnych stronach) */
+/* Promo bar: zawsze nad treĹ›ciÄ…; warstwa nad headerem (jak na normalnych stronach) */
 .mnsk7-promo-bar {
   background: var(--color-primary);
   color: var(--color-white);
@@ -461,7 +461,7 @@ a {
   opacity: 1;
   background: rgba(255, 255, 255, 0.15);
 }
-/* Tablet + mobile: promo bar — compact, bez nałożenia tekstu i close */
+/* Tablet + mobile: promo bar â€” compact, bez naĹ‚oĹĽenia tekstu i close */
 @media (max-width: 1023px) {
   .mnsk7-promo-bar {
     padding: 0.35rem 0.75rem;
@@ -523,7 +523,7 @@ a {
   }
 }
 
-/* Mobile: promo bar — 2-line layout jeśli potrzeba, close nie najeżdża */
+/* Mobile: promo bar â€” 2-line layout jeĹ›li potrzeba, close nie najeĹĽdĹĽa */
 @media (max-width: 480px) {
   .mnsk7-promo-bar {
     padding: 0.5rem 0.75rem 0.5rem 1rem;
@@ -555,7 +555,7 @@ a {
   }
 }
 
-/* Header + dropdowny zawsze nad treścią strony (menu i koszyk nie chowają się za hero/banerem) */
+/* Header + dropdowny zawsze nad treĹ›ciÄ… strony (menu i koszyk nie chowajÄ… siÄ™ za hero/banerem) */
 .mnsk7-header,
 .site-header.mnsk7-header {
   background: var(--color-white);
@@ -695,7 +695,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   outline-offset: 2px;
 }
 
-/* Hamburger icon (3 lines) — równe długość/grubość, wyśrodkowany w przycisku. HEADER UI: optical alignment w 44px target (drobne przesunięcie w dół). */
+/* Hamburger icon (3 lines) â€” rĂłwne dĹ‚ugoĹ›Ä‡/gruboĹ›Ä‡, wyĹ›rodkowany w przycisku. HEADER UI: optical alignment w 44px target (drobne przesuniÄ™cie w dĂłĹ‚). */
 .mnsk7-header__hamburger {
   display: block;
   width: 22px;
@@ -724,11 +724,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   bottom: 0;
 }
 
-/* Sklep dropdown — megamenu style: 2 columns, wider (audit: "grouped categories") */
+/* Sklep dropdown â€” megamenu style: 2 columns, wider (audit: "grouped categories") */
 .mnsk7-header__menu li.menu-item-has-children {
   position: relative;
 }
-/* Audit: wskaźnik rozwijania submenu (Sklep) */
+/* Audit: wskaĹşnik rozwijania submenu (Sklep) */
 .mnsk7-header__menu li.menu-item-has-children > a::after {
   content: "";
   display: inline-block;
@@ -740,7 +740,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   transform: rotate(45deg);
   vertical-align: 0.15em;
 }
-/* Megamenu Sklep: overlay panel — własna szerokość od viewport, nie od kontenera nav (NNG/Baymard) */
+/* Megamenu Sklep: overlay panel â€” wĹ‚asna szerokoĹ›Ä‡ od viewport, nie od kontenera nav (NNG/Baymard) */
 .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
   list-style: none;
   margin: 0;
@@ -795,7 +795,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   align-items: start;
   min-width: 0;
 }
-/* 3 kolumny — min 11em/9em, zawijanie tylko między słowami (bez łamania w środku) */
+/* 3 kolumny â€” min 11em/9em, zawijanie tylko miÄ™dzy sĹ‚owami (bez Ĺ‚amania w Ĺ›rodku) */
 .mnsk7-megamenu__list--cols {
   grid-template-columns: repeat(3, minmax(11em, 1fr));
 }
@@ -875,7 +875,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     grid-template-columns: repeat(2, minmax(7em, 1fr));
   }
 }
-/* Legacy: zwykły sub-menu (tylko gdy bez .mnsk7-megamenu) */
+/* Legacy: zwykĹ‚y sub-menu (tylko gdy bez .mnsk7-megamenu) */
 .mnsk7-header__menu .sub-menu:not(.mnsk7-megamenu) {
   list-style: none;
   margin: 0;
@@ -908,13 +908,13 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   visibility: visible;
   transform: translateY(0);
 }
-/* Sklep: aktywny stan gdy dropdown otwarty — dolna kreska w kolorze primary */
+/* Sklep: aktywny stan gdy dropdown otwarty â€” dolna kreska w kolorze primary */
 .mnsk7-header__menu li.menu-item-has-children:hover > a,
 .mnsk7-header__menu li.menu-item-has-children:focus-within > a {
   color: var(--color-primary);
   box-shadow: inset 0 -2px 0 var(--color-primary);
 }
-/* Desktop: megamenu tylko po hover delay (JS .mnsk7-megamenu-open) lub focus-within — bez flicker (Baymard) */
+/* Desktop: megamenu tylko po hover delay (JS .mnsk7-megamenu-open) lub focus-within â€” bez flicker (Baymard) */
 @media (min-width: 1024px) {
   .mnsk7-header__menu li.menu-item-has-children:hover .sub-menu.mnsk7-megamenu {
     opacity: 0;
@@ -937,7 +937,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     box-shadow: inset 0 -2px 0 var(--color-primary);
   }
 }
-/* Mobile (<=1023px): Sklep rozwijany — submenu ukryte domyślnie, widoczne gdy li.is-open; układ pionowy, tap targets 44px */
+/* Mobile (<=1023px): Sklep rozwijany â€” submenu ukryte domyĹ›lnie, widoczne gdy li.is-open; ukĹ‚ad pionowy, tap targets 44px */
 @media (max-width: 1023px) {
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu {
     position: static;
@@ -1062,7 +1062,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   outline-offset: 2px;
 }
 
-/* Desktop: burger tylko na mobile; na desktop nie ma off-canvas — ukryty (również w header.php critical CSS). */
+/* Desktop: burger tylko na mobile; na desktop nie ma off-canvas â€” ukryty (rĂłwnieĹĽ w header.php critical CSS). */
 .mnsk7-header__menu-toggle {
   display: none;
   width: 44px;
@@ -1090,7 +1090,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   outline: 2px solid var(--color-focus, var(--color-primary));
   outline-offset: 2px;
 }
-/* Open: bez przesunięcia ikony */
+/* Open: bez przesuniÄ™cia ikony */
 .mnsk7-header__nav.is-open .mnsk7-header__menu-toggle {
   color: var(--color-primary);
   background: rgba(0, 0, 0, 0.04);
@@ -1108,7 +1108,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   margin: 0;
 }
 
-/* Search: один поиск — только иконка, по клику открывается dropdown */
+/* Search: ĐľĐ´Đ¸Đ˝ ĐżĐľĐ¸ŃĐş â€” Ń‚ĐľĐ»ŃŚĐşĐľ Đ¸ĐşĐľĐ˝ĐşĐ°, ĐżĐľ ĐşĐ»Đ¸ĐşŃ ĐľŃ‚ĐşŃ€Ń‹Đ˛Đ°ĐµŃ‚ŃŃŹ dropdown */
 .mnsk7-header__search-wrap {
   position: relative;
   display: flex;
@@ -1211,7 +1211,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   box-shadow: none;
 }
 
-/* Od 1024px (desktop): pole wyszukiwania w jednej linii z headerem; do 1023px — ikona + panel */
+/* Od 1024px (desktop): pole wyszukiwania w jednej linii z headerem; do 1023px â€” ikona + panel */
 @media (min-width: 1024px) {
   .mnsk7-header__search-toggle {
     display: none;
@@ -1244,7 +1244,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     margin: 0;
   }
   .mnsk7-header__search-dropdown .mnsk7-header__search-input {
-    min-width: 11.5em; /* placeholder "Szukaj produktów…" */
+    min-width: 11.5em; /* placeholder "Szukaj produktĂłwâ€¦" */
     min-height: 40px;
     height: 40px;
     padding: 0.4rem 0.75rem;
@@ -1333,7 +1333,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   outline-offset: 1px;
 }
 
-/* Account link + icon — bez nałożenia na koszyk (min-width: 0, flex-shrink). No link underline/visited artifact. */
+/* Account link + icon â€” bez naĹ‚oĹĽenia na koszyk (min-width: 0, flex-shrink). No link underline/visited artifact. */
 .mnsk7-header__link {
   display: inline-flex;
   align-items: center;
@@ -1395,7 +1395,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   border-bottom: none;
 }
 
-/* Cart: nie kurczyć przy długim "Moje konto" (audit: zalogowany = kaša) */
+/* Cart: nie kurczyÄ‡ przy dĹ‚ugim "Moje konto" (audit: zalogowany = kaĹˇa) */
 .mnsk7-header__cart {
   position: relative;
   flex-shrink: 0;
@@ -1473,12 +1473,12 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   box-sizing: border-box;
   vertical-align: middle;
 }
-/* Audit task 11: przy pustym koszyku ikona + „0” zawsze widoczne */
+/* Audit task 11: przy pustym koszyku ikona + â€ž0â€ť zawsze widoczne */
 .mnsk7-header__cart--empty .mnsk7-header__cart-icon,
 .mnsk7-header__cart--empty .mnsk7-header__cart-count {
   display: inline-flex !important;
 }
-/* Mini-cart: pokazać do 3 ostatnich pozycji (audit Zad.10); podsumowanie i przyciski zawsze */
+/* Mini-cart: pokazaÄ‡ do 3 ostatnich pozycji (audit Zad.10); podsumowanie i przyciski zawsze */
 .mnsk7-header__cart-dropdown .cart_list,
 .mnsk7-header__cart-dropdown .product_list_widget,
 .mnsk7-header__cart-dropdown ul.cart_list {
@@ -1538,7 +1538,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-header__cart-dropdown .product_list_widget li:last-child {
   border-bottom: none;
 }
-/* Pokazać max 3 pozycje; reszta ukryta */
+/* PokazaÄ‡ max 3 pozycje; reszta ukryta */
 .mnsk7-header__cart-dropdown .cart_list li:nth-child(n+4),
 .mnsk7-header__cart-dropdown .product_list_widget li:nth-child(n+4) {
   display: none !important;
@@ -1557,7 +1557,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   overflow: visible;
   line-height: 1.35;
 }
-/* Odstęp między liczbą produktów a „zł” / etykietami */
+/* OdstÄ™p miÄ™dzy liczbÄ… produktĂłw a â€žzĹ‚â€ť / etykietami */
 .mnsk7-header__cart-summary__main {
   gap: 0.35em 1rem;
   word-spacing: 0.08em;
@@ -1630,7 +1630,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   visibility: visible;
   transform: translateY(0);
 }
-/* Desktop: account link z tekstem — przywróć min-width i padding */
+/* Desktop: account link z tekstem â€” przywrĂłÄ‡ min-width i padding */
 @media (min-width: 1024px) {
   .mnsk7-header__link.mnsk7-header__link--account {
     min-width: 7.5em;
@@ -1665,7 +1665,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   background: var(--color-primary-hover);
 }
 
-/* Tablet: jedna linia, menu może się zawijać */
+/* Tablet: jedna linia, menu moĹĽe siÄ™ zawijaÄ‡ */
 @media (max-width: 900px) {
   .mnsk7-header__inner {
     gap: 0.5rem;
@@ -1781,7 +1781,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     background: rgba(0, 0, 0, 0.04);
     color: var(--color-primary);
   }
-  /* Cart fragments fallback: jeśli Woo podmieni markup na amount/count, zachowaj ikonowy przycisk */
+  /* Cart fragments fallback: jeĹ›li Woo podmieni markup na amount/count, zachowaj ikonowy przycisk */
   .mnsk7-header__cart .cart-contents .woocommerce-Price-amount,
   .mnsk7-header__cart .cart-contents .count {
     display: none !important;
@@ -1835,7 +1835,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     line-height: 16px;
     z-index: 1;
   }
-  /* Mobile menu panel: below header, full width, vertical nav list, left-aligned, normal spacing — not empty block */
+  /* Mobile menu panel: below header, full width, vertical nav list, left-aligned, normal spacing â€” not empty block */
   .mnsk7-header__nav .mnsk7-header__menu {
     display: none !important;
     position: absolute;
@@ -1885,7 +1885,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     outline: 2px solid var(--color-focus, var(--color-primary));
     outline-offset: -2px;
   }
-  /* Mobile: submenu Sklep ukryte domyślnie; po tap na „Sklep” (li.is-open) — rozwijane (JS), ta sama struktura co desktop */
+  /* Mobile: submenu Sklep ukryte domyĹ›lnie; po tap na â€žSklepâ€ť (li.is-open) â€” rozwijane (JS), ta sama struktura co desktop */
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu {
     display: none !important;
   }
@@ -1909,7 +1909,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     min-width: 44px;
     padding: 0;
   }
-  /* Mobile: in-header search dropdown hidden — use Pattern B panel below header (pushes content) */
+  /* Mobile: in-header search dropdown hidden â€” use Pattern B panel below header (pushes content) */
   .mnsk7-header__search-dropdown {
     display: none !important;
   }
@@ -1974,7 +1974,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 
-/* Mobile search panel (Pattern B): below header, in flow — pushes content down. Attached to header visually. */
+/* Mobile search panel (Pattern B): below header, in flow â€” pushes content down. Attached to header visually. */
 .mnsk7-header-search-panel {
   display: none;
   background: var(--color-white);
@@ -1988,7 +1988,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     display: none !important;
   }
 }
-/* Tablet (769-1023px): search row zawsze widoczna — druga linia pod headerem, jeden składany control (input + przycisk bez szpary) */
+/* Tablet (769-1023px): search row zawsze widoczna â€” druga linia pod headerem, jeden skĹ‚adany control (input + przycisk bez szpary) */
 @media (min-width: 769px) and (max-width: 1023px) {
   .mnsk7-header__search-wrap {
     display: none !important;
@@ -1999,7 +1999,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     border-bottom: 1px solid var(--color-border);
     padding: 0.5rem 1rem;
   }
-  /* Strona główna: bez białej wstęgi nad search barem — panel tuż pod headerem */
+  /* Strona gĹ‚Ăłwna: bez biaĹ‚ej wstÄ™gi nad search barem â€” panel tuĹĽ pod headerem */
   body.home .mnsk7-header-search-panel {
     padding-top: 0;
   }
@@ -2008,7 +2008,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     margin: 0 auto;
   }
 }
-/* Mobile (≤768px): panel tylko po kliknięciu ikony */
+/* Mobile (â‰¤768px): panel tylko po klikniÄ™ciu ikony */
 @media (max-width: 768px) {
   .mnsk7-header-search-panel[hidden] {
     display: none !important;
@@ -2018,7 +2018,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 @media (max-width: 1023px) {
-  /* Jeden komponent: form ma obramowanie i radius, overflow:hidden — input i przycisk bez własnego bordera */
+  /* Jeden komponent: form ma obramowanie i radius, overflow:hidden â€” input i przycisk bez wĹ‚asnego bordera */
   .mnsk7-header-search-panel__form {
     display: flex;
     flex-direction: row;
@@ -2095,7 +2095,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
 }
 
-/* Warstwa treści pod headerem (menu i dropdowny zawsze na wierzchu). Dual-support (Task 4). */
+/* Warstwa treĹ›ci pod headerem (menu i dropdowny zawsze na wierzchu). Dual-support (Task 4). */
 #content.site-content,
 .mnsk7-content.site-content,
 body .site .site-content {
@@ -2103,9 +2103,9 @@ body .site .site-content {
   z-index: 0;
 }
 
-/* Audit: dropdown Sklep nie może przycinać się ani zakrywać paska promocyjnego i koszyka.
-   Tylko desktop: overflow visible dla dropdownów. Na mobile/tablet (<=1023px) inner ma overflow: hidden
-   żeby uniknąć nałożenia menu/search na siebie (mobile UX fix). */
+/* Audit: dropdown Sklep nie moĹĽe przycinaÄ‡ siÄ™ ani zakrywaÄ‡ paska promocyjnego i koszyka.
+   Tylko desktop: overflow visible dla dropdownĂłw. Na mobile/tablet (<=1023px) inner ma overflow: hidden
+   ĹĽeby uniknÄ…Ä‡ naĹ‚oĹĽenia menu/search na siebie (mobile UX fix). */
 @media (min-width: 1024px) {
   .mnsk7-header {
     overflow: visible;
@@ -2121,7 +2121,7 @@ body .site .site-content {
 .mnsk7-header__menu .sub-menu {
   z-index: 100;
 }
-/* Search, konto, koszyk — zawsze na wierzchu w headerze (dropdown nie zakrywa) */
+/* Search, konto, koszyk â€” zawsze na wierzchu w headerze (dropdown nie zakrywa) */
 .mnsk7-header__actions {
   position: relative;
   z-index: 110;
@@ -2131,7 +2131,7 @@ body .site .site-content {
   z-index: 111;
 }
 
-/* Mobile Sklep: gwarancja widoczności submenu po tap (li.is-open) — wygrywa z innymi regułami */
+/* Mobile Sklep: gwarancja widocznoĹ›ci submenu po tap (li.is-open) â€” wygrywa z innymi reguĹ‚ami */
 @media (max-width: 1023px) {
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children.is-open > .sub-menu.mnsk7-megamenu {
     display: flex !important;
@@ -2145,7 +2145,7 @@ body .site .site-content {
   }
 }
 
-/* hdr-01: inline padding jak #content / .site-content (25-global-layout) — nadpisuje węższe paddingi z bloków <=1023px */
+/* hdr-01: inline padding jak #content / .site-content (25-global-layout) â€” nadpisuje wÄ™ĹĽsze paddingi z blokĂłw <=1023px */
 @media (min-width: 769px) {
   .mnsk7-header__inner {
     padding-inline: max(1.5rem, env(safe-area-inset-left)) max(1.5rem, env(safe-area-inset-right));
@@ -2162,15 +2162,15 @@ body .site .site-content {
   }
 }
 
-/* Legacy header paths removed: jeden header = header.php (mnsk7-header). Nie używać .mnsk7-header-actions / .mnsk7-header-link. */
+/* Legacy header paths removed: jeden header = header.php (mnsk7-header). Nie uĹĽywaÄ‡ .mnsk7-header-actions / .mnsk7-header-link. */
 
 /* === 05-plp-cards.css === */
-/* 05-plp-cards — extracted from main.css */
+/* 05-plp-cards â€” extracted from main.css */
 
-   § SHOP / ARCHIVE LAYOUT — content + sidebar
+   Â§ SHOP / ARCHIVE LAYOUT â€” content + sidebar
    ----------------------------------------------------------------- */
 
-/* Strona sklepu i archiwum: dual-support — #content/#primary i .mnsk7-* (Task 4).
+/* Strona sklepu i archiwum: dual-support â€” #content/#primary i .mnsk7-* (Task 4).
    ARCH-21: padding-top tylko w 25-global-layout.css (canonical). Tu tylko flex + boczne/dolny padding. */
 body.woocommerce-page #content,
 body.woocommerce-page .mnsk7-content,
@@ -2182,7 +2182,7 @@ body.woocommerce .mnsk7-content {
   max-width: var(--content-max);
   margin-left: auto;
   margin-right: auto;
-  /* padding-top: canonical 25-global-layout.css — nie ustawiać tutaj */
+  /* padding-top: canonical 25-global-layout.css â€” nie ustawiaÄ‡ tutaj */
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   padding-bottom: 1.5rem;
@@ -2230,7 +2230,7 @@ body.woocommerce .mnsk7-content h1.page-title {
   body.woocommerce #content,
   body.woocommerce .mnsk7-content {
     flex-direction: column;
-    /* padding-top: canonical 25-global-layout.css — nie ustawiać tutaj */
+    /* padding-top: canonical 25-global-layout.css â€” nie ustawiaÄ‡ tutaj */
     padding-left: var(--space-16);
     padding-right: var(--space-16);
     padding-bottom: var(--space-16);
@@ -2249,10 +2249,10 @@ body.woocommerce .mnsk7-content h1.page-title {
   }
 }
 
-   § PLP PRODUCT CARDS
+   Â§ PLP PRODUCT CARDS
    ----------------------------------------------------------------- */
 
-/* Clearfix ::before (Storefront/Woo) = pusta „komórka” w gridzie. Task 7: wyłączamy celowo — nasz layout to grid, nie float-clearfix. */
+/* Clearfix ::before (Storefront/Woo) = pusta â€žkomĂłrkaâ€ť w gridzie. Task 7: wyĹ‚Ä…czamy celowo â€” nasz layout to grid, nie float-clearfix. */
 .woocommerce ul.products::before,
 .woocommerce-page ul.products::before,
 ul.products.columns-3::before,
@@ -2285,7 +2285,7 @@ ul.products.columns-4::before {
   border: 1px solid var(--color-border);
   box-shadow: var(--shadow-sm);
   border-radius: var(--r-md);
-  overflow: hidden; /* Task 8: obcięcie obrazu/treści do border-radius karty. */
+  overflow: hidden; /* Task 8: obciÄ™cie obrazu/treĹ›ci do border-radius karty. */
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -2298,7 +2298,7 @@ ul.products.columns-4::before {
   transform: translateY(-2px);
 }
 
-/* Product image — 1:1 aspect (Sandvik-style compact card); tylko link z miniatury (z :has(> img)), żeby nie obcinać nazwy/ceny */
+/* Product image â€” 1:1 aspect (Sandvik-style compact card); tylko link z miniatury (z :has(> img)), ĹĽeby nie obcinaÄ‡ nazwy/ceny */
 .woocommerce ul.products li.product .woocommerce-loop-product__link:has(> img),
 .woocommerce ul.products li.product a.woocommerce-loop-product__link:first-of-type {
   display: block;
@@ -2316,7 +2316,7 @@ ul.products.columns-4::before {
   margin: 0;
 }
 
-/* Product title — max 2 lines, readable; no stray underline/focus artifacts. Title is in its own link (theme moves link wrap). */
+/* Product title â€” max 2 lines, readable; no stray underline/focus artifacts. Title is in its own link (theme moves link wrap). */
 .woocommerce ul.products li.product .woocommerce-loop-product__title,
 .woocommerce ul.products li.product h2 {
   font-size: var(--fs-sm);
@@ -2374,7 +2374,7 @@ ul.products.columns-4::before {
   font-weight: 700;
 }
 
-/* Add to cart button — prevent vertical text (narrow cards in cart/related).
+/* Add to cart button â€” prevent vertical text (narrow cards in cart/related).
  * A11y: darker background so white text meets WCAG 4.5:1 (Lighthouse contrast). */
 .woocommerce ul.products li.product .button,
 .woocommerce ul.products li.product .add_to_cart_button,
@@ -2472,7 +2472,7 @@ ul.products.columns-4::before {
 }
 
 
-/* Product image container — fixed aspect so cards stay compact (Sandvik ref); tylko link z miniatury */
+/* Product image container â€” fixed aspect so cards stay compact (Sandvik ref); tylko link z miniatury */
 .woocommerce ul.products li.product .woocommerce-loop-product__link:has(> img),
 .woocommerce ul.products li.product a.woocommerce-loop-product__link:first-of-type {
   display: block;
@@ -2487,9 +2487,9 @@ ul.products.columns-4::before {
 }
 
 /* === 06-single-product.css === */
-/* 06-single-product — PDP (product_card_visual, UI_SPEC_V2) */
+/* 06-single-product â€” PDP (product_card_visual, UI_SPEC_V2) */
 
-/* PDP: pełna szerokość (bez sidebaru). Dual-support #content/#primary i .mnsk7-* (Task 4). */
+/* PDP: peĹ‚na szerokoĹ›Ä‡ (bez sidebaru). Dual-support #content/#primary i .mnsk7-* (Task 4). */
 body.single-product #content #primary,
 body.single-product #content > main,
 body.single-product .mnsk7-content .mnsk7-content-area,
@@ -2514,7 +2514,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   padding: 0 1rem 1.5rem;
 }
 
-/* Opis, podobne produkty i cała treść pod buyboxem — pełna szerokość, pod zdjęciem i summary */
+/* Opis, podobne produkty i caĹ‚a treĹ›Ä‡ pod buyboxem â€” peĹ‚na szerokoĹ›Ä‡, pod zdjÄ™ciem i summary */
 .single-product div.product > .mnsk7-product-description-accordion,
 .single-product div.product > .mnsk7-product-extra-media,
 .single-product div.product > .related.products,
@@ -2546,7 +2546,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   flex-direction: column;
   gap: 0;
 }
-/* Kolejność wizualna PDP: okruszki → tytuł → cena + „X osób kupiło” → parametry → formularz (availability wewnątrz przy CTA) → trust */
+/* KolejnoĹ›Ä‡ wizualna PDP: okruszki â†’ tytuĹ‚ â†’ cena + â€žX osĂłb kupiĹ‚oâ€ť â†’ parametry â†’ formularz (availability wewnÄ…trz przy CTA) â†’ trust */
 .single-product .summary.entry-summary.mnsk7-pdp-buybox > * {
   order: 10;
 }
@@ -2579,7 +2579,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   min-width: 200px;
 }
 
-/* Audit task 8: miniaturki — flex-wrap, bez wewnętrznego scrolla */
+/* Audit task 8: miniaturki â€” flex-wrap, bez wewnÄ™trznego scrolla */
 .single-product .images .flex-control-thumbs {
   display: flex;
   flex-wrap: wrap;
@@ -2620,8 +2620,9 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   font-size: clamp(1.25rem, 2.5vw, var(--fs-2xl));
   font-weight: 600;
   color: var(--color-text);
-  margin: 0 0 0.5rem;
-  line-height: 1.25;
+  margin: 0 0 0.4rem;
+  line-height: 1.18;
+  max-width: 18ch;
 }
 
 .single-product .summary .price {
@@ -2631,7 +2632,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin: 0 0 0.5rem;
   line-height: 1.2;
 }
-/* Cena + „X osób kupiło” w jednym rzędzie (wrapper z mu-plugina lub flex na rodzicu) */
+/* Cena + â€žX osĂłb kupiĹ‚oâ€ť w jednym rzÄ™dzie (wrapper z mu-plugina lub flex na rodzicu) */
 .mnsk7-pdp-price-row {
   display: flex;
   flex-wrap: wrap;
@@ -2645,6 +2646,13 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--color-text-muted, #555);
+}
+
+.mnsk7-product-value-statement {
+  margin: 0 0 0.85rem;
+  color: var(--color-text-secondary);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
 }
 
 .single-product .summary .price del {
@@ -2663,7 +2671,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   display: none !important;
 }
 
-/* Availability + „X osób kupiło” w jednym rzędzie */
+/* Availability + â€žX osĂłb kupiĹ‚oâ€ť w jednym rzÄ™dzie */
 .mnsk7-product-availability-row {
   display: flex;
   flex-wrap: wrap;
@@ -2709,7 +2717,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   color: inherit;
 }
 
-/* Variable: quantity + availability + button w jednym rzędzie */
+/* Variable: quantity + availability + button w jednym rzÄ™dzie */
 .single-product .woocommerce-variation-add-to-cart {
   display: flex;
   flex-wrap: wrap;
@@ -2770,7 +2778,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   outline-offset: 1px;
 }
 
-/* TASK 17: Pokazać standardowy UI wariacji WooCommerce (product options), nie tylko tabelę Kluczowe parametry */
+/* TASK 17: PokazaÄ‡ standardowy UI wariacji WooCommerce (product options), nie tylko tabelÄ™ Kluczowe parametry */
 .single-product form.cart .variations {
   margin-bottom: 0.75rem;
 }
@@ -2946,19 +2954,22 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .mnsk7-product-trust {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-border);
+  gap: 0.5rem;
+  margin-top: 0.85rem;
 }
 
 .mnsk7-product-trust__badge {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  min-height: 2.2rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: var(--r-pill);
+  background: rgba(248, 250, 252, 0.95);
   font-size: var(--fs-xs);
   font-weight: 600;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
 }
 
 .mnsk7-product-trust__badge-icon {
@@ -2988,7 +2999,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   color: var(--color-primary);
 }
 
-/* Link „Wróć do wyników wyszukiwania” nad okruszkami (gdy użytkownik przyszedł z wyszukiwania) */
+/* Link â€žWrĂłÄ‡ do wynikĂłw wyszukiwaniaâ€ť nad okruszkami (gdy uĹĽytkownik przyszedĹ‚ z wyszukiwania) */
 .mnsk7-pdp-back-search {
   margin: 0 0 0.5rem;
   font-size: var(--fs-sm);
@@ -3055,7 +3066,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   color: var(--color-text);
 }
 
-/* Opis jako harmonijka (domyślnie zwinięty) — zawsze pod blokiem zdjęcie+buybox. Task 8: overflow: hidden — obcięcie do border-radius. */
+/* Opis jako harmonijka (domyĹ›lnie zwiniÄ™ty) â€” zawsze pod blokiem zdjÄ™cie+buybox. Task 8: overflow: hidden â€” obciÄ™cie do border-radius. */
 .mnsk7-product-description-accordion {
   margin: 1.25rem 0 0.5rem;
   border: 1px solid var(--color-border);
@@ -3084,7 +3095,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 .mnsk7-product-description-accordion[open] .mnsk7-product-description-accordion__summary::before {
-  content: '− ';
+  content: 'â’ ';
 }
 
 .mnsk7-product-description-accordion__content {
@@ -3099,7 +3110,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin-bottom: 0.75rem;
 }
 
-/* PDP: related/upsells na pełną szerokość (breakout z paddingu). Siatka i karta: 12-related-products.css. */
+/* PDP: related/upsells na peĹ‚nÄ… szerokoĹ›Ä‡ (breakout z paddingu). Siatka i karta: 12-related-products.css. */
 .single-product .related.products,
 .single-product .upsells.products,
 .single-product .up-sells.products {
@@ -3182,7 +3193,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   }
 }
 
-/* Sticky CTA na mobile (PDP): widoczny tylko ≤768px, ukrywany gdy główny formularz w viewport */
+/* Sticky CTA na mobile (PDP): widoczny tylko â‰¤768px, ukrywany gdy gĹ‚Ăłwny formularz w viewport */
 .mnsk7-pdp-sticky-cta {
   display: none;
   position: fixed;
@@ -3267,12 +3278,12 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 /* === 07-mnsk7-blocks.css === */
-/* 07-mnsk7-blocks — extracted from main.css */
+/* 07-mnsk7-blocks â€” extracted from main.css */
 
-   § MNK7 CUSTOM BLOCKS (mu-plugin)
+   Â§ MNK7 CUSTOM BLOCKS (mu-plugin)
    ----------------------------------------------------------------- */
 
-/* Key params table. overflow: hidden — obcinanie zawartości do border-radius. */
+/* Key params table. overflow: hidden â€” obcinanie zawartoĹ›ci do border-radius. */
 .mnsk7-product-key-params {
   border: 1px solid var(--color-border);
   border-radius: var(--r-sm);
@@ -3410,7 +3421,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   line-height: 1.5;
 }
 
-/* Meta chips (kategorie/tagi) — ładne pilli */
+/* Meta chips (kategorie/tagi) â€” Ĺ‚adne pilli */
 .mnsk7-product-meta-chips {
   display: flex;
   flex-wrap: wrap;
@@ -3465,7 +3476,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
 
 /* === 08-home-sections.css === */
-/* 08-home-sections — extracted from main.css
+/* 08-home-sections â€” extracted from main.css
    HOME PAGE SECTIONS
    ----------------------------------------------------------------- */
 
@@ -3476,13 +3487,13 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 .mnsk7-front-page .mnsk7-hero { order: 10; }
-.mnsk7-front-page .mnsk7-section--bestsellers { order: 20; }
-.mnsk7-front-page .mnsk7-section--trust { order: 30; }
+.mnsk7-front-page .mnsk7-section--trust { order: 20; }
+.mnsk7-front-page .mnsk7-section--bestsellers { order: 30; }
 .mnsk7-front-page .mnsk7-section--catalog { order: 40; }
 .mnsk7-front-page .mnsk7-section--loyalty { order: 50; }
 .mnsk7-front-page .mnsk7-section--insta { order: 60; }
 
-/* Hero — mobile-first, jasny e-commerce look + techniczna czytelność */
+/* Hero â€” mobile-first, jasny e-commerce look + techniczna czytelnoĹ›Ä‡ */
 .mnsk7-hero {
   background: linear-gradient(180deg, #f6f9ff 0%, #eef4fc 100%);
   color: var(--color-text);
@@ -3631,6 +3642,24 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   width: 100%;
 }
 
+.mnsk7-hero__trust-strip {
+  display: grid;
+  gap: 0.55rem;
+  margin-top: 1rem;
+  padding: 0.85rem 0.95rem;
+  border: 1px solid rgba(22, 88, 176, 0.14);
+  border-radius: 0.9rem;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 10px 28px rgba(15, 38, 72, 0.06);
+}
+
+.mnsk7-hero__trust-strip span {
+  color: #193b67;
+  font-size: 0.86rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
 .mnsk7-hero__link {
   justify-self: start;
   color: #16355e;
@@ -3692,6 +3721,11 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
     gap: 0.65rem;
   }
 
+  .mnsk7-hero__trust-strip {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+  }
+
   .mnsk7-hero__usp {
     font-size: 0.79rem;
   }
@@ -3726,7 +3760,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
 /* Sections */
 .mnsk7-section {
-  padding: var(--space-48) 0;
+  padding: clamp(2.25rem, 4vw, 3.25rem) 0;
 }
 
 .mnsk7-section--light {
@@ -3738,7 +3772,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   scroll-margin-top: calc(var(--header-h, 56px) + var(--mnsk7-promo-h, 0px) + 0.75rem);
 }
 
-/* Dlaczego kupujący + Program rabatowy — beżowe tło full-bleed (bez bocznych odstępów) */
+/* Dlaczego kupujÄ…cy + Program rabatowy â€” beĹĽowe tĹ‚o full-bleed (bez bocznych odstÄ™pĂłw) */
 .mnsk7-section--trust.mnsk7-section--light,
 .mnsk7-section--loyalty.mnsk7-section--light,
 .mnsk7-section--catalog.mnsk7-section--light,
@@ -3759,7 +3793,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
     width: calc(100% + 4rem);
   }
 }
-/* Przeglądaj asortyment (TASK 12) — białe tło, chipy białe z czarną ramką, hover niebieski */
+/* PrzeglÄ…daj asortyment (TASK 12) â€” biaĹ‚e tĹ‚o, chipy biaĹ‚e z czarnÄ… ramkÄ…, hover niebieski */
 .mnsk7-section--catalog.mnsk7-section--light,
 .mnsk7-section.mnsk7-section--catalog {
   background: var(--color-white) !important;
@@ -3784,6 +3818,36 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .mnsk7-section--catalog .mnsk7-cats__item:hover .mnsk7-cats__img-wrap {
   border-color: var(--color-primary);
   background: rgba(12, 125, 219, 0.06);
+}
+
+.mnsk7-section--catalog .mnsk7-cats__item {
+  align-items: stretch;
+  gap: 0.9rem;
+  min-height: 100%;
+  padding: 1rem;
+  border-radius: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.05);
+}
+
+.mnsk7-section--catalog .mnsk7-cats__body {
+  display: grid;
+  align-content: start;
+  gap: 0.35rem;
+}
+
+.mnsk7-section--catalog .mnsk7-cats__hint {
+  color: var(--color-text-secondary);
+  font-size: var(--fs-xs);
+  line-height: 1.45;
+}
+
+.mnsk7-section--catalog .mnsk7-cats__arrow {
+  align-self: end;
+  color: var(--color-primary);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+  white-space: nowrap;
 }
 
 .mnsk7-section__title {
@@ -3820,7 +3884,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   color: var(--color-primary-hover);
 }
 
-/* Przeglądaj asortyment: Zastosowanie i materiały — chmura chipów (bez Więcej), potem Rodzaje frezów — karty. Jednakowe odstępy pionowe. */
+/* PrzeglÄ…daj asortyment: Zastosowanie i materiaĹ‚y â€” chmura chipĂłw (bez WiÄ™cej), potem Rodzaje frezĂłw â€” karty. Jednakowe odstÄ™py pionowe. */
 .mnsk7-catalog-aside {
   margin-bottom: 1.25rem;
 }
@@ -3844,7 +3908,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   min-width: 0;
 }
 
-/* Katalog: grupy chipów — każda grupa = etykieta + pozioma swipe-row (mobile). */
+/* Katalog: grupy chipĂłw â€” kaĹĽda grupa = etykieta + pozioma swipe-row (mobile). */
 .mnsk7-catalog-chips {
   display: flex;
   flex-direction: column;
@@ -3881,12 +3945,12 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   .mnsk7-section--catalog .col-full {
     overflow-x: hidden;
   }
-  /* Chmura tagów (Zastosowanie) — zawsze wrap, bez swipe. */
+  /* Chmura tagĂłw (Zastosowanie) â€” zawsze wrap, bez swipe. */
   .mnsk7-catalog-chips__scroll--cloud {
     flex-wrap: wrap;
     overflow: visible;
   }
-  /* Mobile: swipe row pattern — ukryty scrollbar, snap, fade hint (tylko gdy nie --cloud). */
+  /* Mobile: swipe row pattern â€” ukryty scrollbar, snap, fade hint (tylko gdy nie --cloud). */
   .mnsk7-catalog-chips__scroll:not(.mnsk7-catalog-chips__scroll--cloud) {
     flex-wrap: nowrap;
     overflow-x: auto;
@@ -4005,7 +4069,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   outline-offset: 2px;
 }
 
-/* Tagi / przeglądaj według cech — intro + label + chipy */
+/* Tagi / przeglÄ…daj wedĹ‚ug cech â€” intro + label + chipy */
 .mnsk7-section__sub.mnsk7-tags-intro {
   margin-bottom: 1.25rem;
 }
@@ -4046,7 +4110,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   outline-offset: 2px;
 }
 
-/* Katalog kategorii (jak Sandvik) — karta: obrazek po lewej, nazwa + liczba, strzałka */
+/* Katalog kategorii (jak Sandvik) â€” karta: obrazek po lewej, nazwa + liczba, strzaĹ‚ka */
 .mnsk7-cats--catalog {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -4061,7 +4125,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   }
 }
 
-/* Mobile: kategorie nie wychodzą poza ekran — jedna kolumna na wąskich, ograniczenie overflow */
+/* Mobile: kategorie nie wychodzÄ… poza ekran â€” jedna kolumna na wÄ…skich, ograniczenie overflow */
 @media (max-width: 480px) {
   .mnsk7-section--catalog .mnsk7-cats--catalog {
     grid-template-columns: 1fr;
@@ -4221,7 +4285,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin-top: 1rem;
 }
 
-/* Wspólny styl CTA (trust, loyalty) — jeden system przycisków */
+/* WspĂłlny styl CTA (trust, loyalty) â€” jeden system przyciskĂłw */
 .mnsk7-btn,
 .mnsk7-trust-cta__btn {
   display: inline-flex;
@@ -4256,7 +4320,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   color: var(--color-white);
 }
 
-/* Loyalty: CTA dla gości */
+/* Loyalty: CTA dla goĹ›ci */
 .mnsk7-loyalty-cta {
   text-align: center;
   margin-top: 1.5rem;
@@ -4286,7 +4350,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 
-/* Jedna CTA Allegro — ukryj duplikaty z shortcode */
+/* Jedna CTA Allegro â€” ukryj duplikaty z shortcode */
 .mnsk7-section--trust a[href*="allegro"] { display: none !important; }
 .mnsk7-section--trust .mnsk7-trust-cta a.mnsk7-trust-cta__btn { display: inline-flex !important; }
 
@@ -4328,7 +4392,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .mnsk7-loyalty-tier:nth-child(3) { animation-delay: 0.19s; }
 .mnsk7-loyalty-tier:nth-child(4) { animation-delay: 0.26s; }
 
-/* Najwyższy próg (20%) — wyróżniony */
+/* NajwyĹĽszy prĂłg (20%) â€” wyrĂłĹĽniony */
 .mnsk7-loyalty-tier:last-child {
   background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
   border: 2px solid var(--color-primary);
@@ -4360,7 +4424,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   font-weight: 600;
 }
 
-/* Allegro reviews — wyrównane karty, wycentrowana treść */
+/* Allegro reviews â€” wyrĂłwnane karty, wycentrowana treĹ›Ä‡ */
 .mnsk7-allegro-reviews__list {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -4396,7 +4460,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .mnsk7-allegro-reviews__item:nth-child(3) { animation-delay: 0.19s; }
 
 .mnsk7-allegro-reviews__item::before {
-  content: "★★★★★";
+  content: "â…â…â…â…â…";
   color: var(--color-warning);
   font-size: var(--fs-base);
   letter-spacing: 0.1em;
@@ -4404,7 +4468,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   order: -1;
 }
 
-/* Treść shortcode — wyśrodkuj jeśli ma własne divy */
+/* TreĹ›Ä‡ shortcode â€” wyĹ›rodkuj jeĹ›li ma wĹ‚asne divy */
 .mnsk7-allegro-reviews__item > * {
   text-align: center;
   width: 100%;
@@ -4432,7 +4496,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   transform: translateY(-1px);
 }
 
-/* Instagram section — wysokość = treść (tytuł + posty + profil), bez białej wstęgi pod postami */
+/* Instagram section â€” wysokoĹ›Ä‡ = treĹ›Ä‡ (tytuĹ‚ + posty + profil), bez biaĹ‚ej wstÄ™gi pod postami */
 .mnsk7-section--insta {
   background: var(--color-surface);
   padding: var(--space-32) 0 var(--space-16);
@@ -4448,11 +4512,11 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   align-items: center;
   min-height: 0;
 }
-/* Nadpisanie ogólnego margin-bottom: 1rem — żadnej białej wstęgi pod siatką 6 postów */
+/* Nadpisanie ogĂłlnego margin-bottom: 1rem â€” ĹĽadnej biaĹ‚ej wstÄ™gi pod siatkÄ… 6 postĂłw */
 .mnsk7-section--insta .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts {
   margin-bottom: 0 !important;
   padding-bottom: 0;
-  align-items: start; /* wiersze siatki nie rozciągają się do najwyższego iframe */
+  align-items: start; /* wiersze siatki nie rozciÄ…gajÄ… siÄ™ do najwyĹĽszego iframe */
 }
 .mnsk7-section--insta .mnsk7-instagram-feed__profile {
   margin-bottom: 0;
@@ -4486,7 +4550,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin-right: auto;
 }
 
-/* Instagram — wyraźny rozmiar miniaturek (nie mikro) */
+/* Instagram â€” wyraĹşny rozmiar miniaturek (nie mikro) */
 .mnsk7-instagram-feed {
   display: flex;
   flex-direction: column;
@@ -4496,7 +4560,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin: 0 auto;
 }
 
-/* Wariant „karta” jak na alesyatakun.by: jedna duża karuzela + profil + przycisk */
+/* Wariant â€žkartaâ€ť jak na alesyatakun.by: jedna duĹĽa karuzela + profil + przycisk */
 .mnsk7-instagram-feed--card {
   width: 100%;
   max-width: 560px;
@@ -4640,8 +4704,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   color: #fff;
 }
 
-/* Wariant embed (jak alesyatakun.by): blockquote + embed.js → iframe od Instagram */
-/* Zapobiegaj ukryciu przez pluginy — kontener z postami musi być widoczny (display:none na script#...-js nie blokuje wykonania skryptu, ale np. lazy load może ukryć rodziców) */
+/* Wariant embed (jak alesyatakun.by): blockquote + embed.js â†’ iframe od Instagram */
+/* Zapobiegaj ukryciu przez pluginy â€” kontener z postami musi byÄ‡ widoczny (display:none na script#...-js nie blokuje wykonania skryptu, ale np. lazy load moĹĽe ukryÄ‡ rodzicĂłw) */
 .mnsk7-section--insta .mnsk7-instagram-feed--embed {
   display: flex !important;
 }
@@ -4653,7 +4717,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   width: 100%;
 }
 
-/* Wariant profile: jeden iframe z embed profilu (jak kayer.pl) — ładuje się stabilnie bez embed.js */
+/* Wariant profile: jeden iframe z embed profilu (jak kayer.pl) â€” Ĺ‚aduje siÄ™ stabilnie bez embed.js */
 .mnsk7-instagram-feed--profile {
   max-width: 680px;
   width: 100%;
@@ -4702,7 +4766,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   text-align: center;
 }
 
-/* Siatka: 1 kol. mobilka, 2 od 600px, 2 na desktop — większe posty (nie 3 małe) */
+/* Siatka: 1 kol. mobilka, 2 od 600px, 2 na desktop â€” wiÄ™ksze posty (nie 3 maĹ‚e) */
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts {
   display: grid;
   grid-template-columns: 1fr;
@@ -4733,7 +4797,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   position: relative;
 }
 
-/* Placeholder pod embed — wyraźna wysokość (posty nie „mikro”) */
+/* Placeholder pod embed â€” wyraĹşna wysokoĹ›Ä‡ (posty nie â€žmikroâ€ť) */
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media {
   min-height: 380px;
   background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
@@ -4746,7 +4810,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   }
 }
 
-/* Fallback link gdy embed.js nie załaduje iframe — widoczna karta z linkiem */
+/* Fallback link gdy embed.js nie zaĹ‚aduje iframe â€” widoczna karta z linkiem */
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post-fallback {
   display: inline-flex;
   align-items: center;
@@ -4770,7 +4834,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   display: none;
 }
 
-/* Większe embedy — pełna szerokość komórki, min 320px, max 560px (Instagram ładuje w dobrej skali) */
+/* WiÄ™ksze embedy â€” peĹ‚na szerokoĹ›Ä‡ komĂłrki, min 320px, max 560px (Instagram Ĺ‚aduje w dobrej skali) */
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media,
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post iframe {
   width: 100% !important;
@@ -4871,7 +4935,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   box-shadow: var(--shadow-md);
 }
 
-/* Miniatura posta — zawsze kwadrat, równo przycięta */
+/* Miniatura posta â€” zawsze kwadrat, rĂłwno przyciÄ™ta */
 .mnsk7-instagram-feed__item::before {
   content: "";
   display: block;
@@ -4930,7 +4994,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   text-align: center;
 }
 
-/* Bestsellers — w obrębie content-max (bez breakout), żeby wszystkie 4 kolumny × 2 rzędy (8 prod.) były widoczne */
+/* Bestsellers â€” w obrÄ™bie content-max (bez breakout), ĹĽeby wszystkie 4 kolumny Ă— 2 rzÄ™dy (8 prod.) byĹ‚y widoczne */
 .mnsk7-front-page .mnsk7-section--bestsellers {
   box-sizing: border-box;
   padding-top: 1.5rem;
@@ -4952,7 +5016,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   max-width: 100%;
 }
 
-/* Nie zostawiać przed ul.products żadnego elementu w jednej „komórce” — np. result count */
+/* Nie zostawiaÄ‡ przed ul.products ĹĽadnego elementu w jednej â€žkomĂłrceâ€ť â€” np. result count */
 .mnsk7-section--bestsellers .woocommerce {
   display: block;
 }
@@ -4960,13 +5024,13 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   display: none !important;
 }
 
-/* Pusty pierwszy li (clear/placeholder) — tylko w bestsellerach */
+/* Pusty pierwszy li (clear/placeholder) â€” tylko w bestsellerach */
 .mnsk7-section--bestsellers ul.products li.clear,
 .mnsk7-section--bestsellers ul.products > li:first-child:empty {
   display: none !important;
 }
 
-/* Siatka i karta bestsellerów: 12-related-products.css (wspólny recommendation block). */
+/* Siatka i karta bestsellerĂłw: 12-related-products.css (wspĂłlny recommendation block). */
 
 .mnsk7-section--bestsellers .mnsk7-bestsellers-title,
 .mnsk7-section--bestsellers .woocommerce h2 {
@@ -5039,9 +5103,9 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 /* === 09-footer.css === */
-/* 09-footer — jeden styl z resztą strony: primary, zaokrąglenia, typografia */
+/* 09-footer â€” jeden styl z resztÄ… strony: primary, zaokrÄ…glenia, typografia */
 
-/* Strefa wysyłki: powiadomienie przeniesione z treści nad footer (bez zsuwania strony) */
+/* Strefa wysyĹ‚ki: powiadomienie przeniesione z treĹ›ci nad footer (bez zsuwania strony) */
 .mnsk7-shipping-zone-placeholder {
   max-width: var(--content-max);
   margin: 0 auto;
@@ -5061,7 +5125,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   border-radius: var(--r-sm);
 }
 
-/* Ciemny, kontrastowy footer — tokeny dla spójności z cookie barem. !important nadpisuje Storefront. */
+/* Ciemny, kontrastowy footer â€” tokeny dla spĂłjnoĹ›ci z cookie barem. !important nadpisuje Storefront. */
 #colophon.mnsk7-footer,
 .mnsk7-footer {
   background: var(--color-footer-bg) !important;
@@ -5070,7 +5134,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin: 0;
   font-family: var(--font-base);
 }
-/* Na stronie Moje konto i innych WooCommerce — ten sam footer co na głównej (nadpisuje ewent. styl parenta) */
+/* Na stronie Moje konto i innych WooCommerce â€” ten sam footer co na gĹ‚Ăłwnej (nadpisuje ewent. styl parenta) */
 body.woocommerce-account .mnsk7-footer,
 body.woocommerce-account #colophon.mnsk7-footer,
 body.page .mnsk7-footer,
@@ -5078,13 +5142,13 @@ body.page #colophon.mnsk7-footer {
   background: var(--color-footer-bg) !important;
 }
 
-/* Górny blok: obramowanie w kolorze strony */
+/* GĂłrny blok: obramowanie w kolorze strony */
 .mnsk7-footer__top {
   padding: var(--space-32) 0 1.75rem;
   border-top: 3px solid var(--color-primary);
 }
 
-/* Audit 2026-03: 4 kolumny — Klient, Kategorie, Kontakt, Newsletter (bez osobnej kolumny Dostawa) */
+/* Audit 2026-03: 4 kolumny â€” Klient, Kategorie, Kontakt, Newsletter (bez osobnej kolumny Dostawa) */
 .mnsk7-footer__inner {
   max-width: var(--content-max);
   margin: 0 auto;
@@ -5097,8 +5161,8 @@ body.page #colophon.mnsk7-footer {
   min-width: 0;
   overflow-wrap: break-word;
 }
-/* Audit task 5: pełny tekst „Darmowa dostawa od 300 zł. Tylko Polska.” — zawijanie zamiast obcięcia */
-/* Na stronie głównej ukryj (hero ma już ten tekst w USP) */
+/* Audit task 5: peĹ‚ny tekst â€žDarmowa dostawa od 300 zĹ‚. Tylko Polska.â€ť â€” zawijanie zamiast obciÄ™cia */
+/* Na stronie gĹ‚Ăłwnej ukryj (hero ma juĹĽ ten tekst w USP) */
 .front-page .mnsk7-footer__dostawa-line {
   display: none;
 }
@@ -5129,6 +5193,10 @@ body.page #colophon.mnsk7-footer {
 }
 .mnsk7-footer__newsletter-privacy a {
   color: var(--color-footer-link);
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+  text-decoration-thickness: 0.08em;
+  font-weight: 600;
 }
 
 .mnsk7-footer__newsletter-desc {
@@ -5176,7 +5244,7 @@ body.page #colophon.mnsk7-footer {
   background: var(--color-primary-hover);
 }
 
-/* UX: czytelność — font nie mniejszy od podstawowego (NN/G) */
+/* UX: czytelnoĹ›Ä‡ â€” font nie mniejszy od podstawowego (NN/G) */
 .mnsk7-footer__col {
   font-size: var(--fs-base);
 }
@@ -5186,14 +5254,14 @@ body.page #colophon.mnsk7-footer {
   margin: 0.35rem 0;
   line-height: 1.6;
 }
-/* Audit: adres i KRS/NIP/REGON — zawijanie na wąskich ekranach */
+/* Audit: adres i KRS/NIP/REGON â€” zawijanie na wÄ…skich ekranach */
 .mnsk7-footer__address {
   word-wrap: break-word;
   overflow-wrap: break-word;
 }
 
-/* Desktop: trigger wygląda jak nagłówek sekcji (bez wyglądu przycisku).
-   appearance/box-shadow — nadpisanie globalnych stylów button (Storefront/plugins). */
+/* Desktop: trigger wyglÄ…da jak nagĹ‚Ăłwek sekcji (bez wyglÄ…du przycisku).
+   appearance/box-shadow â€” nadpisanie globalnych stylĂłw button (Storefront/plugins). */
 .mnsk7-footer__accordion-trigger {
   display: block;
   width: 100%;
@@ -5242,13 +5310,13 @@ body.page #colophon.mnsk7-footer {
   color: var(--color-white);
 }
 
-/* Lista kontaktów z ikonami */
+/* Lista kontaktĂłw z ikonami */
 .mnsk7-footer__contact-list {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-/* Dane firmy / adres siedziby (domyślnie z filtra mnsk7_footer_legal_address) */
+/* Dane firmy / adres siedziby (domyĹ›lnie z filtra mnsk7_footer_legal_address) */
 .mnsk7-footer__address {
   margin: 0 0 0.75rem;
   line-height: 1.55;
@@ -5265,7 +5333,7 @@ body.page #colophon.mnsk7-footer {
   display: block;
 }
 
-/* Godziny otwarcia — dwie kolumny, równo */
+/* Godziny otwarcia â€” dwie kolumny, rĂłwno */
 .mnsk7-footer__hours {
   margin: 0;
   display: grid;
@@ -5330,7 +5398,7 @@ body.page #colophon.mnsk7-footer {
   margin-bottom: 0.4rem;
 }
 
-/* Dolny pasek: ciemny, spójny z footerem (nie beż) */
+/* Dolny pasek: ciemny, spĂłjny z footerem (nie beĹĽ) */
 .mnsk7-footer__bottom {
   background: var(--color-footer-bottom);
   padding: 0.75rem 0;
@@ -5364,7 +5432,7 @@ body.page #colophon.mnsk7-footer {
 }
 
 /* -----------------------------------------------------------------
-   Mobile footer accordion (≤768px) — jeden mechanizm, bez duplikatów
+   Mobile footer accordion (â‰¤768px) â€” jeden mechanizm, bez duplikatĂłw
    ----------------------------------------------------------------- */
 @media (max-width: 768px) {
   .mnsk7-footer__top {
@@ -5382,7 +5450,7 @@ body.page #colophon.mnsk7-footer {
     border-bottom: none;
   }
 
-  /* Trigger: cały wiersz klikalny, bez native button look / focus overlay / tap highlight */
+  /* Trigger: caĹ‚y wiersz klikalny, bez native button look / focus overlay / tap highlight */
   .mnsk7-footer__accordion-trigger,
   .mnsk7-footer__accordion-trigger * {
     -webkit-tap-highlight-color: transparent;
@@ -5446,7 +5514,7 @@ body.page #colophon.mnsk7-footer {
     content: "+";
   }
   .mnsk7-footer__col.is-open .mnsk7-footer__accordion-icon::before {
-    content: "−";
+    content: "â’";
   }
   @media (prefers-reduced-motion: reduce) {
     .mnsk7-footer__accordion-icon {
@@ -5454,8 +5522,8 @@ body.page #colophon.mnsk7-footer {
     }
   }
 
-  /* Panel: jeden source of truth — ukryty domyślnie, widoczny gdy .is-open na kolumnie.
-   * > bezpośredni potomek: panel jest zawsze pierwszym (i jedynym) divem po triggerze w .mnsk7-footer__col.
+  /* Panel: jeden source of truth â€” ukryty domyĹ›lnie, widoczny gdy .is-open na kolumnie.
+   * > bezpoĹ›redni potomek: panel jest zawsze pierwszym (i jedynym) divem po triggerze w .mnsk7-footer__col.
    */
   .mnsk7-footer__accordion-panel {
     display: none !important;
@@ -5505,7 +5573,7 @@ body.page #colophon.mnsk7-footer {
 }
 
 /* === 10-cookie-bar.css === */
-/* 10-cookie-bar — widoczny pasek, Ustawienia (GDPR), safe-area (iPhone). Bar poza #page (fixed względem viewport). */
+/* 10-cookie-bar â€” widoczny pasek, Ustawienia (GDPR), safe-area (iPhone). Bar poza #page (fixed wzglÄ™dem viewport). */
 
 :root {
   --mnsk7-cookie-bar-h: 0px;
@@ -5521,14 +5589,14 @@ body.page #colophon.mnsk7-footer {
   box-sizing: border-box;
   background: var(--color-dark-bg);
   color: var(--color-white);
-  padding: 0.75rem 1.25rem;
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  padding: 0.55rem 1rem;
+  padding-bottom: max(0.55rem, env(safe-area-inset-bottom));
   z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.75rem 1rem;
+  gap: 0.5rem 0.85rem;
   box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.2);
   font-size: var(--fs-sm);
   line-height: 1.5;
@@ -5556,6 +5624,8 @@ body.page #colophon.mnsk7-footer {
   flex: 1 1 260px;
   min-width: 0;
   margin: 0;
+  font-size: var(--fs-xs);
+  line-height: 1.4;
 }
 
 .mnsk7-cookie-bar__text a,
@@ -5573,7 +5643,7 @@ body.page #colophon.mnsk7-footer {
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem;
   flex-shrink: 0;
   min-width: 0;
   position: relative;
@@ -5584,9 +5654,9 @@ body.page #colophon.mnsk7-footer {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
+  padding: 0.45rem 0.85rem;
   border-radius: var(--r-md);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   font-weight: 600;
   font-family: var(--font-base);
   cursor: pointer;
@@ -5627,9 +5697,9 @@ body.page #colophon.mnsk7-footer {
 
 @media (max-width: 768px) {
   .mnsk7-cookie-bar {
-    padding: 0.5rem 0.75rem;
-    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
-    gap: 0.5rem 0.75rem;
+    padding: 0.45rem 0.7rem;
+    padding-bottom: max(0.45rem, env(safe-area-inset-bottom));
+    gap: 0.35rem 0.6rem;
     font-size: var(--fs-xs);
     line-height: 1.4;
   }
@@ -5645,22 +5715,22 @@ body.page #colophon.mnsk7-footer {
 
   .mnsk7-cookie-bar__buttons {
     width: 100%;
-    gap: 0.4rem;
+    gap: 0.35rem;
   }
 
   .mnsk7-cookie-bar__btn {
     min-height: 44px;
-    padding: 0.45rem 0.85rem;
+    padding: 0.4rem 0.75rem;
     font-size: var(--fs-xs);
     flex: 1 1 auto;
   }
 }
 
 /* === 11-hidden.css === */
-/* 11-hidden — extracted from main.css */
+/* 11-hidden â€” extracted from main.css */
 
 /* -----------------------------------------------------------------
-   § HIDDEN ELEMENTS
+   Â§ HIDDEN ELEMENTS
    ----------------------------------------------------------------- */
 
 .yith-wcwl-add-to-wishlist,
@@ -5681,7 +5751,7 @@ a.add_to_wishlist,
   display: none !important;
 }
 
-/* PDP: linki poprzedni/następny produkt — ukryte (zgodnie z zadaniem) */
+/* PDP: linki poprzedni/nastÄ™pny produkt â€” ukryte (zgodnie z zadaniem) */
 body.single-product .post-navigation,
 body.single-product .storefront-product-pagination,
 body.single-product .product-navigation,
@@ -5698,13 +5768,13 @@ body.single-product .woocommerce-product-navigation {
 
 
 /* === 12-related-products.css === */
-/* 12-related-products — jedyny moduł dla recommendation blocks (PDP, koszyk, główna).
-   Wszystkie sekcje: related, upsells, cross-sells, bestsellery — ta sama siatka, ta sama karta.
-   Breakpoints: desktop ≥1200: 3 kolumny; tablet 768–1199: 2; mobile <768: 2; ≤400: 1.
+/* 12-related-products â€” jedyny moduĹ‚ dla recommendation blocks (PDP, koszyk, gĹ‚Ăłwna).
+   Wszystkie sekcje: related, upsells, cross-sells, bestsellery â€” ta sama siatka, ta sama karta.
+   Breakpoints: desktop â‰Ą1200: 3 kolumny; tablet 768â€“1199: 2; mobile <768: 2; â‰¤400: 1.
    Docs: docs/RECOMMENDATION-BLOCKS-UNIFIED.md */
 
 /* -----------------------------------------------------------------
-   § SECTIONS: nagłówki i odstępy (wspólne)
+   Â§ SECTIONS: nagĹ‚Ăłwki i odstÄ™py (wspĂłlne)
    ----------------------------------------------------------------- */
 
 .related.products,
@@ -5740,7 +5810,7 @@ body.single-product .woocommerce-product-navigation {
 }
 
 /* -----------------------------------------------------------------
-   § GRID: jedna siatka dla wszystkich recommendation blocks
+   Â§ GRID: jedna siatka dla wszystkich recommendation blocks
    ----------------------------------------------------------------- */
 
 .related.products ul.products::before,
@@ -5752,7 +5822,7 @@ body.single-product .woocommerce-product-navigation {
   display: none !important;
 }
 
-/* Desktop ≥1200px: 3 karty w rzędzie */
+/* Desktop â‰Ą1200px: 3 karty w rzÄ™dzie */
 .related.products ul.products,
 .upsells.products ul.products,
 .up-sells.products ul.products,
@@ -5805,7 +5875,7 @@ body.single-product .woocommerce-product-navigation {
 }
 
 /* -----------------------------------------------------------------
-   § CARD: wspólny komponent karty (obrazek, tytuł, cena, CTA)
+   Â§ CARD: wspĂłlny komponent karty (obrazek, tytuĹ‚, cena, CTA)
    ----------------------------------------------------------------- */
 
 .related.products ul.products li.product,
@@ -5832,7 +5902,7 @@ body.single-product .woocommerce-product-navigation {
   min-height: 0;
 }
 
-/* Obrazek: stały aspect-ratio 1:1 */
+/* Obrazek: staĹ‚y aspect-ratio 1:1 */
 .related.products ul.products li.product .woocommerce-loop-product__link:has(> img),
 .related.products ul.products li.product a.woocommerce-loop-product__link:first-of-type,
 .upsells.products ul.products li.product .woocommerce-loop-product__link:has(> img),
@@ -5862,7 +5932,7 @@ body.single-product .woocommerce-product-navigation {
   display: block;
 }
 
-/* Tytuł: max 2 linie, line-clamp */
+/* TytuĹ‚: max 2 linie, line-clamp */
 .related.products ul.products li.product .woocommerce-loop-product__title,
 .related.products ul.products li.product h2,
 .upsells.products ul.products li.product .woocommerce-loop-product__title,
@@ -5885,7 +5955,7 @@ body.single-product .woocommerce-product-navigation {
   text-overflow: ellipsis;
 }
 
-/* Cena: jedna linia, bez łamania po jednej cyfrze */
+/* Cena: jedna linia, bez Ĺ‚amania po jednej cyfrze */
 .related.products ul.products li.product .price,
 .upsells.products ul.products li.product .price,
 .up-sells.products ul.products li.product .price,
@@ -5915,7 +5985,7 @@ body.single-product .woocommerce-product-navigation {
   color: var(--color-text-secondary);
 }
 
-/* CTA: zawsze poziomy tekst, min-width żeby nie łamać w pion */
+/* CTA: zawsze poziomy tekst, min-width ĹĽeby nie Ĺ‚amaÄ‡ w pion */
 .related.products ul.products li.product .button,
 .related.products ul.products li.product .add_to_cart_button,
 .related.products ul.products li.product a.added_to_cart,
@@ -5978,9 +6048,9 @@ body.single-product .woocommerce-product-navigation {
 }
 
 /* === 13-seo-landing.css === */
-/* 13-seo-landing — extracted from main.css */
+/* 13-seo-landing â€” extracted from main.css */
 
-   § SEO LANDING PAGES
+   Â§ SEO LANDING PAGES
    ----------------------------------------------------------------- */
 
 .mnsk7-seo-page {
@@ -6045,7 +6115,7 @@ body.single-product .woocommerce-product-navigation {
   padding: var(--space-32) 0 var(--space-48);
 }
 
-/* Przewodnik — single post (SEO artykuły) */
+/* Przewodnik â€” single post (SEO artykuĹ‚y) */
 .mnsk7-guide-single {
   max-width: var(--content-max);
   margin: 0 auto;
@@ -6110,7 +6180,7 @@ body.single-product .woocommerce-product-navigation {
   text-decoration: underline;
 }
 
-/* Blok linków do produktów/kategorii w artykule (shortcode [mnsk7_guide_products]) */
+/* Blok linkĂłw do produktĂłw/kategorii w artykule (shortcode [mnsk7_guide_products]) */
 .mnsk7-guide-products {
   margin: var(--space-32) 0;
   padding: 1.5rem 0;
@@ -6152,9 +6222,9 @@ body.single-product .woocommerce-product-navigation {
 
 
 /* === 14-faq.css === */
-/* 14-faq — extracted from main.css */
+/* 14-faq â€” extracted from main.css */
 
-   § FAQ ACCORDION
+   Â§ FAQ ACCORDION
    ----------------------------------------------------------------- */
 
 .mnsk7-faq {
@@ -6202,7 +6272,7 @@ body.single-product .woocommerce-product-navigation {
 }
 
 .mnsk7-faq__item.is-open .mnsk7-faq__q::after {
-  content: "−";
+  content: "â’";
 }
 
 .mnsk7-faq__a {
@@ -6219,12 +6289,12 @@ body.single-product .woocommerce-product-navigation {
 
 
 /* === 15-delivery-contact.css === */
-/* 15-delivery-contact — extracted from main.css */
+/* 15-delivery-contact â€” extracted from main.css */
 
-   § DELIVERY RULES / CONTACT / CHECKOUT NOTE
+   Â§ DELIVERY RULES / CONTACT / CHECKOUT NOTE
    ----------------------------------------------------------------- */
 
-/* Delivery page — layout pod headerem; page-top od #content, bez duplikatu */
+/* Delivery page â€” layout pod headerem; page-top od #content, bez duplikatu */
 .mnsk7-page-dostawa {
   max-width: var(--content-max);
   margin: 0 auto;
@@ -6295,7 +6365,7 @@ body.single-product .woocommerce-product-navigation {
   font-style: italic;
 }
 
-/* Contact page — layout formularza; page-top od #content */
+/* Contact page â€” layout formularza; page-top od #content */
 .mnsk7-page-kontakt {
   max-width: var(--content-max);
   margin: 0 auto;
@@ -6461,11 +6531,11 @@ body.single-product .woocommerce-product-navigation {
   outline-offset: 2px;
 }
 
-/* Moje konto — jeden H1 (nasz z hooka), ukryć duplikat z szablonu strony */
+/* Moje konto â€” jeden H1 (nasz z hooka), ukryÄ‡ duplikat z szablonu strony */
 .woocommerce-account .entry-header {
   display: none;
 }
-/* Moje konto — layout stabilny, w obrębie content-max */
+/* Moje konto â€” layout stabilny, w obrÄ™bie content-max */
 .woocommerce-account .entry-content,
 .woocommerce-account .woocommerce-MyAccount-content,
 .woocommerce-account .woocommerce-account .col-full {
@@ -6521,7 +6591,7 @@ body.single-product .woocommerce-product-navigation {
   gap: 0.35rem;
 }
 
-/* Przewodnik (single post) — lista artykułów w porządku */
+/* Przewodnik (single post) â€” lista artykuĹ‚Ăłw w porzÄ…dku */
 .mnsk7-guide-single {
   padding: var(--space-32) 0 var(--space-48);
 }
@@ -6610,8 +6680,8 @@ body.single-product .woocommerce-product-navigation {
 }
 
 /* -----------------------------------------------------------------
-   § MOJE KONTO — wymuszenie stylów (nagłówek, przyciski, padding)
-   WooCommerce/Storefront ładują się później — wygrywamy !important.
+   Â§ MOJE KONTO â€” wymuszenie stylĂłw (nagĹ‚Ăłwek, przyciski, padding)
+   WooCommerce/Storefront Ĺ‚adujÄ… siÄ™ pĂłĹşniej â€” wygrywamy !important.
    ----------------------------------------------------------------- */
 body.woocommerce-account .mnsk7-header__search-input,
 body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-input {
@@ -6658,7 +6728,7 @@ body.woocommerce-account .col-full {
 }
 
 /* === 16-woo-notices.css === */
-/* 16-woo-notices — WooCommerce messages (add-to-cart, errors). Wyraźne na mobile. */
+/* 16-woo-notices â€” WooCommerce messages (add-to-cart, errors). WyraĹşne na mobile. */
 
 .woocommerce-message {
   border-top-color: var(--color-primary);
@@ -6684,7 +6754,7 @@ body.woocommerce-account .col-full {
   color: var(--color-text);
 }
 
-/* Add-to-cart success: bardziej widoczne (sticky u góry na mobile, wyraźna ramka) */
+/* Add-to-cart success: bardziej widoczne (sticky u gĂłry na mobile, wyraĹşna ramka) */
 .woocommerce-message:has(.restore-item),
 .woocommerce ul.woocommerce-message {
   font-weight: 500;
@@ -6705,7 +6775,7 @@ body.woocommerce-account .col-full {
   }
 }
 
-/* Cart/checkout notice — w stylu sklepu (surface, nie zielony/niebieski); padding-left żeby ikona nie napełzała na tekst */
+/* Cart/checkout notice â€” w stylu sklepu (surface, nie zielony/niebieski); padding-left ĹĽeby ikona nie napeĹ‚zaĹ‚a na tekst */
 .woocommerce-info.darmowa-dostawa,
 .woocommerce .cart-subtotal + .woocommerce-info,
 .woocommerce-cart .woocommerce-info,
@@ -6727,14 +6797,14 @@ body.woocommerce-account .col-full {
   text-decoration: underline;
 }
 
-/* Checkout toggle links sit on beige surface — use darker primary for AA contrast */
+/* Checkout toggle links sit on beige surface â€” use darker primary for AA contrast */
 .woocommerce-checkout .woocommerce-info a,
 .woocommerce .woocommerce-info[role="status"] a {
   color: var(--color-primary-pressed) !important;
   text-decoration: underline;
 }
 
-/* Wyłączenie ewentualnej ikony z rodzica (Storefront) — unikamy nałożenia na tekst */
+/* WyĹ‚Ä…czenie ewentualnej ikony z rodzica (Storefront) â€” unikamy naĹ‚oĹĽenia na tekst */
 .woocommerce-cart .woocommerce-notices-wrapper .woocommerce-message::before,
 .woocommerce-cart .woocommerce-notices-wrapper .woocommerce-info::before,
 .woocommerce-checkout .woocommerce-notices-wrapper .woocommerce-info::before,
@@ -6744,10 +6814,10 @@ body.woocommerce-account .col-full {
 
 
 /* === 17-buttons.css === */
-/* 17-buttons — jeden system: zaokrąglenia, wysokość, primary (audit: brak kwadratowych przycisków) */
+/* 17-buttons â€” jeden system: zaokrÄ…glenia, wysokoĹ›Ä‡, primary (audit: brak kwadratowych przyciskĂłw) */
 
 /* -----------------------------------------------------------------
-   § GLOBAL BUTTON RESET — spójne zaokrąglenie, wysokość, padding
+   Â§ GLOBAL BUTTON RESET â€” spĂłjne zaokrÄ…glenie, wysokoĹ›Ä‡, padding
    ----------------------------------------------------------------- */
 .woocommerce a.button,
 .woocommerce button.button,
@@ -6784,12 +6854,12 @@ button[type="submit"] {
   font-weight: 600;
   vertical-align: middle;
 }
-/* Padding nie nadpisujemy globalnie — hero, contact, header mają własne; poniżej tylko WooCommerce */
+/* Padding nie nadpisujemy globalnie â€” hero, contact, header majÄ… wĹ‚asne; poniĹĽej tylko WooCommerce */
 
 /* -----------------------------------------------------------------
-   § WOOCOMMERCE / THEME BUTTONS
+   Â§ WOOCOMMERCE / THEME BUTTONS
    ----------------------------------------------------------------- */
-/* Tap target min 44px (WCAG 2.5.5, UI_SPEC_V2 §4.1) */
+/* Tap target min 44px (WCAG 2.5.5, UI_SPEC_V2 Â§4.1) */
 .woocommerce a.button,
 .woocommerce button.button,
 .woocommerce input.button,
@@ -6827,7 +6897,7 @@ button[type="submit"] {
   color: var(--color-white);
 }
 
-/* A11y: Add to cart — darker blue so white text meets WCAG 4.5:1 (Lighthouse) */
+/* A11y: Add to cart â€” darker blue so white text meets WCAG 4.5:1 (Lighthouse) */
 .woocommerce .add_to_cart_button,
 .woocommerce .single_add_to_cart_button {
   background: var(--color-primary-dark, var(--color-primary));
@@ -6842,8 +6912,27 @@ button[type="submit"] {
   cursor: not-allowed;
 }
 
+.mnsk7-btn--secondary,
+.woocommerce-cart .mnsk7-cart-continue .button.mnsk7-btn-back,
+.woocommerce-cart .woocommerce-cart-form .coupon .button,
+.woocommerce-cart .woocommerce-cart-form button[name="update_cart"],
+.woocommerce-checkout .woocommerce-form-login-toggle .showlogin,
+.woocommerce-checkout .woocommerce-form-coupon-toggle .showcoupon {
+  background: var(--color-white) !important;
+  color: var(--color-text) !important;
+  border: 1px solid var(--color-border) !important;
+  box-shadow: none !important;
+}
+
+.mnsk7-btn--ghost {
+  background: transparent !important;
+  color: var(--color-primary) !important;
+  border: 1px solid rgba(12, 125, 219, 0.22) !important;
+  box-shadow: none !important;
+}
+
 /* -----------------------------------------------------------------
-   § FORM ELEMENTS — :focus-visible (WCAG 2.4.7, UI_SPEC_V2 §12 W3)
+   Â§ FORM ELEMENTS â€” :focus-visible (WCAG 2.4.7, UI_SPEC_V2 Â§12 W3)
    ----------------------------------------------------------------- */
 input:focus,
 select:focus,
@@ -6858,7 +6947,6 @@ textarea:focus-visible {
   outline: 2px solid var(--color-focus, var(--color-primary));
   outline-offset: 2px;
 }
-
 
 /* === 18-cart-checkout.css === */
 /* 18-cart-checkout - cart, empty cart, checkout (backlog 4.x) */
@@ -7095,6 +7183,61 @@ textarea:focus-visible {
 
 .woocommerce-cart .cart_totals {
   padding: 1.25rem;
+}
+
+.mnsk7-checkout-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.85rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: var(--r-lg, 1rem);
+  background: var(--color-white);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
+}
+
+.mnsk7-checkout-steps__item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--r-pill);
+  background: rgba(12, 125, 219, 0.08);
+  color: var(--color-text-secondary);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+}
+
+.mnsk7-checkout-steps__item--done,
+.mnsk7-checkout-steps__item--active {
+  color: var(--color-primary-dark, #0a5a9e);
+  background: rgba(12, 125, 219, 0.14);
+}
+
+.mnsk7-checkout-steps__divider {
+  color: var(--color-text-muted);
+}
+
+.mnsk7-checkout-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+}
+
+.mnsk7-checkout-trust span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.1rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: var(--r-pill);
+  background: rgba(248, 250, 252, 0.95);
+  color: var(--color-text);
+  font-size: var(--fs-xs);
+  font-weight: 600;
 }
 
 .woocommerce-cart table.shop_table th {
@@ -7338,8 +7481,41 @@ textarea:focus-visible {
   border-radius: var(--r-md);
 }
 
+.woocommerce-checkout .woocommerce-form-login-toggle,
+.woocommerce-checkout .woocommerce-form-coupon-toggle,
+.woocommerce-checkout .woocommerce-notices-wrapper .woocommerce-message,
+.woocommerce-checkout .woocommerce-notices-wrapper .woocommerce-info {
+  margin-bottom: 0.85rem;
+}
+
+.woocommerce-checkout .mnsk7-checkout-notice-card {
+  border-radius: var(--r-md);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+}
+
+.woocommerce-checkout .mnsk7-checkout-notice-card--compact {
+  margin-bottom: 0.55rem;
+  font-size: var(--fs-xs);
+}
+
 /* Audit task 13: na mobile przycisk "Kupuje i place" widoczny, nie zasloniety przez sticky header */
 @media (max-width: 768px) {
+  .mnsk7-checkout-steps {
+    gap: 0.3rem;
+    padding: 0.75rem 0.85rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .mnsk7-checkout-trust {
+    gap: 0.4rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .mnsk7-checkout-trust span {
+    width: 100%;
+    justify-content: center;
+  }
+
   .woocommerce-checkout form.woocommerce-checkout {
     padding-bottom: 6rem;
   }
@@ -7444,6 +7620,10 @@ textarea:focus-visible {
     font-size: var(--fs-base);
   }
 
+  .woocommerce-checkout .mnsk7-checkout-notice-card--compact {
+    opacity: 0.92;
+  }
+
   .woocommerce-cart .cart_totals,
   .woocommerce-checkout #payment {
     border-radius: var(--r-md);
@@ -7455,7 +7635,7 @@ textarea:focus-visible {
 }
 
 /* === 19-breadcrumbs.css === */
-/* 19-breadcrumbs — okruszki (na PDP przy tytule, na archiwum pod headerem) */
+/* 19-breadcrumbs â€” okruszki (na PDP przy tytule, na archiwum pod headerem) */
 
 .mnsk7-breadcrumb-wrap {
   margin-top: 0;
@@ -7465,7 +7645,7 @@ textarea:focus-visible {
   border-bottom: 1px solid var(--color-border, #e5e5e5);
 }
 
-/* PDP: okruszki nad tytułem — wyrównanie do lewej, bez pływania */
+/* PDP: okruszki nad tytuĹ‚em â€” wyrĂłwnanie do lewej, bez pĹ‚ywania */
 .single-product .summary .mnsk7-breadcrumb-wrap {
   margin-top: 0;
   margin-bottom: 0.5rem;
@@ -7531,7 +7711,7 @@ nav.woocommerce-breadcrumb {
   }
 }
 
-/* Audit task 15: na mobile breadcrumbs czytelne, bez nadmiernego obcięcia */
+/* Audit task 15: na mobile breadcrumbs czytelne, bez nadmiernego obciÄ™cia */
 @media (max-width: 480px) {
   .mnsk7-breadcrumb-wrap {
     padding: 0.5rem 0;
@@ -7548,10 +7728,10 @@ nav.woocommerce-breadcrumb {
 }
 
 /* === 20-responsive-tablet.css === */
-/* 20-responsive-tablet — extracted from main.css */
+/* 20-responsive-tablet â€” extracted from main.css */
 
 /* -----------------------------------------------------------------
-   § RESPONSIVE — Tablet / Mobile
+   Â§ RESPONSIVE â€” Tablet / Mobile
    Breakpoint 768px = --breakpoint-mobile (01-tokens.css), MNSK7_BREAKPOINT_MOBILE (PHP).
    ----------------------------------------------------------------- */
 
@@ -7608,8 +7788,8 @@ nav.woocommerce-breadcrumb {
 }
 
 /* === 21-responsive-mobile.css === */
-/* 21-responsive-mobile — Mobile: 2 kolumny gdzie sensowne, overflow-x hidden, 1 kol. tylko na bardzo wąskich.
-   Task 8: overflow-x: hidden — zapobiega przewijaniu w poziomie na wąskich ekranach (szerokie tabele/obrazy). */
+/* 21-responsive-mobile â€” Mobile: 2 kolumny gdzie sensowne, overflow-x hidden, 1 kol. tylko na bardzo wÄ…skich.
+   Task 8: overflow-x: hidden â€” zapobiega przewijaniu w poziomie na wÄ…skich ekranach (szerokie tabele/obrazy). */
 
 @media (max-width: 768px) {
   body,
@@ -7658,7 +7838,7 @@ nav.woocommerce-breadcrumb {
     padding-top: 0.125rem;
   }
 
-  /* Cookie bar: bottom-sheet / stacked — bez obcięcia, bez overflow (P0) */
+  /* Cookie bar: bottom-sheet / stacked â€” bez obciÄ™cia, bez overflow (P0) */
   .mnsk7-cookie-bar {
     flex-direction: column;
     text-align: center;
@@ -7690,7 +7870,7 @@ nav.woocommerce-breadcrumb {
     box-sizing: border-box;
   }
 
-  /* Delivery table: mniejszy font i padding, zawijanie tekstu — bez wewnętrznego scrolla */
+  /* Delivery table: mniejszy font i padding, zawijanie tekstu â€” bez wewnÄ™trznego scrolla */
   .mnsk7-delivery-rules {
     font-size: var(--fs-sm);
   }
@@ -7701,7 +7881,7 @@ nav.woocommerce-breadcrumb {
   }
 }
 
-/* Bardzo wąskie (≤360px): 1 kolumna na PLP. Recommendation blocks: 12-related-products.css (≤400px). */
+/* Bardzo wÄ…skie (â‰¤360px): 1 kolumna na PLP. Recommendation blocks: 12-related-products.css (â‰¤400px). */
 @media (max-width: 360px) {
   .woocommerce ul.products,
   .woocommerce-page ul.products {
@@ -7710,11 +7890,11 @@ nav.woocommerce-breadcrumb {
 }
 
 /* === 22-touch-targets.css === */
-/* 22-touch-targets — extracted from main.css */
+/* 22-touch-targets â€” extracted from main.css */
 
 /* -----------------------------------------------------------------
-   § TOUCH TARGETS
-   All interactive elements ≥ 44px for accessibility (WCAG 2.5.5).
+   Â§ TOUCH TARGETS
+   All interactive elements â‰Ą 44px for accessibility (WCAG 2.5.5).
    ----------------------------------------------------------------- */
 
 .site-header .menu-toggle,
@@ -7752,7 +7932,7 @@ a.button.alt,
   min-height: 44px;
 }
 
-/* Ordering dropdown (Zamówienie w sklepie) — min height tap target */
+/* Ordering dropdown (ZamĂłwienie w sklepie) â€” min height tap target */
 .woocommerce-ordering select,
 .woocommerce .woocommerce-ordering select {
   min-height: 44px;
@@ -7760,7 +7940,7 @@ a.button.alt,
   box-sizing: border-box;
 }
 
-/* Quantity input .qty (PDP, PLP, cart) — min 44px height */
+/* Quantity input .qty (PDP, PLP, cart) â€” min 44px height */
 .woocommerce .quantity .qty,
 .woocommerce form .quantity input.qty {
   min-height: 44px;
@@ -7774,9 +7954,9 @@ a.button.alt,
 }
 
 /* === 23-print.css === */
-/* 23-print — extracted from main.css */
+/* 23-print â€” extracted from main.css */
 
-   § PRINT — minimal overrides
+   Â§ PRINT â€” minimal overrides
    ----------------------------------------------------------------- */
 
 @media print {
@@ -7796,9 +7976,9 @@ a.button.alt,
 }
 
 /* === 24-plp-table.css === */
-/* 24-plp-table — Sandvik-style table + chips (чипсы) on category/tag archives */
+/* 24-plp-table â€” Sandvik-style table + chips (Ń‡Đ¸ĐżŃŃ‹) on category/tag archives */
 
-/* Bez zdjęcia kategorii/tagu u góry — ukrywamy kwadrat z lewej (kategoria/tag w jednym stylu) */
+/* Bez zdjÄ™cia kategorii/tagu u gĂłry â€” ukrywamy kwadrat z lewej (kategoria/tag w jednym stylu) */
 body.tax-product_cat .woocommerce-products-header img,
 body.tax-product_cat .woocommerce-products-header .wp-post-image,
 body.tax-product_cat .woocommerce-products-header .attachment-woocommerce_thumbnail,
@@ -7812,7 +7992,7 @@ body.tax-product_tag [class*="category-image"] {
   display: none;
 }
 
-/* Nagłówek kategorii/tagu — wizualna hierarchia: tytuł + chips; odstęp pod tytułem = token */
+/* NagĹ‚Ăłwek kategorii/tagu â€” wizualna hierarchia: tytuĹ‚ + chips; odstÄ™p pod tytuĹ‚em = token */
 .woocommerce-products-header {
   margin-top: 0;
   margin-bottom: var(--space-title-bottom);
@@ -7826,7 +8006,7 @@ body.tax-product_tag [class*="category-image"] {
   line-height: 1.3;
   color: var(--color-text);
 }
-/* Wyższa specyficzność niż 05-plp-cards (body… #content h1.page-title → --fs-2xl) — archiwa Sklep/kategoria/tag */
+/* WyĹĽsza specyficznoĹ›Ä‡ niĹĽ 05-plp-cards (bodyâ€¦ #content h1.page-title â†’ --fs-2xl) â€” archiwa Sklep/kategoria/tag */
 body.post-type-archive-product #content h1.woocommerce-products-header__title.page-title,
 body.post-type-archive-product .mnsk7-content h1.woocommerce-products-header__title.page-title,
 body.tax-product_cat #content h1.woocommerce-products-header__title.page-title,
@@ -7837,24 +8017,24 @@ body.tax-product_tag .mnsk7-content h1.woocommerce-products-header__title.page-t
 }
 
 /* =================================================================
-   Archive vertical rhythm (compact) — tylko archiwa towarów
+   Archive vertical rhythm (compact) â€” tylko archiwa towarĂłw
    body.post-type-archive-product, body.tax-product_cat, body.tax-product_tag
    Dwie systemy: default page rhythm (25-global, 05-plp) + compact archive rhythm (tu).
-   Odstępy przez zmienne --archive-gap-*: jeden gap = jedna zmienna (nie suma margin+padding).
+   OdstÄ™py przez zmienne --archive-gap-*: jeden gap = jedna zmienna (nie suma margin+padding).
    HANDOFF: docs/PLP-ARCHIVE-VERTICAL-RHYTHM-HANDOFF.md
    ================================================================= */
 body.post-type-archive-product,
 body.tax-product_cat,
 body.tax-product_tag {
-  --archive-gap-page-top: 0.5rem;            /* compact desktop rhythm */
+  --archive-gap-page-top: 0.2rem;            /* compact desktop rhythm */
   --archive-gap-breadcrumbs-title: 0.5rem;
-  --archive-gap-title-chips: 0.5rem;
-  --archive-gap-chips-filters: 0.75rem;
-  --archive-gap-filter-rows: 0.75rem;        /* 12px — między wierszami filtrów */
-  --archive-gap-filters-results: 0.75rem;
-  --archive-inner-breadcrumb: 0.5rem;         /* padding wewnętrzny .mnsk7-breadcrumb-wrap */
-  --archive-after-search: 0.75rem;
-  --archive-after-trust: 0.75rem;
+  --archive-gap-title-chips: 0.35rem;
+  --archive-gap-chips-filters: 0.55rem;
+  --archive-gap-filter-rows: 0.75rem;        /* 12px â€” miÄ™dzy wierszami filtrĂłw */
+  --archive-gap-filters-results: 0.5rem;
+  --archive-inner-breadcrumb: 0.5rem;         /* padding wewnÄ™trzny .mnsk7-breadcrumb-wrap */
+  --archive-after-search: 0.45rem;
+  --archive-after-trust: 0.55rem;
   --archive-after-table: 1rem;
 }
 body.post-type-archive-product #content,
@@ -7877,7 +8057,7 @@ body.tax-product_cat .woocommerce-products-header,
 body.tax-product_tag .woocommerce-products-header {
   margin-bottom: var(--archive-gap-title-chips);
 }
-/* Kategoria/tag: tytuł i chips w jednej linii wizualnej — ten sam lewy brzeg (bez dodatkowego paddingu) */
+/* Kategoria/tag: tytuĹ‚ i chips w jednej linii wizualnej â€” ten sam lewy brzeg (bez dodatkowego paddingu) */
 body.tax-product_cat .woocommerce-products-header,
 body.tax-product_tag .woocommerce-products-header,
 body.tax-product_cat .mnsk7-plp-archive-wrap,
@@ -7923,7 +8103,7 @@ body.post-type-archive-product .mnsk7-plp-search--priority,
 body.tax-product_cat .mnsk7-plp-search--priority,
 body.tax-product_tag .mnsk7-plp-search--priority {
   margin-top: 0;
-  margin-bottom: var(--archive-gap-chips-filters);
+  margin-bottom: 0.4rem;
 }
 body.post-type-archive-product .mnsk7-plp-search--priority + .mnsk7-plp-empty,
 body.tax-product_cat .mnsk7-plp-search--priority + .mnsk7-plp-empty,
@@ -7953,7 +8133,7 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   margin-bottom: var(--archive-after-table);
 }
 
-/* Desktop: mniejsze boczne odstępy na kategoria/tag (spójnie z mobile) */
+/* Desktop: mniejsze boczne odstÄ™py na kategoria/tag (spĂłjnie z mobile) */
 @media (min-width: 769px) {
   body.tax-product_cat #content,
   body.tax-product_cat .mnsk7-content,
@@ -7974,18 +8154,18 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   body.post-type-archive-product,
   body.tax-product_cat,
   body.tax-product_tag {
-    --archive-gap-page-top: 0.375rem;
+    --archive-gap-page-top: 0.15rem;
     --archive-gap-breadcrumbs-title: 0.375rem;
-    --archive-gap-title-chips: 0.625rem;
-    --archive-gap-chips-filters: 0.625rem;
+    --archive-gap-title-chips: 0.35rem;
+    --archive-gap-chips-filters: 0.45rem;
     --archive-gap-filter-rows: 0.375rem;
-    --archive-gap-filters-results: 0.5rem;
+    --archive-gap-filters-results: 0.35rem;
     --archive-inner-breadcrumb: 0.25rem;
-    --archive-after-search: 0.25rem;
-    --archive-after-trust: 0.625rem;
+    --archive-after-search: 0.15rem;
+    --archive-after-trust: 0.45rem;
     --archive-after-table: 0.75rem;
   }
-  /* Kategoria/tag: minimalne boczne odstępy; kontekst od „F” (wyrównanie z tytułem) */
+  /* Kategoria/tag: minimalne boczne odstÄ™py; kontekst od â€žFâ€ť (wyrĂłwnanie z tytuĹ‚em) */
   body.tax-product_cat #content,
   body.tax-product_cat .mnsk7-content,
   body.tax-product_tag #content,
@@ -7995,13 +8175,20 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   }
   body.post-type-archive-product .mnsk7-breadcrumb-wrap,
   body.tax-product_cat .mnsk7-breadcrumb-wrap,
-  body.tax-product_tag .mnsk7-breadcrumb-wrap,
+  body.tax-product_tag .mnsk7-breadcrumb-wrap {
+    display: block;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    margin-bottom: 0.35rem;
+  }
   body.post-type-archive-product .woocommerce-breadcrumb,
   body.tax-product_cat .woocommerce-breadcrumb,
   body.tax-product_tag .woocommerce-breadcrumb {
-    display: none;
+    display: flex;
+    font-size: 0.78rem;
+    line-height: 1.35;
   }
-  /* Chips: bez dodatkowego wcięcia — Rodzaje frezów i chipy startują pod „F” w tytule */
+  /* Chips: bez dodatkowego wciÄ™cia â€” Rodzaje frezĂłw i chipy startujÄ… pod â€žFâ€ť w tytule */
   body.tax-product_cat .mnsk7-plp-chips__scroll,
   body.tax-product_tag .mnsk7-plp-chips__scroll {
     padding-inline: 0 1rem;
@@ -8042,14 +8229,14 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   }
 }
 
-/* Strefa wysyłki: w treści nie pokazujemy (przenoszone do footera przez JS), żeby nie zsuwało strony */
+/* Strefa wysyĹ‚ki: w treĹ›ci nie pokazujemy (przenoszone do footera przez JS), ĹĽeby nie zsuwaĹ‚o strony */
 body.post-type-archive-product .mnsk7-plp-toolbar .woocommerce-info,
 body.tax-product_cat .mnsk7-plp-toolbar .woocommerce-info,
 body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
   display: none;
 }
 
-/* Toolbar: sortowanie + (opcjonalnie wyników) + paginacja — ten sam styl u góry i u dołu */
+/* Toolbar: sortowanie + (opcjonalnie wynikĂłw) + paginacja â€” ten sam styl u gĂłry i u doĹ‚u */
 .mnsk7-plp-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -8057,7 +8244,7 @@ body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
   gap: var(--space-16);
   margin-bottom: var(--space-16);
 }
-/* U góry i u dołu: wyników + sortowanie + paginacja w jednej linii */
+/* U gĂłry i u doĹ‚u: wynikĂłw + sortowanie + paginacja w jednej linii */
 body.woocommerce .mnsk7-plp-toolbar--top .woocommerce-result-count,
 body.woocommerce .mnsk7-plp-toolbar--bottom .woocommerce-result-count {
   display: block;
@@ -8174,7 +8361,7 @@ body.woocommerce .mnsk7-plp-toolbar:not(.mnsk7-plp-toolbar--top):not(.mnsk7-plp-
   }
 }
 
-/* Archiwum: główna kolumna — dual-support #content/#primary i .mnsk7-* (Task 4). */
+/* Archiwum: gĹ‚Ăłwna kolumna â€” dual-support #content/#primary i .mnsk7-* (Task 4). */
 body.post-type-archive-product #content #primary,
 body.post-type-archive-product #content > main,
 body.post-type-archive-product .mnsk7-content .mnsk7-content-area,
@@ -8192,7 +8379,7 @@ body.tax-product_tag .mnsk7-content > main.mnsk7-main {
   min-width: 0;
   padding-top: 0;
 }
-/* .mnsk7-content-area / .mnsk7-main pełna szerokość */
+/* .mnsk7-content-area / .mnsk7-main peĹ‚na szerokoĹ›Ä‡ */
 body.post-type-archive-product #content #primary .site-main,
 body.post-type-archive-product #content > main,
 body.post-type-archive-product .mnsk7-content .mnsk7-content-area .site-main,
@@ -8224,7 +8411,7 @@ body.tax-product_tag .mnsk7-catalog-filters {
   display: none !important;
 }
 
-/* Jedna szerokość dla całego bloku: chips + wyszukiwarka + tabela (bez rozjeżdżania) */
+/* Jedna szerokoĹ›Ä‡ dla caĹ‚ego bloku: chips + wyszukiwarka + tabela (bez rozjeĹĽdĹĽania) */
 .mnsk7-plp-content {
   width: 100%;
   max-width: 100%;
@@ -8278,7 +8465,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   padding-right: 0;
 }
 
-/* Scroll target: górna granica strefy wyników (chips + search + USP). scroll-margin dla sticky header. */
+/* Scroll target: gĂłrna granica strefy wynikĂłw (chips + search + USP). scroll-margin dla sticky header. */
 .mnsk7-plp-results-anchor {
   display: block;
   height: 0;
@@ -8287,7 +8474,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   scroll-margin-top: var(--header-h, 52px);
 }
 
-/* Chips row (subcategories / filters) — odstęp od tytułu Sklep, spójny rytm; UX: min 44px touch */
+/* Chips row (subcategories / filters) â€” odstÄ™p od tytuĹ‚u Sklep, spĂłjny rytm; UX: min 44px touch */
 .mnsk7-plp-chips {
   display: flex;
   flex-wrap: wrap;
@@ -8302,7 +8489,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   margin-bottom: var(--space-section-gap);
 }
 
-/* Mobile: swipe row pattern — scrollbar ukryty, scroll-snap, fade hint, label+row w jednym bloku. */
+/* Mobile: swipe row pattern â€” scrollbar ukryty, scroll-snap, fade hint, label+row w jednym bloku. */
 @media (max-width: 768px) {
   .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs):not(.mnsk7-plp-chips--nav) {
     flex-wrap: wrap;
@@ -8332,7 +8519,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
     white-space: normal;
     overflow: visible;
   }
-  /* Jedna definicja scroll-row: ukryty scrollbar, snap, fade. Nav i attrs — jedna linia (swipe), bez zawijania. */
+  /* Jedna definicja scroll-row: ukryty scrollbar, snap, fade. Nav i attrs â€” jedna linia (swipe), bez zawijania. */
   .mnsk7-plp-chips--nav .mnsk7-plp-chips__scroll,
   .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
     width: 100%;
@@ -8360,7 +8547,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
     padding-inline-start: 0;
   }
-  /* Wyczyść wszystkie + filter search row — one system, aligned */
+  /* WyczyĹ›Ä‡ wszystkie + filter search row â€” one system, aligned */
   .mnsk7-plp-selected {
     align-items: center;
     gap: 0.5rem;
@@ -8417,12 +8604,12 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   outline-offset: 2px;
 }
 
-/* Wybrane/aktywne chipy — zawsze czytelny kontrast (ciemne tło + biały tekst) i na początku rzędu */
+/* Wybrane/aktywne chipy â€” zawsze czytelny kontrast (ciemne tĹ‚o + biaĹ‚y tekst) i na poczÄ…tku rzÄ™du */
 .mnsk7-plp-chip--active {
   background: var(--color-primary, #0c7ddb) !important;
   border-color: var(--color-primary, #0c7ddb) !important;
   color: #fff !important;
-  order: -1; /* wybrany chip zawsze na początku rzędu (flex order) */
+  order: -1; /* wybrany chip zawsze na poczÄ…tku rzÄ™du (flex order) */
 }
 
 .mnsk7-plp-chip--active:hover {
@@ -8439,7 +8626,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   align-self: center;
 }
 
-/* Na desktop: scroll wrapper zachowuje się jak zwykły flex-wrap (bez overflow). Na mobile — nowrap w @media wyżej. */
+/* Na desktop: scroll wrapper zachowuje siÄ™ jak zwykĹ‚y flex-wrap (bez overflow). Na mobile â€” nowrap w @media wyĹĽej. */
 @media (min-width: 769px) {
   .mnsk7-plp-chips__scroll {
     display: flex;
@@ -8449,7 +8636,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   }
 }
 
-/* PLP-07: drugi rząd chipów (atrybuty) — wizualnie drugorzędne względem kategorii; każdy wiersz z etykietą + chipy z zawijaniem */
+/* PLP-07: drugi rzÄ…d chipĂłw (atrybuty) â€” wizualnie drugorzÄ™dne wzglÄ™dem kategorii; kaĹĽdy wiersz z etykietÄ… + chipy z zawijaniem */
 .mnsk7-plp-chips--attrs {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
@@ -8465,7 +8652,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   background: var(--color-bg-subtle, #f8f8f8);
   border-color: var(--color-border);
 }
-/* Wybrany chip atrybutu — zawsze biały tekst na primary (kontrast) */
+/* Wybrany chip atrybutu â€” zawsze biaĹ‚y tekst na primary (kontrast) */
 .mnsk7-plp-chips--attrs .mnsk7-plp-chip.mnsk7-plp-chip--active {
   background: var(--color-primary, #0c7ddb) !important;
   border-color: var(--color-primary, #0c7ddb) !important;
@@ -8482,7 +8669,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   margin-right: 0.25rem;
 }
 
-/* Rozwinięty blok „Więcej”: chipy biorą udział w flexie rodzica; gdy hidden — nie pokazuj */
+/* RozwiniÄ™ty blok â€žWiÄ™cejâ€ť: chipy biorÄ… udziaĹ‚ w flexie rodzica; gdy hidden â€” nie pokazuj */
 .mnsk7-plp-chips-more[hidden] {
   display: none !important;
 }
@@ -8490,7 +8677,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   display: contents;
 }
 
-/* Przycisk „Więcej” — wizualnie odróżniony od chipów, czytelny CTA */
+/* Przycisk â€žWiÄ™cejâ€ť â€” wizualnie odrĂłĹĽniony od chipĂłw, czytelny CTA */
 .mnsk7-plp-chips-toggle {
   display: inline-flex;
   align-items: center;
@@ -8529,7 +8716,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   border-color: var(--color-primary);
 }
 
-/* Blok „Więcej filtrów” — dodatkowe wiersze atrybutów (Średnica, Kąt skosu…) */
+/* Blok â€žWiÄ™cej filtrĂłwâ€ť â€” dodatkowe wiersze atrybutĂłw (Ĺšrednica, KÄ…t skosuâ€¦) */
 .mnsk7-plp-filters-toggle-wrap {
   margin-top: 0.25rem;
   margin-bottom: 0.5rem;
@@ -8557,7 +8744,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   order: -1;
 }
 
-/* Wybrane filtry + przycisk Wyczyść wszystkie (UX audit) — jako przycisk */
+/* Wybrane filtry + przycisk WyczyĹ›Ä‡ wszystkie (UX audit) â€” jako przycisk */
 .mnsk7-plp-selected {
   display: flex;
   flex-wrap: wrap;
@@ -8573,7 +8760,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   color: var(--color-text-secondary);
   margin-right: 0.25rem;
 }
-/* Chipy „Wybrane” (85 mm ×, 8 mm ×…) — zawsze czytelne: biały tekst na primary */
+/* Chipy â€žWybraneâ€ť (85 mm Ă—, 8 mm Ă—â€¦) â€” zawsze czytelne: biaĹ‚y tekst na primary */
 .mnsk7-plp-selected .mnsk7-plp-chip.mnsk7-plp-chip--remove {
   background: var(--color-primary, #0c7ddb) !important;
   border-color: var(--color-primary, #0c7ddb) !important;
@@ -8673,7 +8860,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
 .mnsk7-plp-search__input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: none; /* bez fioletowego glow z przeglądarki */
+  box-shadow: none; /* bez fioletowego glow z przeglÄ…darki */
 }
 .mnsk7-plp-search__input:focus-visible {
   outline: none;
@@ -8712,7 +8899,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   font-weight: 600;
 }
 
-/* PLP-11: empty state — nad chipsami (order:-1 w .mnsk7-plp-archive-wrap), spójny przycisk */
+/* PLP-11: empty state â€” nad chipsami (order:-1 w .mnsk7-plp-archive-wrap), spĂłjny przycisk */
 .mnsk7-plp-empty {
   width: 100%;
   max-width: 100%;
@@ -8770,14 +8957,14 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
-/* Na archiwum: ukryć ewentualny drugi notice Woo (gdy już pokazujemy własny empty) */
+/* Na archiwum: ukryÄ‡ ewentualny drugi notice Woo (gdy juĹĽ pokazujemy wĹ‚asny empty) */
 body.post-type-archive-product .woocommerce-no-products-found:not(.mnsk7-plp-empty),
 body.tax-product_cat .woocommerce-no-products-found:not(.mnsk7-plp-empty),
 body.tax-product_tag .woocommerce-no-products-found:not(.mnsk7-plp-empty) {
   margin-top: 0;
 }
 
-/* PLP-12: link „Wyczyść wyszukiwanie" na stronie wyników */
+/* PLP-12: link â€žWyczyĹ›Ä‡ wyszukiwanie" na stronie wynikĂłw */
 .mnsk7-plp-search-clear {
   margin: 0 0 0.75rem;
   font-size: var(--fs-sm);
@@ -8791,18 +8978,18 @@ body.tax-product_tag .woocommerce-no-products-found:not(.mnsk7-plp-empty) {
   text-decoration: underline;
 }
 
-/* Trust badges przy tabeli (jak w kartce: Dostawa jutro, Faktura VAT, dostawa 300 zł, Zwroty 30 dni) */
+/* Trust badges przy tabeli (jak w kartce: Dostawa jutro, Faktura VAT, dostawa 300 zĹ‚, Zwroty 30 dni) */
 .mnsk7-plp-trust-wrap {
   margin-bottom: 1rem;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
 }
-/* Nadpisanie ewentualnych stylów [role="list"] z normalizacji / a11y */
+/* Nadpisanie ewentualnych stylĂłw [role="list"] z normalizacji / a11y */
 .mnsk7-plp-trust-wrap [role="list"].mnsk7-plp-trust {
   display: flex !important;
 }
-/* Wyższa specyficzność na archiwum (sklep/kategoria/tag), żeby wygrać z .woocommerce div / Storefront */
+/* WyĹĽsza specyficznoĹ›Ä‡ na archiwum (sklep/kategoria/tag), ĹĽeby wygraÄ‡ z .woocommerce div / Storefront */
 body.post-type-archive-product .mnsk7-plp-trust-wrap .mnsk7-plp-trust,
 body.tax-product_cat .mnsk7-plp-trust-wrap .mnsk7-plp-trust,
 body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust,
@@ -8846,9 +9033,9 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   margin-right: 0 !important;
   margin-inline-end: 0 !important;
 }
-/* Separator między badge’ami, gdy gap nie działa (fallback) */
+/* Separator miÄ™dzy badgeâ€™ami, gdy gap nie dziaĹ‚a (fallback) */
 .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item:not(:last-child)::after {
-  content: ' · ';
+  content: ' Â· ';
   margin-left: 0.5rem;
   color: var(--color-text-muted);
   font-weight: 400;
@@ -8861,7 +9048,7 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
 }
 .mnsk7-plp-trust__item::before,
 .mnsk7-pdp-trust__item::before {
-  content: '✓ ';
+  content: 'âś“ ';
   color: var(--color-accent, #22c55e);
   font-weight: 700;
   font-size: 1em;
@@ -8952,7 +9139,7 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   }
 }
 
-/* Przycisk „Pokaż więcej” pod tabelą (gdy jest następna strona) — wyśrodkowany, ta sama szerokość co tabela */
+/* Przycisk â€žPokaĹĽ wiÄ™cejâ€ť pod tabelÄ… (gdy jest nastÄ™pna strona) â€” wyĹ›rodkowany, ta sama szerokoĹ›Ä‡ co tabela */
 .mnsk7-plp-load-more-wrap {
   margin: 1.25rem 0 1rem;
   width: 100%;
@@ -9018,14 +9205,14 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   visibility: visible;
   opacity: 1;
 }
-/* Bardzo wąskie ekrany — 1 kolumna (wartość z 01-tokens: --breakpoint-mobile-narrow) */
+/* Bardzo wÄ…skie ekrany â€” 1 kolumna (wartoĹ›Ä‡ z 01-tokens: --breakpoint-mobile-narrow) */
 @media (max-width: 360px) {
   body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products {
     grid-template-columns: 1fr;
   }
 }
 
-/* Table wrapper — na wąskim desktopie przewijanie w poziomie zamiast obcinania przycisku. */
+/* Table wrapper â€” na wÄ…skim desktopie przewijanie w poziomie zamiast obcinania przycisku. */
 .mnsk7-product-table-wrap {
   margin-bottom: 1.5rem;
   max-width: 100%;
@@ -9034,7 +9221,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   -webkit-overflow-scrolling: touch;
 }
 
-/* table-layout: fixed — jednakowe proporcje kolumn. Task 8: overflow: hidden — obcięcie treści do border-radius. */
+/* table-layout: fixed â€” jednakowe proporcje kolumn. Task 8: overflow: hidden â€” obciÄ™cie treĹ›ci do border-radius. */
 .mnsk7-product-table {
   width: 100%;
   table-layout: fixed;
@@ -9060,7 +9247,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   white-space: nowrap;
 }
 
-/* Фиксированные доли колонок для единого вида на всех категориях */
+/* Đ¤Đ¸ĐşŃĐ¸Ń€ĐľĐ˛Đ°Đ˝Đ˝Ń‹Đµ Đ´ĐľĐ»Đ¸ ĐşĐľĐ»ĐľĐ˝ĐľĐş Đ´Đ»ŃŹ ĐµĐ´Đ¸Đ˝ĐľĐłĐľ Đ˛Đ¸Đ´Đ° Đ˝Đ° Đ˛ŃĐµŃ… ĐşĐ°Ń‚ĐµĐłĐľŃ€Đ¸ŃŹŃ… */
 .mnsk7-product-table th.mnsk7-table-cell--thumb,
 .mnsk7-product-table .mnsk7-table-cell--thumb { width: 7%; min-width: 64px; }
 .mnsk7-product-table th.mnsk7-table-cell--title,
@@ -9099,7 +9286,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   max-width: 64px;
   background: var(--color-surface);
   border-radius: var(--r-sm);
-  overflow: hidden; /* obcięcie miniatury do border-radius */
+  overflow: hidden; /* obciÄ™cie miniatury do border-radius */
   text-decoration: none;
   border-bottom: none;
   -webkit-tap-highlight-color: transparent;
@@ -9151,11 +9338,16 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 }
 
 .mnsk7-product-table .mnsk7-table-cell--title a {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
   color: var(--color-text);
   font-weight: 600;
   text-decoration: none;
   border-bottom: none;
   -webkit-tap-highlight-color: transparent;
+  line-height: 1.4;
 }
 .mnsk7-product-table .mnsk7-table-cell--title a:hover,
 .mnsk7-product-table .mnsk7-table-cell--title a:active,
@@ -9175,6 +9367,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table td.mnsk7-table-cell--price {
   font-weight: 700;
   color: var(--color-primary-dark);
+  white-space: nowrap;
 }
 
 .mnsk7-product-table .mnsk7-table-cell--stock {
@@ -9189,7 +9382,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   vertical-align: middle;
 }
 
-/* Desktop: przycisk „Dodaj do koszyka” w jednej linii z ceną (41,00 zł), stanem (1 szt.), ilością */
+/* Desktop: przycisk â€žDodaj do koszykaâ€ť w jednej linii z cenÄ… (41,00 zĹ‚), stanem (1 szt.), iloĹ›ciÄ… */
 @media (min-width: 769px) {
   .mnsk7-product-table tbody .mnsk7-table-cell--price,
   .mnsk7-product-table tbody .mnsk7-table-cell--stock,
@@ -9427,13 +9620,13 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 }
 
 /* === 25-global-layout.css === */
-/* 25-global-layout — source of truth dla header/footer/clearfix/PLP trust (HANDOFF: bez wp_footer).
-   Ten sam wygląd na wszystkich stronach (/, koszyk, archive, tag, ?filter_*, PDP).
-   Task 7: !important celowo — nadpisanie Woo/Storefront (kolejność ładowania); nie usuwać bez zmiany specyficzności lub kolejności plików. */
+/* 25-global-layout â€” source of truth dla header/footer/clearfix/PLP trust (HANDOFF: bez wp_footer).
+   Ten sam wyglÄ…d na wszystkich stronach (/, koszyk, archive, tag, ?filter_*, PDP).
+   Task 7: !important celowo â€” nadpisanie Woo/Storefront (kolejnoĹ›Ä‡ Ĺ‚adowania); nie usuwaÄ‡ bez zmiany specyficznoĹ›ci lub kolejnoĹ›ci plikĂłw. */
 
-/* Page top — jedyne źródło odstępu header→treść: padding-top #content (header.php zamyka #content, wewnątrz main/hero).
-   Root cause: docs/ROOT-CAUSE-WHITE-STRIP-HOME.md. Główna NIGDY nie dostaje padding-top — ustawiamy go tylko dla body:not(.home).
-   Archiwa produktów (shop / kategoria / tag): kompaktowy padding-top z 24-plp-table.css — nie nadpisywać tutaj (plp-01). */
+/* Page top â€” jedyne ĹşrĂłdĹ‚o odstÄ™pu headerâ†’treĹ›Ä‡: padding-top #content (header.php zamyka #content, wewnÄ…trz main/hero).
+   Root cause: docs/ROOT-CAUSE-WHITE-STRIP-HOME.md. GĹ‚Ăłwna NIGDY nie dostaje padding-top â€” ustawiamy go tylko dla body:not(.home).
+   Archiwa produktĂłw (shop / kategoria / tag): kompaktowy padding-top z 24-plp-table.css â€” nie nadpisywaÄ‡ tutaj (plp-01). */
 #content,
 .site-content,
 .mnsk7-content {
@@ -9446,7 +9639,7 @@ body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-p
 body:not(.home):not(.post-type-archive-product):not(.tax-product_cat):not(.tax-product_tag) .mnsk7-content {
   padding-top: var(--space-page-top);
 }
-/* Strona główna: brak odstępu górnego (hero od razu pod headerem). Zerujemy padding i margin. */
+/* Strona gĹ‚Ăłwna: brak odstÄ™pu gĂłrnego (hero od razu pod headerem). Zerujemy padding i margin. */
 body.home #content,
 body.home .site-content,
 body.home .mnsk7-content {
@@ -9502,7 +9695,7 @@ body.home .mnsk7-content {
   #content,
   .site-content,
   .mnsk7-content {
-    /* UI policy: 8/16/24 rhythm — desktop uses 24px padding */
+    /* UI policy: 8/16/24 rhythm â€” desktop uses 24px padding */
     padding-left: 1.5rem;
     padding-right: 1.5rem;
   }
@@ -9525,7 +9718,7 @@ body.home .mnsk7-content {
   background: var(--color-bg, #fff);
 }
 
-/* Woo clearfix: usuń ::before, który psuł grid produktów */
+/* Woo clearfix: usuĹ„ ::before, ktĂłry psuĹ‚ grid produktĂłw */
 ul.products::before,
 ul.products.columns-3::before,
 ul.products.columns-4::before,
@@ -9535,7 +9728,7 @@ ul.products.columns-4::before,
   display: none !important;
 }
 
-/* Footer: ciemne tło i kolory tekstu */
+/* Footer: ciemne tĹ‚o i kolory tekstu */
 #colophon.mnsk7-footer,
 .mnsk7-footer {
   background: #1e293b !important;
@@ -9557,7 +9750,7 @@ ul.products.columns-4::before,
   color: #60a5fa;
 }
 
-/* Header: tło i obramowanie (wygrywa z cache/pluginami) */
+/* Header: tĹ‚o i obramowanie (wygrywa z cache/pluginami) */
 #masthead.mnsk7-header {
   background: #fff !important;
   border-bottom: 1px solid var(--color-border, #e9e8cc);
@@ -9566,7 +9759,7 @@ ul.products.columns-4::before,
   margin-bottom: 0;
 }
 
-/* Desktop (1025px): jeden search/menu — bez duplikatu, bez zależności od JS */
+/* Desktop (1025px): jeden search/menu â€” bez duplikatu, bez zaleĹĽnoĹ›ci od JS */
 @media (min-width: 1025px) {
   .mnsk7-header__menu-toggle,
   .mnsk7-header__search-toggle {
@@ -9596,11 +9789,11 @@ ul.products.columns-4::before,
   display: inline-flex !important;
 }
 .mnsk7-plp-trust__item:not(:last-child)::after {
-  content: " · " !important;
+  content: " Â· " !important;
   margin-left: 0.5rem;
 }
 
-/* UI Audit: jeden border-radius dla wszystkich przycisków (var(--r-md)) — nadpisuje WC/Storefront */
+/* UI Audit: jeden border-radius dla wszystkich przyciskĂłw (var(--r-md)) â€” nadpisuje WC/Storefront */
 .woocommerce a.button,
 .woocommerce button.button,
 .woocommerce input.button,

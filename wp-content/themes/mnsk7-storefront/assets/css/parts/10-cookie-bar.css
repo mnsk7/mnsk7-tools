@@ -14,14 +14,14 @@
   box-sizing: border-box;
   background: var(--color-dark-bg);
   color: var(--color-white);
-  padding: 0.75rem 1.25rem;
-  padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
+  padding: 0.55rem 1rem;
+  padding-bottom: max(0.55rem, env(safe-area-inset-bottom));
   z-index: 10000;
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 0.75rem 1rem;
+  gap: 0.5rem 0.85rem;
   box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.2);
   font-size: var(--fs-sm);
   line-height: 1.5;
@@ -49,6 +49,8 @@
   flex: 1 1 260px;
   min-width: 0;
   margin: 0;
+  font-size: var(--fs-xs);
+  line-height: 1.4;
 }
 
 .mnsk7-cookie-bar__text a,
@@ -66,7 +68,7 @@
   display: flex;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem;
   flex-shrink: 0;
   min-width: 0;
   position: relative;
@@ -77,9 +79,9 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
+  padding: 0.45rem 0.85rem;
   border-radius: var(--r-md);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-xs);
   font-weight: 600;
   font-family: var(--font-base);
   cursor: pointer;
@@ -120,9 +122,9 @@
 
 @media (max-width: 768px) {
   .mnsk7-cookie-bar {
-    padding: 0.5rem 0.75rem;
-    padding-bottom: max(0.5rem, env(safe-area-inset-bottom));
-    gap: 0.5rem 0.75rem;
+    padding: 0.45rem 0.7rem;
+    padding-bottom: max(0.45rem, env(safe-area-inset-bottom));
+    gap: 0.35rem 0.6rem;
     font-size: var(--fs-xs);
     line-height: 1.4;
   }
@@ -138,12 +140,12 @@
 
   .mnsk7-cookie-bar__buttons {
     width: 100%;
-    gap: 0.4rem;
+    gap: 0.35rem;
   }
 
   .mnsk7-cookie-bar__btn {
     min-height: 44px;
-    padding: 0.45rem 0.85rem;
+    padding: 0.4rem 0.75rem;
     font-size: var(--fs-xs);
     flex: 1 1 auto;
   }

@@ -131,8 +131,9 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   font-size: clamp(1.25rem, 2.5vw, var(--fs-2xl));
   font-weight: 600;
   color: var(--color-text);
-  margin: 0 0 0.5rem;
-  line-height: 1.25;
+  margin: 0 0 0.4rem;
+  line-height: 1.18;
+  max-width: 18ch;
 }
 
 .single-product .summary .price {
@@ -156,6 +157,13 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--color-text-muted, #555);
+}
+
+.mnsk7-product-value-statement {
+  margin: 0 0 0.85rem;
+  color: var(--color-text-secondary);
+  font-size: var(--fs-sm);
+  line-height: 1.55;
 }
 
 .single-product .summary .price del {
@@ -457,19 +465,22 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .mnsk7-product-trust {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem 1rem;
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid var(--color-border);
+  gap: 0.5rem;
+  margin-top: 0.85rem;
 }
 
 .mnsk7-product-trust__badge {
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
+  min-height: 2.2rem;
+  padding: 0.45rem 0.7rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: var(--r-pill);
+  background: rgba(248, 250, 252, 0.95);
   font-size: var(--fs-xs);
   font-weight: 600;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
 }
 
 .mnsk7-product-trust__badge-icon {

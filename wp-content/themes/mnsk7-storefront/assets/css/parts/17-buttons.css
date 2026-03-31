@@ -96,6 +96,25 @@ button[type="submit"] {
   cursor: not-allowed;
 }
 
+.mnsk7-btn--secondary,
+.woocommerce-cart .mnsk7-cart-continue .button.mnsk7-btn-back,
+.woocommerce-cart .woocommerce-cart-form .coupon .button,
+.woocommerce-cart .woocommerce-cart-form button[name="update_cart"],
+.woocommerce-checkout .woocommerce-form-login-toggle .showlogin,
+.woocommerce-checkout .woocommerce-form-coupon-toggle .showcoupon {
+  background: var(--color-white) !important;
+  color: var(--color-text) !important;
+  border: 1px solid var(--color-border) !important;
+  box-shadow: none !important;
+}
+
+.mnsk7-btn--ghost {
+  background: transparent !important;
+  color: var(--color-primary) !important;
+  border: 1px solid rgba(12, 125, 219, 0.22) !important;
+  box-shadow: none !important;
+}
+
 /* -----------------------------------------------------------------
    § FORM ELEMENTS — :focus-visible (WCAG 2.4.7, UI_SPEC_V2 §12 W3)
    ----------------------------------------------------------------- */
@@ -112,4 +131,3 @@ textarea:focus-visible {
   outline: 2px solid var(--color-focus, var(--color-primary));
   outline-offset: 2px;
 }
-

@@ -88,6 +88,10 @@ body.page #colophon.mnsk7-footer {
 }
 .mnsk7-footer__newsletter-privacy a {
   color: var(--color-footer-link);
+  text-decoration: underline;
+  text-underline-offset: 0.16em;
+  text-decoration-thickness: 0.08em;
+  font-weight: 600;
 }
 
 .mnsk7-footer__newsletter-desc {

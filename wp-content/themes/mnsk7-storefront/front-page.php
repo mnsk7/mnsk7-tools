@@ -24,6 +24,12 @@ get_header();
 						<li class="mnsk7-hero__usp"><?php esc_html_e( 'Realne stany magazynowe', 'mnsk7-storefront' ); ?></li>
 					</ul>
 
+					<div class="mnsk7-hero__trust-strip" aria-label="<?php esc_attr_e( 'Powody zakupu', 'mnsk7-storefront' ); ?>">
+						<span><?php esc_html_e( 'Szybki dobór narzędzi do materiału', 'mnsk7-storefront' ); ?></span>
+						<span><?php esc_html_e( 'Wsparcie przy zakupach B2B i VAT', 'mnsk7-storefront' ); ?></span>
+						<span><?php esc_html_e( 'Jasna dostawa i płatność przed checkoutem', 'mnsk7-storefront' ); ?></span>
+					</div>
+
 					<div class="mnsk7-hero__materials-wrap">
 						<p class="mnsk7-hero__group-label"><?php esc_html_e( 'Materiały', 'mnsk7-storefront' ); ?></p>
 						<div class="mnsk7-hero__materials" aria-label="<?php esc_attr_e( 'Szybki wybór materiału', 'mnsk7-storefront' ); ?>">
@@ -73,17 +79,6 @@ get_header();
 		</div>
 	</section>
 
-	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
-	<section class="mnsk7-section mnsk7-section--bestsellers">
-		<div class="col-full">
-			<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title="Bestsellery i polecane"]' ); ?>
-			<p class="mnsk7-section__more mnsk7-bestsellers-more">
-				<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie bestsellery →', 'mnsk7-storefront' ); ?></a>
-			</p>
-		</div>
-	</section>
-	<?php endif; ?>
-
 	<section class="mnsk7-section mnsk7-section--trust mnsk7-section--light">
 		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Dlaczego kupujący nam ufają', 'mnsk7-storefront' ); ?></h2>
@@ -117,6 +112,17 @@ get_header();
 			<?php endif; ?>
 		</div>
 	</section>
+
+	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
+	<section class="mnsk7-section mnsk7-section--bestsellers">
+		<div class="col-full">
+			<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title="Bestsellery i polecane"]' ); ?>
+			<p class="mnsk7-section__more mnsk7-bestsellers-more">
+				<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie bestsellery →', 'mnsk7-storefront' ); ?></a>
+			</p>
+		</div>
+	</section>
+	<?php endif; ?>
 
 	<?php
 	$cats     = array();
@@ -189,6 +195,7 @@ get_header();
 						$cat_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $cat_name ) );
 						$img_id   = get_term_meta( $cat->term_id, 'thumbnail_id', true );
 						$img      = $img_id ? wp_get_attachment_image( $img_id, 'medium', false, array( 'alt' => $cat_name ) ) : '';
+						$cat_hint = sprintf( esc_html__( '%s produktów gotowych do szybkiego porównania.', 'mnsk7-storefront' ), absint( $cat->count ) );
 						?>
 						<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-cats__item">
 							<span class="mnsk7-cats__img-wrap">
@@ -201,8 +208,9 @@ get_header();
 							<span class="mnsk7-cats__body">
 								<span class="mnsk7-cats__name"><?php echo esc_html( $cat_name ); ?></span>
 								<span class="mnsk7-cats__count"><?php echo esc_html( $cat->count ); ?> <?php esc_html_e( 'prod.', 'mnsk7-storefront' ); ?></span>
+								<span class="mnsk7-cats__hint"><?php echo esc_html( $cat_hint ); ?></span>
 							</span>
-							<span class="mnsk7-cats__arrow" aria-hidden="true">→</span>
+							<span class="mnsk7-cats__arrow" aria-hidden="true"><?php esc_html_e( 'Przejdź', 'mnsk7-storefront' ); ?> →</span>
 						</a>
 					<?php endforeach; ?>
 				</div>
@@ -248,12 +256,14 @@ get_header();
 		</div>
 	</section>
 
+	<?php if ( function_exists( 'mnsk7_should_render_home_instagram' ) && mnsk7_should_render_home_instagram() ) : ?>
 	<section class="mnsk7-section mnsk7-section--insta">
 		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Obserwuj nas na Instagramie', 'mnsk7-storefront' ); ?></h2>
-			<?php echo do_shortcode( '[mnsk7_instagram_feed type="profile" title="Instagram @mnsk7tools"]' ); ?>
+			<?php echo do_shortcode( '[mnsk7_instagram_feed type="posts" title="Instagram @mnsk7tools"]' ); ?>
 		</div>
 	</section>
+	<?php endif; ?>
 
 </main>
 

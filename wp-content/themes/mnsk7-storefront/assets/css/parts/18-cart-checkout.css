@@ -234,6 +234,61 @@
   padding: 1.25rem;
 }
 
+.mnsk7-checkout-steps {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 0.85rem;
+  padding: 0.85rem 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: var(--r-lg, 1rem);
+  background: var(--color-white);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
+}
+
+.mnsk7-checkout-steps__item {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2rem;
+  padding: 0.3rem 0.65rem;
+  border-radius: var(--r-pill);
+  background: rgba(12, 125, 219, 0.08);
+  color: var(--color-text-secondary);
+  font-size: var(--fs-xs);
+  font-weight: 700;
+}
+
+.mnsk7-checkout-steps__item--done,
+.mnsk7-checkout-steps__item--active {
+  color: var(--color-primary-dark, #0a5a9e);
+  background: rgba(12, 125, 219, 0.14);
+}
+
+.mnsk7-checkout-steps__divider {
+  color: var(--color-text-muted);
+}
+
+.mnsk7-checkout-trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0 0 1rem;
+}
+
+.mnsk7-checkout-trust span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 2.1rem;
+  padding: 0.4rem 0.65rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: var(--r-pill);
+  background: rgba(248, 250, 252, 0.95);
+  color: var(--color-text);
+  font-size: var(--fs-xs);
+  font-weight: 600;
+}
+
 .woocommerce-cart table.shop_table th {
   font-weight: 600;
   font-size: var(--fs-sm);
@@ -475,8 +530,41 @@
   border-radius: var(--r-md);
 }
 
+.woocommerce-checkout .woocommerce-form-login-toggle,
+.woocommerce-checkout .woocommerce-form-coupon-toggle,
+.woocommerce-checkout .woocommerce-notices-wrapper .woocommerce-message,
+.woocommerce-checkout .woocommerce-notices-wrapper .woocommerce-info {
+  margin-bottom: 0.85rem;
+}
+
+.woocommerce-checkout .mnsk7-checkout-notice-card {
+  border-radius: var(--r-md);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+}
+
+.woocommerce-checkout .mnsk7-checkout-notice-card--compact {
+  margin-bottom: 0.55rem;
+  font-size: var(--fs-xs);
+}
+
 /* Audit task 13: na mobile przycisk "Kupuje i place" widoczny, nie zasloniety przez sticky header */
 @media (max-width: 768px) {
+  .mnsk7-checkout-steps {
+    gap: 0.3rem;
+    padding: 0.75rem 0.85rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .mnsk7-checkout-trust {
+    gap: 0.4rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .mnsk7-checkout-trust span {
+    width: 100%;
+    justify-content: center;
+  }
+
   .woocommerce-checkout form.woocommerce-checkout {
     padding-bottom: 6rem;
   }
@@ -579,6 +667,10 @@
   .woocommerce-checkout .form-row textarea,
   .woocommerce-checkout .form-row select {
     font-size: var(--fs-base);
+  }
+
+  .woocommerce-checkout .mnsk7-checkout-notice-card--compact {
+    opacity: 0.92;
   }
 
   .woocommerce-cart .cart_totals,
