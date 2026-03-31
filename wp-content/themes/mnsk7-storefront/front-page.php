@@ -24,12 +24,6 @@ get_header();
 						<li class="mnsk7-hero__usp"><?php esc_html_e( 'Realne stany magazynowe', 'mnsk7-storefront' ); ?></li>
 					</ul>
 
-					<div class="mnsk7-hero__trust-strip" aria-label="<?php esc_attr_e( 'Powody zakupu', 'mnsk7-storefront' ); ?>">
-						<span><?php esc_html_e( 'Szybki dobór narzędzi do materiału', 'mnsk7-storefront' ); ?></span>
-						<span><?php esc_html_e( 'Wsparcie przy zakupach B2B i VAT', 'mnsk7-storefront' ); ?></span>
-						<span><?php esc_html_e( 'Jasna dostawa i płatność przed checkoutem', 'mnsk7-storefront' ); ?></span>
-					</div>
-
 					<div class="mnsk7-hero__materials-wrap">
 						<p class="mnsk7-hero__group-label"><?php esc_html_e( 'Materiały', 'mnsk7-storefront' ); ?></p>
 						<div class="mnsk7-hero__materials" aria-label="<?php esc_attr_e( 'Szybki wybór materiału', 'mnsk7-storefront' ); ?>">
@@ -213,7 +207,7 @@ get_header();
 								<span class="mnsk7-cats__name"><?php echo esc_html( $cat_name ); ?></span>
 								<span class="mnsk7-cats__count"><?php echo esc_html( $cat_count_label ); ?></span>
 							</span>
-							<span class="mnsk7-cats__arrow" aria-hidden="true"><?php esc_html_e( 'Zobacz kategorię', 'mnsk7-storefront' ); ?></span>
+							<span class="mnsk7-cats__arrow" aria-hidden="true">→</span>
 						</a>
 					<?php endforeach; ?>
 				</div>

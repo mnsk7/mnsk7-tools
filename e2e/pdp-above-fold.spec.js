@@ -6,9 +6,19 @@ const DESKTOP_UA = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
 
 async function openFirstProduct(page) {
   await page.goto('/sklep/', { waitUntil: 'domcontentloaded' });
-  const firstProduct = page.locator('.products .product a').first();
+  await page.waitForLoadState('networkidle', { timeout: 15000 }).catch(() => {});
+
+  const firstProduct = page
+    .locator(
+      '.mnsk7-product-table tbody .mnsk7-table-cell--title a, .mnsk7-plp-grid-mobile .products .product a, .products .product a'
+    )
+    .first();
+
   await expect(firstProduct).toBeVisible({ timeout: 10000 });
-  await firstProduct.click();
+  const href = await firstProduct.getAttribute('href');
+  expect(href).toBeTruthy();
+
+  await page.goto(href, { waitUntil: 'domcontentloaded' });
   await expect(page.locator('body.single-product')).toBeVisible({ timeout: 10000 });
 }
 
