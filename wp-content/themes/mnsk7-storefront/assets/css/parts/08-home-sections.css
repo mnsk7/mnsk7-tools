@@ -37,12 +37,10 @@
   }
 }
 
-.mnsk7-hero::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at 82% 12%, rgba(23, 88, 176, 0.13) 0%, rgba(23, 88, 176, 0) 46%);
-  pointer-events: none;
+.mnsk7-hero::before,
+.mnsk7-hero::after {
+  content: none;
+  display: none;
 }
 
 .mnsk7-hero__inner {
