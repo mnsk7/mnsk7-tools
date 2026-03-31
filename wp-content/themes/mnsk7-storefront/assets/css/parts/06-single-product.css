@@ -383,35 +383,30 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin: 0;
   display: grid;
   grid-template-columns: 46px minmax(0, 1fr) 46px;
-  grid-template-rows: auto 48px;
+  grid-template-rows: 48px;
   align-items: center;
   justify-content: stretch;
   align-self: stretch;
   width: 100%;
   min-width: 0;
-  gap: 0.35rem 0.125rem;
+  gap: 0;
   padding: 0;
-  border: none;
-  border-radius: 0;
-  overflow: visible;
-  background: transparent;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--color-white);
 }
 
 .single-product div.product .summary form.cart .quantity::before {
-  content: "Ilość";
-  grid-column: 1 / -1;
-  grid-row: 1;
-  display: block;
-  padding: 0 0.125rem;
-  font-size: var(--fs-xs);
-  font-weight: 700;
-  color: var(--color-text-secondary);
+  content: none;
+  display: none;
 }
+
 
 .single-product .summary .quantity .qty,
 .single-product .summary .mnsk7-qty-btn,
 .single-product .summary .mnsk7-quantity-lock {
-  grid-row: 2;
+  grid-row: 1;
 }
 
 .single-product .summary .mnsk7-qty-btn--minus {
@@ -438,27 +433,27 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
 .single-product .summary .quantity.quantity--locked .mnsk7-quantity-lock {
   border: 1px solid var(--color-border);
-  border-radius: var(--r-pill);
+  border-radius: 0;
 }
 
 .single-product .summary .quantity.quantity--stepper .mnsk7-qty-btn,
 .single-product .summary .quantity.quantity--stepper .qty {
-  border: 1px solid var(--color-border);
-  background: var(--color-white);
+  border: none;
+  background: transparent;
 }
 
 .single-product .summary .quantity.quantity--stepper .mnsk7-qty-btn--minus {
-  border-radius: var(--r-pill) 0 0 var(--r-pill);
+  border-radius: 0;
 }
 
 .single-product .summary .quantity.quantity--stepper .qty {
-  border-left: none;
-  border-right: none;
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
   border-radius: 0;
 }
 
 .single-product .summary .quantity.quantity--stepper .mnsk7-qty-btn--plus {
-  border-radius: 0 var(--r-pill) var(--r-pill) 0;
+  border-radius: 0;
 }
 
 .single-product .summary .quantity.quantity--locked {
@@ -472,13 +467,13 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   padding: 0.5rem 0.25rem;
   font-size: var(--fs-base);
   font-family: var(--font-base);
-  width: 3.25rem;
-  min-width: 3.25rem;
+  width: 100%;
+  min-width: 3rem;
   min-height: 46px;
   text-align: center;
   box-shadow: none;
-  background: var(--color-white);
-  border-radius: var(--r-pill);
+  background: transparent;
+  border-radius: 0;
   font-weight: 700;
   appearance: textfield;
 }
@@ -498,14 +493,14 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   line-height: 1;
   cursor: pointer;
   flex-shrink: 0;
-  border-radius: var(--r-pill);
+  border-radius: 0;
 }
 .single-product .summary .mnsk7-qty-btn::before {
   font-size: 1.125rem;
   line-height: 1;
 }
 .single-product .summary .mnsk7-qty-btn--minus::before {
-  content: "−";
+  content: "-";
 }
 .single-product .summary .mnsk7-qty-btn--plus::before {
   content: "+";
@@ -526,8 +521,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   font-weight: 700;
   color: var(--color-text);
   white-space: nowrap;
-  background: var(--color-white);
-  border-radius: var(--r-pill);
+  background: transparent;
+  border-radius: 0;
 }
 
 .single-product div.product .summary form.cart .single_add_to_cart_button {
@@ -807,14 +802,14 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   }
 
   .single-product div.product > .summary.mnsk7-pdp-buybox {
-    order: 1;
+    order: 2;
   }
 
   .single-product div.product .images {
     position: static;
     top: auto;
     max-width: 100%;
-    order: 2;
+    order: 1;
     width: 100%;
     min-width: 0;
   }
@@ -870,10 +865,10 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   .single-product div.product .images {
     position: static;
     top: auto;
-    order: 2;
+    order: 1;
   }
   .single-product div.product .summary.mnsk7-pdp-buybox {
-    order: 1;
+    order: 2;
   }
   .single-product div.product > .mnsk7-product-extra-media,
   .single-product div.product > .mnsk7-product-description-accordion {
