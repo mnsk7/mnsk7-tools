@@ -18,6 +18,14 @@ body,
   box-sizing: border-box;
 }
 
+/* Storefront can turn .site into a scroll container, which breaks sticky header on desktop.
+   Keep horizontal clipping, but let vertical scrolling stay on the viewport. */
+.site,
+#page {
+  overflow-x: clip;
+  overflow-y: visible;
+}
+
 body {
   font-family: var(--font-base);
   color: var(--color-text);

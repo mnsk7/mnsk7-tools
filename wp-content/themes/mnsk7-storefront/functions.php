@@ -2229,7 +2229,6 @@ add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 				}
 			}
 
-			$crumbs[] = array( wp_strip_all_tags( $product->get_name() ), '' );
 		}
 	}
 
