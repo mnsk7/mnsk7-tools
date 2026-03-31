@@ -52,7 +52,7 @@ if ( is_shop() && ! $is_taxonomy ) {
 	echo '<p class="mnsk7-archive-context col-full">' . esc_html( $archive_context ) . '</p>';
 }
 
-/* PLP-12: na stronie wyników wyszukiwania — link „Wyczyść wyszukiwanie" i liczba wyników */
+/* PLP-12: na stronie wyników wyszukiwania — link "Wyczyść wyszukiwanie" i liczba wyników */
 if ( is_search() && get_query_var( 'post_type' ) === 'product' ) {
 	global $wp_query;
 	$found = isset( $wp_query->found_posts ) ? (int) $wp_query->found_posts : 0;
@@ -115,7 +115,7 @@ if ( is_shop() || $is_taxonomy ) {
 	$render_plp_search( $current_term, true );
 }
 
-/* Render jednego rzędu chipów nawigacyjnych (kategorie/tagi): etykieta + poziomy scroll + opcjonalnie „Więcej”. */
+/* Render jednego rzędu chipów nawigacyjnych (kategorie/tagi): etykieta + poziomy scroll + opcjonalnie "Więcej". */
 $plp_nav_chips_limit = $plp_is_mobile_request ? 5 : 6;
 $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $plp_nav_chips_limit ) {
 	if ( empty( $terms ) || ! is_array( $terms ) ) {
@@ -306,7 +306,7 @@ $plp_is_mobile = $plp_is_mobile_request;
 $plp_show_toolbar_at_top = false;
 
 if ( woocommerce_product_loop() ) {
-	/* PLP-05/PLP-10: bez toolbara u góry — sortowanie i paginacja tylko na dole; przy tabeli tylko „Pokaż więcej” */
+	/* PLP-05/PLP-10: bez toolbara u góry — sortowanie i paginacja tylko na dole; przy tabeli tylko "Pokaż więcej" */
 	if ( $use_table ) {
 		if ( $plp_is_mobile ) {
 			/* Mobile: tylko siatka kart (jedna pętla, bez tabeli w DOM). */

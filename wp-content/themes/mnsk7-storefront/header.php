@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
 	<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 	<link rel="profile" href="https://gmpg.org/xfn/11">
 	<?php
-	// Performance: preload main font for faster LCP (Inter). Tylko gdy plik istnieje (unika 404 + „preloaded but not used” na staging).
+	// Performance: preload main font for faster LCP (Inter). Tylko gdy plik istnieje (unika 404 + "preloaded but not used" na staging).
 	$font_path = get_stylesheet_directory() . '/assets/fonts/inter-latin-wght-normal.woff2';
 	if ( file_exists( $font_path ) ) {
 		$font_uri = get_stylesheet_directory_uri() . '/assets/fonts/inter-latin-wght-normal.woff2';
@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 	<?php wp_head(); ?>
 	<?php
 	// Krytyczne style nagłówka inline — gwarantują ten sam wygląd także gdy URL ma parametry ?filter_*
-	// (cache/CDN może serwować stronę bez pełnego CSS; te reguły zapobiegają „złamaniu” headera).
+	// (cache/CDN może serwować stronę bez pełnego CSS; te reguły zapobiegają "złamaniu" headera).
 	?>
 	<style id="mnsk7-header-critical">
 	#masthead.mnsk7-header{background:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:1000;border-bottom:1px solid #e9e8cc;box-shadow:0 1px 3px rgba(0,0,0,.06);min-height:56px;box-sizing:border-box;padding-top:0;padding-bottom:0;margin-bottom:0}
@@ -91,7 +91,7 @@ endif;
 					$has_submenu = true;
 					$top_cats = array();
 					$top_tags = array();
-					// Submenu w DOM zawsze (desktop + mobile); na mobile rozwijane przez JS (tap → .is-open). Nawet przy pustych termach — footer „Wszystkie produkty”.
+					// Submenu w DOM zawsze (desktop + mobile); na mobile rozwijane przez JS (tap → .is-open). Nawet przy pustych termach — footer "Wszystkie produkty".
 					if ( function_exists( 'mnsk7_get_megamenu_terms' ) ) {
 						$terms = mnsk7_get_megamenu_terms();
 						$top_cats = isset( $terms['cats'] ) ? $terms['cats'] : array();

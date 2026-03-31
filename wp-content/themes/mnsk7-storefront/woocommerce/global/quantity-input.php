@@ -1,8 +1,8 @@
-﻿<?php
+<?php
 /**
  * Product quantity inputs
  *
- * Override: mnsk7-storefront. Na PDP etykieta i aria-label tylko „Ilość” (bez nazwy produktu) — a11y.
+ * Override: mnsk7-storefront. Na PDP etykieta i aria-label tylko "Ilość" (bez nazwy produktu) — a11y.
  *
  * @see     woocommerce/templates/global/quantity-input.php
  * @package WooCommerce\Templates

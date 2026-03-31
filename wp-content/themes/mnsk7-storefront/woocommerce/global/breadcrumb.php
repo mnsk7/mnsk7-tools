@@ -2,7 +2,7 @@
 /**
  * Shop breadcrumb
  *
- * Override: ostatni element jest linkiem, gdy ma URL (np. archiwum z filtrami — link „wstecz” do tej samej listy).
+ * Override: ostatni element jest linkiem, gdy ma URL (np. archiwum z filtrami — link "wstecz" do tej samej listy).
  *
  * @see         https://woocommerce.com/document/template-structure/
  * @package     WooCommerce\Templates

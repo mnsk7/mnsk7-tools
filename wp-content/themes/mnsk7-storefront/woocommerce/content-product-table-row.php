@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 /**
  * One row of the product table (shop/category archive). Sandvik-style PLP table.
  * Columns: thumb, title, price, stock, qty, action.

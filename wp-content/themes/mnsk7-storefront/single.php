@@ -49,7 +49,7 @@ $przewodnik_label = apply_filters( 'mnsk7_przewodnik_menu_label', __( 'Przewodni
 		</div>
 
 		<?php
-		// FAQ: domyślnie zestaw „produkt” (dobór frezu itd.); w treści można dodać [mnsk7_faq set="dostawa"] lub własny tytuł
+		// FAQ: domyślnie zestaw "produkt" (dobór frezu itd.); w treści można dodać [mnsk7_faq set="dostawa"] lub własny tytuł
 		$faq_set   = get_post_meta( get_the_ID(), 'mnsk7_faq_set', true );
 		$faq_title = get_post_meta( get_the_ID(), 'mnsk7_faq_title', true );
 		if ( $faq_set === '' ) {

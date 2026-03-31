@@ -109,7 +109,7 @@ function mnsk7_is_plp_url_path() {
 }
 
 /**
- * Jedno miejsce określania „to jest PLP” (sklep / kategoria / tag). Lazy-eval przy pierwszym wywołaniu — cache w $GLOBALS.
+ * Jedno miejsce określania "to jest PLP" (sklep / kategoria / tag). Lazy-eval przy pierwszym wywołaniu — cache w $GLOBALS.
  * Nie ustawiamy w wp (priority 1), żeby pluginy zmieniające query (filter_*, koszyk, taxonomy) nie były wyprzedzane.
  * HANDOFF: body_class, template_include, breadcrumbs, header używają tylko tego.
  *
@@ -124,7 +124,7 @@ function mnsk7_is_plp() {
 }
 
 /**
- * Ustawienie globalnego stanu „to jest PLP” na początku requestu (jeden raz).
+ * Ustawienie globalnego stanu "to jest PLP" na początku requestu (jeden raz).
  */
 /**
  * Whether parent theme Storefront is present (not removed/overwritten by WP or host).
@@ -192,7 +192,7 @@ add_action( 'wp', function () {
 	remove_action( 'woocommerce_after_shop_loop', 'storefront_sorting_wrapper_close', 31 );
 }, 25 );
 
-/* PLP-10: przy tabeli (shop/category/tag) nie pokazuj numerów paginacji — tylko przycisk „Pokaż więcej” */
+/* PLP-10: przy tabeli (shop/category/tag) nie pokazuj numerów paginacji — tylko przycisk "Pokaż więcej" */
 add_action( 'woocommerce_after_shop_loop', function () {
 	if ( ! empty( $GLOBALS['mnsk7_plp_use_table'] ) ) {
 		remove_action( 'woocommerce_after_shop_loop', 'woocommerce_pagination', 10 );
@@ -200,7 +200,7 @@ add_action( 'woocommerce_after_shop_loop', function () {
 }, 1 );
 
 /**
- * PLP „Pokaż więcej”: AJAX — zwraca HTML wierszy tabeli dla następnej strony (bez przejścia na page/2).
+ * PLP "Pokaż więcej": AJAX — zwraca HTML wierszy tabeli dla następnej strony (bez przejścia na page/2).
  */
 function mnsk7_plp_load_more_handler() {
 	if ( ! function_exists( 'wc_get_product' ) ) {
@@ -267,7 +267,7 @@ function mnsk7_plp_load_more_handler() {
 	}
 	wp_reset_postdata();
 
-	// Po załadowaniu kolejnej strony: zakres 1–N z total (np. „Wyświetlanie 1–24 z 54 wyników”).
+	// Po załadowaniu kolejnej strony: zakres 1–N z total (np. "Wyświetlanie 1–24 z 54 wyników").
 	$first = 1;
 	$last  = min( $total, $page * $per_page );
 	$result_count = sprintf(
@@ -306,11 +306,11 @@ add_action( 'wp', function () {
 	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10 );
 } );
 
-/** PDP: cena + „X osób kupiło” w jednym rzędzie (otwarcie wrappera przed ceną) */
+/** PDP: cena + "X osób kupiło" w jednym rzędzie (otwarcie wrappera przed ceną) */
 add_action( 'woocommerce_single_product_summary', function () {
 	echo '<div class="mnsk7-pdp-price-row">';
 }, 14 );
-/** PDP: zamknięcie wrappera ceny + wyświetlenie „X osób kupiło” obok ceny */
+/** PDP: zamknięcie wrappera ceny + wyświetlenie "X osób kupiło" obok ceny */
 add_action( 'woocommerce_single_product_summary', function () {
 	global $product;
 	if ( $product && is_a( $product, 'WC_Product' ) ) {
@@ -427,7 +427,7 @@ function mnsk7_render_pdp_back_to_results() {
 	echo '<p class="mnsk7-pdp-back-search"><a href="' . esc_url( $back_url ) . '" class="mnsk7-pdp-back-search__link">' . esc_html__( 'Wróć do wyników', 'mnsk7-storefront' ) . '</a></p>';
 }
 
-/** PDP a11y: etykieta pola Ilość bez nazwy produktu (tylko „Ilość”) */
+/** PDP a11y: etykieta pola Ilość bez nazwy produktu (tylko "Ilość") */
 add_filter( 'woocommerce_quantity_input_args', function ( $args, $product ) {
 	if ( is_singular( 'product' ) ) {
 		$args['product_name'] = '';
@@ -489,7 +489,7 @@ add_filter( 'woocommerce_output_related_products_args', function ( $args ) {
 	return $args;
 }, 10 );
 
-/** 1.1 Cena w pętli (bestsellery, related, PLP): fallback gdy pusta; suffix „zł” na głównej */
+/** 1.1 Cena w pętli (bestsellery, related, PLP): fallback gdy pusta; suffix "zł" na głównej */
 add_filter( 'woocommerce_get_price_html', function ( $html, $product ) {
 	if ( in_the_loop() && (string) $html === '' ) {
 		return '<span class="woocommerce-price-fallback">' . esc_html__( 'Cena na zapytanie', 'mnsk7-storefront' ) . '</span>';
@@ -560,8 +560,8 @@ function mnsk7_get_cookie_consent() {
 }
 
 /**
- * Mega menu „Sklep”: nagłówki sekcji dla użytkownika (nie nazwy taksonomii Woo).
- * Domyślnie: product_cat → „Rodzaje frezów”, product_tag → „Zastosowanie i materiały”.
+ * Mega menu "Sklep": nagłówki sekcji dla użytkownika (nie nazwy taksonomii Woo).
+ * Domyślnie: product_cat → "Rodzaje frezów", product_tag → "Zastosowanie i materiały".
  * Aby zmienić: add_filter( 'mnsk7_megamenu_heading_categories', fn( $s ) => 'Twoja etykieta' );
  *              add_filter( 'mnsk7_megamenu_heading_tags', fn( $s ) => 'Twoja etykieta' );
  */
@@ -662,7 +662,7 @@ add_filter( 'the_content', function ( $content ) {
 	return $content;
 }, 3 );
 
-/** 4.2 UX: przycisk „Kontynuuj zakupy” na stronie koszyka */
+/** 4.2 UX: przycisk "Kontynuuj zakupy" na stronie koszyka */
 add_action( 'woocommerce_before_cart', function () {
 	if ( ! function_exists( 'wc_get_page_permalink' ) ) {
 		return;
@@ -856,7 +856,7 @@ add_action( 'wp_enqueue_scripts', function () {
 	}
 }, 20 );
 
-/* Override WooCommerce clearfix: woocommerce-layout.css ładuje się PO naszej temie i ustawia .woocommerce ul.products::before{display:table}, co daje pustą pierwszą „komórkę” w gridzie. Dodajemy inline do handle WooCommerce, żeby nasze display:none było po ich regule. Również Moje konto: przyciski + padding (wygrywamy z WC). */
+/* Override WooCommerce clearfix: woocommerce-layout.css ładuje się PO naszej temie i ustawia .woocommerce ul.products::before{display:table}, co daje pustą pierwszą "komórkę" w gridzie. Dodajemy inline do handle WooCommerce, żeby nasze display:none było po ich regule. Również Moje konto: przyciski + padding (wygrywamy z WC). */
 add_action( 'wp_enqueue_scripts', function () {
 	if ( ! wp_style_is( 'woocommerce-layout', 'registered' ) ) {
 		return;
@@ -1199,7 +1199,7 @@ add_action( 'wp_footer', function () {
 				closeCart();
 			}
 		});
-		// Mobile (<=1023): tap na parent z submenu (np. „Sklep”) rozwija submenu; bez przejścia po URL. Capture phase + pewne wykrycie linku (tap może dać target = tekst/child).
+		// Mobile (<=1023): tap na parent z submenu (np. "Sklep") rozwija submenu; bez przejścia po URL. Capture phase + pewne wykrycie linku (tap może dać target = tekst/child).
 		if (menu) {
 			function getLinkFromEvent(ev, root) {
 				var el = ev.target;
@@ -1270,7 +1270,7 @@ add_action( 'wp_footer', function () {
 					}
 				});
 			}
-			// Mobile: po kliknięciu w link (nie w parent „Sklep”) zamknij overlay — Przewodnik, Dostawa, Kontakt, podpunkty Sklep.
+			// Mobile: po kliknięciu w link (nie w parent "Sklep") zamknij overlay — Przewodnik, Dostawa, Kontakt, podpunkty Sklep.
 			menu.addEventListener('click', function(e) {
 				var a = getLinkFromEvent(e, menu);
 				if (!a || !a.getAttribute('href') || window.innerWidth >= DESKTOP_MIN || !nav) return;
@@ -1448,7 +1448,7 @@ add_action( 'wp_footer', function () {
 				}
 			} catch (e) {}
 		}
-		// Header shrink when scrolled (Visual Audit). Hysteresis: add at 70px, remove at 30px — zapobiega „trzęsieniu” przy pozycji ~50px.
+		// Header shrink when scrolled (Visual Audit). Hysteresis: add at 70px, remove at 30px — zapobiega "trzęsieniu" przy pozycji ~50px.
 		var header = document.getElementById('masthead');
 		if (header && header.classList.contains('mnsk7-header') && !header.dataset.mnsk7ShrinkInit) {
 			var SCROLL_ON = 70;
@@ -1691,7 +1691,7 @@ add_action( 'wp_footer', function () {
 	<?php
 }, 6 );
 
-/* 1e. PLP „Pokaż więcej”: podгрузка następnych wierszy tabeli bez przejścia na page/2 */
+/* 1e. PLP "Pokaż więcej": podгрузка następnych wierszy tabeli bez przejścia na page/2 */
 add_action( 'wp_footer', function () {
 	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_category() && ! is_product_tag() ) ) {
 		return;
@@ -1810,7 +1810,7 @@ add_action( 'wp_footer', function () {
 	<?php
 }, 21 );
 
-/* 1e bis. PLP chips „Więcej” / „Więcej filtrów”: pokaż/ukryj dodatkowe chipy i blok filtrów. Scroll do wyników po filter/category/tag. */
+/* 1e bis. PLP chips "Więcej" / "Więcej filtrów": pokaż/ukryj dodatkowe chipy i blok filtrów. Scroll do wyników po filter/category/tag. */
 add_action( 'wp_footer', function () {
 	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_category() && ! is_product_tag() ) ) {
 		return;
@@ -1860,7 +1860,7 @@ add_action( 'wp_footer', function () {
 	<?php
 }, 19 );
 
-/* 1e ter. Catalog chips „Więcej” na stronie głównej — rozwijanie ukrytych chipów w grupie. */
+/* 1e ter. Catalog chips "Więcej" na stronie głównej — rozwijanie ukrytych chipów w grupie. */
 add_action( 'wp_footer', function () {
 	if ( ! is_front_page() ) {
 		return;
@@ -1991,7 +1991,7 @@ add_filter( 'wp_page_menu_args', function ( $args ) {
 /* 7. Override Storefront typography */
 add_filter( 'storefront_google_font_families', '__return_empty_array' );
 
-/* 7b. PLP: nie pokazuj shortcodów ani artefaktów filtrów ([wpf-filters id=7] + blok „Filtruj: Średnica: …”) */
+/* 7b. PLP: nie pokazuj shortcodów ani artefaktów filtrów ([wpf-filters id=7] + blok "Filtruj: Średnica: …") */
 function mnsk7_strip_wpf_filters_from_text( $text ) {
 	if ( ! is_string( $text ) || $text === '' ) {
 		return $text;
@@ -2092,7 +2092,7 @@ add_filter( 'body_class', function ( $classes ) {
 
 /**
  * PLP + filter_*: jedna struktura body_class dla archiwum — niezależnie od ?filter_*.
- * Zapobiega przełączeniu layoutu/headera gdy pluginy zmieniają klasy przy „filter request”.
+ * Zapobiega przełączeniu layoutu/headera gdy pluginy zmieniają klasy przy "filter request".
  * Krytyczne klasy dla 24-plp-table.css: post-type-archive-product, tax-product_cat, tax-product_tag.
  * REQUEST_URI fallback: gdy plugin zmienia main query (np. ?filter_*), get_queried_object() bywa pusty —
  * wtedy tax-* dopisywane po ścieżce. Pełna determinacja wymagałaby poprawnego main query po stronie Woo/pluginu.
@@ -2561,7 +2561,7 @@ add_action( 'init', function () {
 				$out .= '</div>';
 			}
 			$out .= '</div>';
-			// Gdy iframe nie załaduje się — po 3 s pokaż link „Zobacz post” (blokada embed, CSP, brak sieci).
+			// Gdy iframe nie załaduje się — po 3 s pokaż link "Zobacz post" (blokada embed, CSP, brak sieci).
 			$out .= '<script>(function(){var posts=document.querySelectorAll(".mnsk7-instagram-feed__post");if(!posts.length)return;setTimeout(function(){posts.forEach(function(el){var ifr=el.querySelector("iframe");var fallback=el.querySelector(".mnsk7-instagram-feed__post-fallback");if(!fallback)return;if(!ifr||ifr.offsetHeight<100){var wrap=el.querySelector(".instagram-media")||el.querySelector("iframe");if(wrap)wrap.style.display="none";fallback.style.display="inline-flex";}});},3000);})();</script>';
 		}
 		$out .= '<div class="mnsk7-instagram-feed__profile">';
