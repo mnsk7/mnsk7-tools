@@ -327,15 +327,8 @@ if ( woocommerce_product_loop() ) {
 				echo '</div>';
 			}
 		} else {
-			/* Desktop/tablet: tylko tabela (bez siatki kart w DOM). Toolbar bez duplikowania searcha poniżej chipsów. */
-			$plp_show_toolbar_at_top = $is_taxonomy && $current_term;
-			if ( $is_taxonomy && $current_term && isset( $current_term->slug ) ) {
-				?>
-				<div class="mnsk7-plp-toolbar mnsk7-plp-toolbar--top col-full">
-					<?php do_action( 'woocommerce_after_shop_loop' ); ?>
-				</div>
-				<?php
-			}
+			/* Desktop/tablet: tylko tabela (bez siatki kart w DOM). Jeden toolbar (na dole) dla spójnego rytmu. */
+			$plp_show_toolbar_at_top = false;
 			?>
 			<div class="mnsk7-product-table-wrap col-full">
 				<table class="mnsk7-product-table shop_table">
@@ -372,28 +365,7 @@ if ( woocommerce_product_loop() ) {
 			?>
 			<?php
 		}
-		/* Przy kilku stronach (desktop): przycisk „Pokaż więcej” — AJAX. Na mobile paginacja z after_shop_loop. */
-		if ( $use_table && ! $plp_is_mobile ) {
-			$paged = max( 1, get_query_var( 'paged' ) );
-			$total_pages = $GLOBALS['wp_query']->max_num_pages;
-			$total = (int) $GLOBALS['wp_query']->found_posts;
-			$per_page = (int) $GLOBALS['wp_query']->get( 'posts_per_page' );
-			if ( $per_page < 1 ) {
-				$per_page = 12;
-			}
-			if ( $total_pages > 1 && $paged < $total_pages ) {
-				$next_url = add_query_arg( 'paged', $paged + 1 );
-				$taxonomy = '';
-				$term_slug = '';
-				if ( $is_taxonomy && $current_term && isset( $current_term->taxonomy, $current_term->slug ) ) {
-					$taxonomy  = $current_term->taxonomy;
-					$term_slug = $current_term->slug;
-				}
-				echo '<div class="mnsk7-plp-load-more-wrap col-full" data-current-page="' . esc_attr( (string) $paged ) . '" data-total-pages="' . esc_attr( (string) $total_pages ) . '" data-taxonomy="' . esc_attr( $taxonomy ) . '" data-term="' . esc_attr( $term_slug ) . '" data-per-page="' . esc_attr( (string) $per_page ) . '" data-total="' . esc_attr( (string) $total ) . '">';
-				echo '<a href="' . esc_url( $next_url ) . '" class="mnsk7-plp-load-more button">' . esc_html__( 'Pokaż więcej', 'mnsk7-storefront' ) . '</a>';
-				echo '</div>';
-			}
-		}
+		/* Desktop table: jeden wzorzec nawigacji listy (toolbar + paginacja), bez dodatkowego "Pokaż więcej". */
 	} else {
 		woocommerce_product_loop_start();
 		if ( wc_get_loop_prop( 'total' ) ) {

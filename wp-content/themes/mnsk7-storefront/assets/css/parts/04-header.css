@@ -404,16 +404,38 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   box-sizing: border-box;
 }
 @media (min-width: 1024px) {
+  .site-header.mnsk7-header.mnsk7-header--sticky,
+  #masthead.mnsk7-header.mnsk7-header--sticky {
+    position: sticky !important;
+    top: env(safe-area-inset-top, 0px) !important;
+  }
+  body.mnsk7-has-promo .site-header.mnsk7-header.mnsk7-header--sticky,
+  body.mnsk7-has-promo #masthead.mnsk7-header.mnsk7-header--sticky {
+    top: calc(env(safe-area-inset-top, 0px) + var(--mnsk7-promo-h, 2.5rem)) !important;
+  }
   .mnsk7-header__inner,
   .mnsk7-header__nav,
   .mnsk7-header__menu,
   .mnsk7-header__menu > li.menu-item-has-children {
     overflow: visible !important;
   }
+  .mnsk7-header__menu .sub-menu {
+    max-height: none !important;
+    overflow-y: visible !important;
+  }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
     max-height: none !important;
     overflow-x: hidden !important;
     overflow-y: visible !important;
+  }
+  .mnsk7-header__menu a,
+  .mnsk7-header__link,
+  .mnsk7-header__cart .cart-contents,
+  .mnsk7-header__cart-trigger {
+    min-height: 40px;
+  }
+  .mnsk7-header__actions {
+    gap: 0.4rem;
   }
 }
 .mnsk7-megamenu__group {

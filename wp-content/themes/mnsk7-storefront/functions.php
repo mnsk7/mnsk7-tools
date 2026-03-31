@@ -390,11 +390,17 @@ function mnsk7_is_catalog_back_url( $url ) {
 function mnsk7_get_catalog_back_url() {
 	$referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
 	if ( $referer && mnsk7_is_catalog_back_url( $referer ) ) {
+		if ( function_exists( 'mnsk7_plp_anchor_results' ) ) {
+			$referer = mnsk7_plp_anchor_results( $referer );
+		}
 		return $referer;
 	}
 
 	$cookie = isset( $_COOKIE['mnsk7_catalog_back'] ) ? esc_url_raw( wp_unslash( $_COOKIE['mnsk7_catalog_back'] ) ) : '';
 	if ( $cookie && mnsk7_is_catalog_back_url( $cookie ) ) {
+		if ( function_exists( 'mnsk7_plp_anchor_results' ) ) {
+			$cookie = mnsk7_plp_anchor_results( $cookie );
+		}
 		return $cookie;
 	}
 
@@ -2194,6 +2200,9 @@ add_action( 'template_redirect', function () {
 	if ( ! $url || ! function_exists( 'mnsk7_is_catalog_back_url' ) || ! mnsk7_is_catalog_back_url( $url ) ) {
 		return;
 	}
+	if ( function_exists( 'mnsk7_plp_anchor_results' ) ) {
+		$url = mnsk7_plp_anchor_results( $url );
+	}
 
 	setcookie( 'mnsk7_catalog_back', $url, time() + HOUR_IN_SECONDS, COOKIEPATH ?: '/', COOKIE_DOMAIN, is_ssl(), true );
 }, 5 );
@@ -2211,7 +2220,11 @@ add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 			$shop_name        = function_exists( 'wc_get_page_id' ) ? get_the_title( wc_get_page_id( 'shop' ) ) : __( 'Sklep', 'mnsk7-storefront' );
 			$catalog_back_url = function_exists( 'mnsk7_get_catalog_back_url' ) ? mnsk7_get_catalog_back_url() : '';
 			$entry_url        = $catalog_back_url ? $catalog_back_url : $shop_url;
-			$entry_name       = $catalog_back_url ? __( 'Wyniki', 'mnsk7-storefront' ) : ( $shop_name ? $shop_name : __( 'Sklep', 'mnsk7-storefront' ) );
+			$entry_name       = $shop_name ? $shop_name : __( 'Sklep', 'mnsk7-storefront' );
+			if ( $catalog_back_url ) {
+				$has_filters = ( strpos( $catalog_back_url, 'filter_' ) !== false ) || ( strpos( $catalog_back_url, '?s=' ) !== false );
+				$entry_name  = $has_filters ? __( 'Wyniki filtrowania', 'mnsk7-storefront' ) : __( 'Wyniki', 'mnsk7-storefront' );
+			}
 			$crumbs    = array(
 				array( $entry_name, $entry_url ),
 			);
