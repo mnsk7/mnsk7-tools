@@ -310,11 +310,6 @@ if ( woocommerce_product_loop() ) {
 	if ( $use_table ) {
 		if ( $plp_is_mobile ) {
 			/* Mobile: tylko siatka kart (jedna pętla, bez tabeli w DOM). */
-			if ( function_exists( 'mnsk7_render_trust_badges' ) ) {
-				echo '<div class="mnsk7-plp-trust-wrap col-full">';
-				mnsk7_render_trust_badges( 'mnsk7-plp-trust' );
-				echo '</div>';
-			}
 			echo '<div class="mnsk7-plp-grid-mobile col-full">';
 			woocommerce_product_loop_start();
 			if ( wc_get_loop_prop( 'total' ) ) {
@@ -326,6 +321,11 @@ if ( woocommerce_product_loop() ) {
 			}
 			woocommerce_product_loop_end();
 			echo '</div>';
+			if ( function_exists( 'mnsk7_render_trust_badges' ) ) {
+				echo '<div class="mnsk7-plp-trust-wrap mnsk7-plp-trust-wrap--after-results col-full">';
+				mnsk7_render_trust_badges( 'mnsk7-plp-trust' );
+				echo '</div>';
+			}
 		} else {
 			/* Desktop/tablet: tylko tabela (bez siatki kart w DOM). Toolbar bez duplikowania searcha poniżej chipsów. */
 			$plp_show_toolbar_at_top = $is_taxonomy && $current_term;
@@ -335,11 +335,6 @@ if ( woocommerce_product_loop() ) {
 					<?php do_action( 'woocommerce_after_shop_loop' ); ?>
 				</div>
 				<?php
-			}
-			if ( function_exists( 'mnsk7_render_trust_badges' ) ) {
-				echo '<div class="mnsk7-plp-trust-wrap col-full">';
-				mnsk7_render_trust_badges( 'mnsk7-plp-trust' );
-				echo '</div>';
 			}
 			?>
 			<div class="mnsk7-product-table-wrap col-full">
@@ -368,6 +363,13 @@ if ( woocommerce_product_loop() ) {
 					</tbody>
 				</table>
 			</div>
+			<?php
+			if ( function_exists( 'mnsk7_render_trust_badges' ) ) {
+				echo '<div class="mnsk7-plp-trust-wrap mnsk7-plp-trust-wrap--after-results col-full">';
+				mnsk7_render_trust_badges( 'mnsk7-plp-trust' );
+				echo '</div>';
+			}
+			?>
 			<?php
 		}
 		/* Przy kilku stronach (desktop): przycisk „Pokaż więcej” — AJAX. Na mobile paginacja z after_shop_loop. */

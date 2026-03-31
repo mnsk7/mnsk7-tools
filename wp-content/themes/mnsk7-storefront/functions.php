@@ -322,32 +322,97 @@ add_action( 'woocommerce_single_product_summary', function () {
 	echo '</div>';
 }, 16 );
 
-/** PDP: link „Wróć do wyników wyszukiwania” gdy użytkownik przyszedł z wyszukiwania (lepsza nawigacja niż tylko kategoria) */
-add_action( 'woocommerce_single_product_summary', function () {
-	$referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
-	if ( $referer === '' ) {
-		return;
+function mnsk7_is_catalog_back_url( $url ) {
+	if ( ! is_string( $url ) || $url === '' ) {
+		return false;
 	}
-	$ref_host = wp_parse_url( $referer, PHP_URL_HOST );
+
+	$url       = esc_url_raw( $url );
 	$home_host = wp_parse_url( home_url( '/' ), PHP_URL_HOST );
-	if ( $ref_host !== $home_host ) {
+	$url_host  = wp_parse_url( $url, PHP_URL_HOST );
+	if ( ! $home_host || ! $url_host || $home_host !== $url_host ) {
+		return false;
+	}
+
+	$path = (string) wp_parse_url( $url, PHP_URL_PATH );
+	if ( $path === '' ) {
+		return false;
+	}
+
+	$shop_path = function_exists( 'wc_get_page_permalink' ) ? wp_parse_url( wc_get_page_permalink( 'shop' ), PHP_URL_PATH ) : '/sklep/';
+	$shop_path = is_string( $shop_path ) && $shop_path !== '' ? trailingslashit( $shop_path ) : '/sklep/';
+	$path_norm = trailingslashit( $path );
+
+	if ( function_exists( 'wc_get_cart_url' ) ) {
+		$cart_path = (string) wp_parse_url( wc_get_cart_url(), PHP_URL_PATH );
+		if ( $cart_path !== '' && strpos( $path_norm, trailingslashit( $cart_path ) ) === 0 ) {
+			return false;
+		}
+	}
+	if ( function_exists( 'wc_get_checkout_url' ) ) {
+		$checkout_path = (string) wp_parse_url( wc_get_checkout_url(), PHP_URL_PATH );
+		if ( $checkout_path !== '' && strpos( $path_norm, trailingslashit( $checkout_path ) ) === 0 ) {
+			return false;
+		}
+	}
+	if ( function_exists( 'wc_get_page_permalink' ) ) {
+		$account_path = (string) wp_parse_url( wc_get_page_permalink( 'myaccount' ), PHP_URL_PATH );
+		if ( $account_path !== '' && strpos( $path_norm, trailingslashit( $account_path ) ) === 0 ) {
+			return false;
+		}
+	}
+
+	if ( strpos( $path_norm, $shop_path ) === 0 ) {
+		return true;
+	}
+
+	foreach ( array( 'product_cat', 'product_tag' ) as $taxonomy ) {
+		$obj = get_taxonomy( $taxonomy );
+		if ( $obj && ! empty( $obj->rewrite['slug'] ) ) {
+			$base = '/' . trim( (string) $obj->rewrite['slug'], '/' ) . '/';
+			if ( strpos( $path_norm, $base ) === 0 ) {
+				return true;
+			}
+		}
+	}
+
+	$query = (string) wp_parse_url( $url, PHP_URL_QUERY );
+	if ( $query !== '' ) {
+		parse_str( $query, $args );
+		if ( ! empty( $args['s'] ) && ( empty( $args['post_type'] ) || $args['post_type'] === 'product' ) ) {
+			return true;
+		}
+	}
+
+	return false;
+}
+
+function mnsk7_get_catalog_back_url() {
+	$referer = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
+	if ( $referer && mnsk7_is_catalog_back_url( $referer ) ) {
+		return $referer;
+	}
+
+	$cookie = isset( $_COOKIE['mnsk7_catalog_back'] ) ? esc_url_raw( wp_unslash( $_COOKIE['mnsk7_catalog_back'] ) ) : '';
+	if ( $cookie && mnsk7_is_catalog_back_url( $cookie ) ) {
+		return $cookie;
+	}
+
+	return '';
+}
+
+function mnsk7_render_pdp_back_to_results() {
+	if ( ! is_singular( 'product' ) ) {
 		return;
 	}
-	if ( strpos( $referer, '?' ) === false ) {
+
+	$back_url = mnsk7_get_catalog_back_url();
+	if ( ! $back_url ) {
 		return;
 	}
-	$parsed = wp_parse_url( $referer );
-	if ( empty( $parsed['query'] ) ) {
-		return;
-	}
-	parse_str( $parsed['query'], $q );
-	$is_search = ! empty( $q['s'] ) && ( empty( $q['post_type'] ) || $q['post_type'] === 'product' );
-	if ( ! $is_search ) {
-		return;
-	}
-	$search_url = home_url( '/' ) . '?s=' . rawurlencode( $q['s'] ) . '&post_type=product';
-	echo '<p class="mnsk7-pdp-back-search"><a href="' . esc_url( $search_url ) . '" class="mnsk7-pdp-back-search__link">' . esc_html__( '← Wróć do wyników wyszukiwania', 'mnsk7-storefront' ) . '</a></p>';
-}, 4 );
+
+	echo '<p class="mnsk7-pdp-back-search"><a href="' . esc_url( $back_url ) . '" class="mnsk7-pdp-back-search__link">' . esc_html__( 'Wróć do wyników', 'mnsk7-storefront' ) . '</a></p>';
+}
 
 /** PDP a11y: etykieta pola Ilość bez nazwy produktu (tylko „Ilość”) */
 add_filter( 'woocommerce_quantity_input_args', function ( $args, $product ) {
@@ -2102,107 +2167,72 @@ add_action( 'send_headers', function () {
 	}
 }, 5 );
 
-/**
- * Na archiwum tagu produktu: zapisz pełny URL (z filtrami) w cookie, żeby na PDP móc pokazać
- * „wstecz” do tej samej listy nawet gdy Referer nie jest wysyłany (nowa karta, privacy).
- */
 add_action( 'template_redirect', function () {
-	if ( ! function_exists( 'is_product_tag' ) || ! is_product_tag() || headers_sent() ) {
+	if ( headers_sent() ) {
 		return;
 	}
+
+	$should_store = ( function_exists( 'mnsk7_is_plp' ) && mnsk7_is_plp() )
+		|| ( is_search() && get_query_var( 'post_type' ) === 'product' );
+	if ( ! $should_store ) {
+		return;
+	}
+
 	$req_uri = isset( $_SERVER['REQUEST_URI'] ) ? wp_unslash( $_SERVER['REQUEST_URI'] ) : '';
 	if ( $req_uri === '' ) {
 		return;
 	}
-	$url = home_url( $req_uri );
-	$safe = esc_url_raw( $url );
-	if ( $safe === '' ) {
+
+	$url = esc_url_raw( home_url( $req_uri ) );
+	if ( ! $url || ! function_exists( 'mnsk7_is_catalog_back_url' ) || ! mnsk7_is_catalog_back_url( $url ) ) {
 		return;
 	}
-	setcookie( 'mnsk7_tag_back', $safe, time() + 1800, COOKIEPATH ?: '/', COOKIE_DOMAIN, is_ssl(), true );
+
+	setcookie( 'mnsk7_catalog_back', $url, time() + HOUR_IN_SECONDS, COOKIEPATH ?: '/', COOKIE_DOMAIN, is_ssl(), true );
 }, 5 );
 
 add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 	if ( ! is_array( $crumbs ) ) {
 		return $crumbs;
 	}
-	// Na PDP: jeśli użytkownik przyszedł z archiwum tagu (referer lub cookie), pokaż: Strona główna › Tag. Link = pełny URL (z filtrami).
-	if ( is_singular( 'product' ) && count( $crumbs ) > 1 ) {
+
+	if ( is_singular( 'product' ) ) {
 		$product_id = get_queried_object_id();
-		$home_host  = wp_parse_url( home_url( '/' ), PHP_URL_HOST );
-		$tag_base   = 'tag-produktu';
-		if ( taxonomy_exists( 'product_tag' ) ) {
-			$tax_obj = get_taxonomy( 'product_tag' );
-			if ( $tax_obj && ! empty( $tax_obj->rewrite['slug'] ) ) {
-				$tag_base = $tax_obj->rewrite['slug'];
-			}
-		}
-		$pattern = '#/' . preg_quote( $tag_base, '#' ) . '/([^/]+)/?#';
+		$product    = $product_id ? wc_get_product( $product_id ) : null;
+		if ( $product && is_a( $product, 'WC_Product' ) ) {
+			$shop_url  = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
+			$shop_name = function_exists( 'wc_get_page_id' ) ? get_the_title( wc_get_page_id( 'shop' ) ) : __( 'Sklep', 'mnsk7-storefront' );
+			$crumbs    = array(
+				array( _x( 'Home', 'breadcrumb', 'woocommerce' ), home_url( '/' ) ),
+				array( $shop_name ? $shop_name : __( 'Sklep', 'mnsk7-storefront' ), $shop_url ),
+			);
 
-		$source_url = '';
-		$referer    = isset( $_SERVER['HTTP_REFERER'] ) ? esc_url_raw( wp_unslash( $_SERVER['HTTP_REFERER'] ) ) : '';
-		if ( $referer !== '' && $home_host && $home_host === wp_parse_url( $referer, PHP_URL_HOST ) ) {
-			$ref_path = wp_parse_url( $referer, PHP_URL_PATH );
-			if ( $ref_path && preg_match( $pattern, $ref_path ) ) {
-				$source_url = $referer;
-			}
-		}
-		if ( $source_url === '' && isset( $_COOKIE['mnsk7_tag_back'] ) ) {
-			$cookie_val = esc_url_raw( wp_unslash( $_COOKIE['mnsk7_tag_back'] ) );
-			if ( $cookie_val !== '' && $home_host && $home_host === wp_parse_url( $cookie_val, PHP_URL_HOST ) ) {
-				$cookie_path = wp_parse_url( $cookie_val, PHP_URL_PATH );
-				if ( $cookie_path && preg_match( $pattern, $cookie_path ) ) {
-					$source_url = $cookie_val;
-				}
-			}
-		}
-
-		if ( $source_url !== '' ) {
-			$ref_path = wp_parse_url( $source_url, PHP_URL_PATH );
-			if ( $ref_path && preg_match( $pattern, $ref_path, $m ) && ! empty( $m[1] ) ) {
-				$tag_slug = sanitize_text_field( $m[1] );
-				$tag_term = get_term_by( 'slug', $tag_slug, 'product_tag' );
-				if ( $tag_term && ! is_wp_error( $tag_term ) && has_term( $tag_term->term_id, 'product_tag', $product_id ) ) {
-					$tag_link = get_term_link( $tag_term );
-					if ( ! is_wp_error( $tag_link ) ) {
-						$tag_name   = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $tag_term->name ) : $tag_term->name;
-						$home_crumb = isset( $crumbs[0] ) ? $crumbs[0] : array( _x( 'Home', 'breadcrumb', 'woocommerce' ), wc_get_page_permalink( 'shop' ) );
-						if ( is_array( $home_crumb ) && isset( $home_crumb[0] ) ) {
-							$home_url = home_url( '/' );
-							$back_url = $source_url;
-							$crumbs   = array(
-								array( $home_crumb[0], $home_url ),
-								array( $tag_name, $back_url ),
-							);
-							foreach ( $crumbs as $i => $crumb ) {
-								if ( isset( $crumb[1] ) && is_string( $crumb[1] ) ) {
-									$crumbs[ $i ][1] = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $crumb[1] ) : $crumb[1];
-								}
-							}
-							return $crumbs;
+			$terms = wc_get_product_terms( $product_id, 'product_cat', array( 'orderby' => 'parent', 'order' => 'DESC' ) );
+			if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
+				$main_term = apply_filters( 'woocommerce_breadcrumb_main_term', $terms[0], $terms );
+				if ( $main_term && ! is_wp_error( $main_term ) ) {
+					$ancestors = array_reverse( array_map( 'intval', get_ancestors( $main_term->term_id, 'product_cat' ) ) );
+					foreach ( $ancestors as $ancestor_id ) {
+						$ancestor = get_term( $ancestor_id, 'product_cat' );
+						if ( ! $ancestor || is_wp_error( $ancestor ) ) {
+							continue;
 						}
+						$link = get_term_link( $ancestor );
+						if ( ! is_wp_error( $link ) ) {
+							$crumbs[] = array( $ancestor->name, $link );
+						}
+					}
+					$term_link = get_term_link( $main_term );
+					if ( ! is_wp_error( $term_link ) ) {
+						$crumbs[] = array( $main_term->name, $term_link );
 					}
 				}
 			}
-		}
 
-		// Domyślnie: Strona główna › Sklep › Kategoria (bez nazwy produktu).
-		array_pop( $crumbs );
-		// Upewnij się, że kategoria produktu jest w okruszkach (WC czasem jej nie dodaje).
-		$terms = $product_id ? wc_get_product_terms( $product_id, 'product_cat', array( 'orderby' => 'parent', 'order' => 'DESC' ) ) : array();
-		if ( ! empty( $terms ) && ! is_wp_error( $terms ) ) {
-			$main_term = apply_filters( 'woocommerce_breadcrumb_main_term', $terms[0], $terms );
-			$term_link = get_term_link( $main_term );
-			if ( ! is_wp_error( $term_link ) ) {
-				$last_url = ! empty( $crumbs[ count( $crumbs ) - 1 ][1] ) ? $crumbs[ count( $crumbs ) - 1 ][1] : '';
-				if ( $last_url !== $term_link ) {
-					$crumbs[] = array( $main_term->name, $term_link );
-				}
-			}
+			$crumbs[] = array( wp_strip_all_tags( $product->get_name() ), '' );
 		}
 	}
 
-	// Na archiwum (kategoria, tag, sklep): nie linkuj ostatniego crumb do URL z parametrami filtrów (SEO: duplikaty).
 	if ( function_exists( 'mnsk7_is_plp' ) && mnsk7_is_plp() && ! empty( $_GET ) && count( $crumbs ) > 0 ) {
 		$last_idx = count( $crumbs ) - 1;
 		if ( isset( $crumbs[ $last_idx ][1] ) ) {
@@ -2215,6 +2245,7 @@ add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 			$crumbs[ $i ][1] = mnsk7_strip_wpf_filters_from_text( $crumb[1] );
 		}
 	}
+
 	return $crumbs;
 }, 5 );
 add_filter( 'the_content', 'mnsk7_strip_wpf_filters_from_text', 1 );

@@ -98,7 +98,7 @@ $row_class = $product->is_sold_individually() ? 'mnsk7-row--fixed-qty' : '';
 				<span class="screen-reader-text"><?php esc_html_e( 'Stała ilość: 1', 'mnsk7-storefront' ); ?></span>
 			<?php else : ?>
 				<div class="quantity quantity--stepper mnsk7-table-qty-stepper">
-					<button type="button" class="mnsk7-qty-btn mnsk7-qty-btn--minus" aria-label="<?php esc_attr_e( 'Zmniejsz ilość', 'mnsk7-storefront' ); ?>">−</button>
+					<button type="button" class="mnsk7-qty-btn mnsk7-qty-btn--minus" aria-label="<?php esc_attr_e( 'Zmniejsz ilość', 'mnsk7-storefront' ); ?>">&minus;</button>
 					<input type="number" form="<?php echo esc_attr( $form_id ); ?>" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="<?php echo esc_attr( max( $min_qty, 1 ) ); ?>" min="<?php echo esc_attr( $min_qty ); ?>" max="<?php echo esc_attr( $max_qty > 0 ? $max_qty : 9999 ); ?>" step="1" aria-label="<?php esc_attr_e( 'Ilość', 'mnsk7-storefront' ); ?>" />
 					<button type="button" class="mnsk7-qty-btn mnsk7-qty-btn--plus" aria-label="<?php esc_attr_e( 'Zwiększ ilość', 'mnsk7-storefront' ); ?>">+</button>
 				</div>

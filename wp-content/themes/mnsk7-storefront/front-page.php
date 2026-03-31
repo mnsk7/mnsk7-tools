@@ -195,7 +195,11 @@ get_header();
 						$cat_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $cat_name ) );
 						$img_id   = get_term_meta( $cat->term_id, 'thumbnail_id', true );
 						$img      = $img_id ? wp_get_attachment_image( $img_id, 'medium', false, array( 'alt' => $cat_name ) ) : '';
-						$cat_hint = sprintf( esc_html__( '%s produktów gotowych do szybkiego porównania.', 'mnsk7-storefront' ), absint( $cat->count ) );
+						$cat_count_label = sprintf(
+							/* translators: %d: number of products in category */
+							_n( '%d produkt', '%d produktów', absint( $cat->count ), 'mnsk7-storefront' ),
+							absint( $cat->count )
+						);
 						?>
 						<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-cats__item">
 							<span class="mnsk7-cats__img-wrap">
@@ -207,10 +211,9 @@ get_header();
 							</span>
 							<span class="mnsk7-cats__body">
 								<span class="mnsk7-cats__name"><?php echo esc_html( $cat_name ); ?></span>
-								<span class="mnsk7-cats__count"><?php echo esc_html( $cat->count ); ?> <?php esc_html_e( 'prod.', 'mnsk7-storefront' ); ?></span>
-								<span class="mnsk7-cats__hint"><?php echo esc_html( $cat_hint ); ?></span>
+								<span class="mnsk7-cats__count"><?php echo esc_html( $cat_count_label ); ?></span>
 							</span>
-							<span class="mnsk7-cats__arrow" aria-hidden="true"><?php esc_html_e( 'Przejdź', 'mnsk7-storefront' ); ?> →</span>
+							<span class="mnsk7-cats__arrow" aria-hidden="true"><?php esc_html_e( 'Zobacz kategorię', 'mnsk7-storefront' ); ?></span>
 						</a>
 					<?php endforeach; ?>
 				</div>

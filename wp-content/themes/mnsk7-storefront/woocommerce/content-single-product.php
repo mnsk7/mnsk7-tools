@@ -27,6 +27,7 @@ if ( post_password_required() ) {
 	<div class="summary entry-summary mnsk7-pdp-buybox">
 		<?php if ( function_exists( 'woocommerce_breadcrumb' ) ) : ?>
 			<div class="mnsk7-pdp-breadcrumb-slot">
+				<?php if ( function_exists( 'mnsk7_render_pdp_back_to_results' ) ) { mnsk7_render_pdp_back_to_results(); } ?>
 				<?php woocommerce_breadcrumb(); ?>
 			</div>
 		<?php endif; ?>

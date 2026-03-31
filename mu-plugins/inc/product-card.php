@@ -333,18 +333,13 @@ function mnsk7_single_product_availability_inline() {
 	$class        = ! empty( $availability['class'] ) ? $availability['class'] : ( $product->is_in_stock() ? 'in-stock' : 'out-of-stock' );
 	$text         = ! empty( $availability['availability'] ) ? $availability['availability'] : ( $product->is_in_stock() ? __( 'W magazynie', 'mnsk7-tools' ) : __( 'Na zamówienie', 'mnsk7-tools' ) );
 	echo '<span class="mnsk7-product-availability mnsk7-product-availability--inline ' . esc_attr( $class ) . '" aria-live="polite">';
-	echo '<i class="mnsk7-product-availability__icon" aria-hidden="true">&#10003;</i> ';
+	echo '<i class="mnsk7-product-availability__icon" aria-hidden="true"></i>';
 	echo esc_html( $text );
 	echo '</span>';
 }
 
 function mnsk7_single_product_value_statement() {
-	global $product;
-	if ( ! is_a( $product, 'WC_Product' ) ) {
-		return;
-	}
-	$line = __( 'Szybkie porównanie parametrów, realny stan magazynowy i jasna dostawa jeszcze przed zakupem.', 'mnsk7-tools' );
-	echo '<p class="mnsk7-product-value-statement">' . esc_html( $line ) . '</p>';
+	return;
 }
 
 function mnsk7_single_product_trust_badges() {
@@ -359,7 +354,7 @@ function mnsk7_single_product_trust_badges() {
 	);
 	echo '<div class="mnsk7-product-trust">';
 	foreach ( $badges as $badge ) {
-		echo '<span class="mnsk7-product-trust__badge"><i class="mnsk7-product-trust__badge-icon" aria-hidden="true">&#10003;</i>' . esc_html( $badge ) . '</span>';
+		echo '<span class="mnsk7-product-trust__badge"><i class="mnsk7-product-trust__badge-icon" aria-hidden="true"></i><span class="mnsk7-product-trust__badge-label">' . esc_html( $badge ) . '</span></span>';
 	}
 	echo '</div>';
 }

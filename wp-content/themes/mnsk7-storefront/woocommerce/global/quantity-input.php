@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * Product quantity inputs
  *
@@ -31,7 +31,7 @@ $quantity_display = sprintf(
 	?>
 	<label class="screen-reader-text" for="<?php echo esc_attr( $input_id ); ?>"><?php echo esc_html( $label ); ?></label>
 	<?php if ( ! $is_locked_qty ) : ?>
-		<button type="button" class="mnsk7-qty-btn mnsk7-qty-btn--minus" aria-label="<?php esc_attr_e( 'Zmniejsz ilość', 'mnsk7-storefront' ); ?>">−</button>
+		<button type="button" class="mnsk7-qty-btn mnsk7-qty-btn--minus" aria-label="<?php esc_attr_e( 'Zmniejsz ilość', 'mnsk7-storefront' ); ?>">&minus;</button>
 	<?php endif; ?>
 	<input
 		type="<?php echo esc_attr( $type ); ?>"

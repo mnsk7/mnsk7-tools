@@ -1,6 +1,6 @@
-/* 24-plp-table — Sandvik-style table + chips (чипсы) on category/tag archives */
+/* 24-plp-table â€” Sandvik-style table + chips (Ń‡Đ¸ĐżŃŃ‹) on category/tag archives */
 
-/* Bez zdjęcia kategorii/tagu u góry — ukrywamy kwadrat z lewej (kategoria/tag w jednym stylu) */
+/* Bez zdjÄ™cia kategorii/tagu u gĂłry â€” ukrywamy kwadrat z lewej (kategoria/tag w jednym stylu) */
 body.tax-product_cat .woocommerce-products-header img,
 body.tax-product_cat .woocommerce-products-header .wp-post-image,
 body.tax-product_cat .woocommerce-products-header .attachment-woocommerce_thumbnail,
@@ -14,7 +14,7 @@ body.tax-product_tag [class*="category-image"] {
   display: none;
 }
 
-/* Nagłówek kategorii/tagu — wizualna hierarchia: tytuł + chips; odstęp pod tytułem = token */
+/* NagĹ‚Ăłwek kategorii/tagu â€” wizualna hierarchia: tytuĹ‚ + chips; odstÄ™p pod tytuĹ‚em = token */
 .woocommerce-products-header {
   margin-top: 0;
   margin-bottom: var(--space-title-bottom);
@@ -28,7 +28,7 @@ body.tax-product_tag [class*="category-image"] {
   line-height: 1.3;
   color: var(--color-text);
 }
-/* Wyższa specyficzność niż 05-plp-cards (body… #content h1.page-title → --fs-2xl) — archiwa Sklep/kategoria/tag */
+/* WyĹĽsza specyficznoĹ›Ä‡ niĹĽ 05-plp-cards (bodyâ€¦ #content h1.page-title â†’ --fs-2xl) â€” archiwa Sklep/kategoria/tag */
 body.post-type-archive-product #content h1.woocommerce-products-header__title.page-title,
 body.post-type-archive-product .mnsk7-content h1.woocommerce-products-header__title.page-title,
 body.tax-product_cat #content h1.woocommerce-products-header__title.page-title,
@@ -39,24 +39,24 @@ body.tax-product_tag .mnsk7-content h1.woocommerce-products-header__title.page-t
 }
 
 /* =================================================================
-   Archive vertical rhythm (compact) — tylko archiwa towarów
+   Archive vertical rhythm (compact) â€” tylko archiwa towarĂłw
    body.post-type-archive-product, body.tax-product_cat, body.tax-product_tag
    Dwie systemy: default page rhythm (25-global, 05-plp) + compact archive rhythm (tu).
-   Odstępy przez zmienne --archive-gap-*: jeden gap = jedna zmienna (nie suma margin+padding).
+   OdstÄ™py przez zmienne --archive-gap-*: jeden gap = jedna zmienna (nie suma margin+padding).
    HANDOFF: docs/PLP-ARCHIVE-VERTICAL-RHYTHM-HANDOFF.md
    ================================================================= */
 body.post-type-archive-product,
 body.tax-product_cat,
 body.tax-product_tag {
-  --archive-gap-page-top: 0.2rem;            /* compact desktop rhythm */
+  --archive-gap-page-top: 0.05rem;            /* compact desktop rhythm */
   --archive-gap-breadcrumbs-title: 0.5rem;
-  --archive-gap-title-chips: 0.35rem;
-  --archive-gap-chips-filters: 0.55rem;
-  --archive-gap-filter-rows: 0.75rem;        /* 12px — między wierszami filtrów */
-  --archive-gap-filters-results: 0.5rem;
-  --archive-inner-breadcrumb: 0.5rem;         /* padding wewnętrzny .mnsk7-breadcrumb-wrap */
-  --archive-after-search: 0.45rem;
-  --archive-after-trust: 0.55rem;
+  --archive-gap-title-chips: 0.2rem;
+  --archive-gap-chips-filters: 0.35rem;
+  --archive-gap-filter-rows: 0.75rem;        /* 12px â€” miÄ™dzy wierszami filtrĂłw */
+  --archive-gap-filters-results: 0.25rem;
+  --archive-inner-breadcrumb: 0.35rem;         /* padding wewnÄ™trzny .mnsk7-breadcrumb-wrap */
+  --archive-after-search: 0.25rem;
+  --archive-after-trust: 0.4rem;
   --archive-after-table: 1rem;
 }
 body.post-type-archive-product #content,
@@ -79,7 +79,7 @@ body.tax-product_cat .woocommerce-products-header,
 body.tax-product_tag .woocommerce-products-header {
   margin-bottom: var(--archive-gap-title-chips);
 }
-/* Kategoria/tag: tytuł i chips w jednej linii wizualnej — ten sam lewy brzeg (bez dodatkowego paddingu) */
+/* Kategoria/tag: tytuĹ‚ i chips w jednej linii wizualnej â€” ten sam lewy brzeg (bez dodatkowego paddingu) */
 body.tax-product_cat .woocommerce-products-header,
 body.tax-product_tag .woocommerce-products-header,
 body.tax-product_cat .mnsk7-plp-archive-wrap,
@@ -155,7 +155,7 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   margin-bottom: var(--archive-after-table);
 }
 
-/* Desktop: mniejsze boczne odstępy na kategoria/tag (spójnie z mobile) */
+/* Desktop: mniejsze boczne odstÄ™py na kategoria/tag (spĂłjnie z mobile) */
 @media (min-width: 769px) {
   body.tax-product_cat #content,
   body.tax-product_cat .mnsk7-content,
@@ -187,7 +187,7 @@ body.tax-product_tag .mnsk7-product-table-wrap {
     --archive-after-trust: 0.45rem;
     --archive-after-table: 0.75rem;
   }
-  /* Kategoria/tag: minimalne boczne odstępy; kontekst od „F” (wyrównanie z tytułem) */
+  /* Kategoria/tag: minimalne boczne odstÄ™py; kontekst od â€žFâ€ť (wyrĂłwnanie z tytuĹ‚em) */
   body.tax-product_cat #content,
   body.tax-product_cat .mnsk7-content,
   body.tax-product_tag #content,
@@ -210,7 +210,7 @@ body.tax-product_tag .mnsk7-product-table-wrap {
     font-size: 0.78rem;
     line-height: 1.35;
   }
-  /* Chips: bez dodatkowego wcięcia — Rodzaje frezów i chipy startują pod „F” w tytule */
+  /* Chips: bez dodatkowego wciÄ™cia â€” Rodzaje frezĂłw i chipy startujÄ… pod â€žFâ€ť w tytule */
   body.tax-product_cat .mnsk7-plp-chips__scroll,
   body.tax-product_tag .mnsk7-plp-chips__scroll {
     padding-inline: 0 1rem;
@@ -251,14 +251,14 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   }
 }
 
-/* Strefa wysyłki: w treści nie pokazujemy (przenoszone do footera przez JS), żeby nie zsuwało strony */
+/* Strefa wysyĹ‚ki: w treĹ›ci nie pokazujemy (przenoszone do footera przez JS), ĹĽeby nie zsuwaĹ‚o strony */
 body.post-type-archive-product .mnsk7-plp-toolbar .woocommerce-info,
 body.tax-product_cat .mnsk7-plp-toolbar .woocommerce-info,
 body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
   display: none;
 }
 
-/* Toolbar: sortowanie + (opcjonalnie wyników) + paginacja — ten sam styl u góry i u dołu */
+/* Toolbar: sortowanie + (opcjonalnie wynikĂłw) + paginacja â€” ten sam styl u gĂłry i u doĹ‚u */
 .mnsk7-plp-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -266,7 +266,7 @@ body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
   gap: var(--space-16);
   margin-bottom: var(--space-16);
 }
-/* U góry i u dołu: wyników + sortowanie + paginacja w jednej linii */
+/* U gĂłry i u doĹ‚u: wynikĂłw + sortowanie + paginacja w jednej linii */
 body.woocommerce .mnsk7-plp-toolbar--top .woocommerce-result-count,
 body.woocommerce .mnsk7-plp-toolbar--bottom .woocommerce-result-count {
   display: block;
@@ -383,7 +383,7 @@ body.woocommerce .mnsk7-plp-toolbar:not(.mnsk7-plp-toolbar--top):not(.mnsk7-plp-
   }
 }
 
-/* Archiwum: główna kolumna — dual-support #content/#primary i .mnsk7-* (Task 4). */
+/* Archiwum: gĹ‚Ăłwna kolumna â€” dual-support #content/#primary i .mnsk7-* (Task 4). */
 body.post-type-archive-product #content #primary,
 body.post-type-archive-product #content > main,
 body.post-type-archive-product .mnsk7-content .mnsk7-content-area,
@@ -401,7 +401,7 @@ body.tax-product_tag .mnsk7-content > main.mnsk7-main {
   min-width: 0;
   padding-top: 0;
 }
-/* .mnsk7-content-area / .mnsk7-main pełna szerokość */
+/* .mnsk7-content-area / .mnsk7-main peĹ‚na szerokoĹ›Ä‡ */
 body.post-type-archive-product #content #primary .site-main,
 body.post-type-archive-product #content > main,
 body.post-type-archive-product .mnsk7-content .mnsk7-content-area .site-main,
@@ -433,7 +433,7 @@ body.tax-product_tag .mnsk7-catalog-filters {
   display: none !important;
 }
 
-/* Jedna szerokość dla całego bloku: chips + wyszukiwarka + tabela (bez rozjeżdżania) */
+/* Jedna szerokoĹ›Ä‡ dla caĹ‚ego bloku: chips + wyszukiwarka + tabela (bez rozjeĹĽdĹĽania) */
 .mnsk7-plp-content {
   width: 100%;
   max-width: 100%;
@@ -452,7 +452,7 @@ body.tax-product_tag .mnsk7-catalog-filters {
 }
 
 .mnsk7-archive-context {
-  margin: 0 0 0.375rem;
+  margin: 0 0 0.15rem;
   font-size: 0.75rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -487,7 +487,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   padding-right: 0;
 }
 
-/* Scroll target: górna granica strefy wyników (chips + search + USP). scroll-margin dla sticky header. */
+/* Scroll target: gĂłrna granica strefy wynikĂłw (chips + search + USP). scroll-margin dla sticky header. */
 .mnsk7-plp-results-anchor {
   display: block;
   height: 0;
@@ -496,7 +496,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   scroll-margin-top: var(--header-h, 52px);
 }
 
-/* Chips row (subcategories / filters) — odstęp od tytułu Sklep, spójny rytm; UX: min 44px touch */
+/* Chips row (subcategories / filters) â€” odstÄ™p od tytuĹ‚u Sklep, spĂłjny rytm; UX: min 44px touch */
 .mnsk7-plp-chips {
   display: flex;
   flex-wrap: wrap;
@@ -511,7 +511,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   margin-bottom: var(--space-section-gap);
 }
 
-/* Mobile: swipe row pattern — scrollbar ukryty, scroll-snap, fade hint, label+row w jednym bloku. */
+/* Mobile: swipe row pattern â€” scrollbar ukryty, scroll-snap, fade hint, label+row w jednym bloku. */
 @media (max-width: 768px) {
   .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs):not(.mnsk7-plp-chips--nav) {
     flex-wrap: wrap;
@@ -541,7 +541,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
     white-space: normal;
     overflow: visible;
   }
-  /* Jedna definicja scroll-row: ukryty scrollbar, snap, fade. Nav i attrs — jedna linia (swipe), bez zawijania. */
+  /* Jedna definicja scroll-row: ukryty scrollbar, snap, fade. Nav i attrs â€” jedna linia (swipe), bez zawijania. */
   .mnsk7-plp-chips--nav .mnsk7-plp-chips__scroll,
   .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
     width: 100%;
@@ -569,7 +569,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
     padding-inline-start: 0;
   }
-  /* Wyczyść wszystkie + filter search row — one system, aligned */
+  /* WyczyĹ›Ä‡ wszystkie + filter search row â€” one system, aligned */
   .mnsk7-plp-selected {
     align-items: center;
     gap: 0.5rem;
@@ -626,12 +626,12 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   outline-offset: 2px;
 }
 
-/* Wybrane/aktywne chipy — zawsze czytelny kontrast (ciemne tło + biały tekst) i na początku rzędu */
+/* Wybrane/aktywne chipy â€” zawsze czytelny kontrast (ciemne tĹ‚o + biaĹ‚y tekst) i na poczÄ…tku rzÄ™du */
 .mnsk7-plp-chip--active {
   background: var(--color-primary, #0c7ddb) !important;
   border-color: var(--color-primary, #0c7ddb) !important;
   color: #fff !important;
-  order: -1; /* wybrany chip zawsze na początku rzędu (flex order) */
+  order: -1; /* wybrany chip zawsze na poczÄ…tku rzÄ™du (flex order) */
 }
 
 .mnsk7-plp-chip--active:hover {
@@ -648,7 +648,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   align-self: center;
 }
 
-/* Na desktop: scroll wrapper zachowuje się jak zwykły flex-wrap (bez overflow). Na mobile — nowrap w @media wyżej. */
+/* Na desktop: scroll wrapper zachowuje siÄ™ jak zwykĹ‚y flex-wrap (bez overflow). Na mobile â€” nowrap w @media wyĹĽej. */
 @media (min-width: 769px) {
   .mnsk7-plp-chips__scroll {
     display: flex;
@@ -658,7 +658,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   }
 }
 
-/* PLP-07: drugi rząd chipów (atrybuty) — wizualnie drugorzędne względem kategorii; każdy wiersz z etykietą + chipy z zawijaniem */
+/* PLP-07: drugi rzÄ…d chipĂłw (atrybuty) â€” wizualnie drugorzÄ™dne wzglÄ™dem kategorii; kaĹĽdy wiersz z etykietÄ… + chipy z zawijaniem */
 .mnsk7-plp-chips--attrs {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
@@ -674,7 +674,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   background: var(--color-bg-subtle, #f8f8f8);
   border-color: var(--color-border);
 }
-/* Wybrany chip atrybutu — zawsze biały tekst na primary (kontrast) */
+/* Wybrany chip atrybutu â€” zawsze biaĹ‚y tekst na primary (kontrast) */
 .mnsk7-plp-chips--attrs .mnsk7-plp-chip.mnsk7-plp-chip--active {
   background: var(--color-primary, #0c7ddb) !important;
   border-color: var(--color-primary, #0c7ddb) !important;
@@ -691,7 +691,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   margin-right: 0.25rem;
 }
 
-/* Rozwinięty blok „Więcej”: chipy biorą udział w flexie rodzica; gdy hidden — nie pokazuj */
+/* RozwiniÄ™ty blok â€žWiÄ™cejâ€ť: chipy biorÄ… udziaĹ‚ w flexie rodzica; gdy hidden â€” nie pokazuj */
 .mnsk7-plp-chips-more[hidden] {
   display: none !important;
 }
@@ -699,7 +699,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   display: contents;
 }
 
-/* Przycisk „Więcej” — wizualnie odróżniony od chipów, czytelny CTA */
+/* Przycisk â€žWiÄ™cejâ€ť â€” wizualnie odrĂłĹĽniony od chipĂłw, czytelny CTA */
 .mnsk7-plp-chips-toggle {
   display: inline-flex;
   align-items: center;
@@ -738,7 +738,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   border-color: var(--color-primary);
 }
 
-/* Blok „Więcej filtrów” — dodatkowe wiersze atrybutów (Średnica, Kąt skosu…) */
+/* Blok â€žWiÄ™cej filtrĂłwâ€ť â€” dodatkowe wiersze atrybutĂłw (Ĺšrednica, KÄ…t skosuâ€¦) */
 .mnsk7-plp-filters-toggle-wrap {
   margin-top: 0.25rem;
   margin-bottom: 0.5rem;
@@ -766,7 +766,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   order: -1;
 }
 
-/* Wybrane filtry + przycisk Wyczyść wszystkie (UX audit) — jako przycisk */
+/* Wybrane filtry + przycisk WyczyĹ›Ä‡ wszystkie (UX audit) â€” jako przycisk */
 .mnsk7-plp-selected {
   display: flex;
   flex-wrap: wrap;
@@ -782,7 +782,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   color: var(--color-text-secondary);
   margin-right: 0.25rem;
 }
-/* Chipy „Wybrane” (85 mm ×, 8 mm ×…) — zawsze czytelne: biały tekst na primary */
+/* Chipy â€žWybraneâ€ť (85 mm Ă—, 8 mm Ă—â€¦) â€” zawsze czytelne: biaĹ‚y tekst na primary */
 .mnsk7-plp-selected .mnsk7-plp-chip.mnsk7-plp-chip--remove {
   background: var(--color-primary, #0c7ddb) !important;
   border-color: var(--color-primary, #0c7ddb) !important;
@@ -882,7 +882,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
 .mnsk7-plp-search__input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: none; /* bez fioletowego glow z przeglądarki */
+  box-shadow: none; /* bez fioletowego glow z przeglÄ…darki */
 }
 .mnsk7-plp-search__input:focus-visible {
   outline: none;
@@ -921,7 +921,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   font-weight: 600;
 }
 
-/* PLP-11: empty state — nad chipsami (order:-1 w .mnsk7-plp-archive-wrap), spójny przycisk */
+/* PLP-11: empty state â€” nad chipsami (order:-1 w .mnsk7-plp-archive-wrap), spĂłjny przycisk */
 .mnsk7-plp-empty {
   width: 100%;
   max-width: 100%;
@@ -979,14 +979,14 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
-/* Na archiwum: ukryć ewentualny drugi notice Woo (gdy już pokazujemy własny empty) */
+/* Na archiwum: ukryÄ‡ ewentualny drugi notice Woo (gdy juĹĽ pokazujemy wĹ‚asny empty) */
 body.post-type-archive-product .woocommerce-no-products-found:not(.mnsk7-plp-empty),
 body.tax-product_cat .woocommerce-no-products-found:not(.mnsk7-plp-empty),
 body.tax-product_tag .woocommerce-no-products-found:not(.mnsk7-plp-empty) {
   margin-top: 0;
 }
 
-/* PLP-12: link „Wyczyść wyszukiwanie" na stronie wyników */
+/* PLP-12: link â€žWyczyĹ›Ä‡ wyszukiwanie" na stronie wynikĂłw */
 .mnsk7-plp-search-clear {
   margin: 0 0 0.75rem;
   font-size: var(--fs-sm);
@@ -1000,18 +1000,18 @@ body.tax-product_tag .woocommerce-no-products-found:not(.mnsk7-plp-empty) {
   text-decoration: underline;
 }
 
-/* Trust badges przy tabeli (jak w kartce: Dostawa jutro, Faktura VAT, dostawa 300 zł, Zwroty 30 dni) */
+/* Trust badges przy tabeli (jak w kartce: Dostawa jutro, Faktura VAT, dostawa 300 zĹ‚, Zwroty 30 dni) */
 .mnsk7-plp-trust-wrap {
-  margin-bottom: 1rem;
+  margin-bottom: 0.6rem;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
 }
-/* Nadpisanie ewentualnych stylów [role="list"] z normalizacji / a11y */
+/* Nadpisanie ewentualnych stylĂłw [role="list"] z normalizacji / a11y */
 .mnsk7-plp-trust-wrap [role="list"].mnsk7-plp-trust {
   display: flex !important;
 }
-/* Wyższa specyficzność na archiwum (sklep/kategoria/tag), żeby wygrać z .woocommerce div / Storefront */
+/* WyĹĽsza specyficznoĹ›Ä‡ na archiwum (sklep/kategoria/tag), ĹĽeby wygraÄ‡ z .woocommerce div / Storefront */
 body.post-type-archive-product .mnsk7-plp-trust-wrap .mnsk7-plp-trust,
 body.tax-product_cat .mnsk7-plp-trust-wrap .mnsk7-plp-trust,
 body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust,
@@ -1055,9 +1055,9 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   margin-right: 0 !important;
   margin-inline-end: 0 !important;
 }
-/* Separator między badge’ami, gdy gap nie działa (fallback) */
+/* Separator miÄ™dzy badgeâ€™ami, gdy gap nie dziaĹ‚a (fallback) */
 .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item:not(:last-child)::after {
-  content: ' · ';
+  content: ' Â· ';
   margin-left: 0.5rem;
   color: var(--color-text-muted);
   font-weight: 400;
@@ -1070,7 +1070,7 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
 }
 .mnsk7-plp-trust__item::before,
 .mnsk7-pdp-trust__item::before {
-  content: '✓ ';
+  content: 'âś“ ';
   color: var(--color-accent, #22c55e);
   font-weight: 700;
   font-size: 1em;
@@ -1161,7 +1161,7 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   }
 }
 
-/* Przycisk „Pokaż więcej” pod tabelą (gdy jest następna strona) — wyśrodkowany, ta sama szerokość co tabela */
+/* Przycisk â€žPokaĹĽ wiÄ™cejâ€ť pod tabelÄ… (gdy jest nastÄ™pna strona) â€” wyĹ›rodkowany, ta sama szerokoĹ›Ä‡ co tabela */
 .mnsk7-plp-load-more-wrap {
   margin: 1.25rem 0 1rem;
   width: 100%;
@@ -1227,14 +1227,14 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   visibility: visible;
   opacity: 1;
 }
-/* Bardzo wąskie ekrany — 1 kolumna (wartość z 01-tokens: --breakpoint-mobile-narrow) */
+/* Bardzo wÄ…skie ekrany â€” 1 kolumna (wartoĹ›Ä‡ z 01-tokens: --breakpoint-mobile-narrow) */
 @media (max-width: 360px) {
   body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products {
     grid-template-columns: 1fr;
   }
 }
 
-/* Table wrapper — na wąskim desktopie przewijanie w poziomie zamiast obcinania przycisku. */
+/* Table wrapper â€” na wÄ…skim desktopie przewijanie w poziomie zamiast obcinania przycisku. */
 .mnsk7-product-table-wrap {
   margin-bottom: 1.5rem;
   max-width: 100%;
@@ -1243,7 +1243,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   -webkit-overflow-scrolling: touch;
 }
 
-/* table-layout: fixed — jednakowe proporcje kolumn. Task 8: overflow: hidden — obcięcie treści do border-radius. */
+/* table-layout: fixed â€” jednakowe proporcje kolumn. Task 8: overflow: hidden â€” obciÄ™cie treĹ›ci do border-radius. */
 .mnsk7-product-table {
   width: 100%;
   table-layout: fixed;
@@ -1269,7 +1269,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   white-space: nowrap;
 }
 
-/* Фиксированные доли колонок для единого вида на всех категориях */
+/* Đ¤Đ¸ĐşŃĐ¸Ń€ĐľĐ˛Đ°Đ˝Đ˝Ń‹Đµ Đ´ĐľĐ»Đ¸ ĐşĐľĐ»ĐľĐ˝ĐľĐş Đ´Đ»ŃŹ ĐµĐ´Đ¸Đ˝ĐľĐłĐľ Đ˛Đ¸Đ´Đ° Đ˝Đ° Đ˛ŃĐµŃ… ĐşĐ°Ń‚ĐµĐłĐľŃ€Đ¸ŃŹŃ… */
 .mnsk7-product-table th.mnsk7-table-cell--thumb,
 .mnsk7-product-table .mnsk7-table-cell--thumb { width: 7%; min-width: 64px; }
 .mnsk7-product-table th.mnsk7-table-cell--title,
@@ -1308,7 +1308,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   max-width: 64px;
   background: var(--color-surface);
   border-radius: var(--r-sm);
-  overflow: hidden; /* obcięcie miniatury do border-radius */
+  overflow: hidden; /* obciÄ™cie miniatury do border-radius */
   text-decoration: none;
   border-bottom: none;
   -webkit-tap-highlight-color: transparent;
@@ -1404,7 +1404,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   vertical-align: middle;
 }
 
-/* Desktop: przycisk „Dodaj do koszyka” w jednej linii z ceną (41,00 zł), stanem (1 szt.), ilością */
+/* Desktop: przycisk â€žDodaj do koszykaâ€ť w jednej linii z cenÄ… (41,00 zĹ‚), stanem (1 szt.), iloĹ›ciÄ… */
 @media (min-width: 769px) {
   .mnsk7-product-table tbody .mnsk7-table-cell--price,
   .mnsk7-product-table tbody .mnsk7-table-cell--stock,

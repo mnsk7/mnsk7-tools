@@ -17,6 +17,31 @@
   border-bottom: none;
   text-align: left;
 }
+
+.single-product .summary .mnsk7-pdp-back-search {
+  margin: 0 0 0.35rem;
+}
+
+.single-product .summary .mnsk7-pdp-back-search__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+}
+
+.single-product .summary .mnsk7-pdp-back-search__link::before {
+  content: "\2190";
+  font-size: 0.95em;
+  line-height: 1;
+}
+
+.single-product .summary .mnsk7-pdp-back-search__link:hover {
+  text-decoration: underline;
+}
+
 .single-product .summary .woocommerce-breadcrumb {
   justify-content: flex-start;
 }
