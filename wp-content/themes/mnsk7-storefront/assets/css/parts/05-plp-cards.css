@@ -212,6 +212,7 @@ ul.products.columns-4::before {
 .woocommerce ul.products li.product .button,
 .woocommerce ul.products li.product .add_to_cart_button,
 .woocommerce ul.products li.product a.added_to_cart {
+  writing-mode: horizontal-tb;
   display: inline-block;
   width: calc(100% - 1.5rem);
   min-width: 120px;
@@ -228,7 +229,10 @@ ul.products.columns-4::before {
   cursor: pointer;
   transition: background 0.15s ease;
   text-decoration: none;
-  white-space: normal;
+  white-space: nowrap;
+  overflow-wrap: normal;
+  word-break: normal;
+  hyphens: none;
   flex-shrink: 0;
 }
 
