@@ -2207,11 +2207,13 @@ add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 		$product_id = get_queried_object_id();
 		$product    = $product_id ? wc_get_product( $product_id ) : null;
 		if ( $product && is_a( $product, 'WC_Product' ) ) {
-			$shop_url  = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
-			$shop_name = function_exists( 'wc_get_page_id' ) ? get_the_title( wc_get_page_id( 'shop' ) ) : __( 'Sklep', 'mnsk7-storefront' );
+			$shop_url         = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
+			$shop_name        = function_exists( 'wc_get_page_id' ) ? get_the_title( wc_get_page_id( 'shop' ) ) : __( 'Sklep', 'mnsk7-storefront' );
+			$catalog_back_url = function_exists( 'mnsk7_get_catalog_back_url' ) ? mnsk7_get_catalog_back_url() : '';
+			$entry_url        = $catalog_back_url ? $catalog_back_url : $shop_url;
+			$entry_name       = $catalog_back_url ? __( 'Wyniki', 'mnsk7-storefront' ) : ( $shop_name ? $shop_name : __( 'Sklep', 'mnsk7-storefront' ) );
 			$crumbs    = array(
-				array( _x( 'Home', 'breadcrumb', 'woocommerce' ), home_url( '/' ) ),
-				array( $shop_name ? $shop_name : __( 'Sklep', 'mnsk7-storefront' ), $shop_url ),
+				array( $entry_name, $entry_url ),
 			);
 
 			$terms = wc_get_product_terms( $product_id, 'product_cat', array( 'orderby' => 'parent', 'order' => 'DESC' ) );
@@ -2236,7 +2238,7 @@ add_filter( 'woocommerce_get_breadcrumb', function ( $crumbs ) {
 				}
 			}
 
-			if ( count( $crumbs ) > 2 ) {
+			if ( count( $crumbs ) > 1 ) {
 				$product_label = mnsk7_normalize_breadcrumb_label( $product->get_name() );
 				$last_index    = count( $crumbs ) - 1;
 				$last_label    = mnsk7_normalize_breadcrumb_label( $crumbs[ $last_index ][0] ?? '' );
