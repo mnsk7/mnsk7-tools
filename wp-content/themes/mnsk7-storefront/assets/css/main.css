@@ -131,7 +131,7 @@
 
 /* Task 8: zapobiegaj poziomemu przewijaniu. clip (not hidden) â€” nie tworzy scroll container, nie Ĺ‚amie position:sticky. */
 html {
-  overflow-x: clip;
+  overflow-x: visible;
   max-width: 100%;
   /* iOS Safari can auto-enlarge text and break tight header geometry. Keep scale consistent with desktop tests. */
   -webkit-text-size-adjust: 100%;
@@ -157,6 +157,8 @@ body {
   font-size: var(--fs-base);
   line-height: 1.6;
   background: var(--color-bg);
+  overflow-x: clip;
+  overflow-y: visible;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
@@ -775,6 +777,19 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   gap: 0.6rem;
   pointer-events: auto;
   box-sizing: border-box;
+}
+@media (min-width: 1024px) {
+  .mnsk7-header__inner,
+  .mnsk7-header__nav,
+  .mnsk7-header__menu,
+  .mnsk7-header__menu > li.menu-item-has-children {
+    overflow: visible !important;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
+    max-height: none !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+  }
 }
 .mnsk7-megamenu__group {
   margin: 0;

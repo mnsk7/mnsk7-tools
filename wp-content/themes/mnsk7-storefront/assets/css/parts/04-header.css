@@ -403,6 +403,19 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   pointer-events: auto;
   box-sizing: border-box;
 }
+@media (min-width: 1024px) {
+  .mnsk7-header__inner,
+  .mnsk7-header__nav,
+  .mnsk7-header__menu,
+  .mnsk7-header__menu > li.menu-item-has-children {
+    overflow: visible !important;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
+    max-height: none !important;
+    overflow-x: hidden !important;
+    overflow-y: visible !important;
+  }
+}
 .mnsk7-megamenu__group {
   margin: 0;
   list-style: none;
