@@ -303,3 +303,47 @@ test.describe('Header — visual regression (screenshots)', () => {
     await expect(header).toHaveScreenshot('header-desktop-sklep-open.png', { maxDiffPixels: 150 });
   });
 });
+
+test.describe('Header search contract', () => {
+  test('375x700: search toggle opens mobile search panel', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 700 });
+    await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+
+    const toggle = page.locator('.mnsk7-header__search-toggle').first();
+    const panel = page.locator('#mnsk7-header-search-panel').first();
+
+    await expect(toggle).toBeVisible();
+    await expect(panel).toBeHidden();
+
+    await toggle.click();
+    await expect(panel).toBeVisible();
+
+    await page.keyboard.press('Escape');
+    await expect(panel).toBeHidden();
+  });
+
+  test('768x700: search toggle opens mobile search panel', async ({ page }) => {
+    await page.setViewportSize({ width: 768, height: 700 });
+    await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+
+    const toggle = page.locator('.mnsk7-header__search-toggle').first();
+    const panel = page.locator('#mnsk7-header-search-panel').first();
+
+    await expect(toggle).toBeVisible();
+    await expect(panel).toBeHidden();
+
+    await toggle.click();
+    await expect(panel).toBeVisible();
+  });
+
+  test('1024x768: inline desktop search is visible and toggle is hidden', async ({ page }) => {
+    await page.setViewportSize({ width: 1024, height: 768 });
+    await page.setExtraHTTPHeaders({ 'User-Agent': DESKTOP_UA });
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+
+    await expect(page.locator('.mnsk7-header__search-toggle').first()).toBeHidden();
+    await expect(page.locator('#mnsk7-header-search .mnsk7-header__search-form').first()).toBeVisible();
+  });
+});

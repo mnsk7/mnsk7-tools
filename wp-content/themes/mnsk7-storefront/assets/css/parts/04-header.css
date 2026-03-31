@@ -1625,6 +1625,9 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 /* Tablet (769-1023px): search row zawsze widoczna — druga linia pod headerem, jeden składany control (input + przycisk bez szpary) */
 @media (min-width: 769px) and (max-width: 1023px) {
+  .mnsk7-header__search-wrap {
+    display: none !important;
+  }
   .mnsk7-header-search-panel {
     display: block !important;
     box-shadow: none;
