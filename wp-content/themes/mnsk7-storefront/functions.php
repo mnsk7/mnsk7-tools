@@ -315,6 +315,7 @@ add_filter( 'woocommerce_breadcrumb_defaults', function ( $args ) {
 	$args['delimiter']   = ' <span class="separator" aria-hidden="true">›</span> ';
 	$args['wrap_before'] = '<div class="mnsk7-breadcrumb-wrap"><nav class="woocommerce-breadcrumb" aria-label="' . esc_attr__( 'Nawigacja okruszków', 'mnsk7-storefront' ) . '">';
 	$args['wrap_after']  = '</nav></div>';
+	$args['home']        = __( 'Strona główna', 'mnsk7-storefront' );
 	return $args;
 } );
 

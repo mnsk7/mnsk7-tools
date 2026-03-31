@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /**
  * One row of the product table (shop/category archive). Sandvik-style PLP table.
  * Columns: thumb, title, price, stock, qty, action.
@@ -50,7 +50,7 @@ if ( (string) $usage_value === '' ) {
 	$usage_value = $product->get_attribute( 'zastosowanie' );
 }
 
-// PERFORMANCE: pierwszy wiersz tabeli = LCP candidate na archive — eager + fetchpriority high.
+// PERFORMANCE: pierwszy wiersz tabeli = LCP candidate na archive - eager + fetchpriority high.
 static $mnsk7_plp_row_index = 0;
 $mnsk7_plp_row_index++;
 $img_attr = ( $mnsk7_plp_row_index === 1 ) ? array( 'loading' => 'eager', 'fetchpriority' => 'high' ) : array();
@@ -76,7 +76,7 @@ $row_class = $product->is_sold_individually() ? 'mnsk7-row--fixed-qty' : '';
 			</dl>
 		<?php endif; ?>
 		<?php if ( $product->get_sku() ) : ?>
-			<span class="mnsk7-table-sku"><?php echo esc_html( $product->get_sku() ); ?></span>
+			<span class="mnsk7-table-sku"><?php echo esc_html( sprintf( 'SKU: %s', $product->get_sku() ) ); ?></span>
 		<?php endif; ?>
 		<?php if ( $total_sales > 0 ) : ?>
 			<span class="mnsk7-table-sold"><?php echo esc_html( sprintf( _n( '%d osoba kupiła', '%d osób kupiło', $total_sales, 'mnsk7-storefront' ), $total_sales ) ); ?></span>
@@ -97,7 +97,11 @@ $row_class = $product->is_sold_individually() ? 'mnsk7-row--fixed-qty' : '';
 				<span class="mnsk7-table-qty-implicit mnsk7-table-qty-implicit--fixed" aria-hidden="true"></span>
 				<span class="screen-reader-text"><?php esc_html_e( 'Stała ilość: 1', 'mnsk7-storefront' ); ?></span>
 			<?php else : ?>
-				<input type="number" form="<?php echo esc_attr( $form_id ); ?>" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="<?php echo esc_attr( max( $min_qty, 1 ) ); ?>" min="<?php echo esc_attr( $min_qty ); ?>" max="<?php echo esc_attr( $max_qty > 0 ? $max_qty : 9999 ); ?>" step="1" aria-label="<?php esc_attr_e( 'Ilość', 'mnsk7-storefront' ); ?>" />
+				<div class="quantity quantity--stepper mnsk7-table-qty-stepper">
+					<button type="button" class="mnsk7-qty-btn mnsk7-qty-btn--minus" aria-label="<?php esc_attr_e( 'Zmniejsz ilość', 'mnsk7-storefront' ); ?>">−</button>
+					<input type="number" form="<?php echo esc_attr( $form_id ); ?>" class="mnsk7-table-qty-input input-text qty text" name="quantity" value="<?php echo esc_attr( max( $min_qty, 1 ) ); ?>" min="<?php echo esc_attr( $min_qty ); ?>" max="<?php echo esc_attr( $max_qty > 0 ? $max_qty : 9999 ); ?>" step="1" aria-label="<?php esc_attr_e( 'Ilość', 'mnsk7-storefront' ); ?>" />
+					<button type="button" class="mnsk7-qty-btn mnsk7-qty-btn--plus" aria-label="<?php esc_attr_e( 'Zwiększ ilość', 'mnsk7-storefront' ); ?>">+</button>
+				</div>
 			<?php endif; ?>
 		<?php else : ?>
 			—

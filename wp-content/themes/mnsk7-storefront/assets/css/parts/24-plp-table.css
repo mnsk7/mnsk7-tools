@@ -19,6 +19,7 @@ body.tax-product_tag [class*="category-image"] {
   margin-top: 0;
   margin-bottom: var(--space-title-bottom);
   padding-bottom: 0;
+  text-align: left;
 }
 .woocommerce-products-header__title.page-title {
   margin: 0;
@@ -47,12 +48,12 @@ body.tax-product_tag .mnsk7-content h1.woocommerce-products-header__title.page-t
 body.post-type-archive-product,
 body.tax-product_cat,
 body.tax-product_tag {
-  --archive-gap-page-top: 1.25rem;           /* 20px — header → strefa archiwum */
-  --archive-gap-breadcrumbs-title: 1.5rem;  /* 24px — breadcrumbs → H1 */
-  --archive-gap-title-chips: 0.75rem;      /* 12px — H1 → chips (minimalna przerwa na desktop) */
-  --archive-gap-chips-filters: 1.5rem;       /* 24px — chips → pierwszy rząd filtrów */
+  --archive-gap-page-top: 0.5rem;            /* compact desktop rhythm */
+  --archive-gap-breadcrumbs-title: 0.5rem;
+  --archive-gap-title-chips: 0.5rem;
+  --archive-gap-chips-filters: 0.75rem;
   --archive-gap-filter-rows: 0.75rem;        /* 12px — między wierszami filtrów */
-  --archive-gap-filters-results: 1.25rem;    /* 20px — filtry → search/tabela */
+  --archive-gap-filters-results: 0.75rem;
   --archive-inner-breadcrumb: 0.5rem;         /* padding wewnętrzny .mnsk7-breadcrumb-wrap */
   --archive-after-search: 0.75rem;
   --archive-after-trust: 0.75rem;
@@ -1322,8 +1323,10 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-table-sku {
   display: block;
   font-size: var(--fs-xs);
-  color: var(--color-text-muted);
-  margin-top: 0.25rem;
+  color: #334155;
+  margin-top: 0.35rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
 }
 .mnsk7-table-usage {
   display: block;
@@ -1412,13 +1415,25 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   flex-shrink: 0;
 }
 .mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-input {
-  width: 4rem;
-  padding: 0.35rem 0.5rem;
+  width: 3rem;
+  min-height: 36px;
+  padding: 0.25rem 0.35rem;
   font-size: var(--fs-sm);
   text-align: center;
   border: 1px solid var(--color-border);
   border-radius: var(--r-sm);
   box-sizing: border-box;
+}
+.mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+.mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-stepper .mnsk7-qty-btn {
+  min-width: 32px;
+  min-height: 32px;
+  padding: 0;
+  border-radius: 0.4rem;
 }
 .mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-implicit {
   display: inline-flex;
