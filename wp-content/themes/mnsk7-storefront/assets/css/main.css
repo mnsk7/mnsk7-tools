@@ -3487,8 +3487,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 .mnsk7-front-page .mnsk7-hero { order: 10; }
-.mnsk7-front-page .mnsk7-section--trust { order: 20; }
-.mnsk7-front-page .mnsk7-section--bestsellers { order: 30; }
+.mnsk7-front-page .mnsk7-section--bestsellers { order: 20; }
+.mnsk7-front-page .mnsk7-section--trust { order: 30; }
 .mnsk7-front-page .mnsk7-section--catalog { order: 40; }
 .mnsk7-front-page .mnsk7-section--loyalty { order: 50; }
 .mnsk7-front-page .mnsk7-section--insta { order: 60; }

@@ -7,27 +7,6 @@
 
 defined( 'ABSPATH' ) || exit;
 
-/* Preconnect: Google Fonts, CDN */
-add_action( 'wp_head', function () {
-	?>
-	<link rel="preconnect" href="https://fonts.googleapis.com">
-	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-	<?php
-}, 1 );
-
-/* DNS prefetch dla często używanych domen zewnętrznych */
-add_action( 'wp_head', function () {
-	$domains = array(
-		'https://www.googletagmanager.com',
-		'https://www.google-analytics.com',
-		'https://www.instagram.com',
-		'https://allegro.pl',
-	);
-	foreach ( $domains as $domain ) {
-		echo '<link rel="dns-prefetch" href="' . esc_url( $domain ) . '">' . "\n";
-	}
-}, 2 );
-
 /**
  * Lazy loading obrazków — ustawiamy loading="lazy" jeśli nie jest jeszcze ustawiony.
  * WooCommerce 10.6 (marzec 2026) robi to domyślnie dla obrazków produktów;
@@ -75,8 +54,10 @@ remove_filter( 'wp_mail', 'wp_staticize_emoji_for_email' );
  */
 add_action( 'wp_enqueue_scripts', function () {
 	if ( ! is_admin() ) {
-		wp_dequeue_style( 'wp-block-library' );
-		wp_dequeue_style( 'wp-block-library-theme' );
-		wp_dequeue_style( 'global-styles' );
+		if ( ! is_singular() || ! has_blocks( get_post() ) ) {
+			wp_dequeue_style( 'wp-block-library' );
+			wp_dequeue_style( 'wp-block-library-theme' );
+			wp_dequeue_style( 'global-styles' );
+		}
 	}
 }, 100 );

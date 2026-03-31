@@ -101,6 +101,17 @@ function mnsk7_key_param_slug_to_taxonomy( $slug ) {
 	return taxonomy_exists( $taxonomy ) ? $taxonomy : null;
 }
 
+function mnsk7_get_product_primary_category_id( $product ) {
+	if ( ! is_a( $product, 'WC_Product' ) ) {
+		return 0;
+	}
+	$cat_ids = $product->get_category_ids();
+	if ( empty( $cat_ids ) ) {
+		return 0;
+	}
+	return (int) $cat_ids[0];
+}
+
 /**
  * Get variant options for a key param: other values available in the same category.
  * Used to show select/links on PDP so user can switch to another product (category + filter).
@@ -116,23 +127,30 @@ function mnsk7_get_key_param_variant_options( $product, $attr_slug, $value ) {
 		return null;
 	}
 
-	$cat_ids = $product->get_category_ids();
-	if ( empty( $cat_ids ) ) {
+	$cat_id = mnsk7_get_product_primary_category_id( $product );
+	if ( $cat_id <= 0 ) {
 		return null;
 	}
-	$cat_id = (int) $cat_ids[0];
 	$term_link = get_term_link( $cat_id, 'product_cat' );
 	if ( is_wp_error( $term_link ) ) {
 		return null;
 	}
 
+	$cache_key = 'mnsk7_key_param_variant_options_' . md5( $product->get_id() . '|' . $taxonomy . '|' . $cat_id );
+	$cached    = wp_cache_get( $cache_key, 'mnsk7_product_card' );
+	if ( false !== $cached ) {
+		return $cached;
+	}
+
 	$product_ids = get_posts( array(
-		'post_type'      => 'product',
-		'post_status'    => 'publish',
-		'fields'         => 'ids',
-		'posts_per_page' => 500,
-		'no_found_rows'  => true,
-		'tax_query'      => array(
+		'post_type'              => 'product',
+		'post_status'            => 'publish',
+		'fields'                 => 'ids',
+		'posts_per_page'         => 150,
+		'no_found_rows'          => true,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
+		'tax_query'              => array(
 			array(
 				'taxonomy' => 'product_cat',
 				'field'    => 'term_id',
@@ -145,6 +163,7 @@ function mnsk7_get_key_param_variant_options( $product, $attr_slug, $value ) {
 	) );
 
 	if ( empty( $product_ids ) ) {
+		wp_cache_set( $cache_key, null, 'mnsk7_product_card', HOUR_IN_SECONDS );
 		return null;
 	}
 
@@ -156,6 +175,7 @@ function mnsk7_get_key_param_variant_options( $product, $attr_slug, $value ) {
 		'number'     => 50,
 	) );
 	if ( is_wp_error( $terms ) || empty( $terms ) ) {
+		wp_cache_set( $cache_key, null, 'mnsk7_product_card', HOUR_IN_SECONDS );
 		return null;
 	}
 
@@ -164,6 +184,7 @@ function mnsk7_get_key_param_variant_options( $product, $attr_slug, $value ) {
 		$options[ $t->slug ] = $t->name;
 	}
 	if ( count( $options ) < 2 ) {
+		wp_cache_set( $cache_key, null, 'mnsk7_product_card', HOUR_IN_SECONDS );
 		return null;
 	}
 
@@ -185,12 +206,14 @@ function mnsk7_get_key_param_variant_options( $product, $attr_slug, $value ) {
 	}
 
 	$param = 'filter_' . str_replace( 'pa_', '', $taxonomy );
-	return array(
+	$result = array(
 		'param'         => $param,
 		'category_url'  => $term_link,
 		'options'       => $options,
 		'current_slug'  => $current_slug,
 	);
+	wp_cache_set( $cache_key, $result, 'mnsk7_product_card', HOUR_IN_SECONDS );
+	return $result;
 }
 
 function mnsk7_single_product_key_params() {
@@ -246,7 +269,8 @@ function mnsk7_single_product_key_params() {
 			echo '<select name="' . $name . '" data-attribute_name="' . esc_attr( $slug ) . '" class="mnsk7-key-param-select">';
 			echo '<option value="">' . esc_html__( 'Wybierz', 'mnsk7-tools' ) . '</option>';
 			foreach ( $var_attrs[ $slug ] as $opt_val ) {
-				$opt_label = get_term_by( 'slug', $opt_val, $slug ) ? get_term_by( 'slug', $opt_val, $slug )->name : $opt_val;
+				$term_obj  = get_term_by( 'slug', $opt_val, $slug );
+				$opt_label = $term_obj ? $term_obj->name : $opt_val;
 				$selected  = ( $opt_val === $value || sanitize_title( $opt_label ) === sanitize_title( $value ) ) ? ' selected' : '';
 				echo '<option value="' . esc_attr( $opt_val ) . '"' . $selected . '>' . esc_html( $opt_label ) . '</option>';
 			}
@@ -314,6 +338,15 @@ function mnsk7_single_product_availability_inline() {
 	echo '</span>';
 }
 
+function mnsk7_single_product_value_statement() {
+	global $product;
+	if ( ! is_a( $product, 'WC_Product' ) ) {
+		return;
+	}
+	$line = __( 'Szybkie porównanie parametrów, realny stan magazynowy i jasna dostawa jeszcze przed zakupem.', 'mnsk7-tools' );
+	echo '<p class="mnsk7-product-value-statement">' . esc_html( $line ) . '</p>';
+}
+
 function mnsk7_single_product_trust_badges() {
 	global $product;
 	$min    = number_format_i18n( MNK7_FREE_SHIPPING_MIN, 0 );
@@ -347,6 +380,7 @@ add_filter( 'woocommerce_get_stock_html', function ( $html ) {
 } );
 
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_availability', 8 );
+add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_value_statement', 17 );
 add_action( 'woocommerce_before_add_to_cart_button', 'mnsk7_single_product_availability_inline', 5 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_key_params', 21 );
 

@@ -79,6 +79,17 @@ get_header();
 		</div>
 	</section>
 
+	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
+	<section class="mnsk7-section mnsk7-section--bestsellers">
+		<div class="col-full">
+			<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title="Bestsellery i polecane"]' ); ?>
+			<p class="mnsk7-section__more mnsk7-bestsellers-more">
+				<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie bestsellery →', 'mnsk7-storefront' ); ?></a>
+			</p>
+		</div>
+	</section>
+	<?php endif; ?>
+
 	<section class="mnsk7-section mnsk7-section--trust mnsk7-section--light">
 		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Dlaczego kupujący nam ufają', 'mnsk7-storefront' ); ?></h2>
@@ -112,17 +123,6 @@ get_header();
 			<?php endif; ?>
 		</div>
 	</section>
-
-	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
-	<section class="mnsk7-section mnsk7-section--bestsellers">
-		<div class="col-full">
-			<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title="Bestsellery i polecane"]' ); ?>
-			<p class="mnsk7-section__more mnsk7-bestsellers-more">
-				<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie bestsellery →', 'mnsk7-storefront' ); ?></a>
-			</p>
-		</div>
-	</section>
-	<?php endif; ?>
 
 	<?php
 	$cats     = array();
