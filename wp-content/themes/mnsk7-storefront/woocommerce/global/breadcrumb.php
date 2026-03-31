@@ -22,9 +22,11 @@ if ( ! empty( $breadcrumb ) ) {
 
 		echo $before;
 
+		$link_class = ( 0 === $key ) ? ' class="home"' : '';
+
 		// Link gdy jest URL (także dla ostatniego elementu — na archiwum z filtrami ustawiamy URL w woocommerce_get_breadcrumb).
 		if ( ! empty( $crumb[1] ) ) {
-			echo '<a href="' . esc_url( $crumb[1] ) . '">' . esc_html( $crumb[0] ) . '</a>';
+			echo '<a href="' . esc_url( $crumb[1] ) . '"' . $link_class . '>' . esc_html( $crumb[0] ) . '</a>';
 		} else {
 			echo '<span aria-current="page">' . esc_html( $crumb[0] ) . '</span>';
 		}
