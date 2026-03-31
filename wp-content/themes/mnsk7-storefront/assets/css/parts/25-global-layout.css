@@ -167,8 +167,8 @@ ul.products.columns-4::before,
   display: inline-flex !important;
 }
 .mnsk7-plp-trust__item:not(:last-child)::after {
-  content: " · " !important;
-  margin-left: 0.5rem;
+  content: none !important;
+  margin-left: 0;
 }
 
 /* UI Audit: jeden border-radius dla wszystkich przycisków (var(--r-md)) — nadpisuje WC/Storefront */

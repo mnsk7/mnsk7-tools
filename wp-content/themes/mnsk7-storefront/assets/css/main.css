@@ -8160,6 +8160,10 @@ body.tax-product_tag {
   --archive-after-trust: 0.4rem;
   --archive-after-table: 1rem;
 }
+body.tax-product_tag {
+  --archive-gap-filter-rows: 0.5rem;
+  --archive-after-search: 0.15rem;
+}
 body.post-type-archive-product #content,
 body.post-type-archive-product .mnsk7-content,
 body.tax-product_cat #content,
@@ -8403,16 +8407,23 @@ body.woocommerce .mnsk7-plp-toolbar:not(.mnsk7-plp-toolbar--top):not(.mnsk7-plp-
   margin: 0;
 }
 .mnsk7-plp-toolbar--bottom {
-  margin-top: 1.25rem;
+  margin-top: 0.875rem;
   margin-bottom: 0;
   margin-left: 0;
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: minmax(0, max-content) minmax(13rem, max-content) 1fr auto;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--space-16);
+  gap: 0.75rem 1rem;
+  padding-top: 0.875rem;
+  border-top: 1px solid var(--color-border);
   width: 100%;
   box-sizing: border-box;
+}
+.mnsk7-plp-toolbar--bottom > * {
+  min-width: 0;
+}
+.mnsk7-plp-toolbar--bottom .woocommerce-result-count {
+  align-self: center;
 }
 .mnsk7-plp-toolbar--bottom .woocommerce-ordering {
   margin-left: 0;
@@ -8422,8 +8433,9 @@ body.woocommerce .mnsk7-plp-toolbar:not(.mnsk7-plp-toolbar--top):not(.mnsk7-plp-
   margin-left: auto;
 }
 .mnsk7-plp-toolbar--bottom .woocommerce-pagination {
-  margin-left: auto;
+  margin-left: 0;
   flex-shrink: 0;
+  justify-self: end;
 }
 .mnsk7-plp-toolbar--bottom .woocommerce-pagination ul {
   display: flex;
@@ -8488,9 +8500,16 @@ body.woocommerce .mnsk7-plp-toolbar:not(.mnsk7-plp-toolbar--top):not(.mnsk7-plp-
   .mnsk7-plp-toolbar .woocommerce-ordering {
     margin-left: 0;
   }
+  .mnsk7-plp-toolbar--bottom {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding-top: 0.75rem;
+  }
   .mnsk7-plp-toolbar--bottom .woocommerce-pagination {
     margin-left: 0;
     width: 100%;
+    justify-self: auto;
   }
   .mnsk7-plp-toolbar--bottom .woocommerce-pagination ul {
     gap: 0.35rem;
@@ -9284,12 +9303,20 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
 
 /* Przycisk Ä‚ËĂ˘â€šÂ¬ÄąÄľPokaĂ„Ä…Ă„Ëť wiÄ‚â€žĂ˘â€žËcejÄ‚ËĂ˘â€šÂ¬ÄąÄ„ pod tabelÄ‚â€žĂ˘â‚¬Â¦ (gdy jest nastÄ‚â€žĂ˘â€žËpna strona) Ä‚ËĂ˘â€šÂ¬Ă˘â‚¬ĹĄ wyĂ„Ä…Ă˘â‚¬Ĺźrodkowany, ta sama szerokoĂ„Ä…Ă˘â‚¬ĹźÄ‚â€žĂ˘â‚¬Ë‡ co tabela */
 .mnsk7-plp-load-more-wrap {
-  margin: 1.25rem 0 1rem;
+  margin: 0.75rem 0 0;
   width: 100%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   box-sizing: border-box;
+}
+.mnsk7-plp-trust-wrap--after-results {
+  margin-top: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-border);
+}
+.mnsk7-plp-trust-wrap--after-results .mnsk7-plp-trust {
+  justify-content: flex-start;
 }
 .mnsk7-plp-load-more {
   display: inline-flex;
@@ -9941,8 +9968,8 @@ ul.products.columns-4::before,
   display: inline-flex !important;
 }
 .mnsk7-plp-trust__item:not(:last-child)::after {
-  content: " Â· " !important;
-  margin-left: 0.5rem;
+  content: none !important;
+  margin-left: 0;
 }
 
 /* UI Audit: jeden border-radius dla wszystkich przyciskĂłw (var(--r-md)) â€” nadpisuje WC/Storefront */

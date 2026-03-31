@@ -45,7 +45,7 @@ echo '<div class="mnsk7-plp-content col-full">';
 
 if ( is_shop() && ! $is_taxonomy ) {
 	echo '<p class="mnsk7-archive-context col-full">' . esc_html__( 'Katalog frezów CNC', 'mnsk7-storefront' ) . '</p>';
-} elseif ( $is_taxonomy && $current_term instanceof WP_Term ) {
+} elseif ( $is_taxonomy && $current_term instanceof WP_Term && ! ( 'product_tag' === $current_term->taxonomy && $has_filter ) ) {
 	$archive_context = ( $current_term->taxonomy === 'product_tag' )
 		? __( 'Zastosowanie i materiał', 'mnsk7-storefront' )
 		: __( 'Kategoria produktu', 'mnsk7-storefront' );
@@ -185,7 +185,7 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 	$megamenu_terms = function_exists( 'mnsk7_get_megamenu_terms' ) ? mnsk7_get_megamenu_terms() : array( 'tags' => array() );
 	$tags_row      = isset( $megamenu_terms['tags'] ) ? $megamenu_terms['tags'] : array();
 	$tags_label    = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
-	if ( ! empty( $tags_row ) ) {
+	if ( ! empty( $tags_row ) && 'product_tag' !== $current_term->taxonomy ) {
 		$render_plp_nav_row( $tags_label, $tags_row, $current_term->taxonomy === 'product_tag' ? $current_term->term_id : 0 );
 	}
 
