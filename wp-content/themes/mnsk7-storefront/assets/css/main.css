@@ -9260,6 +9260,13 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   font-weight: 600;
   color: var(--color-text-secondary);
   margin-right: 0.25rem;
+  order: -2;
+}
+.mnsk7-plp-selected .mnsk7-plp-chip {
+  order: 0;
+}
+.mnsk7-plp-reset.button {
+  order: 1;
 }
 /* Chipy Ă˘â‚¬ĹľWybraneĂ˘â‚¬ĹĄ (85 mm Ä‚â€”, 8 mm Ä‚â€”Ă˘â‚¬Â¦) Ă˘â‚¬â€ť zawsze czytelne: biaÄąâ€šy tekst na primary */
 .mnsk7-plp-selected .mnsk7-plp-chip.mnsk7-plp-chip--remove {
