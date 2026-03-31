@@ -3015,6 +3015,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  position: relative;
   min-width: 46px;
   min-height: 46px;
   padding: 0;
@@ -3027,10 +3028,18 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   cursor: pointer;
   flex-shrink: 0;
   border-radius: 0;
+  text-indent: -9999px;
+  overflow: hidden;
 }
 .single-product .summary .mnsk7-qty-btn::before {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 1.125rem;
   line-height: 1;
+  text-indent: 0;
 }
 .single-product .summary .mnsk7-qty-btn--minus::before {
   content: "-";
