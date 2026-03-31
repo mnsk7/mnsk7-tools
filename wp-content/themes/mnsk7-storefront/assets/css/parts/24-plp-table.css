@@ -1,6 +1,6 @@
-/* 24-plp-table â€” Sandvik-style table + chips (Ń‡Đ¸ĐżŃŃ‹) on category/tag archives */
+/* 24-plp-table Ă˘â‚¬â€ť Sandvik-style table + chips (Ĺâ€ˇÄÂ¸ÄĹĽĹÂĹâ€ą) on category/tag archives */
 
-/* Bez zdjÄ™cia kategorii/tagu u gĂłry â€” ukrywamy kwadrat z lewej (kategoria/tag w jednym stylu) */
+/* Bez zdjĂ„â„˘cia kategorii/tagu u gÄ‚Ĺ‚ry Ă˘â‚¬â€ť ukrywamy kwadrat z lewej (kategoria/tag w jednym stylu) */
 body.tax-product_cat .woocommerce-products-header img,
 body.tax-product_cat .woocommerce-products-header .wp-post-image,
 body.tax-product_cat .woocommerce-products-header .attachment-woocommerce_thumbnail,
@@ -14,12 +14,13 @@ body.tax-product_tag [class*="category-image"] {
   display: none;
 }
 
-/* NagĹ‚Ăłwek kategorii/tagu â€” wizualna hierarchia: tytuĹ‚ + chips; odstÄ™p pod tytuĹ‚em = token */
+/* NagÄąâ€šÄ‚Ĺ‚wek kategorii/tagu Ă˘â‚¬â€ť wizualna hierarchia: tytuÄąâ€š + chips; odstĂ„â„˘p pod tytuÄąâ€šem = token */
 .woocommerce-products-header {
   margin-top: 0;
   margin-bottom: var(--space-title-bottom);
-  padding-bottom: 0;
-  text-align: left;
+  padding-bottom: 0 !important;
+  text-align: left !important;
+  min-height: 0 !important;
 }
 .woocommerce-products-header__title.page-title {
   margin: 0;
@@ -27,8 +28,9 @@ body.tax-product_tag [class*="category-image"] {
   font-weight: 700;
   line-height: 1.3;
   color: var(--color-text);
+  text-align: left !important;
 }
-/* WyĹĽsza specyficznoĹ›Ä‡ niĹĽ 05-plp-cards (bodyâ€¦ #content h1.page-title â†’ --fs-2xl) â€” archiwa Sklep/kategoria/tag */
+/* WyÄąÄ˝sza specyficznoÄąâ€şĂ„â€ˇ niÄąÄ˝ 05-plp-cards (bodyĂ˘â‚¬Â¦ #content h1.page-title Ă˘â€ â€™ --fs-2xl) Ă˘â‚¬â€ť archiwa Sklep/kategoria/tag */
 body.post-type-archive-product #content h1.woocommerce-products-header__title.page-title,
 body.post-type-archive-product .mnsk7-content h1.woocommerce-products-header__title.page-title,
 body.tax-product_cat #content h1.woocommerce-products-header__title.page-title,
@@ -39,10 +41,10 @@ body.tax-product_tag .mnsk7-content h1.woocommerce-products-header__title.page-t
 }
 
 /* =================================================================
-   Archive vertical rhythm (compact) â€” tylko archiwa towarĂłw
+   Archive vertical rhythm (compact) Ă˘â‚¬â€ť tylko archiwa towarÄ‚Ĺ‚w
    body.post-type-archive-product, body.tax-product_cat, body.tax-product_tag
    Dwie systemy: default page rhythm (25-global, 05-plp) + compact archive rhythm (tu).
-   OdstÄ™py przez zmienne --archive-gap-*: jeden gap = jedna zmienna (nie suma margin+padding).
+   OdstĂ„â„˘py przez zmienne --archive-gap-*: jeden gap = jedna zmienna (nie suma margin+padding).
    HANDOFF: docs/PLP-ARCHIVE-VERTICAL-RHYTHM-HANDOFF.md
    ================================================================= */
 body.post-type-archive-product,
@@ -52,9 +54,9 @@ body.tax-product_tag {
   --archive-gap-breadcrumbs-title: 0.5rem;
   --archive-gap-title-chips: 0.2rem;
   --archive-gap-chips-filters: 0.35rem;
-  --archive-gap-filter-rows: 0.75rem;        /* 12px â€” miÄ™dzy wierszami filtrĂłw */
+  --archive-gap-filter-rows: 0.75rem;        /* 12px Ă˘â‚¬â€ť miĂ„â„˘dzy wierszami filtrÄ‚Ĺ‚w */
   --archive-gap-filters-results: 0.25rem;
-  --archive-inner-breadcrumb: 0.35rem;         /* padding wewnÄ™trzny .mnsk7-breadcrumb-wrap */
+  --archive-inner-breadcrumb: 0.35rem;         /* padding wewnĂ„â„˘trzny .mnsk7-breadcrumb-wrap */
   --archive-after-search: 0.25rem;
   --archive-after-trust: 0.4rem;
   --archive-after-table: 1rem;
@@ -78,8 +80,28 @@ body.post-type-archive-product .woocommerce-products-header,
 body.tax-product_cat .woocommerce-products-header,
 body.tax-product_tag .woocommerce-products-header {
   margin-bottom: var(--archive-gap-title-chips);
+  padding-bottom: 0 !important;
+  text-align: left !important;
+  min-height: 0 !important;
 }
-/* Kategoria/tag: tytuĹ‚ i chips w jednej linii wizualnej â€” ten sam lewy brzeg (bez dodatkowego paddingu) */
+body.post-type-archive-product .woocommerce-products-header .page-description,
+body.tax-product_cat .woocommerce-products-header .page-description,
+body.tax-product_tag .woocommerce-products-header .page-description,
+body.post-type-archive-product .woocommerce-products-header .page-description p,
+body.tax-product_cat .woocommerce-products-header .page-description p,
+body.tax-product_tag .woocommerce-products-header .page-description p {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+body.post-type-archive-product .woocommerce-products-header .page-description:empty,
+body.tax-product_cat .woocommerce-products-header .page-description:empty,
+body.tax-product_tag .woocommerce-products-header .page-description:empty,
+body.post-type-archive-product .woocommerce-products-header .page-description p:empty,
+body.tax-product_cat .woocommerce-products-header .page-description p:empty,
+body.tax-product_tag .woocommerce-products-header .page-description p:empty {
+  display: none !important;
+}
+/* Kategoria/tag: tytuÄąâ€š i chips w jednej linii wizualnej Ă˘â‚¬â€ť ten sam lewy brzeg (bez dodatkowego paddingu) */
 body.tax-product_cat .woocommerce-products-header,
 body.tax-product_tag .woocommerce-products-header,
 body.tax-product_cat .mnsk7-plp-archive-wrap,
@@ -125,7 +147,7 @@ body.post-type-archive-product .mnsk7-plp-search--priority,
 body.tax-product_cat .mnsk7-plp-search--priority,
 body.tax-product_tag .mnsk7-plp-search--priority {
   margin-top: 0;
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.2rem;
 }
 body.post-type-archive-product .mnsk7-plp-search--priority + .mnsk7-plp-empty,
 body.tax-product_cat .mnsk7-plp-search--priority + .mnsk7-plp-empty,
@@ -155,7 +177,7 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   margin-bottom: var(--archive-after-table);
 }
 
-/* Desktop: mniejsze boczne odstÄ™py na kategoria/tag (spĂłjnie z mobile) */
+/* Desktop: mniejsze boczne odstĂ„â„˘py na kategoria/tag (spÄ‚Ĺ‚jnie z mobile) */
 @media (min-width: 769px) {
   body.tax-product_cat #content,
   body.tax-product_cat .mnsk7-content,
@@ -187,7 +209,7 @@ body.tax-product_tag .mnsk7-product-table-wrap {
     --archive-after-trust: 0.45rem;
     --archive-after-table: 0.75rem;
   }
-  /* Kategoria/tag: minimalne boczne odstÄ™py; kontekst od â€žFâ€ť (wyrĂłwnanie z tytuĹ‚em) */
+  /* Kategoria/tag: minimalne boczne odstĂ„â„˘py; kontekst od Ă˘â‚¬ĹľFĂ˘â‚¬ĹĄ (wyrÄ‚Ĺ‚wnanie z tytuÄąâ€šem) */
   body.tax-product_cat #content,
   body.tax-product_cat .mnsk7-content,
   body.tax-product_tag #content,
@@ -210,7 +232,7 @@ body.tax-product_tag .mnsk7-product-table-wrap {
     font-size: 0.78rem;
     line-height: 1.35;
   }
-  /* Chips: bez dodatkowego wciÄ™cia â€” Rodzaje frezĂłw i chipy startujÄ… pod â€žFâ€ť w tytule */
+  /* Chips: bez dodatkowego wciĂ„â„˘cia Ă˘â‚¬â€ť Rodzaje frezÄ‚Ĺ‚w i chipy startujĂ„â€¦ pod Ă˘â‚¬ĹľFĂ˘â‚¬ĹĄ w tytule */
   body.tax-product_cat .mnsk7-plp-chips__scroll,
   body.tax-product_tag .mnsk7-plp-chips__scroll {
     padding-inline: 0 1rem;
@@ -251,14 +273,14 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   }
 }
 
-/* Strefa wysyĹ‚ki: w treĹ›ci nie pokazujemy (przenoszone do footera przez JS), ĹĽeby nie zsuwaĹ‚o strony */
+/* Strefa wysyÄąâ€ški: w treÄąâ€şci nie pokazujemy (przenoszone do footera przez JS), ÄąÄ˝eby nie zsuwaÄąâ€šo strony */
 body.post-type-archive-product .mnsk7-plp-toolbar .woocommerce-info,
 body.tax-product_cat .mnsk7-plp-toolbar .woocommerce-info,
 body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
   display: none;
 }
 
-/* Toolbar: sortowanie + (opcjonalnie wynikĂłw) + paginacja â€” ten sam styl u gĂłry i u doĹ‚u */
+/* Toolbar: sortowanie + (opcjonalnie wynikÄ‚Ĺ‚w) + paginacja Ă˘â‚¬â€ť ten sam styl u gÄ‚Ĺ‚ry i u doÄąâ€šu */
 .mnsk7-plp-toolbar {
   display: flex;
   flex-wrap: wrap;
@@ -266,7 +288,7 @@ body.tax-product_tag .mnsk7-plp-toolbar .woocommerce-info {
   gap: var(--space-16);
   margin-bottom: var(--space-16);
 }
-/* U gĂłry i u doĹ‚u: wynikĂłw + sortowanie + paginacja w jednej linii */
+/* U gÄ‚Ĺ‚ry i u doÄąâ€šu: wynikÄ‚Ĺ‚w + sortowanie + paginacja w jednej linii */
 body.woocommerce .mnsk7-plp-toolbar--top .woocommerce-result-count,
 body.woocommerce .mnsk7-plp-toolbar--bottom .woocommerce-result-count {
   display: block;
@@ -383,7 +405,7 @@ body.woocommerce .mnsk7-plp-toolbar:not(.mnsk7-plp-toolbar--top):not(.mnsk7-plp-
   }
 }
 
-/* Archiwum: gĹ‚Ăłwna kolumna â€” dual-support #content/#primary i .mnsk7-* (Task 4). */
+/* Archiwum: gÄąâ€šÄ‚Ĺ‚wna kolumna Ă˘â‚¬â€ť dual-support #content/#primary i .mnsk7-* (Task 4). */
 body.post-type-archive-product #content #primary,
 body.post-type-archive-product #content > main,
 body.post-type-archive-product .mnsk7-content .mnsk7-content-area,
@@ -401,7 +423,7 @@ body.tax-product_tag .mnsk7-content > main.mnsk7-main {
   min-width: 0;
   padding-top: 0;
 }
-/* .mnsk7-content-area / .mnsk7-main peĹ‚na szerokoĹ›Ä‡ */
+/* .mnsk7-content-area / .mnsk7-main peÄąâ€šna szerokoÄąâ€şĂ„â€ˇ */
 body.post-type-archive-product #content #primary .site-main,
 body.post-type-archive-product #content > main,
 body.post-type-archive-product .mnsk7-content .mnsk7-content-area .site-main,
@@ -433,7 +455,7 @@ body.tax-product_tag .mnsk7-catalog-filters {
   display: none !important;
 }
 
-/* Jedna szerokoĹ›Ä‡ dla caĹ‚ego bloku: chips + wyszukiwarka + tabela (bez rozjeĹĽdĹĽania) */
+/* Jedna szerokoÄąâ€şĂ„â€ˇ dla caÄąâ€šego bloku: chips + wyszukiwarka + tabela (bez rozjeÄąÄ˝dÄąÄ˝ania) */
 .mnsk7-plp-content {
   width: 100%;
   max-width: 100%;
@@ -487,7 +509,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   padding-right: 0;
 }
 
-/* Scroll target: gĂłrna granica strefy wynikĂłw (chips + search + USP). scroll-margin dla sticky header. */
+/* Scroll target: gÄ‚Ĺ‚rna granica strefy wynikÄ‚Ĺ‚w (chips + search + USP). scroll-margin dla sticky header. */
 .mnsk7-plp-results-anchor {
   display: block;
   height: 0;
@@ -496,22 +518,22 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   scroll-margin-top: var(--header-h, 52px);
 }
 
-/* Chips row (subcategories / filters) â€” odstÄ™p od tytuĹ‚u Sklep, spĂłjny rytm; UX: min 44px touch */
+/* Chips row (subcategories / filters) Ă˘â‚¬â€ť odstĂ„â„˘p od tytuÄąâ€šu Sklep, spÄ‚Ĺ‚jny rytm; UX: min 44px touch */
 .mnsk7-plp-chips {
   display: flex;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 0;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.45rem;
   width: 100%;
   box-sizing: border-box;
 }
 .mnsk7-plp-chips:first-of-type {
-  margin-top: 0.25rem;
-  margin-bottom: var(--space-section-gap);
+  margin-top: 0.1rem;
+  margin-bottom: 0.45rem;
 }
 
-/* Mobile: swipe row pattern â€” scrollbar ukryty, scroll-snap, fade hint, label+row w jednym bloku. */
+/* Mobile: swipe row pattern Ă˘â‚¬â€ť scrollbar ukryty, scroll-snap, fade hint, label+row w jednym bloku. */
 @media (max-width: 768px) {
   .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs):not(.mnsk7-plp-chips--nav) {
     flex-wrap: wrap;
@@ -541,7 +563,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
     white-space: normal;
     overflow: visible;
   }
-  /* Jedna definicja scroll-row: ukryty scrollbar, snap, fade. Nav i attrs â€” jedna linia (swipe), bez zawijania. */
+  /* Jedna definicja scroll-row: ukryty scrollbar, snap, fade. Nav i attrs Ă˘â‚¬â€ť jedna linia (swipe), bez zawijania. */
   .mnsk7-plp-chips--nav .mnsk7-plp-chips__scroll,
   .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
     width: 100%;
@@ -569,7 +591,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   .mnsk7-plp-chips--attrs .mnsk7-plp-chips__scroll {
     padding-inline-start: 0;
   }
-  /* WyczyĹ›Ä‡ wszystkie + filter search row â€” one system, aligned */
+  /* WyczyÄąâ€şĂ„â€ˇ wszystkie + filter search row Ă˘â‚¬â€ť one system, aligned */
   .mnsk7-plp-selected {
     align-items: center;
     gap: 0.5rem;
@@ -626,12 +648,12 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   outline-offset: 2px;
 }
 
-/* Wybrane/aktywne chipy â€” zawsze czytelny kontrast (ciemne tĹ‚o + biaĹ‚y tekst) i na poczÄ…tku rzÄ™du */
+/* Wybrane/aktywne chipy Ă˘â‚¬â€ť zawsze czytelny kontrast (ciemne tÄąâ€šo + biaÄąâ€šy tekst) i na poczĂ„â€¦tku rzĂ„â„˘du */
 .mnsk7-plp-chip--active {
   background: var(--color-primary, #0c7ddb) !important;
   border-color: var(--color-primary, #0c7ddb) !important;
   color: #fff !important;
-  order: -1; /* wybrany chip zawsze na poczÄ…tku rzÄ™du (flex order) */
+  order: -1; /* wybrany chip zawsze na poczĂ„â€¦tku rzĂ„â„˘du (flex order) */
 }
 
 .mnsk7-plp-chip--active:hover {
@@ -648,7 +670,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   align-self: center;
 }
 
-/* Na desktop: scroll wrapper zachowuje siÄ™ jak zwykĹ‚y flex-wrap (bez overflow). Na mobile â€” nowrap w @media wyĹĽej. */
+/* Na desktop: scroll wrapper zachowuje siĂ„â„˘ jak zwykÄąâ€šy flex-wrap (bez overflow). Na mobile Ă˘â‚¬â€ť nowrap w @media wyÄąÄ˝ej. */
 @media (min-width: 769px) {
   .mnsk7-plp-chips__scroll {
     display: flex;
@@ -658,7 +680,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   }
 }
 
-/* PLP-07: drugi rzÄ…d chipĂłw (atrybuty) â€” wizualnie drugorzÄ™dne wzglÄ™dem kategorii; kaĹĽdy wiersz z etykietÄ… + chipy z zawijaniem */
+/* PLP-07: drugi rzĂ„â€¦d chipÄ‚Ĺ‚w (atrybuty) Ă˘â‚¬â€ť wizualnie drugorzĂ„â„˘dne wzglĂ„â„˘dem kategorii; kaÄąÄ˝dy wiersz z etykietĂ„â€¦ + chipy z zawijaniem */
 .mnsk7-plp-chips--attrs {
   margin-top: 0.5rem;
   margin-bottom: 0.5rem;
@@ -674,7 +696,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   background: var(--color-bg-subtle, #f8f8f8);
   border-color: var(--color-border);
 }
-/* Wybrany chip atrybutu â€” zawsze biaĹ‚y tekst na primary (kontrast) */
+/* Wybrany chip atrybutu Ă˘â‚¬â€ť zawsze biaÄąâ€šy tekst na primary (kontrast) */
 .mnsk7-plp-chips--attrs .mnsk7-plp-chip.mnsk7-plp-chip--active {
   background: var(--color-primary, #0c7ddb) !important;
   border-color: var(--color-primary, #0c7ddb) !important;
@@ -691,7 +713,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   margin-right: 0.25rem;
 }
 
-/* RozwiniÄ™ty blok â€žWiÄ™cejâ€ť: chipy biorÄ… udziaĹ‚ w flexie rodzica; gdy hidden â€” nie pokazuj */
+/* RozwiniĂ„â„˘ty blok Ă˘â‚¬ĹľWiĂ„â„˘cejĂ˘â‚¬ĹĄ: chipy biorĂ„â€¦ udziaÄąâ€š w flexie rodzica; gdy hidden Ă˘â‚¬â€ť nie pokazuj */
 .mnsk7-plp-chips-more[hidden] {
   display: none !important;
 }
@@ -699,7 +721,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   display: contents;
 }
 
-/* Przycisk â€žWiÄ™cejâ€ť â€” wizualnie odrĂłĹĽniony od chipĂłw, czytelny CTA */
+/* Przycisk Ă˘â‚¬ĹľWiĂ„â„˘cejĂ˘â‚¬ĹĄ Ă˘â‚¬â€ť wizualnie odrÄ‚Ĺ‚ÄąÄ˝niony od chipÄ‚Ĺ‚w, czytelny CTA */
 .mnsk7-plp-chips-toggle {
   display: inline-flex;
   align-items: center;
@@ -738,7 +760,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   border-color: var(--color-primary);
 }
 
-/* Blok â€žWiÄ™cej filtrĂłwâ€ť â€” dodatkowe wiersze atrybutĂłw (Ĺšrednica, KÄ…t skosuâ€¦) */
+/* Blok Ă˘â‚¬ĹľWiĂ„â„˘cej filtrÄ‚Ĺ‚wĂ˘â‚¬ĹĄ Ă˘â‚¬â€ť dodatkowe wiersze atrybutÄ‚Ĺ‚w (ÄąĹˇrednica, KĂ„â€¦t skosuĂ˘â‚¬Â¦) */
 .mnsk7-plp-filters-toggle-wrap {
   margin-top: 0.25rem;
   margin-bottom: 0.5rem;
@@ -766,7 +788,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   order: -1;
 }
 
-/* Wybrane filtry + przycisk WyczyĹ›Ä‡ wszystkie (UX audit) â€” jako przycisk */
+/* Wybrane filtry + przycisk WyczyÄąâ€şĂ„â€ˇ wszystkie (UX audit) Ă˘â‚¬â€ť jako przycisk */
 .mnsk7-plp-selected {
   display: flex;
   flex-wrap: wrap;
@@ -782,7 +804,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   color: var(--color-text-secondary);
   margin-right: 0.25rem;
 }
-/* Chipy â€žWybraneâ€ť (85 mm Ă—, 8 mm Ă—â€¦) â€” zawsze czytelne: biaĹ‚y tekst na primary */
+/* Chipy Ă˘â‚¬ĹľWybraneĂ˘â‚¬ĹĄ (85 mm Ä‚â€”, 8 mm Ä‚â€”Ă˘â‚¬Â¦) Ă˘â‚¬â€ť zawsze czytelne: biaÄąâ€šy tekst na primary */
 .mnsk7-plp-selected .mnsk7-plp-chip.mnsk7-plp-chip--remove {
   background: var(--color-primary, #0c7ddb) !important;
   border-color: var(--color-primary, #0c7ddb) !important;
@@ -882,7 +904,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
 .mnsk7-plp-search__input:focus {
   outline: none;
   border-color: var(--color-primary);
-  box-shadow: none; /* bez fioletowego glow z przeglÄ…darki */
+  box-shadow: none; /* bez fioletowego glow z przeglĂ„â€¦darki */
 }
 .mnsk7-plp-search__input:focus-visible {
   outline: none;
@@ -921,7 +943,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   font-weight: 600;
 }
 
-/* PLP-11: empty state â€” nad chipsami (order:-1 w .mnsk7-plp-archive-wrap), spĂłjny przycisk */
+/* PLP-11: empty state Ă˘â‚¬â€ť nad chipsami (order:-1 w .mnsk7-plp-archive-wrap), spÄ‚Ĺ‚jny przycisk */
 .mnsk7-plp-empty {
   width: 100%;
   max-width: 100%;
@@ -979,14 +1001,14 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
-/* Na archiwum: ukryÄ‡ ewentualny drugi notice Woo (gdy juĹĽ pokazujemy wĹ‚asny empty) */
+/* Na archiwum: ukryĂ„â€ˇ ewentualny drugi notice Woo (gdy juÄąÄ˝ pokazujemy wÄąâ€šasny empty) */
 body.post-type-archive-product .woocommerce-no-products-found:not(.mnsk7-plp-empty),
 body.tax-product_cat .woocommerce-no-products-found:not(.mnsk7-plp-empty),
 body.tax-product_tag .woocommerce-no-products-found:not(.mnsk7-plp-empty) {
   margin-top: 0;
 }
 
-/* PLP-12: link â€žWyczyĹ›Ä‡ wyszukiwanie" na stronie wynikĂłw */
+/* PLP-12: link Ă˘â‚¬ĹľWyczyÄąâ€şĂ„â€ˇ wyszukiwanie" na stronie wynikÄ‚Ĺ‚w */
 .mnsk7-plp-search-clear {
   margin: 0 0 0.75rem;
   font-size: var(--fs-sm);
@@ -1000,18 +1022,18 @@ body.tax-product_tag .woocommerce-no-products-found:not(.mnsk7-plp-empty) {
   text-decoration: underline;
 }
 
-/* Trust badges przy tabeli (jak w kartce: Dostawa jutro, Faktura VAT, dostawa 300 zĹ‚, Zwroty 30 dni) */
+/* Trust badges przy tabeli (jak w kartce: Dostawa jutro, Faktura VAT, dostawa 300 zÄąâ€š, Zwroty 30 dni) */
 .mnsk7-plp-trust-wrap {
   margin-bottom: 0.6rem;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
 }
-/* Nadpisanie ewentualnych stylĂłw [role="list"] z normalizacji / a11y */
+/* Nadpisanie ewentualnych stylÄ‚Ĺ‚w [role="list"] z normalizacji / a11y */
 .mnsk7-plp-trust-wrap [role="list"].mnsk7-plp-trust {
   display: flex !important;
 }
-/* WyĹĽsza specyficznoĹ›Ä‡ na archiwum (sklep/kategoria/tag), ĹĽeby wygraÄ‡ z .woocommerce div / Storefront */
+/* WyÄąÄ˝sza specyficznoÄąâ€şĂ„â€ˇ na archiwum (sklep/kategoria/tag), ÄąÄ˝eby wygraĂ„â€ˇ z .woocommerce div / Storefront */
 body.post-type-archive-product .mnsk7-plp-trust-wrap .mnsk7-plp-trust,
 body.tax-product_cat .mnsk7-plp-trust-wrap .mnsk7-plp-trust,
 body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust,
@@ -1055,12 +1077,9 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   margin-right: 0 !important;
   margin-inline-end: 0 !important;
 }
-/* Separator miÄ™dzy badgeâ€™ami, gdy gap nie dziaĹ‚a (fallback) */
+/* Separator miĂ„â„˘dzy badgeĂ˘â‚¬â„˘ami, gdy gap nie dziaÄąâ€ša (fallback) */
 .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item:not(:last-child)::after {
-  content: ' Â· ';
-  margin-left: 0.5rem;
-  color: var(--color-text-muted);
-  font-weight: 400;
+  content: none;
 }
 .mnsk7-plp-trust__item,
 .mnsk7-pdp-trust__item {
@@ -1070,10 +1089,13 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
 }
 .mnsk7-plp-trust__item::before,
 .mnsk7-pdp-trust__item::before {
-  content: 'âś“ ';
-  color: var(--color-accent, #22c55e);
-  font-weight: 700;
-  font-size: 1em;
+  content: "";
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  min-width: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-accent, #22c55e);
 }
 
 @media (max-width: 768px) {
@@ -1161,7 +1183,7 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
   }
 }
 
-/* Przycisk â€žPokaĹĽ wiÄ™cejâ€ť pod tabelÄ… (gdy jest nastÄ™pna strona) â€” wyĹ›rodkowany, ta sama szerokoĹ›Ä‡ co tabela */
+/* Przycisk Ă˘â‚¬ĹľPokaÄąÄ˝ wiĂ„â„˘cejĂ˘â‚¬ĹĄ pod tabelĂ„â€¦ (gdy jest nastĂ„â„˘pna strona) Ă˘â‚¬â€ť wyÄąâ€şrodkowany, ta sama szerokoÄąâ€şĂ„â€ˇ co tabela */
 .mnsk7-plp-load-more-wrap {
   margin: 1.25rem 0 1rem;
   width: 100%;
@@ -1227,14 +1249,14 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   visibility: visible;
   opacity: 1;
 }
-/* Bardzo wÄ…skie ekrany â€” 1 kolumna (wartoĹ›Ä‡ z 01-tokens: --breakpoint-mobile-narrow) */
+/* Bardzo wĂ„â€¦skie ekrany Ă˘â‚¬â€ť 1 kolumna (wartoÄąâ€şĂ„â€ˇ z 01-tokens: --breakpoint-mobile-narrow) */
 @media (max-width: 360px) {
   body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products {
     grid-template-columns: 1fr;
   }
 }
 
-/* Table wrapper â€” na wÄ…skim desktopie przewijanie w poziomie zamiast obcinania przycisku. */
+/* Table wrapper Ă˘â‚¬â€ť na wĂ„â€¦skim desktopie przewijanie w poziomie zamiast obcinania przycisku. */
 .mnsk7-product-table-wrap {
   margin-bottom: 1.5rem;
   max-width: 100%;
@@ -1243,7 +1265,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   -webkit-overflow-scrolling: touch;
 }
 
-/* table-layout: fixed â€” jednakowe proporcje kolumn. Task 8: overflow: hidden â€” obciÄ™cie treĹ›ci do border-radius. */
+/* table-layout: fixed Ă˘â‚¬â€ť jednakowe proporcje kolumn. Task 8: overflow: hidden Ă˘â‚¬â€ť obciĂ„â„˘cie treÄąâ€şci do border-radius. */
 .mnsk7-product-table {
   width: 100%;
   table-layout: fixed;
@@ -1269,7 +1291,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   white-space: nowrap;
 }
 
-/* Đ¤Đ¸ĐşŃĐ¸Ń€ĐľĐ˛Đ°Đ˝Đ˝Ń‹Đµ Đ´ĐľĐ»Đ¸ ĐşĐľĐ»ĐľĐ˝ĐľĐş Đ´Đ»ŃŹ ĐµĐ´Đ¸Đ˝ĐľĐłĐľ Đ˛Đ¸Đ´Đ° Đ˝Đ° Đ˛ŃĐµŃ… ĐşĐ°Ń‚ĐµĐłĐľŃ€Đ¸ŃŹŃ… */
+/* ÄÂ¤ÄÂ¸ÄĹźĹÂÄÂ¸Ĺâ‚¬ÄÄľÄË›ÄÂ°ÄËťÄËťĹâ€ąÄÂµ ÄÂ´ÄÄľÄÂ»ÄÂ¸ ÄĹźÄÄľÄÂ»ÄÄľÄËťÄÄľÄĹź ÄÂ´ÄÂ»ĹĹą ÄÂµÄÂ´ÄÂ¸ÄËťÄÄľÄĹ‚ÄÄľ ÄË›ÄÂ¸ÄÂ´ÄÂ° ÄËťÄÂ° ÄË›ĹÂÄÂµĹâ€¦ ÄĹźÄÂ°Ĺâ€šÄÂµÄĹ‚ÄÄľĹâ‚¬ÄÂ¸ĹĹąĹâ€¦ */
 .mnsk7-product-table th.mnsk7-table-cell--thumb,
 .mnsk7-product-table .mnsk7-table-cell--thumb { width: 7%; min-width: 64px; }
 .mnsk7-product-table th.mnsk7-table-cell--title,
@@ -1279,9 +1301,9 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table th.mnsk7-table-cell--stock,
 .mnsk7-product-table .mnsk7-table-cell--stock { width: 12%; }
 .mnsk7-product-table th.mnsk7-table-cell--qty,
-.mnsk7-product-table .mnsk7-table-cell--qty { width: 12%; }
+.mnsk7-product-table .mnsk7-table-cell--qty { width: 13%; }
 .mnsk7-product-table th.mnsk7-table-cell--action,
-.mnsk7-product-table .mnsk7-table-cell--action { width: 19%; min-width: 160px; }
+.mnsk7-product-table .mnsk7-table-cell--action { width: 16%; min-width: 180px; }
 
 .mnsk7-product-table tbody tr {
   border-bottom: 1px solid var(--color-border);
@@ -1297,8 +1319,8 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 }
 
 .mnsk7-product-table .mnsk7-table-cell {
-  padding: 0.5rem 0.75rem;
-  vertical-align: middle;
+  padding: 0.75rem 0.75rem;
+  vertical-align: top;
   font-size: var(--fs-xs);
 }
 
@@ -1308,7 +1330,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   max-width: 64px;
   background: var(--color-surface);
   border-radius: var(--r-sm);
-  overflow: hidden; /* obciÄ™cie miniatury do border-radius */
+  overflow: hidden; /* obciĂ„â„˘cie miniatury do border-radius */
   text-decoration: none;
   border-bottom: none;
   -webkit-tap-highlight-color: transparent;
@@ -1390,10 +1412,12 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   font-weight: 700;
   color: var(--color-primary-dark);
   white-space: nowrap;
+  vertical-align: middle;
 }
 
 .mnsk7-product-table .mnsk7-table-cell--stock {
   white-space: nowrap;
+  vertical-align: middle;
 }
 .mnsk7-product-table .mnsk7-table-outofstock {
   color: var(--color-text-secondary);
@@ -1404,7 +1428,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   vertical-align: middle;
 }
 
-/* Desktop: przycisk â€žDodaj do koszykaâ€ť w jednej linii z cenÄ… (41,00 zĹ‚), stanem (1 szt.), iloĹ›ciÄ… */
+/* Desktop: przycisk Ă˘â‚¬ĹľDodaj do koszykaĂ˘â‚¬ĹĄ w jednej linii z cenĂ„â€¦ (41,00 zÄąâ€š), stanem (1 szt.), iloÄąâ€şciĂ„â€¦ */
 @media (min-width: 769px) {
   .mnsk7-product-table tbody .mnsk7-table-cell--price,
   .mnsk7-product-table tbody .mnsk7-table-cell--stock,
@@ -1429,7 +1453,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 }
 .mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-input {
   width: 3rem;
-  min-height: 36px;
+  min-height: 44px;
   padding: 0.25rem 0.35rem;
   font-size: var(--fs-sm);
   text-align: center;
@@ -1441,10 +1465,13 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   display: inline-flex;
   align-items: center;
   gap: 0.25rem;
+  justify-content: center;
+  width: 100%;
+  min-height: 44px;
 }
 .mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-stepper .mnsk7-qty-btn {
-  min-width: 32px;
-  min-height: 32px;
+  min-width: 44px;
+  min-height: 44px;
   padding: 0;
   border-radius: 0.4rem;
 }
@@ -1461,6 +1488,8 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   display: inline-flex;
   align-items: center;
   flex-wrap: nowrap;
+  justify-content: center;
+  width: 100%;
 }
 .mnsk7-product-table .mnsk7-table-addcart-form--fixed-qty {
   gap: 0;
@@ -1509,8 +1538,9 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  padding: 0.5rem 1.25rem;
+  min-height: 46px;
+  width: 100%;
+  padding: 0.5rem 1rem;
   font-size: var(--fs-sm);
   font-weight: 600;
   font-family: var(--font-base);
