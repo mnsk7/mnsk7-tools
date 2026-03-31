@@ -197,11 +197,18 @@ body.tax-product_tag .mnsk7-product-table-wrap {
   }
   body.post-type-archive-product .mnsk7-breadcrumb-wrap,
   body.tax-product_cat .mnsk7-breadcrumb-wrap,
-  body.tax-product_tag .mnsk7-breadcrumb-wrap,
+  body.tax-product_tag .mnsk7-breadcrumb-wrap {
+    display: block;
+    padding-top: 0.2rem;
+    padding-bottom: 0.2rem;
+    margin-bottom: 0.35rem;
+  }
   body.post-type-archive-product .woocommerce-breadcrumb,
   body.tax-product_cat .woocommerce-breadcrumb,
   body.tax-product_tag .woocommerce-breadcrumb {
-    display: none;
+    display: flex;
+    font-size: 0.78rem;
+    line-height: 1.35;
   }
   /* Chips: bez dodatkowego wcięcia — Rodzaje frezów i chipy startują pod „F” w tytule */
   body.tax-product_cat .mnsk7-plp-chips__scroll,

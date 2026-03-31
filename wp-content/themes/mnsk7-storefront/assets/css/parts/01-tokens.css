@@ -13,13 +13,13 @@
   /* Palette: blue #0c7ddb, beige #e9e8cc, white, black */
   --color-bg:             #ffffff;
   --color-beige:          #e9e8cc;
-  --color-surface:        #e9e8cc;
-  --color-surface-2:      #e0dfc4;
+  --color-surface:        #f6f8fb;
+  --color-surface-2:      #eef2f7;
   --color-text:           #000000;
   --color-text-secondary: #333333;
   --color-text-muted:     #666666;
-  --color-border:         #e9e8cc;
-  --color-border-strong:  #d4d3b8;
+  --color-border:         #d9e2ec;
+  --color-border-strong:  #c7d3e0;
   /* Darkened primary to satisfy WCAG AA contrast with white text on 15px buttons */
   --color-primary:        #0b74c9;
   --color-primary-hover:   #0a6bc2;
@@ -102,4 +102,3 @@
     transition-duration: 0.01ms !important;
   }
 }
-

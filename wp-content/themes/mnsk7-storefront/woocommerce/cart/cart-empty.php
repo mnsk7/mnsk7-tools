@@ -17,6 +17,14 @@ defined( 'ABSPATH' ) || exit;
 			<path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
 		</svg>
 	</div>
+	<p class="mnsk7-cart-empty__eyebrow"><?php esc_html_e( 'Koszyk', 'mnsk7-storefront' ); ?></p>
+	<h2 class="mnsk7-cart-empty__title"><?php esc_html_e( 'Dodaj produkty i wróć do zamówienia w minutę', 'mnsk7-storefront' ); ?></h2>
+	<p class="mnsk7-cart-empty__lead"><?php esc_html_e( 'Wybierz frezy, tuleje lub zestawy. W kolejnym kroku zobaczysz dostawę i formę płatności przed finalizacją zamówienia.', 'mnsk7-storefront' ); ?></p>
+	<div class="mnsk7-cart-empty__benefits" aria-label="<?php esc_attr_e( 'Korzyści zakupowe', 'mnsk7-storefront' ); ?>">
+		<span><?php esc_html_e( 'Darmowa dostawa od 300 zł', 'mnsk7-storefront' ); ?></span>
+		<span><?php esc_html_e( 'Bezpieczne płatności', 'mnsk7-storefront' ); ?></span>
+		<span><?php esc_html_e( 'Szybka wysyłka', 'mnsk7-storefront' ); ?></span>
+	</div>
 	<?php do_action( 'woocommerce_cart_is_empty' ); ?>
 	<?php if ( wc_get_page_id( 'shop' ) > 0 ) : ?>
 		<p class="mnsk7-cart-empty__actions">
@@ -25,4 +33,7 @@ defined( 'ABSPATH' ) || exit;
 			</a>
 		</p>
 	<?php endif; ?>
+	<p class="mnsk7-cart-empty__secondary">
+		<a href="<?php echo esc_url( home_url( '/dostawa-i-platnosci/' ) ); ?>"><?php esc_html_e( 'Sprawdź dostawę i płatności', 'mnsk7-storefront' ); ?></a>
+	</p>
 </div>
