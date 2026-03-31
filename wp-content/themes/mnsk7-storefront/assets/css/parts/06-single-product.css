@@ -816,10 +816,25 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
     order: 3;
   }
 
+  .single-product div.product > details.mnsk7-product-description-accordion,
+  .single-product div.product > .mnsk7-product-description-accordion {
+    order: 3;
+  }
+
   .single-product div.product > .related.products,
   .single-product div.product > .upsells.products,
   .single-product div.product > .up-sells.products {
     order: 4;
+  }
+
+  .single-product div.product > section.related.products,
+  .single-product div.product > section.upsells.products,
+  .single-product div.product > section.up-sells.products {
+    order: 4;
+  }
+
+  .single-product div.product > nav.storefront-product-pagination {
+    order: 5;
   }
 }
 
@@ -847,10 +862,22 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   .single-product div.product > .mnsk7-product-description-accordion {
     order: 3;
   }
+  .single-product div.product > details.mnsk7-product-description-accordion,
+  .single-product div.product > .mnsk7-product-description-accordion {
+    order: 3;
+  }
   .single-product div.product > .related.products,
   .single-product div.product > .upsells.products,
   .single-product div.product > .up-sells.products {
     order: 4;
+  }
+  .single-product div.product > section.related.products,
+  .single-product div.product > section.upsells.products,
+  .single-product div.product > section.up-sells.products {
+    order: 4;
+  }
+  .single-product div.product > nav.storefront-product-pagination {
+    order: 5;
   }
 }
 
