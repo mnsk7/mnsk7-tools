@@ -2969,8 +2969,11 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 .single-product .summary .quantity.quantity--locked .mnsk7-quantity-lock {
-  border: 1px solid var(--color-border);
+  border: none;
   border-radius: 0;
+  width: 100%;
+  min-height: 100%;
+  font-size: var(--fs-base);
 }
 
 .single-product .summary .quantity.quantity--stepper .mnsk7-qty-btn,
@@ -10345,4 +10348,3 @@ button[type="submit"],
 .add_to_cart_button {
   border-radius: var(--r-md) !important;
 }
-

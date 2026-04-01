@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
 $label = ! empty( $args['product_name'] ) ? sprintf( esc_html__( '%s quantity', 'woocommerce' ), wp_strip_all_tags( $args['product_name'] ) ) : esc_html__( 'Quantity', 'woocommerce' );
 $is_locked_qty = $readonly || $type === 'hidden' || ( isset( $min_value, $max_value ) && (string) $min_value !== '' && (string) $max_value !== '' && (float) $min_value === (float) $max_value );
 $quantity_classes = 'quantity' . ( $is_locked_qty ? ' quantity--locked' : ' quantity--stepper' );
+$input_type = $is_locked_qty ? 'hidden' : $type;
 $quantity_display = sprintf(
 	/* translators: %s: quantity value */
 	__( '%s szt.', 'mnsk7-storefront' ),
@@ -34,14 +35,14 @@ $quantity_display = sprintf(
 		<button type="button" class="mnsk7-qty-btn mnsk7-qty-btn--minus" aria-label="<?php esc_attr_e( 'Zmniejsz ilość', 'mnsk7-storefront' ); ?>">&minus;</button>
 	<?php endif; ?>
 	<input
-		type="<?php echo esc_attr( $type ); ?>"
+		type="<?php echo esc_attr( $input_type ); ?>"
 		<?php echo $readonly ? 'readonly="readonly"' : ''; ?>
 		id="<?php echo esc_attr( $input_id ); ?>"
 		class="<?php echo esc_attr( join( ' ', (array) $classes ) ); ?>"
 		name="<?php echo esc_attr( $input_name ); ?>"
 		value="<?php echo esc_attr( $input_value ); ?>"
 		aria-label="<?php echo esc_attr( $label ); ?>"
-		<?php if ( in_array( $type, array( 'text', 'search', 'tel', 'url', 'email', 'password' ), true ) ) : ?>
+		<?php if ( in_array( $input_type, array( 'text', 'search', 'tel', 'url', 'email', 'password' ), true ) ) : ?>
 			size="4"
 		<?php endif; ?>
 		min="<?php echo esc_attr( $min_value ); ?>"
