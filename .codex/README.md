@@ -30,3 +30,11 @@ Use repo-level docs for shared process rules:
 - `templates/task-intake.md`
 - `templates/change-review.md`
 - `templates/staging-verify-handoff.md`
+
+## Codex Ralph
+
+Codex uses a repo-local Ralph adaptation documented in:
+
+- `.codex/RALPH_LOOP.md`
+
+The Codex version is script-driven, not hook-driven.

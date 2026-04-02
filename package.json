@@ -4,6 +4,10 @@
   "private": true,
   "description": "E2E tests for mnsk7-tools (Playwright)",
   "scripts": {
+    "ralph:codex:start": "bash scripts/codex-ralph-start.sh",
+    "ralph:codex:next": "bash scripts/codex-ralph-next.sh",
+    "ralph:codex:status": "bash scripts/codex-ralph-status.sh",
+    "ralph:codex:cancel": "bash scripts/codex-ralph-cancel.sh",
     "ralph:start": "bash scripts/setup-ralph-loop.sh",
     "ralph:cancel": "bash scripts/cancel-ralph-loop.sh",
     "test:e2e": "playwright test",

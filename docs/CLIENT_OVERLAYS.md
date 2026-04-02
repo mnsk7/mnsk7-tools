@@ -39,6 +39,7 @@ Do not treat `.cursor/` as the source of truth for the whole repo.
 Keep in `.codex/` only:
 
 - Codex-specific workflow notes
+- Codex script-driven Ralph loop adapter
 - Codex-specific agent prompts/templates
 - Codex scratch or session layout definitions
 
