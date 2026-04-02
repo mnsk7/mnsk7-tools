@@ -23,6 +23,25 @@ test.describe('Homepage scorecard', () => {
     await expect(page.locator('.mnsk7-hero__media')).toHaveCount(0);
   });
 
+  test('375x700: hero secondary CTA points to a real destination', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 700 });
+    await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
+    await page.goto('/', { waitUntil: 'domcontentloaded' });
+
+    const secondaryCta = page.locator('.mnsk7-hero__link').first();
+    await expect(secondaryCta).toBeVisible();
+
+    const href = await secondaryCta.getAttribute('href');
+    expect(href).toBeTruthy();
+
+    if (href.startsWith('#')) {
+      await expect(page.locator(href).first()).toHaveCount(1);
+      await expect(secondaryCta).toHaveAttribute('aria-controls', href.slice(1));
+    } else {
+      expect(href).toMatch(/\/sklep\/?|shop/);
+    }
+  });
+
   test('768x900: trust appears before catalog and homepage sections remain ordered', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 900 });
     await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });

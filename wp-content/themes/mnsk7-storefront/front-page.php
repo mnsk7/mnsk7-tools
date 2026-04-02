@@ -6,6 +6,39 @@
  */
 
 get_header();
+
+$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
+$cats     = array();
+$tags     = array();
+$has_cats = taxonomy_exists( 'product_cat' );
+$has_tags = taxonomy_exists( 'product_tag' );
+if ( $has_cats ) {
+	$cats = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'hide_empty' => true,
+			'parent'     => 0,
+			'number'     => 20,
+			'orderby'    => 'count',
+			'order'      => 'DESC',
+		)
+	);
+}
+if ( $has_tags ) {
+	$tags = get_terms(
+		array(
+			'taxonomy'   => 'product_tag',
+			'hide_empty' => true,
+			'number'     => 20,
+			'orderby'    => 'count',
+			'order'      => 'DESC',
+		)
+	);
+}
+$tags_label     = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
+$cats_label     = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
+$show_catalog   = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) );
+$hero_link_href = $show_catalog ? '#mnsk7-home-catalog' : $shop_url;
 ?>
 
 <main id="main" class="site-main mnsk7-front-page">
@@ -28,7 +61,6 @@ get_header();
 						<p class="mnsk7-hero__group-label"><?php esc_html_e( 'Materiały', 'mnsk7-storefront' ); ?></p>
 						<div class="mnsk7-hero__materials" aria-label="<?php esc_attr_e( 'Szybki wybór materiału', 'mnsk7-storefront' ); ?>">
 							<?php
-							$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
 							$materials = array(
 								array( 'label' => 'Drewno', 'slug' => 'drewno' ),
 								array( 'label' => 'MDF', 'slug' => 'mdf' ),
@@ -63,7 +95,7 @@ get_header();
 						<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="mnsk7-hero__btn mnsk7-hero__btn--primary">
 							<?php esc_html_e( 'Przejdź do sklepu', 'mnsk7-storefront' ); ?>
 						</a>
-						<a href="#mnsk7-home-catalog" class="mnsk7-hero__link">
+						<a href="<?php echo esc_url( $hero_link_href ); ?>" class="mnsk7-hero__link"<?php echo $show_catalog ? ' aria-controls="mnsk7-home-catalog"' : ''; ?>>
 							<?php esc_html_e( 'Zobacz kategorie', 'mnsk7-storefront' ); ?>
 						</a>
 					</div>
@@ -119,36 +151,6 @@ get_header();
 	</section>
 
 	<?php
-	$cats     = array();
-	$tags     = array();
-	$has_cats = taxonomy_exists( 'product_cat' );
-	$has_tags = taxonomy_exists( 'product_tag' );
-	if ( $has_cats ) {
-		$cats = get_terms(
-			array(
-				'taxonomy'   => 'product_cat',
-				'hide_empty' => true,
-				'parent'     => 0,
-				'number'     => 20,
-				'orderby'    => 'count',
-				'order'      => 'DESC',
-			)
-		);
-	}
-	if ( $has_tags ) {
-		$tags = get_terms(
-			array(
-				'taxonomy'   => 'product_tag',
-				'hide_empty' => true,
-				'number'     => 20,
-				'orderby'    => 'count',
-				'order'      => 'DESC',
-			)
-		);
-	}
-	$tags_label   = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
-	$cats_label   = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
-	$show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) );
 	if ( $show_catalog ) :
 	?>
 	<section id="mnsk7-home-catalog" class="mnsk7-section mnsk7-section--catalog mnsk7-section--light">
