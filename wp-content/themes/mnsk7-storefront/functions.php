@@ -1213,6 +1213,30 @@ add_action( 'wp_footer', function () {
 				if (!parentLi || !link) return false;
 				return link.getAttribute('data-mnsk7') === 'sklep-parent' || parentLi.firstElementChild === link;
 			}
+			function alignOpenedMobileSubmenu(parentLi) {
+				if (!menu || !parentLi) return;
+				var submenu = parentLi.querySelector(':scope > .sub-menu');
+				if (!submenu) return;
+				try { submenu.scrollTop = 0; } catch (e) {}
+				try { submenu.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) {}
+				window.requestAnimationFrame(function() {
+					try {
+						menu.scrollTo({
+							top: Math.max(0, parentLi.offsetTop - 8),
+							left: 0,
+							behavior: 'auto'
+						});
+					} catch (e) {
+						try { menu.scrollTop = Math.max(0, parentLi.offsetTop - 8); } catch (e2) {}
+					}
+					var firstSubmenuLink = submenu.querySelector('a[href]');
+					if (firstSubmenuLink) {
+						try {
+							firstSubmenuLink.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'auto' });
+						} catch (e) {}
+					}
+				});
+			}
 			menu.addEventListener('click', function(e) {
 				var a = getLinkFromEvent(e, menu);
 				if (!a || !a.href) return;
@@ -1229,6 +1253,7 @@ add_action( 'wp_footer', function () {
 						if (submenu) {
 							try { submenu.scrollTop = 0; } catch (e) {}
 						}
+						alignOpenedMobileSubmenu(li);
 						a.setAttribute('aria-expanded', 'true');
 					}
 				}
