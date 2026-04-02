@@ -5,23 +5,33 @@
 
 .mnsk7-front-page {
   padding: 0;
+  display: flex;
+  flex-direction: column;
 }
+
+.mnsk7-front-page .mnsk7-hero { order: 10; }
+.mnsk7-front-page .mnsk7-section--catalog { order: 20; }
+.mnsk7-front-page .mnsk7-section--bestsellers { order: 30; }
+.mnsk7-front-page .mnsk7-section--trust { order: 40; }
+.mnsk7-front-page .mnsk7-section--loyalty { order: 50; }
+.mnsk7-front-page .mnsk7-section--insta { order: 60; }
 
 /* Hero — czytelny, full-bleed (bez białych pasów od padding #content). Audit task 6: overflow visible */
 .mnsk7-hero {
   background:
-    radial-gradient(circle at top left, rgba(255,255,255,0.06), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(255,184,77,0.12), transparent 24%),
-    linear-gradient(135deg, #06111c 0%, #0b2238 42%, #15466d 100%);
-  color: var(--color-white);
+    radial-gradient(circle at top left, rgba(255,255,255,0.95), transparent 26%),
+    radial-gradient(circle at bottom right, rgba(12,125,219,0.08), transparent 28%),
+    linear-gradient(180deg, #fcfdff 0%, #f2f7fd 58%, #edf3fa 100%);
+  color: #16355e;
   text-align: left;
-  padding: 4.25rem 1.5rem 4.5rem;
+  padding: 4rem 1.5rem 4.15rem;
   position: relative;
   overflow: visible;
   margin-left: -1.5rem;
   margin-right: -1.5rem;
   width: calc(100% + 3rem);
   max-width: none;
+  border-bottom: 1px solid #dbe5f3;
 }
 @media (min-width: 768px) {
   .mnsk7-hero {
@@ -38,8 +48,8 @@
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(90deg, rgba(3, 10, 18, 0.5), rgba(3, 10, 18, 0.18) 55%, transparent 100%),
-    repeating-linear-gradient(90deg, rgba(255,255,255,0.03) 0 1px, transparent 1px 92px);
+    linear-gradient(90deg, rgba(255,255,255,0.54), rgba(255,255,255,0.18) 55%, transparent 100%),
+    repeating-linear-gradient(90deg, rgba(12,125,219,0.045) 0 1px, transparent 1px 96px);
   pointer-events: none;
 }
 
@@ -70,9 +80,9 @@
   margin: 0 0 1rem;
   padding: 0.42rem 0.78rem;
   border-radius: var(--r-pill);
-  background: rgba(255, 184, 77, 0.12);
-  border: 1px solid rgba(255, 184, 77, 0.24);
-  color: rgba(255, 237, 211, 0.9);
+  background: rgba(12, 125, 219, 0.08);
+  border: 1px solid rgba(12, 125, 219, 0.18);
+  color: #0f4a98;
   font-size: 0.82rem;
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -82,17 +92,17 @@
 .mnsk7-hero__title {
   font-size: clamp(2.3rem, 5.2vw, 4.55rem);
   font-weight: 800;
-  color: #fff;
+  color: #0f2648;
   margin: 0 0 1.1rem;
   line-height: 1.02;
   letter-spacing: -0.03em;
   text-wrap: balance;
-  text-shadow: 0 8px 32px rgba(0,0,0,0.22);
+  text-shadow: none;
 }
 
 .mnsk7-hero__lead {
   font-size: clamp(1.02rem, 1.6vw, 1.2rem);
-  color: rgba(255, 255, 255, 0.84);
+  color: #314865;
   margin: 0 0 1.2rem;
   max-width: 35rem;
   font-weight: 450;
@@ -112,20 +122,20 @@
   gap: 0.2rem;
   padding: 0.95rem 1rem;
   border-radius: 16px;
-  background: rgba(7, 18, 30, 0.26);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(22, 88, 176, 0.12);
+  box-shadow: 0 10px 30px rgba(15, 38, 72, 0.06);
 }
 
 .mnsk7-hero__stat-value {
   font-size: clamp(1.2rem, 2vw, 1.65rem);
   font-weight: 800;
-  color: #fff;
+  color: #16355e;
   line-height: 1.05;
 }
 
 .mnsk7-hero__stat-label {
-  color: rgba(255, 255, 255, 0.72);
+  color: #4b5f7c;
   font-size: var(--fs-xs);
   line-height: 1.35;
 }
@@ -147,16 +157,16 @@
   padding: 0.42rem 0.88rem;
   font-size: 0.88rem;
   font-weight: 600;
-  color: rgba(255, 255, 255, 0.92);
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #16355e;
+  background: rgba(255, 255, 255, 0.82);
+  border: 1px solid rgba(22, 88, 176, 0.12);
   border-radius: var(--r-pill);
   white-space: nowrap;
   transition: background 0.2s ease, border-color 0.2s ease;
 }
 .mnsk7-hero__material-chip:hover {
-  background: rgba(255, 255, 255, 0.14);
-  border-color: rgba(255, 255, 255, 0.24);
+  background: #ffffff;
+  border-color: rgba(22, 88, 176, 0.28);
 }
 
 .mnsk7-hero__usps {
@@ -172,13 +182,13 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.82);
   padding: 0.55rem 0.95rem;
   border-radius: var(--r-pill);
   font-size: 0.88rem;
   font-weight: 600;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #16355e;
+  border: 1px solid rgba(22, 88, 176, 0.12);
 }
 
 .mnsk7-hero__usp-icon {
@@ -193,8 +203,8 @@
   width: 0.45rem;
   height: 0.45rem;
   border-radius: 999px;
-  background: #ffb84d;
-  box-shadow: 0 0 0 4px rgba(255, 184, 77, 0.15);
+  background: #0c7ddb;
+  box-shadow: 0 0 0 4px rgba(12, 125, 219, 0.14);
   font-weight: 700;
   display: inline-block;
 }
@@ -222,32 +232,32 @@
 }
 
 .mnsk7-hero__btn--primary {
-  background: #ffb84d;
-  color: #08111b;
-  box-shadow: 0 12px 28px rgba(0,0,0,0.24);
+  background: #0c7ddb;
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(12,125,219,0.24);
   padding: 1rem 2.25rem;
   font-size: 1rem;
 }
 
 .mnsk7-hero__btn--primary:hover {
-  background: #ffc874;
-  color: #08111b;
+  background: #0b74c9;
+  color: #fff;
   text-decoration: none;
   transform: translateY(-2px);
   box-shadow: 0 16px 32px rgba(0,0,0,0.24);
 }
 
 .mnsk7-hero__btn--secondary {
-  background: transparent;
-  color: var(--color-white);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: none;
+  background: rgba(255, 255, 255, 0.88);
+  color: #16355e;
+  border: 1px solid rgba(22, 88, 176, 0.16);
+  box-shadow: 0 8px 24px rgba(15, 38, 72, 0.05);
 }
 
 .mnsk7-hero__btn--secondary:hover,
 .mnsk7-hero__btn--secondary:focus-visible {
-  background: rgba(255, 255, 255, 0.1);
-  color: var(--color-white);
+  background: #ffffff;
+  color: #0f4a98;
   text-decoration: none;
   transform: translateY(-1px);
 }
@@ -264,16 +274,14 @@
   height: 100%;
   padding: 1.45rem 1.3rem;
   border-radius: 24px;
-  background:
-    linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02)),
-    linear-gradient(180deg, rgba(3, 12, 20, 0.58), rgba(3, 12, 20, 0.78));
-  border: 1px solid rgba(255,255,255,0.1);
-  box-shadow: 0 22px 50px rgba(0, 7, 15, 0.32);
+  background: linear-gradient(180deg, rgba(255,255,255,0.94), rgba(248,251,255,0.96));
+  border: 1px solid rgba(22, 88, 176, 0.12);
+  box-shadow: 0 22px 50px rgba(15, 38, 72, 0.08);
 }
 
 .mnsk7-hero__panel-kicker {
   margin: 0;
-  color: rgba(255, 184, 77, 0.88);
+  color: #0c7ddb;
   font-size: var(--fs-xs);
   font-weight: 700;
   letter-spacing: 0.08em;
@@ -282,7 +290,7 @@
 
 .mnsk7-hero__panel-title {
   margin: 0;
-  color: #fff;
+  color: #0f2648;
   font-size: clamp(1.2rem, 2vw, 1.5rem);
   font-weight: 800;
   line-height: 1.22;
@@ -301,7 +309,7 @@
   gap: 0.35rem;
   align-items: start;
   padding: 0.95rem 0;
-  border-top: 1px solid rgba(255,255,255,0.1);
+  border-top: 1px solid rgba(22, 88, 176, 0.12);
 }
 
 .mnsk7-hero__proof-row:first-child {
@@ -310,14 +318,14 @@
 }
 
 .mnsk7-hero__proof-label {
-  color: #fff;
+  color: #16355e;
   font-size: 0.98rem;
   font-weight: 700;
   line-height: 1.25;
 }
 
 .mnsk7-hero__proof-text {
-  color: rgba(255, 255, 255, 0.78);
+  color: #4b5f7c;
   font-size: 0.92rem;
   line-height: 1.5;
 }
