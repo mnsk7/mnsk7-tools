@@ -1313,7 +1313,7 @@
 .mnsk7-section--insta .mnsk7-instagram-feed__posts {
   display: grid !important;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: clamp(1rem, 2vw, 1.75rem);
+  gap: clamp(0.9rem, 1.8vw, 1.35rem);
   align-items: start;
   justify-items: center;
   margin: 0;
@@ -1321,14 +1321,14 @@
 
 .mnsk7-section--insta .mnsk7-instagram-feed__post {
   width: 100%;
-  max-width: 420px;
+  max-width: 330px;
   min-height: 0;
   aspect-ratio: 1 / 1;
-  border-radius: 16px;
+  border-radius: 14px;
   overflow: hidden;
   background: #f3f6fb;
   border: 1px solid rgba(12, 125, 219, 0.1);
-  box-shadow: 0 12px 28px rgba(15, 38, 72, 0.08);
+  box-shadow: 0 10px 22px rgba(15, 38, 72, 0.08);
 }
 
 .mnsk7-section--insta .mnsk7-instagram-feed__post iframe {
@@ -1370,16 +1370,16 @@
 
 .mnsk7-section--insta .mnsk7-instagram-feed__post-cta {
   position: absolute;
-  left: 0.9rem;
-  bottom: 0.9rem;
+  left: 0.7rem;
+  bottom: 0.7rem;
   display: inline-flex;
   align-items: center;
-  min-height: 40px;
-  padding: 0.45rem 0.8rem;
+  min-height: 36px;
+  padding: 0.35rem 0.72rem;
   border-radius: 999px;
   background: rgba(15, 38, 72, 0.86);
   color: #fff;
-  font-size: 0.84rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.01em;
   box-shadow: 0 8px 20px rgba(15, 38, 72, 0.18);
@@ -1403,7 +1403,7 @@
 
   .mnsk7-section--insta .mnsk7-instagram-feed__post,
   .mnsk7-section--insta .mnsk7-instagram-feed__post iframe {
-    max-width: 360px;
+    max-width: 300px;
   }
 }
 
