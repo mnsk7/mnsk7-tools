@@ -65,6 +65,20 @@ test.describe('PDP above-the-fold smoke', () => {
     expect(stickyAriaDisabled).toBe(mainDisabled ? 'true' : 'false');
   });
 
+  test('375x812: quantity input keeps a short Polish accessibility label', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
+    await openFirstProduct(page);
+
+    const quantityInput = page.locator('form.cart input.qty').first();
+    if (!(await quantityInput.count())) {
+      test.skip(true, 'No visible quantity input on current PDP.');
+      return;
+    }
+
+    await expect(quantityInput).toHaveAttribute('aria-label', 'Ilość');
+  });
+
   test('1280x900: title, price row and cart form are visible without scroll jump', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.setExtraHTTPHeaders({ 'User-Agent': DESKTOP_UA });

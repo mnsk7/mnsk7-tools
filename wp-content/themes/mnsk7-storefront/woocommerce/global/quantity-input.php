@@ -14,8 +14,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-/* translators: %s: Quantity. */
-$label = ! empty( $args['product_name'] ) ? sprintf( esc_html__( '%s quantity', 'woocommerce' ), wp_strip_all_tags( $args['product_name'] ) ) : esc_html__( 'Quantity', 'woocommerce' );
+$label = esc_html__( 'Ilość', 'mnsk7-storefront' );
 $is_locked_qty = $readonly || $type === 'hidden' || ( isset( $min_value, $max_value ) && (string) $min_value !== '' && (string) $max_value !== '' && (float) $min_value === (float) $max_value );
 $quantity_classes = 'quantity' . ( $is_locked_qty ? ' quantity--locked' : ' quantity--stepper' );
 $input_type = $is_locked_qty ? 'hidden' : $type;
