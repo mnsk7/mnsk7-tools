@@ -282,7 +282,7 @@ get_header();
 			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Marka w praktyce', 'mnsk7-storefront' ); ?></p>
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Obserwuj nas na Instagramie', 'mnsk7-storefront' ); ?></h2>
 			<p class="mnsk7-section__sub"><?php esc_html_e( 'Nowości, realizacje i krótkie materiały pokazujące narzędzia oraz ofertę MNSK7 w bardziej codziennym kontekście.', 'mnsk7-storefront' ); ?></p>
-			<?php echo do_shortcode( '[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]' ); ?>
+			<?php echo do_shortcode( '[mnsk7_instagram_feed type="posts" limit="6" title="Instagram @mnsk7tools"]' ); ?>
 		</div>
 	</section>
 
