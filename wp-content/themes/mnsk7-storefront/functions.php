@@ -2561,7 +2561,8 @@ add_action( 'init', function () {
 		$atts = shortcode_atts( array(
 			'limit' => 6,
 			'title' => 'Instagram @mnsk7tools',
-			'type'  => 'profile', // profile = jeden iframe z embed profilu (ładuje się stabilnie); posts = blockquote + embed.js
+			'type'  => 'profile',
+			'urls'  => '',
 		), $atts, 'mnsk7_instagram_feed' );
 		$profile = defined( 'MNK7_INSTAGRAM_URL' ) ? MNK7_INSTAGRAM_URL : 'https://www.instagram.com/mnsk7tools/';
 		$handle  = preg_replace( '#^https?://(www\.)?instagram\.com/#', '', untrailingslashit( $profile ) );
@@ -2578,15 +2579,23 @@ add_action( 'init', function () {
 		}
 
 		$limit = max( 1, min( 12, (int) $atts['limit'] ) );
-		$raw = get_option( 'mnsk7_instagram_post_urls', array() );
+		$raw = array();
+		if ( is_string( $atts['urls'] ) && trim( $atts['urls'] ) !== '' ) {
+			$raw = preg_split( '/[\s,]+/', trim( $atts['urls'] ) );
+		}
+		if ( empty( $raw ) ) {
+			$raw = get_option( 'mnsk7_instagram_post_urls', array() );
+		}
 		if ( ! is_array( $raw ) ) {
 			$raw = array();
 		}
 		if ( empty( $raw ) ) {
 			$raw = array(
-				'https://www.instagram.com/mnsk7tools/p/DC4agmPtKoy/',
-				'https://www.instagram.com/mnsk7tools/p/DC9J3JjNobj/',
+				'https://www.instagram.com/mnsk7tools/p/DC12yM_NZIP/',
 				'https://www.instagram.com/mnsk7tools/p/DCTybzqtxEi/',
+				'https://www.instagram.com/mnsk7tools/p/DCeUnS8Ismh/',
+				'https://www.instagram.com/mnsk7tools/p/DCzOqKqtjUe/',
+				'https://www.instagram.com/mnsk7tools/p/DC9J3JjNobj/',
 			);
 		}
 		$urls = array();
@@ -2594,7 +2603,6 @@ add_action( 'init', function () {
 			$url = is_array( $entry ) ? ( isset( $entry['url'] ) ? $entry['url'] : '' ) : $entry;
 			$url = esc_url_raw( $url );
 			if ( $url !== '' ) {
-				// Format bez /username/ (instagram.com/p/CODE) — lepsza kompatybilność z embed w 2024+
 				if ( preg_match( '#instagram\.com/p/([A-Za-z0-9_-]+)/?#', $url, $m ) ) {
 					$url = 'https://www.instagram.com/p/' . $m[1] . '/';
 				}
@@ -2602,29 +2610,16 @@ add_action( 'init', function () {
 			}
 		}
 
-		// Skrypt przez wp_enqueue_script — WP Rocket/optymalizatory go nie opóźnią (exclusion), kolejność gwarantowana.
-		static $enqueue_done = false;
-		if ( ! $enqueue_done ) {
-			$enqueue_done = true;
-			$embed_url = 'https://www.instagram.com/embed.js';
-			wp_enqueue_script( 'mnsk7-instagram-embed', $embed_url, array(), null, true );
-			// process() wywołane w onload skryptu embed.js; retry 2s i 5s gdy skrypt ładuje się wolno lub DOM się opóźnia
-			$inline = "function mnsk7InstgrmRun(){try{if(window.instgrm&&window.instgrm.Embeds)window.instgrm.Embeds.process();}catch(e){}}setTimeout(mnsk7InstgrmRun,2000);setTimeout(mnsk7InstgrmRun,5000);if(document.readyState!=='complete')window.addEventListener('load',mnsk7InstgrmRun);";
-			wp_add_inline_script( 'mnsk7-instagram-embed', $inline, 'after' );
-		}
 		$out = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--embed">';
-		$out .= '<p class="mnsk7-instagram-feed__more"><a href="' . esc_url( $profile ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__more-link">' . esc_html( $atts['title'] ) . '</a></p>';
 		if ( ! empty( $urls ) ) {
 			$out .= '<div class="mnsk7-instagram-feed__posts" role="region" aria-label="' . esc_attr__( 'Posty z Instagrama', 'mnsk7-storefront' ) . '">';
 			foreach ( $urls as $url ) {
-				$out .= '<div class="mnsk7-instagram-feed__post" data-instagram-url="' . esc_attr( $url ) . '">';
-				$out .= '<blockquote class="instagram-media" data-instgrm-permalink="' . esc_url( $url ) . '" data-instgrm-version="14"></blockquote>';
-				$out .= '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__post-fallback">' . esc_html__( 'Zobacz post', 'mnsk7-storefront' ) . '</a>';
+				$embed_url = $url . 'embed/';
+				$out .= '<div class="mnsk7-instagram-feed__post">';
+				$out .= '<iframe src="' . esc_url( $embed_url ) . '" title="' . esc_attr__( 'Post z Instagrama', 'mnsk7-storefront' ) . '" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowtransparency="true"></iframe>';
 				$out .= '</div>';
 			}
 			$out .= '</div>';
-			// Gdy iframe nie załaduje się — po 3 s pokaż link "Zobacz post" (blokada embed, CSP, brak sieci).
-			$out .= '<script>(function(){var posts=document.querySelectorAll(".mnsk7-instagram-feed__post");if(!posts.length)return;setTimeout(function(){posts.forEach(function(el){var ifr=el.querySelector("iframe");var fallback=el.querySelector(".mnsk7-instagram-feed__post-fallback");if(!fallback)return;if(!ifr||ifr.offsetHeight<100){var wrap=el.querySelector(".instagram-media")||el.querySelector("iframe");if(wrap)wrap.style.display="none";fallback.style.display="inline-flex";}});},3000);})();</script>';
 		}
 		$out .= '<div class="mnsk7-instagram-feed__profile">';
 		$out .= '<span class="mnsk7-instagram-feed__profile-icon" aria-hidden="true"></span>';

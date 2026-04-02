@@ -5440,6 +5440,67 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   max-width: 480px !important;
 }
 
+/* Homepage Instagram: direct post iframes, fixed card size like Alesya */
+.mnsk7-section--insta .mnsk7-instagram-feed--embed {
+  width: 100%;
+  max-width: 1120px;
+  margin: 0 auto;
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed__posts {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1rem, 2vw, 1.5rem);
+  align-items: start;
+  justify-items: center;
+  margin: 0;
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed__post {
+  width: 100%;
+  max-width: 320px;
+  min-height: 400px;
+  aspect-ratio: auto;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #f3f6fb;
+  border: 1px solid rgba(12, 125, 219, 0.1);
+  box-shadow: 0 12px 28px rgba(15, 38, 72, 0.08);
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed__post iframe {
+  display: block;
+  width: 100%;
+  height: 400px !important;
+  min-height: 400px !important;
+  max-width: 320px;
+  margin: 0 auto;
+  border: 0;
+  background: #fff;
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed__profile {
+  margin-top: 1rem;
+  padding-top: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .mnsk7-section--insta .mnsk7-instagram-feed__posts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .mnsk7-section--insta .mnsk7-instagram-feed__posts {
+    grid-template-columns: 1fr;
+  }
+
+  .mnsk7-section--insta .mnsk7-instagram-feed__post,
+  .mnsk7-section--insta .mnsk7-instagram-feed__post iframe {
+    max-width: 320px;
+  }
+}
+
 @media (min-width: 600px) {
   .mnsk7-instagram-feed__grid {
     grid-template-columns: repeat(6, minmax(120px, 1fr)) !important;
