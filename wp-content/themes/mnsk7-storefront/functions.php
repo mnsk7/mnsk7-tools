@@ -1229,12 +1229,6 @@ add_action( 'wp_footer', function () {
 					} catch (e) {
 						try { menu.scrollTop = Math.max(0, parentLi.offsetTop - 8); } catch (e2) {}
 					}
-					var firstSubmenuLink = submenu.querySelector('a[href]');
-					if (firstSubmenuLink) {
-						try {
-							firstSubmenuLink.scrollIntoView({ block: 'start', inline: 'nearest', behavior: 'auto' });
-						} catch (e) {}
-					}
 				});
 			}
 			menu.addEventListener('click', function(e) {
