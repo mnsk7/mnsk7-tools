@@ -279,10 +279,31 @@ get_header();
 	<!-- INSTAGRAM — embed.js ładujemy w footer (shortcode rejestruje skrypt), process() po load + retry -->
 	<section class="mnsk7-section mnsk7-section--insta">
 		<div class="col-full">
+			<?php $instagram_url = defined( 'MNK7_INSTAGRAM_URL' ) ? MNK7_INSTAGRAM_URL : 'https://www.instagram.com/mnsk7tools/'; ?>
 			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Marka w praktyce', 'mnsk7-storefront' ); ?></p>
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Obserwuj nas na Instagramie', 'mnsk7-storefront' ); ?></h2>
 			<p class="mnsk7-section__sub"><?php esc_html_e( 'Nowości, realizacje i krótkie materiały pokazujące narzędzia oraz ofertę MNSK7 w bardziej codziennym kontekście.', 'mnsk7-storefront' ); ?></p>
-			<?php echo do_shortcode( '[mnsk7_instagram_feed type="posts" limit="6" title="Instagram @mnsk7tools"]' ); ?>
+			<div class="mnsk7-social-card">
+				<div class="mnsk7-social-card__visual" aria-hidden="true">
+					<span class="mnsk7-social-card__badge">Instagram</span>
+					<div class="mnsk7-social-card__tiles">
+						<span class="mnsk7-social-card__tile"></span>
+						<span class="mnsk7-social-card__tile"></span>
+						<span class="mnsk7-social-card__tile"></span>
+					</div>
+				</div>
+				<div class="mnsk7-social-card__content">
+					<p class="mnsk7-social-card__handle">@mnsk7tools</p>
+					<h3 class="mnsk7-social-card__title"><?php esc_html_e( 'Zobacz nowości, inspiracje i narzędzia MNSK7 poza sklepem', 'mnsk7-storefront' ); ?></h3>
+					<p class="mnsk7-social-card__text"><?php esc_html_e( 'Na Instagramie pokazujemy ofertę w praktyce: nowe produkty, materiały, krótkie ujęcia z branży CNC i rzeczy, które pomagają szybciej wybrać właściwe narzędzie.', 'mnsk7-storefront' ); ?></p>
+					<ul class="mnsk7-social-card__list">
+						<li><?php esc_html_e( 'nowości i bestsellery', 'mnsk7-storefront' ); ?></li>
+						<li><?php esc_html_e( 'materiały i zastosowania frezów', 'mnsk7-storefront' ); ?></li>
+						<li><?php esc_html_e( 'krótkie aktualizacje marki', 'mnsk7-storefront' ); ?></li>
+					</ul>
+					<a href="<?php echo esc_url( $instagram_url ); ?>" class="mnsk7-btn mnsk7-btn--primary" target="_blank" rel="noopener noreferrer"><?php esc_html_e( 'Przejdź do Instagramu →', 'mnsk7-storefront' ); ?></a>
+				</div>
+			</div>
 		</div>
 	</section>
 

@@ -70,6 +70,14 @@
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .mnsk7-social-card {
+    grid-template-columns: 1fr;
+  }
+
+  .mnsk7-social-card__visual {
+    min-height: 240px;
+  }
+
   /* Sections */
   .mnsk7-section {
     padding: var(--space-32) 0;
