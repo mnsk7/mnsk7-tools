@@ -22,7 +22,7 @@ The repository contains code and operating documents for **staging.mnsk7-tools.p
 This repository supports both Cursor and Codex.
 
 - The shared process contract lives in repo-level docs.
-- `.cursor/` is a Cursor adapter layer.
+- `.cursor/` is a Cursor adapter layer and uses Ralph as its only iterative loop.
 - `.codex/` is a Codex adapter layer.
 - Client overlays may differ in structure, but they must follow the same shared pipeline and acceptance criteria.
 
@@ -48,6 +48,7 @@ Never accept a change if it breaks any of the following:
 
 - Shared pipeline: `docs/REPO_PIPELINE.md`
 - Overlay structure: `docs/CLIENT_OVERLAYS.md`
+- Ralph loop: `docs/RALPH_LOOP.md`
 - Definition of done: `docs/DEFINITION_OF_DONE.md`
 - Verify policy: `docs/QUALITY_GATES.md`
 - Deploy safety: `docs/DEPLOY_SAFETY.md`

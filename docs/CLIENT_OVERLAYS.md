@@ -27,6 +27,7 @@ Keep in repo-level docs and root contracts:
 Keep in `.cursor/` only:
 
 - Cursor rules and hooks
+- Cursor stop-loop implementation (`Ralph`)
 - Cursor-specific agents
 - Cursor-specific MCP config
 - reusable Cursor skills that are still worth tracking

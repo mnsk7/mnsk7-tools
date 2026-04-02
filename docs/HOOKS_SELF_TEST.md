@@ -1,6 +1,6 @@
 # Hooks self-test (Cursor)
 
-Цель: доказать, что hooks действительно срабатывают и не “молчат” из-за несовпадения схемы событий.
+Цель: доказать, что Ralph stop hook действительно срабатывает и не “молчит” из-за несовпадения схемы событий.
 
 ## Где лежит конфиг
 
@@ -8,16 +8,17 @@
 
 ## Где смотреть сырые payload’ы
 
-Hooks пишут сырые события в:
+Stop hook пишет сырые события в:
 
-- `.cursor/hooks/state/raw-events.ndjson` (игнорируется git)
+- `.cursor/hooks/state/ralph-events.ndjson` (игнорируется git)
 
 ## Как проверить
 
-1) Сделай любое изменение в файле в scope (например `docs/START_HERE.md`) и сохрани.
-2) Убедись, что в `raw-events.ndjson` появилась запись с `"hook":"afterFileEdit"`.
-3) Запусти любой сабагент (например `verifier`) и убедись, что появилась запись `"hook":"subagentStart"`.
-4) Попробуй завершить шаг/остановиться: если был edit после verifier/critic — должен появиться `followup_message` от stop‑хука.
+1) Запусти Ralph:
+   `bash scripts/setup-ralph-loop.sh "Test Ralph hook" --completion-promise "DONE" --max-iterations 2`
+2) Попробуй завершить шаг/остановиться без `<promise>DONE</promise>`.
+3) Убедись, что в `ralph-events.ndjson` появилась запись с `"hook":"stop"`.
+4) Убедись, что stop hook вернул `followup_message` и не дал завершить loop раньше времени.
+5) Добавь completion promise в transcript и повтори stop: hook должен отпустить сессию.
 
-Если `raw-events.ndjson` пустой — hooks не загружены/не поддерживаются в текущем окружении Cursor, и тогда “не забыть гейт” нужно фиксировать через CI-гейты.
-
+Если `ralph-events.ndjson` пустой — hooks не загружены/не поддерживаются в текущем окружении Cursor.

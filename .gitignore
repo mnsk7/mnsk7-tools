@@ -58,6 +58,7 @@ artifacts/
 
 # Cursor local artifacts
 .cursor/hooks/state/
+.cursor/ralph-loop.local.json
 .cursor/*REPORT*.md
 .cursor/*PLAN*.md
 

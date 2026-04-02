@@ -1,5 +1,5 @@
 ﻿---
-description: "Cursor adapter: follow the shared repo pipeline and choose process depth by risk."
+description: "Cursor adapter: use one iterative loop only, Ralph."
 alwaysApply: true
 ---
 
@@ -10,15 +10,17 @@ alwaysApply: true
 Cursor should follow the shared repo pipeline defined in `docs/REPO_PIPELINE.md`.
 
 This rule adapts the shared process to Cursor. It is not the source of truth for the repository.
+Cursor keeps one iterative loop only: Ralph.
 
 ## Default behavior
 
-1. Classify the task as low-risk or high-risk.
-2. Stay inside allowed code zones.
-3. Make the minimal safe diff.
-4. Perform a pre-push review.
-5. Push to `main` when the change is ready.
-6. Run post-deploy verification only to the level required by risk.
+1. If iterative execution is needed, start Ralph.
+2. Classify the task as low-risk or high-risk.
+3. Stay inside allowed code zones.
+4. Make the minimal safe diff.
+5. Perform a pre-push review.
+6. Push to `main` when the change is ready.
+7. Run post-deploy verification only to the level required by risk.
 
 ## Risk guidance
 
@@ -30,7 +32,7 @@ Examples:
 - small content or markup fixes outside conversion flow
 
 Expected path:
-- no mandatory multi-agent loop
+- no mandatory multi-agent loop beyond Ralph when iteration is needed
 - concise review is enough
 - selective verification only
 
@@ -54,3 +56,4 @@ Expected path:
 - Do not treat agent count as proof.
 - Do not force full L0/L1/L2 on every task.
 - Do not invent report requirements that are not needed for the actual ship decision.
+- Do not run a second mandatory loop on top of Ralph.

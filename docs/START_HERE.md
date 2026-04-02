@@ -6,6 +6,7 @@ Start with these files:
 
 - `docs/REPO_PIPELINE.md`
 - `docs/CLIENT_OVERLAYS.md`
+- `docs/RALPH_LOOP.md`
 - `docs/STACK_MAP.md`
 - `docs/DEFINITION_OF_DONE.md`
 - `docs/QUALITY_GATES.md`
@@ -16,7 +17,7 @@ Start with these files:
 This repository uses one shared process for both Cursor and Codex.
 
 - shared rules live in repo docs
-- `.cursor/` adapts the workflow for Cursor
+- `.cursor/` adapts the workflow for Cursor and keeps one loop only: Ralph
 - `.codex/` adapts the workflow for Codex
 - `main` is the staging deploy branch
 - verification depth depends on risk

@@ -1,15 +1,15 @@
 ﻿---
-description: "Cursor reminder: use review and verification proportional to risk, not a fixed heavy loop."
+description: "Cursor reminder: Ralph is the only iterative loop in this overlay."
 alwaysApply: true
 ---
 
-# Review and verify loop
+# Single-loop reminder
 
 ## Purpose
 
-This repository no longer requires a fixed critic/verifier loop for every substantial change.
+This repository does not require a fixed critic/verifier loop for substantial change.
 
-Use a loop only when it increases confidence for the actual risk.
+In Cursor, the only tracked iterative loop is Ralph.
 
 ## Required minimum
 
@@ -20,7 +20,7 @@ Use a loop only when it increases confidence for the actual risk.
 
 ## Stronger path for high-risk work
 
-Use a stricter loop when the change affects:
+Use a stricter review path when the change affects:
 - Woo flow
 - checkout or cart
 - JS runtime behavior
@@ -38,3 +38,4 @@ For those tasks:
 - dual process/product acceptance flags
 - generated discovery bug quotas
 - fixed postmortem requirements for every rework
+- any second mandatory loop layered on top of Ralph

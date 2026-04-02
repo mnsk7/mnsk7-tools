@@ -9,6 +9,8 @@
 
 Источник истины теперь находится на уровне репозитория, а не внутри конкретного client overlay.
 
+Для Cursor overlay execution loop сведён к одному механизму: **Ralph**.
+
 ## Core principles
 
 - Один общий pipeline для Cursor и Codex.
@@ -30,7 +32,7 @@
 | Product verification expectations | `docs/BUG_DISCOVERY_ACCEPTANCE.md` |
 | Staging/deploy safety | `docs/DEPLOY_SAFETY.md`, `docs/DEPLOY_PLAYBOOK.md`, `.github/workflows/deploy-staging.yml` |
 | Repo-wide rules for editable zones | `.cursorrules`, `AGENTS.md` |
-| Cursor-specific adapter | `.cursor/` |
+| Cursor-specific adapter | `.cursor/`, `docs/RALPH_LOOP.md` |
 | Codex-specific adapter | `.codex/` |
 
 ## Shared workflow
