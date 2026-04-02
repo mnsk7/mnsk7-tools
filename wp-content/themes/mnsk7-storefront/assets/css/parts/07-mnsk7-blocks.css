@@ -3,6 +3,85 @@
    § MNK7 CUSTOM BLOCKS (mu-plugin)
    ----------------------------------------------------------------- */
 
+/* -----------------------------------------------------------------
+   § LOCAL UI KIT — core primitives for future page work
+   Change tokens in 01-tokens.css first, then these aliases/components.
+   ----------------------------------------------------------------- */
+
+.mnsk7-ui-kicker {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.9rem;
+  padding: 0.42rem 0.78rem;
+  border-radius: var(--r-pill);
+  background: rgba(12, 125, 219, 0.08);
+  border: 1px solid var(--ui-stroke-strong);
+  color: var(--ui-kicker);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.mnsk7-ui-heading {
+  margin: 0 0 0.65rem;
+  color: var(--ui-heading);
+  font-size: var(--fs-2xl);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+}
+
+.mnsk7-ui-copy {
+  color: var(--ui-copy);
+  font-size: var(--fs-base);
+  line-height: 1.6;
+}
+
+.mnsk7-ui-card {
+  border-radius: var(--ui-card-radius);
+  background: var(--ui-surface-card);
+  border: 1px solid var(--ui-stroke-soft);
+  box-shadow: var(--ui-card-shadow);
+}
+
+.mnsk7-ui-panel {
+  position: relative;
+  border-radius: var(--ui-section-radius);
+  background: var(--ui-surface-panel);
+  border: 1px solid var(--ui-stroke-soft);
+  box-shadow: var(--ui-panel-shadow);
+}
+
+.mnsk7-ui-chip {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 0.45rem 0.8rem;
+  border-radius: var(--r-pill);
+  background: var(--color-white);
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.mnsk7-ui-grid-2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--space-24);
+}
+
+@media (max-width: 768px) {
+  .mnsk7-ui-grid-2 {
+    grid-template-columns: 1fr;
+    gap: var(--space-16);
+  }
+}
+
 /* Key params table. overflow: hidden — obcinanie zawartości do border-radius. */
 .mnsk7-product-key-params {
   border: 1px solid var(--color-border);

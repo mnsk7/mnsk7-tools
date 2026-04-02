@@ -63,6 +63,19 @@
   --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.08);
   --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.10);
 
+  /* Local UI kit knobs — change these first before touching component rules */
+  --ui-surface-card:      rgba(255, 255, 255, 0.92);
+  --ui-surface-panel:     rgba(255, 255, 255, 0.72);
+  --ui-stroke-soft:       rgba(12, 125, 219, 0.08);
+  --ui-stroke-strong:     rgba(12, 125, 219, 0.16);
+  --ui-heading:           #0f2648;
+  --ui-copy:              #4b5f7c;
+  --ui-kicker:            #0f4a98;
+  --ui-section-radius:    28px;
+  --ui-card-radius:       16px;
+  --ui-panel-shadow:      0 20px 60px rgba(15, 38, 72, 0.05);
+  --ui-card-shadow:       0 12px 28px rgba(15, 38, 72, 0.08);
+
   /* Layout (UI_SPEC_V2 §3.3: mobile padding 16, desktop max 1200) */
   --content-max: 1200px;
   --header-h:            56px;
