@@ -6,109 +6,160 @@
  */
 
 get_header();
-
-$shop_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
-$cats     = array();
-$tags     = array();
-$has_cats = taxonomy_exists( 'product_cat' );
-$has_tags = taxonomy_exists( 'product_tag' );
-if ( $has_cats ) {
-	$cats = get_terms(
-		array(
-			'taxonomy'   => 'product_cat',
-			'hide_empty' => true,
-			'parent'     => 0,
-			'number'     => 20,
-			'orderby'    => 'count',
-			'order'      => 'DESC',
-		)
-	);
-}
-if ( $has_tags ) {
-	$tags = get_terms(
-		array(
-			'taxonomy'   => 'product_tag',
-			'hide_empty' => true,
-			'number'     => 20,
-			'orderby'    => 'count',
-			'order'      => 'DESC',
-		)
-	);
-}
-$tags_label     = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
-$cats_label     = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
-$show_catalog   = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) );
-$hero_link_href = $show_catalog ? '#mnsk7-home-catalog' : $shop_url;
 ?>
 
 <main id="main" class="site-main mnsk7-front-page">
 
+	<!-- HERO -->
 	<section class="mnsk7-hero">
 		<div class="mnsk7-hero__inner col-full">
-			<div class="mnsk7-hero__layout">
+			<?php
+			$materials = array( 'Drewno', 'MDF', 'Aluminium', 'Stal', __( 'Tworzywa sztuczne', 'mnsk7-storefront' ) );
+			$hero_products = array();
+			if ( function_exists( 'wc_get_products' ) ) {
+				$candidates = wc_get_products(
+					array(
+						'status'       => 'publish',
+						'limit'        => 8,
+						'stock_status' => 'instock',
+						'orderby'      => 'date',
+						'order'        => 'DESC',
+					)
+				);
+				foreach ( $candidates as $candidate ) {
+					if ( ! $candidate instanceof WC_Product || ! has_post_thumbnail( $candidate->get_id() ) ) {
+						continue;
+					}
+					$hero_products[] = $candidate;
+					if ( count( $hero_products ) >= 3 ) {
+						break;
+					}
+				}
+			}
+			?>
+
+			<div class="mnsk7-hero__split">
 				<div class="mnsk7-hero__content">
-					<p class="mnsk7-hero__eyebrow"><?php esc_html_e( 'MNSK7 Tools • Sklep CNC', 'mnsk7-storefront' ); ?></p>
-					<h1 class="mnsk7-hero__title"><?php esc_html_e( 'Frezy CNC do drewna, aluminium i tworzyw', 'mnsk7-storefront' ); ?></h1>
-					<p class="mnsk7-hero__sub"><?php esc_html_e( 'Dobierz narzędzie szybciej: jasne kategorie, realne stany magazynowe i wysyłka 24h bez szukania po całym katalogu.', 'mnsk7-storefront' ); ?></p>
+					<p class="mnsk7-hero__eyebrow"><?php esc_html_e( 'MNK7 Tools', 'mnsk7-storefront' ); ?></p>
+					<h1 class="mnsk7-hero__title"><?php esc_html_e( 'Frezy CNC i narzędzia skrawające, które możesz dobrać bez zgadywania', 'mnsk7-storefront' ); ?></h1>
+					<p class="mnsk7-hero__lead"><?php esc_html_e( 'Oferta do drewna, MDF, aluminium i stali. Szybka wysyłka, jasne parametry i produkty gotowe do pracy od pierwszego zamówienia.', 'mnsk7-storefront' ); ?></p>
 
-					<ul class="mnsk7-hero__usps" aria-label="<?php esc_attr_e( 'Najważniejsze informacje', 'mnsk7-storefront' ); ?>">
-						<li class="mnsk7-hero__usp"><?php esc_html_e( 'Wysyłka 24h', 'mnsk7-storefront' ); ?></li>
-						<li class="mnsk7-hero__usp"><?php esc_html_e( 'Faktura VAT', 'mnsk7-storefront' ); ?></li>
-						<li class="mnsk7-hero__usp"><?php esc_html_e( 'Realne stany magazynowe', 'mnsk7-storefront' ); ?></li>
-					</ul>
-
-					<div class="mnsk7-hero__materials-wrap">
-						<p class="mnsk7-hero__group-label"><?php esc_html_e( 'Materiały', 'mnsk7-storefront' ); ?></p>
-						<div class="mnsk7-hero__materials" aria-label="<?php esc_attr_e( 'Szybki wybór materiału', 'mnsk7-storefront' ); ?>">
-							<?php
-							$materials = array(
-								array( 'label' => 'Drewno', 'slug' => 'drewno' ),
-								array( 'label' => 'MDF', 'slug' => 'mdf' ),
-								array( 'label' => 'Aluminium', 'slug' => 'aluminium' ),
-								array( 'label' => 'Stal', 'slug' => 'stal' ),
-								array( 'label' => __( 'Tworzywa', 'mnsk7-storefront' ), 'slug' => 'tworzywa-sztuczne' ),
-							);
-							foreach ( $materials as $material ) {
-								$term = taxonomy_exists( 'product_tag' ) ? get_term_by( 'slug', $material['slug'], 'product_tag' ) : false;
-								$link = $shop_url;
-								if ( $term && ! is_wp_error( $term ) ) {
-									$link = get_term_link( $term );
-								} else {
-									$link = add_query_arg(
-										array(
-											's'         => $material['label'],
-											'post_type' => 'product',
-										),
-										$shop_url
-									);
-								}
-								?>
-								<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-hero__material-chip"><?php echo esc_html( $material['label'] ); ?></a>
-								<?php
-							}
-							?>
+					<div class="mnsk7-hero__stats" aria-label="<?php esc_attr_e( 'Najważniejsze informacje', 'mnsk7-storefront' ); ?>">
+						<div class="mnsk7-hero__stat">
+							<span class="mnsk7-hero__stat-value">425+</span>
+							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'produktów w ofercie', 'mnsk7-storefront' ); ?></span>
+						</div>
+						<div class="mnsk7-hero__stat">
+							<span class="mnsk7-hero__stat-value">24h</span>
+							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'na wysyłkę topowych pozycji', 'mnsk7-storefront' ); ?></span>
+						</div>
+						<div class="mnsk7-hero__stat">
+							<span class="mnsk7-hero__stat-value">100%</span>
+							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'pozytywnych opinii', 'mnsk7-storefront' ); ?></span>
 						</div>
 					</div>
+
+					<div class="mnsk7-hero__materials" aria-label="<?php esc_attr_e( 'Materiały', 'mnsk7-storefront' ); ?>">
+						<?php
+						foreach ( $materials as $mat ) {
+							echo '<span class="mnsk7-hero__material-chip">' . esc_html( $mat ) . '</span>';
+						}
+						?>
+					</div>
+
+					<div class="mnsk7-hero__usps">
+						<div class="mnsk7-hero__usp">
+							<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
+							<span><?php esc_html_e( 'Darmowa dostawa od 300 zł', 'mnsk7-storefront' ); ?></span>
+						</div>
+						<div class="mnsk7-hero__usp">
+							<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
+							<span><?php esc_html_e( 'Dostawa następnego dnia', 'mnsk7-storefront' ); ?></span>
+						</div>
+						<div class="mnsk7-hero__usp">
+							<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
+							<span><?php esc_html_e( '100% pozytywnych opinii', 'mnsk7-storefront' ); ?></span>
+						</div>
+						<div class="mnsk7-hero__usp">
+							<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
+							<span><?php esc_html_e( 'Faktura VAT', 'mnsk7-storefront' ); ?></span>
+						</div>
+					</div>
+
+					<?php if ( is_user_logged_in() ) : $u = wp_get_current_user(); ?>
+					<p class="mnsk7-hero__welcome"><?php printf( esc_html__( 'Witaj, %s!', 'mnsk7-storefront' ), esc_html( $u->display_name ?: $u->user_login ) ); ?></p>
+					<?php endif; ?>
 
 					<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
 					<div class="mnsk7-hero__ctas">
 						<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="mnsk7-hero__btn mnsk7-hero__btn--primary">
 							<?php esc_html_e( 'Przejdź do sklepu', 'mnsk7-storefront' ); ?>
 						</a>
-						<a href="<?php echo esc_url( $hero_link_href ); ?>" class="mnsk7-hero__link"<?php echo $show_catalog ? ' aria-controls="mnsk7-home-catalog"' : ''; ?>>
-							<?php esc_html_e( 'Zobacz kategorie', 'mnsk7-storefront' ); ?>
+						<a href="#bestsellery" class="mnsk7-hero__btn mnsk7-hero__btn--secondary">
+							<?php esc_html_e( 'Zobacz bestsellery', 'mnsk7-storefront' ); ?>
 						</a>
 					</div>
+					<p class="mnsk7-hero__cta-note"><?php esc_html_e( 'Najczęściej kupowane frezy i narzędzia zobaczysz od razu pod hero.', 'mnsk7-storefront' ); ?></p>
 					<?php endif; ?>
+				</div>
+
+				<div class="mnsk7-hero__visual">
+					<div class="mnsk7-hero__visual-shell">
+						<div class="mnsk7-hero__visual-copy">
+							<p class="mnsk7-hero__visual-kicker"><?php esc_html_e( 'Na start', 'mnsk7-storefront' ); ?></p>
+							<h2 class="mnsk7-hero__visual-title"><?php esc_html_e( 'Sprawdzone produkty z oferty', 'mnsk7-storefront' ); ?></h2>
+							<p class="mnsk7-hero__visual-text"><?php esc_html_e( 'Jeśli w katalogu są zdjęcia produktów, hero pokazuje prawdziwe pozycje z aktualnej oferty zamiast martwego placeholdera.', 'mnsk7-storefront' ); ?></p>
+						</div>
+
+						<?php if ( ! empty( $hero_products ) ) : ?>
+						<div class="mnsk7-hero__product-grid">
+							<?php foreach ( $hero_products as $index => $hero_product ) : ?>
+								<?php
+								$hero_product_id = $hero_product->get_id();
+								$hero_image_id   = $hero_product->get_image_id();
+								$hero_image      = $hero_image_id ? wp_get_attachment_image( $hero_image_id, 'medium_large', false, array( 'class' => 'mnsk7-hero-card__img' ) ) : '';
+								$hero_url        = get_permalink( $hero_product_id );
+								$hero_title      = wp_trim_words( $hero_product->get_name(), 7, '…' );
+								$hero_badge      = 0 === $index ? __( 'Polecany wybór', 'mnsk7-storefront' ) : __( 'Dostępny online', 'mnsk7-storefront' );
+								?>
+								<a href="<?php echo esc_url( $hero_url ); ?>" class="mnsk7-hero-card<?php echo 0 === $index ? ' mnsk7-hero-card--featured' : ''; ?>">
+									<span class="mnsk7-hero-card__media">
+										<?php echo $hero_image; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+									</span>
+									<span class="mnsk7-hero-card__body">
+										<span class="mnsk7-hero-card__badge"><?php echo esc_html( $hero_badge ); ?></span>
+										<span class="mnsk7-hero-card__title"><?php echo esc_html( $hero_title ); ?></span>
+									</span>
+								</a>
+							<?php endforeach; ?>
+						</div>
+						<?php else : ?>
+						<div class="mnsk7-hero__proof">
+							<div class="mnsk7-hero__proof-item">
+								<span class="mnsk7-hero__proof-value">383</span>
+								<span class="mnsk7-hero__proof-label"><?php esc_html_e( 'ocen na Allegro', 'mnsk7-storefront' ); ?></span>
+							</div>
+							<div class="mnsk7-hero__proof-item">
+								<span class="mnsk7-hero__proof-value">3 500+</span>
+								<span class="mnsk7-hero__proof-label"><?php esc_html_e( 'zamówień w 2025 r.', 'mnsk7-storefront' ); ?></span>
+							</div>
+							<div class="mnsk7-hero__proof-item">
+								<span class="mnsk7-hero__proof-value">VAT</span>
+								<span class="mnsk7-hero__proof-label"><?php esc_html_e( 'zakupy B2B i indywidualne', 'mnsk7-storefront' ); ?></span>
+							</div>
+						</div>
+						<?php endif; ?>
+					</div>
 				</div>
 			</div>
 		</div>
 	</section>
 
+	<!-- BESTSELLERS (CRO: drugi blok po hero — od razu produkt) -->
 	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
-	<section class="mnsk7-section mnsk7-section--bestsellers">
+	<section id="bestsellery" class="mnsk7-section mnsk7-section--bestsellers">
 		<div class="col-full">
-			<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title="Bestsellery i polecane"]' ); ?>
+			<?php echo do_shortcode( '[mnsk7_bestsellers limit="8" title="Bestsellery i polecane"]' ); ?>
 			<p class="mnsk7-section__more mnsk7-bestsellers-more">
 				<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie bestsellery →', 'mnsk7-storefront' ); ?></a>
 			</p>
@@ -116,6 +167,7 @@ $hero_link_href = $show_catalog ? '#mnsk7-home-catalog' : $shop_url;
 	</section>
 	<?php endif; ?>
 
+	<!-- TRUST + OPINIE (CRO: trzeci blok — zaufanie przed głębszym katalogiem) -->
 	<section class="mnsk7-section mnsk7-section--trust mnsk7-section--light">
 		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Dlaczego kupujący nam ufają', 'mnsk7-storefront' ); ?></h2>
@@ -137,7 +189,7 @@ $hero_link_href = $show_catalog ? '#mnsk7-home-catalog' : $shop_url;
 					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'produktów w ofercie', 'mnsk7-storefront' ); ?></span>
 				</div>
 			</div>
-			<p class="mnsk7-trust-stats__sub"><?php esc_html_e( 'Super Sprzedawca Allegro - najwyższa jakość obsługi i realizacji zamówień.', 'mnsk7-storefront' ); ?></p>
+			<p class="mnsk7-trust-stats__sub"><?php esc_html_e( 'Super Sprzedawca Allegro — najwyższa jakość obsługi i realizacji zamówień.', 'mnsk7-storefront' ); ?></p>
 			<?php echo do_shortcode( '[mnsk7_allegro_reviews title="" allegro_link="0"]' ); ?>
 			<?php $allegro_url = defined( 'MNK7_ALLEGRO_SELLER_URL' ) ? MNK7_ALLEGRO_SELLER_URL : '#'; ?>
 			<?php if ( $allegro_url && $allegro_url !== '#' ) : ?>
@@ -150,10 +202,37 @@ $hero_link_href = $show_catalog ? '#mnsk7-home-catalog' : $shop_url;
 		</div>
 	</section>
 
+	<!-- KATALOG: grupy chipów (tagi + kategorie) jako poziome swipe rows, potem siatka kart kategorii. -->
 	<?php
+	$cats     = array();
+	$tags     = array();
+	$has_cats = taxonomy_exists( 'product_cat' );
+	$has_tags = taxonomy_exists( 'product_tag' );
+	if ( $has_cats ) {
+		$cats = get_terms( array(
+			'taxonomy'   => 'product_cat',
+			'hide_empty' => true,
+			'parent'     => 0,
+			'number'     => 20,
+			'orderby'    => 'count',
+			'order'      => 'DESC',
+		) );
+	}
+	if ( $has_tags ) {
+		$tags = get_terms( array(
+			'taxonomy'   => 'product_tag',
+			'hide_empty' => true,
+			'number'     => 20,
+			'orderby'    => 'count',
+			'order'      => 'DESC',
+		) );
+	}
+	$tags_label = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
+	$cats_label = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
+	$show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) );
 	if ( $show_catalog ) :
 	?>
-	<section id="mnsk7-home-catalog" class="mnsk7-section mnsk7-section--catalog mnsk7-section--light">
+	<section class="mnsk7-section mnsk7-section--catalog mnsk7-section--light">
 		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Przeglądaj asortyment', 'mnsk7-storefront' ); ?></h2>
 
@@ -161,17 +240,13 @@ $hero_link_href = $show_catalog ? '#mnsk7-home-catalog' : $shop_url;
 			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $tags_label ); ?>">
 				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $tags_label ); ?></h3>
 				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud">
-					<?php foreach ( $tags as $tag ) : ?>
-						<?php
+					<?php foreach ( $tags as $tag ) :
 						$t_link = get_term_link( $tag );
-						if ( is_wp_error( $t_link ) ) {
-							continue;
-						}
+						if ( is_wp_error( $t_link ) ) continue;
 						$tag_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $tag->name ) : $tag->name;
-						$tag_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $tag_name ) : $tag_name;
 						$tag_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $tag_name ) );
-						?>
-						<a href="<?php echo esc_url( $t_link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $tag_name ); ?></a>
+					?>
+					<a href="<?php echo esc_url( $t_link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $tag_name ); ?></a>
 					<?php endforeach; ?>
 				</div>
 			</div>
@@ -180,37 +255,28 @@ $hero_link_href = $show_catalog ? '#mnsk7-home-catalog' : $shop_url;
 			<?php if ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) : ?>
 			<h3 class="mnsk7-catalog-aside__title mnsk7-catalog-aside__title--cats"><?php echo esc_html( $cats_label ); ?></h3>
 				<div class="mnsk7-cats mnsk7-cats--catalog">
-					<?php foreach ( $cats as $cat ) : ?>
-						<?php
+					<?php foreach ( $cats as $cat ) :
 						$link = get_term_link( $cat );
-						if ( is_wp_error( $link ) ) {
-							continue;
-						}
+						if ( is_wp_error( $link ) ) continue;
 						$cat_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $cat->name ) : $cat->name;
-						$cat_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $cat_name ) : $cat_name;
 						$cat_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $cat_name ) );
-						$img_id   = get_term_meta( $cat->term_id, 'thumbnail_id', true );
-						$img      = $img_id ? wp_get_attachment_image( $img_id, 'medium', false, array( 'alt' => $cat_name ) ) : '';
-						$cat_count_label = sprintf(
-							/* translators: %d: number of products in category */
-							_n( '%d produkt', '%d produktów', absint( $cat->count ), 'mnsk7-storefront' ),
-							absint( $cat->count )
-						);
-						?>
-						<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-cats__item">
-							<span class="mnsk7-cats__img-wrap">
-								<?php if ( $img ) : ?>
-									<?php echo $img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-								<?php else : ?>
-									<span class="mnsk7-cats__icon mnsk7-cats__icon--default" aria-hidden="true"></span>
-								<?php endif; ?>
-							</span>
-							<span class="mnsk7-cats__body">
-								<span class="mnsk7-cats__name"><?php echo esc_html( $cat_name ); ?></span>
-								<span class="mnsk7-cats__count"><?php echo esc_html( $cat_count_label ); ?></span>
-							</span>
-							<span class="mnsk7-cats__arrow" aria-hidden="true">→</span>
-						</a>
+						$img_id = get_term_meta( $cat->term_id, 'thumbnail_id', true );
+						$img    = $img_id ? wp_get_attachment_image( $img_id, 'medium', false, array( 'alt' => $cat_name ) ) : '';
+					?>
+					<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-cats__item">
+						<span class="mnsk7-cats__img-wrap">
+							<?php if ( $img ) : ?>
+								<?php echo $img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+							<?php else : ?>
+								<span class="mnsk7-cats__icon mnsk7-cats__icon--default" aria-hidden="true"></span>
+							<?php endif; ?>
+						</span>
+						<span class="mnsk7-cats__body">
+							<span class="mnsk7-cats__name"><?php echo esc_html( $cat_name ); ?></span>
+							<span class="mnsk7-cats__count"><?php echo esc_html( $cat->count ); ?> <?php esc_html_e( 'prod.', 'mnsk7-storefront' ); ?></span>
+						</span>
+						<span class="mnsk7-cats__arrow" aria-hidden="true">→</span>
+					</a>
 					<?php endforeach; ?>
 				</div>
 			<?php endif; ?>
@@ -222,6 +288,7 @@ $hero_link_href = $show_catalog ? '#mnsk7-home-catalog' : $shop_url;
 	</section>
 	<?php endif; ?>
 
+	<!-- SYSTEM RABATÓW -->
 	<section class="mnsk7-section mnsk7-section--loyalty mnsk7-section--light">
 		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Program rabatowy dla stałych klientów', 'mnsk7-storefront' ); ?></h2>
@@ -229,13 +296,13 @@ $hero_link_href = $show_catalog ? '#mnsk7-home-catalog' : $shop_url;
 			<div class="mnsk7-loyalty-tiers">
 				<?php
 				$tiers = array(
-					array( 'from' => '1 000', 'pct' => '5%' ),
-					array( 'from' => '3 000', 'pct' => '10%' ),
-					array( 'from' => '5 000', 'pct' => '15%' ),
-					array( 'from' => '10 000', 'pct' => '20%' ),
+					array( 'from' => '1 000', 'pct' => '5%',  'label' => '' ),
+					array( 'from' => '3 000', 'pct' => '10%', 'label' => '' ),
+					array( 'from' => '5 000', 'pct' => '15%', 'label' => '' ),
+					array( 'from' => '10 000', 'pct' => '20%', 'label' => '' ),
 				);
 				foreach ( $tiers as $tier ) :
-					?>
+				?>
 				<div class="mnsk7-loyalty-tier">
 					<span class="mnsk7-loyalty-tier__pct"><?php echo esc_html( $tier['pct'] ); ?></span>
 					<span class="mnsk7-loyalty-tier__from"><?php printf( esc_html__( 'od %s zł/rok', 'mnsk7-storefront' ), esc_html( $tier['from'] ) ); ?></span>
@@ -255,14 +322,13 @@ $hero_link_href = $show_catalog ? '#mnsk7-home-catalog' : $shop_url;
 		</div>
 	</section>
 
-	<?php if ( function_exists( 'mnsk7_should_render_home_instagram' ) && mnsk7_should_render_home_instagram() ) : ?>
+	<!-- INSTAGRAM — embed.js ładujemy w footer (shortcode rejestruje skrypt), process() po load + retry -->
 	<section class="mnsk7-section mnsk7-section--insta">
 		<div class="col-full">
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Obserwuj nas na Instagramie', 'mnsk7-storefront' ); ?></h2>
-			<?php echo do_shortcode( '[mnsk7_instagram_feed type="posts" title="Instagram @mnsk7tools"]' ); ?>
+			<?php echo do_shortcode( '[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]' ); ?>
 		</div>
 	</section>
-	<?php endif; ?>
 
 </main>
 
