@@ -5219,6 +5219,10 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   justify-content: center;
   align-items: center;
   position: relative;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: #f6f8fb;
 }
 
 /* Placeholder pod embed — wyraźna wysokość (posty nie „mikro”) */
@@ -5262,16 +5266,19 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media,
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post iframe {
   width: 100% !important;
-  min-width: 320px !important;
-  max-width: 560px !important;
+  min-width: 0 !important;
+  max-width: 100% !important;
   margin: 0 auto;
   display: block;
+  height: 100% !important;
+  min-height: 0 !important;
+  border: 0 !important;
 }
 
 @media (min-width: 600px) {
   .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media,
   .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post iframe {
-    min-width: 360px;
+    min-width: 0;
     max-width: 100%;
   }
 }
