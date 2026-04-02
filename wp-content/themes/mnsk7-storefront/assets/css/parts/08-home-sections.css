@@ -1080,7 +1080,7 @@
 /* Instagram section — wysokość = treść (tytuł + posty + profil), bez białej wstęgi pod postami */
 .mnsk7-section--insta {
   background: var(--color-surface);
-  padding: var(--space-32) 0 var(--space-16);
+  padding: var(--space-32) 0 0;
   min-height: 0;
 }
 .mnsk7-section--insta .mnsk7-instagram-feed--profile {
@@ -1105,14 +1105,14 @@
   margin-top: 0.5rem;
 }
 .mnsk7-section--insta .mnsk7-instagram-feed__more {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
 }
 .mnsk7-section--insta .col-full {
   min-height: 0;
   text-align: center;
   max-width: var(--content-max);
   margin: 0 auto;
-  padding: 0 1.5rem;
+  padding: 0 1.5rem 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -1318,10 +1318,10 @@
 
 @media (max-width: 768px) {
   .mnsk7-section--insta {
-    padding: var(--space-24) 0 var(--space-16);
+    padding: var(--space-24) 0 0;
   }
   .mnsk7-section--insta .col-full {
-    padding: 0 var(--space-16);
+    padding: 0 var(--space-16) 0;
   }
   .mnsk7-instagram-profile-embed {
     border-radius: var(--r-sm);
@@ -1334,7 +1334,7 @@
 }
 
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__more {
-  margin: 0 0 1rem;
+  margin: 0;
   text-align: center;
 }
 
@@ -1344,7 +1344,7 @@
   grid-template-columns: 1fr;
   gap: 1.5rem;
   width: 100%;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
 }
 
 @media (min-width: 600px) {
