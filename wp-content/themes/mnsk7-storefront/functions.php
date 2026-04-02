@@ -1652,6 +1652,12 @@ add_action( 'wp_footer', function () {
 		var variationsForm = document.querySelector('.single-product form.variations_form');
 		var defaultBtnLabel = stickyBtn ? stickyBtn.textContent : '';
 		var chooseLbl = <?php echo json_encode( __( 'Wybierz wariant', 'mnsk7-storefront' ) ); ?>;
+		function syncStickyActionability(action) {
+			if (!stickyBtn) return;
+			var disabled = action === 'add' ? !!mainBtn.disabled : false;
+			stickyBtn.disabled = disabled;
+			stickyBtn.setAttribute('aria-disabled', disabled ? 'true' : 'false');
+		}
 		function isVariationChosen() {
 			if (!variationsForm) return true;
 			var selects = variationsForm.querySelectorAll('.variations select');
@@ -1665,9 +1671,11 @@ add_action( 'wp_footer', function () {
 			if (variationsForm && !isVariationChosen()) {
 				stickyBtn.textContent = chooseLbl;
 				stickyBtn.dataset.action = 'choose';
+				syncStickyActionability('choose');
 			} else {
 				stickyBtn.textContent = defaultBtnLabel;
 				stickyBtn.dataset.action = 'add';
+				syncStickyActionability('add');
 			}
 		}
 		updateStickyBtnState();

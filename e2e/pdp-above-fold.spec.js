@@ -45,6 +45,26 @@ test.describe('PDP above-the-fold smoke', () => {
     expect(await isInViewport(page, '.mnsk7-pdp-price-row')).toBe(true);
   });
 
+  test('375x812: sticky CTA exposes disabled state contract when revealed', async ({ page }) => {
+    await page.setViewportSize({ width: 375, height: 812 });
+    await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
+    await openFirstProduct(page);
+
+    const mainButton = page.locator('.summary form.cart .single_add_to_cart_button').first();
+    const stickyButton = page.locator('#mnsk7-pdp-sticky-cta .mnsk7-pdp-sticky-cta__btn').first();
+
+    await expect(mainButton).toBeVisible();
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await expect(stickyButton).toBeVisible();
+
+    const mainDisabled = await mainButton.evaluate((el) => el.disabled);
+    const stickyDisabled = await stickyButton.evaluate((el) => el.disabled);
+    const stickyAriaDisabled = await stickyButton.getAttribute('aria-disabled');
+
+    expect(stickyDisabled).toBe(mainDisabled);
+    expect(stickyAriaDisabled).toBe(mainDisabled ? 'true' : 'false');
+  });
+
   test('1280x900: title, price row and cart form are visible without scroll jump', async ({ page }) => {
     await page.setViewportSize({ width: 1280, height: 900 });
     await page.setExtraHTTPHeaders({ 'User-Agent': DESKTOP_UA });
