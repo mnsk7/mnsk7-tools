@@ -332,11 +332,12 @@
 
 /* Sections */
 .mnsk7-section {
-  padding: var(--space-48) 0;
+  padding: clamp(3.25rem, 6vw, 5rem) 0;
+  position: relative;
 }
 
 .mnsk7-section--light {
-  background: var(--color-surface);
+  background: linear-gradient(180deg, #f8fbff 0%, #f1f6fb 100%);
 }
 
 /* Dlaczego kupujący + Program rabatowy — beżowe tło full-bleed (bez bocznych odstępów) */
@@ -389,19 +390,36 @@
   text-align: center;
   font-size: var(--fs-2xl);
   font-weight: 800;
-  color: var(--color-text);
-  margin: 0 0 0.5rem;
+  color: #0f2648;
+  margin: 0 0 0.65rem;
   letter-spacing: -0.02em;
   line-height: 1.25;
+}
+
+.mnsk7-section__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 0.9rem;
+  padding: 0.42rem 0.78rem;
+  border-radius: var(--r-pill);
+  background: rgba(12, 125, 219, 0.08);
+  border: 1px solid rgba(12, 125, 219, 0.16);
+  color: #0f4a98;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  width: fit-content;
 }
 
 .mnsk7-section__sub {
   text-align: center;
   font-size: var(--fs-base);
-  color: var(--color-text-secondary);
-  margin: 0 auto 1.5rem;
-  max-width: 36rem;
-  line-height: 1.5;
+  color: #4b5f7c;
+  margin: 0 auto 2rem;
+  max-width: 44rem;
+  line-height: 1.6;
 }
 
 .mnsk7-section__more {
@@ -417,6 +435,37 @@
 
 .mnsk7-section__more a:hover {
   color: var(--color-primary-hover);
+}
+
+.mnsk7-section--catalog .col-full,
+.mnsk7-section--trust .col-full,
+.mnsk7-section--loyalty .col-full,
+.mnsk7-section--insta .col-full {
+  position: relative;
+  z-index: 1;
+  padding: clamp(1.4rem, 3vw, 2.2rem);
+}
+
+.mnsk7-section--catalog .col-full::before,
+.mnsk7-section--trust .col-full::before,
+.mnsk7-section--loyalty .col-full::before,
+.mnsk7-section--insta .col-full::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 28px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid rgba(12, 125, 219, 0.08);
+  box-shadow: 0 20px 60px rgba(15, 38, 72, 0.05);
+  pointer-events: none;
+}
+
+.mnsk7-section--catalog .col-full > *,
+.mnsk7-section--trust .col-full > *,
+.mnsk7-section--loyalty .col-full > *,
+.mnsk7-section--insta .col-full > * {
+  position: relative;
+  z-index: 1;
 }
 
 /* Przeglądaj asortyment: Zastosowanie i materiały — chmura chipów (bez Więcej), potem Rodzaje frezów — karty. Jednakowe odstępy pionowe. */
@@ -762,20 +811,24 @@
 
 /* Trust stats counters */
 .mnsk7-trust-stats {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-32);
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
   margin-bottom: var(--space-32);
 }
 
 .mnsk7-trust-stats__item {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  gap: 0.25rem;
-  min-width: 120px;
+  align-items: flex-start;
+  text-align: left;
+  gap: 0.35rem;
+  min-width: 0;
+  padding: 1.1rem 1.15rem;
+  border-radius: 18px;
+  background: #ffffff;
+  border: 1px solid rgba(12, 125, 219, 0.1);
+  box-shadow: 0 14px 28px rgba(15, 38, 72, 0.05);
   animation: mnsk7-fade-in 0.5s ease both;
 }
 
@@ -787,21 +840,21 @@
 .mnsk7-trust-stats__number {
   font-size: clamp(1.75rem, 4vw, 2.75rem);
   font-weight: 800;
-  color: var(--color-primary);
+  color: #0f4a98;
   line-height: 1.1;
 }
 
 .mnsk7-trust-stats__label {
   font-size: var(--fs-base);
-  color: var(--color-text-secondary);
+  color: #4b5f7c;
   font-weight: 600;
 }
 
 .mnsk7-trust-stats__sub {
   text-align: center;
   font-size: var(--fs-base);
-  color: var(--color-text-secondary);
-  margin: 0 0 0.5rem;
+  color: #4b5f7c;
+  margin: 0 0 1rem;
 }
 
 .mnsk7-trust-stats__allegro {
@@ -891,35 +944,28 @@
 
 /* Loyalty tiers */
 .mnsk7-loyalty-intro {
-  text-align: center;
-  color: var(--color-text-secondary);
-  font-size: var(--fs-lg);
   margin-bottom: 1.5rem;
-  max-width: 640px;
-  margin-left: auto;
-  margin-right: auto;
-  line-height: 1.5;
 }
 
 .mnsk7-loyalty-tiers {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-16);
-  justify-content: center;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
 }
 
 .mnsk7-loyalty-tier {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   background: var(--color-white);
-  border: 1px solid var(--color-border);
-  border-radius: var(--r-md);
-  padding: var(--space-24) 1.25rem;
-  min-width: 140px;
-  text-align: center;
+  border: 1px solid rgba(12, 125, 219, 0.1);
+  border-radius: 18px;
+  padding: 1.25rem 1.15rem;
+  min-width: 0;
+  text-align: left;
   transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
   animation: mnsk7-fade-in 0.45s ease both;
+  box-shadow: 0 14px 28px rgba(15, 38, 72, 0.05);
 }
 
 .mnsk7-loyalty-tier:nth-child(1) { animation-delay: 0.05s; }
@@ -930,8 +976,8 @@
 /* Najwyższy próg (20%) — wyróżniony */
 .mnsk7-loyalty-tier:last-child {
   background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
-  border: 2px solid var(--color-primary);
-  box-shadow: 0 4px 14px rgba(12, 125, 219, 0.2);
+  border: 1px solid rgba(12, 125, 219, 0.24);
+  box-shadow: 0 14px 28px rgba(12, 125, 219, 0.12);
 }
 
 .mnsk7-loyalty-tier:last-child .mnsk7-loyalty-tier__pct {

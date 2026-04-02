@@ -58,6 +58,18 @@
     gap: 0.3rem;
   }
 
+  .mnsk7-section--catalog .col-full,
+  .mnsk7-section--trust .col-full,
+  .mnsk7-section--loyalty .col-full,
+  .mnsk7-section--insta .col-full {
+    padding: 1.2rem;
+  }
+
+  .mnsk7-trust-stats,
+  .mnsk7-loyalty-tiers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
   /* Sections */
   .mnsk7-section {
     padding: var(--space-32) 0;

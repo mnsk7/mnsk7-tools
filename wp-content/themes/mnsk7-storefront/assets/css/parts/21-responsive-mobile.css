@@ -161,6 +161,41 @@
     line-height: 1.4;
   }
 
+  .mnsk7-section__eyebrow {
+    font-size: 0.72rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .mnsk7-section__sub {
+    margin-bottom: 1.4rem;
+    font-size: 0.94rem;
+  }
+
+  .mnsk7-section--catalog .col-full,
+  .mnsk7-section--trust .col-full,
+  .mnsk7-section--loyalty .col-full,
+  .mnsk7-section--insta .col-full {
+    padding: 1rem 0.9rem;
+  }
+
+  .mnsk7-section--catalog .col-full::before,
+  .mnsk7-section--trust .col-full::before,
+  .mnsk7-section--loyalty .col-full::before,
+  .mnsk7-section--insta .col-full::before {
+    border-radius: 20px;
+  }
+
+  .mnsk7-trust-stats,
+  .mnsk7-loyalty-tiers {
+    grid-template-columns: 1fr;
+    gap: 0.8rem;
+  }
+
+  .mnsk7-trust-stats__item,
+  .mnsk7-loyalty-tier {
+    padding: 0.95rem 0.95rem;
+  }
+
   /* Cookie bar: bottom-sheet / stacked — bez obcięcia, bez overflow (P0) */
   .mnsk7-cookie-bar {
     flex-direction: column;

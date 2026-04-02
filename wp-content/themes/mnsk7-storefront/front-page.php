@@ -105,7 +105,10 @@ get_header();
 	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
 	<section id="bestsellery" class="mnsk7-section mnsk7-section--bestsellers">
 		<div class="col-full">
-			<?php echo do_shortcode( '[mnsk7_bestsellers limit="8" title="Bestsellery i polecane"]' ); ?>
+			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Szybki wybór', 'mnsk7-storefront' ); ?></p>
+			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Bestsellery i najczęściej zamawiane frezy', 'mnsk7-storefront' ); ?></h2>
+			<p class="mnsk7-section__sub"><?php esc_html_e( 'Sprawdzone pozycje, od których klienci najczęściej zaczynają zakupy do drewna, MDF, aluminium i tworzyw.', 'mnsk7-storefront' ); ?></p>
+			<?php echo do_shortcode( '[mnsk7_bestsellers limit="8" title=""]' ); ?>
 			<p class="mnsk7-section__more mnsk7-bestsellers-more">
 				<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie bestsellery →', 'mnsk7-storefront' ); ?></a>
 			</p>
@@ -116,7 +119,9 @@ get_header();
 	<!-- TRUST + OPINIE (CRO: trzeci blok — zaufanie przed głębszym katalogiem) -->
 	<section class="mnsk7-section mnsk7-section--trust mnsk7-section--light">
 		<div class="col-full">
+			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Zaufanie i obsługa', 'mnsk7-storefront' ); ?></p>
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Dlaczego kupujący nam ufają', 'mnsk7-storefront' ); ?></h2>
+			<p class="mnsk7-section__sub"><?php esc_html_e( 'Łączymy specjalistyczny asortyment CNC z przewidywalną realizacją, realnymi opiniami i obsługą pod zakupy warsztatowe oraz B2B.', 'mnsk7-storefront' ); ?></p>
 			<div class="mnsk7-trust-stats">
 				<div class="mnsk7-trust-stats__item">
 					<span class="mnsk7-trust-stats__number">100%</span>
@@ -180,7 +185,9 @@ get_header();
 	?>
 	<section id="kategorie" class="mnsk7-section mnsk7-section--catalog mnsk7-section--light">
 		<div class="col-full">
+			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Kategorie i materiały', 'mnsk7-storefront' ); ?></p>
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Przeglądaj asortyment', 'mnsk7-storefront' ); ?></h2>
+			<p class="mnsk7-section__sub"><?php esc_html_e( 'Wejdź od materiału albo od rodzaju freza. Struktura katalogu prowadzi do właściwej grupy produktów zamiast zmuszać do przypadkowego przeszukiwania sklepu.', 'mnsk7-storefront' ); ?></p>
 
 			<?php if ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) ) : ?>
 			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $tags_label ); ?>">
@@ -237,8 +244,9 @@ get_header();
 	<!-- SYSTEM RABATÓW -->
 	<section class="mnsk7-section mnsk7-section--loyalty mnsk7-section--light">
 		<div class="col-full">
+			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Stała współpraca', 'mnsk7-storefront' ); ?></p>
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Program rabatowy dla stałych klientów', 'mnsk7-storefront' ); ?></h2>
-			<p class="mnsk7-loyalty-intro"><?php esc_html_e( 'Im więcej zamawiasz w ciągu roku, tym większy stały rabat na każde kolejne zamówienie:', 'mnsk7-storefront' ); ?></p>
+			<p class="mnsk7-section__sub mnsk7-loyalty-intro"><?php esc_html_e( 'Im więcej zamawiasz w ciągu roku, tym większy stały rabat na każde kolejne zamówienie i bardziej przewidywalne koszty zakupów.', 'mnsk7-storefront' ); ?></p>
 			<div class="mnsk7-loyalty-tiers">
 				<?php
 				$tiers = array(
@@ -271,7 +279,9 @@ get_header();
 	<!-- INSTAGRAM — embed.js ładujemy w footer (shortcode rejestruje skrypt), process() po load + retry -->
 	<section class="mnsk7-section mnsk7-section--insta">
 		<div class="col-full">
+			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Marka w praktyce', 'mnsk7-storefront' ); ?></p>
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Obserwuj nas na Instagramie', 'mnsk7-storefront' ); ?></h2>
+			<p class="mnsk7-section__sub"><?php esc_html_e( 'Nowości, realizacje i krótkie materiały pokazujące narzędzia oraz ofertę MNSK7 w bardziej codziennym kontekście.', 'mnsk7-storefront' ); ?></p>
 			<?php echo do_shortcode( '[mnsk7_instagram_feed limit="6" title="Instagram @mnsk7tools"]' ); ?>
 		</div>
 	</section>
