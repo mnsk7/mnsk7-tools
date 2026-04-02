@@ -842,18 +842,6 @@ add_action( 'wp_enqueue_scripts', function () {
 	wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( 'mnsk7-storefront-style' ), $v );
 	// Footer accordion: single source of truth = external script (mobile-only behavior inside JS).
 	wp_enqueue_script( 'mnsk7-footer-accordion', get_stylesheet_directory_uri() . '/assets/js/footer-accordion.js', array(), $v, true );
-	/* Inline: tylko Instagram karta — tylko gdy na stronie jest shortcode (front page lub treść z [mnsk7_instagram_feed]). */
-	$need_insta_inline = is_front_page();
-	if ( ! $need_insta_inline && is_singular() ) {
-		$post = get_queried_object();
-		if ( $post && isset( $post->post_content ) && has_shortcode( (string) $post->post_content, 'mnsk7_instagram_feed' ) ) {
-			$need_insta_inline = true;
-		}
-	}
-	if ( $need_insta_inline ) {
-		$insta_inline = '.mnsk7-instagram-feed--card{width:100%;max-width:560px;background:#fff;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,.08)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__carousel{aspect-ratio:1;overflow:hidden;background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__track{display:flex;height:100%;transition:transform .3s ease}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide{flex:0 0 100%;width:100%;height:100%;position:relative}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide .mnsk7-instagram-feed__img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dots{display:flex;justify-content:center;gap:6px;padding:10px 0}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot{width:8px;height:8px;border-radius:50%;border:none;background:#c4c4c4;cursor:pointer}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot.is-active{background:#0d6efd;transform:scale(1.15)}.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile{display:flex;align-items:center;gap:.5rem;padding:.75rem 1rem;border-top:1px solid #eee}';
-		wp_add_inline_style( 'mnsk7-main', $insta_inline );
-	}
 }, 20 );
 
 /* Override WooCommerce clearfix: woocommerce-layout.css ładuje się PO naszej temie i ustawia .woocommerce ul.products::before{display:table}, co daje pustą pierwszą "komórkę" w gridzie. Dodajemy inline do handle WooCommerce, żeby nasze display:none było po ich regule. Również Moje konto: przyciski + padding (wygrywamy z WC). */
@@ -1496,28 +1484,6 @@ add_action( 'wp_footer', function () {
 			onScroll();
 			window.addEventListener('scroll', onScroll, { passive: true });
 			header.dataset.mnsk7ShrinkInit = '1';
-		}
-		// Instagram card carousel (alesyatakun.by style)
-		var carousel = document.querySelector('.mnsk7-instagram-feed--card .mnsk7-instagram-feed__carousel');
-		if (carousel) {
-			var track = carousel.querySelector('.mnsk7-instagram-feed__track');
-			var dots = carousel.querySelectorAll('.mnsk7-instagram-feed__dot');
-			var slides = carousel.querySelectorAll('.mnsk7-instagram-feed__slide');
-			var n = slides.length;
-			if (n > 1 && track && dots.length === n) {
-				function goTo(idx) {
-					idx = Math.max(0, Math.min(idx, n - 1));
-					track.style.transform = 'translateX(-' + idx * 100 + '%)';
-					slides.forEach(function(s, i) { s.classList.toggle('is-active', i === idx); });
-					dots.forEach(function(d, i) {
-						d.classList.toggle('is-active', i === idx);
-						d.setAttribute('aria-selected', i === idx ? 'true' : 'false');
-					});
-				}
-				dots.forEach(function(dot, i) {
-					dot.addEventListener('click', function() { goTo(i); });
-				});
-			}
 		}
 		}
 		// Critical header controls должны быть готовы сразу (без requestIdleCallback), иначе возможен "dead click".
@@ -2563,6 +2529,7 @@ add_action( 'init', function () {
 			'title' => 'Instagram @mnsk7tools',
 			'type'  => 'profile',
 			'urls'  => '',
+			'images' => '',
 		), $atts, 'mnsk7_instagram_feed' );
 		$profile = defined( 'MNK7_INSTAGRAM_URL' ) ? MNK7_INSTAGRAM_URL : 'https://www.instagram.com/mnsk7tools/';
 		$handle  = preg_replace( '#^https?://(www\.)?instagram\.com/#', '', untrailingslashit( $profile ) );
@@ -2599,6 +2566,10 @@ add_action( 'init', function () {
 			);
 		}
 		$urls = array();
+		$image_urls = array();
+		if ( is_string( $atts['images'] ) && trim( $atts['images'] ) !== '' ) {
+			$image_urls = preg_split( '/[\s,]+/', trim( $atts['images'] ) );
+		}
 		foreach ( array_slice( $raw, 0, $limit ) as $entry ) {
 			$url = is_array( $entry ) ? ( isset( $entry['url'] ) ? $entry['url'] : '' ) : $entry;
 			$url = esc_url_raw( $url );
@@ -2610,13 +2581,25 @@ add_action( 'init', function () {
 			}
 		}
 
-		$out = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--embed">';
+		$native_cards = ! empty( $image_urls );
+		$out = '<div class="mnsk7-instagram-feed ' . ( $native_cards ? 'mnsk7-instagram-feed--native' : 'mnsk7-instagram-feed--embed' ) . '">';
 		if ( ! empty( $urls ) ) {
 			$out .= '<div class="mnsk7-instagram-feed__posts" role="region" aria-label="' . esc_attr__( 'Posty z Instagrama', 'mnsk7-storefront' ) . '">';
-			foreach ( $urls as $url ) {
-				$embed_url = $url . 'embed/';
+			foreach ( $urls as $index => $url ) {
 				$out .= '<div class="mnsk7-instagram-feed__post">';
-				$out .= '<iframe src="' . esc_url( $embed_url ) . '" title="' . esc_attr__( 'Post z Instagrama', 'mnsk7-storefront' ) . '" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowtransparency="true"></iframe>';
+				if ( $native_cards ) {
+					$image_url = isset( $image_urls[ $index ] ) ? html_entity_decode( (string) $image_urls[ $index ], ENT_QUOTES | ENT_HTML5, 'UTF-8' ) : '';
+					$image_url = esc_url_raw( $image_url );
+					$out .= '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__post-link">';
+					if ( $image_url !== '' ) {
+						$out .= '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr__( 'Post z Instagrama MNSK7', 'mnsk7-storefront' ) . '" loading="lazy" class="mnsk7-instagram-feed__post-image" />';
+					}
+					$out .= '<span class="mnsk7-instagram-feed__post-cta">' . esc_html__( 'Otwórz post', 'mnsk7-storefront' ) . '</span>';
+					$out .= '</a>';
+				} else {
+					$embed_url = $url . 'embed/';
+					$out .= '<iframe src="' . esc_url( $embed_url ) . '" title="' . esc_attr__( 'Post z Instagrama', 'mnsk7-storefront' ) . '" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowtransparency="true"></iframe>';
+				}
 				$out .= '</div>';
 			}
 			$out .= '</div>';

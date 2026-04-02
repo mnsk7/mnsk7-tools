@@ -4938,7 +4938,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .mnsk7-section--insta .mnsk7-instagram-feed--profile {
   min-height: 0;
 }
-.mnsk7-section--insta .mnsk7-instagram-feed--embed {
+.mnsk7-section--insta .mnsk7-instagram-feed--embed,
+.mnsk7-section--insta .mnsk7-instagram-feed--native {
   padding-bottom: 0;
   margin-bottom: 0;
   flex-direction: column;
@@ -4946,7 +4947,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   min-height: 0;
 }
 /* Nadpisanie ogólnego margin-bottom: 1rem — żadnej białej wstęgi pod siatką 6 postów */
-.mnsk7-section--insta .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts {
+.mnsk7-section--insta .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts,
+.mnsk7-section--insta .mnsk7-instagram-feed--native .mnsk7-instagram-feed__posts {
   margin-bottom: 0 !important;
   padding-bottom: 0;
   align-items: start; /* wiersze siatki nie rozciągają się do najwyższego iframe */
@@ -4982,274 +4984,21 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin-right: auto;
 }
 
-.mnsk7-social-card {
-  display: grid;
-  grid-template-columns: minmax(260px, 0.95fr) minmax(0, 1.05fr);
-  gap: clamp(1.25rem, 3vw, 2.25rem);
-  width: 100%;
-  max-width: 940px;
-  margin: 0 auto;
-  padding: clamp(1.25rem, 3vw, 2rem);
-  border-radius: 24px;
-  background: linear-gradient(135deg, #ffffff 0%, #f6f9fd 100%);
-  border: 1px solid rgba(12, 125, 219, 0.12);
-  box-shadow: 0 18px 40px rgba(15, 38, 72, 0.08);
-  align-items: center;
-}
-
-.mnsk7-social-card__visual {
-  position: relative;
-  display: grid;
-  align-content: end;
-  min-height: 320px;
-  padding: 1rem;
-  border-radius: 20px;
-  overflow: hidden;
-  background:
-    linear-gradient(135deg, rgba(131,58,180,0.14), rgba(253,29,29,0.1), rgba(252,176,69,0.14)),
-    linear-gradient(180deg, #eef4fb 0%, #dfeaf7 100%);
-}
-
-.mnsk7-social-card__badge {
-  justify-self: start;
-  margin-bottom: auto;
-  display: inline-flex;
-  align-items: center;
-  padding: 0.42rem 0.78rem;
-  border-radius: var(--r-pill);
-  background: rgba(255, 255, 255, 0.88);
-  color: #0f2648;
-  font-size: 0.78rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.mnsk7-social-card__tiles {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 0.75rem;
-}
-
-.mnsk7-social-card__tile {
-  aspect-ratio: 1 / 1;
-  border-radius: 16px;
-  background:
-    radial-gradient(circle at top right, rgba(255,255,255,0.55), transparent 28%),
-    linear-gradient(135deg, rgba(131,58,180,0.78), rgba(253,29,29,0.74), rgba(252,176,69,0.78));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.28);
-}
-
-.mnsk7-social-card__content {
-  display: grid;
-  gap: 0.9rem;
-  text-align: left;
-}
-
-.mnsk7-social-card__handle {
-  margin: 0;
-  color: #0c7ddb;
-  font-size: 0.95rem;
-  font-weight: 700;
-}
-
-.mnsk7-social-card__title {
-  margin: 0;
-  color: #0f2648;
-  font-size: clamp(1.4rem, 2.8vw, 2rem);
-  line-height: 1.2;
-}
-
-.mnsk7-social-card__text {
-  margin: 0;
-  color: #4b5f7c;
-  line-height: 1.6;
-}
-
-.mnsk7-social-card__list {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 0.55rem;
-}
-
-.mnsk7-social-card__list li {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.55rem;
-  color: #16355e;
-  font-weight: 600;
-}
-
-.mnsk7-social-card__list li::before {
-  content: "";
-  width: 0.5rem;
-  height: 0.5rem;
-  border-radius: 999px;
-  background: #0c7ddb;
-  box-shadow: 0 0 0 4px rgba(12, 125, 219, 0.12);
-  flex: 0 0 auto;
-}
-
-/* Wariant „karta” jak na alesyatakun.by: jedna duża karuzela + profil + przycisk */
-.mnsk7-instagram-feed--card {
-  width: 100%;
-  max-width: 560px;
-  min-width: 0;
-  padding: 0;
-  background: var(--color-surface, #fff);
-  border-radius: var(--r-md);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__carousel {
-  position: relative;
-  overflow: hidden;
-  aspect-ratio: 1;
-  background: linear-gradient(135deg, #833ab4, #fd1d1d, #fcb045);
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__track {
-  display: flex;
-  height: 100%;
-  transition: transform 0.3s ease;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide {
-  flex: 0 0 100%;
-  width: 100%;
-  height: 100%;
-  display: block;
-  position: relative;
-  text-decoration: none;
-  overflow: hidden;
-  transition: none;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide:hover {
-  transform: none;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide .mnsk7-instagram-feed__img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: center;
-  display: block;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__slide .mnsk7-instagram-feed__icon--placeholder {
-  position: absolute;
-  inset: 0;
-  display: block;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white' opacity='0.9'%3E%3Cpath d='M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z'/%3E%3C/svg%3E") center/48% no-repeat;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dots {
-  display: flex;
-  justify-content: center;
-  gap: 6px;
-  padding: 10px 0;
-  flex-wrap: wrap;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  border: none;
-  padding: 0;
-  background: #c4c4c4;
-  cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot:hover {
-  background: #999;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__dot.is-active {
-  background: var(--color-primary);
-  transform: scale(1.15);
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__more {
-  margin: 0;
-  padding: 0 1rem 0.5rem;
-  text-align: center;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__more-link {
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  color: var(--color-primary);
-  text-decoration: none;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__more-link:hover {
-  text-decoration: underline;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem 0.75rem;
-  padding: 0.75rem 1rem;
-  border-top: 1px solid var(--color-border, #eee);
-  flex-wrap: wrap;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile-icon {
-  width: 24px;
-  height: 24px;
-  flex-shrink: 0;
-  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23181a1b'%3E%3Cpath d='M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z'/%3E%3C/svg%3E") center/100% no-repeat;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile-handle {
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  color: var(--color-text);
-  flex: 1;
-  min-width: 0;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile-btn {
-  flex-shrink: 0;
-  padding: 0.4rem 0.75rem;
-  font-size: var(--fs-xs);
-  font-weight: 600;
-  color: var(--color-primary);
-  background: transparent;
-  border: 1px solid var(--color-primary);
-  border-radius: 6px; /* no --r- token for 6px */
-  text-decoration: none;
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.mnsk7-instagram-feed--card .mnsk7-instagram-feed__profile-btn:hover {
-  background: var(--color-primary);
-  color: #fff;
-}
-
-/* Wariant embed (jak alesyatakun.by): blockquote + embed.js → iframe od Instagram */
-/* Zapobiegaj ukryciu przez pluginy — kontener z postami musi być widoczny (display:none na script#...-js nie blokuje wykonania skryptu, ale np. lazy load może ukryć rodziców) */
-.mnsk7-section--insta .mnsk7-instagram-feed--embed {
+/* Instagram post grid */
+.mnsk7-section--insta .mnsk7-instagram-feed--embed,
+.mnsk7-section--insta .mnsk7-instagram-feed--native {
   display: flex !important;
 }
 .mnsk7-section--insta .mnsk7-instagram-feed__posts {
   display: grid !important;
 }
-.mnsk7-instagram-feed--embed {
+.mnsk7-instagram-feed--embed,
+.mnsk7-instagram-feed--native {
   max-width: 1200px;
   width: 100%;
 }
 
-/* Wariant profile: jeden iframe z embed profilu (jak kayer.pl) — ładuje się stabilnie bez embed.js */
+/* Profile embed variant */
 .mnsk7-instagram-feed--profile {
   max-width: 1200px;
   width: 100%;
@@ -5285,13 +5034,9 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   }
 }
 
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__more {
-  margin: 0;
-  text-align: center;
-}
-
-/* Siatka: 1 kol. mobilka, 2 od 600px, 2 na desktop — większe posty (nie 3 małe) */
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts {
+/* Generic post grid */
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts,
+.mnsk7-instagram-feed--native .mnsk7-instagram-feed__posts {
   display: grid;
   grid-template-columns: 1fr;
   gap: 1.5rem;
@@ -5300,19 +5045,22 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 @media (min-width: 600px) {
-  .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts {
+  .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts,
+  .mnsk7-instagram-feed--native .mnsk7-instagram-feed__posts {
     grid-template-columns: repeat(2, 1fr);
   }
 }
 
 @media (min-width: 1200px) {
-  .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts {
+  .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__posts,
+  .mnsk7-instagram-feed--native .mnsk7-instagram-feed__posts {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--space-32);
   }
 }
 
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post {
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post,
+.mnsk7-instagram-feed--native .mnsk7-instagram-feed__post {
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -5325,45 +5073,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   background: #f6f8fb;
 }
 
-/* Placeholder pod embed — wyraźna wysokość (posty nie „mikro”) */
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media {
-  min-height: 380px;
-  background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
-  border-radius: var(--r-md);
-}
-
-@media (min-width: 600px) {
-  .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media {
-    min-height: 420px;
-  }
-}
-
-/* Fallback link gdy embed.js nie załaduje iframe — widoczna karta z linkiem */
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post-fallback {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 44px;
-  padding: 0.5rem var(--space-16);
-  margin-top: 0.5rem;
-  font-size: var(--fs-sm);
-  font-weight: 600;
-  color: var(--color-primary);
-  text-decoration: none;
-  border: 2px solid var(--color-primary);
-  border-radius: var(--r-sm);
-  background: #fff;
-}
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post-fallback:hover {
-  background: var(--color-primary);
-  color: #fff;
-}
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post:has(iframe) .mnsk7-instagram-feed__post-fallback {
-  display: none;
-}
-
-/* Większe embedy — pełna szerokość komórki, min 320px, max 560px (Instagram ładuje w dobrej skali) */
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media,
+/* Direct iframe embeds */
 .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post iframe {
   width: 100% !important;
   min-width: 0 !important;
@@ -5376,14 +5086,14 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 @media (min-width: 600px) {
-  .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post .instagram-media,
   .mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post iframe {
     min-width: 0;
     max-width: 100%;
   }
 }
 
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile {
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile,
+.mnsk7-instagram-feed--native .mnsk7-instagram-feed__profile {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -5393,20 +5103,23 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   flex-wrap: wrap;
 }
 
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile-icon {
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile-icon,
+.mnsk7-instagram-feed--native .mnsk7-instagram-feed__profile-icon {
   width: 24px;
   height: 24px;
   flex-shrink: 0;
   background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23181a1b'%3E%3Cpath d='M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073z'/%3E%3C/svg%3E") center/100% no-repeat;
 }
 
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile-handle {
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile-handle,
+.mnsk7-instagram-feed--native .mnsk7-instagram-feed__profile-handle {
   font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--color-text);
 }
 
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile-btn {
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile-btn,
+.mnsk7-instagram-feed--native .mnsk7-instagram-feed__profile-btn {
   padding: 0.4rem 0.75rem;
   font-size: var(--fs-xs);
   font-weight: 600;
@@ -5418,7 +5131,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   transition: background 0.2s ease, color 0.2s ease;
 }
 
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile-btn:hover {
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__profile-btn:hover,
+.mnsk7-instagram-feed--native .mnsk7-instagram-feed__profile-btn:hover {
   background: var(--color-primary);
   color: #fff;
 }
@@ -5441,7 +5155,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 /* Homepage Instagram: direct post iframes, fixed card size like Alesya */
-.mnsk7-section--insta .mnsk7-instagram-feed--embed {
+.mnsk7-section--insta .mnsk7-instagram-feed--embed,
+.mnsk7-section--insta .mnsk7-instagram-feed--native {
   width: 100%;
   max-width: 1120px;
   margin: 0 auto;
@@ -5477,6 +5192,48 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin: 0 auto;
   border: 0;
   background: #fff;
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed--native .mnsk7-instagram-feed__post {
+  padding: 0;
+  background: #fff;
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed__post-link {
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed__post-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  object-fit: cover;
+  object-position: center;
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed__post-cta {
+  position: absolute;
+  left: 0.9rem;
+  bottom: 0.9rem;
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0.45rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(15, 38, 72, 0.86);
+  color: #fff;
+  font-size: 0.84rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  box-shadow: 0 8px 20px rgba(15, 38, 72, 0.18);
 }
 
 .mnsk7-section--insta .mnsk7-instagram-feed__profile {
@@ -8403,14 +8160,6 @@ nav.woocommerce-breadcrumb {
   .mnsk7-trust-stats,
   .mnsk7-loyalty-tiers {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-
-  .mnsk7-social-card {
-    grid-template-columns: 1fr;
-  }
-
-  .mnsk7-social-card__visual {
-    min-height: 240px;
   }
 
   /* Sections */
