@@ -141,7 +141,7 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 	}
 	if ( ! empty( $hidden ) ) {
 		$more_id = 'mnsk7-plp-more-nav-' . sanitize_title( $label );
-		echo '<span class="mnsk7-plp-chips-more" id="' . esc_attr( $more_id ) . '" hidden>';
+		echo '<span class="mnsk7-plp-chips-more" id="' . esc_attr( $more_id ) . '" hidden aria-hidden="true">';
 		foreach ( $hidden as $term ) {
 			$link = get_term_link( $term );
 			if ( is_wp_error( $link ) ) {
@@ -227,7 +227,7 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 			printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
 		}
 		if ( ! empty( $hidden ) ) {
-			echo '<span class="mnsk7-plp-chips-more" id="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" hidden>';
+			echo '<span class="mnsk7-plp-chips-more" id="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" hidden aria-hidden="true">';
 			foreach ( $hidden as $slug => $label ) {
 				$url = add_query_arg( $param, $slug );
 				$url = $anchor_fn ? $anchor_fn( $url ) : $url;
@@ -251,7 +251,7 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 		echo '<div class="mnsk7-plp-filters-toggle-wrap col-full">';
 		echo '<button type="button" class="mnsk7-plp-chips-toggle mnsk7-plp-filters-toggle" data-controls="mnsk7-plp-more-filters" aria-controls="mnsk7-plp-more-filters" data-more-text="' . esc_attr__( 'Więcej filtrów', 'mnsk7-storefront' ) . '" data-less-text="' . esc_attr__( 'Mniej filtrów', 'mnsk7-storefront' ) . '" aria-expanded="' . ( $filters_expanded ? 'true' : 'false' ) . '">' . esc_html( $filters_expanded ? __( 'Mniej filtrów', 'mnsk7-storefront' ) : __( 'Więcej filtrów', 'mnsk7-storefront' ) ) . '</button>';
 		echo '</div>';
-		echo '<div class="mnsk7-plp-filters-more col-full" id="mnsk7-plp-more-filters"' . ( $filters_expanded ? '' : ' hidden' ) . '>';
+		echo '<div class="mnsk7-plp-filters-more col-full" id="mnsk7-plp-more-filters" aria-hidden="' . ( $filters_expanded ? 'false' : 'true' ) . '"' . ( $filters_expanded ? '' : ' hidden' ) . '>';
 		foreach ( $hidden_filters as $attribute_filter ) {
 			$render_filter_row( $attribute_filter );
 		}

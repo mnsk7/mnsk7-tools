@@ -90,7 +90,7 @@ if ( isset( $product ) && is_a( $product, 'WC_Product' ) && $product->is_purchas
 		$cta_aria      = $is_variable ? __( 'Wybierz wariant — przewiń do opcji', 'mnsk7-storefront' ) : __( 'Dodaj do koszyka', 'mnsk7-storefront' );
 		$cta_action    = $is_variable ? 'choose' : 'add';
 		?>
-		<button type="button" class="mnsk7-pdp-sticky-cta__btn" data-action="<?php echo esc_attr( $cta_action ); ?>" aria-label="<?php echo esc_attr( $cta_aria ); ?>"><?php echo esc_html( $cta_label ); ?></button>
+		<button type="button" class="mnsk7-pdp-sticky-cta__btn" data-action="<?php echo esc_attr( $cta_action ); ?>" aria-label="<?php echo esc_attr( $cta_aria ); ?>" aria-disabled="false"><?php echo esc_html( $cta_label ); ?></button>
 	</div>
 	<?php
 }

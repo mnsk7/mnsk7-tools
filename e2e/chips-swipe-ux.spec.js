@@ -150,6 +150,38 @@ test.describe('Chips swipe UX — PLP (Sklep / kategoria)', () => {
       }
       expect(String(scrollbarCss)).toMatch(/none|thin|auto|^$/);
     });
+
+    test(`viewport ${viewport.width}x${viewport.height}: hidden chips toggle keeps aria-hidden in sync`, async ({
+      page,
+    }) => {
+      await page.setViewportSize(viewport);
+      await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
+      await page.goto('/sklep/', { waitUntil: 'domcontentloaded' });
+
+      const toggle = page.locator('.mnsk7-plp-chips-toggle').first();
+      if (!(await toggle.count())) {
+        test.skip(true, 'brak .mnsk7-plp-chips-toggle na stronie');
+        return;
+      }
+
+      const targetId = await toggle.getAttribute('aria-controls');
+      if (!targetId) {
+        test.skip(true, 'toggle nie ma aria-controls');
+        return;
+      }
+
+      const target = page.locator(`#${targetId}`).first();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      await expect(target).toHaveAttribute('aria-hidden', 'true');
+
+      await toggle.click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'true');
+      await expect(target).toHaveAttribute('aria-hidden', 'false');
+
+      await toggle.click();
+      await expect(toggle).toHaveAttribute('aria-expanded', 'false');
+      await expect(target).toHaveAttribute('aria-hidden', 'true');
+    });
   }
 });
 

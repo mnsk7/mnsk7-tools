@@ -1861,6 +1861,17 @@ add_action( 'wp_footer', function () {
 	?>
 	<script>
 	(function() {
+		function setExpandableTargetState(btn, target, expanded, labels) {
+			if (btn) btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+			if (target) {
+				target.hidden = !expanded;
+				target.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+			}
+			if (btn && labels) {
+				btn.textContent = expanded ? labels.less : labels.more;
+			}
+		}
+
 		function initPlpToggles() {
 			var toggles = document.querySelectorAll('.mnsk7-plp-chips-toggle');
 			var moreLabel = <?php echo json_encode( $more_text ); ?>;
@@ -1872,11 +1883,11 @@ add_action( 'wp_footer', function () {
 				if (!target) return;
 				var btnMore = btn.getAttribute('data-more-text') || moreLabel;
 				var btnLess = btn.getAttribute('data-less-text') || lessLabel;
+				var expandedInitial = btn.getAttribute('aria-expanded') === 'true' || !target.hidden;
+				setExpandableTargetState(btn, target, expandedInitial, { more: btnMore, less: btnLess });
 				btn.addEventListener('click', function() {
 					var expanded = btn.getAttribute('aria-expanded') === 'true';
-					btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-					target.hidden = expanded;
-					btn.textContent = expanded ? btnMore : btnLess;
+					setExpandableTargetState(btn, target, !expanded, { more: btnMore, less: btnLess });
 				});
 			});
 		}
@@ -1908,6 +1919,17 @@ add_action( 'wp_footer', function () {
 	?>
 	<script>
 	(function() {
+		function setExpandableTargetState(btn, target, expanded, labels) {
+			if (btn) btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+			if (target) {
+				target.hidden = !expanded;
+				target.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+			}
+			if (btn && labels) {
+				btn.textContent = expanded ? labels.less : labels.more;
+			}
+		}
+
 		function initCatalogChipsToggles() {
 			var toggles = document.querySelectorAll('.mnsk7-catalog-chips-toggle');
 			var moreLabel = <?php echo json_encode( __( 'Więcej', 'mnsk7-storefront' ) ); ?>;
@@ -1917,11 +1939,11 @@ add_action( 'wp_footer', function () {
 				if (!id) return;
 				var target = document.getElementById(id);
 				if (!target) return;
+				var expandedInitial = btn.getAttribute('aria-expanded') === 'true' || !target.hidden;
+				setExpandableTargetState(btn, target, expandedInitial, { more: moreLabel, less: lessLabel });
 				btn.addEventListener('click', function() {
 					var expanded = btn.getAttribute('aria-expanded') === 'true';
-					btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
-					target.hidden = expanded;
-					btn.textContent = expanded ? moreLabel : lessLabel;
+					setExpandableTargetState(btn, target, !expanded, { more: moreLabel, less: lessLabel });
 				});
 			});
 		}
