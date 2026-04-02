@@ -15,38 +15,6 @@
   /* Product grids at 768px: only in 21-responsive-mobile.css (gap 0.75rem) */
   /* Footer at 768px: only in 09-footer.css */
 
-  /* Hero */
-  .mnsk7-hero {
-    padding: 3rem 1rem 3.25rem;
-  }
-
-  .mnsk7-hero__split {
-    grid-template-columns: 1fr;
-    gap: 1.5rem;
-  }
-
-  .mnsk7-hero__content {
-    max-width: none;
-  }
-
-  .mnsk7-hero__usps {
-    gap: 0.5rem;
-  }
-
-  .mnsk7-hero__usp {
-    font-size: var(--fs-xs);
-    padding: 0.25rem 0.625rem;
-  }
-
-  .mnsk7-hero__stats,
-  .mnsk7-hero__proof {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .mnsk7-hero__visual-shell {
-    padding: 1rem;
-  }
-
   /* Sections */
   .mnsk7-section {
     padding: var(--space-32) 0;
