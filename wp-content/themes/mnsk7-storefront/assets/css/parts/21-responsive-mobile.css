@@ -48,6 +48,119 @@
     padding-top: 0.125rem;
   }
 
+  /* Hero adjustments */
+  .mnsk7-hero {
+    padding: 2.5rem var(--space-16) 2.35rem;
+  }
+
+  .mnsk7-hero__title {
+    font-size: clamp(1.9rem, 8.6vw, 2.6rem);
+    max-width: 11ch;
+    margin-bottom: 0.9rem;
+  }
+
+  .mnsk7-hero__eyebrow {
+    font-size: 0.7rem;
+    margin-bottom: 0.8rem;
+    letter-spacing: 0.07em;
+  }
+
+  .mnsk7-hero__lead {
+    font-size: 0.94rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+  }
+
+  .mnsk7-hero__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.55rem;
+    margin-bottom: 1rem;
+  }
+
+  .mnsk7-hero__stat:last-child {
+    grid-column: 1 / -1;
+  }
+
+  .mnsk7-hero__stat {
+    padding: 0.75rem 0.7rem;
+    border-radius: 14px;
+  }
+
+  .mnsk7-hero__stat-value {
+    font-size: 1.05rem;
+  }
+
+  .mnsk7-hero__stat-label {
+    font-size: 0.72rem;
+    line-height: 1.25;
+  }
+
+  .mnsk7-hero__materials,
+  .mnsk7-hero__usps,
+  .mnsk7-hero__ctas {
+    justify-content: flex-start;
+  }
+
+  .mnsk7-hero__materials {
+    gap: 0.45rem 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .mnsk7-hero__material-chip {
+    padding: 0.38rem 0.72rem;
+    font-size: 0.8rem;
+  }
+
+  .mnsk7-hero__usps {
+    gap: 0.45rem;
+    margin-bottom: 1.05rem;
+  }
+
+  .mnsk7-hero__usp {
+    width: auto;
+    justify-content: flex-start;
+    padding: 0.55rem 0.8rem;
+    font-size: 0.78rem;
+  }
+
+  .mnsk7-hero__ctas {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.65rem;
+  }
+
+  .mnsk7-hero__rail {
+    margin-top: 0;
+  }
+
+  .mnsk7-hero__panel {
+    padding: 0.95rem 0.95rem 1rem;
+    gap: 0.8rem;
+    border-radius: 18px;
+  }
+
+  .mnsk7-hero__panel-title {
+    font-size: 1.05rem;
+  }
+
+  .mnsk7-hero__proof-list {
+    gap: 0;
+  }
+
+  .mnsk7-hero__proof-row {
+    gap: 0.3rem;
+    padding: 0.75rem 0;
+  }
+
+  .mnsk7-hero__proof-label {
+    font-size: 0.88rem;
+  }
+
+  .mnsk7-hero__proof-text {
+    font-size: 0.79rem;
+    line-height: 1.4;
+  }
+
   /* Cookie bar: bottom-sheet / stacked — bez obcięcia, bez overflow (P0) */
   .mnsk7-cookie-bar {
     flex-direction: column;
@@ -96,5 +209,13 @@
   .woocommerce ul.products,
   .woocommerce-page ul.products {
     grid-template-columns: 1fr !important;
+  }
+
+  .mnsk7-hero__stats {
+    grid-template-columns: 1fr;
+  }
+
+  .mnsk7-hero__btn {
+    width: 100%;
   }
 }
