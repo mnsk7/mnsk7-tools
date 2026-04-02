@@ -174,6 +174,17 @@ test.describe('Header layout — mobile', () => {
       expect(innerRect.height).toBeLessThanOrEqual(headerRect + LAYOUT_TOLERANCE);
     });
 
+    test(`${viewport.width}x${viewport.height}: cart trigger keeps accessibility contract`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
+      await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
+
+      const cartTrigger = page.locator('.mnsk7-header__cart-trigger, a.cart-contents').first();
+      await expect(cartTrigger).toBeVisible();
+      await expect(cartTrigger).toHaveAttribute('aria-controls', 'mnsk7-header-cart-dropdown');
+      await expect(cartTrigger).toHaveAttribute('aria-expanded', 'false');
+    });
+
     test(`${viewport.width}x${viewport.height}: Sklep submenu opens from the first item, not mid-list`, async ({ page }) => {
       await page.setViewportSize(viewport);
       await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });

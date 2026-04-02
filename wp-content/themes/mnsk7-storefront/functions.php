@@ -995,9 +995,12 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( $fragments ) {
 	$cart_count = WC()->cart->get_cart_contents_count();
 	$cart_total = WC()->cart->get_cart_total();
 	$loyalty_discount = function_exists( 'mnsk7_header_cart_loyalty_discount' ) ? mnsk7_header_cart_loyalty_discount() : 0.0;
+	$cart_aria_label = $cart_count === 0
+		? __( 'Koszyk', 'mnsk7-storefront' )
+		: sprintf( _n( 'Koszyk, %d pozycja', 'Koszyk, %d pozycji', $cart_count, 'mnsk7-storefront' ), $cart_count );
 	ob_start();
 	?>
-	<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php esc_attr_e( 'Koszyk', 'mnsk7-storefront' ); ?>">
+	<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php echo esc_attr( $cart_aria_label ); ?>" aria-expanded="false" aria-controls="mnsk7-header-cart-dropdown">
 		<span class="mnsk7-header__cart-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
 		<span class="mnsk7-header__cart-count" aria-hidden="true"><?php echo absint( $cart_count ); ?></span>
 	</a>
@@ -1365,6 +1368,15 @@ add_action( 'wp_footer', function () {
 					'<span class=\"mnsk7-header__cart-icon\" aria-hidden=\"true\"><svg xmlns=\"http://www.w3.org/2000/svg\" width=\"22\" height=\"22\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z\"></path><line x1=\"3\" y1=\"6\" x2=\"21\" y2=\"6\"></line><path d=\"M16 10a4 4 0 0 1-8 0\"></path></svg></span>' +
 					'<span class=\"mnsk7-header__cart-count\" aria-hidden=\"true\">' + count + '</span>';
 			}
+			var countNode = cartLink.querySelector('.mnsk7-header__cart-count, .count');
+			var countText = countNode ? (countNode.textContent || '0') : '0';
+			var count = parseInt(String(countText).replace(/[^\d]/g, ''), 10);
+			if (isNaN(count)) count = 0;
+			cartLink.setAttribute('aria-controls', 'mnsk7-header-cart-dropdown');
+			if (!cartLink.hasAttribute('aria-expanded')) {
+				cartLink.setAttribute('aria-expanded', 'false');
+			}
+			cartLink.setAttribute('aria-label', count > 0 ? ('Koszyk, ' + count + (count === 1 ? ' pozycja' : ' pozycji')) : 'Koszyk');
 			return cartLink;
 		}
 
