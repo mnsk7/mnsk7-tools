@@ -173,6 +173,48 @@ test.describe('Header layout — mobile', () => {
       });
       expect(innerRect.height).toBeLessThanOrEqual(headerRect + LAYOUT_TOLERANCE);
     });
+
+    test(`${viewport.width}x${viewport.height}: Sklep submenu opens from the first item, not mid-list`, async ({ page }) => {
+      await page.setViewportSize(viewport);
+      await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
+      await page.goto('/', { waitUntil: 'domcontentloaded', timeout: 60_000 });
+
+      const menuToggle = page.locator('.mnsk7-header__menu-toggle').first();
+      const sklepTrigger = page.locator('.mnsk7-menu-item-sklep').first();
+      await expect(menuToggle).toBeVisible();
+      await menuToggle.click();
+      await expect(sklepTrigger).toBeVisible();
+      await sklepTrigger.click();
+
+      const metrics = await page.evaluate(() => {
+        const menu = document.getElementById('mnsk7-primary-menu');
+        const parentLi = menu ? menu.querySelector('li.menu-item-has-children') : null;
+        const submenu = parentLi ? parentLi.querySelector(':scope > .sub-menu') : null;
+        const firstLink = submenu ? submenu.querySelector('a[href]') : null;
+        if (!menu || !parentLi || !submenu || !firstLink) return null;
+
+        const menuRect = menu.getBoundingClientRect();
+        const firstRect = firstLink.getBoundingClientRect();
+        return {
+          menuScrollTop: menu.scrollTop,
+          parentOffsetTop: parentLi.offsetTop,
+          firstLinkTopWithinMenu: firstRect.top - menuRect.top,
+          firstLinkBottomWithinMenu: firstRect.bottom - menuRect.top,
+          menuVisibleHeight: menu.clientHeight,
+        };
+      });
+
+      if (!metrics) {
+        test.skip(true, 'mobile Sklep submenu structure not found');
+        return;
+      }
+
+      expect(metrics.menuScrollTop).toBeGreaterThanOrEqual(0);
+      expect(metrics.menuScrollTop).toBeLessThanOrEqual(Math.max(0, metrics.parentOffsetTop + 16));
+      expect(metrics.firstLinkTopWithinMenu).toBeGreaterThanOrEqual(0);
+      expect(metrics.firstLinkTopWithinMenu).toBeLessThanOrEqual(140);
+      expect(metrics.firstLinkBottomWithinMenu).toBeLessThanOrEqual(metrics.menuVisibleHeight);
+    });
   }
 });
 
