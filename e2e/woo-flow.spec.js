@@ -366,6 +366,29 @@ test.describe('WOO_FLOW (blocking)', () => {
     await Promise.race([ajaxAdded, navigated, noticeShown]);
     await page.waitForTimeout(400);
 
+    const headerCartState = await page.evaluate(() => {
+      const wrap = document.querySelector('.mnsk7-header__cart');
+      const trigger = wrap ? wrap.querySelector('.mnsk7-header__cart-trigger, a.cart-contents') : null;
+      const countNode = trigger ? trigger.querySelector('.mnsk7-header__cart-count, .count') : null;
+      const countText = countNode ? (countNode.textContent || '0') : '0';
+      const count = parseInt(String(countText).replace(/[^\d]/g, ''), 10);
+      return {
+        hasWrap: Boolean(wrap),
+        hasTrigger: Boolean(trigger),
+        isEmptyClassApplied: wrap ? wrap.classList.contains('mnsk7-header__cart--empty') : null,
+        count: Number.isNaN(count) ? 0 : count,
+        ariaControls: trigger ? trigger.getAttribute('aria-controls') : null,
+        ariaExpanded: trigger ? trigger.getAttribute('aria-expanded') : null,
+      };
+    });
+
+    expect(headerCartState.hasWrap).toBe(true);
+    expect(headerCartState.hasTrigger).toBe(true);
+    expect(headerCartState.count).toBeGreaterThan(0);
+    expect(headerCartState.isEmptyClassApplied).toBe(false);
+    expect(headerCartState.ariaControls).toBe('mnsk7-header-cart-dropdown');
+    expect(headerCartState.ariaExpanded).toBe('false');
+
     await gotoWithRetries(page, cartUrl, { timeout: 45_000, retries: 2 });
     const cartItems = page.locator('.cart_item, tr.woocommerce-cart-form__cart-item, .wc-block-cart-items__row');
     const count = await cartItems.count();
@@ -374,4 +397,3 @@ test.describe('WOO_FLOW (blocking)', () => {
     }
   });
 });
-

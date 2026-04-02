@@ -1372,6 +1372,7 @@ add_action( 'wp_footer', function () {
 			var countText = countNode ? (countNode.textContent || '0') : '0';
 			var count = parseInt(String(countText).replace(/[^\d]/g, ''), 10);
 			if (isNaN(count)) count = 0;
+			wrap.classList.toggle('mnsk7-header__cart--empty', count === 0);
 			cartLink.setAttribute('aria-controls', 'mnsk7-header-cart-dropdown');
 			if (!cartLink.hasAttribute('aria-expanded')) {
 				cartLink.setAttribute('aria-expanded', 'false');
