@@ -25,6 +25,25 @@ test.describe('PLP layout (server-side) — desktop UA', () => {
     await expect(tableWrap).toBeVisible();
     await expect(gridMobile).toHaveCount(0);
   });
+
+  test('variable products in table route to PDP instead of fake add-to-cart', async ({ page }) => {
+    await page.goto(SHOP_URL, { waitUntil: 'domcontentloaded', timeout: 60_000 });
+
+    const variableRow = page.locator('.mnsk7-product-table tbody tr.product-type-variable').first();
+    if (!(await variableRow.count())) {
+      test.skip(true, 'No variable product row found in current PLP dataset.');
+      return;
+    }
+
+    const qtyCell = variableRow.locator('.mnsk7-table-cell--qty');
+    const actionLink = variableRow.locator('.mnsk7-table-cell--action a.mnsk7-table-addcart-btn').first();
+    const actionForm = variableRow.locator('.mnsk7-table-cell--action form.mnsk7-table-addcart-form');
+
+    await expect(actionLink).toBeVisible();
+    await expect(actionLink).toHaveText(/Wybierz opcje/i);
+    await expect(actionForm).toHaveCount(0);
+    await expect(qtyCell).toContainText('—');
+  });
 });
 
 test.describe('PLP layout (server-side) — mobile UA', () => {

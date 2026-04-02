@@ -21,6 +21,7 @@ $stock_html  = $product->is_in_stock()
 $total_sales = (int) $product->get_total_sales();
 $max_qty     = $product->get_max_purchase_quantity();
 $min_qty     = $product->get_min_purchase_quantity();
+$is_variable = $product->is_type( 'variable' );
 $key_params  = array();
 if ( function_exists( 'mnsk7_get_key_param_attributes' ) ) {
 	foreach ( mnsk7_get_key_param_attributes() as $attr_slug => $attr_label ) {
@@ -91,7 +92,7 @@ $row_class = $product->is_sold_individually() ? 'mnsk7-row--fixed-qty' : '';
 	<td class="mnsk7-table-cell mnsk7-table-cell--qty">
 		<?php
 		$form_id = 'mnsk7-addcart-' . $product->get_id();
-		if ( $product->is_purchasable() && $product->is_in_stock() ) :
+		if ( $product->is_purchasable() && $product->is_in_stock() && ! $is_variable ) :
 			if ( $product->is_sold_individually() ) :
 				?>
 				<span class="mnsk7-table-qty-implicit mnsk7-table-qty-implicit--fixed" aria-hidden="true"></span>
@@ -109,7 +110,9 @@ $row_class = $product->is_sold_individually() ? 'mnsk7-row--fixed-qty' : '';
 	</td>
 	<td class="mnsk7-table-cell mnsk7-table-cell--action">
 		<?php
-		if ( $product->is_purchasable() && $product->is_in_stock() ) {
+		if ( $product->is_purchasable() && $product->is_in_stock() && $is_variable ) {
+			echo '<a href="' . esc_url( get_permalink() ) . '" class="button mnsk7-table-addcart-btn mnsk7-table-addcart-btn--select-options">' . esc_html__( 'Wybierz opcje', 'mnsk7-storefront' ) . '</a>';
+		} elseif ( $product->is_purchasable() && $product->is_in_stock() ) {
 			?>
 			<form id="<?php echo esc_attr( $form_id ); ?>" method="post" action="" class="mnsk7-table-addcart-form<?php echo $product->is_sold_individually() ? ' mnsk7-table-addcart-form--fixed-qty' : ''; ?>">
 				<?php wp_nonce_field( 'woocommerce-add-to-cart', 'woocommerce-add-to-cart-nonce' ); ?>
