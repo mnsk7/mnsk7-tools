@@ -884,14 +884,18 @@ add_action( 'init', function () {
  */
 function mnsk7_get_megamenu_terms() {
 	$cached = get_transient( 'mnsk7_megamenu_terms' );
-	if ( is_array( $cached ) && isset( $cached['cats'] ) && isset( $cached['tags'] ) ) {
+	if ( is_array( $cached ) && isset( $cached['cats'] ) && isset( $cached['tags'] ) && isset( $cached['accessories'] ) ) {
 		return $cached;
 	}
 	$top_cats = array();
+	$accessories = array();
 	$top_tags = array();
 	if ( taxonomy_exists( 'product_cat' ) ) {
 		$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true, 'number' => 16, 'orderby' => 'name' ) );
 		$top_cats = is_wp_error( $top_cats ) ? array() : $top_cats;
+		$grouped = function_exists( 'mnsk7_split_catalog_category_terms' ) ? mnsk7_split_catalog_category_terms( $top_cats ) : array( 'core' => $top_cats, 'accessories' => array() );
+		$top_cats = isset( $grouped['core'] ) ? $grouped['core'] : array();
+		$accessories = isset( $grouped['accessories'] ) ? $grouped['accessories'] : array();
 	}
 	if ( taxonomy_exists( 'product_tag' ) ) {
 		$top_tags = get_terms( array( 'taxonomy' => 'product_tag', 'hide_empty' => true, 'number' => 10, 'orderby' => 'count', 'order' => 'DESC' ) );
@@ -902,8 +906,55 @@ function mnsk7_get_megamenu_terms() {
 			return $slug_ok && $name_ok;
 		} );
 	}
-	set_transient( 'mnsk7_megamenu_terms', array( 'cats' => $top_cats, 'tags' => $top_tags ), 12 * HOUR_IN_SECONDS );
-	return array( 'cats' => $top_cats, 'tags' => $top_tags );
+	set_transient( 'mnsk7_megamenu_terms', array( 'cats' => $top_cats, 'accessories' => $accessories, 'tags' => $top_tags ), 12 * HOUR_IN_SECONDS );
+	return array( 'cats' => $top_cats, 'accessories' => $accessories, 'tags' => $top_tags );
+}
+
+/**
+ * Whether a top-level product category should be treated as accessory/navigation-secondary.
+ *
+ * @param WP_Term $term Product category term.
+ * @return bool
+ */
+function mnsk7_is_accessory_product_category( $term ) {
+	if ( ! ( $term instanceof WP_Term ) ) {
+		return false;
+	}
+	$slug = isset( $term->slug ) ? sanitize_title( $term->slug ) : '';
+	return in_array(
+		$slug,
+		array(
+			'tuleje-zaciskowe',
+			'plytki-wieloostrzowe',
+			'zestaw-frezow-do-drewna',
+			'zestaw-gwintownikow',
+		),
+		true
+	);
+}
+
+/**
+ * Split top-level category terms into core cutter families and accessory-like categories.
+ *
+ * @param array $terms Category terms.
+ * @return array{core: array, accessories: array}
+ */
+function mnsk7_split_catalog_category_terms( $terms ) {
+	$grouped = array(
+		'core'        => array(),
+		'accessories' => array(),
+	);
+	if ( empty( $terms ) || ! is_array( $terms ) ) {
+		return $grouped;
+	}
+	foreach ( $terms as $term ) {
+		if ( function_exists( 'mnsk7_is_accessory_product_category' ) && mnsk7_is_accessory_product_category( $term ) ) {
+			$grouped['accessories'][] = $term;
+			continue;
+		}
+		$grouped['core'][] = $term;
+	}
+	return $grouped;
 }
 
 function mnsk7_clear_megamenu_transient() {
@@ -2770,6 +2821,60 @@ function mnsk7_get_product_attribute_taxonomy_names() {
 }
 
 /**
+ * Canonical PLP attribute filters. Reduces duplicate/near-duplicate rows from raw Woo attributes.
+ *
+ * @return array<string,string> Map taxonomy => customer-facing label.
+ */
+function mnsk7_get_plp_attribute_filter_taxonomies() {
+	$available = array_flip( function_exists( 'mnsk7_get_product_attribute_taxonomy_names' ) ? mnsk7_get_product_attribute_taxonomy_names() : array() );
+	$groups    = array(
+		array(
+			'label' => __( 'Średnica robocza', 'mnsk7-storefront' ),
+			'slugs' => array( 'srednica' ),
+		),
+		array(
+			'label' => __( 'Średnica trzpienia', 'mnsk7-storefront' ),
+			'slugs' => array( 'fi', 'srednica-trzpienia', 'wymiary-trzpienia' ),
+		),
+		array(
+			'label' => __( 'Długość robocza', 'mnsk7-storefront' ),
+			'slugs' => array( 'dlugosc-robocza-h', 'dlugosc-robocza', 'dlugosc-czesci-roboczej' ),
+		),
+		array(
+			'label' => __( 'Długość całkowita', 'mnsk7-storefront' ),
+			'slugs' => array( 'dlugosc-calkowita-l', 'dlugosc-calkowita' ),
+		),
+		array(
+			'label' => __( 'Kąt', 'mnsk7-storefront' ),
+			'slugs' => array( 'kat-skosu', 'kat' ),
+		),
+		array(
+			'label' => __( 'Promień R', 'mnsk7-storefront' ),
+			'slugs' => array( 'r' ),
+		),
+		array(
+			'label' => __( 'Typ', 'mnsk7-storefront' ),
+			'slugs' => array( 'typ-pilnika', 'typ' ),
+		),
+		array(
+			'label' => __( 'Typ tulei zaciskowej', 'mnsk7-storefront' ),
+			'slugs' => array( 'er' ),
+		),
+	);
+	$resolved = array();
+	foreach ( $groups as $group ) {
+		foreach ( $group['slugs'] as $slug ) {
+			$taxonomy = 'pa_' . $slug;
+			if ( isset( $available[ $taxonomy ] ) ) {
+				$resolved[ $taxonomy ] = $group['label'];
+				break;
+			}
+		}
+	}
+	return $resolved;
+}
+
+/**
  * Human-readable Polish labels for product attribute slugs (for chips and filters).
  * Keys = attribute slug (as in pa_*), values = label for customer.
  *
@@ -2824,7 +2929,14 @@ function mnsk7_normalize_catalog_term_label( $name ) {
 		'Pilnik oborotowy' => 'Pilnik obrotowy',
 		'Pilniki oborotowe' => 'Pilniki obrotowe',
 	);
-	return isset( $map[ $normalized ] ) ? $map[ $normalized ] : $normalized;
+	$normalized = isset( $map[ $normalized ] ) ? $map[ $normalized ] : $normalized;
+	$first_char = function_exists( 'mb_substr' ) ? mb_substr( $normalized, 0, 1, 'UTF-8' ) : substr( $normalized, 0, 1 );
+	$rest       = function_exists( 'mb_substr' ) ? mb_substr( $normalized, 1, null, 'UTF-8' ) : substr( $normalized, 1 );
+	if ( $first_char !== '' ) {
+		$first_char = function_exists( 'mb_strtoupper' ) ? mb_strtoupper( $first_char, 'UTF-8' ) : strtoupper( $first_char );
+		$normalized = $first_char . $rest;
+	}
+	return $normalized;
 }
 
 add_filter( 'single_term_title', function ( $title ) {
@@ -2845,7 +2957,7 @@ add_filter( 'get_the_archive_title', function ( $title ) {
  * @return string[]
  */
 function mnsk7_get_all_attribute_filter_param_names() {
-	$taxonomies = function_exists( 'mnsk7_get_product_attribute_taxonomy_names' ) ? mnsk7_get_product_attribute_taxonomy_names() : array();
+	$taxonomies = array_keys( function_exists( 'mnsk7_get_plp_attribute_filter_taxonomies' ) ? mnsk7_get_plp_attribute_filter_taxonomies() : array() );
 	$params     = array();
 	foreach ( $taxonomies as $tax ) {
 		$params[] = 'filter_' . str_replace( 'pa_', '', $tax );
@@ -2874,7 +2986,7 @@ add_action( 'woocommerce_product_query', function ( $q ) {
 	if ( is_admin() || ! is_object( $q ) || ! method_exists( $q, 'set' ) ) {
 		return;
 	}
-	$attr_taxonomies = function_exists( 'mnsk7_get_product_attribute_taxonomy_names' ) ? mnsk7_get_product_attribute_taxonomy_names() : array();
+	$attr_taxonomies = array_keys( function_exists( 'mnsk7_get_plp_attribute_filter_taxonomies' ) ? mnsk7_get_plp_attribute_filter_taxonomies() : array() );
 	$tax             = $q->get( 'tax_query' );
 	if ( ! is_array( $tax ) ) {
 		$tax = array();
@@ -2976,6 +3088,10 @@ function mnsk7_normalize_archive_chip_label( $label, $taxonomy = '' ) {
 		$label = preg_replace( '/^(\d+(?:[.,]\d+)?)\s*(st|stopni|deg)?$/iu', '$1°', $label );
 	}
 
+	if ( function_exists( 'mnsk7_normalize_catalog_term_label' ) ) {
+		$label = mnsk7_normalize_catalog_term_label( $label );
+	}
+
 	return trim( preg_replace( '/\s+/u', ' ', $label ) );
 }
 
@@ -3030,8 +3146,7 @@ function mnsk7_get_archive_attribute_filter_chips() {
 	if ( ! is_product_taxonomy() ) {
 		return $empty;
 	}
-	$attr_taxonomies = function_exists( 'mnsk7_get_product_attribute_taxonomy_names' ) ? mnsk7_get_product_attribute_taxonomy_names() : array();
-	$attrs_to_try   = array_fill_keys( $attr_taxonomies, '' );
+	$attrs_to_try    = function_exists( 'mnsk7_get_plp_attribute_filter_taxonomies' ) ? mnsk7_get_plp_attribute_filter_taxonomies() : array();
 	$term           = get_queried_object();
 	if ( ! $term || ! isset( $term->term_id ) ) {
 		return $empty;
@@ -3048,7 +3163,7 @@ function mnsk7_get_archive_attribute_filter_chips() {
 		return array( 'filters' => array(), 'filter_params' => array() );
 	}
 
-	foreach ( $attrs_to_try as $tax => $_ ) {
+	foreach ( $attrs_to_try as $tax => $preferred_label ) {
 		if ( $is_zestawy && $tax === 'pa_srednica' ) {
 			continue;
 		}
@@ -3056,7 +3171,10 @@ function mnsk7_get_archive_attribute_filter_chips() {
 			continue;
 		}
 		$attr_name = str_replace( 'pa_', '', $tax );
-		$label     = function_exists( 'mnsk7_attribute_label_pl' ) ? mnsk7_attribute_label_pl( $attr_name ) : '';
+		$label     = $preferred_label;
+		if ( $label === '' && function_exists( 'mnsk7_attribute_label_pl' ) ) {
+			$label = mnsk7_attribute_label_pl( $attr_name );
+		}
 		if ( $label === '' && function_exists( 'wc_attribute_label' ) ) {
 			$label = wc_attribute_label( $attr_name );
 		}
@@ -3077,6 +3195,11 @@ function mnsk7_get_archive_attribute_filter_chips() {
 		if ( is_wp_error( $terms ) || empty( $terms ) ) {
 			continue;
 		}
+		$param      = 'filter_' . str_replace( 'pa_', '', $tax );
+		$active_val = ! empty( $_GET[ $param ] ) ? sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) : '';
+		if ( count( $terms ) < 2 && $active_val === '' ) {
+			continue;
+		}
 		$chips = array();
 		foreach ( $terms as $t ) {
 			$normalized_label = function_exists( 'mnsk7_normalize_archive_chip_label' ) ? mnsk7_normalize_archive_chip_label( $t->name, $tax ) : $t->name;
@@ -3088,7 +3211,6 @@ function mnsk7_get_archive_attribute_filter_chips() {
 		if ( empty( $chips ) ) {
 			continue;
 		}
-		$param    = 'filter_' . str_replace( 'pa_', '', $tax );
 		$filters[] = array(
 			'taxonomy' => $tax,
 			'label' => $label,

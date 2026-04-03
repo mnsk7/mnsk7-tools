@@ -28,6 +28,8 @@ do_action( 'woocommerce_before_main_content' );
 $is_taxonomy = is_product_taxonomy();
 $current_term = $is_taxonomy ? get_queried_object() : null;
 $loop_total = isset( $GLOBALS['wp_query']->found_posts ) ? (int) $GLOBALS['wp_query']->found_posts : 0;
+$max_pages  = isset( $GLOBALS['wp_query']->max_num_pages ) ? (int) $GLOBALS['wp_query']->max_num_pages : 1;
+$current_page = max( 1, (int) get_query_var( 'paged', 1 ) );
 $all_filter_params = function_exists( 'mnsk7_get_all_attribute_filter_param_names' ) ? mnsk7_get_all_attribute_filter_param_names() : array();
 $has_filter        = false;
 foreach ( $all_filter_params as $param_name ) {
@@ -95,9 +97,9 @@ $render_plp_search = function ( $term = null, $is_priority = false ) {
 	}
 	?>
 	<div class="<?php echo esc_attr( $classes ); ?>">
-		<form role="search" method="get" class="mnsk7-plp-search__form" action="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">
+		<form role="search" method="get" class="mnsk7-plp-search__form mnsk7-header__search-form" action="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>">
 			<label for="mnsk7-plp-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
-			<input type="search" id="mnsk7-plp-search-input" class="mnsk7-plp-search__input" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php echo esc_attr( $search_placeholder ); ?>" />
+			<input type="search" id="mnsk7-plp-search-input" class="mnsk7-plp-search__input mnsk7-header__search-input" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php echo esc_attr( $search_placeholder ); ?>" />
 			<?php if ( $is_term_archive ) : ?>
 				<?php if ( $term->taxonomy === 'product_tag' ) : ?>
 					<input type="hidden" name="product_tag" value="<?php echo esc_attr( $term->slug ); ?>" />
@@ -105,13 +107,13 @@ $render_plp_search = function ( $term = null, $is_priority = false ) {
 					<input type="hidden" name="product_cat" value="<?php echo esc_attr( $term->slug ); ?>" />
 				<?php endif; ?>
 			<?php endif; ?>
-			<button type="submit" class="mnsk7-plp-search__submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
+			<button type="submit" class="mnsk7-plp-search__submit mnsk7-header__search-submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
 		</form>
 	</div>
 	<?php
 };
 
-if ( is_shop() || $is_taxonomy ) {
+if ( ( is_shop() || $is_taxonomy ) && $plp_is_mobile_request ) {
 	$render_plp_search( $current_term, true );
 }
 
@@ -182,7 +184,7 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 	if ( ! is_wp_error( $cat_row_terms ) && ! empty( $cat_row_terms ) ) {
 		$render_plp_nav_row( $cat_label, $cat_row_terms, $current_term->taxonomy === 'product_cat' ? $current_term->term_id : 0 );
 	}
-	$megamenu_terms = function_exists( 'mnsk7_get_megamenu_terms' ) ? mnsk7_get_megamenu_terms() : array( 'tags' => array() );
+	$megamenu_terms = function_exists( 'mnsk7_get_megamenu_terms' ) ? mnsk7_get_megamenu_terms() : array( 'tags' => array(), 'accessories' => array() );
 	$tags_row      = isset( $megamenu_terms['tags'] ) ? $megamenu_terms['tags'] : array();
 	$tags_label    = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
 	if ( ! empty( $tags_row ) && 'product_tag' !== $current_term->taxonomy ) {
@@ -274,7 +276,8 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 		foreach ( $active_filters as $param => $val ) {
 			$without = remove_query_arg( $param );
 			$without = function_exists( 'mnsk7_plp_anchor_results' ) ? mnsk7_plp_anchor_results( $without ) : $without;
-			echo '<a href="' . esc_url( $without ) . '" class="mnsk7-plp-chip mnsk7-plp-chip--active mnsk7-plp-chip--remove" aria-label="' . esc_attr__( 'Usuń filtr', 'mnsk7-storefront' ) . '">' . esc_html( $val ) . ' ×</a>';
+			$display_val = function_exists( 'mnsk7_normalize_archive_chip_label' ) ? mnsk7_normalize_archive_chip_label( $val ) : $val;
+			echo '<a href="' . esc_url( $without ) . '" class="mnsk7-plp-chip mnsk7-plp-chip--active mnsk7-plp-chip--remove" aria-label="' . esc_attr__( 'Usuń filtr', 'mnsk7-storefront' ) . '">' . esc_html( $display_val ) . ' ×</a>';
 		}
 		echo ' <a href="' . esc_url( $clear_url ) . '" class="button mnsk7-plp-reset">' . esc_html__( 'Wyczyść wszystkie', 'mnsk7-storefront' ) . '</a>';
 		echo '</div>';
@@ -283,16 +286,21 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 
 /* Strona Sklep (bez taksonomii): dwie grupy chipów — kategorie i tagi (jak w megamenu). */
 if ( ! $is_empty_filtered_state && is_shop() && ! $is_taxonomy ) {
-	$megamenu = function_exists( 'mnsk7_get_megamenu_terms' ) ? mnsk7_get_megamenu_terms() : array( 'cats' => array(), 'tags' => array() );
+	$megamenu = function_exists( 'mnsk7_get_megamenu_terms' ) ? mnsk7_get_megamenu_terms() : array( 'cats' => array(), 'accessories' => array(), 'tags' => array() );
 	$shop_cats = isset( $megamenu['cats'] ) ? $megamenu['cats'] : array();
+	$shop_accessories = isset( $megamenu['accessories'] ) ? $megamenu['accessories'] : array();
 	$shop_tags = isset( $megamenu['tags'] ) ? $megamenu['tags'] : array();
 	$cat_label = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
 	$tags_label = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
+	$accessories_label = apply_filters( 'mnsk7_megamenu_heading_accessories', __( 'Akcesoria i zestawy', 'mnsk7-storefront' ) );
 	if ( ! is_wp_error( $shop_cats ) && ! empty( $shop_cats ) ) {
 		$render_plp_nav_row( $cat_label, $shop_cats, 0 );
 	}
 	if ( ! is_wp_error( $shop_tags ) && ! empty( $shop_tags ) ) {
 		$render_plp_nav_row( $tags_label, $shop_tags, 0 );
+	}
+	if ( ! is_wp_error( $shop_accessories ) && ! empty( $shop_accessories ) ) {
+		$render_plp_nav_row( $accessories_label, $shop_accessories, 0 );
 	}
 }
 
@@ -328,7 +336,20 @@ if ( woocommerce_product_loop() ) {
 			}
 		} else {
 			/* Desktop/tablet: tylko tabela (bez siatki kart w DOM). Jeden toolbar (na dole) dla spójnego rytmu. */
-			$plp_show_toolbar_at_top = false;
+			$plp_show_toolbar_at_top = true;
+			echo '<div class="mnsk7-plp-row-search-toolbar col-full">';
+			$render_plp_search( $current_term, false );
+			echo '<div class="mnsk7-plp-toolbar mnsk7-plp-toolbar--top">';
+			if ( function_exists( 'woocommerce_result_count' ) ) {
+				echo '<div class="mnsk7-plp-toolbar__count">';
+				woocommerce_result_count();
+				echo '</div>';
+			}
+			if ( function_exists( 'woocommerce_catalog_ordering' ) ) {
+				woocommerce_catalog_ordering();
+			}
+			echo '</div>';
+			echo '</div>';
 			?>
 			<div class="mnsk7-product-table-wrap col-full">
 				<table class="mnsk7-product-table shop_table">
@@ -360,6 +381,13 @@ if ( woocommerce_product_loop() ) {
 			if ( function_exists( 'mnsk7_render_trust_badges' ) ) {
 				echo '<div class="mnsk7-plp-trust-wrap mnsk7-plp-trust-wrap--after-results col-full">';
 				mnsk7_render_trust_badges( 'mnsk7-plp-trust' );
+				echo '</div>';
+			}
+			if ( $max_pages > $current_page ) {
+				$taxonomy = $is_taxonomy && $current_term instanceof WP_Term ? $current_term->taxonomy : '';
+				$term_slug = $is_taxonomy && $current_term instanceof WP_Term ? $current_term->slug : '';
+				echo '<div class="mnsk7-plp-load-more-wrap col-full" data-current-page="' . esc_attr( $current_page ) . '" data-taxonomy="' . esc_attr( $taxonomy ) . '" data-term="' . esc_attr( $term_slug ) . '">';
+				echo '<button type="button" class="mnsk7-plp-load-more button">' . esc_html__( 'Pokaż więcej', 'mnsk7-storefront' ) . '</button>';
 				echo '</div>';
 			}
 			?>

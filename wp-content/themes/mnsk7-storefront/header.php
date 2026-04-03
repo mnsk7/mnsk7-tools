@@ -90,11 +90,13 @@ endif;
 					<?php
 					$has_submenu = true;
 					$top_cats = array();
+					$accessory_cats = array();
 					$top_tags = array();
 					// Submenu w DOM zawsze (desktop + mobile); na mobile rozwijane przez JS (tap → .is-open). Nawet przy pustych termach — footer "Wszystkie produkty".
 					if ( function_exists( 'mnsk7_get_megamenu_terms' ) ) {
 						$terms = mnsk7_get_megamenu_terms();
 						$top_cats = isset( $terms['cats'] ) ? $terms['cats'] : array();
+						$accessory_cats = isset( $terms['accessories'] ) ? $terms['accessories'] : array();
 						$top_tags = isset( $terms['tags'] ) ? $terms['tags'] : array();
 					}
 					?>
@@ -128,6 +130,23 @@ endif;
 									$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
 									$name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $name ) : $name;
 									$link_class = ( $current_archive_taxonomy === 'product_tag' && $current_archive_term_id === (int) $term->term_id ) ? ' class="mnsk7-megamenu__link--active"' : '';
+									echo '<li><a href="' . esc_url( $link ) . '"' . $link_class . '>' . esc_html( $name ) . '</a></li>';
+								}
+								?>
+							</ul>
+						</li>
+						<?php endif; ?>
+						<?php if ( ! empty( $accessory_cats ) ) : ?>
+						<li class="mnsk7-megamenu__group">
+							<span class="mnsk7-megamenu__heading"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_accessories', __( 'Akcesoria i zestawy', 'mnsk7-storefront' ) ) ); ?></span>
+							<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--tags">
+								<?php
+								foreach ( $accessory_cats as $term ) {
+									$link = get_term_link( $term );
+									if ( is_wp_error( $link ) ) { continue; }
+									$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
+									$name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $name ) : $name;
+									$link_class = ( $current_archive_taxonomy === 'product_cat' && $current_archive_term_id === (int) $term->term_id ) ? ' class="mnsk7-megamenu__link--active"' : '';
 									echo '<li><a href="' . esc_url( $link ) . '"' . $link_class . '>' . esc_html( $name ) . '</a></li>';
 								}
 								?>

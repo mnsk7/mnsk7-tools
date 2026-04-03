@@ -390,6 +390,7 @@ body.woocommerce .mnsk7-plp-toolbar:not(.mnsk7-plp-toolbar--top):not(.mnsk7-plp-
   border: 1px solid var(--color-border);
   border-radius: var(--r-sm);
   cursor: pointer;
+  min-height: 48px;
 }
 .mnsk7-plp-toolbar .woocommerce-ordering .orderby:focus {
   outline: 2px solid var(--color-primary);
@@ -689,7 +690,8 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--color-text-secondary);
-  margin-right: 0.5rem;
+  margin-right: 0.35rem;
+  min-width: 8.5rem;
   align-self: center;
 }
 
@@ -705,14 +707,14 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
 
 /* PLP-07: drugi rzĂ„â€¦d chipÄ‚Ĺ‚w (atrybuty) Ă˘â‚¬â€ť wizualnie drugorzĂ„â„˘dne wzglĂ„â„˘dem kategorii; kaÄąÄ˝dy wiersz z etykietĂ„â€¦ + chipy z zawijaniem */
 .mnsk7-plp-chips--attrs {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem;
+  margin-top: 0.35rem;
+  margin-bottom: 0.35rem;
   width: 100%;
   gap: 0.35rem;
   align-items: center;
 }
 .mnsk7-plp-chips--attrs + .mnsk7-plp-chips--attrs {
-  margin-top: 0.25rem;
+  margin-top: 0.15rem;
 }
 .mnsk7-plp-chips--attrs .mnsk7-plp-chip {
   font-size: var(--fs-xs);
@@ -882,6 +884,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
   width: 100%;
   max-width: 100%;
@@ -901,6 +904,20 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   align-items: center;
   gap: var(--space-16);
   font-size: var(--fs-sm);
+  justify-content: flex-end;
+}
+.mnsk7-plp-toolbar__count,
+.mnsk7-plp-toolbar__count p,
+.mnsk7-plp-toolbar__count span {
+  margin: 0;
+  font-size: var(--fs-sm);
+  color: var(--color-text-secondary);
+  white-space: nowrap;
+}
+.mnsk7-plp-row-search-toolbar .woocommerce-ordering {
+  display: flex;
+  align-items: center;
+  margin: 0;
 }
 .mnsk7-plp-search {
   margin-bottom: 1rem;
@@ -918,18 +935,31 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   max-width: 100%;
   min-width: 0;
 }
+.mnsk7-plp-search__form.mnsk7-header__search-form {
+  gap: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  background: var(--color-white);
+  box-shadow: var(--shadow-sm);
+}
 .mnsk7-plp-search__input {
   flex: 1;
   min-width: 0;
   padding: 0.5rem 0.75rem;
   font-size: var(--fs-base);
   font-family: var(--font-base);
-  border: 1px solid var(--color-border);
-  border-right: none;
+  border: none;
   border-radius: var(--r-sm) 0 0 var(--r-sm) !important;
   background: var(--color-white);
   box-sizing: border-box;
   appearance: none;
+}
+.mnsk7-plp-search__form .mnsk7-header__search-input,
+.mnsk7-plp-search__form .mnsk7-plp-search__input {
+  min-height: 44px;
+  border-right: none;
+  border-radius: var(--r-sm) 0 0 var(--r-sm) !important;
 }
 .mnsk7-plp-search__input:focus {
   outline: none;
@@ -950,8 +980,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   font-family: var(--font-base);
   background: var(--color-primary);
   color: var(--color-white);
-  border: 1px solid var(--color-border);
-  border-left: none;
+  border: none;
   border-radius: 0 var(--r-sm) var(--r-sm) 0 !important;
   cursor: pointer;
   min-height: 44px;
@@ -959,6 +988,12 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   flex-shrink: 0;
   white-space: nowrap;
   appearance: none;
+}
+.mnsk7-plp-search__form .mnsk7-header__search-submit,
+.mnsk7-plp-search__form .mnsk7-plp-search__submit {
+  min-height: 44px;
+  border-left: none;
+  border-radius: 0 var(--r-sm) var(--r-sm) 0 !important;
 }
 .mnsk7-plp-search__submit:hover {
   background: var(--color-primary-hover);
@@ -1218,10 +1253,10 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
 
 /* Przycisk Ă˘â‚¬ĹľPokaÄąÄ˝ wiĂ„â„˘cejĂ˘â‚¬ĹĄ pod tabelĂ„â€¦ (gdy jest nastĂ„â„˘pna strona) Ă˘â‚¬â€ť wyÄąâ€şrodkowany, ta sama szerokoÄąâ€şĂ„â€ˇ co tabela */
 .mnsk7-plp-load-more-wrap {
-  margin: 0.5rem 0 0;
+  margin: 1rem 0 0;
   width: 100%;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   box-sizing: border-box;
 }
@@ -1267,12 +1302,6 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
 .mnsk7-plp-load-more.loading {
   opacity: 0.7;
   pointer-events: none;
-}
-
-@media (min-width: 769px) {
-  .mnsk7-plp-load-more-wrap {
-    display: none;
-  }
 }
 
 /* PLP-09: layout wybierany na backendzie (mobile = grid, desktop = table). W DOM tylko jeden. */
@@ -1476,6 +1505,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table .mnsk7-table-cell--qty,
 .mnsk7-product-table .mnsk7-table-cell--action {
   vertical-align: middle;
+  text-align: center;
 }
 
 /* Desktop: przycisk Ă˘â‚¬ĹľDodaj do koszykaĂ˘â‚¬ĹĄ w jednej linii z cenĂ„â€¦ (41,00 zÄąâ€š), stanem (1 szt.), iloÄąâ€şciĂ„â€¦ */
@@ -1514,14 +1544,14 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-stepper {
   display: inline-flex;
   align-items: center;
-  gap: 0.25rem;
+  gap: 0.35rem;
   justify-content: center;
   width: 100%;
-  min-height: 46px;
+  min-height: 48px;
 }
 .mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-stepper .mnsk7-qty-btn {
-  min-width: 46px;
-  min-height: 46px;
+  min-width: 48px;
+  min-height: 48px;
   padding: 0;
   border-radius: 0.4rem;
 }
@@ -1540,6 +1570,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   flex-wrap: nowrap;
   justify-content: center;
   width: 100%;
+  min-height: 48px;
 }
 .mnsk7-product-table .mnsk7-table-addcart-form--fixed-qty {
   gap: 0;
@@ -1552,7 +1583,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 46px;
+  min-height: 48px;
   min-width: 4.5rem;
   padding: 0.5rem 0.8rem;
   border: none;
@@ -1588,9 +1619,9 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 46px;
+  min-height: 48px;
   width: 100%;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 1.15rem;
   font-size: var(--fs-sm);
   font-weight: 600;
   font-family: var(--font-base);
@@ -1635,6 +1666,13 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 }
 
 @media (max-width: 768px) {
+  .mnsk7-plp-row-search-toolbar {
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+  .mnsk7-plp-row-search-toolbar .mnsk7-plp-toolbar--top {
+    justify-content: flex-start;
+  }
   .mnsk7-plp-chips {
     margin-bottom: 0.75rem;
   }

@@ -42,19 +42,19 @@ get_header();
 
 					<div class="mnsk7-hero__stats" aria-label="<?php esc_attr_e( 'Najważniejsze informacje', 'mnsk7-storefront' ); ?>">
 						<div class="mnsk7-hero__stat">
-							<span class="mnsk7-hero__stat-value">100%</span>
+							<span class="mnsk7-hero__stat-value" data-mnsk7-counter>100%</span>
 							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'pozytywnych opinii', 'mnsk7-storefront' ); ?></span>
 						</div>
 						<div class="mnsk7-hero__stat">
-							<span class="mnsk7-hero__stat-value">383</span>
+							<span class="mnsk7-hero__stat-value" data-mnsk7-counter>383</span>
 							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'ocen na Allegro', 'mnsk7-storefront' ); ?></span>
 						</div>
 						<div class="mnsk7-hero__stat">
-							<span class="mnsk7-hero__stat-value">3 500+</span>
+							<span class="mnsk7-hero__stat-value" data-mnsk7-counter>3 500+</span>
 							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'zamówień w 2025 r.', 'mnsk7-storefront' ); ?></span>
 						</div>
 						<div class="mnsk7-hero__stat">
-							<span class="mnsk7-hero__stat-value">425</span>
+							<span class="mnsk7-hero__stat-value" data-mnsk7-counter>425</span>
 							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'produktów w ofercie', 'mnsk7-storefront' ); ?></span>
 						</div>
 					</div>
@@ -160,6 +160,7 @@ get_header();
 	<!-- KATALOG: grupy chipów (tagi + kategorie) jako poziome swipe rows, potem siatka kart kategorii. -->
 	<?php
 	$cats     = array();
+	$accessory_cats = array();
 	$tags     = array();
 	$has_cats = taxonomy_exists( 'product_cat' );
 	$has_tags = taxonomy_exists( 'product_tag' );
@@ -172,6 +173,11 @@ get_header();
 			'orderby'    => 'count',
 			'order'      => 'DESC',
 		) );
+		if ( ! is_wp_error( $cats ) && function_exists( 'mnsk7_split_catalog_category_terms' ) ) {
+			$grouped = mnsk7_split_catalog_category_terms( $cats );
+			$cats = isset( $grouped['core'] ) ? $grouped['core'] : array();
+			$accessory_cats = isset( $grouped['accessories'] ) ? $grouped['accessories'] : array();
+		}
 	}
 	if ( $has_tags ) {
 		$tags = get_terms( array(
@@ -184,6 +190,7 @@ get_header();
 	}
 	$tags_label = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
 	$cats_label = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
+	$accessories_label = apply_filters( 'mnsk7_megamenu_heading_accessories', __( 'Akcesoria i zestawy', 'mnsk7-storefront' ) );
 	$show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) );
 	if ( $show_catalog ) :
 	?>
@@ -202,8 +209,25 @@ get_header();
 						if ( is_wp_error( $t_link ) ) continue;
 						$tag_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $tag->name ) : $tag->name;
 						$tag_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $tag_name ) );
+						$tag_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $tag_name ) : $tag_name;
 					?>
 					<a href="<?php echo esc_url( $t_link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $tag_name ); ?></a>
+					<?php endforeach; ?>
+				</div>
+			</div>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $accessory_cats ) ) : ?>
+			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $accessories_label ); ?>">
+				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $accessories_label ); ?></h3>
+				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud">
+					<?php foreach ( $accessory_cats as $cat ) :
+						$link = get_term_link( $cat );
+						if ( is_wp_error( $link ) ) continue;
+						$cat_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $cat->name ) : $cat->name;
+						$cat_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $cat_name ) : $cat_name;
+					?>
+					<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $cat_name ); ?></a>
 					<?php endforeach; ?>
 				</div>
 			</div>
