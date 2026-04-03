@@ -17,7 +17,7 @@
 
   /* Hero */
   .mnsk7-hero {
-    padding: 3.2rem 1rem 3rem;
+    padding: 3.5rem 1rem 3.1rem;
   }
 
   .mnsk7-hero__split {
@@ -30,7 +30,7 @@
   }
 
   .mnsk7-hero__title {
-    max-width: 12ch;
+    max-width: 13ch;
   }
 
   .mnsk7-hero__lead {
@@ -47,11 +47,29 @@
   }
 
   .mnsk7-hero__stats {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
   .mnsk7-hero__panel {
-    padding: 1.05rem;
+    padding: 1.1rem;
+  }
+
+  .mnsk7-hero__panel-meta {
+    gap: 0.5rem;
+  }
+
+  .mnsk7-section__header {
+    flex-direction: column;
+    align-items: stretch;
+    margin-bottom: 1.5rem;
+  }
+
+  .mnsk7-section__header--bestsellers {
+    gap: 1rem;
+  }
+
+  .mnsk7-section--bestsellers .mnsk7-section__more {
+    text-align: left;
   }
 
   .mnsk7-hero__proof-row {

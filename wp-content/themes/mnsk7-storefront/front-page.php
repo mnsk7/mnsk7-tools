@@ -26,29 +26,36 @@ get_header();
 				),
 				array(
 					'label' => __( 'Warsztat i B2B', 'mnsk7-storefront' ),
-					'text'  => __( 'faktura VAT, powtarzalne zakupy i oferta ułożona pod szybki wybór, a nie pod przypadkowe scrollowanie', 'mnsk7-storefront' ),
+					'text'  => __( 'faktura VAT, powtarzalne zakupy i oferta ułożona pod szybki wybór zamiast przypadkowego scrollowania', 'mnsk7-storefront' ),
 				),
 			);
 			?>
 
 			<div class="mnsk7-hero__split">
 				<div class="mnsk7-hero__content">
-					<p class="mnsk7-hero__eyebrow"><?php esc_html_e( 'MNSK7 Tools | Frezy CNC i narzędzia skrawające', 'mnsk7-storefront' ); ?></p>
-					<h1 class="mnsk7-hero__title"><?php esc_html_e( 'Frezy CNC do drewna, aluminium i tworzyw pod realną obróbkę', 'mnsk7-storefront' ); ?></h1>
-					<p class="mnsk7-hero__lead"><?php esc_html_e( 'Szybka wysyłka, faktura VAT i oferta ułożona pod materiał, średnicę oraz typ frezowania. Mniej zgadywania, szybszy dobór, pewniejsze zamówienie.', 'mnsk7-storefront' ); ?></p>
+					<p class="mnsk7-hero__eyebrow"><?php esc_html_e( 'Super Sprzedawca Allegro', 'mnsk7-storefront' ); ?></p>
+					<h1 class="mnsk7-hero__title">
+						<?php esc_html_e( 'Precyzja obróbki', 'mnsk7-storefront' ); ?>
+						<span class="mnsk7-hero__title-accent"><?php esc_html_e( 'zaczyna się od frezu', 'mnsk7-storefront' ); ?></span>
+					</h1>
+					<p class="mnsk7-hero__lead"><?php esc_html_e( 'Profesjonalne frezy CNC i narzędzia skrawające do drewna, aluminium, tworzyw i stali. Oferta ułożona pod szybki wybór właściwej geometrii, średnicy i materiału.', 'mnsk7-storefront' ); ?></p>
 
 					<div class="mnsk7-hero__stats" aria-label="<?php esc_attr_e( 'Najważniejsze informacje', 'mnsk7-storefront' ); ?>">
 						<div class="mnsk7-hero__stat">
-							<span class="mnsk7-hero__stat-value">425+</span>
-							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'narzędzi i frezów w ofercie', 'mnsk7-storefront' ); ?></span>
+							<span class="mnsk7-hero__stat-value">100%</span>
+							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'pozytywnych opinii', 'mnsk7-storefront' ); ?></span>
 						</div>
 						<div class="mnsk7-hero__stat">
-							<span class="mnsk7-hero__stat-value">24h</span>
-							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'na wysyłkę topowych pozycji', 'mnsk7-storefront' ); ?></span>
+							<span class="mnsk7-hero__stat-value">383</span>
+							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'ocen na Allegro', 'mnsk7-storefront' ); ?></span>
 						</div>
 						<div class="mnsk7-hero__stat">
-							<span class="mnsk7-hero__stat-value">VAT</span>
-							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'zakupy warsztatowe i B2B', 'mnsk7-storefront' ); ?></span>
+							<span class="mnsk7-hero__stat-value">3 500+</span>
+							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'zamówień w 2025 r.', 'mnsk7-storefront' ); ?></span>
+						</div>
+						<div class="mnsk7-hero__stat">
+							<span class="mnsk7-hero__stat-value">425</span>
+							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'produktów w ofercie', 'mnsk7-storefront' ); ?></span>
 						</div>
 					</div>
 
@@ -58,17 +65,6 @@ get_header();
 							echo '<span class="mnsk7-hero__material-chip">' . esc_html( $mat ) . '</span>';
 						}
 						?>
-					</div>
-
-					<div class="mnsk7-hero__usps">
-						<div class="mnsk7-hero__usp">
-							<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
-							<span><?php esc_html_e( 'Dobór po materiale i rodzaju freza', 'mnsk7-storefront' ); ?></span>
-						</div>
-						<div class="mnsk7-hero__usp">
-							<span class="mnsk7-hero__usp-icon" aria-hidden="true"></span>
-							<span><?php esc_html_e( 'Realne stany i szybka realizacja', 'mnsk7-storefront' ); ?></span>
-						</div>
 					</div>
 
 					<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
@@ -85,8 +81,8 @@ get_header();
 
 				<div class="mnsk7-hero__rail" aria-label="<?php esc_attr_e( 'Dlaczego MNSK7', 'mnsk7-storefront' ); ?>">
 					<div class="mnsk7-hero__panel">
-						<p class="mnsk7-hero__panel-kicker"><?php esc_html_e( 'Szybki start od właściwej kategorii', 'mnsk7-storefront' ); ?></p>
-						<h2 class="mnsk7-hero__panel-title"><?php esc_html_e( 'Najpierw wybierasz typ freza i materiał, potem wchodzisz w konkretne średnice i warianty', 'mnsk7-storefront' ); ?></h2>
+						<p class="mnsk7-hero__panel-kicker"><?php esc_html_e( 'Dlaczego warsztaty wybierają MNSK7', 'mnsk7-storefront' ); ?></p>
+						<h2 class="mnsk7-hero__panel-title"><?php esc_html_e( 'Szybciej trafiasz do właściwego freza, bez błądzenia po przypadkowym katalogu', 'mnsk7-storefront' ); ?></h2>
 						<ul class="mnsk7-hero__proof-list">
 							<?php foreach ( $hero_lines as $line ) : ?>
 							<li class="mnsk7-hero__proof-row">
@@ -95,6 +91,10 @@ get_header();
 							</li>
 							<?php endforeach; ?>
 						</ul>
+						<div class="mnsk7-hero__panel-meta">
+							<span class="mnsk7-hero__panel-chip"><?php esc_html_e( 'Kontakt i doradztwo', 'mnsk7-storefront' ); ?></span>
+							<span class="mnsk7-hero__panel-chip"><?php esc_html_e( 'Szybka wysyłka 24h', 'mnsk7-storefront' ); ?></span>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -105,13 +105,17 @@ get_header();
 	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
 	<section id="bestsellery" class="mnsk7-section mnsk7-section--bestsellers">
 		<div class="col-full">
-			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Szybki wybór', 'mnsk7-storefront' ); ?></p>
-			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Bestsellery i najczęściej zamawiane frezy', 'mnsk7-storefront' ); ?></h2>
-			<p class="mnsk7-section__sub"><?php esc_html_e( 'Sprawdzone pozycje, od których klienci najczęściej zaczynają zakupy do drewna, MDF, aluminium i tworzyw.', 'mnsk7-storefront' ); ?></p>
-			<?php echo do_shortcode( '[mnsk7_bestsellers limit="8" title=""]' ); ?>
-			<p class="mnsk7-section__more mnsk7-bestsellers-more">
-				<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie bestsellery →', 'mnsk7-storefront' ); ?></a>
-			</p>
+			<div class="mnsk7-section__header mnsk7-section__header--bestsellers">
+				<div class="mnsk7-section__header-copy">
+					<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Bestsellery i polecane', 'mnsk7-storefront' ); ?></p>
+					<h2 class="mnsk7-section__title"><?php esc_html_e( 'Najczęściej wybierane frezy przez naszych klientów', 'mnsk7-storefront' ); ?></h2>
+					<p class="mnsk7-section__sub"><?php esc_html_e( 'Sprawdzone pozycje do codziennej pracy: drewno, MDF, aluminium, stal i tworzywa w najczęściej zamawianych wariantach.', 'mnsk7-storefront' ); ?></p>
+				</div>
+				<p class="mnsk7-section__more mnsk7-bestsellers-more">
+					<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie →', 'mnsk7-storefront' ); ?></a>
+				</p>
+			</div>
+			<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title=""]' ); ?>
 		</div>
 	</section>
 	<?php endif; ?>

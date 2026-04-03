@@ -279,3 +279,124 @@
   box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
+
+/* Homepage bestseller overrides — dark surface without affecting PDP/cart blocks */
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products {
+  gap: 1.25rem !important;
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product {
+  background: linear-gradient(180deg, #10161f 0%, #0d1219 100%);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.24);
+  border-radius: 18px;
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product:hover {
+  box-shadow: 0 24px 44px rgba(0, 0, 0, 0.32);
+  border-color: rgba(216, 154, 87, 0.22);
+  transform: translateY(-4px);
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .woocommerce-loop-product__link:has(> img),
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product a.woocommerce-loop-product__link:first-of-type {
+  aspect-ratio: 1.08;
+  background:
+    radial-gradient(circle at top center, rgba(216, 154, 87, 0.12), transparent 48%),
+    #171d27;
+  margin: 1rem 1rem 0;
+  width: auto;
+  border-radius: 14px;
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product img {
+  object-fit: contain;
+  padding: 1.1rem;
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .onsale {
+  position: absolute;
+  top: 0.9rem;
+  right: 0.9rem;
+  left: auto;
+  min-height: auto;
+  min-width: auto;
+  margin: 0;
+  padding: 0.28rem 0.55rem;
+  border-radius: 999px;
+  background: #d89a57;
+  color: #120f0b;
+  border: none;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .woocommerce-loop-product__title,
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product h2 {
+  color: #f6f0e9;
+  font-size: 1.08rem;
+  padding: 1rem 1rem 0.35rem;
+  min-height: 3.2em;
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .price {
+  color: #fff4e6;
+  font-size: clamp(1.15rem, 1.4vw, 1.45rem);
+  margin: 0.2rem 1rem 0.9rem;
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers .woocommerce-price-fallback,
+.mnsk7-front-page .mnsk7-section--bestsellers .woocommerce-price-suffix {
+  color: rgba(233, 237, 244, 0.58);
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .button,
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .add_to_cart_button {
+  width: auto;
+  min-width: 0;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  align-self: flex-start;
+  margin: auto 1rem 1rem;
+  padding: 0.72rem 1rem;
+  background: #d89a57;
+  color: #11151d;
+  border-radius: 12px;
+  font-weight: 700;
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .button:hover,
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .add_to_cart_button:hover {
+  background: #e6ab69;
+  color: #11151d;
+}
+
+@media (max-width: 768px) {
+  .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .woocommerce-loop-product__link:has(> img),
+  .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product a.woocommerce-loop-product__link:first-of-type {
+    margin: 0.85rem 0.85rem 0;
+  }
+
+  .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product img {
+    padding: 0.8rem;
+  }
+
+  .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .woocommerce-loop-product__title,
+  .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product h2 {
+    font-size: 0.95rem;
+    padding: 0.8rem 0.85rem 0.3rem;
+  }
+
+  .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .price {
+    font-size: 1.2rem;
+    margin: 0.25rem 0.85rem 0.8rem;
+  }
+
+  .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .button,
+  .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .add_to_cart_button {
+    margin: auto 0.85rem 0.85rem;
+    padding: 0.72rem 0.85rem;
+  }
+}
