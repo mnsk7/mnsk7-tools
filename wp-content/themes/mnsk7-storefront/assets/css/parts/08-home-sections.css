@@ -1912,3 +1912,90 @@
   border-color: rgba(216, 154, 87, 0.46);
   background: rgba(21, 28, 39, 0.96);
 }
+
+/* Homepage tone alignment: keep homepage in the same light visual system as the rest of the store. */
+.mnsk7-front-page .mnsk7-hero {
+  background:
+    radial-gradient(circle at top center, rgba(216, 154, 87, 0.12), transparent 30%),
+    radial-gradient(circle at 82% 18%, rgba(12, 125, 219, 0.1), transparent 28%),
+    linear-gradient(180deg, #f8fbff 0%, #f3f7fc 58%, #eef3f9 100%);
+  color: var(--color-text, #111827);
+  border-bottom: 1px solid var(--color-border, #e5e7eb);
+}
+
+.mnsk7-front-page .mnsk7-hero::before {
+  background:
+    linear-gradient(90deg, rgba(12, 125, 219, 0.04), transparent 38%, transparent 100%),
+    linear-gradient(180deg, rgba(255,255,255,0.55), transparent 24%),
+    repeating-linear-gradient(90deg, rgba(12, 125, 219, 0.025) 0 1px, transparent 1px 112px);
+}
+
+.mnsk7-front-page .mnsk7-hero__eyebrow {
+  background: rgba(12, 125, 219, 0.08);
+  border-color: rgba(12, 125, 219, 0.18);
+  color: var(--color-primary, #0c7ddb);
+}
+
+.mnsk7-front-page .mnsk7-hero__title,
+.mnsk7-front-page .mnsk7-hero__panel-title,
+.mnsk7-front-page .mnsk7-hero__proof-label {
+  color: var(--color-text, #111827);
+}
+
+.mnsk7-front-page .mnsk7-hero__lead,
+.mnsk7-front-page .mnsk7-hero__stat-label,
+.mnsk7-front-page .mnsk7-hero__proof-text {
+  color: var(--color-text-muted, #4b5563);
+}
+
+.mnsk7-front-page .mnsk7-hero__stat,
+.mnsk7-front-page .mnsk7-hero__material-chip,
+.mnsk7-front-page .mnsk7-hero__btn--secondary,
+.mnsk7-front-page .mnsk7-hero__panel,
+.mnsk7-front-page .mnsk7-hero__panel-chip {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: var(--color-border, #e5e7eb);
+  box-shadow: 0 10px 26px rgba(15, 23, 42, 0.08);
+  color: var(--color-text, #111827);
+}
+
+.mnsk7-front-page .mnsk7-hero__btn--secondary:hover,
+.mnsk7-front-page .mnsk7-hero__btn--secondary:focus-visible,
+.mnsk7-front-page .mnsk7-hero__material-chip:hover {
+  background: var(--color-surface, #f8fafc);
+  border-color: var(--color-primary, #0c7ddb);
+  color: var(--color-text, #111827);
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers {
+  background:
+    radial-gradient(circle at 14% 0%, rgba(216, 154, 87, 0.1), transparent 30%),
+    linear-gradient(180deg, #f8fbff 0%, #f2f7fc 100%);
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__eyebrow {
+  background: rgba(12, 125, 219, 0.08);
+  border-color: rgba(12, 125, 219, 0.18);
+  color: var(--color-primary, #0c7ddb);
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__title {
+  color: var(--color-text, #111827);
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__sub {
+  color: var(--color-text-muted, #4b5563);
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__more a {
+  border: 1px solid var(--color-border, #e5e7eb);
+  color: var(--color-text, #111827);
+  background: rgba(255, 255, 255, 0.9);
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__more a:hover,
+.mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__more a:focus-visible {
+  color: var(--color-primary, #0c7ddb);
+  border-color: var(--color-primary, #0c7ddb);
+  background: var(--color-surface, #f8fafc);
+}
