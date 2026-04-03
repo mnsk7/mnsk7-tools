@@ -1208,19 +1208,12 @@ add_action( 'wp_footer', function () {
 				if (!menu || !parentLi) return;
 				var submenu = parentLi.querySelector(':scope > .sub-menu');
 				if (!submenu) return;
+				// Root-cause fix: mobile menu must open from the top-level context, not auto-jump to remembered offsets.
+				// Keep parent entry visible at the top and reset submenu scroll only.
+				try { menu.scrollTop = 0; } catch (e) {}
+				try { menu.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) {}
 				try { submenu.scrollTop = 0; } catch (e) {}
 				try { submenu.scrollTo({ top: 0, left: 0, behavior: 'auto' }); } catch (e) {}
-				window.requestAnimationFrame(function() {
-					try {
-						menu.scrollTo({
-							top: Math.max(0, parentLi.offsetTop - 8),
-							left: 0,
-							behavior: 'auto'
-						});
-					} catch (e) {
-						try { menu.scrollTop = Math.max(0, parentLi.offsetTop - 8); } catch (e2) {}
-					}
-				});
 			}
 			menu.addEventListener('click', function(e) {
 				var a = getLinkFromEvent(e, menu);
