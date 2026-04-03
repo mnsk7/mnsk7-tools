@@ -1535,6 +1535,81 @@ add_action( 'wp_footer', function () {
 	<?php
 }, 5 );
 
+/* Front page trust/loyalty counters: lekka animacja wzrostu liczb po wejściu sekcji w viewport. */
+add_action( 'wp_footer', function () {
+	if ( ! is_front_page() ) {
+		return;
+	}
+	?>
+	<script>
+	(function() {
+		if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+		var counters = document.querySelectorAll('[data-mnsk7-counter]');
+		if (!counters.length) return;
+
+		function parseCounter(raw) {
+			var text = (raw || '').trim();
+			var normalized = text.replace(/\s+/g, '');
+			var hasPercent = normalized.indexOf('%') !== -1;
+			var hasPlus = normalized.indexOf('+') !== -1;
+			var digits = normalized.replace(/[^\d]/g, '');
+			var target = parseInt(digits, 10);
+			if (!target || isNaN(target)) return null;
+			return { target: target, hasPercent: hasPercent, hasPlus: hasPlus };
+		}
+
+		function formatValue(value) {
+			return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+		}
+
+		function runCounter(el) {
+			var meta = parseCounter(el.textContent);
+			if (!meta) return;
+			var duration = 950;
+			var start = null;
+			var paintedTarget = false;
+
+			function paint(value) {
+				var out = formatValue(value);
+				if (meta.hasPlus) out += '+';
+				if (meta.hasPercent) out += '%';
+				el.textContent = out;
+			}
+
+			function step(ts) {
+				if (!start) start = ts;
+				var p = Math.min((ts - start) / duration, 1);
+				var eased = 1 - Math.pow(1 - p, 3);
+				var current = Math.round(meta.target * eased);
+				paint(current);
+				if (p < 1) {
+					window.requestAnimationFrame(step);
+				} else if (!paintedTarget) {
+					paint(meta.target);
+					paintedTarget = true;
+				}
+			}
+
+			paint(0);
+			window.requestAnimationFrame(step);
+		}
+
+		var observer = new IntersectionObserver(function(entries, obs) {
+			entries.forEach(function(entry) {
+				if (!entry.isIntersecting) return;
+				runCounter(entry.target);
+				obs.unobserve(entry.target);
+			});
+		}, { threshold: 0.55 });
+
+		counters.forEach(function(counter) {
+			observer.observe(counter);
+		});
+	})();
+	</script>
+	<?php
+}, 6 );
+
 /* PDP: sticky CTA na mobile — pokaż gdy formularz poza viewport, klik przewija i uruchamia główny przycisk */
 add_action( 'wp_footer', function () {
 	if ( ! is_singular( 'product' ) ) {

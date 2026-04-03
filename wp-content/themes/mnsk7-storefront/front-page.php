@@ -124,19 +124,19 @@ get_header();
 			<p class="mnsk7-section__sub"><?php esc_html_e( 'Łączymy specjalistyczny asortyment CNC z przewidywalną realizacją, realnymi opiniami i obsługą pod zakupy warsztatowe oraz B2B.', 'mnsk7-storefront' ); ?></p>
 			<div class="mnsk7-trust-stats">
 				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number">100%</span>
+					<span class="mnsk7-trust-stats__number" data-mnsk7-counter>100%</span>
 					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'pozytywnych opinii', 'mnsk7-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number">383</span>
+					<span class="mnsk7-trust-stats__number" data-mnsk7-counter>383</span>
 					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'ocen na Allegro', 'mnsk7-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number">3 500+</span>
+					<span class="mnsk7-trust-stats__number" data-mnsk7-counter>3 500+</span>
 					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'zamówień w 2025 r.', 'mnsk7-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number">425</span>
+					<span class="mnsk7-trust-stats__number" data-mnsk7-counter>425</span>
 					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'produktów w ofercie', 'mnsk7-storefront' ); ?></span>
 				</div>
 			</div>
@@ -258,7 +258,7 @@ get_header();
 				foreach ( $tiers as $tier ) :
 				?>
 				<div class="mnsk7-loyalty-tier">
-					<span class="mnsk7-loyalty-tier__pct"><?php echo esc_html( $tier['pct'] ); ?></span>
+					<span class="mnsk7-loyalty-tier__pct" data-mnsk7-counter><?php echo esc_html( $tier['pct'] ); ?></span>
 					<span class="mnsk7-loyalty-tier__from"><?php printf( esc_html__( 'od %s zł/rok', 'mnsk7-storefront' ), esc_html( $tier['from'] ) ); ?></span>
 				</div>
 				<?php endforeach; ?>

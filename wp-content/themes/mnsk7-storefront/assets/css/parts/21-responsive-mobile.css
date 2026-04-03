@@ -194,6 +194,17 @@
   .mnsk7-trust-stats__item,
   .mnsk7-loyalty-tier {
     padding: 0.95rem 0.95rem;
+    min-height: 128px;
+    justify-content: center;
+  }
+
+  .mnsk7-trust-stats__number,
+  .mnsk7-loyalty-tier__pct {
+    min-height: 1.25em;
+  }
+
+  .mnsk7-loyalty-tier:last-child .mnsk7-loyalty-tier__pct {
+    font-size: var(--fs-3xl);
   }
 
   /* Cookie bar: bottom-sheet / stacked — bez obcięcia, bez overflow (P0) */
