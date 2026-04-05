@@ -353,18 +353,24 @@
 
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .button,
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .add_to_cart_button {
-  width: auto;
+  width: fit-content;
   min-width: 0;
   display: inline-flex !important;
   align-items: center;
   justify-content: center;
-  align-self: flex-start;
-  margin: auto 1rem 1rem;
+  align-self: center;
+  margin: auto auto 1rem;
   padding: 0.72rem 1rem;
   background: var(--color-primary);
   color: var(--color-white);
   border-radius: 12px;
   font-weight: 700;
+  text-align: center;
+}
+
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .button::after,
+.mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .add_to_cart_button::after {
+  display: none !important;
 }
 
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .button:hover,
