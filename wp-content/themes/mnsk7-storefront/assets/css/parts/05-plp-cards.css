@@ -322,3 +322,9 @@ ul.products.columns-4::before {
   height: 100%;
   object-fit: contain;
 }
+
+/* Mobile PLP cards: fill the image box stronger so thumbnails do not look "shrunk". */
+body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.product .woocommerce-loop-product__link img {
+  object-fit: cover;
+  object-position: center;
+}
