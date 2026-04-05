@@ -458,9 +458,13 @@
 .woocommerce-cart .wc-proceed-to-checkout a.checkout-button,
 .woocommerce-cart .cart_totals a.checkout-button,
 #mnsk7-cart-checkout-button {
-  display: block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.35rem;
   width: 100%;
   text-align: center;
+  line-height: 1.2;
   padding: 0.875rem 1.5rem;
   font-size: var(--fs-base);
   font-weight: 700;
@@ -469,6 +473,12 @@
   text-decoration: none;
   pointer-events: auto;
   border-radius: var(--r-md);
+}
+
+.woocommerce-cart .wc-proceed-to-checkout a.checkout-button::after,
+.woocommerce-cart .cart_totals a.checkout-button::after,
+#mnsk7-cart-checkout-button::after {
+  display: none !important;
 }
 
 .woocommerce-cart .wc-proceed-to-checkout a.checkout-button:hover,
