@@ -6684,13 +6684,15 @@ body.single-product .woocommerce-product-navigation {
 .mnsk7-section--bestsellers ul.products li.product .button,
 .mnsk7-section--bestsellers ul.products li.product .add_to_cart_button {
   writing-mode: horizontal-tb;
-  display: block !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
   width: calc(100% - 1.5rem);
-  min-width: 7rem;
+  min-width: 0;
   max-width: 100%;
   margin: auto 0.75rem 0.75rem;
   box-sizing: border-box;
-  padding: 0.625rem 0.75rem;
+  padding: 0.625rem 0.9rem;
   white-space: nowrap;
   overflow-wrap: normal;
   word-break: normal;
@@ -6703,6 +6705,19 @@ body.single-product .woocommerce-product-navigation {
   color: var(--color-white);
   border: none;
   border-radius: var(--r-md);
+}
+
+.related.products ul.products li.product .button::after,
+.related.products ul.products li.product .add_to_cart_button::after,
+.upsells.products ul.products li.product .button::after,
+.upsells.products ul.products li.product .add_to_cart_button::after,
+.up-sells.products ul.products li.product .button::after,
+.up-sells.products ul.products li.product .add_to_cart_button::after,
+.cross-sells ul.products li.product .button::after,
+.cross-sells ul.products li.product .add_to_cart_button::after,
+.mnsk7-section--bestsellers ul.products li.product .button::after,
+.mnsk7-section--bestsellers ul.products li.product .add_to_cart_button::after {
+  display: none !important;
 }
 
 .related.products ul.products li.product .button:hover,
