@@ -302,7 +302,7 @@ get_header();
 		<div class="col-full">
 			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Marka w praktyce', 'mnsk7-storefront' ); ?></p>
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Najnowsze posty z Instagrama', 'mnsk7-storefront' ); ?></h2>
-			<p class="mnsk7-section__sub"><?php esc_html_e( 'Realizacje, nowości i skróty z pracy warsztatu — bez przycinania treści w kwadrat.', 'mnsk7-storefront' ); ?></p>
+			<p class="mnsk7-section__sub"><?php esc_html_e( 'Realizacje, nowości i skróty z pracy warsztatu — posty w osadzeniu Instagrama, tak jak w aplikacji.', 'mnsk7-storefront' ); ?></p>
 			<?php echo do_shortcode( '[mnsk7_instagram_feed type="posts" limit="4" title=""]' ); ?>
 		</div>
 	</section>

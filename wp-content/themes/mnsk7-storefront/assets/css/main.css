@@ -5494,7 +5494,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   max-width: 480px !important;
 }
 
-/* Homepage Instagram: pełny kadł miniatury (contain), iframe na pełną wysokość embedu — bez przycinania do kwadratu */
+/* Homepage Instagram: siatka + tryb embedjs (blockquote) albo thumbs/iframe — style per .mnsk7-instagram-feed--render-* */
 .mnsk7-section--insta .mnsk7-instagram-feed--embed,
 .mnsk7-section--insta .mnsk7-instagram-feed--native,
 .mnsk7-section--insta .mnsk7-instagram-feed--posts {
