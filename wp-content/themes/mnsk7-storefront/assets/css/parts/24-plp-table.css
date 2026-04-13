@@ -65,6 +65,12 @@ body.tax-product_tag {
   --archive-gap-filter-rows: 0.45rem;
   --archive-after-search: 0.1rem;
 }
+/* Sklep (archiwum bez taksonomii): ciaśniej niż kategoria/tag — breadcrumbs → H1 */
+body.post-type-archive-product {
+  --archive-gap-breadcrumbs-title: 0.12rem;
+  --archive-inner-breadcrumb: 0.08rem;
+  --archive-gap-title-chips: 0.05rem;
+}
 body.post-type-archive-product #content,
 body.post-type-archive-product .mnsk7-content,
 body.tax-product_cat #content,
@@ -1537,13 +1543,21 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 }
 .mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-input {
   width: 3rem;
-  min-height: 46px;
-  padding: 0.25rem 0.35rem;
+  min-width: 0;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  max-height: 48px;
+  margin: 0;
+  padding: 0.15rem 0.3rem;
   font-size: var(--fs-sm);
+  font-weight: 700;
+  line-height: 1;
   text-align: center;
   border: 1px solid var(--color-border);
   border-radius: var(--r-sm);
   box-sizing: border-box;
+  align-self: center;
 }
 .mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-stepper {
   display: inline-flex;
@@ -1558,6 +1572,12 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   min-height: 48px;
   padding: 0;
   border-radius: 0.4rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  font-size: 1.125rem;
+  font-weight: 700;
 }
 .mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-implicit {
   display: inline-flex;
@@ -1638,6 +1658,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   transition: background 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
   box-shadow: var(--shadow-sm);
   box-sizing: border-box;
+  line-height: 1.2;
 }
 .mnsk7-product-table .mnsk7-table-addcart-form--fixed-qty .mnsk7-table-addcart-btn {
   border-radius: 0;

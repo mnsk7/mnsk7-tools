@@ -282,6 +282,26 @@
   border-color: var(--color-primary);
   color: var(--color-primary);
 }
+
+/* Dashboard Woo: nawigacja + treść w dwóch kolumnach (bez wtyczki CMAFW) */
+@media (min-width: 769px) {
+  body.woocommerce-account .woocommerce {
+    display: grid;
+    grid-template-columns: minmax(200px, 260px) minmax(0, 1fr);
+    gap: 2rem;
+    align-items: start;
+  }
+  body.woocommerce-account .woocommerce-MyAccount-navigation {
+    margin-bottom: 0;
+  }
+  body.woocommerce-account .woocommerce-MyAccount-navigation ul {
+    flex-direction: column;
+  }
+  body.woocommerce-account .woocommerce-MyAccount-navigation a {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
 .woocommerce-account .mnsk7-login-benefits {
   margin: 0.75rem 0 1.25rem;
   padding: 1rem 1.125rem;

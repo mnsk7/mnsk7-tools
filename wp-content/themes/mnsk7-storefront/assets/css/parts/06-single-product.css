@@ -467,18 +467,23 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
 .single-product .summary .quantity .qty {
   border: none;
-  padding: 0.5rem 0.25rem;
+  padding: 0 0.25rem;
   font-size: var(--fs-base);
   font-family: var(--font-base);
   width: 100%;
   min-width: 3rem;
-  min-height: 46px;
+  min-height: 0;
+  height: auto;
+  max-height: 100%;
+  line-height: 1.1;
   text-align: center;
   box-shadow: none;
   background: transparent;
   border-radius: 0;
   font-weight: 700;
   appearance: textfield;
+  align-self: center;
+  justify-self: stretch;
 }
 
 .single-product .summary .mnsk7-qty-btn {
@@ -539,12 +544,16 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
 .single-product div.product .summary form.cart .single_add_to_cart_button {
   grid-area: cta;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: var(--color-primary);
   color: var(--color-white);
   padding: var(--space-16) var(--space-32);
   font-size: var(--fs-base);
   font-weight: 700;
   font-family: var(--font-base);
+  line-height: 1.2;
   border-radius: var(--r-md);
   border: none;
   cursor: pointer;
@@ -555,6 +564,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   flex: 1 1 13rem;
   min-width: 0;
   width: 100%;
+  box-sizing: border-box;
 }
 
 @media (max-width: 768px) {

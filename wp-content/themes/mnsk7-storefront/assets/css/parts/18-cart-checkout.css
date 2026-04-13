@@ -458,11 +458,12 @@
 .woocommerce-cart .wc-proceed-to-checkout a.checkout-button,
 .woocommerce-cart .cart_totals a.checkout-button,
 #mnsk7-cart-checkout-button {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 0.35rem;
   width: 100%;
+  min-height: 48px;
   text-align: center;
   line-height: 1.2;
   padding: 0.875rem 1.5rem;
@@ -473,6 +474,7 @@
   text-decoration: none;
   pointer-events: auto;
   border-radius: var(--r-md);
+  box-sizing: border-box;
 }
 
 .woocommerce-cart .wc-proceed-to-checkout a.checkout-button::after,

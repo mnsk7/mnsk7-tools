@@ -2182,6 +2182,9 @@ function mnsk7_shop_archive_description_stripped() {
 	}
 	$desc = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $shop_page->post_content ) : $shop_page->post_content;
 	$desc = preg_replace( '/\[wpf[-_]filters[^\]]*\]/i', '', (string) $desc );
+	// Usuń powtarzalny nagłówek marketingowy (zostaje reszta intro w treści strony Sklep).
+	$desc = preg_replace( '/<[^>]+>\s*KATALOG\s+FREZ[ÓO]W\s+CNC\s*<\/[^>]+>/iu', '', (string) $desc );
+	$desc = preg_replace( '/^\s*KATALOG\s+FREZ[ÓO]W\s+CNC\s*$/imu', '', (string) $desc );
 	$desc = trim( (string) $desc );
 	if ( $desc === '' ) {
 		return;
@@ -2846,7 +2849,7 @@ function mnsk7_get_plp_attribute_filter_taxonomies() {
 		),
 		array(
 			'label' => __( 'Kąt', 'mnsk7-storefront' ),
-			'slugs' => array( 'kat-skosu', 'kat' ),
+			'slugs' => array( 'kat-skosu' ),
 		),
 		array(
 			'label' => __( 'Promień R', 'mnsk7-storefront' ),
