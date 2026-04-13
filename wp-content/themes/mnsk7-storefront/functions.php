@@ -2722,9 +2722,10 @@ add_action( 'init', function () {
 				$has_thumb = $image_url !== '';
 				$out      .= '<div class="mnsk7-instagram-feed__post' . ( $has_thumb ? ' mnsk7-instagram-feed__post--thumb' : ' mnsk7-instagram-feed__post--embed' ) . '">';
 				if ( $has_thumb ) {
-					$out .= '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__post-link">';
+					$out .= '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__post-link mnsk7-instagram-feed__post-link--stacked">';
+					$out .= '<span class="mnsk7-instagram-feed__post-thumbwrap">';
 					$out .= '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr__( 'Post z Instagrama MNSK7', 'mnsk7-storefront' ) . '" loading="lazy" decoding="async" class="mnsk7-instagram-feed__post-image" />';
-					$out .= '<span class="mnsk7-instagram-feed__post-shade" aria-hidden="true"></span>';
+					$out .= '</span>';
 					$out .= '<span class="mnsk7-instagram-feed__post-cta">' . esc_html__( 'Otwórz w Instagramie', 'mnsk7-storefront' ) . '</span>';
 					$out .= '</a>';
 				} else {

@@ -5302,9 +5302,10 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   }
 }
 
-.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post,
-.mnsk7-instagram-feed--native .mnsk7-instagram-feed__post,
-.mnsk7-instagram-feed--posts .mnsk7-instagram-feed__post {
+/* Kwadrat tylko dla osadzeń iframe — miniatury og:image mają własny układ (bez przycinania grafik). */
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post:not(.mnsk7-instagram-feed__post--thumb),
+.mnsk7-instagram-feed--native .mnsk7-instagram-feed__post:not(.mnsk7-instagram-feed__post--thumb),
+.mnsk7-instagram-feed--posts .mnsk7-instagram-feed__post:not(.mnsk7-instagram-feed__post--thumb) {
   min-width: 0;
   display: flex;
   flex-direction: column;
@@ -5315,6 +5316,81 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   overflow: hidden;
   border-radius: var(--r-md);
   background: #f6f8fb;
+}
+
+.mnsk7-instagram-feed--embed .mnsk7-instagram-feed__post--thumb,
+.mnsk7-instagram-feed--native .mnsk7-instagram-feed__post--thumb,
+.mnsk7-instagram-feed--posts .mnsk7-instagram-feed__post--thumb {
+  min-width: 0;
+  display: block;
+  position: relative;
+  aspect-ratio: auto;
+  overflow: hidden;
+  border-radius: var(--r-md);
+  background: #f6f8fb;
+}
+
+.mnsk7-instagram-feed--posts .mnsk7-instagram-feed__post--thumb .mnsk7-instagram-feed__post-link--stacked {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  width: 100%;
+  min-height: 0;
+  line-height: normal;
+  color: inherit;
+  text-decoration: none;
+  overflow: hidden;
+  background: #0b1220;
+  border-radius: inherit;
+}
+
+.mnsk7-instagram-feed--posts .mnsk7-instagram-feed__post-thumbwrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.5rem 0.4rem;
+  background: #0b1220;
+  flex: 0 1 auto;
+  min-height: 140px;
+}
+
+.mnsk7-instagram-feed--posts .mnsk7-instagram-feed__post--thumb .mnsk7-instagram-feed__post-image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(55vh, 420px);
+  margin: 0 auto;
+  object-fit: contain;
+  object-position: center center;
+  background: transparent;
+}
+
+.mnsk7-instagram-feed--posts .mnsk7-instagram-feed__post--thumb .mnsk7-instagram-feed__post-cta {
+  position: relative;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  z-index: 2;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 42px;
+  margin: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.98);
+  color: #0f2648;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: none;
 }
 
 /* Direct iframe embeds */
@@ -5477,7 +5553,20 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   background: #fff;
 }
 
-.mnsk7-section--insta .mnsk7-instagram-feed__post-link {
+/* Strona główna: większy limit wysokości miniatury (root layout jest w regułach .mnsk7-instagram-feed--posts .mnsk7-instagram-feed__post--thumb). */
+.mnsk7-section--insta .mnsk7-instagram-feed__post-thumbwrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.65rem 0.5rem;
+  background: #0b1220;
+  flex: 0 1 auto;
+  min-height: 160px;
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed__post-link:not(.mnsk7-instagram-feed__post-link--stacked) {
   position: relative;
   display: block;
   width: 100%;
@@ -5497,6 +5586,18 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   z-index: 1;
 }
 
+.mnsk7-section--insta .mnsk7-instagram-feed__post--thumb .mnsk7-instagram-feed__post-image {
+  display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: min(62vh, 520px);
+  margin: 0 auto;
+  object-fit: contain;
+  object-position: center center;
+  background: transparent;
+}
+
 .mnsk7-section--insta .mnsk7-instagram-feed__post-image {
   display: block;
   width: 100%;
@@ -5505,6 +5606,31 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   object-fit: contain;
   object-position: center top;
   background: #0b1220;
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed__post--thumb .mnsk7-instagram-feed__post-cta {
+  position: relative;
+  left: auto;
+  right: auto;
+  bottom: auto;
+  z-index: 2;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 44px;
+  margin: 0;
+  padding: 0.55rem 0.85rem;
+  border-radius: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.98);
+  color: #0f2648;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  box-shadow: none;
 }
 
 .mnsk7-section--insta .mnsk7-instagram-feed__post-cta {
