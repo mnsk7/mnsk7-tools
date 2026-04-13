@@ -169,7 +169,7 @@ get_header();
 			'taxonomy'   => 'product_cat',
 			'hide_empty' => true,
 			'parent'     => 0,
-			'number'     => 20,
+			'number'     => 48,
 			'orderby'    => 'count',
 			'order'      => 'DESC',
 		) );
@@ -234,32 +234,26 @@ get_header();
 			<?php endif; ?>
 
 			<?php if ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) : ?>
-			<h3 class="mnsk7-catalog-aside__title mnsk7-catalog-aside__title--cats"><?php echo esc_html( $cats_label ); ?></h3>
-				<div class="mnsk7-cats mnsk7-cats--catalog">
+			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--categories" role="navigation" aria-label="<?php echo esc_attr( $cats_label ); ?>">
+				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $cats_label ); ?></h3>
+				<p class="mnsk7-catalog-aside__hint"><?php esc_html_e( 'Bez zdjęć kategorii — szybki wybór po nazwie. Cały katalog jest w sklepie.', 'mnsk7-storefront' ); ?></p>
+				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud mnsk7-catalog-chips__scroll--categories">
 					<?php foreach ( $cats as $cat ) :
 						$link = get_term_link( $cat );
-						if ( is_wp_error( $link ) ) continue;
+						if ( is_wp_error( $link ) ) {
+							continue;
+						}
 						$cat_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $cat->name ) : $cat->name;
 						$cat_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $cat_name ) );
-						$img_id = get_term_meta( $cat->term_id, 'thumbnail_id', true );
-						$img    = $img_id ? wp_get_attachment_image( $img_id, 'medium', false, array( 'alt' => $cat_name ) ) : '';
-					?>
-					<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-cats__item">
-						<span class="mnsk7-cats__img-wrap">
-							<?php if ( $img ) : ?>
-								<?php echo $img; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
-							<?php else : ?>
-								<span class="mnsk7-cats__icon mnsk7-cats__icon--default" aria-hidden="true"></span>
-							<?php endif; ?>
-						</span>
-						<span class="mnsk7-cats__body">
-							<span class="mnsk7-cats__name"><?php echo esc_html( $cat_name ); ?></span>
-							<span class="mnsk7-cats__count"><?php echo esc_html( $cat->count ); ?> <?php esc_html_e( 'prod.', 'mnsk7-storefront' ); ?></span>
-						</span>
-						<span class="mnsk7-cats__arrow" aria-hidden="true">→</span>
+						$cat_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $cat_name ) : $cat_name;
+						?>
+					<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-tags-chip mnsk7-tags-chip--category">
+						<span class="mnsk7-tags-chip__label"><?php echo esc_html( $cat_name ); ?></span>
+						<span class="mnsk7-tags-chip__meta"><?php echo esc_html( number_format_i18n( (int) $cat->count ) ); ?> <?php esc_html_e( 'prod.', 'mnsk7-storefront' ); ?></span>
 					</a>
 					<?php endforeach; ?>
 				</div>
+			</div>
 			<?php endif; ?>
 
 			<p class="mnsk7-section__more">
@@ -309,10 +303,8 @@ get_header();
 		<div class="col-full">
 			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Marka w praktyce', 'mnsk7-storefront' ); ?></p>
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Najnowsze posty z Instagrama', 'mnsk7-storefront' ); ?></h2>
-			<p class="mnsk7-section__sub"><?php esc_html_e( 'Nowości, realizacje i materiały z kanału @mnsk7tools w normalnej siatce, bez rozwalania układu strony.', 'mnsk7-storefront' ); ?></p>
-			<?php
-			echo do_shortcode( '[mnsk7_instagram_feed type="posts" limit="4" title="Instagram @mnsk7tools" urls="https://www.instagram.com/mnsk7tools/p/DCTybzqtxEi/,https://www.instagram.com/mnsk7tools/p/DCeUnS8Ismh/,https://www.instagram.com/mnsk7tools/p/DCzOqKqtjUe/,https://www.instagram.com/mnsk7tools/p/DC9J3JjNobj/" images="https://scontent-waw2-2.cdninstagram.com/v/t51.82787-15/618838310_17958807636028695_553601329369762955_n.jpg?stp=c216.0.648.648a_dst-jpg_e35_s640x640_tt6&amp;_nc_cat=105&amp;ccb=7-5&amp;_nc_sid=18de74&amp;efg=eyJlZmdfdGFnIjoiRkVFRC5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&amp;_nc_ohc=IUXh4HFzmfwQ7kNvwFhBPPA&amp;_nc_oc=AdrUhxsMTJRY5jA5AlC8CHFLilhfRQZM1cWukGQLqU6VQoSrm1-LRgr_cgjn4Al0eHQ&amp;_nc_zt=23&amp;_nc_ht=scontent-waw2-2.cdninstagram.com&amp;_nc_gid=IViln7Zdil6dHgb41JbAYQ&amp;_nc_ss=7a389&amp;oh=00_Af3sK9Kq5R7AzkxhZVPehW3tCVw8no-qDa7YKLFcYp8r8Q&amp;oe=69D4733A,https://scontent-waw2-1.cdninstagram.com/v/t39.30808-6/467187685_122106145898613748_7017910040251271378_n.jpg?stp=c216.0.648.648a_dst-jpg_e35_s640x640_tt6&amp;_nc_cat=109&amp;ccb=7-5&amp;_nc_sid=18de74&amp;efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&amp;_nc_ohc=G5EOZG4vr60Q7kNvwG9N57B&amp;_nc_oc=Adq3bXNTEgR91r8phG3y-Ozgdcz8cirWRPNg0D0-u2d2XXPqATUAf2PcIU_5nNNrk0k&amp;_nc_zt=23&amp;_nc_ht=scontent-waw2-1.cdninstagram.com&amp;_nc_gid=v72drcEWJHE27TP5KijVqA&amp;_nc_ss=7a389&amp;oh=00_Af3RK_2T8pFEp2Nl3FQNuxo2asfMLgHkKYOuqyNob5lsKA&amp;oe=69D4825C,https://scontent-waw2-1.cdninstagram.com/v/t51.75761-15/467779881_17847371727357860_1861874929847902807_n.jpg?stp=c216.0.648.648a_dst-jpg_e35_s640x640_tt6&amp;_nc_cat=104&amp;ccb=7-5&amp;_nc_sid=18de74&amp;efg=eyJlZmdfdGFnIjoiQ0FST1VTRUxfSVRFTS5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&amp;_nc_ohc=al7c1C8wYQgQ7kNvwERLH6S&amp;_nc_oc=AdpS3lqTvVGGHz_k_ceeHNOG5MF0-weEmhBf4Tkt0oFm3bJ3GhB9qTmwF1tplDL3kig&amp;_nc_zt=23&amp;_nc_ht=scontent-waw2-1.cdninstagram.com&amp;_nc_gid=jjBUYev877dvo_json7m3g&amp;_nc_ss=7a389&amp;oh=00_Af3Is290mBlUPEj-VQhnkn5b5wYdnEO0GYX-v1QH-4Q1lA&amp;oe=69D499B8,https://scontent-waw2-2.cdninstagram.com/v/t51.82787-15/624277716_18111854674567315_1589126126157759200_n.jpg?stp=c216.0.648.648a_dst-jpg_e35_s640x640_tt6&amp;_nc_cat=105&amp;ccb=7-5&amp;_nc_sid=18de74&amp;efg=eyJlZmdfdGFnIjoiRkVFRC5iZXN0X2ltYWdlX3VybGdlbi5DMyJ9&amp;_nc_ohc=eIHTAtIw6CUQ7kNvwF2oMQu&amp;_nc_oc=Adq3DsIxJA0m3BHRF3uCkqqqVk37qfXsUT_2APRDibLdZsyW07SnsPH12Wm9t4WWsgg&amp;_nc_zt=23&amp;_nc_ht=scontent-waw2-2.cdninstagram.com&amp;_nc_gid=G-J1-hCvYaXNCpYqRr6NlA&amp;_nc_ss=7a389&amp;oh=00_Af0o0xy4p_8nIBOyQ-frkkuW5wKPIu4Ci8kaxoKfkELj8w&amp;oe=69D481A5"]' );
-			?>
+			<p class="mnsk7-section__sub"><?php esc_html_e( 'Kafelki z podglądem (cache na serwerze) albo osadzenie posta — zawsze sensowny rozmiar i link do profilu.', 'mnsk7-storefront' ); ?></p>
+			<?php echo do_shortcode( '[mnsk7_instagram_feed type="posts" limit="4" title=""]' ); ?>
 		</div>
 	</section>
 

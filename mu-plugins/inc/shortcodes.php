@@ -286,7 +286,7 @@ add_action( 'init', function () {
 		}
 		return mnsk7_delivery_eta_html( $courier );
 	} );
-	add_shortcode( 'mnsk7_instagram_feed',      fn( $a ) => mnsk7_instagram_feed_html( $a ) );
+	/* mnsk7_instagram_feed — tylko motyw mnsk7-storefront (init 99), tu zostają helpery: og:image, opcje URL. */
 	add_shortcode( 'mnsk7_allegro_trust',       fn( $a ) => mnsk7_allegro_trust_html( $a ) );
 	add_shortcode( 'mnsk7_allegro_reviews_pages', fn( $a ) => mnsk7_allegro_reviews_pages_html( $a ) );
 	add_shortcode( 'mnsk7_allegro_reviews',     fn( $a ) => mnsk7_allegro_reviews_html( $a ) );

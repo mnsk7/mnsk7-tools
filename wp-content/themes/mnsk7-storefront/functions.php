@@ -2687,40 +2687,49 @@ add_action( 'init', function () {
 				'https://www.instagram.com/mnsk7tools/p/DC9J3JjNobj/',
 			);
 		}
-		$urls = array();
+		$urls       = array();
 		$image_urls = array();
 		if ( is_string( $atts['images'] ) && trim( $atts['images'] ) !== '' ) {
-			$image_urls = preg_split( '/[\s,]+/', trim( $atts['images'] ) );
+			$decoded = html_entity_decode( trim( $atts['images'] ), ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+			$image_urls = preg_split( '/\s*,\s*/', $decoded );
 		}
 		foreach ( array_slice( $raw, 0, $limit ) as $entry ) {
 			$url = is_array( $entry ) ? ( isset( $entry['url'] ) ? $entry['url'] : '' ) : $entry;
 			$url = esc_url_raw( $url );
 			if ( $url !== '' ) {
-				if ( preg_match( '#instagram\.com/p/([A-Za-z0-9_-]+)/?#', $url, $m ) ) {
+				if ( preg_match( '#instagram\.com/reel/([A-Za-z0-9_-]+)/?#', $url, $m ) ) {
+					$url = 'https://www.instagram.com/reel/' . $m[1] . '/';
+				} elseif ( preg_match( '#instagram\.com/p/([A-Za-z0-9_-]+)/?#', $url, $m ) ) {
 					$url = 'https://www.instagram.com/p/' . $m[1] . '/';
 				}
 				$urls[] = $url;
 			}
 		}
 
-		$native_cards = ! empty( $image_urls );
-		$out = '<div class="mnsk7-instagram-feed ' . ( $native_cards ? 'mnsk7-instagram-feed--native' : 'mnsk7-instagram-feed--embed' ) . '">';
+		$out = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--posts">';
 		if ( ! empty( $urls ) ) {
-			$out .= '<div class="mnsk7-instagram-feed__posts" role="region" aria-label="' . esc_attr__( 'Posty z Instagrama', 'mnsk7-storefront' ) . '">';
+			$n_posts = count( $urls );
+			$cols    = ' mnsk7-instagram-feed__posts--cols-' . (string) min( 4, max( 1, $n_posts ) );
+			$out    .= '<div class="mnsk7-instagram-feed__posts' . esc_attr( $cols ) . '" role="region" aria-label="' . esc_attr__( 'Posty z Instagrama', 'mnsk7-storefront' ) . '">';
 			foreach ( $urls as $index => $url ) {
-				$out .= '<div class="mnsk7-instagram-feed__post">';
-				if ( $native_cards ) {
-					$image_url = isset( $image_urls[ $index ] ) ? html_entity_decode( (string) $image_urls[ $index ], ENT_QUOTES | ENT_HTML5, 'UTF-8' ) : '';
-					$image_url = esc_url_raw( $image_url );
+				$image_url = '';
+				if ( isset( $image_urls[ $index ] ) && is_string( $image_urls[ $index ] ) ) {
+					$image_url = esc_url_raw( trim( html_entity_decode( $image_urls[ $index ], ENT_QUOTES | ENT_HTML5, 'UTF-8' ) ) );
+				}
+				if ( $image_url === '' && function_exists( 'mnsk7_instagram_og_image_for_url' ) ) {
+					$image_url = mnsk7_instagram_og_image_for_url( $url );
+				}
+				$has_thumb = $image_url !== '';
+				$out      .= '<div class="mnsk7-instagram-feed__post' . ( $has_thumb ? ' mnsk7-instagram-feed__post--thumb' : ' mnsk7-instagram-feed__post--embed' ) . '">';
+				if ( $has_thumb ) {
 					$out .= '<a href="' . esc_url( $url ) . '" target="_blank" rel="noopener noreferrer" class="mnsk7-instagram-feed__post-link">';
-					if ( $image_url !== '' ) {
-						$out .= '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr__( 'Post z Instagrama MNSK7', 'mnsk7-storefront' ) . '" loading="lazy" class="mnsk7-instagram-feed__post-image" />';
-					}
-					$out .= '<span class="mnsk7-instagram-feed__post-cta">' . esc_html__( 'Otwórz post', 'mnsk7-storefront' ) . '</span>';
+					$out .= '<img src="' . esc_url( $image_url ) . '" alt="' . esc_attr__( 'Post z Instagrama MNSK7', 'mnsk7-storefront' ) . '" loading="lazy" decoding="async" class="mnsk7-instagram-feed__post-image" width="640" height="640" />';
+					$out .= '<span class="mnsk7-instagram-feed__post-shade" aria-hidden="true"></span>';
+					$out .= '<span class="mnsk7-instagram-feed__post-cta">' . esc_html__( 'Otwórz w Instagramie', 'mnsk7-storefront' ) . '</span>';
 					$out .= '</a>';
 				} else {
-					$embed_url = $url . 'embed/';
-					$out .= '<iframe src="' . esc_url( $embed_url ) . '" title="' . esc_attr__( 'Post z Instagrama', 'mnsk7-storefront' ) . '" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowtransparency="true"></iframe>';
+					$embed_url = trailingslashit( $url ) . 'embed/';
+					$out      .= '<iframe class="mnsk7-instagram-feed__iframe" src="' . esc_url( $embed_url ) . '" title="' . esc_attr__( 'Post z Instagrama', 'mnsk7-storefront' ) . '" loading="lazy" referrerpolicy="strict-origin-when-cross-origin" allowtransparency="true"></iframe>';
 				}
 				$out .= '</div>';
 			}
