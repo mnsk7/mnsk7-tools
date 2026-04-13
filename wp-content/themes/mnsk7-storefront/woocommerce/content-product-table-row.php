@@ -63,7 +63,7 @@ $row_class = $product->is_sold_individually() ? 'mnsk7-row--fixed-qty' : '';
 			<?php echo $product->get_image( 'woocommerce_thumbnail', $img_attr ); ?>
 		</a>
 	</td>
-	<td class="mnsk7-table-cell mnsk7-table-cell--title">
+	<th scope="row" class="mnsk7-table-cell mnsk7-table-cell--title">
 		<a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a>
 		<?php if ( $usage_value ) : ?>
 			<span class="mnsk7-table-usage"><?php echo esc_html( wp_strip_all_tags( $usage_value ) ); ?></span>
@@ -82,7 +82,7 @@ $row_class = $product->is_sold_individually() ? 'mnsk7-row--fixed-qty' : '';
 		<?php if ( $total_sales > 0 ) : ?>
 			<span class="mnsk7-table-sold"><?php echo esc_html( sprintf( _n( '%d osoba kupiła', '%d osób kupiło', $total_sales, 'mnsk7-storefront' ), $total_sales ) ); ?></span>
 		<?php endif; ?>
-	</td>
+	</th>
 	<td class="mnsk7-table-cell mnsk7-table-cell--price">
 		<?php echo $product->get_price_html(); ?>
 	</td>

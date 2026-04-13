@@ -351,16 +351,17 @@ if ( woocommerce_product_loop() ) {
 			echo '</div>';
 			echo '</div>';
 			?>
-			<div class="mnsk7-product-table-wrap col-full">
-				<table class="mnsk7-product-table shop_table">
+			<div class="mnsk7-product-table-wrap col-full" role="region" aria-label="<?php esc_attr_e( 'Lista produktów', 'mnsk7-storefront' ); ?>">
+				<table id="mnsk7-plp-product-table" class="mnsk7-product-table shop_table">
+					<caption class="screen-reader-text"><?php esc_html_e( 'Tabela produktów w katalogu.', 'mnsk7-storefront' ); ?></caption>
 					<thead>
 						<tr>
-							<th class="mnsk7-table-cell--thumb"><?php esc_html_e( 'Zdjęcie', 'mnsk7-storefront' ); ?></th>
-							<th class="mnsk7-table-cell--title"><?php esc_html_e( 'Produkt', 'mnsk7-storefront' ); ?></th>
-							<th class="mnsk7-table-cell--price"><?php esc_html_e( 'Cena', 'mnsk7-storefront' ); ?></th>
-							<th class="mnsk7-table-cell--stock"><?php esc_html_e( 'Na stanie', 'mnsk7-storefront' ); ?></th>
-							<th class="mnsk7-table-cell--qty"><?php esc_html_e( 'Ilość', 'mnsk7-storefront' ); ?></th>
-							<th class="mnsk7-table-cell--action"><?php esc_html_e( 'Akcja', 'mnsk7-storefront' ); ?></th>
+							<th scope="col" class="mnsk7-table-cell--thumb"><?php esc_html_e( 'Zdjęcie', 'mnsk7-storefront' ); ?></th>
+							<th scope="col" class="mnsk7-table-cell--title"><?php esc_html_e( 'Produkt', 'mnsk7-storefront' ); ?></th>
+							<th scope="col" class="mnsk7-table-cell--price"><?php esc_html_e( 'Cena', 'mnsk7-storefront' ); ?></th>
+							<th scope="col" class="mnsk7-table-cell--stock"><?php esc_html_e( 'Na stanie', 'mnsk7-storefront' ); ?></th>
+							<th scope="col" class="mnsk7-table-cell--qty"><?php esc_html_e( 'Ilość', 'mnsk7-storefront' ); ?></th>
+							<th scope="col" class="mnsk7-table-cell--action"><?php esc_html_e( 'Akcja', 'mnsk7-storefront' ); ?></th>
 						</tr>
 					</thead>
 					<tbody>

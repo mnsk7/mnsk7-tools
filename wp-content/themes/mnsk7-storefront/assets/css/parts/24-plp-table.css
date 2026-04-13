@@ -1342,18 +1342,20 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   }
 }
 
-/* Table wrapper Ă˘â‚¬â€ť na wĂ„â€¦skim desktopie przewijanie w poziomie zamiast obcinania przycisku. */
+/* Table wrapper — wąski desktop: przewijanie poziome bez obcinania przycisku */
 .mnsk7-product-table-wrap {
   margin-bottom: 1.5rem;
   max-width: 100%;
   width: 100%;
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
+  scrollbar-gutter: stable;
 }
 
-/* table-layout: fixed Ă˘â‚¬â€ť jednakowe proporcje kolumn. Task 8: overflow: hidden Ă˘â‚¬â€ť obciĂ„â„˘cie treÄąâ€şci do border-radius. */
+/* table-layout: fixed — proporcje kolumn. min-width: czytelne kolumny przy poziomym przewijaniu (wąski desktop). */
 .mnsk7-product-table {
   width: 100%;
+  min-width: 42rem;
   table-layout: fixed;
   border-collapse: collapse;
   font-size: var(--fs-sm);
@@ -1363,19 +1365,29 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   overflow: hidden;
 }
 
+.mnsk7-product-table caption {
+  padding: 0;
+  caption-side: top;
+}
+
 .mnsk7-product-table thead {
   background: var(--color-surface);
 }
 
 .mnsk7-product-table th {
   text-align: left;
-  padding: 0.5rem 0.75rem;
+  padding: var(--space-12) var(--space-16);
   font-weight: 600;
   font-size: var(--fs-xs);
-  color: var(--color-text);
+  font-family: var(--font-base);
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--color-text-secondary);
   border-bottom: 2px solid var(--color-border-strong);
   white-space: nowrap;
 }
+
+/* Uwaga: sticky thead nie działa wobec viewport przy overflow-x na .mnsk7-product-table-wrap (scroll ancestor). */
 
 /* ÄÂ¤ÄÂ¸ÄĹźĹÂÄÂ¸Ĺâ‚¬ÄÄľÄË›ÄÂ°ÄËťÄËťĹâ€ąÄÂµ ÄÂ´ÄÄľÄÂ»ÄÂ¸ ÄĹźÄÄľÄÂ»ÄÄľÄËťÄÄľÄĹź ÄÂ´ÄÂ»ĹĹą ÄÂµÄÂ´ÄÂ¸ÄËťÄÄľÄĹ‚ÄÄľ ÄË›ÄÂ¸ÄÂ´ÄÂ° ÄËťÄÂ° ÄË›ĹÂÄÂµĹâ€¦ ÄĹźÄÂ°Ĺâ€šÄÂµÄĹ‚ÄÄľĹâ‚¬ÄÂ¸ĹĹąĹâ€¦ */
 .mnsk7-product-table th.mnsk7-table-cell--thumb,
@@ -1396,18 +1408,28 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   transition: background 0.15s ease;
 }
 
+.mnsk7-product-table tbody tr:nth-child(even) {
+  background: var(--color-surface);
+}
+
 .mnsk7-product-table tbody tr:last-child {
   border-bottom: none;
 }
 
 .mnsk7-product-table tbody tr:hover {
-  background: var(--color-surface);
+  background: var(--color-surface-2);
 }
 
 .mnsk7-product-table .mnsk7-table-cell {
-  padding: 0.75rem 0.75rem;
+  padding: var(--space-16) var(--space-16);
   vertical-align: middle;
-  font-size: var(--fs-xs);
+  font-size: var(--fs-sm);
+  font-family: var(--font-base);
+}
+
+.mnsk7-product-table tbody th.mnsk7-table-cell--title {
+  font-weight: 400;
+  text-align: left;
 }
 
 .mnsk7-product-table .mnsk7-table-cell--thumb a {
@@ -1457,19 +1479,20 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 }
 .mnsk7-table-key-params dt {
   margin: 0;
-  font-size: 0.6875rem;
+  font-size: var(--fs-xs);
   color: var(--color-text-muted);
+  font-weight: 500;
 }
 .mnsk7-table-key-params dd {
   margin: 0;
-  font-size: 0.75rem;
+  font-size: var(--fs-sm);
   color: var(--color-text);
   font-weight: 600;
 }
 
 .mnsk7-product-table .mnsk7-table-cell--title a {
   display: -webkit-box;
-  -webkit-line-clamp: 2;
+  -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
   color: var(--color-text);
@@ -1477,7 +1500,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   text-decoration: none;
   border-bottom: none;
   -webkit-tap-highlight-color: transparent;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 .mnsk7-product-table .mnsk7-table-cell--title a:hover,
 .mnsk7-product-table .mnsk7-table-cell--title a:active,
@@ -1502,11 +1525,13 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   color: var(--color-primary-dark);
   white-space: nowrap;
   vertical-align: middle;
+  font-variant-numeric: tabular-nums;
 }
 
 .mnsk7-product-table .mnsk7-table-cell--stock {
   white-space: nowrap;
   vertical-align: middle;
+  font-variant-numeric: tabular-nums;
 }
 .mnsk7-product-table .mnsk7-table-outofstock {
   color: var(--color-text-secondary);
@@ -1715,7 +1740,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   .mnsk7-product-table tbody tr {
     display: grid;
   }
-  .mnsk7-product-table tbody td {
+  .mnsk7-product-table tbody :is(td, th) {
     display: block;
   }
   .mnsk7-product-table thead {
