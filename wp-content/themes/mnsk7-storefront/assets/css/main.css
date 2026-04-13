@@ -4545,16 +4545,6 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin-top: 0;
   margin-bottom: 1.25rem;
 }
-.mnsk7-catalog-aside__hint {
-  margin: -0.35rem 0 1rem;
-  font-size: var(--fs-sm);
-  color: var(--color-text-secondary);
-  text-align: center;
-  line-height: 1.5;
-  max-width: 40rem;
-  margin-left: auto;
-  margin-right: auto;
-}
 .mnsk7-catalog-chips__scroll--categories {
   justify-content: center;
 }
@@ -5415,7 +5405,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   max-width: 480px !important;
 }
 
-/* Homepage Instagram: duże kafle, auto-fit, miniatury z og:image lub iframe w kwadracie */
+/* Homepage Instagram: pełny kadł miniatury (contain), iframe na pełną wysokość embedu — bez przycinania do kwadratu */
 .mnsk7-section--insta .mnsk7-instagram-feed--embed,
 .mnsk7-section--insta .mnsk7-instagram-feed--native,
 .mnsk7-section--insta .mnsk7-instagram-feed--posts {
@@ -5430,9 +5420,9 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   max-width: 1180px;
   margin: 0 auto;
   gap: clamp(0.75rem, 2vw, 1.25rem);
-  align-items: stretch;
+  align-items: start;
   justify-items: stretch;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
 }
 
 .mnsk7-section--insta .mnsk7-instagram-feed__posts.mnsk7-instagram-feed__posts--cols-4 {
@@ -5454,15 +5444,20 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .mnsk7-section--insta .mnsk7-instagram-feed__post {
   width: 100%;
   max-width: none;
-  min-height: 0;
   min-width: 0;
-  aspect-ratio: 1 / 1;
+  height: auto;
+  align-self: start;
+  aspect-ratio: auto;
   border-radius: var(--r-lg);
   overflow: hidden;
   background: linear-gradient(145deg, #f0f4fb 0%, #e8eef8 100%);
   border: 1px solid rgba(12, 125, 219, 0.14);
   box-shadow: 0 12px 32px rgba(15, 38, 72, 0.1);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed__post--embed {
+  background: #fff;
 }
 
 .mnsk7-section--insta .mnsk7-instagram-feed__post:hover {
@@ -5474,9 +5469,9 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .mnsk7-section--insta .mnsk7-instagram-feed__iframe {
   display: block;
   width: 100% !important;
-  height: 100% !important;
-  min-height: 0 !important;
-  max-width: none !important;
+  height: 580px !important;
+  min-height: 520px !important;
+  max-width: 100% !important;
   margin: 0;
   border: 0;
   background: #fff;
@@ -5486,35 +5481,30 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   position: relative;
   display: block;
   width: 100%;
-  height: 100%;
-  min-height: 0;
+  height: auto;
+  line-height: 0;
   color: inherit;
   text-decoration: none;
   overflow: hidden;
+  background: #0b1220;
 }
 
 .mnsk7-section--insta .mnsk7-instagram-feed__post-shade {
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: linear-gradient(to top, rgba(15, 38, 72, 0.55) 0%, transparent 45%);
+  background: linear-gradient(to top, rgba(15, 38, 72, 0.5) 0%, transparent 50%);
   z-index: 1;
 }
 
 .mnsk7-section--insta .mnsk7-instagram-feed__post-image {
   display: block;
   width: 100%;
-  height: 100%;
-  min-height: 0;
-  object-fit: cover;
-  object-position: center;
-  background: #0f2648;
-  transform: scale(1.01);
-  transition: transform 0.35s ease;
-}
-
-.mnsk7-section--insta .mnsk7-instagram-feed__post-link:hover .mnsk7-instagram-feed__post-image {
-  transform: scale(1.06);
+  height: auto;
+  max-height: min(85vh, 720px);
+  object-fit: contain;
+  object-position: center top;
+  background: #0b1220;
 }
 
 .mnsk7-section--insta .mnsk7-instagram-feed__post-cta {
@@ -5558,6 +5548,16 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   .mnsk7-section--insta .mnsk7-instagram-feed__posts.mnsk7-instagram-feed__posts--cols-3,
   .mnsk7-section--insta .mnsk7-instagram-feed__posts.mnsk7-instagram-feed__posts--cols-2 {
     grid-template-columns: 1fr;
+  }
+
+  .mnsk7-section--insta .mnsk7-instagram-feed__post iframe,
+  .mnsk7-section--insta .mnsk7-instagram-feed__iframe {
+    height: 520px !important;
+    min-height: 480px !important;
+  }
+
+  .mnsk7-section--insta .mnsk7-instagram-feed__post-image {
+    max-height: 70vh;
   }
 }
 

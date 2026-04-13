@@ -236,7 +236,6 @@ get_header();
 			<?php if ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) : ?>
 			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--categories" role="navigation" aria-label="<?php echo esc_attr( $cats_label ); ?>">
 				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $cats_label ); ?></h3>
-				<p class="mnsk7-catalog-aside__hint"><?php esc_html_e( 'Bez zdjęć kategorii — szybki wybór po nazwie. Cały katalog jest w sklepie.', 'mnsk7-storefront' ); ?></p>
 				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud mnsk7-catalog-chips__scroll--categories">
 					<?php foreach ( $cats as $cat ) :
 						$link = get_term_link( $cat );
@@ -303,7 +302,7 @@ get_header();
 		<div class="col-full">
 			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Marka w praktyce', 'mnsk7-storefront' ); ?></p>
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Najnowsze posty z Instagrama', 'mnsk7-storefront' ); ?></h2>
-			<p class="mnsk7-section__sub"><?php esc_html_e( 'Kafelki z podglądem (cache na serwerze) albo osadzenie posta — zawsze sensowny rozmiar i link do profilu.', 'mnsk7-storefront' ); ?></p>
+			<p class="mnsk7-section__sub"><?php esc_html_e( 'Realizacje, nowości i skróty z pracy warsztatu — bez przycinania treści w kwadrat.', 'mnsk7-storefront' ); ?></p>
 			<?php echo do_shortcode( '[mnsk7_instagram_feed type="posts" limit="4" title=""]' ); ?>
 		</div>
 	</section>
