@@ -26,17 +26,46 @@ function writeState(filePath, state) {
   fs.writeFileSync(filePath, `${JSON.stringify(state, null, 2)}\n`, "utf8");
 }
 
-function loadTranscriptText(transcriptPath) {
+/**
+ * Completion must appear in the last assistant *text* turn only, as
+ * <promise>TOKEN</promise>. Whole-file or substring checks false-positive on:
+ * - setup-ralph-loop.sh printing <promise> to terminal (captured in transcript)
+ * - Shell tool JSON containing --completion-promise "TOKEN"
+ * - assistant saying "do not emit TOKEN yet" (still includes substring)
+ */
+function extractLastAssistantTextFromJsonl(transcriptPath) {
   if (!transcriptPath || !fs.existsSync(transcriptPath)) {
     return "";
   }
-  return fs.readFileSync(transcriptPath, "utf8");
+  const raw = fs.readFileSync(transcriptPath, "utf8");
+  const lines = raw.split("\n").filter((line) => line.trim() !== "");
+  for (let i = lines.length - 1; i >= 0; i--) {
+    let row;
+    try {
+      row = JSON.parse(lines[i]);
+    } catch {
+      continue;
+    }
+    if (row.role !== "assistant" || !row.message || !Array.isArray(row.message.content)) {
+      continue;
+    }
+    const textParts = row.message.content
+      .filter((p) => p && p.type === "text" && typeof p.text === "string")
+      .map((p) => p.text);
+    const combined = textParts.join("\n").trim();
+    if (combined !== "") {
+      return combined;
+    }
+  }
+  return "";
 }
 
-function hasCompletionPromise(transcriptText, promise) {
-  if (!promise || !transcriptText) return false;
+function hasCompletionPromise(transcriptPath, promise) {
+  if (!promise) return false;
+  const lastAssistantText = extractLastAssistantTextFromJsonl(transcriptPath);
+  if (!lastAssistantText) return false;
   const tagged = new RegExp(`<promise>\\s*${escapeRegExp(promise)}\\s*<\\/promise>`, "i");
-  return tagged.test(transcriptText) || transcriptText.includes(promise);
+  return tagged.test(lastAssistantText);
 }
 
 async function main() {
@@ -86,9 +115,9 @@ async function main() {
     state.last_transcript_path = transcriptPath;
   }
 
-  const transcriptText = loadTranscriptText(transcriptPath);
+  const transcriptPathResolved = transcriptPath;
   const promise = String(state.completion_promise || "").trim();
-  const promiseMet = hasCompletionPromise(transcriptText, promise);
+  const promiseMet = hasCompletionPromise(transcriptPathResolved, promise);
   const currentIteration = Number(state.iteration || 0);
   const maxIterations =
     state.max_iterations === null || state.max_iterations === undefined

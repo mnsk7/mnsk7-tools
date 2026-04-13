@@ -79,7 +79,8 @@ NODE
 echo "Ralph loop is active."
 echo "State: $STATE_FILE"
 if [ -n "$COMPLETION_PROMISE" ]; then
-  echo "Completion promise: <promise>$COMPLETION_PROMISE</promise>"
+  # Nie wypisuj <promise>…</promise> na stdout — trafia do transcriptu Shell i zabija pętlę Ralph (fałszywy „completion”).
+  echo "Completion token (w ostatniej odpowiedzi asystenta wpisz dokładnie: <promise>$COMPLETION_PROMISE</promise>): $COMPLETION_PROMISE"
 fi
 if [ -n "$MAX_ITERATIONS" ]; then
   echo "Max iterations: $MAX_ITERATIONS"

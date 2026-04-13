@@ -12,9 +12,11 @@ bash scripts/setup-ralph-loop.sh "Fix the task" --completion-promise "DONE" --ma
 
 - Ralph continues the same task in the same Cursor session.
 - The stop hook releases the session only when:
-  - the transcript contains the completion promise, ideally as `<promise>DONE</promise>`, or
+  - the **last assistant message** (tylko bloki tekstowe, nie narzędzia) zawiera dokładnie tag: `<promise>DONE</promise>` (ten sam token co `--completion-promise`). Nie wystarczy sam substring w całym pliku — inaczej łapie echo skryptu / cytat w odpowiedzi.
   - `max_iterations` is reached, or
   - the operator cancels the loop.
+
+**Zakończenie zadania:** w ostatniej wiadomości asystenta wstaw literalnie np. `<promise>DONE</promise>` (bez dodatkowych znaków w środku tagów).
 
 ## Cancel
 
