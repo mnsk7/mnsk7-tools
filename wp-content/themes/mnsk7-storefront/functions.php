@@ -2636,14 +2636,25 @@ add_filter( 'rocket_delay_js_exclusions', function ( $exclusions ) {
 } );
 add_filter( 'script_loader_tag', function ( $tag, $handle, $src ) {
 	if ( $handle === 'mnsk7-instagram-embed' ) {
+		// WP Rocket: nie opóźniaj embed.js (Instagram inicjalizuje blockquote po załadowaniu).
 		$tag = str_replace( ' src=', ' nowprocket src=', $tag );
-		$tag = preg_replace( '#\s(defer|async)=["\']?[^"\']*["\']?#i', '', $tag );
-		// process() dopiero po załadowaniu embed.js — inaczej instgrm jeszcze nie istnieje i iframe nie powstanie
-		$tag = str_replace( '</script>', '', $tag );
-		$tag .= " onload=\"if(typeof mnsk7InstgrmRun==='function')mnsk7InstgrmRun();\"></script>\n";
 	}
 	return $tag;
 }, 10, 3 );
+
+/** Rejestracja embed.js — enqueue w shortcode (przed wp_footer), patrz alesyatakun.by. */
+add_action( 'wp_enqueue_scripts', function () {
+	wp_register_script(
+		'mnsk7-instagram-embed',
+		'https://www.instagram.com/embed.js',
+		array(),
+		null,
+		true
+	);
+	if ( function_exists( 'wp_script_add_data' ) ) {
+		wp_script_add_data( 'mnsk7-instagram-embed', 'strategy', 'async' );
+	}
+}, 5 );
 
 /**
  * Instagram og:image z meta często wskazuje na URL z centralnym kadrem kwadratowym (parametr stp=c….a_…),
@@ -2666,11 +2677,13 @@ function mnsk7_instagram_og_preview_is_square_cdn_crop( $url ) {
 add_action( 'init', function () {
 	add_shortcode( 'mnsk7_instagram_feed', function ( $atts ) {
 		$atts = shortcode_atts( array(
-			'limit' => 6,
-			'title' => 'Instagram @mnsk7tools',
-			'type'  => 'profile',
-			'urls'  => '',
+			'limit'  => 6,
+			'title'  => 'Instagram @mnsk7tools',
+			'type'   => 'profile',
+			'urls'   => '',
 			'images' => '',
+			// embedjs = blockquote + embed.js (jak alesyatakun.by, pełna kompozycja posta). thumbs = lekkie miniatury og:iframe (legacy).
+			'render' => 'embedjs',
 		), $atts, 'mnsk7_instagram_feed' );
 		$profile = defined( 'MNK7_INSTAGRAM_URL' ) ? MNK7_INSTAGRAM_URL : 'https://www.instagram.com/mnsk7tools/';
 		$handle  = preg_replace( '#^https?://(www\.)?instagram\.com/#', '', untrailingslashit( $profile ) );
@@ -2725,12 +2738,26 @@ add_action( 'init', function () {
 			}
 		}
 
-		$out = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--posts">';
+		$render = isset( $atts['render'] ) ? sanitize_key( (string) $atts['render'] ) : 'embedjs';
+		if ( ! in_array( $render, array( 'embedjs', 'thumbs' ), true ) ) {
+			$render = 'embedjs';
+		}
+
+		$out = '<div class="mnsk7-instagram-feed mnsk7-instagram-feed--posts mnsk7-instagram-feed--render-' . esc_attr( $render ) . '">';
 		if ( ! empty( $urls ) ) {
+			if ( $render === 'embedjs' ) {
+				wp_enqueue_script( 'mnsk7-instagram-embed' );
+			}
 			$n_posts = count( $urls );
 			$cols    = ' mnsk7-instagram-feed__posts--cols-' . (string) min( 4, max( 1, $n_posts ) );
 			$out    .= '<div class="mnsk7-instagram-feed__posts' . esc_attr( $cols ) . '" role="region" aria-label="' . esc_attr__( 'Posty z Instagrama', 'mnsk7-storefront' ) . '">';
 			foreach ( $urls as $index => $url ) {
+				if ( $render === 'embedjs' ) {
+					$out .= '<div class="mnsk7-instagram-feed__post mnsk7-instagram-feed__post--blockquote">';
+					$out .= '<blockquote class="instagram-media" data-instgrm-permalink="' . esc_url( $url ) . '" data-instgrm-version="14"></blockquote>';
+					$out .= '</div>';
+					continue;
+				}
 				$image_url = '';
 				if ( isset( $image_urls[ $index ] ) && is_string( $image_urls[ $index ] ) ) {
 					$image_url = esc_url_raw( trim( html_entity_decode( $image_urls[ $index ], ENT_QUOTES | ENT_HTML5, 'UTF-8' ) ) );

@@ -1408,6 +1408,19 @@
   background: transparent;
 }
 
+.mnsk7-instagram-feed--render-embedjs .mnsk7-instagram-feed__post--blockquote {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  min-width: 0;
+}
+
+.mnsk7-instagram-feed--render-embedjs .mnsk7-instagram-feed__post--blockquote .instagram-media {
+  margin-left: auto !important;
+  margin-right: auto !important;
+  max-width: 100% !important;
+}
+
 .mnsk7-instagram-feed--posts .mnsk7-instagram-feed__post--thumb .mnsk7-instagram-feed__post-cta {
   position: relative;
   left: auto;
@@ -1581,7 +1594,7 @@
   box-shadow: 0 18px 40px rgba(15, 38, 72, 0.14);
 }
 
-.mnsk7-section--insta .mnsk7-instagram-feed__post iframe,
+/* Tylko nasz iframe /embed/ — nie ruszaj iframe wstrzykiwanych przez embed.js w blockquote. */
 .mnsk7-section--insta .mnsk7-instagram-feed__iframe {
   display: block;
   width: 100% !important;
@@ -1591,6 +1604,35 @@
   margin: 0;
   border: 0;
   background: #fff;
+}
+
+/* Oficjalny embed jak alesyatakun.by: blockquote.instagram-media + embed.js */
+.mnsk7-section--insta .mnsk7-instagram-feed--render-embedjs .mnsk7-instagram-feed__post--blockquote {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  padding: 0;
+  overflow: visible;
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed--render-embedjs .mnsk7-instagram-feed__post--blockquote:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed--render-embedjs .mnsk7-instagram-feed__post--blockquote .instagram-media {
+  margin: 0 auto !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+.mnsk7-section--insta .mnsk7-instagram-feed--render-embedjs .mnsk7-instagram-feed__post--blockquote iframe {
+  border-radius: var(--r-md) !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  border: 0 !important;
 }
 
 /* Strona główna: większy limit wysokości miniatury (root layout jest w regułach .mnsk7-instagram-feed--posts .mnsk7-instagram-feed__post--thumb). */
@@ -1716,7 +1758,6 @@
     grid-template-columns: 1fr;
   }
 
-  .mnsk7-section--insta .mnsk7-instagram-feed__post iframe,
   .mnsk7-section--insta .mnsk7-instagram-feed__iframe {
     height: 520px !important;
     min-height: 480px !important;
