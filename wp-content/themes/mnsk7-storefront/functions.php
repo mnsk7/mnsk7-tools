@@ -2644,6 +2644,25 @@ add_filter( 'script_loader_tag', function ( $tag, $handle, $src ) {
 	}
 	return $tag;
 }, 10, 3 );
+
+/**
+ * Instagram og:image z meta często wskazuje na URL z centralnym kadrem kwadratowym (parametr stp=c….a_…),
+ * więc napisy na szerokich grafikach są obcinane niezależnie od CSS. W takim przypadku lepszy jest embed.
+ *
+ * @param string $url URL obrazka (og:image).
+ * @return bool True — nie używaj jako miniatury, użyj iframe.
+ */
+function mnsk7_instagram_og_preview_is_square_cdn_crop( $url ) {
+	if ( ! is_string( $url ) || $url === '' ) {
+		return false;
+	}
+	$u = html_entity_decode( $url, ENT_QUOTES | ENT_HTML5, 'UTF-8' );
+	if ( stripos( $u, 'static.cdninstagram.com/rsrc.php' ) !== false ) {
+		return true;
+	}
+	return (bool) preg_match( '/[?&]stp=c[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+a/i', $u );
+}
+
 add_action( 'init', function () {
 	add_shortcode( 'mnsk7_instagram_feed', function ( $atts ) {
 		$atts = shortcode_atts( array(
@@ -2718,6 +2737,9 @@ add_action( 'init', function () {
 				}
 				if ( $image_url === '' && function_exists( 'mnsk7_instagram_og_image_for_url' ) ) {
 					$image_url = mnsk7_instagram_og_image_for_url( $url );
+					if ( $image_url !== '' && mnsk7_instagram_og_preview_is_square_cdn_crop( $image_url ) ) {
+						$image_url = '';
+					}
 				}
 				$has_thumb = $image_url !== '';
 				$out      .= '<div class="mnsk7-instagram-feed__post' . ( $has_thumb ? ' mnsk7-instagram-feed__post--thumb' : ' mnsk7-instagram-feed__post--embed' ) . '">';

@@ -88,12 +88,20 @@ add_action( 'init', function () {
  * @return string URL obrazka lub pusty string.
  */
 function mnsk7_instagram_og_image_for_url( $url ) {
-	$cache_key = 'mnsk7_ig_thumb_' . md5( $url );
+	// v2: UA jak crawler FB — inaczej IG często zwraca placeholder zamiast scontent; v2 czyści stary transient.
+	$cache_key = 'mnsk7_ig_thumb_v2_' . md5( $url );
 	$cached    = get_transient( $cache_key );
 	if ( is_string( $cached ) && $cached !== '' ) {
 		return $cached;
 	}
-	$response = wp_remote_get( $url, array( 'timeout' => 5, 'user-agent' => 'Mozilla/5.0 (compatible; WordPress)' ) );
+	$response = wp_remote_get(
+		$url,
+		array(
+			'timeout'     => 8,
+			'user-agent'  => 'facebookexternalhit/1.1 (+http://www.facebook.com/externalhit_uatext.php)',
+			'redirection' => 3,
+		)
+	);
 	if ( is_wp_error( $response ) || wp_remote_retrieve_response_code( $response ) !== 200 ) {
 		set_transient( $cache_key, '', 1 * HOUR_IN_SECONDS );
 		return '';
