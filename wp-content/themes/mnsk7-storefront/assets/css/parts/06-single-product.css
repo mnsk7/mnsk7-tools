@@ -82,6 +82,25 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   order: 20;
   margin-top: 0;
 }
+/* Variable: DOM i flex — najpierw wybór wariantu (mu-plugin: add_to_cart przed key params), bez „order:20” na końcu summary */
+.single-product.product-type-variable .summary.mnsk7-pdp-buybox > form.cart {
+  order: 3;
+}
+.single-product.product-type-variable .summary.mnsk7-pdp-buybox > .mnsk7-product-key-params {
+  order: 4;
+}
+.single-product.product-type-variable .summary.mnsk7-pdp-buybox > .mnsk7-product-zastosowanie {
+  order: 5;
+}
+.single-product.product-type-variable .summary.mnsk7-pdp-buybox > .mnsk7-product-meta-chips {
+  order: 6;
+}
+.single-product.product-type-variable .summary.mnsk7-pdp-buybox > .mnsk7-product-trust {
+  order: 7;
+}
+#mnsk7-variations {
+  scroll-margin-top: calc(var(--header-h, 56px) + 0.75rem);
+}
 .single-product .summary .mnsk7-product-trust {
   order: 21;
 }
@@ -597,18 +616,24 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   outline-offset: 2px;
 }
 
+/* Siatka 2×2 zamiast flex-wrap — równe kolumny, wyrównanie do buyboxa (bez „poszarpanej” prawej krawędzi). */
 .single-product .summary .mnsk7-product-trust {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.55rem;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.55rem 0.65rem;
   margin-top: 0.9rem;
+  width: 100%;
+  align-items: stretch;
 }
 
 .single-product .summary .mnsk7-product-trust__badge {
-  display: inline-flex;
+  display: flex;
   align-items: center;
   gap: 0.4rem;
+  min-width: 0;
   min-height: 2.35rem;
+  height: 100%;
+  box-sizing: border-box;
   padding: 0.5rem 0.8rem;
   border: 1px solid rgba(15, 23, 42, 0.08);
   border-radius: var(--r-md);
@@ -616,6 +641,12 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   font-size: var(--fs-xs);
   font-weight: 600;
   color: var(--color-text);
+}
+
+.single-product .summary .mnsk7-product-trust__badge-label {
+  min-width: 0;
+  flex: 1 1 auto;
+  line-height: 1.35;
 }
 
 .single-product .summary .mnsk7-product-trust__badge-icon {
