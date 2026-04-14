@@ -6755,6 +6755,7 @@ body.single-product .woocommerce-product-navigation {
 /* 12-related-products — jedyny moduł dla recommendation blocks (PDP, koszyk, główna).
    Wszystkie sekcje: related, upsells, cross-sells, bestsellery — ta sama siatka, ta sama karta.
    Breakpoints: desktop ≥1200: 3 kolumny; tablet 768–1199: 2; mobile <768: 2; ≤400: 1.
+   Dopasowanie liczby kart: :has(li:first-child:nth-last-child(n)) — np. 3 karty → 3 kolumny (bez 2+1), 4 → 2×2, 8 → 4×2 / 2×4.
    Docs: docs/RECOMMENDATION-BLOCKS-UNIFIED.md */
 
 /* -----------------------------------------------------------------
@@ -6855,6 +6856,76 @@ body.single-product .woocommerce-product-navigation {
   .mnsk7-section--bestsellers ul.products {
     grid-template-columns: 1fr !important;
     gap: 0.75rem !important;
+  }
+}
+
+/* -----------------------------------------------------------------
+   § GRID: liczba produktów — bez „dziury” w ostatnim rzędzie (2+1 przy 2 kolumnach itd.)
+   :has(> li.product:first-child:nth-last-child(n)) = dokładnie n kart w <ul>.
+   ----------------------------------------------------------------- */
+
+.related.products ul.products:has(> li.product:first-child:nth-last-child(1)),
+.upsells.products ul.products:has(> li.product:first-child:nth-last-child(1)),
+.up-sells.products ul.products:has(> li.product:first-child:nth-last-child(1)),
+.cross-sells ul.products:has(> li.product:first-child:nth-last-child(1)),
+.mnsk7-section--bestsellers ul.products:has(> li.product:first-child:nth-last-child(1)) {
+  grid-template-columns: 1fr !important;
+}
+
+.related.products ul.products:has(> li.product:first-child:nth-last-child(2)),
+.upsells.products ul.products:has(> li.product:first-child:nth-last-child(2)),
+.up-sells.products ul.products:has(> li.product:first-child:nth-last-child(2)),
+.cross-sells ul.products:has(> li.product:first-child:nth-last-child(2)),
+.mnsk7-section--bestsellers ul.products:has(> li.product:first-child:nth-last-child(2)) {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+/* 3 karty: jeden pełny rząd (ważne przy tablecie 768–1199, gdzie domyślnie było 2+1 z pustką) */
+.related.products ul.products:has(> li.product:first-child:nth-last-child(3)),
+.upsells.products ul.products:has(> li.product:first-child:nth-last-child(3)),
+.up-sells.products ul.products:has(> li.product:first-child:nth-last-child(3)),
+.cross-sells ul.products:has(> li.product:first-child:nth-last-child(3)),
+.mnsk7-section--bestsellers ul.products:has(> li.product:first-child:nth-last-child(3)) {
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+}
+
+/* 4 karty: 2×2 */
+.related.products ul.products:has(> li.product:first-child:nth-last-child(4)),
+.upsells.products ul.products:has(> li.product:first-child:nth-last-child(4)),
+.up-sells.products ul.products:has(> li.product:first-child:nth-last-child(4)),
+.cross-sells ul.products:has(> li.product:first-child:nth-last-child(4)),
+.mnsk7-section--bestsellers ul.products:has(> li.product:first-child:nth-last-child(4)) {
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+}
+
+/* 8 kart: 4×2 na desktopie, 2×4 wężej */
+@media (min-width: 1200px) {
+  .related.products ul.products:has(> li.product:first-child:nth-last-child(8)),
+  .upsells.products ul.products:has(> li.product:first-child:nth-last-child(8)),
+  .up-sells.products ul.products:has(> li.product:first-child:nth-last-child(8)),
+  .cross-sells ul.products:has(> li.product:first-child:nth-last-child(8)),
+  .mnsk7-section--bestsellers ul.products:has(> li.product:first-child:nth-last-child(8)) {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 1199px) {
+  .related.products ul.products:has(> li.product:first-child:nth-last-child(8)),
+  .upsells.products ul.products:has(> li.product:first-child:nth-last-child(8)),
+  .up-sells.products ul.products:has(> li.product:first-child:nth-last-child(8)),
+  .cross-sells ul.products:has(> li.product:first-child:nth-last-child(8)),
+  .mnsk7-section--bestsellers ul.products:has(> li.product:first-child:nth-last-child(8)) {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+}
+
+@media (max-width: 400px) {
+  .related.products ul.products:has(> li.product:first-child:nth-last-child(3)),
+  .upsells.products ul.products:has(> li.product:first-child:nth-last-child(3)),
+  .up-sells.products ul.products:has(> li.product:first-child:nth-last-child(3)),
+  .cross-sells ul.products:has(> li.product:first-child:nth-last-child(3)),
+  .mnsk7-section--bestsellers ul.products:has(> li.product:first-child:nth-last-child(3)) {
+    grid-template-columns: 1fr !important;
   }
 }
 

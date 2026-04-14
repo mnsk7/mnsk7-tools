@@ -482,10 +482,10 @@ add_filter( 'woocommerce_product_upsells_products_heading', function ( $heading 
 	return __( 'Może spodoba się również…', 'mnsk7-storefront' );
 }, 10 );
 
-/** PDP: Podobne produkty — 8 pozycji, 4 kolumny (pełny rząd bez pustego miejsca z boku) */
+/** PDP: podobne produkty — do 8 pozycji; klasa columns-* + siatka w 12-related-products.css (:has dopasowuje kolumny do liczby kart). */
 add_filter( 'woocommerce_output_related_products_args', function ( $args ) {
 	$args['posts_per_page'] = 8;
-	$args['columns']        = 4;
+	$args['columns']        = 3;
 	return $args;
 }, 10 );
 
