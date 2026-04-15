@@ -22,6 +22,15 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
  * @return bool
  */
 function mnsk7_is_mobile_request() {
+	if ( isset( $_GET['mnsk7_mobile'] ) ) {
+		$forced = strtolower( sanitize_text_field( wp_unslash( $_GET['mnsk7_mobile'] ) ) );
+		if ( in_array( $forced, array( '1', 'true', 'yes', 'on' ), true ) ) {
+			return true;
+		}
+		if ( in_array( $forced, array( '0', 'false', 'no', 'off' ), true ) ) {
+			return false;
+		}
+	}
 	return function_exists( 'wp_is_mobile' ) && wp_is_mobile();
 }
 
