@@ -119,7 +119,7 @@ if ( ( is_shop() || $is_taxonomy ) && $plp_is_mobile_request ) {
 
 /* Render jednego rzędu chipów nawigacyjnych (kategorie/tagi): etykieta + poziomy scroll + opcjonalnie "Więcej". */
 $plp_nav_chips_limit = $plp_is_mobile_request ? 5 : 6;
-$render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $plp_nav_chips_limit ) {
+$render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $plp_nav_chips_limit, $plp_is_mobile_request ) {
 	if ( empty( $terms ) || ! is_array( $terms ) ) {
 		return;
 	}
@@ -127,6 +127,36 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 	$visible = array_slice( $terms, 0, $plp_nav_chips_limit );
 	$hidden  = array_slice( $terms, $plp_nav_chips_limit, null );
 	$anchor  = function_exists( 'mnsk7_plp_anchor_results' ) ? 'mnsk7_plp_anchor_results' : null;
+	if ( $plp_is_mobile_request ) {
+		$is_open = false;
+		foreach ( $terms as $term ) {
+			if ( $active_term_id && (int) $term->term_id === (int) $active_term_id ) {
+				$is_open = true;
+				break;
+			}
+		}
+		echo '<details class="mnsk7-plp-dropdown mnsk7-plp-dropdown--nav col-full"' . ( $is_open ? ' open' : '' ) . '>';
+		echo '<summary class="mnsk7-plp-dropdown__summary">' . esc_html( $label ) . '</summary>';
+		echo '<div class="mnsk7-plp-dropdown__panel">';
+		echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--nav" role="navigation" aria-label="' . esc_attr( $label ) . '">';
+		echo '<div class="mnsk7-plp-chips__scroll">';
+		foreach ( $terms as $term ) {
+			$link = get_term_link( $term );
+			if ( is_wp_error( $link ) ) {
+				continue;
+			}
+			$link = $anchor ? $anchor( $link ) : $link;
+			$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
+			$name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $name ) : $name;
+			$active = $active_term_id && (int) $term->term_id === (int) $active_term_id;
+			printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $link ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $name ) );
+		}
+		echo '</div>';
+		echo '</div>';
+		echo '</div>';
+		echo '</details>';
+		return;
+	}
 	echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--nav col-full" role="navigation" aria-label="' . esc_attr( $label ) . '">';
 	echo '<span class="mnsk7-plp-chips__label">' . esc_html( $label ) . '</span>';
 	echo '<div class="mnsk7-plp-chips__scroll">';
@@ -193,11 +223,11 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 
 	$attr_data      = function_exists( 'mnsk7_get_archive_attribute_filter_chips' ) ? mnsk7_get_archive_attribute_filter_chips() : array( 'filters' => array(), 'filter_params' => array() );
 	$plp_chips_limit  = $plp_is_mobile_request ? 4 : 5;
-	$plp_attr_visible = 1;
 	$all_filters      = isset( $attr_data['filters'] ) ? $attr_data['filters'] : array();
+	$plp_attr_visible = $plp_is_mobile_request ? count( $all_filters ) : 1;
 	$visible_filters  = array_slice( $all_filters, 0, $plp_attr_visible, true );
 	$hidden_filters   = array_slice( $all_filters, $plp_attr_visible, null, true );
-	$has_hidden_rows   = ! empty( $hidden_filters );
+	$has_hidden_rows   = ! $plp_is_mobile_request && ! empty( $hidden_filters );
 	$active_in_hidden  = false;
 	if ( $has_hidden_rows ) {
 		foreach ( $hidden_filters as $attribute_filter ) {
@@ -209,7 +239,7 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 		}
 	}
 
-	$render_filter_row = function ( $attribute_filter ) use ( $plp_chips_limit ) {
+	$render_filter_row = function ( $attribute_filter ) use ( $plp_chips_limit, $plp_is_mobile_request ) {
 		if ( empty( $attribute_filter['chips'] ) ) {
 			return;
 		}
@@ -219,6 +249,25 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 		$visible    = array_slice( $chips_list, 0, $plp_chips_limit, true );
 		$hidden     = array_slice( $chips_list, $plp_chips_limit, null, true );
 		$anchor_fn  = function_exists( 'mnsk7_plp_anchor_results' ) ? 'mnsk7_plp_anchor_results' : null;
+		if ( $plp_is_mobile_request ) {
+			$is_active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) !== '';
+			echo '<details class="mnsk7-plp-dropdown mnsk7-plp-dropdown--attrs col-full"' . ( $is_active ? ' open' : '' ) . '>';
+			echo '<summary class="mnsk7-plp-dropdown__summary">' . esc_html( $attribute_filter['label'] ) . '</summary>';
+			echo '<div class="mnsk7-plp-dropdown__panel">';
+			echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs" role="navigation" aria-label="' . esc_attr( $aria_label ) . '">';
+			echo '<div class="mnsk7-plp-chips__scroll">';
+			foreach ( $chips_list as $slug => $label ) {
+				$url = add_query_arg( $param, $slug );
+				$url = $anchor_fn ? $anchor_fn( $url ) : $url;
+				$active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) === $slug;
+				printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
+			}
+			echo '</div>';
+			echo '</div>';
+			echo '</div>';
+			echo '</details>';
+			return;
+		}
 		echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs col-full" role="navigation" aria-label="' . esc_attr( $aria_label ) . '">';
 		echo '<span class="mnsk7-plp-chips__label">' . esc_html( $attribute_filter['label'] ) . '</span>';
 		echo '<div class="mnsk7-plp-chips__scroll">';
