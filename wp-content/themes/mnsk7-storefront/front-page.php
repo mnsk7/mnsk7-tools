@@ -108,8 +108,7 @@ get_header();
 			<div class="mnsk7-section__header mnsk7-section__header--bestsellers">
 				<div class="mnsk7-section__header-copy">
 					<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Bestsellery i polecane', 'mnsk7-storefront' ); ?></p>
-					<h2 class="mnsk7-section__title"><?php esc_html_e( 'Najczęściej wybierane frezy przez naszych klientów', 'mnsk7-storefront' ); ?></h2>
-					<p class="mnsk7-section__sub"><?php esc_html_e( 'Sprawdzone pozycje do codziennej pracy: drewno, MDF, aluminium, stal i tworzywa w najczęściej zamawianych wariantach.', 'mnsk7-storefront' ); ?></p>
+					<h2 class="mnsk7-section__title"><?php esc_html_e( 'Najczęściej wybierane produkty przez naszych klientów', 'mnsk7-storefront' ); ?></h2>
 				</div>
 				<p class="mnsk7-section__more mnsk7-bestsellers-more">
 					<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie →', 'mnsk7-storefront' ); ?></a>

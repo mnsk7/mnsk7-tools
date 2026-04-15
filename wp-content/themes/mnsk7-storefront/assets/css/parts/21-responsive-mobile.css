@@ -193,6 +193,24 @@
     gap: 0.85rem !important;
   }
 
+  .mnsk7-section--bestsellers .mnsk7-section__header,
+  .mnsk7-section--bestsellers .mnsk7-section__header-copy {
+    align-items: center;
+    text-align: center;
+  }
+
+  .mnsk7-section--bestsellers .mnsk7-section__eyebrow,
+  .mnsk7-section--bestsellers .mnsk7-section__title {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .mnsk7-section--bestsellers .mnsk7-section__more {
+    width: 100%;
+    text-align: center;
+  }
+
   .mnsk7-section--bestsellers .mnsk7-section__more a {
     width: 100%;
   }
