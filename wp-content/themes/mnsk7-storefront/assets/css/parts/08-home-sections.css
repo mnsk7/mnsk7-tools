@@ -499,6 +499,15 @@
   line-height: 1.25;
 }
 
+.mnsk7-section__title--catalog-hero {
+  margin-bottom: 0.75rem;
+}
+
+.mnsk7-section__title--catalog-hero .mnsk7-section__title-accent {
+  display: block;
+  color: var(--color-primary, #0c7ddb);
+}
+
 .mnsk7-section__eyebrow {
   display: inline-flex;
   align-items: center;

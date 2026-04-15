@@ -10,97 +10,6 @@ get_header();
 
 <main id="main" class="site-main mnsk7-front-page">
 
-	<!-- HERO -->
-	<section class="mnsk7-hero">
-		<div class="mnsk7-hero__inner col-full">
-			<?php
-			$materials = array( 'Drewno', 'MDF', 'Aluminium', 'Stal', __( 'Tworzywa sztuczne', 'mnsk7-storefront' ) );
-			$hero_lines = array(
-				array(
-					'label' => __( 'Drewno i MDF', 'mnsk7-storefront' ),
-					'text'  => __( 'frezy proste, spiralne, kompresyjne i grawerskie do czystej obróbki płyt i litego drewna', 'mnsk7-storefront' ),
-				),
-				array(
-					'label' => __( 'Aluminium i tworzywa', 'mnsk7-storefront' ),
-					'text'  => __( 'jednopiórowe i specjalistyczne geometrie pod szybkie odprowadzanie wióra i stabilne cięcie', 'mnsk7-storefront' ),
-				),
-				array(
-					'label' => __( 'Warsztat i B2B', 'mnsk7-storefront' ),
-					'text'  => __( 'faktura VAT, powtarzalne zakupy i oferta ułożona pod szybki wybór zamiast przypadkowego scrollowania', 'mnsk7-storefront' ),
-				),
-			);
-			?>
-
-			<div class="mnsk7-hero__split">
-				<div class="mnsk7-hero__content">
-					<p class="mnsk7-hero__eyebrow"><?php esc_html_e( 'Super Sprzedawca Allegro', 'mnsk7-storefront' ); ?></p>
-					<h1 class="mnsk7-hero__title">
-						<?php esc_html_e( 'Precyzja obróbki', 'mnsk7-storefront' ); ?>
-						<span class="mnsk7-hero__title-accent"><?php esc_html_e( 'zaczyna się od frezu', 'mnsk7-storefront' ); ?></span>
-					</h1>
-					<p class="mnsk7-hero__lead"><?php esc_html_e( 'Profesjonalne frezy CNC i narzędzia skrawające do drewna, aluminium, tworzyw i stali. Oferta ułożona pod szybki wybór właściwej geometrii, średnicy i materiału.', 'mnsk7-storefront' ); ?></p>
-
-					<div class="mnsk7-hero__stats" aria-label="<?php esc_attr_e( 'Najważniejsze informacje', 'mnsk7-storefront' ); ?>">
-						<div class="mnsk7-hero__stat">
-							<span class="mnsk7-hero__stat-value" data-mnsk7-counter>100%</span>
-							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'pozytywnych opinii', 'mnsk7-storefront' ); ?></span>
-						</div>
-						<div class="mnsk7-hero__stat">
-							<span class="mnsk7-hero__stat-value" data-mnsk7-counter>383</span>
-							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'ocen na Allegro', 'mnsk7-storefront' ); ?></span>
-						</div>
-						<div class="mnsk7-hero__stat">
-							<span class="mnsk7-hero__stat-value" data-mnsk7-counter>3 500+</span>
-							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'zamówień w 2025 r.', 'mnsk7-storefront' ); ?></span>
-						</div>
-						<div class="mnsk7-hero__stat">
-							<span class="mnsk7-hero__stat-value" data-mnsk7-counter>425</span>
-							<span class="mnsk7-hero__stat-label"><?php esc_html_e( 'produktów w ofercie', 'mnsk7-storefront' ); ?></span>
-						</div>
-					</div>
-
-					<div class="mnsk7-hero__materials" aria-label="<?php esc_attr_e( 'Materiały', 'mnsk7-storefront' ); ?>">
-						<?php
-						foreach ( $materials as $mat ) {
-							echo '<span class="mnsk7-hero__material-chip">' . esc_html( $mat ) . '</span>';
-						}
-						?>
-					</div>
-
-					<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
-					<div class="mnsk7-hero__ctas">
-						<a href="<?php echo esc_url( wc_get_page_permalink( 'shop' ) ); ?>" class="mnsk7-hero__btn mnsk7-hero__btn--primary">
-							<?php esc_html_e( 'Przejdź do sklepu', 'mnsk7-storefront' ); ?>
-						</a>
-						<a href="#kategorie" class="mnsk7-hero__btn mnsk7-hero__btn--secondary">
-							<?php esc_html_e( 'Zobacz kategorie', 'mnsk7-storefront' ); ?>
-						</a>
-					</div>
-					<?php endif; ?>
-				</div>
-
-				<div class="mnsk7-hero__rail" aria-label="<?php esc_attr_e( 'Dlaczego MNSK7', 'mnsk7-storefront' ); ?>">
-					<div class="mnsk7-hero__panel">
-						<p class="mnsk7-hero__panel-kicker"><?php esc_html_e( 'Dlaczego warsztaty wybierają MNSK7', 'mnsk7-storefront' ); ?></p>
-						<h2 class="mnsk7-hero__panel-title"><?php esc_html_e( 'Szybciej trafiasz do właściwego freza, bez błądzenia po przypadkowym katalogu', 'mnsk7-storefront' ); ?></h2>
-						<ul class="mnsk7-hero__proof-list">
-							<?php foreach ( $hero_lines as $line ) : ?>
-							<li class="mnsk7-hero__proof-row">
-								<span class="mnsk7-hero__proof-label"><?php echo esc_html( $line['label'] ); ?></span>
-								<span class="mnsk7-hero__proof-text"><?php echo esc_html( $line['text'] ); ?></span>
-							</li>
-							<?php endforeach; ?>
-						</ul>
-						<div class="mnsk7-hero__panel-meta">
-							<span class="mnsk7-hero__panel-chip"><?php esc_html_e( 'Kontakt i doradztwo', 'mnsk7-storefront' ); ?></span>
-							<span class="mnsk7-hero__panel-chip"><?php esc_html_e( 'Szybka wysyłka 24h', 'mnsk7-storefront' ); ?></span>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
 	<!-- BESTSELLERS (CRO: drugi blok po hero — od razu produkt) -->
 	<?php if ( function_exists( 'do_shortcode' ) ) : ?>
 	<section id="bestsellery" class="mnsk7-section mnsk7-section--bestsellers">
@@ -242,8 +151,11 @@ get_header();
 	<section id="kategorie" class="mnsk7-section mnsk7-section--catalog mnsk7-section--light">
 		<div class="col-full">
 			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Kategorie i materiały', 'mnsk7-storefront' ); ?></p>
-			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Przeglądaj asortyment', 'mnsk7-storefront' ); ?></h2>
-			<p class="mnsk7-section__sub"><?php esc_html_e( 'Wejdź od materiału albo od rodzaju freza. Struktura katalogu prowadzi do właściwej grupy produktów zamiast zmuszać do przypadkowego przeszukiwania sklepu.', 'mnsk7-storefront' ); ?></p>
+			<h1 class="mnsk7-section__title mnsk7-section__title--catalog-hero">
+				<?php esc_html_e( 'Precyzja obróbki', 'mnsk7-storefront' ); ?>
+				<span class="mnsk7-section__title-accent"><?php esc_html_e( 'zaczyna się od frezu', 'mnsk7-storefront' ); ?></span>
+			</h1>
+			<p class="mnsk7-section__sub"><?php esc_html_e( 'Profesjonalne frezy CNC i narzędzia skrawające do drewna, aluminium, tworzyw i stali. Oferta ułożona pod szybki wybór właściwej geometrii, średnicy i materiału.', 'mnsk7-storefront' ); ?></p>
 
 			<?php if ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) ) : ?>
 			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $tags_label ); ?>">
