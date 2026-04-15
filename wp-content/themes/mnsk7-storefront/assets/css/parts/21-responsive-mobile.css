@@ -215,6 +215,19 @@
     width: 100%;
   }
 
+  .mnsk7-section--catalog .mnsk7-section__eyebrow,
+  .mnsk7-section--catalog .mnsk7-section__title,
+  .mnsk7-section--catalog .mnsk7-section__sub,
+  .mnsk7-section--catalog .mnsk7-catalog-aside__title {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .mnsk7-section--catalog .mnsk7-section__more {
+    text-align: center;
+  }
+
   .mnsk7-section--catalog .col-full,
   .mnsk7-section--trust .col-full,
   .mnsk7-section--loyalty .col-full,

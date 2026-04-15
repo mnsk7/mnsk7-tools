@@ -190,6 +190,52 @@ get_header();
 	$tags_label = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
 	$cats_label = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
 	$accessories_label = apply_filters( 'mnsk7_megamenu_heading_accessories', __( 'Akcesoria i zestawy', 'mnsk7-storefront' ) );
+
+	$normalize_catalog_slug = static function ( $value ) {
+		$value = sanitize_title( wp_strip_all_tags( (string) $value ) );
+		return str_replace( 'mnsk7-tools-pl', '', $value );
+	};
+
+	if ( ! empty( $accessory_cats ) ) {
+		$move_to_core_slugs = array( 'tuleje-zaciskowe' );
+		$hidden_accessory_slugs = array(
+			'zestaw-frezow-do-drewna',
+			'zestaw-gwintownikow',
+			'zestaw-gwintownikow-i-narzynki',
+		);
+		$accessory_kept = array();
+		$accessory_to_core = array();
+
+		foreach ( $accessory_cats as $term ) {
+			$slug = $normalize_catalog_slug( isset( $term->slug ) ? $term->slug : ( isset( $term->name ) ? $term->name : '' ) );
+			if ( in_array( $slug, $hidden_accessory_slugs, true ) ) {
+				continue;
+			}
+			if ( in_array( $slug, $move_to_core_slugs, true ) ) {
+				$accessory_to_core[] = $term;
+				continue;
+			}
+			$accessory_kept[] = $term;
+		}
+
+		$accessory_cats = $accessory_kept;
+
+		if ( ! empty( $accessory_to_core ) ) {
+			$core_ids = array();
+			foreach ( $cats as $cat_term ) {
+				$core_ids[ (int) $cat_term->term_id ] = true;
+			}
+			foreach ( $accessory_to_core as $term ) {
+				$term_id = (int) $term->term_id;
+				if ( isset( $core_ids[ $term_id ] ) ) {
+					continue;
+				}
+				$cats[] = $term;
+				$core_ids[ $term_id ] = true;
+			}
+		}
+	}
+
 	$show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) );
 	if ( $show_catalog ) :
 	?>
@@ -216,22 +262,6 @@ get_header();
 			</div>
 			<?php endif; ?>
 
-			<?php if ( ! empty( $accessory_cats ) ) : ?>
-			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $accessories_label ); ?>">
-				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $accessories_label ); ?></h3>
-				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud">
-					<?php foreach ( $accessory_cats as $cat ) :
-						$link = get_term_link( $cat );
-						if ( is_wp_error( $link ) ) continue;
-						$cat_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $cat->name ) : $cat->name;
-						$cat_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $cat_name ) : $cat_name;
-					?>
-					<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $cat_name ); ?></a>
-					<?php endforeach; ?>
-				</div>
-			</div>
-			<?php endif; ?>
-
 			<?php if ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) : ?>
 			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--categories" role="navigation" aria-label="<?php echo esc_attr( $cats_label ); ?>">
 				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $cats_label ); ?></h3>
@@ -249,6 +279,22 @@ get_header();
 						<span class="mnsk7-tags-chip__label"><?php echo esc_html( $cat_name ); ?></span>
 						<span class="mnsk7-tags-chip__meta"><?php echo esc_html( number_format_i18n( (int) $cat->count ) ); ?> <?php esc_html_e( 'prod.', 'mnsk7-storefront' ); ?></span>
 					</a>
+					<?php endforeach; ?>
+				</div>
+			</div>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $accessory_cats ) ) : ?>
+			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $accessories_label ); ?>">
+				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $accessories_label ); ?></h3>
+				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud">
+					<?php foreach ( $accessory_cats as $cat ) :
+						$link = get_term_link( $cat );
+						if ( is_wp_error( $link ) ) continue;
+						$cat_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $cat->name ) : $cat->name;
+						$cat_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $cat_name ) : $cat_name;
+					?>
+					<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $cat_name ); ?></a>
 					<?php endforeach; ?>
 				</div>
 			</div>
