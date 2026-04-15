@@ -217,11 +217,29 @@
     gap: 0.8rem;
   }
 
+  .mnsk7-section--loyalty .mnsk7-section__eyebrow,
+  .mnsk7-section--loyalty .mnsk7-section__title,
+  .mnsk7-section--loyalty .mnsk7-section__sub {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
   .mnsk7-trust-stats__item,
   .mnsk7-loyalty-tier {
     padding: 0.95rem 0.95rem;
     min-height: 128px;
     justify-content: center;
+  }
+
+  .mnsk7-loyalty-tier {
+    align-items: center;
+    text-align: center;
+  }
+
+  .mnsk7-loyalty-tier__from {
+    width: 100%;
+    text-align: center;
   }
 
   .mnsk7-trust-stats__number,
