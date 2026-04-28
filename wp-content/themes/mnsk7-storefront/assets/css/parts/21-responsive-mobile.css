@@ -336,10 +336,29 @@
   .mnsk7-delivery-rules {
     font-size: var(--fs-sm);
   }
+  .mnsk7-delivery-rules table {
+    table-layout: fixed;
+  }
   .mnsk7-delivery-rules th,
   .mnsk7-delivery-rules td {
     padding: 0.5rem 0.6rem;
-    word-break: break-word;
+    word-break: normal;
+    overflow-wrap: break-word;
+    hyphens: auto;
+  }
+  .mnsk7-delivery-rules th:first-child,
+  .mnsk7-delivery-rules td:first-child {
+    width: 4.75rem;
+    white-space: nowrap;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
+  }
+  .mnsk7-delivery-rules th {
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+    hyphens: none;
   }
 }
 
