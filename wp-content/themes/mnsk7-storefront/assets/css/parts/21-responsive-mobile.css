@@ -304,32 +304,59 @@
   .mnsk7-cookie-bar {
     flex-direction: column;
     text-align: center;
-    padding: var(--space-12) var(--space-16);
-    padding-bottom: max(var(--space-16), env(safe-area-inset-bottom));
+    padding: 0.75rem 1rem;
+    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
     align-items: stretch;
   }
 
   .mnsk7-cookie-bar__inner {
     flex-direction: column;
-    gap: var(--space-12);
+    gap: 0.75rem;
   }
 
   .mnsk7-cookie-bar__text {
     flex: none;
     width: 100%;
+    max-width: 36rem;
+    margin: 0 auto;
     text-align: center;
+    font-size: 0.75rem;
+    line-height: 1.35;
   }
 
   .mnsk7-cookie-bar__buttons {
-    flex-direction: column;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     width: 100%;
     align-items: stretch;
+    gap: 0.5rem;
   }
 
   .mnsk7-cookie-bar__btn {
     width: 100%;
     min-width: 0;
     box-sizing: border-box;
+    min-height: 3rem;
+    padding: 0.6rem 0.75rem;
+    font-size: 0.75rem;
+  }
+
+  .mnsk7-cookie-bar-accept {
+    grid-column: 1 / -1;
+  }
+
+  .mnsk7-cookie-bar__btn--secondary {
+    grid-column: 2;
+  }
+
+  @media (max-width: 380px) {
+    .mnsk7-cookie-bar__buttons {
+      grid-template-columns: 1fr;
+    }
+
+    .mnsk7-cookie-bar__btn--secondary {
+      grid-column: auto;
+    }
   }
 
   /* Delivery table: mniejszy font i padding, zawijanie tekstu — bez wewnętrznego scrolla */

@@ -128,15 +128,22 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 	$hidden  = array_slice( $terms, $plp_nav_chips_limit, null );
 	$anchor  = function_exists( 'mnsk7_plp_anchor_results' ) ? 'mnsk7_plp_anchor_results' : null;
 	if ( $plp_is_mobile_request ) {
-		$is_open = false;
+		$active_name = '';
 		foreach ( $terms as $term ) {
 			if ( $active_term_id && (int) $term->term_id === (int) $active_term_id ) {
-				$is_open = true;
+				$active_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
+				$active_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $active_name ) : $active_name;
 				break;
 			}
 		}
-		echo '<details class="mnsk7-plp-dropdown mnsk7-plp-dropdown--nav col-full"' . ( $is_open ? ' open' : '' ) . '>';
-		echo '<summary class="mnsk7-plp-dropdown__summary">' . esc_html( $label ) . '</summary>';
+		$summary_meta = $active_name
+			? sprintf( __( 'Wybrano: %s', 'mnsk7-storefront' ), $active_name )
+			: sprintf(
+				_n( '%d opcja', '%d opcji', count( $terms ), 'mnsk7-storefront' ),
+				count( $terms )
+			);
+		echo '<details class="mnsk7-plp-dropdown mnsk7-plp-dropdown--nav col-full">';
+		echo '<summary class="mnsk7-plp-dropdown__summary"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title">' . esc_html( $label ) . '</span><span class="mnsk7-plp-dropdown__summary-meta">' . esc_html( $summary_meta ) . '</span></span></summary>';
 		echo '<div class="mnsk7-plp-dropdown__panel">';
 		echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--nav" role="navigation" aria-label="' . esc_attr( $label ) . '">';
 		echo '<div class="mnsk7-plp-chips__scroll">';
@@ -250,9 +257,16 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 		$hidden     = array_slice( $chips_list, $plp_chips_limit, null, true );
 		$anchor_fn  = function_exists( 'mnsk7_plp_anchor_results' ) ? 'mnsk7_plp_anchor_results' : null;
 		if ( $plp_is_mobile_request ) {
-			$is_active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) !== '';
-			echo '<details class="mnsk7-plp-dropdown mnsk7-plp-dropdown--attrs col-full"' . ( $is_active ? ' open' : '' ) . '>';
-			echo '<summary class="mnsk7-plp-dropdown__summary">' . esc_html( $attribute_filter['label'] ) . '</summary>';
+			$active_slug  = isset( $_GET[ $param ] ) ? sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) : '';
+			$active_label = ( $active_slug && isset( $chips_list[ $active_slug ] ) ) ? $chips_list[ $active_slug ] : '';
+			$summary_meta = $active_label
+				? sprintf( __( 'Wybrano: %s', 'mnsk7-storefront' ), $active_label )
+				: sprintf(
+					_n( '%d opcja', '%d opcji', count( $chips_list ), 'mnsk7-storefront' ),
+					count( $chips_list )
+				);
+			echo '<details class="mnsk7-plp-dropdown mnsk7-plp-dropdown--attrs col-full">';
+			echo '<summary class="mnsk7-plp-dropdown__summary"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title">' . esc_html( $attribute_filter['label'] ) . '</span><span class="mnsk7-plp-dropdown__summary-meta">' . esc_html( $summary_meta ) . '</span></span></summary>';
 			echo '<div class="mnsk7-plp-dropdown__panel">';
 			echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs" role="navigation" aria-label="' . esc_attr( $aria_label ) . '">';
 			echo '<div class="mnsk7-plp-chips__scroll">';
