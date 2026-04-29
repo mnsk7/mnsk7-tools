@@ -16,7 +16,7 @@ get_header();
 		<div class="col-full">
 			<div class="mnsk7-section__header mnsk7-section__header--bestsellers">
 				<div class="mnsk7-section__header-copy">
-					<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Bestsellery i polecane', 'mnsk7-storefront' ); ?></p>
+					<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Najczęściej wybierane', 'mnsk7-storefront' ); ?></p>
 					<h2 class="mnsk7-section__title"><?php esc_html_e( 'Najczęściej wybierane produkty przez naszych klientów', 'mnsk7-storefront' ); ?></h2>
 				</div>
 				<p class="mnsk7-section__more mnsk7-bestsellers-more">
@@ -150,12 +150,11 @@ get_header();
 	?>
 	<section id="kategorie" class="mnsk7-section mnsk7-section--catalog mnsk7-section--light">
 		<div class="col-full">
-			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Kategorie i materiały', 'mnsk7-storefront' ); ?></p>
+			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Sklep i zastosowania', 'mnsk7-storefront' ); ?></p>
 			<h1 class="mnsk7-section__title mnsk7-section__title--catalog-hero">
-				<?php esc_html_e( 'Precyzja obróbki', 'mnsk7-storefront' ); ?>
-				<span class="mnsk7-section__title-accent"><?php esc_html_e( 'zaczyna się od frezu', 'mnsk7-storefront' ); ?></span>
+				<?php esc_html_e( 'Produkty do drewna, aluminium, tworzyw i stali', 'mnsk7-storefront' ); ?>
 			</h1>
-			<p class="mnsk7-section__sub"><?php esc_html_e( 'Profesjonalne frezy CNC i narzędzia skrawające do drewna, aluminium, tworzyw i stali. Oferta ułożona pod szybki wybór właściwej geometrii, średnicy i materiału.', 'mnsk7-storefront' ); ?></p>
+			<p class="mnsk7-section__sub"><?php esc_html_e( 'Szybki wybór produktów według materiału, zastosowania i rodzaju narzędzia bez przeklikiwania całego katalogu.', 'mnsk7-storefront' ); ?></p>
 
 			<?php if ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) ) : ?>
 			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $tags_label ); ?>">

@@ -569,9 +569,11 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
     width: 100%;
     margin: 0 0 0.5rem 0;
     border: 1px solid var(--color-border);
-    border-radius: var(--r-md);
-    background: var(--color-white, #fff);
+    border-radius: var(--r-lg, 1rem);
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
     box-sizing: border-box;
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
   }
   .mnsk7-plp-dropdown__summary {
     display: flex;
@@ -579,8 +581,8 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
     justify-content: space-between;
     gap: 0.5rem;
     width: 100%;
-    min-height: 44px;
-    padding: 0.625rem 0.75rem;
+    min-height: 56px;
+    padding: 0.85rem 0.95rem;
     margin: 0;
     font-size: var(--fs-sm);
     font-weight: 600;
@@ -597,21 +599,23 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 1.25rem;
-    height: 1.25rem;
-    border: 1px solid var(--color-border);
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid rgba(12, 125, 219, 0.16);
     border-radius: 999px;
-    font-size: var(--fs-sm);
+    font-size: 1rem;
     line-height: 1;
-    color: var(--color-text-secondary);
+    color: var(--color-primary);
+    background: rgba(12, 125, 219, 0.08);
     flex-shrink: 0;
   }
   .mnsk7-plp-dropdown[open] .mnsk7-plp-dropdown__summary::after {
     content: "-";
   }
   .mnsk7-plp-dropdown__panel {
-    padding: 0 0.75rem 0.75rem;
+    padding: 0.1rem 0.85rem 0.85rem;
     box-sizing: border-box;
+    border-top: 1px solid rgba(15, 23, 42, 0.06);
   }
   .mnsk7-plp-dropdown .mnsk7-plp-chips {
     margin: 0;
@@ -633,15 +637,19 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   .mnsk7-plp-dropdown__summary-title {
     display: block;
     width: 100%;
+    font-size: 0.95rem;
   }
   .mnsk7-plp-dropdown__summary-meta {
     display: block;
     margin-top: 0.1rem;
-    font-size: 0.6875rem;
+    font-size: 0.78rem;
     font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    text-transform: none;
     color: var(--color-text-muted, #667085);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   body.tax-product_cat .mnsk7-plp-dropdown,
   body.tax-product_tag .mnsk7-plp-dropdown {

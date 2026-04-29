@@ -431,6 +431,12 @@ a {
   text-overflow: clip;
   line-height: 1.35;
 }
+.mnsk7-promo-bar__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 1.5rem;
+}
 .mnsk7-promo-bar__badge {
   display: inline-flex;
   align-items: center;
@@ -461,15 +467,17 @@ a {
 .mnsk7-promo-bar__cta {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 1.5rem;
-  padding: 0.05rem 0.25rem;
-  border-radius: 6px;
-  border: 1px solid transparent;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
   font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
 }
 .mnsk7-promo-bar__cta:hover,
 .mnsk7-promo-bar__cta:focus-visible {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.18);
   border-color: rgba(255, 255, 255, 0.32);
   text-decoration: none;
 }
@@ -573,15 +581,10 @@ a {
     line-height: 1.4;
     gap: 0.35rem 0.45rem;
   }
-  .mnsk7-promo-bar__value {
+  .mnsk7-promo-bar__item {
     width: 100%;
-    order: 2;
-  }
-  .mnsk7-promo-bar__meta {
-    order: 3;
   }
   .mnsk7-promo-bar__cta {
-    order: 4;
     padding-left: 0;
   }
   .mnsk7-promo-bar__close {
@@ -2646,31 +2649,48 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .single-product .summary .mnsk7-pdp-price-row {
   order: 2;
 }
+.single-product .summary .mnsk7-pdp-description-intro {
+  order: 3;
+}
 .single-product .summary form.cart {
   order: 20;
   margin-top: 0;
 }
 /* Variable: DOM i flex — najpierw wybór wariantu (mu-plugin: add_to_cart przed key params), bez „order:20” na końcu summary */
 .single-product.product-type-variable .summary.mnsk7-pdp-buybox > form.cart {
-  order: 3;
-}
-.single-product.product-type-variable .summary.mnsk7-pdp-buybox > .mnsk7-product-key-params {
   order: 4;
 }
-.single-product.product-type-variable .summary.mnsk7-pdp-buybox > .mnsk7-product-zastosowanie {
+.single-product.product-type-variable .summary.mnsk7-pdp-buybox > .mnsk7-product-key-params {
   order: 5;
 }
-.single-product.product-type-variable .summary.mnsk7-pdp-buybox > .mnsk7-product-meta-chips {
+.single-product.product-type-variable .summary.mnsk7-pdp-buybox > .mnsk7-product-zastosowanie {
   order: 6;
 }
-.single-product.product-type-variable .summary.mnsk7-pdp-buybox > .mnsk7-product-trust {
+.single-product.product-type-variable .summary.mnsk7-pdp-buybox > .mnsk7-product-meta-chips {
   order: 7;
+}
+.single-product.product-type-variable .summary.mnsk7-pdp-buybox > .mnsk7-product-trust {
+  order: 8;
 }
 #mnsk7-variations {
   scroll-margin-top: calc(var(--header-h, 56px) + 0.75rem);
 }
 .single-product .summary .mnsk7-product-trust {
   order: 21;
+}
+
+.mnsk7-pdp-description-intro {
+  margin: 0 0 1rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: var(--r-md);
+  background: linear-gradient(180deg, #f8fbff 0%, #f3f7fb 100%);
+  color: var(--color-text);
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
+}
+
+.mnsk7-pdp-description-intro p:last-child {
+  margin-bottom: 0;
 }
 
 .single-product .images img {
@@ -3290,7 +3310,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   border-bottom: 2px solid var(--color-border);
   display: flex;
   flex-wrap: wrap;
-  gap: 0;
+  gap: 0.5rem;
+  justify-content: center;
 }
 
 .woocommerce-tabs ul.tabs li {
@@ -3306,9 +3327,10 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--color-text-secondary);
-  border-bottom: 2px solid transparent;
-  margin-bottom: -2px;
-  transition: color 0.15s ease, border-color 0.15s ease;
+  border: 1px solid transparent;
+  border-radius: var(--r-pill);
+  margin-bottom: 0;
+  transition: color 0.15s ease, border-color 0.15s ease, background 0.15s ease;
   text-decoration: none;
   min-height: 44px;
   box-sizing: border-box;
@@ -3321,7 +3343,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
 .woocommerce-tabs ul.tabs li.active a {
   color: var(--color-primary);
-  border-bottom-color: var(--color-primary);
+  border-color: rgba(12, 125, 219, 0.18);
+  background: rgba(12, 125, 219, 0.08);
 }
 
 .woocommerce-tabs .panel {
@@ -4432,18 +4455,20 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   justify-content: space-between;
   gap: 1.5rem;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 .mnsk7-section__header--bestsellers .mnsk7-section__header-copy {
   max-width: 44rem;
+  margin: 0 auto;
 }
 
 .mnsk7-section__header--bestsellers .mnsk7-section__eyebrow,
 .mnsk7-section__header--bestsellers .mnsk7-section__title,
 .mnsk7-section__header--bestsellers .mnsk7-section__sub {
-  text-align: left;
-  margin-left: 0;
-  margin-right: 0;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Dlaczego kupujący + Program rabatowy — beżowe tło full-bleed (bez bocznych odstępów) */
@@ -5936,10 +5961,12 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   justify-content: space-between;
   gap: 1rem 1.5rem;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 .mnsk7-front-page .mnsk7-section__header-copy {
   max-width: 42rem;
+  margin: 0 auto;
 }
 
 .mnsk7-front-page .mnsk7-hero {
@@ -6068,7 +6095,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
 .mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__title,
 .mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__sub {
-  text-align: left;
+  text-align: center;
 }
 
 .mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__title {
@@ -6079,6 +6106,17 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__sub {
   color: var(--color-text-muted, #4b5563);
   margin: 0;
+}
+
+.mnsk7-section--catalog .col-full,
+.mnsk7-section--trust .col-full,
+.mnsk7-section--loyalty .col-full {
+  text-align: center;
+}
+
+.mnsk7-section--trust .mnsk7-trust-stats__item {
+  align-items: center;
+  text-align: center;
 }
 
 .mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__more {
@@ -10182,46 +10220,51 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   .mnsk7-plp-dropdown__summary-title {
     display: block;
     width: 100%;
+    font-size: 0.95rem;
   }
   .mnsk7-plp-dropdown__summary-meta {
     display: block;
     margin-top: 0.1rem;
-    font-size: 0.6875rem;
+    font-size: 0.78rem;
     font-weight: 600;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
+    letter-spacing: 0.01em;
+    text-transform: none;
     color: var(--color-text-muted, #667085);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   body.tax-product_cat .mnsk7-plp-dropdown,
   body.tax-product_tag .mnsk7-plp-dropdown {
     margin-bottom: 0.4rem;
     border-color: rgba(17, 24, 39, 0.1);
-    border-radius: 16px;
-    background: linear-gradient(180deg, #ffffff 0%, #f7f9fc 100%);
-    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.06);
+    border-radius: var(--r-lg, 1rem);
+    background: linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+    box-shadow: 0 14px 30px rgba(15, 23, 42, 0.08);
     overflow: hidden;
   }
   body.tax-product_cat .mnsk7-plp-dropdown__summary,
   body.tax-product_tag .mnsk7-plp-dropdown__summary {
-    min-height: 0;
-    padding: 0.75rem 0.85rem;
+    min-height: 56px;
+    padding: 0.85rem 0.95rem;
   }
   body.tax-product_cat .mnsk7-plp-dropdown__summary::after,
   body.tax-product_tag .mnsk7-plp-dropdown__summary::after {
-    width: 1.6rem;
-    height: 1.6rem;
-    border: none;
-    background: #1f2937;
-    color: #fff;
-    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.18);
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid rgba(12, 125, 219, 0.16);
+    background: rgba(12, 125, 219, 0.08);
+    color: var(--color-primary);
+    box-shadow: none;
   }
   body.tax-product_cat .mnsk7-plp-dropdown[open] .mnsk7-plp-dropdown__summary::after,
   body.tax-product_tag .mnsk7-plp-dropdown[open] .mnsk7-plp-dropdown__summary::after {
     background: var(--color-primary, #0c7ddb);
+    color: #fff;
   }
   body.tax-product_cat .mnsk7-plp-dropdown__panel,
   body.tax-product_tag .mnsk7-plp-dropdown__panel {
-    padding: 0.2rem 0.75rem 0.75rem;
+    padding: 0.1rem 0.85rem 0.85rem;
     border-top: 1px solid rgba(17, 24, 39, 0.08);
     background: rgba(255, 255, 255, 0.78);
   }

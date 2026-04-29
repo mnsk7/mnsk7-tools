@@ -603,11 +603,12 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 		}
 	}
 	$dostawa_url = home_url( '/dostawa-i-platnosci/' );
-	$badge = '<span class="mnsk7-promo-bar__badge">' . esc_html__( 'DOSTAWA', 'mnsk7-storefront' ) . '</span>';
-	$value = '<span class="mnsk7-promo-bar__value">' . esc_html__( 'Gratis od 300 zł', 'mnsk7-storefront' ) . '</span>';
-	$meta  = '<span class="mnsk7-promo-bar__meta">' . esc_html__( 'na terenie Polski', 'mnsk7-storefront' ) . '</span>';
-	$cta   = '<a class="mnsk7-promo-bar__cta" href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Sprawdź warunki', 'mnsk7-storefront' ) . ' &rarr;</a>';
-	return $badge . ' ' . $value . ' ' . $meta . ' ' . $cta;
+	$account_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/moje-konto/' );
+	$delivery = '<span class="mnsk7-promo-bar__item"><span class="mnsk7-promo-bar__badge">' . esc_html__( 'DOSTAWA', 'mnsk7-storefront' ) . '</span><span class="mnsk7-promo-bar__value">' . esc_html__( 'Gratis od 300 zł', 'mnsk7-storefront' ) . '</span></span>';
+	$loyalty  = '<span class="mnsk7-promo-bar__item"><span class="mnsk7-promo-bar__badge">' . esc_html__( 'RABAT', 'mnsk7-storefront' ) . '</span><span class="mnsk7-promo-bar__value">' . esc_html__( 'Program lojalnościowy do 20%', 'mnsk7-storefront' ) . '</span></span>';
+	$cta      = '<a class="mnsk7-promo-bar__cta" href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Dostawa', 'mnsk7-storefront' ) . '</a>';
+	$cta2     = '<a class="mnsk7-promo-bar__cta" href="' . esc_url( $account_url ) . '">' . esc_html__( 'Rabat', 'mnsk7-storefront' ) . '</a>';
+	return $delivery . ' ' . $loyalty . ' ' . $cta . ' ' . $cta2;
 }, 5 );
 
 /** Audit task 14: H1 na stronie Moje konto — jeden nagłówek (zalogowani: przed nawigacją; goście: przed formularzem). Bez duplikatu. */
@@ -933,10 +934,25 @@ function mnsk7_is_accessory_product_category( $term ) {
 	return in_array(
 		$slug,
 		array(
-			'tuleje-zaciskowe',
 			'plytki-wieloostrzowe',
 			'zestaw-frezow-do-drewna',
 			'zestaw-gwintownikow',
+		),
+		true
+	);
+}
+
+function mnsk7_is_hidden_catalog_product_category( $term ) {
+	if ( ! ( $term instanceof WP_Term ) ) {
+		return false;
+	}
+	$slug = isset( $term->slug ) ? sanitize_title( $term->slug ) : '';
+	return in_array(
+		$slug,
+		array(
+			'zestaw-frezow-do-drewna',
+			'zestaw-gwintownikow',
+			'zestaw-gwintownikow-i-narzynki',
 		),
 		true
 	);
@@ -957,6 +973,9 @@ function mnsk7_split_catalog_category_terms( $terms ) {
 		return $grouped;
 	}
 	foreach ( $terms as $term ) {
+		if ( function_exists( 'mnsk7_is_hidden_catalog_product_category' ) && mnsk7_is_hidden_catalog_product_category( $term ) ) {
+			continue;
+		}
 		if ( function_exists( 'mnsk7_is_accessory_product_category' ) && mnsk7_is_accessory_product_category( $term ) ) {
 			$grouped['accessories'][] = $term;
 			continue;
@@ -2533,6 +2552,20 @@ add_action( 'woocommerce_single_product_summary', function () {
 	}
 	echo '</tbody></table></div>';
 }, 21 );
+
+add_action( 'woocommerce_single_product_summary', function () {
+	global $product;
+	if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
+		return;
+	}
+	$short_description = trim( (string) $product->get_short_description() );
+	if ( $short_description === '' ) {
+		return;
+	}
+	echo '<div class="mnsk7-pdp-description-intro">';
+	echo wp_kses_post( wpautop( $short_description ) );
+	echo '</div>';
+}, 19 );
 
 /** Trust badges HTML (PDP i PLP — wspólna treść: dostawa, faktura, zwroty) */
 function mnsk7_render_trust_badges( $wrapper_class = 'mnsk7-pdp-trust' ) {

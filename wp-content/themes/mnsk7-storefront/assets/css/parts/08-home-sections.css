@@ -429,18 +429,20 @@
   justify-content: space-between;
   gap: 1.5rem;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 .mnsk7-section__header--bestsellers .mnsk7-section__header-copy {
   max-width: 44rem;
+  margin: 0 auto;
 }
 
 .mnsk7-section__header--bestsellers .mnsk7-section__eyebrow,
 .mnsk7-section__header--bestsellers .mnsk7-section__title,
 .mnsk7-section__header--bestsellers .mnsk7-section__sub {
-  text-align: left;
-  margin-left: 0;
-  margin-right: 0;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 /* Dlaczego kupujący + Program rabatowy — beżowe tło full-bleed (bez bocznych odstępów) */
@@ -1942,10 +1944,12 @@
   justify-content: space-between;
   gap: 1rem 1.5rem;
   margin-bottom: 2rem;
+  text-align: center;
 }
 
 .mnsk7-front-page .mnsk7-section__header-copy {
   max-width: 42rem;
+  margin: 0 auto;
 }
 
 .mnsk7-front-page .mnsk7-hero {
@@ -2074,7 +2078,7 @@
 
 .mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__title,
 .mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__sub {
-  text-align: left;
+  text-align: center;
 }
 
 .mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__title {
@@ -2085,6 +2089,17 @@
 .mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__sub {
   color: var(--color-text-muted, #4b5563);
   margin: 0;
+}
+
+.mnsk7-section--catalog .col-full,
+.mnsk7-section--trust .col-full,
+.mnsk7-section--loyalty .col-full {
+  text-align: center;
+}
+
+.mnsk7-section--trust .mnsk7-trust-stats__item {
+  align-items: center;
+  text-align: center;
 }
 
 .mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__more {

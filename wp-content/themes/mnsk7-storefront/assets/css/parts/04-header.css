@@ -32,6 +32,12 @@
   text-overflow: clip;
   line-height: 1.35;
 }
+.mnsk7-promo-bar__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 1.5rem;
+}
 .mnsk7-promo-bar__badge {
   display: inline-flex;
   align-items: center;
@@ -62,15 +68,17 @@
 .mnsk7-promo-bar__cta {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   min-height: 1.5rem;
-  padding: 0.05rem 0.25rem;
-  border-radius: 6px;
-  border: 1px solid transparent;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.26);
   font-weight: 600;
+  background: rgba(255, 255, 255, 0.08);
 }
 .mnsk7-promo-bar__cta:hover,
 .mnsk7-promo-bar__cta:focus-visible {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(255, 255, 255, 0.18);
   border-color: rgba(255, 255, 255, 0.32);
   text-decoration: none;
 }
@@ -174,15 +182,10 @@
     line-height: 1.4;
     gap: 0.35rem 0.45rem;
   }
-  .mnsk7-promo-bar__value {
+  .mnsk7-promo-bar__item {
     width: 100%;
-    order: 2;
-  }
-  .mnsk7-promo-bar__meta {
-    order: 3;
   }
   .mnsk7-promo-bar__cta {
-    order: 4;
     padding-left: 0;
   }
   .mnsk7-promo-bar__close {
