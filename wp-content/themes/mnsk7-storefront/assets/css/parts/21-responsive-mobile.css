@@ -22,6 +22,10 @@
 }
 
 @media (max-width: 480px) {
+  .mnsk7-section {
+    padding: 2.25rem 0;
+  }
+
   .woocommerce ul.products,
   .woocommerce-page ul.products {
     grid-template-columns: repeat(2, 1fr) !important;
@@ -143,6 +147,26 @@
     border-radius: 18px;
   }
 
+  .mnsk7-cats__item {
+    gap: 0.75rem;
+    padding: 0.85rem 0.9rem;
+    align-items: flex-start;
+  }
+
+  .mnsk7-cats__img-wrap {
+    width: 64px;
+    height: 64px;
+  }
+
+  .mnsk7-cats__name {
+    font-size: 0.94rem;
+    line-height: 1.28;
+  }
+
+  .mnsk7-cats__count {
+    font-size: 0.82rem;
+  }
+
   .mnsk7-hero__panel-meta {
     flex-direction: column;
   }
@@ -232,7 +256,7 @@
   .mnsk7-section--trust .col-full,
   .mnsk7-section--loyalty .col-full,
   .mnsk7-section--insta .col-full {
-    padding: 1rem 0.9rem;
+    padding: 0.9rem 0.85rem;
   }
 
   .mnsk7-section--catalog .col-full::before,
