@@ -50,6 +50,8 @@ $usage_value = $product->get_attribute( 'pa_zastosowanie' );
 if ( (string) $usage_value === '' ) {
 	$usage_value = $product->get_attribute( 'zastosowanie' );
 }
+$thumb_id   = $product->get_image_id();
+$thumb_full = $thumb_id ? wp_get_attachment_image_url( $thumb_id, 'full' ) : '';
 
 // PERFORMANCE: pierwszy wiersz tabeli = LCP candidate na archive - eager + fetchpriority high.
 static $mnsk7_plp_row_index = 0;
@@ -59,8 +61,16 @@ $row_class = $product->is_sold_individually() ? 'mnsk7-row--fixed-qty' : '';
 ?>
 <tr <?php wc_product_class( $row_class, $product ); ?>>
 	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
-		<a href="<?php echo esc_url( get_permalink() ); ?>">
+		<a
+			href="<?php echo esc_url( $thumb_full ? $thumb_full : get_permalink() ); ?>"
+			class="mnsk7-table-thumb-link"
+			<?php if ( $thumb_full ) : ?>
+				target="_blank" rel="noopener"
+			<?php endif; ?>
+			aria-label="<?php echo esc_attr( sprintf( __( 'Otwórz zdjęcie produktu %s', 'mnsk7-storefront' ), get_the_title() ) ); ?>"
+		>
 			<?php echo $product->get_image( 'woocommerce_thumbnail', $img_attr ); ?>
+			<span class="mnsk7-table-thumb-hint" aria-hidden="true"><?php esc_html_e( 'Powiększ', 'mnsk7-storefront' ); ?></span>
 		</a>
 	</td>
 	<th scope="row" class="mnsk7-table-cell mnsk7-table-cell--title">
