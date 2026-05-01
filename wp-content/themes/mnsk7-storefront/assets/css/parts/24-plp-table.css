@@ -1756,18 +1756,19 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 /* Uwaga: sticky thead nie działa wobec viewport przy overflow-x na .mnsk7-product-table-wrap (scroll ancestor). */
 
 /* ÄÂ¤ÄÂ¸ÄĹźĹÂÄÂ¸Ĺâ‚¬ÄÄľÄË›ÄÂ°ÄËťÄËťĹâ€ąÄÂµ ÄÂ´ÄÄľÄÂ»ÄÂ¸ ÄĹźÄÄľÄÂ»ÄÄľÄËťÄÄľÄĹź ÄÂ´ÄÂ»ĹĹą ÄÂµÄÂ´ÄÂ¸ÄËťÄÄľÄĹ‚ÄÄľ ÄË›ÄÂ¸ÄÂ´ÄÂ° ÄËťÄÂ° ÄË›ĹÂÄÂµĹâ€¦ ÄĹźÄÂ°Ĺâ€šÄÂµÄĹ‚ÄÄľĹâ‚¬ÄÂ¸ĹĹąĹâ€¦ */
+/* min-width qty/akcja: stepper ~150px + CTA tekst nie nachodzi na sąsiednią kolumnę (--flex-shrink kosztem layoutu TD) */
 .mnsk7-product-table th.mnsk7-table-cell--thumb,
-.mnsk7-product-table .mnsk7-table-cell--thumb { width: 12%; min-width: 116px; }
+.mnsk7-product-table .mnsk7-table-cell--thumb { width: 11%; min-width: 116px; }
 .mnsk7-product-table th.mnsk7-table-cell--title,
-.mnsk7-product-table .mnsk7-table-cell--title { width: 38%; }
+.mnsk7-product-table .mnsk7-table-cell--title { width: 34%; min-width: 0; }
 .mnsk7-product-table th.mnsk7-table-cell--price,
-.mnsk7-product-table .mnsk7-table-cell--price { width: 12%; }
+.mnsk7-product-table .mnsk7-table-cell--price { width: 11%; }
 .mnsk7-product-table th.mnsk7-table-cell--stock,
-.mnsk7-product-table .mnsk7-table-cell--stock { width: 12%; }
+.mnsk7-product-table .mnsk7-table-cell--stock { width: 11%; }
 .mnsk7-product-table th.mnsk7-table-cell--qty,
-.mnsk7-product-table .mnsk7-table-cell--qty { width: 10%; }
+.mnsk7-product-table .mnsk7-table-cell--qty { width: 14%; min-width: 10rem; }
 .mnsk7-product-table th.mnsk7-table-cell--action,
-.mnsk7-product-table .mnsk7-table-cell--action { width: 16%; min-width: 190px; }
+.mnsk7-product-table .mnsk7-table-cell--action { width: 19%; min-width: 13.5rem; }
 
 .mnsk7-product-table tbody tr {
   border-bottom: 1px solid var(--color-border);
@@ -1948,10 +1949,13 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   }
 }
 
+/* Możliwość zwężenia przycisku w wąskiej TD — bez nachodzenia na kolumnę z ilością */
 .mnsk7-product-table .mnsk7-table-cell--action .button,
 .mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button,
 .mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn {
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: 100%;
 }
 /* Ilość — jak w koszyku: .woocommerce-cart .quantity.quantity--stepper */
 .mnsk7-product-table .mnsk7-table-cell--qty .quantity.quantity--stepper {
@@ -1965,6 +1969,8 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   border-radius: var(--r-pill);
   background: var(--color-white);
   width: auto;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .mnsk7-product-table .mnsk7-table-cell--qty .quantity.quantity--stepper .mnsk7-table-qty-input {
   width: 3.25rem;
@@ -2022,7 +2028,10 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   flex-wrap: nowrap;
   justify-content: center;
   width: 100%;
+  min-width: 0;
+  max-width: 100%;
   min-height: 48px;
+  box-sizing: border-box;
 }
 .mnsk7-product-table .mnsk7-table-addcart-form--fixed-qty {
   gap: 0;
@@ -2239,7 +2248,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 
 @media (max-width: 1180px) and (min-width: 769px) {
   .mnsk7-product-table {
-    min-width: 46rem;
+    min-width: 52rem;
   }
 
   .mnsk7-product-table .mnsk7-table-cell {
@@ -2256,14 +2265,21 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
     max-width: 92px;
   }
 
+  .mnsk7-product-table th.mnsk7-table-cell--qty,
+  .mnsk7-product-table .mnsk7-table-cell--qty {
+    min-width: 10rem;
+  }
+
+  .mnsk7-product-table th.mnsk7-table-cell--action,
   .mnsk7-product-table .mnsk7-table-cell--action {
-    min-width: 168px;
+    min-width: 12rem;
   }
 
   .mnsk7-product-table .mnsk7-table-cell--action .button,
   .mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button,
   .mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn {
-    padding-inline: 0.85rem;
-    font-size: 0.8125rem;
+    padding: 0.65rem 0.95rem;
+    font-size: var(--fs-sm);
+    line-height: 1.25;
   }
 }
