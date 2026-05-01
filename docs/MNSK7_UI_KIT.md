@@ -54,3 +54,17 @@ Local UI kit for the Storefront child theme. This is the place to tune visual la
 - Industrial/product-first presentation
 - Rounded cards and section shells, but no toy-like softness
 - Strong contrast on headings and CTAs, muted copy for support text
+
+## System Status
+
+- A visual system already exists in partial form. The base layers are `01-tokens.css`, `17-buttons.css`, `07-mnsk7-blocks.css`, and `docs/UI_SPEC_V2.md`.
+- The main risk is not lack of tokens, but uneven enforcement. Some areas use shared primitives, while others still rely on page-level selectors and one-off overrides.
+- `assets/css/main.css` is a build artifact, not the design-system source of truth. Visual decisions should start in parts and only then flow into the compiled file.
+
+## Enforcement Priorities
+
+- Change tokens first: palette, type scale, spacing, radius, shadow.
+- Reuse primitives second: buttons, cards, panels, chips, section headers.
+- Only use page-level selectors for layout exceptions or Woo-specific structure that cannot be normalized.
+- If a pattern repeats across two or more templates, move it into the UI kit instead of keeping it local to a page stylesheet.
+- Keep mobile overlays compact and non-blocking. Consent, search, and sticky helper UI must not dominate the viewport or hide primary commerce actions.

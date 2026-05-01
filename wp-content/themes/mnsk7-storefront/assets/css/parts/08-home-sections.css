@@ -506,8 +506,11 @@
   margin-bottom: 0.75rem;
 }
 
-.mnsk7-section__title--catalog-hero .mnsk7-section__title-accent {
+.mnsk7-section__title--catalog-hero .mnsk7-section__catalog-hero-line {
   display: block;
+}
+
+.mnsk7-section__title--catalog-hero .mnsk7-section__title-accent {
   color: var(--color-primary, #0c7ddb);
 }
 
@@ -1927,14 +1930,22 @@
 
 @media (max-width: 980px) {
   .mnsk7-section__header--bestsellers {
-    align-items: start;
+    align-items: center;
     flex-direction: column;
     margin-bottom: 1.6rem;
   }
 
   .mnsk7-section--bestsellers .mnsk7-section__more {
-    text-align: left;
+    text-align: center;
     margin-top: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .mnsk7-section--bestsellers .mnsk7-section__more a {
+    width: auto;
+    max-width: 100%;
   }
 }
 
@@ -2103,9 +2114,22 @@
   text-align: center;
 }
 
+.mnsk7-front-page .mnsk7-section__header--bestsellers {
+  align-items: center;
+}
+
+@media (max-width: 980px) {
+  .mnsk7-front-page .mnsk7-section__header--bestsellers .mnsk7-section__header-copy {
+    width: 100%;
+  }
+}
+
 .mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__more {
   margin: 0;
   flex-shrink: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
 
 .mnsk7-front-page .mnsk7-section--bestsellers .mnsk7-section__more a {

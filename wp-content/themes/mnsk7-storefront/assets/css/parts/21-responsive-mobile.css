@@ -212,7 +212,8 @@
     margin-bottom: 1.35rem;
   }
 
-  .mnsk7-section--bestsellers ul.products {
+  /* Homepage #bestsellery: poziomy strip (reguły w 25-global-layout), nie 1 kolumna. */
+  .mnsk7-section--bestsellers:not(#bestsellery) ul.products {
     grid-template-columns: 1fr !important;
     gap: 0.85rem !important;
   }
@@ -235,7 +236,7 @@
     text-align: center;
   }
 
-  .mnsk7-section--bestsellers .mnsk7-section__more a {
+  .mnsk7-section--bestsellers:not(#bestsellery) .mnsk7-section__more a {
     width: 100%;
   }
 

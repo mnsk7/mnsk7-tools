@@ -103,7 +103,11 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 					<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie →', 'mnsk7-storefront' ); ?></a>
 				</p>
 			</div>
-			<?php echo do_shortcode( '[mnsk7_bestsellers limit="3" title="" columns="3"]' ); ?>
+			<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title="" columns="3"]' ); ?>
+			<p class="mnsk7-bestsellers-strip-hint">
+				<span class="mnsk7-bestsellers-strip-hint__icon" aria-hidden="true">↔</span>
+				<?php esc_html_e( 'Przesuń palcem w bok, aby zobaczyć kolejne produkty', 'mnsk7-storefront' ); ?>
+			</p>
 		</div>
 	</section>
 	<?php endif; ?>
@@ -114,7 +118,10 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 		<div class="col-full">
 			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Sklep i zastosowania', 'mnsk7-storefront' ); ?></p>
 			<h1 class="mnsk7-section__title mnsk7-section__title--catalog-hero">
-				<?php esc_html_e( 'Produkty do drewna, aluminium, tworzyw i stali', 'mnsk7-storefront' ); ?>
+				<span class="mnsk7-section__catalog-hero-line"><?php esc_html_e( 'Precyzja', 'mnsk7-storefront' ); ?></span>
+				<span class="mnsk7-section__catalog-hero-line"><?php esc_html_e( 'obróbki', 'mnsk7-storefront' ); ?></span>
+				<span class="mnsk7-section__catalog-hero-line mnsk7-section__title-accent"><?php esc_html_e( 'zaczyna', 'mnsk7-storefront' ); ?></span>
+				<span class="mnsk7-section__catalog-hero-line mnsk7-section__title-accent"><?php esc_html_e( 'się od frezu', 'mnsk7-storefront' ); ?></span>
 			</h1>
 			<p class="mnsk7-section__sub"><?php esc_html_e( 'Szybki wybór produktów według materiału, zastosowania i rodzaju narzędzia bez przeklikiwania całego katalogu.', 'mnsk7-storefront' ); ?></p>
 
