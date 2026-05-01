@@ -151,43 +151,16 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 	echo '</div>';
 };
 
-/* Чипсы na stronie taksonomii (kategoria/tag): rząd kategorii + rząd tagów (jak w megamenu), potem filtry atrybutów. */
-if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
-	$cat_row_terms = array();
-	if ( $current_term->taxonomy === 'product_cat' ) {
-		$parent_id     = $current_term->parent;
-		$cat_row_terms = get_terms( array(
-			'taxonomy'   => 'product_cat',
-			'parent'     => $parent_id,
-			'hide_empty' => true,
-		) );
-	} else {
-		$cat_row_terms = get_terms( array(
-			'taxonomy'   => 'product_cat',
-			'parent'     => 0,
-			'hide_empty' => true,
-			'number'     => 12,
-		) );
-	}
-	$cat_label = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
-	if ( ! is_wp_error( $cat_row_terms ) && ! empty( $cat_row_terms ) ) {
-		$render_plp_nav_row( $cat_label, $cat_row_terms, $current_term->taxonomy === 'product_cat' ? $current_term->term_id : 0 );
-	}
-	$megamenu_terms = function_exists( 'mnsk7_get_megamenu_terms' ) ? mnsk7_get_megamenu_terms() : array( 'tags' => array(), 'accessories' => array() );
-	$tags_row      = isset( $megamenu_terms['tags'] ) ? $megamenu_terms['tags'] : array();
-	$tags_label    = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
-	if ( ! empty( $tags_row ) && 'product_tag' !== $current_term->taxonomy ) {
-		$render_plp_nav_row( $tags_label, $tags_row, $current_term->taxonomy === 'product_tag' ? $current_term->term_id : 0 );
-	}
-
-	$attr_data      = function_exists( 'mnsk7_get_archive_attribute_filter_chips' ) ? mnsk7_get_archive_attribute_filter_chips() : array( 'filters' => array(), 'filter_params' => array() );
-	$plp_chips_limit  = $plp_is_mobile_request ? 4 : 5;
-	$all_filters      = isset( $attr_data['filters'] ) ? $attr_data['filters'] : array();
+/* Filtr atrybutów (Średnica trzpienia) — ten sam blok na kategorii/tagach i na głównej stronie Sklep. */
+$plp_attr_chips_limit = $plp_is_mobile_request ? 4 : 5;
+$render_plp_attribute_section = function ( $clear_all_url ) use ( $plp_is_mobile_request, $plp_attr_chips_limit ) {
+	$attr_data       = function_exists( 'mnsk7_get_archive_attribute_filter_chips' ) ? mnsk7_get_archive_attribute_filter_chips() : array( 'filters' => array(), 'filter_params' => array() );
+	$all_filters     = isset( $attr_data['filters'] ) ? $attr_data['filters'] : array();
 	$plp_attr_visible = $plp_is_mobile_request ? count( $all_filters ) : 1;
 	$visible_filters  = array_slice( $all_filters, 0, $plp_attr_visible, true );
 	$hidden_filters   = array_slice( $all_filters, $plp_attr_visible, null, true );
-	$has_hidden_rows   = ! $plp_is_mobile_request && ! empty( $hidden_filters );
-	$active_in_hidden  = false;
+	$has_hidden_rows  = ! $plp_is_mobile_request && ! empty( $hidden_filters );
+	$active_in_hidden = false;
 	if ( $has_hidden_rows ) {
 		foreach ( $hidden_filters as $attribute_filter ) {
 			$param = isset( $attribute_filter['param'] ) ? $attribute_filter['param'] : '';
@@ -198,15 +171,15 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 		}
 	}
 
-	$render_filter_row = function ( $attribute_filter ) use ( $plp_chips_limit, $plp_is_mobile_request ) {
+	$render_filter_row = function ( $attribute_filter ) use ( $plp_attr_chips_limit, $plp_is_mobile_request ) {
 		if ( empty( $attribute_filter['chips'] ) ) {
 			return;
 		}
 		$aria_label = sprintf( /* translators: %s: filter group name */ __( 'Filtruj: %s', 'mnsk7-storefront' ), $attribute_filter['label'] );
 		$chips_list = $attribute_filter['chips'];
 		$param      = $attribute_filter['param'];
-		$visible    = array_slice( $chips_list, 0, $plp_chips_limit, true );
-		$hidden     = array_slice( $chips_list, $plp_chips_limit, null, true );
+		$visible    = array_slice( $chips_list, 0, $plp_attr_chips_limit, true );
+		$hidden     = array_slice( $chips_list, $plp_attr_chips_limit, null, true );
 		$anchor_fn  = function_exists( 'mnsk7_plp_anchor_results' ) ? 'mnsk7_plp_anchor_results' : null;
 		if ( $plp_is_mobile_request ) {
 			$active_slug  = isset( $_GET[ $param ] ) ? sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) : '';
@@ -283,9 +256,14 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 		}
 	}
 	if ( ! empty( $active_filters ) ) {
-		$term_link  = get_term_link( $current_term );
-		$clear_url  = is_wp_error( $term_link ) ? ( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : '' ) : $term_link;
-		$clear_url  = function_exists( 'mnsk7_plp_anchor_results' ) ? mnsk7_plp_anchor_results( $clear_url ) : $clear_url;
+		$clear_url = is_string( $clear_all_url ) ? $clear_all_url : '';
+		if ( $clear_url === '' && function_exists( 'wc_get_page_permalink' ) ) {
+			$clear_url = (string) wc_get_page_permalink( 'shop' );
+		}
+		if ( $clear_url === '' ) {
+			$clear_url = home_url( '/' );
+		}
+		$clear_url = function_exists( 'mnsk7_plp_anchor_results' ) ? mnsk7_plp_anchor_results( $clear_url ) : $clear_url;
 		echo '<div class="mnsk7-plp-selected col-full">';
 		echo '<span class="mnsk7-plp-selected__label">' . esc_html__( 'Wybrane:', 'mnsk7-storefront' ) . '</span>';
 		foreach ( $active_filters as $param => $val ) {
@@ -297,6 +275,41 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 		echo ' <a href="' . esc_url( $clear_url ) . '" class="button mnsk7-plp-reset">' . esc_html__( 'Wyczyść wszystkie', 'mnsk7-storefront' ) . '</a>';
 		echo '</div>';
 	}
+};
+
+/* Чипсы na stronie taksonomii (kategoria/tag): rząd kategorii + rząd tagów (jak w megamenu), potem filtry atrybutów. */
+if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
+	$cat_row_terms = array();
+	if ( $current_term->taxonomy === 'product_cat' ) {
+		$parent_id     = $current_term->parent;
+		$cat_row_terms = get_terms( array(
+			'taxonomy'   => 'product_cat',
+			'parent'     => $parent_id,
+			'hide_empty' => true,
+		) );
+	} else {
+		$cat_row_terms = get_terms( array(
+			'taxonomy'   => 'product_cat',
+			'parent'     => 0,
+			'hide_empty' => true,
+			'number'     => 12,
+		) );
+	}
+	$cat_label = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
+	if ( ! is_wp_error( $cat_row_terms ) && ! empty( $cat_row_terms ) ) {
+		$render_plp_nav_row( $cat_label, $cat_row_terms, $current_term->taxonomy === 'product_cat' ? $current_term->term_id : 0 );
+	}
+	$megamenu_terms = function_exists( 'mnsk7_get_megamenu_terms' ) ? mnsk7_get_megamenu_terms() : array( 'tags' => array(), 'accessories' => array() );
+	$tags_row      = isset( $megamenu_terms['tags'] ) ? $megamenu_terms['tags'] : array();
+	$tags_label    = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
+	if ( ! empty( $tags_row ) && 'product_tag' !== $current_term->taxonomy ) {
+		$render_plp_nav_row( $tags_label, $tags_row, $current_term->taxonomy === 'product_tag' ? $current_term->term_id : 0 );
+	}
+
+	$term_link_clear = get_term_link( $current_term );
+	$clear_attr_base = is_wp_error( $term_link_clear ) ? ( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : '' ) : $term_link_clear;
+	$clear_attr_base = $clear_attr_base ? ( function_exists( 'mnsk7_plp_anchor_results' ) ? mnsk7_plp_anchor_results( $clear_attr_base ) : $clear_attr_base ) : home_url( '/' );
+	$render_plp_attribute_section( $clear_attr_base );
 }
 
 /* Strona Sklep (bez taksonomii): dwie grupy chipów — kategorie i tagi (jak w megamenu). */
@@ -317,6 +330,9 @@ if ( ! $is_empty_filtered_state && is_shop() && ! $is_taxonomy ) {
 	if ( ! is_wp_error( $shop_accessories ) && ! empty( $shop_accessories ) ) {
 		$render_plp_nav_row( $accessories_label, $shop_accessories, 0 );
 	}
+	$shop_clear = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : '';
+	$shop_clear = $shop_clear ? ( function_exists( 'mnsk7_plp_anchor_results' ) ? mnsk7_plp_anchor_results( $shop_clear ) : $shop_clear ) : home_url( '/' );
+	$render_plp_attribute_section( $shop_clear );
 }
 
 $use_table = is_shop() || $is_taxonomy;

@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.17' );
+	define( 'MNSK7_THEME_VERSION', '1.0.18' );
 }
 
 /**
@@ -3082,6 +3082,9 @@ add_action( 'woocommerce_product_query', function ( $q ) {
 	if ( is_admin() || ! is_object( $q ) || ! method_exists( $q, 'set' ) ) {
 		return;
 	}
+	if ( function_exists( 'is_shop' ) && function_exists( 'is_product_taxonomy' ) && ! is_shop() && ! is_product_taxonomy() ) {
+		return;
+	}
 	$attr_taxonomies = array_keys( function_exists( 'mnsk7_get_plp_attribute_filter_taxonomies' ) ? mnsk7_get_plp_attribute_filter_taxonomies() : array() );
 	$tax             = $q->get( 'tax_query' );
 	if ( ! is_array( $tax ) ) {
@@ -3108,24 +3111,28 @@ add_action( 'woocommerce_product_query', function ( $q ) {
 }, 20 );
 
 /**
- * Get product IDs in current archive term (category/tag), in stock only, respecting current attribute filters.
- * Used by FB-03 to show only attribute terms that have products in the current category.
+ * Get product IDs in current archive (category/tag lub główny Sklep), in stock only, respecting current attribute filters.
+ * Used by FB-03 to show only attribute terms that have products in the current scope.
  *
  * @param array $attrs_to_try Map of taxonomy => label (to build tax_query from filter_* params).
  * @return int[] Product IDs, or empty array.
  */
 function mnsk7_get_archive_product_ids_for_chips( $attrs_to_try ) {
-	$term = get_queried_object();
-	if ( ! $term || ! isset( $term->term_id ) ) {
+	$on_shop = function_exists( 'is_shop' ) && is_shop() && ! is_product_taxonomy();
+	$term    = get_queried_object();
+	if ( $on_shop ) {
+		$tax_query = array();
+	} elseif ( $term instanceof WP_Term && isset( $term->term_id ) ) {
+		$tax_query = array(
+			array(
+				'taxonomy' => $term->taxonomy,
+				'field'    => 'term_id',
+				'terms'    => $term->term_id,
+			),
+		);
+	} else {
 		return array();
 	}
-	$tax_query = array(
-		array(
-			'taxonomy' => $term->taxonomy,
-			'field'    => 'term_id',
-			'terms'    => $term->term_id,
-		),
-	);
 	// Add current attribute filters from URL so chips reflect only terms that exist for filtered set.
 	foreach ( $attrs_to_try as $tax => $label ) {
 		$param = 'filter_' . str_replace( 'pa_', '', $tax );
@@ -3215,16 +3222,18 @@ function mnsk7_get_archive_filter_priority( $term ) {
  * @return array{filters: array<array{label: string, param: string, chips: array}>, filter_params: string[]}
  */
 function mnsk7_get_archive_attribute_filter_chips() {
-	$empty = array( 'filters' => array(), 'filter_params' => array() );
-	if ( ! is_product_taxonomy() ) {
+	$empty    = array( 'filters' => array(), 'filter_params' => array() );
+	$on_shop  = function_exists( 'is_shop' ) && is_shop() && ! is_product_taxonomy();
+	if ( ! is_product_taxonomy() && ! $on_shop ) {
 		return $empty;
 	}
-	$attrs_to_try    = function_exists( 'mnsk7_get_plp_attribute_filter_taxonomies' ) ? mnsk7_get_plp_attribute_filter_taxonomies() : array();
-	$term = get_queried_object();
-	if ( ! $term || ! isset( $term->term_id ) ) {
+	$attrs_to_try = function_exists( 'mnsk7_get_plp_attribute_filter_taxonomies' ) ? mnsk7_get_plp_attribute_filter_taxonomies() : array();
+	$term         = get_queried_object();
+	if ( ! $on_shop && ( ! $term instanceof WP_Term || ! isset( $term->term_id ) ) ) {
 		return $empty;
 	}
-	$priority_order = function_exists( 'mnsk7_get_archive_filter_priority' ) ? mnsk7_get_archive_filter_priority( $term ) : array();
+	$priority_term  = ( $term instanceof WP_Term ) ? $term : null;
+	$priority_order = function_exists( 'mnsk7_get_archive_filter_priority' ) ? mnsk7_get_archive_filter_priority( $priority_term ) : array();
 
 	$product_ids = mnsk7_get_archive_product_ids_for_chips( $attrs_to_try );
 	$filters     = array();
