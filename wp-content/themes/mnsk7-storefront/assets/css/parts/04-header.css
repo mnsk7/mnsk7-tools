@@ -45,28 +45,39 @@
   min-width: 0;
   flex: 1 1 auto;
 }
-.mnsk7-promo-bar__promise {
+/* Jedna skala typografii: nagłówek/promise i nutka dostawy — ten sam rozmiar co lewa strona */
+.mnsk7-promo-bar__promise,
+.mnsk7-promo-bar__headline,
+.mnsk7-promo-bar__delivery-link,
+.mnsk7-promo-bar__fine {
+  font-size: clamp(0.6875rem, 1.35vw, 0.8125rem);
   font-weight: 700;
+}
+.mnsk7-promo-bar__promise {
   letter-spacing: 0.01em;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  font-size: clamp(0.6875rem, 1.35vw, 0.8125rem);
+}
+.mnsk7-promo-bar__headline {
+  letter-spacing: 0.01em;
 }
 .mnsk7-promo-bar__delivery {
   flex-shrink: 0;
-  font-size: clamp(0.5625rem, 1.05vw, 0.6875rem);
   opacity: 0.88;
   white-space: nowrap;
 }
-.mnsk7-promo-bar__delivery-link {
+.mnsk7-promo-bar__delivery-link,
+.mnsk7-promo-bar__fine {
   color: inherit;
   text-decoration: underline;
   text-decoration-color: rgba(255, 255, 255, 0.42);
   text-underline-offset: 2px;
 }
 .mnsk7-promo-bar__delivery-link:hover,
-.mnsk7-promo-bar__delivery-link:focus-visible {
+.mnsk7-promo-bar__delivery-link:focus-visible,
+.mnsk7-promo-bar__fine:hover,
+.mnsk7-promo-bar__fine:focus-visible {
   text-decoration-color: rgba(255, 255, 255, 0.78);
 }
 .mnsk7-promo-bar__text a.mnsk7-promo-bar__cta,
