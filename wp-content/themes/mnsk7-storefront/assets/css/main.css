@@ -3543,6 +3543,17 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   }
 }
 
+@media (min-width: 901px) {
+  .single-product div.product .woocommerce-product-gallery.images,
+  .single-product div.product .images {
+    position: sticky !important;
+    top: calc(var(--header-h, 56px) + 1rem) !important;
+    z-index: 2;
+    align-self: flex-start;
+    height: fit-content;
+  }
+}
+
 @media (max-width: 768px) {
   .single-product div.product {
     gap: 0.85rem;
