@@ -467,6 +467,15 @@
     width: calc(100% + 4rem);
   }
 }
+
+/* Kategorie (#kategorie): col-full w obrębie --content-max, min-width 0 — bez poziomego „przesunu” przy full-bleed */
+#kategorie .col-full {
+  width: 100%;
+  max-width: min(var(--content-max, 75rem), 100%);
+  margin-inline: auto;
+  box-sizing: border-box;
+  min-width: 0;
+}
 /* Przeglądaj asortyment (TASK 12) — białe tło, chipy białe z czarną ramką, hover niebieski */
 .mnsk7-section--catalog.mnsk7-section--light,
 .mnsk7-section.mnsk7-section--catalog {
@@ -521,6 +530,19 @@
 .mnsk7-section__title--catalog-hero .mnsk7-section__catalog-hero-line--accent {
   margin-top: 0.08em;
   color: var(--color-primary, #0c7ddb);
+}
+
+@media (max-width: 639px) {
+  .mnsk7-section__title--catalog-hero {
+    font-size: clamp(1.3rem, 5.5vw, 1.85rem);
+  }
+
+  .mnsk7-section__sub--catalog {
+    font-size: 0.94rem;
+    line-height: 1.55;
+    max-width: 36rem;
+    padding-inline: 0.15rem;
+  }
 }
 
 .mnsk7-section__eyebrow {
@@ -1254,17 +1276,52 @@
   text-wrap: balance;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1024px) {
   .mnsk7-loyalty-tiers {
     grid-template-columns: 1fr;
-    max-width: 22rem;
-    padding: 0.85rem;
+    max-width: min(26.5rem, 100%);
+    padding: clamp(0.75rem, 3vw, 1rem);
+  }
+
+  .mnsk7-loyalty-tier {
+    padding: clamp(1rem, 4vw, 1.35rem) clamp(0.75rem, 4vw, 1.05rem);
+  }
+
+  .mnsk7-loyalty-tier__pct {
+    font-size: clamp(1.65rem, 6.5vw, var(--fs-3xl));
+  }
+
+  .mnsk7-loyalty-tier:last-child .mnsk7-loyalty-tier__pct {
+    font-size: clamp(1.9rem, 7vw, 2.45rem);
+  }
+
+  .mnsk7-loyalty-tier__from {
+    font-size: clamp(0.8rem, 3vw, var(--fs-sm));
   }
 
   .mnsk7-loyalty-tiers-kicker {
-    font-size: 0.75rem;
-    padding-inline: 0.85rem;
-    letter-spacing: 0.065em;
+    font-size: clamp(0.71rem, 2.8vw, 0.8125rem);
+    padding-inline: clamp(0.65rem, 4vw, 1rem);
+    letter-spacing: 0.058em;
+  }
+}
+
+/* Wąska plansza desktop: trzy kolumny, ale bez „ściśniętych” etykiet */
+@media (min-width: 1025px) and (max-width: 1240px) {
+  .mnsk7-loyalty-tiers {
+    gap: 0.72rem;
+    padding: 0.95rem;
+  }
+
+  .mnsk7-loyalty-tier {
+    padding: 1rem 0.65rem;
+  }
+
+  .mnsk7-loyalty-tier__from {
+    font-size: clamp(0.74rem, 0.95vw, 0.8125rem);
+    line-height: 1.36;
+    hyphens: auto;
+    overflow-wrap: break-word;
   }
 }
 

@@ -125,7 +125,7 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 					<span class="mnsk7-section__catalog-hero-line mnsk7-section__catalog-hero-line--accent"><?php esc_html_e( 'zaczyna się od frezu', 'mnsk7-storefront' ); ?></span>
 				</span>
 			</h1>
-			<p class="mnsk7-section__sub"><?php esc_html_e( 'Szybki wybór produktów według materiału, zastosowania i rodzaju narzędzia bez przeklikiwania całego katalogu.', 'mnsk7-storefront' ); ?></p>
+			<p class="mnsk7-section__sub mnsk7-section__sub--catalog"><?php esc_html_e( 'Kategorie ustawione pod materiał, zastosowanie i typ narzędzia — szybciej znajdziesz to, czego potrzebujesz, bez przeglądania całego sklepu.', 'mnsk7-storefront' ); ?></p>
 
 			<?php if ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) ) : ?>
 			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $tags_label ); ?>">
@@ -199,18 +199,19 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Stała współpraca', 'mnsk7-storefront' ); ?></p>
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Program rabatowy dla stałych klientów', 'mnsk7-storefront' ); ?></h2>
 			<p class="mnsk7-section__sub mnsk7-loyalty-intro"><?php esc_html_e( 'Od pierwszego zamówienia po rejestracji zyskujesz stały rabat 5%. Im więcej kupujesz w roku, tym atrakcyjniej: od 5 000 zł łącznie to już 10%, a od 10 000 zł — nawet 15% na każde zamówienie. Bez punktów — proste zasady, realne oszczędności.', 'mnsk7-storefront' ); ?></p>
-			<p class="mnsk7-loyalty-tiers-kicker"><?php esc_html_e( 'Wyższe zamówienia w roku — wyższy stały rabat na każdy koszyk', 'mnsk7-storefront' ); ?></p>
+			<p class="mnsk7-loyalty-tiers-kicker"><?php esc_html_e( 'Większa suma zakupów w roku — wyższy rabat przy każdym zamówieniu', 'mnsk7-storefront' ); ?></p>
 			<div class="mnsk7-loyalty-tiers">
 				<?php
 				$loyalty_tiers_display = array(
-					array( 'pct' => '5%', 'sub' => __( 'Konto po rejestracji — stale', 'mnsk7-storefront' ) ),
+					array( 'pct' => '5%', 'sub' => __( 'Stale 5% — po założeniu konta', 'mnsk7-storefront' ) ),
 					array( 'pct' => '10%', 'sub' => sprintf(
-						/* translators: yearly spend threshold formatted with spaces thousands */
-						__( 'Od %s zł łącznie w roku', 'mnsk7-storefront' ),
+						/* translators: 1: yearly spend threshold with space thousands (e.g. 5 000) */
+						__( '10%% — od %s zł zakupów w roku', 'mnsk7-storefront' ),
 						'5 000'
 					) ),
 					array( 'pct' => '15%', 'sub' => sprintf(
-						__( 'Od %s zł łącznie w roku (max)', 'mnsk7-storefront' ),
+						/* translators: 1: yearly spend threshold with space thousands (e.g. 10 000) */
+						__( '15%% (max.) — od %s zł zakupów w roku', 'mnsk7-storefront' ),
 						'10 000'
 					) ),
 				);
