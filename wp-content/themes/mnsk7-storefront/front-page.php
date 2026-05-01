@@ -198,7 +198,8 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 		<div class="col-full">
 			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Stała współpraca', 'mnsk7-storefront' ); ?></p>
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Program rabatowy dla stałych klientów', 'mnsk7-storefront' ); ?></h2>
-			<p class="mnsk7-section__sub mnsk7-loyalty-intro"><?php esc_html_e( 'Po rejestracji masz stale 5%. Przy zakupach 5 000 zł i więcej w roku — 10%, od 10 000 zł w roku — 15% (maksymalnie).', 'mnsk7-storefront' ); ?></p>
+			<p class="mnsk7-section__sub mnsk7-loyalty-intro"><?php esc_html_e( 'Od pierwszego zamówienia po rejestracji zyskujesz stały rabat 5%. Im więcej kupujesz w roku, tym atrakcyjniej: od 5 000 zł łącznie to już 10%, a od 10 000 zł — nawet 15% na każde zamówienie. Bez punktów — proste zasady, realne oszczędności.', 'mnsk7-storefront' ); ?></p>
+			<p class="mnsk7-loyalty-tiers-kicker"><?php esc_html_e( 'Wyższe zamówienia w roku — wyższy stały rabat na każdy koszyk', 'mnsk7-storefront' ); ?></p>
 			<div class="mnsk7-loyalty-tiers">
 				<?php
 				$loyalty_tiers_display = array(

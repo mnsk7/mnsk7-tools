@@ -289,25 +289,23 @@
     margin-right: auto;
   }
 
-  .mnsk7-trust-stats__item,
-  .mnsk7-loyalty-tier {
+  .mnsk7-trust-stats__item {
     padding: 0.95rem 0.95rem;
     min-height: 128px;
     justify-content: center;
+    align-items: center;
+    text-align: center;
   }
 
-  .mnsk7-trust-stats__item {
+  .mnsk7-loyalty-tier {
+    padding: 0.95rem 0.95rem;
+    justify-content: center;
     align-items: center;
     text-align: center;
   }
 
   .mnsk7-trust-stats__label {
     width: 100%;
-    text-align: center;
-  }
-
-  .mnsk7-loyalty-tier {
-    align-items: center;
     text-align: center;
   }
 
