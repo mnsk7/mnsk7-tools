@@ -13,8 +13,8 @@
 .mnsk7-front-page .mnsk7-hero { order: 10; }
 .mnsk7-front-page .mnsk7-section--bestsellers { order: 20; }
 .mnsk7-front-page .mnsk7-section--catalog { order: 30; }
-.mnsk7-front-page .mnsk7-section--trust { order: 40; }
-.mnsk7-front-page .mnsk7-section--loyalty { order: 50; }
+.mnsk7-front-page .mnsk7-section--loyalty { order: 40; }
+.mnsk7-front-page .mnsk7-section--trust { order: 50; }
 .mnsk7-front-page .mnsk7-section--insta { order: 60; }
 
 /* Hero — czytelny, full-bleed (bez białych pasów od padding #content). Audit task 6: overflow visible */
@@ -504,13 +504,22 @@
 
 .mnsk7-section__title--catalog-hero {
   margin-bottom: 0.75rem;
+  line-height: 1.12;
+}
+
+.mnsk7-section__title--catalog-hero .mnsk7-section__catalog-hero-inner {
+  display: block;
+  margin-inline: auto;
+  max-width: min(18em, 100%);
 }
 
 .mnsk7-section__title--catalog-hero .mnsk7-section__catalog-hero-line {
   display: block;
+  text-wrap: balance;
 }
 
-.mnsk7-section__title--catalog-hero .mnsk7-section__title-accent {
+.mnsk7-section__title--catalog-hero .mnsk7-section__catalog-hero-line--accent {
+  margin-top: 0.08em;
   color: var(--color-primary, #0c7ddb);
 }
 

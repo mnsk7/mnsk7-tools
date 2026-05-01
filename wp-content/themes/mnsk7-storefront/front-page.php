@@ -118,10 +118,10 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 		<div class="col-full">
 			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Sklep i zastosowania', 'mnsk7-storefront' ); ?></p>
 			<h1 class="mnsk7-section__title mnsk7-section__title--catalog-hero">
-				<span class="mnsk7-section__catalog-hero-line"><?php esc_html_e( 'Precyzja', 'mnsk7-storefront' ); ?></span>
-				<span class="mnsk7-section__catalog-hero-line"><?php esc_html_e( 'obróbki', 'mnsk7-storefront' ); ?></span>
-				<span class="mnsk7-section__catalog-hero-line mnsk7-section__title-accent"><?php esc_html_e( 'zaczyna', 'mnsk7-storefront' ); ?></span>
-				<span class="mnsk7-section__catalog-hero-line mnsk7-section__title-accent"><?php esc_html_e( 'się od frezu', 'mnsk7-storefront' ); ?></span>
+				<span class="mnsk7-section__catalog-hero-inner">
+					<span class="mnsk7-section__catalog-hero-line mnsk7-section__catalog-hero-line--top"><?php esc_html_e( 'Precyzja obróbki', 'mnsk7-storefront' ); ?></span>
+					<span class="mnsk7-section__catalog-hero-line mnsk7-section__catalog-hero-line--accent"><?php esc_html_e( 'zaczyna się od frezu', 'mnsk7-storefront' ); ?></span>
+				</span>
 			</h1>
 			<p class="mnsk7-section__sub"><?php esc_html_e( 'Szybki wybór produktów według materiału, zastosowania i rodzaju narzędzia bez przeklikiwania całego katalogu.', 'mnsk7-storefront' ); ?></p>
 
