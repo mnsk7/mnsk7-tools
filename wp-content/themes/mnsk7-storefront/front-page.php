@@ -6,6 +6,86 @@
  */
 
 get_header();
+
+$cats            = array();
+$accessory_cats  = array();
+$tags            = array();
+$has_cats        = taxonomy_exists( 'product_cat' );
+$has_tags        = taxonomy_exists( 'product_tag' );
+if ( $has_cats ) {
+	$cats = get_terms( array(
+		'taxonomy'   => 'product_cat',
+		'hide_empty' => true,
+		'parent'     => 0,
+		'number'     => 48,
+		'orderby'    => 'count',
+		'order'      => 'DESC',
+	) );
+	if ( ! is_wp_error( $cats ) && function_exists( 'mnsk7_split_catalog_category_terms' ) ) {
+		$grouped        = mnsk7_split_catalog_category_terms( $cats );
+		$cats           = isset( $grouped['core'] ) ? $grouped['core'] : array();
+		$accessory_cats = isset( $grouped['accessories'] ) ? $grouped['accessories'] : array();
+	}
+}
+if ( $has_tags ) {
+	$tags = get_terms( array(
+		'taxonomy'   => 'product_tag',
+		'hide_empty' => true,
+		'number'     => 20,
+		'orderby'    => 'count',
+		'order'      => 'DESC',
+	) );
+}
+$tags_label        = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
+$cats_label        = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
+$accessories_label = apply_filters( 'mnsk7_megamenu_heading_accessories', __( 'Akcesoria i zestawy', 'mnsk7-storefront' ) );
+
+$normalize_catalog_slug = static function ( $value ) {
+	$value = sanitize_title( wp_strip_all_tags( (string) $value ) );
+	return str_replace( 'mnsk7-tools-pl', '', $value );
+};
+
+if ( ! empty( $accessory_cats ) ) {
+	$move_to_core_slugs     = array( 'tuleje-zaciskowe' );
+	$hidden_accessory_slugs = array(
+		'zestaw-frezow-do-drewna',
+		'zestaw-gwintownikow',
+		'zestaw-gwintownikow-i-narzynki',
+	);
+	$accessory_kept  = array();
+	$accessory_to_core = array();
+
+	foreach ( $accessory_cats as $term ) {
+		$slug = $normalize_catalog_slug( isset( $term->slug ) ? $term->slug : ( isset( $term->name ) ? $term->name : '' ) );
+		if ( in_array( $slug, $hidden_accessory_slugs, true ) ) {
+			continue;
+		}
+		if ( in_array( $slug, $move_to_core_slugs, true ) ) {
+			$accessory_to_core[] = $term;
+			continue;
+		}
+		$accessory_kept[] = $term;
+	}
+
+	$accessory_cats = $accessory_kept;
+
+	if ( ! empty( $accessory_to_core ) ) {
+		$core_ids = array();
+		foreach ( $cats as $cat_term ) {
+			$core_ids[ (int) $cat_term->term_id ] = true;
+		}
+		foreach ( $accessory_to_core as $term ) {
+			$term_id = (int) $term->term_id;
+			if ( isset( $core_ids[ $term_id ] ) ) {
+				continue;
+			}
+			$cats[]                 = $term;
+			$core_ids[ $term_id ] = true;
+		}
+	}
+}
+
+$show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) );
 ?>
 
 <main id="main" class="site-main mnsk7-front-page">
@@ -28,7 +108,83 @@ get_header();
 	</section>
 	<?php endif; ?>
 
-	<!-- TRUST + OPINIE (CRO: trzeci blok — zaufanie przed głębszym katalogiem) -->
+	<!-- KATALOG: zaraz po bestsellerach (kolejność DOM — bez polegania wyłącznie na CSS order). -->
+	<?php if ( $show_catalog ) : ?>
+	<section id="kategorie" class="mnsk7-section mnsk7-section--catalog mnsk7-section--light">
+		<div class="col-full">
+			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Sklep i zastosowania', 'mnsk7-storefront' ); ?></p>
+			<h1 class="mnsk7-section__title mnsk7-section__title--catalog-hero">
+				<?php esc_html_e( 'Produkty do drewna, aluminium, tworzyw i stali', 'mnsk7-storefront' ); ?>
+			</h1>
+			<p class="mnsk7-section__sub"><?php esc_html_e( 'Szybki wybór produktów według materiału, zastosowania i rodzaju narzędzia bez przeklikiwania całego katalogu.', 'mnsk7-storefront' ); ?></p>
+
+			<?php if ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) ) : ?>
+			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $tags_label ); ?>">
+				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $tags_label ); ?></h3>
+				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud">
+					<?php foreach ( $tags as $tag ) :
+						$t_link = get_term_link( $tag );
+						if ( is_wp_error( $t_link ) ) {
+							continue;
+						}
+						$tag_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $tag->name ) : $tag->name;
+						$tag_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $tag_name ) );
+						$tag_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $tag_name ) : $tag_name;
+						?>
+					<a href="<?php echo esc_url( $t_link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $tag_name ); ?></a>
+					<?php endforeach; ?>
+				</div>
+			</div>
+			<?php endif; ?>
+
+			<?php if ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) : ?>
+			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--categories" role="navigation" aria-label="<?php echo esc_attr( $cats_label ); ?>">
+				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $cats_label ); ?></h3>
+				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud mnsk7-catalog-chips__scroll--categories">
+					<?php foreach ( $cats as $cat ) :
+						$link = get_term_link( $cat );
+						if ( is_wp_error( $link ) ) {
+							continue;
+						}
+						$cat_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $cat->name ) : $cat->name;
+						$cat_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $cat_name ) );
+						$cat_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $cat_name ) : $cat_name;
+						?>
+					<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-tags-chip mnsk7-tags-chip--category">
+						<span class="mnsk7-tags-chip__label"><?php echo esc_html( $cat_name ); ?></span>
+						<span class="mnsk7-tags-chip__meta"><?php echo esc_html( number_format_i18n( (int) $cat->count ) ); ?> <?php esc_html_e( 'prod.', 'mnsk7-storefront' ); ?></span>
+					</a>
+					<?php endforeach; ?>
+				</div>
+			</div>
+			<?php endif; ?>
+
+			<?php if ( ! empty( $accessory_cats ) ) : ?>
+			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $accessories_label ); ?>">
+				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $accessories_label ); ?></h3>
+				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud">
+					<?php foreach ( $accessory_cats as $cat ) :
+						$link = get_term_link( $cat );
+						if ( is_wp_error( $link ) ) {
+							continue;
+						}
+						$cat_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $cat->name ) : $cat->name;
+						$cat_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $cat_name ) : $cat_name;
+						?>
+					<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $cat_name ); ?></a>
+					<?php endforeach; ?>
+				</div>
+			</div>
+			<?php endif; ?>
+
+			<p class="mnsk7-section__more">
+				<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Wszystkie produkty →', 'mnsk7-storefront' ); ?></a>
+			</p>
+		</div>
+	</section>
+	<?php endif; ?>
+
+	<!-- TRUST + OPINIE -->
 	<section class="mnsk7-section mnsk7-section--trust mnsk7-section--light">
 		<div class="col-full">
 			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Zaufanie i obsługa', 'mnsk7-storefront' ); ?></p>
@@ -65,159 +221,6 @@ get_header();
 		</div>
 	</section>
 
-	<!-- KATALOG: grupy chipów (tagi + kategorie) jako poziome swipe rows, potem siatka kart kategorii. -->
-	<?php
-	$cats     = array();
-	$accessory_cats = array();
-	$tags     = array();
-	$has_cats = taxonomy_exists( 'product_cat' );
-	$has_tags = taxonomy_exists( 'product_tag' );
-	if ( $has_cats ) {
-		$cats = get_terms( array(
-			'taxonomy'   => 'product_cat',
-			'hide_empty' => true,
-			'parent'     => 0,
-			'number'     => 48,
-			'orderby'    => 'count',
-			'order'      => 'DESC',
-		) );
-		if ( ! is_wp_error( $cats ) && function_exists( 'mnsk7_split_catalog_category_terms' ) ) {
-			$grouped = mnsk7_split_catalog_category_terms( $cats );
-			$cats = isset( $grouped['core'] ) ? $grouped['core'] : array();
-			$accessory_cats = isset( $grouped['accessories'] ) ? $grouped['accessories'] : array();
-		}
-	}
-	if ( $has_tags ) {
-		$tags = get_terms( array(
-			'taxonomy'   => 'product_tag',
-			'hide_empty' => true,
-			'number'     => 20,
-			'orderby'    => 'count',
-			'order'      => 'DESC',
-		) );
-	}
-	$tags_label = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
-	$cats_label = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
-	$accessories_label = apply_filters( 'mnsk7_megamenu_heading_accessories', __( 'Akcesoria i zestawy', 'mnsk7-storefront' ) );
-
-	$normalize_catalog_slug = static function ( $value ) {
-		$value = sanitize_title( wp_strip_all_tags( (string) $value ) );
-		return str_replace( 'mnsk7-tools-pl', '', $value );
-	};
-
-	if ( ! empty( $accessory_cats ) ) {
-		$move_to_core_slugs = array( 'tuleje-zaciskowe' );
-		$hidden_accessory_slugs = array(
-			'zestaw-frezow-do-drewna',
-			'zestaw-gwintownikow',
-			'zestaw-gwintownikow-i-narzynki',
-		);
-		$accessory_kept = array();
-		$accessory_to_core = array();
-
-		foreach ( $accessory_cats as $term ) {
-			$slug = $normalize_catalog_slug( isset( $term->slug ) ? $term->slug : ( isset( $term->name ) ? $term->name : '' ) );
-			if ( in_array( $slug, $hidden_accessory_slugs, true ) ) {
-				continue;
-			}
-			if ( in_array( $slug, $move_to_core_slugs, true ) ) {
-				$accessory_to_core[] = $term;
-				continue;
-			}
-			$accessory_kept[] = $term;
-		}
-
-		$accessory_cats = $accessory_kept;
-
-		if ( ! empty( $accessory_to_core ) ) {
-			$core_ids = array();
-			foreach ( $cats as $cat_term ) {
-				$core_ids[ (int) $cat_term->term_id ] = true;
-			}
-			foreach ( $accessory_to_core as $term ) {
-				$term_id = (int) $term->term_id;
-				if ( isset( $core_ids[ $term_id ] ) ) {
-					continue;
-				}
-				$cats[] = $term;
-				$core_ids[ $term_id ] = true;
-			}
-		}
-	}
-
-	$show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) );
-	if ( $show_catalog ) :
-	?>
-	<section id="kategorie" class="mnsk7-section mnsk7-section--catalog mnsk7-section--light">
-		<div class="col-full">
-			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Sklep i zastosowania', 'mnsk7-storefront' ); ?></p>
-			<h1 class="mnsk7-section__title mnsk7-section__title--catalog-hero">
-				<?php esc_html_e( 'Produkty do drewna, aluminium, tworzyw i stali', 'mnsk7-storefront' ); ?>
-			</h1>
-			<p class="mnsk7-section__sub"><?php esc_html_e( 'Szybki wybór produktów według materiału, zastosowania i rodzaju narzędzia bez przeklikiwania całego katalogu.', 'mnsk7-storefront' ); ?></p>
-
-			<?php if ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) ) : ?>
-			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $tags_label ); ?>">
-				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $tags_label ); ?></h3>
-				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud">
-					<?php foreach ( $tags as $tag ) :
-						$t_link = get_term_link( $tag );
-						if ( is_wp_error( $t_link ) ) continue;
-						$tag_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $tag->name ) : $tag->name;
-						$tag_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $tag_name ) );
-						$tag_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $tag_name ) : $tag_name;
-					?>
-					<a href="<?php echo esc_url( $t_link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $tag_name ); ?></a>
-					<?php endforeach; ?>
-				</div>
-			</div>
-			<?php endif; ?>
-
-			<?php if ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) : ?>
-			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--categories" role="navigation" aria-label="<?php echo esc_attr( $cats_label ); ?>">
-				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $cats_label ); ?></h3>
-				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud mnsk7-catalog-chips__scroll--categories">
-					<?php foreach ( $cats as $cat ) :
-						$link = get_term_link( $cat );
-						if ( is_wp_error( $link ) ) {
-							continue;
-						}
-						$cat_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $cat->name ) : $cat->name;
-						$cat_name = trim( preg_replace( '/\s*mnsk7-tools\.pl\s*/i', '', (string) $cat_name ) );
-						$cat_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $cat_name ) : $cat_name;
-						?>
-					<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-tags-chip mnsk7-tags-chip--category">
-						<span class="mnsk7-tags-chip__label"><?php echo esc_html( $cat_name ); ?></span>
-						<span class="mnsk7-tags-chip__meta"><?php echo esc_html( number_format_i18n( (int) $cat->count ) ); ?> <?php esc_html_e( 'prod.', 'mnsk7-storefront' ); ?></span>
-					</a>
-					<?php endforeach; ?>
-				</div>
-			</div>
-			<?php endif; ?>
-
-			<?php if ( ! empty( $accessory_cats ) ) : ?>
-			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $accessories_label ); ?>">
-				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $accessories_label ); ?></h3>
-				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud">
-					<?php foreach ( $accessory_cats as $cat ) :
-						$link = get_term_link( $cat );
-						if ( is_wp_error( $link ) ) continue;
-						$cat_name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $cat->name ) : $cat->name;
-						$cat_name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $cat_name ) : $cat_name;
-					?>
-					<a href="<?php echo esc_url( $link ); ?>" class="mnsk7-tags-chip"><?php echo esc_html( $cat_name ); ?></a>
-					<?php endforeach; ?>
-				</div>
-			</div>
-			<?php endif; ?>
-
-			<p class="mnsk7-section__more">
-				<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Wszystkie produkty →', 'mnsk7-storefront' ); ?></a>
-			</p>
-		</div>
-	</section>
-	<?php endif; ?>
-
 	<!-- SYSTEM RABATÓW -->
 	<section class="mnsk7-section mnsk7-section--loyalty mnsk7-section--light">
 		<div class="col-full">
@@ -227,13 +230,13 @@ get_header();
 			<div class="mnsk7-loyalty-tiers">
 				<?php
 				$tiers = array(
-					array( 'from' => '1 000', 'pct' => '5%',  'label' => '' ),
+					array( 'from' => '1 000', 'pct' => '5%', 'label' => '' ),
 					array( 'from' => '3 000', 'pct' => '10%', 'label' => '' ),
 					array( 'from' => '5 000', 'pct' => '15%', 'label' => '' ),
 					array( 'from' => '10 000', 'pct' => '20%', 'label' => '' ),
 				);
 				foreach ( $tiers as $tier ) :
-				?>
+					?>
 				<div class="mnsk7-loyalty-tier">
 					<span class="mnsk7-loyalty-tier__pct" data-mnsk7-counter><?php echo esc_html( $tier['pct'] ); ?></span>
 					<span class="mnsk7-loyalty-tier__from"><?php printf( esc_html__( 'od %s zł/rok', 'mnsk7-storefront' ), esc_html( $tier['from'] ) ); ?></span>
