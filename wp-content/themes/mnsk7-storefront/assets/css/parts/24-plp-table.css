@@ -1844,23 +1844,37 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   font-size: var(--fs-sm);
   color: var(--color-text-secondary);
 }
+/* Jak mini-tabela: siatka z „żyłkami” (gap + tło jak nagłówki shop_table PLP). */
 .mnsk7-table-key-params {
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.15rem 0.75rem;
-  margin: 0.4rem 0 0;
+  grid-template-columns: minmax(7.25rem, 42%) minmax(0, 1fr);
+  gap: 1px;
+  margin: 0.5rem 0 0;
+  max-width: 100%;
+  padding: 1px;
+  box-sizing: border-box;
+  border-radius: var(--r-sm);
+  overflow: hidden;
+  background: var(--color-border);
 }
 .mnsk7-table-key-params dt {
   margin: 0;
+  padding: 0.45rem 0.55rem;
   font-size: var(--fs-xs);
   color: var(--color-text-muted);
-  font-weight: 500;
+  font-weight: 600;
+  line-height: 1.38;
+  background: rgba(12, 125, 219, 0.06);
 }
 .mnsk7-table-key-params dd {
   margin: 0;
+  padding: 0.45rem 0.55rem;
   font-size: var(--fs-sm);
   color: var(--color-text);
   font-weight: 600;
+  line-height: 1.38;
+  font-variant-numeric: tabular-nums;
+  background: var(--color-white);
 }
 
 .mnsk7-product-table .mnsk7-table-cell--title a {
@@ -2043,8 +2057,12 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 }
 @media (max-width: 768px) {
   .mnsk7-table-key-params {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 0.125rem;
+    grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
+    margin-top: 0.35rem;
+  }
+  .mnsk7-table-key-params dt,
+  .mnsk7-table-key-params dd {
+    padding: 0.32rem 0.42rem;
   }
 }
 .mnsk7-product-table tbody tr.mnsk7-row--fixed-qty .mnsk7-table-cell--qty .mnsk7-table-qty-implicit--fixed {
