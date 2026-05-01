@@ -11927,6 +11927,16 @@ button[type="submit"],
   transform: translateX(-10%) rotate(-45deg);
 }
 
+.mnsk7-front-page #bestsellery ul.products,
+.mnsk7-front-page #bestsellery .woocommerce ul.products {
+  align-items: start !important;
+}
+
+.mnsk7-front-page #bestsellery ul.products li.product .woocommerce-loop-product__title,
+.mnsk7-front-page #bestsellery ul.products li.product h2 {
+  min-height: 0 !important;
+}
+
 @media (max-width: 768px) {
   .mnsk7-front-page #bestsellery .mnsk7-bestsellers-strip-rail {
     display: grid;
@@ -11977,7 +11987,7 @@ button[type="submit"],
     grid-template-columns: none !important;
     gap: 0.65rem !important;
     margin: 0 !important;
-    padding: 0.15rem 0 0.55rem !important;
+    padding: 0.15rem 0 0.2rem !important;
     list-style: none !important;
     width: 100% !important;
     min-width: 0 !important;
@@ -11986,9 +11996,15 @@ button[type="submit"],
     overflow-y: visible !important;
     scroll-snap-type: x mandatory;
     scroll-padding-inline: 0;
-    scrollbar-width: thin;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     overscroll-behavior-x: contain;
     -webkit-overflow-scrolling: touch;
+  }
+
+  .mnsk7-front-page #bestsellery ul.products::-webkit-scrollbar {
+    height: 0 !important;
+    width: 0 !important;
   }
 
   .mnsk7-front-page #bestsellery ul.products > li.product {
