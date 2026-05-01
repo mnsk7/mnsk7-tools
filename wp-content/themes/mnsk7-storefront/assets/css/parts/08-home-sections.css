@@ -1871,7 +1871,7 @@
   text-align: center;
 }
 
-/* Bestsellers — w obrębie content-max (bez breakout), żeby wszystkie 4 kolumny × 2 rzędy (8 prod.) były widoczne */
+/* Bestsellers — w obrębie content-max (bez breakout); siatka kart: 12-related-products (3 col desktop). */
 .mnsk7-front-page .mnsk7-section--bestsellers {
   box-sizing: border-box;
   padding-top: 1.5rem;

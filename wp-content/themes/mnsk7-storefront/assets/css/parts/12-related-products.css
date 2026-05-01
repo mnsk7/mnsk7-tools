@@ -1,7 +1,7 @@
 /* 12-related-products — jedyny moduł dla recommendation blocks (PDP, koszyk, główna).
    Wszystkie sekcje: related, upsells, cross-sells, bestsellery — ta sama siatka, ta sama karta.
-   Breakpoints: desktop ≥1200: 3 kolumny; tablet 768–1199: 2; mobile <768: 2; ≤400: 1.
-   Dopasowanie liczby kart: :has(li:first-child:nth-last-child(n)) — np. 3 karty → 3 kolumny (bez 2+1), 4 → 2×2, 8 → 4×2 / 2×4.
+   Breakpoints: desktop ≥992: 3 kolumny; tablet 768–991: 2; mobile <768: 2; ≤400: 1.
+   Dopasowanie liczby kart: :has(li:first-child:nth-last-child(n)) — np. 3 karty → 3 kolumny (bez 2+1), 4 → 2×2, 8 → related 4×2 / bestsellery 3×3.
    Docs: docs/RECOMMENDATION-BLOCKS-UNIFIED.md */
 
 /* -----------------------------------------------------------------
@@ -53,7 +53,7 @@
   display: none !important;
 }
 
-/* Desktop ≥1200px: 3 karty w rzędzie */
+/* Desktop ≥992px: 3 karty w rzędzie (węższe karty niż przy 2 kolumnach 768–1199) */
 .related.products ul.products,
 .upsells.products ul.products,
 .up-sells.products ul.products,
@@ -72,7 +72,7 @@
   min-width: 0;
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 991px) {
   .related.products ul.products,
   .upsells.products ul.products,
   .up-sells.products ul.products,
@@ -126,7 +126,7 @@
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
 }
 
-/* 3 karty: jeden pełny rząd (ważne przy tablecie 768–1199, gdzie domyślnie było 2+1 z pustką) */
+/* 3 karty: jeden pełny rząd (ważne przy tablecie 768–991, gdzie domyślnie było 2+1 z pustką) */
 .related.products ul.products:has(> li.product:first-child:nth-last-child(3)),
 .upsells.products ul.products:has(> li.product:first-child:nth-last-child(3)),
 .up-sells.products ul.products:has(> li.product:first-child:nth-last-child(3)),
@@ -144,18 +144,20 @@
   grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
 }
 
-/* 8 kart: 4×2 na desktopie, 2×4 wężej */
+/* 8 kart: related/upsells/cross — 4×2 na szerokim desktopie; bestsellery — 3×3 (mniejsze karty) */
 @media (min-width: 1200px) {
   .related.products ul.products:has(> li.product:first-child:nth-last-child(8)),
   .upsells.products ul.products:has(> li.product:first-child:nth-last-child(8)),
   .up-sells.products ul.products:has(> li.product:first-child:nth-last-child(8)),
-  .cross-sells ul.products:has(> li.product:first-child:nth-last-child(8)),
-  .mnsk7-section--bestsellers ul.products:has(> li.product:first-child:nth-last-child(8)) {
+  .cross-sells ul.products:has(> li.product:first-child:nth-last-child(8)) {
     grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+  .mnsk7-section--bestsellers ul.products:has(> li.product:first-child:nth-last-child(8)) {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
   }
 }
 
-@media (max-width: 1199px) {
+@media (max-width: 991px) {
   .related.products ul.products:has(> li.product:first-child:nth-last-child(8)),
   .upsells.products ul.products:has(> li.product:first-child:nth-last-child(8)),
   .up-sells.products ul.products:has(> li.product:first-child:nth-last-child(8)),
@@ -359,31 +361,31 @@
 
 /* Homepage bestseller overrides — dark surface without affecting PDP/cart blocks */
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products {
-  gap: 1.25rem !important;
+  gap: 1rem !important;
 }
 
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product {
   background: rgba(255, 255, 255, 0.96);
   border-color: rgba(18, 38, 63, 0.08);
-  box-shadow: 0 18px 42px rgba(15, 38, 72, 0.06);
-  border-radius: 18px;
+  box-shadow: 0 12px 28px rgba(15, 38, 72, 0.055);
+  border-radius: 14px;
 }
 
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product:hover {
-  box-shadow: 0 22px 48px rgba(15, 38, 72, 0.1);
+  box-shadow: 0 16px 36px rgba(15, 38, 72, 0.09);
   border-color: rgba(12, 125, 219, 0.18);
-  transform: translateY(-3px);
+  transform: translateY(-2px);
 }
 
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .woocommerce-loop-product__link:has(> img),
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product a.woocommerce-loop-product__link:first-of-type {
-  aspect-ratio: 1.02;
+  aspect-ratio: 1;
   background:
     radial-gradient(circle at top center, rgba(216, 154, 87, 0.08), transparent 44%),
     linear-gradient(180deg, #f9fbfe 0%, #eef4fb 100%);
   margin: 0;
   width: 100%;
-  border-radius: 18px 18px 0 0;
+  border-radius: 14px 14px 0 0;
 }
 
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .woocommerce-loop-product__link img,
@@ -414,15 +416,16 @@
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .woocommerce-loop-product__title,
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product h2 {
   color: var(--color-text, #111827);
-  font-size: 1.08rem;
-  padding: 1rem 1rem 0.35rem;
-  min-height: 3.2em;
+  font-size: var(--fs-sm);
+  padding: 0.65rem 0.65rem 0.2rem;
+  min-height: 2.65em;
+  line-height: 1.35;
 }
 
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .price {
   color: var(--color-primary-dark, #0a5a9e);
-  font-size: clamp(1.15rem, 1.4vw, 1.45rem);
-  margin: 0.2rem 1rem 0.9rem;
+  font-size: clamp(1rem, 1.2vw, 1.2rem);
+  margin: 0.1rem 0.65rem 0.55rem;
 }
 
 .mnsk7-front-page .mnsk7-section--bestsellers .woocommerce-price-fallback,
@@ -438,11 +441,12 @@
   align-items: center;
   justify-content: center;
   align-self: center;
-  margin: auto auto 1rem;
-  padding: 0.72rem 1rem;
+  margin: auto auto 0.65rem;
+  padding: 0.55rem 0.85rem;
+  font-size: var(--fs-xs);
   background: var(--color-primary);
   color: var(--color-white);
-  border-radius: 12px;
+  border-radius: 10px;
   font-weight: 700;
   text-align: center;
 }
