@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.7' );
+	define( 'MNSK7_THEME_VERSION', '1.0.8' );
 }
 
 /**
@@ -2200,7 +2200,7 @@ add_filter(
 	'woocommerce_page_title',
 	function ( $title ) {
 		if ( function_exists( 'is_shop' ) && is_shop() && function_exists( 'is_product_taxonomy' ) && ! is_product_taxonomy() ) {
-			return __( 'Katalog frezów i narzędzi CNC', 'mnsk7-storefront' );
+			return __( 'Katalog narzędzi CNC', 'mnsk7-storefront' );
 		}
 		return $title;
 	},
@@ -2227,8 +2227,8 @@ function mnsk7_shop_archive_description_stripped() {
 	$desc = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $shop_page->post_content ) : $shop_page->post_content;
 	$desc = preg_replace( '/\[wpf[-_]filters[^\]]*\]/i', '', (string) $desc );
 	// Usuń powtarzalny nagłówek marketingowy (zostaje reszta intro w treści strony Sklep).
-	$desc = preg_replace( '/<[^>]+>\s*KATALOG\s+FREZ[ÓO]W(?:\s+I\s+NARZĘDZI)?\s+CNC\s*<\/[^>]+>/iu', '', (string) $desc );
-	$desc = preg_replace( '/^\s*KATALOG\s+FREZ[ÓO]W(?:\s+I\s+NARZĘDZI)?\s+CNC\s*$/imu', '', (string) $desc );
+	$desc = preg_replace( '/<[^>]+>\s*KATALOG\s+(?:FREZ[ÓO]W(?:\s+I\s+NARZĘDZI)?|NARZĘDZI)\s+CNC\s*<\/[^>]+>/iu', '', (string) $desc );
+	$desc = preg_replace( '/^\s*KATALOG\s+(?:FREZ[ÓO]W(?:\s+I\s+NARZĘDZI)?|NARZĘDZI)\s+CNC\s*$/imu', '', (string) $desc );
 	$desc = trim( (string) $desc );
 	if ( $desc === '' ) {
 		return;
