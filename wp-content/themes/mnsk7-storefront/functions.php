@@ -575,7 +575,7 @@ function mnsk7_get_cookie_consent() {
  *              add_filter( 'mnsk7_megamenu_heading_tags', fn( $s ) => 'Twoja etykieta' );
  */
 
-/** 4.0 UX: domyślny tekst promocyjny w headerze (darmowa dostawa) + CTA do Dostawa (audit Zad.11). Na stronie głównej bez paska — nie konkurować z hero. */
+/** 4.0 UX: promo bar — jedna linia: lojalność + CTA; dostawa jako drobna nutka (link). Na stronie głównej bez paska — nie konkurować z hero. */
 add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	if ( $text !== '' ) {
 		return $text;
@@ -604,12 +604,17 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	}
 	$dostawa_url = home_url( '/dostawa-i-platnosci/' );
 	$account_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/moje-konto/' );
-	$delivery = '<span class="mnsk7-promo-bar__item"><span class="mnsk7-promo-bar__badge">' . esc_html__( 'DOSTAWA', 'mnsk7-storefront' ) . '</span><span class="mnsk7-promo-bar__value">' . esc_html__( 'Gratis od 300 zł', 'mnsk7-storefront' ) . '</span></span>';
-	$loyalty  = '<span class="mnsk7-promo-bar__item"><span class="mnsk7-promo-bar__badge">' . esc_html__( 'RABAT', 'mnsk7-storefront' ) . '</span><span class="mnsk7-promo-bar__value">' . esc_html__( 'Program lojalnościowy stale 5%, do 15%', 'mnsk7-storefront' ) . '</span></span>';
-	$cta      = '<a class="mnsk7-promo-bar__cta" href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Dostawa', 'mnsk7-storefront' ) . '</a>';
-	$cta2     = '<a class="mnsk7-promo-bar__cta" href="' . esc_url( $account_url ) . '">' . esc_html__( 'Rabat', 'mnsk7-storefront' ) . '</a>';
-	$actions  = '<span class="mnsk7-promo-bar__actions">' . $cta . $cta2 . '</span>';
-	return $delivery . ' ' . $loyalty . ' ' . $actions;
+
+	$loyalty_block = '<span class="mnsk7-promo-bar__loyalty">';
+	$loyalty_block .= '<span class="mnsk7-promo-bar__promise">' . esc_html__( 'Stały rabat 5–15% z kontem klienta.', 'mnsk7-storefront' ) . '</span>';
+	$loyalty_block .= '<a class="mnsk7-promo-bar__cta mnsk7-promo-bar__cta--loyalty" href="' . esc_url( $account_url ) . '">' . esc_html__( 'Sprawdź program', 'mnsk7-storefront' ) . '</a>';
+	$loyalty_block .= '</span>';
+
+	$delivery_note = '<span class="mnsk7-promo-bar__delivery">';
+	$delivery_note .= '<a class="mnsk7-promo-bar__delivery-link" href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Dostawa gratis od 300 zł', 'mnsk7-storefront' ) . '</a>';
+	$delivery_note .= '</span>';
+
+	return '<span class="mnsk7-promo-bar__line">' . $loyalty_block . $delivery_note . '</span>';
 }, 5 );
 
 /** Audit task 14: H1 na stronie Moje konto — jeden nagłówek (zalogowani: przed nawigacją; goście: przed formularzem). Bez duplikatu. */

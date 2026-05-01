@@ -399,7 +399,7 @@ a {
 /* === 04-header.css === */
 /* 04-header — sticky, shrink on scroll, promo bar, visible search desktop, megamenu (Visual Audit) */
 
-/* Promo bar: zawsze nad treścią; warstwa nad headerem (jak na normalnych stronach) */
+/* Promo bar: jedna linia — komunikat lojalnościowy + CTA; dostawa jako drobny link */
 .mnsk7-promo-bar {
   background: var(--color-primary);
   color: var(--color-white);
@@ -416,56 +416,59 @@ a {
   margin: 0 auto;
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
-  align-items: start;
+  align-items: center;
   column-gap: var(--space-8);
 }
 .mnsk7-promo-bar__text {
   min-width: 0;
-  text-align: left;
+  flex: 1 1 auto;
   display: flex;
-  flex-wrap: wrap;
+  align-items: center;
+  text-align: left;
+  line-height: 1.25;
+}
+.mnsk7-promo-bar__line {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem 0.85rem;
+  width: 100%;
+  min-width: 0;
+}
+.mnsk7-promo-bar__loyalty {
+  display: flex;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 0.45rem;
-  white-space: normal;
-  overflow: visible;
-  text-overflow: clip;
-  line-height: 1.35;
+  min-width: 0;
+  flex: 1 1 auto;
 }
-.mnsk7-promo-bar__item {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-height: 1.5rem;
-}
-.mnsk7-promo-bar__badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 1.35rem;
-  padding: 0.1rem 0.45rem;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.42);
-  color: var(--color-white);
-  font-size: 0.625rem;
-  letter-spacing: 0.08em;
-  font-weight: 700;
-  white-space: nowrap;
-}
-.mnsk7-promo-bar__value {
+.mnsk7-promo-bar__promise {
   font-weight: 700;
   letter-spacing: 0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: clamp(0.6875rem, 1.35vw, 0.8125rem);
 }
-.mnsk7-promo-bar__meta {
-  opacity: 0.95;
+.mnsk7-promo-bar__delivery {
+  flex-shrink: 0;
+  font-size: clamp(0.5625rem, 1.05vw, 0.6875rem);
+  opacity: 0.88;
+  white-space: nowrap;
 }
-.mnsk7-promo-bar__actions {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.45rem;
+.mnsk7-promo-bar__delivery-link {
+  color: inherit;
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.42);
+  text-underline-offset: 2px;
 }
-.mnsk7-promo-bar__text a,
+.mnsk7-promo-bar__delivery-link:hover,
+.mnsk7-promo-bar__delivery-link:focus-visible {
+  text-decoration-color: rgba(255, 255, 255, 0.78);
+}
+.mnsk7-promo-bar__text a.mnsk7-promo-bar__cta,
 .mnsk7-promo-bar__cta {
   color: inherit;
   text-decoration: none;
@@ -481,11 +484,22 @@ a {
   font-weight: 600;
   background: rgba(255, 255, 255, 0.08);
 }
+.mnsk7-promo-bar__cta--loyalty {
+  flex-shrink: 0;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.42);
+}
 .mnsk7-promo-bar__cta:hover,
 .mnsk7-promo-bar__cta:focus-visible {
   background: rgba(255, 255, 255, 0.18);
   border-color: rgba(255, 255, 255, 0.32);
   text-decoration: none;
+}
+.mnsk7-promo-bar__cta--loyalty:hover,
+.mnsk7-promo-bar__cta--loyalty:focus-visible {
+  background: rgba(255, 255, 255, 0.32);
+  border-color: rgba(255, 255, 255, 0.52);
 }
 .mnsk7-promo-bar__close {
   position: static;
@@ -500,7 +514,7 @@ a {
   min-width: 44px;
   min-height: 44px;
   box-sizing: border-box;
-  align-self: start;
+  align-self: center;
   border-radius: var(--r-sm);
   transition: opacity 0.15s ease, background 0.15s ease;
 }
@@ -509,7 +523,7 @@ a {
   opacity: 1;
   background: rgba(255, 255, 255, 0.15);
 }
-/* Tablet + mobile: promo bar — compact, bez nałożenia tekstu i close */
+/* Tablet + mobile: promo — nadal jedna linia; w razie ciasnoty przewijanie poziome */
 @media (max-width: 1023px) {
   .mnsk7-promo-bar {
     padding: 0.35rem 0.75rem;
@@ -517,14 +531,6 @@ a {
   }
   .mnsk7-promo-bar__inner {
     gap: 0.5rem;
-  }
-  .mnsk7-promo-bar__text {
-    line-height: 1.35;
-    gap: 0.4rem;
-  }
-  .mnsk7-promo-bar__badge {
-    font-size: 0.59375rem;
-    min-height: 1.25rem;
   }
 }
 
@@ -571,46 +577,38 @@ a {
   }
 }
 
-/* Mobile / wąski viewport: promo — kolumna (bez „ściany tekstu”), CTA w jednym rzędzie */
 @media (max-width: 767px) {
-  .mnsk7-promo-bar__text {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.5rem;
-    line-height: 1.4;
+  .mnsk7-promo-bar__line {
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 0.4rem 0.65rem;
+    justify-content: flex-start;
   }
-  .mnsk7-promo-bar__item {
-    width: 100%;
-    max-width: 100%;
-    box-sizing: border-box;
+  .mnsk7-promo-bar__line::-webkit-scrollbar {
+    display: none;
   }
-  .mnsk7-promo-bar__item .mnsk7-promo-bar__value {
-    min-width: 0;
-    flex: 1 1 auto;
-  }
-  .mnsk7-promo-bar__actions {
-    display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    gap: 0.5rem;
+  .mnsk7-promo-bar__delivery {
+    margin-left: auto;
   }
 }
 
 @media (max-width: 480px) {
   .mnsk7-promo-bar {
-    padding: 0.5rem 0.75rem 0.5rem 1rem;
+    padding: 0.45rem 0.65rem 0.45rem 0.85rem;
     min-height: 44px;
     box-sizing: border-box;
   }
   .mnsk7-promo-bar__inner {
     grid-template-columns: minmax(0, 1fr) auto;
-    align-items: start;
+    align-items: center;
   }
   .mnsk7-promo-bar__text {
     text-align: left;
   }
   .mnsk7-promo-bar__close {
-    margin-top: -0.125rem;
+    margin-top: 0;
   }
 }
 
