@@ -892,6 +892,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
     margin-bottom: 0.6rem;
   }
   .mnsk7-plp-chips--nav .mnsk7-plp-chips__label,
+  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__label,
   .mnsk7-plp-chips__label {
     flex: 0 0 auto;
     width: 100%;
@@ -1010,7 +1011,7 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
 .mnsk7-plp-chips__label {
   font-size: var(--fs-sm);
   font-weight: 600;
-  color: var(--color-text-secondary);
+  color: var(--color-text);
   margin-right: 0.35rem;
   min-width: 8.5rem;
   align-self: center;
@@ -1053,12 +1054,6 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   border-color: var(--color-primary-hover, #0a6bc2) !important;
   color: #fff !important;
 }
-.mnsk7-plp-chips--attrs .mnsk7-plp-chips__label {
-  color: var(--color-text-muted, #666);
-  font-weight: 500;
-  margin-right: 0.25rem;
-}
-
 /* RozwiniĂ„â„˘ty blok Ă˘â‚¬ĹľWiĂ„â„˘cejĂ˘â‚¬ĹĄ: chipy biorĂ„â€¦ udziaÄąâ€š w flexie rodzica; gdy hidden Ă˘â‚¬â€ť nie pokazuj */
 .mnsk7-plp-chips-more[hidden] {
   display: none !important;
@@ -1576,6 +1571,7 @@ body.tax-product_tag .mnsk7-plp-trust-wrap .mnsk7-plp-trust__item,
     gap: 0.125rem;
   }
   .mnsk7-plp-chips--nav .mnsk7-plp-chips__label,
+  .mnsk7-plp-chips--attrs .mnsk7-plp-chips__label,
   .mnsk7-plp-chips__label {
     padding-bottom: 0.05rem;
     font-size: 0.6875rem;
@@ -1753,13 +1749,13 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   text-transform: none;
   color: var(--color-text);
   border-bottom: 1px solid var(--color-border);
-  white-space: nowrap;
 }
 
 .mnsk7-product-table thead th {
   text-align: center;
   vertical-align: middle;
   padding: 0.6rem 0.4rem;
+  white-space: nowrap;
 }
 
 /* Uwaga: sticky thead nie działa wobec viewport przy overflow-x na .mnsk7-product-table-wrap (scroll ancestor). */
@@ -1769,7 +1765,14 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table th.mnsk7-table-cell--thumb,
 .mnsk7-product-table .mnsk7-table-cell--thumb { width: 13%; min-width: 132px; }
 .mnsk7-product-table th.mnsk7-table-cell--title,
-.mnsk7-product-table .mnsk7-table-cell--title { width: 36%; min-width: 0; }
+.mnsk7-product-table .mnsk7-table-cell--title {
+  width: 36%;
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
 .mnsk7-product-table th.mnsk7-table-cell--price,
 .mnsk7-product-table .mnsk7-table-cell--price { width: 9%; }
 .mnsk7-product-table th.mnsk7-table-cell--stock,
@@ -1810,6 +1813,11 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table tbody th.mnsk7-table-cell--title {
   font-weight: 400;
   text-align: left;
+  /* Nagłówki thead miały nowrap na wszystkie th — w tbody tytuł musi się zawijać */
+  white-space: normal;
+  /* table-layout: fixed — bez min-width:0 długi tytuł może rozpychać komórkę poza kolumnę */
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .mnsk7-product-table .mnsk7-table-cell--thumb .mnsk7-table-thumb-zoom {
@@ -1939,6 +1947,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   gap: 1px;
   margin: 0.5rem 0 0;
   max-width: 100%;
+  min-width: 0;
   padding: 1px;
   box-sizing: border-box;
   border-radius: var(--r-sm);
@@ -1985,13 +1994,17 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 
 .mnsk7-product-table .mnsk7-table-cell--title a {
   display: block;
-  overflow: visible;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   color: var(--color-text);
   font-weight: 600;
   text-decoration: none;
   border-bottom: none;
   -webkit-tap-highlight-color: transparent;
   line-height: 1.45;
+  white-space: normal;
   word-break: break-word;
   overflow-wrap: anywhere;
 }
@@ -2011,6 +2024,14 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 }
 .mnsk7-product-table .mnsk7-table-cell--title {
   vertical-align: top;
+}
+
+/* Bloki pod linkiem — nie szersze niż kolumna (SKU, sprzedaż, zastosowanie) */
+.mnsk7-product-table .mnsk7-table-cell--title .mnsk7-table-usage,
+.mnsk7-product-table .mnsk7-table-cell--title .mnsk7-table-sku,
+.mnsk7-product-table .mnsk7-table-cell--title .mnsk7-table-sold {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 .mnsk7-product-table td.mnsk7-table-cell--price {
