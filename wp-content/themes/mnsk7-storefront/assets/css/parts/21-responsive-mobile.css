@@ -272,10 +272,14 @@
     gap: 0.8rem;
   }
 
-  /* Trust stats: jeden wiersz (4 kolumny), kompakt — zamiast 1 kolumny stack */
+  /* Trust stats: 3 kolumny (ukryta 4. karta „produktów”) — większe kafelki */
+  .mnsk7-trust-stats__item:nth-child(4) {
+    display: none;
+  }
+
   .mnsk7-trust-stats {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.35rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.45rem;
     margin-bottom: 1.25rem;
     align-items: stretch;
   }
@@ -306,17 +310,54 @@
   }
 
   .mnsk7-trust-stats__number {
-    font-size: clamp(0.82rem, 3.1vw, 1.05rem);
+    font-size: clamp(0.9rem, 3.6vw, 1.12rem);
     line-height: 1.05;
   }
 
   .mnsk7-trust-stats__label {
     width: 100%;
     text-align: center;
-    font-size: clamp(0.56rem, 2.1vw, 0.68rem);
-    line-height: 1.12;
+    font-size: clamp(0.62rem, 2.5vw, 0.76rem);
+    line-height: 1.15;
     hyphens: auto;
     overflow-wrap: break-word;
+  }
+
+  /* Allegro cytaty: niższy „footprint”, bez utraty treści */
+  .mnsk7-allegro-reviews__title:empty {
+    display: none;
+  }
+
+  .mnsk7-allegro-reviews__list {
+    gap: 0.45rem;
+    margin-top: 0.65rem;
+  }
+
+  .mnsk7-allegro-reviews__item {
+    margin: 0;
+    padding: 0.55rem 0.65rem;
+    font-size: clamp(0.78rem, 3.1vw, 0.875rem);
+    line-height: 1.38;
+  }
+
+  .mnsk7-allegro-reviews__item::before {
+    font-size: 0.68rem;
+    margin-bottom: 0.32rem;
+    letter-spacing: 0.06em;
+  }
+
+  .mnsk7-allegro-reviews__item p {
+    margin: 0 0 0.32rem;
+  }
+
+  .mnsk7-allegro-reviews__item cite {
+    display: block;
+    font-size: 0.68rem;
+    font-style: normal;
+    font-weight: 600;
+    opacity: 0.82;
+    margin: 0;
+    line-height: 1.25;
   }
 
   .mnsk7-loyalty-tier {
