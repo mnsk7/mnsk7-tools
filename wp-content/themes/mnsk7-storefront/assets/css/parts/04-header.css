@@ -38,14 +38,13 @@
 .mnsk7-promo-bar__msg-link {
   color: var(--color-white);
   text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
-  transition: border-color 0.15s ease, opacity 0.15s ease;
+  border-bottom: none;
+  transition: opacity 0.15s ease;
 }
 .mnsk7-promo-bar__msg-link:hover,
 .mnsk7-promo-bar__msg-link:focus-visible {
   color: var(--color-white);
-  opacity: 0.95;
-  border-bottom-color: rgba(255, 255, 255, 0.88);
+  opacity: 0.92;
 }
 .mnsk7-promo-bar__close {
   flex-shrink: 0;
