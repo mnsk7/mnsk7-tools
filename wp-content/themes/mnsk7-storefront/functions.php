@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.25' );
+	define( 'MNSK7_THEME_VERSION', '1.0.26' );
 }
 
 /**
@@ -2040,6 +2040,30 @@ add_action( 'wp_footer', function () {
 				});
 			});
 		}
+		function enhanceMobileFallbackFilterRows() {
+			var mq = window.matchMedia ? window.matchMedia('(max-width: 768px)') : null;
+			if (mq && !mq.matches) return;
+			if (document.querySelector('.mnsk7-plp-dropdown')) return;
+			var rows = document.querySelectorAll('.mnsk7-plp-chips--nav, .mnsk7-plp-chips--attrs');
+			rows.forEach(function(row, index) {
+				if (row.closest('.mnsk7-plp-dropdown') || row.dataset.mnsk7MobileModal === '1') return;
+				var labelEl = row.querySelector('.mnsk7-plp-chips__label');
+				var label = labelEl ? (labelEl.textContent || '').trim() : (index === 0 ? 'Filtry' : 'Opcje');
+				var active = row.querySelector('.mnsk7-plp-chip--active, [aria-current="page"]');
+				var meta = active ? ('Wybrano: ' + (active.textContent || '').trim().replace(/\s+/g, ' ')) : 'Dotknij, aby wybrać';
+				var details = document.createElement('details');
+				details.className = 'mnsk7-plp-dropdown mnsk7-plp-dropdown--fallback ' + (row.classList.contains('mnsk7-plp-chips--attrs') ? 'mnsk7-plp-dropdown--attrs' : 'mnsk7-plp-dropdown--nav') + (active ? ' mnsk7-plp-dropdown--active' : '');
+				details.innerHTML =
+					'<summary class="mnsk7-plp-dropdown__summary"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title"></span><span class="mnsk7-plp-dropdown__summary-meta"></span></span></summary>' +
+					'<div class="mnsk7-plp-dropdown__panel"><div class="mnsk7-plp-dropdown__panel-head"><span class="mnsk7-plp-dropdown__panel-title"></span><button type="button" class="mnsk7-plp-dropdown__close" aria-label="Zamknij filtr">Zamknij</button></div></div>';
+				details.querySelector('.mnsk7-plp-dropdown__summary-title').textContent = label;
+				details.querySelector('.mnsk7-plp-dropdown__summary-meta').textContent = meta;
+				details.querySelector('.mnsk7-plp-dropdown__panel-title').textContent = label;
+				row.dataset.mnsk7MobileModal = '1';
+				row.parentNode.insertBefore(details, row);
+				details.querySelector('.mnsk7-plp-dropdown__panel').appendChild(row);
+			});
+		}
 		function scrollToResults() {
 			var el = document.getElementById('mnsk7-plp-results');
 			if (el && (window.location.hash === '#mnsk7-plp-results' || <?php echo $has_filter_params ? 'true' : 'false'; ?>)) {
@@ -2048,6 +2072,7 @@ add_action( 'wp_footer', function () {
 		}
 		function init() {
 			initPlpToggles();
+			enhanceMobileFallbackFilterRows();
 			initPlpDropdownModals();
 			scrollToResults();
 		}

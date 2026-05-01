@@ -604,6 +604,27 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 @media (max-width: 768px) {
+  .single-product div.product .woocommerce-product-gallery {
+    overflow: hidden;
+  }
+
+  .single-product div.product .woocommerce-product-gallery__wrapper {
+    width: 100% !important;
+    max-width: 100%;
+    transform: none !important;
+  }
+
+  .single-product div.product .woocommerce-product-gallery__image {
+    width: 100% !important;
+    max-width: 100%;
+    margin: 0 !important;
+  }
+
+  .single-product div.product .woocommerce-product-gallery__image:not(:first-child),
+  .single-product div.product .flex-control-thumbs {
+    display: none !important;
+  }
+
   .single-product div.product .summary form.cart {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas:
