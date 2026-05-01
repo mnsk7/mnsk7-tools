@@ -16,6 +16,11 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 	define( 'MNSK7_BREAKPOINT_MOBILE', 1024 );
 }
 
+/** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
+if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
+	define( 'MNSK7_THEME_VERSION', '1.0.3' );
+}
+
 /**
  * Czy request jest z urządzenia mobilnego (user-agent). Używane do renderowania jednego layoutu PLP.
  *
@@ -605,16 +610,20 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	$dostawa_url = home_url( '/dostawa-i-platnosci/' );
 	$account_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/moje-konto/' );
 
-	$loyalty_block = '<span class="mnsk7-promo-bar__loyalty">';
-	$loyalty_block .= '<span class="mnsk7-promo-bar__promise">' . esc_html__( 'Stały rabat 5–15% z kontem klienta.', 'mnsk7-storefront' ) . '</span>';
-	$loyalty_block .= '<a class="mnsk7-promo-bar__cta mnsk7-promo-bar__cta--loyalty" href="' . esc_url( $account_url ) . '">' . esc_html__( 'Sprawdź program', 'mnsk7-storefront' ) . '</a>';
-	$loyalty_block .= '</span>';
+	/* Układ jak announcement bar: nagłówek + CTA; dostawa osobno — na mobile CSS układa w kolumnę (bez ucinania). */
+	$cta_title = esc_attr__( 'Program lojalnościowy: rabat stały 5–15% — szczegóły w Moje konto', 'mnsk7-storefront' );
+	$cluster   = '<span class="mnsk7-promo-bar__cluster">';
+	$cluster  .= '<span class="mnsk7-promo-bar__headline">' . esc_html__( 'Rabat stały 5–15% z kontem klienta.', 'mnsk7-storefront' ) . '</span>';
+	$cluster  .= '<a class="mnsk7-promo-bar__cta mnsk7-promo-bar__cta--primary" href="' . esc_url( $account_url ) . '" title="' . $cta_title . '">' . esc_html__( 'Zobacz program', 'mnsk7-storefront' ) . '</a>';
+	$cluster  .= '</span>';
 
-	$delivery_note = '<span class="mnsk7-promo-bar__delivery">';
-	$delivery_note .= '<a class="mnsk7-promo-bar__delivery-link" href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Dostawa gratis od 300 zł', 'mnsk7-storefront' ) . '</a>';
-	$delivery_note .= '</span>';
+	$fine = '<a class="mnsk7-promo-bar__fine" href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Dostawa gratis od 300 zł', 'mnsk7-storefront' ) . '</a>';
 
-	return '<span class="mnsk7-promo-bar__line">' . $loyalty_block . $delivery_note . '</span>';
+	return '<span class="mnsk7-promo-bar__announce" role="group">'
+		. $cluster
+		. '<span class="mnsk7-promo-bar__sep" aria-hidden="true">·</span>'
+		. $fine
+		. '</span>';
 }, 5 );
 
 /** Audit task 14: H1 na stronie Moje konto — jeden nagłówek (zalogowani: przed nawigacją; goście: przed formularzem). Bez duplikatu. */
