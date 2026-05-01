@@ -376,7 +376,6 @@ button[type="submit"],
     padding: 0.4rem max(2px, env(safe-area-inset-left, 0)) 0.5rem max(2px, env(safe-area-inset-right, 0)) !important;
     scroll-snap-type: x proximity;
     scroll-padding-inline: 0.25rem;
-    touch-action: pan-x pinch-zoom;
   }
 
   .mnsk7-front-page #bestsellery ul.products > li.product {
@@ -406,7 +405,6 @@ button[type="submit"],
     padding: 0.4rem 0.9rem 0.6rem !important;
     scroll-snap-type: x mandatory;
     scroll-padding-inline: 0.9rem;
-    touch-action: pan-x;
   }
 
   .mnsk7-front-page #bestsellery ul.products > li.product {
