@@ -29,19 +29,23 @@
 }
 .mnsk7-promo-bar__msg {
   margin: 0;
+  width: 100%;
+  text-align: center;
   font-size: clamp(0.8125rem, 2.6vw, 0.9375rem);
   font-weight: 600;
   letter-spacing: 0.03em;
 }
 .mnsk7-promo-bar__msg-link {
-  color: inherit;
+  color: var(--color-white);
   text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.42);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
   transition: border-color 0.15s ease, opacity 0.15s ease;
 }
 .mnsk7-promo-bar__msg-link:hover,
 .mnsk7-promo-bar__msg-link:focus-visible {
-  border-bottom-color: rgba(255, 255, 255, 0.92);
+  color: var(--color-white);
+  opacity: 0.95;
+  border-bottom-color: rgba(255, 255, 255, 0.88);
 }
 .mnsk7-promo-bar__close {
   flex-shrink: 0;

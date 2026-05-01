@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.5' );
+	define( 'MNSK7_THEME_VERSION', '1.0.6' );
 }
 
 /**
@@ -2195,6 +2195,17 @@ add_filter( 'get_the_archive_title', function ( $title ) {
 	return $title;
 }, 5 );
 add_filter( 'woocommerce_page_title', 'mnsk7_strip_wpf_filters_from_text', 5 );
+/** PLP: na stronie Sklep (bez kategorii/tagów) H1 = komunikat katalogu zamiast „Sklep”. */
+add_filter(
+	'woocommerce_page_title',
+	function ( $title ) {
+		if ( function_exists( 'is_shop' ) && is_shop() && function_exists( 'is_product_taxonomy' ) && ! is_product_taxonomy() ) {
+			return __( 'Katalog frezów CNC', 'mnsk7-storefront' );
+		}
+		return $title;
+	},
+	16
+);
 add_filter( 'woocommerce_taxonomy_archive_description_raw', 'mnsk7_strip_wpf_filters_from_text', 5 );
 
 /* PLP-01: opis strony Sklep — usuń shortcode [wpf-filters] z treści (WooCommerce wyświetla post_content bez filtra) */

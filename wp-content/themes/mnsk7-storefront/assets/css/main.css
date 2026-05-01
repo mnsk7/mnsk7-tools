@@ -428,19 +428,23 @@ a {
 }
 .mnsk7-promo-bar__msg {
   margin: 0;
+  width: 100%;
+  text-align: center;
   font-size: clamp(0.8125rem, 2.6vw, 0.9375rem);
   font-weight: 600;
   letter-spacing: 0.03em;
 }
 .mnsk7-promo-bar__msg-link {
-  color: inherit;
+  color: var(--color-white);
   text-decoration: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.42);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.45);
   transition: border-color 0.15s ease, opacity 0.15s ease;
 }
 .mnsk7-promo-bar__msg-link:hover,
 .mnsk7-promo-bar__msg-link:focus-visible {
-  border-bottom-color: rgba(255, 255, 255, 0.92);
+  color: var(--color-white);
+  opacity: 0.95;
+  border-bottom-color: rgba(255, 255, 255, 0.88);
 }
 .mnsk7-promo-bar__close {
   flex-shrink: 0;
@@ -9917,6 +9921,17 @@ body.tax-product_tag .mnsk7-content h1.woocommerce-products-header__title.page-t
   font-size: clamp(1.25rem, 2.5vw, 1.5rem);
 }
 
+/* Sklep główny (bez taksonomii): H1 jak dawny eyebrow „KATALOG…” — nie duży tytuł „Sklep” */
+body.post-type-archive-product:not(.tax-product_cat):not(.tax-product_tag) #content h1.woocommerce-products-header__title.page-title,
+body.post-type-archive-product:not(.tax-product_cat):not(.tax-product_tag) .mnsk7-content h1.woocommerce-products-header__title.page-title {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  line-height: 1.35;
+}
+
 /* =================================================================
    Archive vertical rhythm (compact) Ă˘â‚¬â€ť tylko archiwa towarÄ‚Ĺ‚w
    body.post-type-archive-product, body.tax-product_cat, body.tax-product_tag
@@ -10155,8 +10170,9 @@ body.tax-product_tag .mnsk7-product-table-wrap {
     letter-spacing: 0.09em;
   }
   body.post-type-archive-product:not(.tax-product_cat):not(.tax-product_tag) .woocommerce-products-header__title.page-title {
-    font-size: clamp(1.125rem, 5vw, 1.35rem);
-    line-height: 1.25;
+    font-size: 0.6875rem;
+    letter-spacing: 0.09em;
+    line-height: 1.35;
   }
 }
 
@@ -10854,6 +10870,48 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
 .mnsk7-plp-reset.button:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+/* Toolbar nad tabelą PLP — bez pola wyszukiwania (wyniki + sortowanie) */
+.mnsk7-plp-toolbar-strip {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.65rem 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin-bottom: var(--space-16);
+}
+.mnsk7-plp-toolbar-strip .mnsk7-plp-toolbar--top {
+  flex: 1 1 auto;
+  margin: 0;
+  min-width: 0;
+  justify-content: space-between;
+}
+@media (max-width: 767px) {
+  .mnsk7-plp-toolbar-strip .mnsk7-plp-toolbar--top {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.45rem;
+  }
+  .mnsk7-plp-toolbar-strip .mnsk7-plp-toolbar__count,
+  .mnsk7-plp-toolbar-strip .woocommerce-result-count {
+    white-space: normal;
+    text-align: center;
+    font-size: var(--fs-xs);
+    line-height: 1.35;
+  }
+  .mnsk7-plp-toolbar-strip .woocommerce-ordering {
+    width: 100%;
+    margin: 0;
+  }
+  .mnsk7-plp-toolbar-strip .orderby {
+    width: 100%;
+    min-height: 44px;
+    box-sizing: border-box;
+  }
 }
 
 /* FB-05: search over table. Row: search + toolbar (wyniki, sortowanie, paginacja) w jednej linii, ten sam styl. */
@@ -12004,6 +12062,25 @@ ul.products.columns-4::before,
 .mnsk7-plp-trust__item:not(:last-child)::after {
   content: none !important;
   margin-left: 0;
+}
+
+@media (max-width: 767px) {
+  .mnsk7-plp-trust {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 0.85rem !important;
+    align-items: start;
+  }
+  .mnsk7-plp-trust__item:nth-child(1),
+  .mnsk7-plp-trust__item:nth-child(3) {
+    justify-self: start;
+    text-align: left;
+  }
+  .mnsk7-plp-trust__item:nth-child(2),
+  .mnsk7-plp-trust__item:nth-child(4) {
+    justify-self: end;
+    text-align: right;
+  }
 }
 
 /* UI Audit: jeden border-radius dla wszystkich przycisków (var(--r-md)) — nadpisuje WC/Storefront */

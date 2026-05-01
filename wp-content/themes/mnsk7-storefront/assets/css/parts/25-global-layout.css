@@ -178,6 +178,25 @@ ul.products.columns-4::before,
   margin-left: 0;
 }
 
+@media (max-width: 767px) {
+  .mnsk7-plp-trust {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.4rem 0.85rem !important;
+    align-items: start;
+  }
+  .mnsk7-plp-trust__item:nth-child(1),
+  .mnsk7-plp-trust__item:nth-child(3) {
+    justify-self: start;
+    text-align: left;
+  }
+  .mnsk7-plp-trust__item:nth-child(2),
+  .mnsk7-plp-trust__item:nth-child(4) {
+    justify-self: end;
+    text-align: right;
+  }
+}
+
 /* UI Audit: jeden border-radius dla wszystkich przycisków (var(--r-md)) — nadpisuje WC/Storefront */
 .woocommerce a.button,
 .woocommerce button.button,
