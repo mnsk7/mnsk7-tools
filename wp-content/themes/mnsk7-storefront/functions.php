@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.13' );
+	define( 'MNSK7_THEME_VERSION', '1.0.15' );
 }
 
 /**
@@ -2944,7 +2944,8 @@ function mnsk7_get_product_attribute_taxonomy_names() {
 }
 
 /**
- * Canonical PLP attribute filters. Reduces duplicate/near-duplicate rows from raw Woo attributes.
+ * Canonical PLP attribute filters — tylko średnica trzpienia (razem z Rodzaje frezów + Zastosowanie i materiały w archive-product.php).
+ * Pierwszy pasujący slug z listy (fi / srednica-trzpienia / …) — jedna taksonomia na archiwum.
  *
  * @return array<string,string> Map taxonomy => customer-facing label.
  */
@@ -2952,36 +2953,8 @@ function mnsk7_get_plp_attribute_filter_taxonomies() {
 	$available = array_flip( function_exists( 'mnsk7_get_product_attribute_taxonomy_names' ) ? mnsk7_get_product_attribute_taxonomy_names() : array() );
 	$groups    = array(
 		array(
-			'label' => __( 'Średnica robocza', 'mnsk7-storefront' ),
-			'slugs' => array( 'srednica' ),
-		),
-		array(
 			'label' => __( 'Średnica trzpienia', 'mnsk7-storefront' ),
-			'slugs' => array( 'fi', 'srednica-trzpienia', 'wymiary-trzpienia' ),
-		),
-		array(
-			'label' => __( 'Długość robocza', 'mnsk7-storefront' ),
-			'slugs' => array( 'dlugosc-robocza-h', 'dlugosc-robocza', 'dlugosc-czesci-roboczej' ),
-		),
-		array(
-			'label' => __( 'Długość całkowita', 'mnsk7-storefront' ),
-			'slugs' => array( 'dlugosc-calkowita-l', 'dlugosc-calkowita' ),
-		),
-		array(
-			'label' => __( 'Kąt', 'mnsk7-storefront' ),
-			'slugs' => array( 'kat-skosu' ),
-		),
-		array(
-			'label' => __( 'Promień R', 'mnsk7-storefront' ),
-			'slugs' => array( 'r' ),
-		),
-		array(
-			'label' => __( 'Typ', 'mnsk7-storefront' ),
-			'slugs' => array( 'typ-pilnika', 'typ' ),
-		),
-		array(
-			'label' => __( 'Typ tulei zaciskowej', 'mnsk7-storefront' ),
-			'slugs' => array( 'er' ),
+			'slugs' => array( 'fi', 'srednica-trzpienia', 'srednica_trzpienia', 'wymiary-trzpienia' ),
 		),
 	);
 	$resolved = array();
@@ -3219,46 +3192,23 @@ function mnsk7_normalize_archive_chip_label( $label, $taxonomy = '' ) {
 }
 
 /**
- * Business priority for archive filter rows.
+ * Business priority for archive attribute filter rows (PLP — tylko średnica trzpienia).
  *
- * @param WP_Term $term Current archive term.
+ * @param WP_Term $term Current archive term (unused; kept for API stability).
  * @return string[]
  */
 function mnsk7_get_archive_filter_priority( $term ) {
-	$base = array(
-		'pa_srednica',
+	return array(
 		'pa_fi',
 		'pa_srednica-trzpienia',
-		'pa_typ',
-		'pa_material',
-		'pa_dlugosc-robocza',
-		'pa_dlugosc-robocza-h',
-		'pa_dlugosc-calkowita',
-		'pa_dlugosc-calkowita-l',
-		'pa_kat-skosu',
-		'pa_kat_skosu',
-		'pa_r',
-		'pa_zastosowanie',
-	);
-
-	if ( $term instanceof WP_Term && isset( $term->taxonomy ) && $term->taxonomy === 'product_tag' ) {
-		return $base;
-	}
-
-	return array_merge(
-		array(
-			'pa_srednica',
-			'pa_typ',
-			'pa_material',
-			'pa_fi',
-		),
-		$base
+		'pa_srednica_trzpienia',
+		'pa_wymiary-trzpienia',
 	);
 }
 
 /**
- * Attribute filter chips for PLP. Only attributes that have terms in the current archive's products are shown.
- * FB-02: when category is Zestawy, diameter filter row is hidden.
+ * Attribute filter chips for PLP — wyłącznie Średnica trzpienia (Źródło taksonomii: mnsk7_get_plp_attribute_filter_taxonomies).
+ * FB-02 (zestawy / pa_srednica): nie dotyczy — filtr średnicy roboczej nie jest już na PLP.
  * FB-03: only terms that have in-stock products in the current category are shown (no fallback to global terms).
  * Labels from WooCommerce (e.g. Średnica robocza, Dł. robocza, Dł. całkowita, Promień R).
  *
@@ -3270,13 +3220,10 @@ function mnsk7_get_archive_attribute_filter_chips() {
 		return $empty;
 	}
 	$attrs_to_try    = function_exists( 'mnsk7_get_plp_attribute_filter_taxonomies' ) ? mnsk7_get_plp_attribute_filter_taxonomies() : array();
-	$term           = get_queried_object();
+	$term = get_queried_object();
 	if ( ! $term || ! isset( $term->term_id ) ) {
 		return $empty;
 	}
-	$term_slug  = isset( $term->slug ) ? strtolower( (string) $term->slug ) : '';
-	$term_name  = isset( $term->name ) ? strtolower( (string) $term->name ) : '';
-	$is_zestawy = ( strpos( $term_slug, 'zestaw' ) !== false || strpos( $term_name, 'zestaw' ) !== false );
 	$priority_order = function_exists( 'mnsk7_get_archive_filter_priority' ) ? mnsk7_get_archive_filter_priority( $term ) : array();
 
 	$product_ids = mnsk7_get_archive_product_ids_for_chips( $attrs_to_try );
@@ -3287,9 +3234,6 @@ function mnsk7_get_archive_attribute_filter_chips() {
 	}
 
 	foreach ( $attrs_to_try as $tax => $preferred_label ) {
-		if ( $is_zestawy && $tax === 'pa_srednica' ) {
-			continue;
-		}
 		if ( ! taxonomy_exists( $tax ) ) {
 			continue;
 		}

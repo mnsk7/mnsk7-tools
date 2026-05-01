@@ -1753,6 +1753,12 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   white-space: nowrap;
 }
 
+.mnsk7-product-table thead th {
+  text-align: center;
+  vertical-align: middle;
+  padding: 0.6rem 0.4rem;
+}
+
 /* Uwaga: sticky thead nie działa wobec viewport przy overflow-x na .mnsk7-product-table-wrap (scroll ancestor). */
 
 /* ÄÂ¤ÄÂ¸ÄĹźĹÂÄÂ¸Ĺâ‚¬ÄÄľÄË›ÄÂ°ÄËťÄËťĹâ€ąÄÂµ ÄÂ´ÄÄľÄÂ»ÄÂ¸ ÄĹźÄÄľÄÂ»ÄÄľÄËťÄÄľÄĹź ÄÂ´ÄÂ»ĹĹą ÄÂµÄÂ´ÄÂ¸ÄËťÄÄľÄĹ‚ÄÄľ ÄË›ÄÂ¸ÄÂ´ÄÂ° ÄËťÄÂ° ÄË›ĹÂÄÂµĹâ€¦ ÄĹźÄÂ°Ĺâ€šÄÂµÄĹ‚ÄÄľĹâ‚¬ÄÂ¸ĹĹąĹâ€¦ */
@@ -1760,11 +1766,11 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table th.mnsk7-table-cell--thumb,
 .mnsk7-product-table .mnsk7-table-cell--thumb { width: 13%; min-width: 132px; }
 .mnsk7-product-table th.mnsk7-table-cell--title,
-.mnsk7-product-table .mnsk7-table-cell--title { width: 32%; min-width: 0; }
+.mnsk7-product-table .mnsk7-table-cell--title { width: 36%; min-width: 0; }
 .mnsk7-product-table th.mnsk7-table-cell--price,
-.mnsk7-product-table .mnsk7-table-cell--price { width: 11%; }
+.mnsk7-product-table .mnsk7-table-cell--price { width: 9%; }
 .mnsk7-product-table th.mnsk7-table-cell--stock,
-.mnsk7-product-table .mnsk7-table-cell--stock { width: 11%; }
+.mnsk7-product-table .mnsk7-table-cell--stock { width: 9%; }
 .mnsk7-product-table th.mnsk7-table-cell--qty,
 .mnsk7-product-table .mnsk7-table-cell--qty { width: 14%; min-width: 11.5rem; }
 .mnsk7-product-table th.mnsk7-table-cell--action,
@@ -1784,10 +1790,18 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 }
 
 .mnsk7-product-table .mnsk7-table-cell {
-  padding: 1rem;
+  padding: 0.65rem 0.45rem;
   vertical-align: middle;
   font-size: var(--fs-sm);
   font-family: var(--font-base);
+}
+
+/* Cena | stan — wyżej zwarto, nagłówek i treść wyśrodkowane */
+.mnsk7-product-table tbody td.mnsk7-table-cell--price,
+.mnsk7-product-table tbody td.mnsk7-table-cell--stock {
+  text-align: center;
+  padding-left: 0.35rem;
+  padding-right: 0.35rem;
 }
 
 .mnsk7-product-table tbody th.mnsk7-table-cell--title {
@@ -1912,7 +1926,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 /* Jak mini-tabela: „żyłki” = gap + tło komórek; czytelność = ta sama typografia w dt/dd (różnica: obramowanie/tło). */
 .mnsk7-table-key-params {
   display: grid;
-  grid-template-columns: minmax(0, 7.75rem) minmax(0, 1fr);
+  grid-template-columns: minmax(0, min(11.25rem, 52%)) minmax(0, 1fr);
   gap: 1px;
   margin: 0.5rem 0 0;
   max-width: 100%;
@@ -1961,16 +1975,16 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 }
 
 .mnsk7-product-table .mnsk7-table-cell--title a {
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  display: block;
+  overflow: visible;
   color: var(--color-text);
   font-weight: 600;
   text-decoration: none;
   border-bottom: none;
   -webkit-tap-highlight-color: transparent;
   line-height: 1.45;
+  word-break: break-word;
+  overflow-wrap: anywhere;
 }
 .mnsk7-product-table .mnsk7-table-cell--title a:hover,
 .mnsk7-product-table .mnsk7-table-cell--title a:active,
@@ -2068,8 +2082,16 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   border-radius: var(--r-pill);
   box-shadow: none;
   background: transparent;
+  -moz-appearance: textfield;
   appearance: textfield;
   box-sizing: border-box;
+}
+
+/* Ukryj strzałki spin przy input[type=number] (Chrome / Safari / Edge) */
+.mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-input::-webkit-outer-spin-button,
+.mnsk7-product-table .mnsk7-table-cell--qty .mnsk7-table-qty-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 .mnsk7-product-table .mnsk7-table-cell--qty .quantity.quantity--stepper .mnsk7-qty-btn {
   display: inline-flex;
@@ -2363,7 +2385,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   }
 
   .mnsk7-product-table .mnsk7-table-cell {
-    padding: 0.85rem 0.65rem;
+    padding: 0.6rem 0.4rem;
   }
 
   .mnsk7-product-table th.mnsk7-table-cell--thumb,
