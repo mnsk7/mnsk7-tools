@@ -392,6 +392,12 @@ if ( woocommerce_product_loop() ) {
 					</tbody>
 				</table>
 			</div>
+			<dialog id="mnsk7-plp-thumb-dialog" class="mnsk7-plp-thumb-dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Powiększone zdjęcie produktu', 'mnsk7-storefront' ); ?>">
+				<div class="mnsk7-plp-thumb-dialog__inner">
+					<button type="button" class="mnsk7-plp-thumb-dialog__close" aria-label="<?php esc_attr_e( 'Zamknij', 'mnsk7-storefront' ); ?>"><span aria-hidden="true">&times;</span></button>
+					<img class="mnsk7-plp-thumb-dialog__img" alt="" decoding="async" loading="lazy" />
+				</div>
+			</dialog>
 			<?php
 			if ( function_exists( 'mnsk7_render_trust_badges' ) ) {
 				echo '<div class="mnsk7-plp-trust-wrap mnsk7-plp-trust-wrap--after-results col-full">';

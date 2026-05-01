@@ -51,21 +51,45 @@ if ( (string) $usage_value === '' ) {
 	$usage_value = $product->get_attribute( 'zastosowanie' );
 }
 
+$img_id   = $product->get_image_id();
+$full_src = '';
+if ( $img_id ) {
+	$full_src = wp_get_attachment_image_url( $img_id, 'woocommerce_single' );
+	if ( ! $full_src ) {
+		$full_src = wp_get_attachment_image_url( $img_id, 'large' );
+	}
+	if ( ! $full_src ) {
+		$full_src = wp_get_attachment_image_url( $img_id, 'full' );
+	}
+} elseif ( function_exists( 'wc_get_placeholder_image_src' ) ) {
+	$full_src = wc_get_placeholder_image_src( 'woocommerce_single' );
+	if ( ! $full_src ) {
+		$full_src = wc_get_placeholder_image_src();
+	}
+}
+
 // PERFORMANCE: pierwszy wiersz tabeli = LCP candidate na archive - eager + fetchpriority high.
 static $mnsk7_plp_row_index = 0;
 $mnsk7_plp_row_index++;
 $img_attr = ( $mnsk7_plp_row_index === 1 ) ? array( 'loading' => 'eager', 'fetchpriority' => 'high' ) : array();
 $row_class = $product->is_sold_individually() ? 'mnsk7-row--fixed-qty' : '';
+$thumb_zoom_label = sprintf(
+	/* translators: %s: product title */
+	__( 'Powiększ zdjęcie: %s', 'mnsk7-storefront' ),
+	get_the_title()
+);
 ?>
 <tr <?php wc_product_class( $row_class, $product ); ?>>
 	<td class="mnsk7-table-cell mnsk7-table-cell--thumb">
-		<a
-			href="<?php echo esc_url( get_permalink() ); ?>"
-			class="mnsk7-table-thumb-link"
-			aria-label="<?php echo esc_attr( sprintf( __( 'Zobacz produkt %s', 'mnsk7-storefront' ), get_the_title() ) ); ?>"
+		<button
+			type="button"
+			class="mnsk7-table-thumb-zoom"
+			<?php echo $full_src ? ' data-full-src="' . esc_url( $full_src ) . '"' : ''; ?>
+			aria-label="<?php echo esc_attr( $thumb_zoom_label ); ?>"
+			<?php echo $full_src ? '' : ' disabled aria-disabled="true"'; ?>
 		>
 			<?php echo $product->get_image( 'woocommerce_thumbnail', $img_attr ); ?>
-		</a>
+		</button>
 	</td>
 	<th scope="row" class="mnsk7-table-cell mnsk7-table-cell--title">
 		<a href="<?php echo esc_url( get_permalink() ); ?>"><?php echo esc_html( get_the_title() ); ?></a>

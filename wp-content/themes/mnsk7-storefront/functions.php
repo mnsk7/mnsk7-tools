@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.11' );
+	define( 'MNSK7_THEME_VERSION', '1.0.12' );
 }
 
 /**
@@ -856,6 +856,9 @@ add_action( 'wp_enqueue_scripts', function () {
 	wp_enqueue_script( 'mnsk7-footer-accordion', get_stylesheet_directory_uri() . '/assets/js/footer-accordion.js', array(), $v, true );
 	if ( is_front_page() ) {
 		wp_enqueue_script( 'mnsk7-bestsellers-strip', get_stylesheet_directory_uri() . '/assets/js/bestsellers-strip.js', array(), $v, true );
+	}
+	if ( function_exists( 'is_shop' ) && ( is_shop() || is_product_category() || is_product_tag() ) ) {
+		wp_enqueue_script( 'mnsk7-plp-thumb-dialog', get_stylesheet_directory_uri() . '/assets/js/plp-thumb-dialog.js', array(), $v, true );
 	}
 }, 20 );
 
