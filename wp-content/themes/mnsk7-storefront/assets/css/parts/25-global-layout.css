@@ -250,15 +250,10 @@ button[type="submit"],
   transform: translateX(-10%) rotate(-45deg);
 }
 
-/* Karty: własna wysokość (bez rozciągania do sąsiada w rzędzie/siatce) + ciaśniejszy tytuł */
+/* Karty: własna wysokość (bez rozciągania do sąsiada w rzędzie/siatce) */
 .mnsk7-front-page #bestsellery ul.products,
 .mnsk7-front-page #bestsellery .woocommerce ul.products {
   align-items: start !important;
-}
-
-.mnsk7-front-page #bestsellery ul.products li.product .woocommerce-loop-product__title,
-.mnsk7-front-page #bestsellery ul.products li.product h2 {
-  min-height: 0 !important;
 }
 
 @media (max-width: 768px) {
