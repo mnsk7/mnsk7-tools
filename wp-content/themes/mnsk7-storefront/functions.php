@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.3' );
+	define( 'MNSK7_THEME_VERSION', '1.0.5' );
 }
 
 /**
@@ -580,7 +580,7 @@ function mnsk7_get_cookie_consent() {
  *              add_filter( 'mnsk7_megamenu_heading_tags', fn( $s ) => 'Twoja etykieta' );
  */
 
-/** 4.0 UX: promo bar — jedna linia: lojalność + CTA; dostawa jako drobna nutka (link). Na stronie głównej bez paska — nie konkurować z hero. */
+/** 4.0 UX: promo bar — wyłącznie informacja o darmowej dostawie + zamknij (bez lojalności / drugiego CTA). Front-page i koszyk/checkout jak wcześniej ukryte. */
 add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	if ( $text !== '' ) {
 		return $text;
@@ -600,7 +600,6 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	if ( is_page( 'kontakt' ) ) {
 		return '';
 	}
-	// Strony z szablonem Kontakt/Dostawa — bez paska (slug może być inny na stagingu).
 	if ( is_singular( 'page' ) ) {
 		$template = get_page_template_slug( get_queried_object_id() );
 		if ( $template === 'page-kontakt.php' || $template === 'page-dostawa.php' ) {
@@ -608,22 +607,10 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 		}
 	}
 	$dostawa_url = home_url( '/dostawa-i-platnosci/' );
-	$account_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/moje-konto/' );
 
-	/* Układ jak announcement bar: nagłówek + CTA; dostawa osobno — na mobile CSS układa w kolumnę (bez ucinania). */
-	$cta_title = esc_attr__( 'Program lojalnościowy: rabat stały 5–15% — szczegóły w Moje konto', 'mnsk7-storefront' );
-	$cluster   = '<span class="mnsk7-promo-bar__cluster">';
-	$cluster  .= '<span class="mnsk7-promo-bar__headline">' . esc_html__( 'Rabat stały 5–15% z kontem klienta.', 'mnsk7-storefront' ) . '</span>';
-	$cluster  .= '<a class="mnsk7-promo-bar__cta mnsk7-promo-bar__cta--primary" href="' . esc_url( $account_url ) . '" title="' . $cta_title . '">' . esc_html__( 'Zobacz program', 'mnsk7-storefront' ) . '</a>';
-	$cluster  .= '</span>';
-
-	$fine = '<a class="mnsk7-promo-bar__fine" href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Dostawa gratis od 300 zł', 'mnsk7-storefront' ) . '</a>';
-
-	return '<span class="mnsk7-promo-bar__announce" role="group">'
-		. $cluster
-		. '<span class="mnsk7-promo-bar__sep" aria-hidden="true">·</span>'
-		. $fine
-		. '</span>';
+	return '<p class="mnsk7-promo-bar__msg"><a class="mnsk7-promo-bar__msg-link" href="' . esc_url( $dostawa_url ) . '">'
+		. esc_html__( 'Darmowa dostawa od 300 zł', 'mnsk7-storefront' )
+		. '</a></p>';
 }, 5 );
 
 /** Audit task 14: H1 na stronie Moje konto — jeden nagłówek (zalogowani: przed nawigacją; goście: przed formularzem). Bez duplikatu. */

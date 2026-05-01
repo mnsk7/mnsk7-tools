@@ -399,17 +399,16 @@ a {
 /* === 04-header.css === */
 /* 04-header — sticky, shrink on scroll, promo bar, visible search desktop, megamenu (Visual Audit) */
 
-/* Promo bar: jedna linia — komunikat lojalnościowy + CTA; dostawa jako drobny link */
+/* Promo bar — tylko komunikat darmowej dostawy + przycisk zamknij */
 .mnsk7-promo-bar {
   background: var(--color-primary);
   color: var(--color-white);
-  font-size: var(--fs-xs);
-  font-weight: 500;
-  padding: 0.35rem 1rem;
+  padding: 0.45rem 0.85rem;
   position: sticky;
   top: env(safe-area-inset-top, 0px);
   z-index: 1001;
   box-sizing: border-box;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.07);
 }
 .mnsk7-promo-bar__inner {
   max-width: var(--content-max, 1200px);
@@ -417,157 +416,42 @@ a {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: center;
-  column-gap: var(--space-8);
+  column-gap: 0.25rem;
 }
 .mnsk7-promo-bar__text {
   min-width: 0;
-  flex: 1 1 auto;
   display: flex;
-  align-items: center;
-  text-align: left;
-  line-height: 1.25;
-}
-.mnsk7-promo-bar__line {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.45rem 0.85rem;
-  width: 100%;
-  min-width: 0;
-}
-.mnsk7-promo-bar__loyalty {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 0.45rem;
-  min-width: 0;
-  flex: 1 1 auto;
-}
-/* Jedna skala typografii: nagłówek/promise i nutka dostawy — ten sam rozmiar co lewa strona */
-.mnsk7-promo-bar__promise,
-.mnsk7-promo-bar__headline,
-.mnsk7-promo-bar__delivery-link,
-.mnsk7-promo-bar__fine {
-  font-size: clamp(0.6875rem, 1.35vw, 0.8125rem);
-  font-weight: 700;
-}
-.mnsk7-promo-bar__promise {
-  letter-spacing: 0.01em;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-.mnsk7-promo-bar__headline {
-  letter-spacing: 0.01em;
-}
-.mnsk7-promo-bar__delivery {
-  flex-shrink: 0;
-  opacity: 0.88;
-  white-space: nowrap;
-}
-.mnsk7-promo-bar__delivery-link,
-.mnsk7-promo-bar__fine {
-  color: inherit;
-  text-decoration: underline;
-  text-decoration-color: rgba(255, 255, 255, 0.42);
-  text-underline-offset: 2px;
-}
-.mnsk7-promo-bar__delivery-link:hover,
-.mnsk7-promo-bar__delivery-link:focus-visible,
-.mnsk7-promo-bar__fine:hover,
-.mnsk7-promo-bar__fine:focus-visible {
-  text-decoration-color: rgba(255, 255, 255, 0.78);
-}
-
-/* Announcement bar: headline + primary CTA + dostawa (desktop: rząd / wrap) */
-.mnsk7-promo-bar__announce {
-  display: flex;
-  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem 0.65rem;
-  width: 100%;
-  min-width: 0;
-}
-.mnsk7-promo-bar__cluster {
-  display: inline-flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem 0.55rem;
-  min-width: 0;
-}
-.mnsk7-promo-bar__headline {
-  max-width: 100%;
   text-align: center;
+  line-height: 1.38;
 }
-.mnsk7-promo-bar__sep {
-  opacity: 0.65;
-  user-select: none;
-  padding: 0 0.12rem;
+.mnsk7-promo-bar__msg {
+  margin: 0;
+  font-size: clamp(0.8125rem, 2.6vw, 0.9375rem);
+  font-weight: 600;
+  letter-spacing: 0.03em;
 }
-.mnsk7-promo-bar__cta--primary {
-  background: #ffffff;
-  color: var(--color-primary);
-  border: 1px solid rgba(255, 255, 255, 0.95);
-  font-weight: 700;
-  padding: 0.35rem 0.85rem;
-  min-height: 2rem;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12);
-  flex-shrink: 0;
-}
-.mnsk7-promo-bar__cta--primary:hover,
-.mnsk7-promo-bar__cta--primary:focus-visible {
-  background: #f2f6fa;
-  color: var(--color-primary);
-  border-color: #fff;
-  text-decoration: none;
-}
-
-.mnsk7-promo-bar__text a.mnsk7-promo-bar__cta:not(.mnsk7-promo-bar__cta--primary),
-.mnsk7-promo-bar__cta:not(.mnsk7-promo-bar__cta--primary) {
+.mnsk7-promo-bar__msg-link {
   color: inherit;
   text-decoration: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.42);
+  transition: border-color 0.15s ease, opacity 0.15s ease;
 }
-.mnsk7-promo-bar__cta:not(.mnsk7-promo-bar__cta--primary) {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 1.5rem;
-  padding: 0.15rem 0.55rem;
-  border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.26);
-  font-weight: 600;
-  background: rgba(255, 255, 255, 0.08);
-}
-.mnsk7-promo-bar__cta--loyalty {
-  flex-shrink: 0;
-  font-weight: 700;
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.42);
-}
-.mnsk7-promo-bar__cta:not(.mnsk7-promo-bar__cta--primary):hover,
-.mnsk7-promo-bar__cta:not(.mnsk7-promo-bar__cta--primary):focus-visible {
-  background: rgba(255, 255, 255, 0.18);
-  border-color: rgba(255, 255, 255, 0.32);
-  text-decoration: none;
-}
-.mnsk7-promo-bar__cta--loyalty:hover,
-.mnsk7-promo-bar__cta--loyalty:focus-visible {
-  background: rgba(255, 255, 255, 0.32);
-  border-color: rgba(255, 255, 255, 0.52);
+.mnsk7-promo-bar__msg-link:hover,
+.mnsk7-promo-bar__msg-link:focus-visible {
+  border-bottom-color: rgba(255, 255, 255, 0.92);
 }
 .mnsk7-promo-bar__close {
-  position: static;
+  flex-shrink: 0;
   background: transparent;
   border: none;
   color: inherit;
-  font-size: var(--fs-lg);
+  font-size: 1.35rem;
   line-height: 1;
   cursor: pointer;
-  padding: 0.25rem 0.5rem;
-  opacity: 0.9;
+  padding: 0.35rem;
+  opacity: 0.88;
   min-width: 44px;
   min-height: 44px;
   box-sizing: border-box;
@@ -578,16 +462,12 @@ a {
 .mnsk7-promo-bar__close:hover,
 .mnsk7-promo-bar__close:focus-visible {
   opacity: 1;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.14);
 }
-/* Tablet + mobile: promo — nadal jedna linia; w razie ciasnoty przewijanie poziome */
+
 @media (max-width: 1023px) {
   .mnsk7-promo-bar {
-    padding: 0.35rem 0.75rem;
-    font-size: var(--fs-xs);
-  }
-  .mnsk7-promo-bar__inner {
-    gap: 0.5rem;
+    padding: 0.42rem 0.65rem;
   }
 }
 
@@ -634,104 +514,13 @@ a {
   }
 }
 
-/* Mobile / wąski ekran: pełna treść, zawijanie — bez ellipsis i bez „znikania” w overflow */
 @media (max-width: 767px) {
   .mnsk7-promo-bar {
-    padding: 0.5rem 0.55rem 0.5rem 0.65rem;
-  }
-  .mnsk7-promo-bar__text {
-    align-items: stretch;
-    text-align: center;
-  }
-  .mnsk7-promo-bar__announce {
-    flex-direction: column;
-    align-items: stretch;
-    justify-content: flex-start;
-    gap: 0.45rem;
-  }
-  .mnsk7-promo-bar__cluster {
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-    gap: 0.4rem;
-  }
-  .mnsk7-promo-bar__headline {
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
-    text-align: center;
-    line-height: 1.38;
-    font-size: clamp(0.78rem, 3.7vw, 0.875rem);
-  }
-  .mnsk7-promo-bar__promise {
-    white-space: normal;
-    overflow: visible;
-    text-overflow: unset;
-    text-align: center;
-    line-height: 1.38;
-    font-size: clamp(0.78rem, 3.7vw, 0.875rem);
-  }
-  .mnsk7-promo-bar__sep {
-    display: none;
-  }
-  .mnsk7-promo-bar__cta--primary {
-    width: 100%;
-    max-width: 100%;
-    justify-content: center;
-    white-space: normal;
-    text-align: center;
-    line-height: 1.25;
-    padding: 0.5rem 0.85rem;
-    min-height: 2.75rem;
-    box-sizing: border-box;
-  }
-  .mnsk7-promo-bar__fine {
-    display: block;
-    width: 100%;
-    text-align: center;
-    font-size: clamp(0.72rem, 3.35vw, 0.8125rem);
-    line-height: 1.35;
-  }
-  .mnsk7-promo-bar__line {
-    flex-wrap: wrap;
-    justify-content: center;
-    overflow-x: visible;
-    overflow-y: visible;
-    gap: 0.45rem;
-  }
-  .mnsk7-promo-bar__loyalty {
-    flex-direction: column;
-    align-items: stretch;
-    width: 100%;
-  }
-  .mnsk7-promo-bar__delivery {
-    margin-left: 0;
-    width: 100%;
-    text-align: center;
-    white-space: normal;
-  }
-  .mnsk7-promo-bar__delivery-link {
-    white-space: normal;
-    text-align: center;
-    display: inline;
+    padding: 0.4rem 0.5rem 0.4rem 0.55rem;
   }
 }
 
-@media (max-width: 480px) {
-  .mnsk7-promo-bar {
-    padding: 0.5rem 0.5rem 0.5rem 0.55rem;
-    min-height: 0;
-    box-sizing: border-box;
-  }
-  .mnsk7-promo-bar__inner {
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: start;
-  }
-  .mnsk7-promo-bar__close {
-    margin-top: 0;
-    align-self: start;
-  }
-}
+
 
 /* Header + dropdowny zawsze nad treścią strony (menu i koszyk nie chowają się za hero/banerem) */
 .mnsk7-header,
