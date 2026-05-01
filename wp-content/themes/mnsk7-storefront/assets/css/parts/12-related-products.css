@@ -384,8 +384,11 @@
 
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .woocommerce-loop-product__link:has(> img),
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product a.woocommerce-loop-product__link:first-of-type {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
   aspect-ratio: 1;
-  max-height: clamp(104px, 19vw, 152px);
+  max-height: none;
   background:
     radial-gradient(circle at top center, rgba(216, 154, 87, 0.08), transparent 44%),
     linear-gradient(180deg, #f9fbfe 0%, #eef4fb 100%);
@@ -396,7 +399,11 @@
 
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product .woocommerce-loop-product__link img,
 .mnsk7-front-page .mnsk7-section--bestsellers ul.products li.product img {
-  object-fit: cover;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
   object-position: center;
   padding: 0;
 }

@@ -197,7 +197,7 @@ button[type="submit"],
 
 /* -----------------------------------------------------------------
  * Homepage #bestsellery (#bestsellery): carousel ≤768px, 3 kolumny ≥769–991,
- * wyśrodkowany „Zobacz wszystkie” mobilnie, tekst-podpowiedź przewijania.
+ * wyśrodkowany „Zobacz wszystkie” mobilnie, strzałki przewijania (bez tekstu).
  * ----------------------------------------------------------------- */
 .mnsk7-front-page #bestsellery .mnsk7-bestsellers-title:empty {
   display: none;
@@ -208,31 +208,47 @@ button[type="submit"],
   overflow: hidden;
 }
 
-.mnsk7-bestsellers-strip-hint {
+.mnsk7-bestsellers-strip-nav {
   display: none;
+  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
-  justify-content: center;
-  gap: 0.4rem;
-  margin: 0.55rem auto 0;
-  padding: 0 0.5rem max(0.75rem, env(safe-area-inset-bottom));
-  max-width: 22rem;
-  font-size: 0.8125rem;
-  line-height: 1.35;
-  color: var(--color-text-secondary, #64748b);
-  text-align: center;
+  margin: 0.35rem auto 0;
+  padding: 0 0.25rem max(0.5rem, env(safe-area-inset-bottom));
+  max-width: min(22rem, 100%);
+  gap: 1rem;
 }
 
-.mnsk7-bestsellers-strip-hint__icon {
+.mnsk7-bestsellers-strip-nav__arr {
+  flex: 0 0 auto;
+  width: 2.25rem;
+  height: 2.25rem;
   display: inline-flex;
-  flex-shrink: 0;
-  font-weight: 700;
-  font-size: 1rem;
-  opacity: 0.72;
-  letter-spacing: 0.02em;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-secondary, #64748b);
+  opacity: 0.85;
+}
+
+.mnsk7-bestsellers-strip-nav__arr::after {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  border: solid currentColor;
+  border-width: 0 2.5px 2.5px 0;
+  display: block;
+}
+
+.mnsk7-bestsellers-strip-nav__arr--left::after {
+  transform: translateX(16%) rotate(135deg);
+}
+
+.mnsk7-bestsellers-strip-nav__arr--right::after {
+  transform: translateX(-16%) rotate(-45deg);
 }
 
 @media (max-width: 768px) {
-  .mnsk7-bestsellers-strip-hint {
+  .mnsk7-bestsellers-strip-nav {
     display: flex;
   }
 
@@ -294,11 +310,6 @@ button[type="submit"],
     scroll-snap-align: start;
     scroll-snap-stop: normal;
     margin: 0 !important;
-  }
-
-  .mnsk7-front-page #bestsellery ul.products li.product .woocommerce-loop-product__link:has(> img),
-  .mnsk7-front-page #bestsellery ul.products li.product a.woocommerce-loop-product__link:first-of-type {
-    max-height: clamp(88px, 26vw, 116px) !important;
   }
 }
 

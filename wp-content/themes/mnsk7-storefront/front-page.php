@@ -104,10 +104,10 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 				</p>
 			</div>
 			<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title="" columns="3"]' ); ?>
-			<p class="mnsk7-bestsellers-strip-hint">
-				<span class="mnsk7-bestsellers-strip-hint__icon" aria-hidden="true">↔</span>
-				<?php esc_html_e( 'Przesuń palcem w bok, aby zobaczyć kolejne produkty', 'mnsk7-storefront' ); ?>
-			</p>
+			<div class="mnsk7-bestsellers-strip-nav" aria-hidden="true">
+				<span class="mnsk7-bestsellers-strip-nav__arr mnsk7-bestsellers-strip-nav__arr--left"></span>
+				<span class="mnsk7-bestsellers-strip-nav__arr mnsk7-bestsellers-strip-nav__arr--right"></span>
+			</div>
 		</div>
 	</section>
 	<?php endif; ?>
@@ -191,6 +191,41 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 	</section>
 	<?php endif; ?>
 
+	<!-- SYSTEM RABATÓW (nad blokiem „Zaufanie”) -->
+	<section class="mnsk7-section mnsk7-section--loyalty mnsk7-section--light">
+		<div class="col-full">
+			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Stała współpraca', 'mnsk7-storefront' ); ?></p>
+			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Program rabatowy dla stałych klientów', 'mnsk7-storefront' ); ?></h2>
+			<p class="mnsk7-section__sub mnsk7-loyalty-intro"><?php esc_html_e( 'Im więcej zamawiasz w ciągu roku, tym większy stały rabat na każde kolejne zamówienie i bardziej przewidywalne koszty zakupów.', 'mnsk7-storefront' ); ?></p>
+			<div class="mnsk7-loyalty-tiers">
+				<?php
+				$tiers = array(
+					array( 'from' => '1 000', 'pct' => '5%', 'label' => '' ),
+					array( 'from' => '3 000', 'pct' => '10%', 'label' => '' ),
+					array( 'from' => '5 000', 'pct' => '15%', 'label' => '' ),
+					array( 'from' => '10 000', 'pct' => '20%', 'label' => '' ),
+				);
+				foreach ( $tiers as $tier ) :
+					?>
+				<div class="mnsk7-loyalty-tier">
+					<span class="mnsk7-loyalty-tier__pct" data-mnsk7-counter><?php echo esc_html( $tier['pct'] ); ?></span>
+					<span class="mnsk7-loyalty-tier__from"><?php printf( esc_html__( 'od %s zł/rok', 'mnsk7-storefront' ), esc_html( $tier['from'] ) ); ?></span>
+				</div>
+				<?php endforeach; ?>
+			</div>
+			<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
+			<div class="mnsk7-loyalty-cta">
+				<?php if ( is_user_logged_in() ) : ?>
+					<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="mnsk7-btn mnsk7-btn--primary"><?php esc_html_e( 'Sprawdź swój poziom rabatu w Moje konto →', 'mnsk7-storefront' ); ?></a>
+				<?php else : ?>
+					<p class="mnsk7-loyalty-cta__guest"><?php esc_html_e( 'Zaloguj się lub załóż konto, aby zobaczyć swój rabat i zamawiać taniej.', 'mnsk7-storefront' ); ?></p>
+					<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="mnsk7-btn mnsk7-btn--primary"><?php esc_html_e( 'Moje konto / Zaloguj się', 'mnsk7-storefront' ); ?></a>
+				<?php endif; ?>
+			</div>
+			<?php endif; ?>
+		</div>
+	</section>
+
 	<!-- TRUST + OPINIE -->
 	<section class="mnsk7-section mnsk7-section--trust mnsk7-section--light">
 		<div class="col-full">
@@ -224,41 +259,6 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 						<?php esc_html_e( 'Zobacz profil i opinie na Allegro →', 'mnsk7-storefront' ); ?>
 					</a>
 				</div>
-			<?php endif; ?>
-		</div>
-	</section>
-
-	<!-- SYSTEM RABATÓW -->
-	<section class="mnsk7-section mnsk7-section--loyalty mnsk7-section--light">
-		<div class="col-full">
-			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Stała współpraca', 'mnsk7-storefront' ); ?></p>
-			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Program rabatowy dla stałych klientów', 'mnsk7-storefront' ); ?></h2>
-			<p class="mnsk7-section__sub mnsk7-loyalty-intro"><?php esc_html_e( 'Im więcej zamawiasz w ciągu roku, tym większy stały rabat na każde kolejne zamówienie i bardziej przewidywalne koszty zakupów.', 'mnsk7-storefront' ); ?></p>
-			<div class="mnsk7-loyalty-tiers">
-				<?php
-				$tiers = array(
-					array( 'from' => '1 000', 'pct' => '5%', 'label' => '' ),
-					array( 'from' => '3 000', 'pct' => '10%', 'label' => '' ),
-					array( 'from' => '5 000', 'pct' => '15%', 'label' => '' ),
-					array( 'from' => '10 000', 'pct' => '20%', 'label' => '' ),
-				);
-				foreach ( $tiers as $tier ) :
-					?>
-				<div class="mnsk7-loyalty-tier">
-					<span class="mnsk7-loyalty-tier__pct" data-mnsk7-counter><?php echo esc_html( $tier['pct'] ); ?></span>
-					<span class="mnsk7-loyalty-tier__from"><?php printf( esc_html__( 'od %s zł/rok', 'mnsk7-storefront' ), esc_html( $tier['from'] ) ); ?></span>
-				</div>
-				<?php endforeach; ?>
-			</div>
-			<?php if ( function_exists( 'wc_get_page_permalink' ) ) : ?>
-			<div class="mnsk7-loyalty-cta">
-				<?php if ( is_user_logged_in() ) : ?>
-					<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="mnsk7-btn mnsk7-btn--primary"><?php esc_html_e( 'Sprawdź swój poziom rabatu w Moje konto →', 'mnsk7-storefront' ); ?></a>
-				<?php else : ?>
-					<p class="mnsk7-loyalty-cta__guest"><?php esc_html_e( 'Zaloguj się lub załóż konto, aby zobaczyć swój rabat i zamawiać taniej.', 'mnsk7-storefront' ); ?></p>
-					<a href="<?php echo esc_url( wc_get_page_permalink( 'myaccount' ) ); ?>" class="mnsk7-btn mnsk7-btn--primary"><?php esc_html_e( 'Moje konto / Zaloguj się', 'mnsk7-storefront' ); ?></a>
-				<?php endif; ?>
-			</div>
 			<?php endif; ?>
 		</div>
 	</section>
