@@ -103,7 +103,7 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 					<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie →', 'mnsk7-storefront' ); ?></a>
 				</p>
 			</div>
-			<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title=""]' ); ?>
+			<?php echo do_shortcode( '[mnsk7_bestsellers limit="3" title="" columns="3"]' ); ?>
 		</div>
 	</section>
 	<?php endif; ?>

@@ -306,9 +306,20 @@ add_action( 'init', function () {
 			: '<p class="mnsk7-store-rating">' . esc_html( $atts['title'] ) . '</p>';
 	} );
 	add_shortcode( 'mnsk7_bestsellers', function ( $atts ) {
-		$atts = shortcode_atts( array( 'limit' => 4, 'orderby' => 'popularity', 'title' => __( 'Polecane / Bestsellery', 'mnsk7-tools' ) ), $atts, 'mnsk7_bestsellers' );
+		$atts = shortcode_atts(
+			array(
+				'limit'   => 4,
+				'orderby' => 'popularity',
+				'title'   => __( 'Polecane / Bestsellery', 'mnsk7-tools' ),
+				'columns' => '3',
+			),
+			$atts,
+			'mnsk7_bestsellers'
+		);
+		$limit   = max( 1, min( 48, (int) $atts['limit'] ) );
+		$columns = max( 1, min( 6, (int) $atts['columns'] ) );
 		return '<section class="mnsk7-bestsellers"><h2 class="mnsk7-bestsellers-title">' . esc_html( $atts['title'] ) . '</h2>'
-			. do_shortcode( sprintf( '[products limit="%d" orderby="%s" columns="4"]', (int) $atts['limit'], sanitize_key( $atts['orderby'] ) ) )
+			. do_shortcode( sprintf( '[products limit="%d" orderby="%s" columns="%d"]', $limit, sanitize_key( $atts['orderby'] ), $columns ) )
 			. '</section>';
 	} );
 }, 5 );
