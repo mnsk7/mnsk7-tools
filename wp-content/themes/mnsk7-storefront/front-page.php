@@ -104,11 +104,11 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 				</p>
 			</div>
 			<div class="mnsk7-bestsellers-strip-rail">
-				<span class="mnsk7-bestsellers-strip-rail__chev mnsk7-bestsellers-strip-rail__chev--prev" aria-hidden="true"></span>
+				<button type="button" class="mnsk7-bestsellers-strip-rail__chev mnsk7-bestsellers-strip-rail__chev--prev" aria-label="<?php esc_attr_e( 'Poprzednie produkty', 'mnsk7-storefront' ); ?>"></button>
 				<div class="mnsk7-bestsellers-strip-rail__track">
 					<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title="" columns="3"]' ); ?>
 				</div>
-				<span class="mnsk7-bestsellers-strip-rail__chev mnsk7-bestsellers-strip-rail__chev--next" aria-hidden="true"></span>
+				<button type="button" class="mnsk7-bestsellers-strip-rail__chev mnsk7-bestsellers-strip-rail__chev--next" aria-label="<?php esc_attr_e( 'Następne produkty', 'mnsk7-storefront' ); ?>"></button>
 			</div>
 		</div>
 	</section>

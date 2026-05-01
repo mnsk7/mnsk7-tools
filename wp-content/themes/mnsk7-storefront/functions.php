@@ -853,6 +853,9 @@ add_action( 'wp_enqueue_scripts', function () {
 	wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( 'mnsk7-storefront-style' ), $v );
 	// Footer accordion: single source of truth = external script (mobile-only behavior inside JS).
 	wp_enqueue_script( 'mnsk7-footer-accordion', get_stylesheet_directory_uri() . '/assets/js/footer-accordion.js', array(), $v, true );
+	if ( is_front_page() ) {
+		wp_enqueue_script( 'mnsk7-bestsellers-strip', get_stylesheet_directory_uri() . '/assets/js/bestsellers-strip.js', array(), $v, true );
+	}
 }, 20 );
 
 /* Override WooCommerce clearfix: woocommerce-layout.css ładuje się PO naszej temie i ustawia .woocommerce ul.products::before{display:table}, co daje pustą pierwszą "komórkę" w gridzie. Dodajemy inline do handle WooCommerce, żeby nasze display:none było po ich regule. Również Moje konto: przyciski + padding (wygrywamy z WC). */
