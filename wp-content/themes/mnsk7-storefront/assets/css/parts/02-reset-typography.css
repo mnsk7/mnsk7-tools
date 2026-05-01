@@ -56,14 +56,15 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 a {
-  color: var(--color-primary);
+  color: var(--color-text);
   text-decoration: none;
-  transition: color 0.15s ease;
+  transition: color 0.15s ease, opacity 0.15s ease;
 }
 
 a:hover {
-  color: var(--color-primary-hover);
+  color: var(--color-text);
   text-decoration: underline;
+  opacity: 0.88;
 }
 
 /* Oбычный текст — без underline/focus артефактов, не выглядит редактируемым */

@@ -192,7 +192,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-header__brand a:hover,
 .mnsk7-header__brand a:visited,
 .mnsk7-header__brand a:active {
-  color: var(--color-primary);
+  color: var(--color-text);
   text-decoration: none;
   border-bottom: none;
 }
@@ -249,7 +249,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-header__menu a:active,
 .mnsk7-header__menu a:visited,
 .mnsk7-header__menu li.current-menu-item > a {
-  color: var(--color-primary);
+  color: var(--color-text);
   text-decoration: none;
   border-bottom: none;
 }
@@ -431,12 +431,12 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 .mnsk7-megamenu__list a:hover {
   background: rgba(0, 0, 0, 0.06);
-  color: var(--color-primary);
+  color: var(--color-text);
 }
 .mnsk7-megamenu__list a.mnsk7-megamenu__link--active,
 .mnsk7-megamenu__footer a.mnsk7-megamenu__link--active {
   background: rgba(12, 125, 219, 0.1);
-  color: var(--color-primary);
+  color: var(--color-text);
   font-weight: 700;
 }
 .mnsk7-megamenu__list a:focus {
@@ -458,7 +458,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   padding: 0.25rem 0.4rem;
   font-size: var(--fs-xs);
   font-weight: 600;
-  color: var(--color-primary);
+  color: var(--color-text);
   text-decoration: none;
   border-radius: var(--r-sm);
   line-height: 1.35;
@@ -515,7 +515,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 /* Sklep: aktywny stan gdy dropdown otwarty — dolna kreska w kolorze primary */
 .mnsk7-header__menu li.menu-item-has-children:hover > a,
 .mnsk7-header__menu li.menu-item-has-children:focus-within > a {
-  color: var(--color-primary);
+  color: var(--color-text);
   box-shadow: inset 0 -2px 0 var(--color-primary);
 }
 /* Desktop: megamenu tylko po hover delay (JS .mnsk7-megamenu-open) lub focus-within — bez flicker (Baymard) */
@@ -537,7 +537,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
   .mnsk7-header__menu li.menu-item-has-children.mnsk7-megamenu-open > a,
   .mnsk7-header__menu li.menu-item-has-children:focus-within > a {
-    color: var(--color-primary);
+    color: var(--color-text);
     box-shadow: inset 0 -2px 0 var(--color-primary);
   }
 }
@@ -618,7 +618,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     display: inline-flex;
     align-items: center;
     font-weight: 700;
-    color: var(--color-primary);
+    color: var(--color-text);
     background: rgba(12, 125, 219, 0.08);
     border-radius: var(--r-sm);
     margin-left: 0.25rem;
@@ -696,7 +696,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 /* Open: bez przesunięcia ikony */
 .mnsk7-header__nav.is-open .mnsk7-header__menu-toggle {
-  color: var(--color-primary);
+  color: var(--color-text);
   background: rgba(0, 0, 0, 0.04);
 }
 
@@ -749,7 +749,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 .mnsk7-header__search-toggle:hover,
 .mnsk7-header__search-toggle[aria-expanded="true"] {
-  color: var(--color-primary);
+  color: var(--color-text);
   background: rgba(0,0,0,0.04);
 }
 .mnsk7-header__search-icon {
@@ -993,7 +993,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   outline-offset: 1px;
 }
 .mnsk7-header__link:hover {
-  color: var(--color-primary);
+  color: var(--color-text);
   background: rgba(0, 0, 0, 0.04);
   text-decoration: none;
   border-bottom: none;

@@ -975,11 +975,14 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   touch-action: manipulation;
   -webkit-tap-highlight-color: transparent;
 }
+.mnsk7-plp-chip:visited {
+  color: var(--color-text);
+}
 
 .mnsk7-plp-chip:hover {
   background: var(--color-surface-2);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
+  border-color: rgba(15, 23, 42, 0.22);
+  color: var(--color-text);
   text-decoration: none;
 }
 .mnsk7-plp-chip:focus {
@@ -1995,7 +1998,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table .mnsk7-table-cell--title a:hover,
 .mnsk7-product-table .mnsk7-table-cell--title a:active,
 .mnsk7-product-table .mnsk7-table-cell--title a:visited {
-  color: var(--color-primary);
+  color: var(--color-text);
   text-decoration: none;
   border-bottom: none;
 }
@@ -2140,7 +2143,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   width: 100%;
   min-width: 0;
   max-width: 100%;
-  min-height: 48px;
+  min-height: 44px;
   box-sizing: border-box;
 }
 .mnsk7-product-table .mnsk7-table-addcart-form--fixed-qty {
@@ -2185,11 +2188,11 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.35rem;
-  min-height: 48px;
+  gap: 0.3rem;
+  min-height: 42px;
   width: 100%;
-  padding: 0.875rem 1.5rem;
-  font-size: var(--fs-base);
+  padding: 0.5rem 0.85rem;
+  font-size: var(--fs-sm);
   font-weight: 700;
   font-family: var(--font-base);
   color: var(--color-white) !important;
@@ -2380,8 +2383,8 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   .mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn {
     width: 100%;
     justify-content: center;
-    min-height: 48px;
-    padding: 0.875rem 1.25rem;
+    min-height: 44px;
+    padding: 0.65rem 1rem;
   }
 }
 
@@ -2416,8 +2419,9 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   .mnsk7-product-table .mnsk7-table-cell--action .button,
   .mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button,
   .mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn {
-    padding: 0.65rem 0.85rem;
-    font-size: var(--fs-sm);
+    padding: 0.5rem 0.65rem;
+    font-size: 0.8125rem;
     line-height: 1.25;
+    min-height: 40px;
   }
 }

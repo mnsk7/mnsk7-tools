@@ -50,11 +50,12 @@ button,
 .woocommerce a.button,
 .woocommerce button.button,
 .woocommerce input.button,
-.woocommerce a.button.alt,
+.woocommerce a.button.alt {
+  color: var(--color-white);
+}
 .main-navigation a:hover,
-.site-header-cart .cart-contents:hover,
-a {
-  color: var(--color-primary);
+.site-header-cart .cart-contents:hover {
+  color: var(--color-text);
 }
 
 .woocommerce a.button:hover,
