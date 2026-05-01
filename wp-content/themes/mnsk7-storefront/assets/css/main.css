@@ -11874,7 +11874,7 @@ button[type="submit"],
 
 /* -----------------------------------------------------------------
  * Homepage #bestsellery (#bestsellery): carousel ≤768px, 3 kolumny ≥769–991,
- * wyśrodkowany „Zobacz wszystkie” mobilnie, strzałki przewijania (bez tekstu).
+ * wyśrodkowany „Zobacz wszystkie” mobilnie, strzałki po bokach paska produktów.
  * ----------------------------------------------------------------- */
 .mnsk7-front-page #bestsellery .mnsk7-bestsellers-title:empty {
   display: none;
@@ -11885,48 +11885,59 @@ button[type="submit"],
   overflow: hidden;
 }
 
-.mnsk7-bestsellers-strip-nav {
-  display: none;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  margin: 0.35rem auto 0;
-  padding: 0 0.25rem max(0.5rem, env(safe-area-inset-bottom));
-  max-width: min(22rem, 100%);
-  gap: 1rem;
-}
-
-.mnsk7-bestsellers-strip-nav__arr {
-  flex: 0 0 auto;
-  width: 2.25rem;
-  height: 2.25rem;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  color: var(--color-text-secondary, #64748b);
-  opacity: 0.85;
-}
-
-.mnsk7-bestsellers-strip-nav__arr::after {
-  content: "";
-  width: 0.55rem;
-  height: 0.55rem;
-  border: solid currentColor;
-  border-width: 0 2.5px 2.5px 0;
+.mnsk7-bestsellers-strip-rail {
   display: block;
+  width: 100%;
 }
 
-.mnsk7-bestsellers-strip-nav__arr--left::after {
-  transform: translateX(16%) rotate(135deg);
+.mnsk7-bestsellers-strip-rail__track {
+  min-width: 0;
 }
 
-.mnsk7-bestsellers-strip-nav__arr--right::after {
-  transform: translateX(-16%) rotate(-45deg);
+.mnsk7-bestsellers-strip-rail__chev {
+  display: none;
+  flex: 0 0 auto;
+  align-self: center;
+  width: 2.925rem;
+  height: 2.925rem;
+  box-sizing: border-box;
+  color: var(--color-text-secondary, #64748b);
+  opacity: 0.88;
+  position: relative;
+}
+
+.mnsk7-bestsellers-strip-rail__chev::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 0.715rem;
+  height: 0.715rem;
+  margin: -0.3575rem 0 0 -0.3575rem;
+  border: solid currentColor;
+  border-width: 0 3px 3px 0;
+  box-sizing: border-box;
+}
+
+.mnsk7-bestsellers-strip-rail__chev--prev::after {
+  transform: translateX(10%) rotate(135deg);
+}
+
+.mnsk7-bestsellers-strip-rail__chev--next::after {
+  transform: translateX(-10%) rotate(-45deg);
 }
 
 @media (max-width: 768px) {
-  .mnsk7-bestsellers-strip-nav {
-    display: flex;
+  .mnsk7-front-page #bestsellery .mnsk7-bestsellers-strip-rail {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 0.35rem;
+    width: 100%;
+  }
+
+  .mnsk7-front-page #bestsellery .mnsk7-bestsellers-strip-rail__chev {
+    display: block;
   }
 
   .mnsk7-front-page #bestsellery .mnsk7-bestsellers {

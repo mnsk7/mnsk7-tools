@@ -223,12 +223,13 @@ test.describe('Mobile design — footer', () => {
 
 test.describe('Mobile design — sections order (homepage)', () => {
   for (const viewport of VIEWPORTS) {
-    test(`viewport ${viewport.width}x${viewport.height}: hero → bestsellers → catalog → trust order`, async ({ page }) => {
+    test(`viewport ${viewport.width}x${viewport.height}: hero → bestsellers → catalog → loyalty → trust`, async ({ page }) => {
       await page.setViewportSize(viewport);
       await page.goto('/', { waitUntil: 'domcontentloaded' });
 
       const heroRect = await getRect(page, '.mnsk7-hero');
       const bestsellersRect = await getRect(page, '.mnsk7-section--bestsellers');
+      const loyaltyRect = await getRect(page, '.mnsk7-section--loyalty');
       const trustRect = await getRect(page, '.mnsk7-section--trust');
       const catalogRect = await getRect(page, '.mnsk7-section--catalog, .mnsk7-catalog-chips');
 
@@ -238,7 +239,8 @@ test.describe('Mobile design — sections order (homepage)', () => {
       }
       if (bestsellersRect) expect(bestsellersRect.top).toBeGreaterThanOrEqual(heroRect.bottom - OVERLAP_TOLERANCE);
       if (catalogRect && bestsellersRect) expect(catalogRect.top).toBeGreaterThanOrEqual(bestsellersRect.bottom - OVERLAP_TOLERANCE);
-      if (trustRect && catalogRect) expect(trustRect.top).toBeGreaterThanOrEqual(catalogRect.bottom - OVERLAP_TOLERANCE);
+      if (loyaltyRect && catalogRect) expect(loyaltyRect.top).toBeGreaterThanOrEqual(catalogRect.bottom - OVERLAP_TOLERANCE);
+      if (trustRect && loyaltyRect) expect(trustRect.top).toBeGreaterThanOrEqual(loyaltyRect.bottom - OVERLAP_TOLERANCE);
     });
   }
 });

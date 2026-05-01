@@ -103,10 +103,12 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 					<a href="<?php echo esc_url( function_exists( 'wc_get_page_permalink' ) ? add_query_arg( 'orderby', 'popularity', wc_get_page_permalink( 'shop' ) ) : home_url( '/sklep/' ) ); ?>"><?php esc_html_e( 'Zobacz wszystkie →', 'mnsk7-storefront' ); ?></a>
 				</p>
 			</div>
-			<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title="" columns="3"]' ); ?>
-			<div class="mnsk7-bestsellers-strip-nav" aria-hidden="true">
-				<span class="mnsk7-bestsellers-strip-nav__arr mnsk7-bestsellers-strip-nav__arr--left"></span>
-				<span class="mnsk7-bestsellers-strip-nav__arr mnsk7-bestsellers-strip-nav__arr--right"></span>
+			<div class="mnsk7-bestsellers-strip-rail">
+				<span class="mnsk7-bestsellers-strip-rail__chev mnsk7-bestsellers-strip-rail__chev--prev" aria-hidden="true"></span>
+				<div class="mnsk7-bestsellers-strip-rail__track">
+					<?php echo do_shortcode( '[mnsk7_bestsellers limit="6" title="" columns="3"]' ); ?>
+				</div>
+				<span class="mnsk7-bestsellers-strip-rail__chev mnsk7-bestsellers-strip-rail__chev--next" aria-hidden="true"></span>
 			</div>
 		</div>
 	</section>

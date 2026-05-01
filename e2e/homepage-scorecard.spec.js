@@ -42,21 +42,24 @@ test.describe('Homepage scorecard', () => {
     }
   });
 
-  test('768x900: catalog after bestsellers, trust after catalog', async ({ page }) => {
+  test('768x900: catalog after bestsellers, loyalty before trust after catalog', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 900 });
     await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
     await page.goto('/', { waitUntil: 'domcontentloaded' });
 
     const bestsellersTop = await topOf(page, '.mnsk7-section--bestsellers');
+    const loyaltyTop = await topOf(page, '.mnsk7-section--loyalty');
     const trustTop = await topOf(page, '.mnsk7-section--trust');
     const catalogTop = await topOf(page, '.mnsk7-section--catalog');
 
     expect(bestsellersTop).not.toBeNull();
+    expect(loyaltyTop).not.toBeNull();
     expect(trustTop).not.toBeNull();
     expect(catalogTop).not.toBeNull();
 
     expect(catalogTop).toBeGreaterThanOrEqual(bestsellersTop);
-    expect(trustTop).toBeGreaterThanOrEqual(catalogTop);
+    expect(loyaltyTop).toBeGreaterThanOrEqual(catalogTop);
+    expect(trustTop).toBeGreaterThanOrEqual(loyaltyTop);
   });
 
   test('1280x900: bestsellers block exposes a see-all continuation link', async ({ page }) => {
