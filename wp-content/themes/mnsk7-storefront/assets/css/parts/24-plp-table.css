@@ -43,7 +43,7 @@ body.tax-product_tag .mnsk7-content h1.woocommerce-products-header__title.page-t
 /* Sklep główny (bez taksonomii): H1 jak dawny eyebrow „KATALOG…” — nie duży tytuł „Sklep” */
 body.post-type-archive-product:not(.tax-product_cat):not(.tax-product_tag) #content h1.woocommerce-products-header__title.page-title,
 body.post-type-archive-product:not(.tax-product_cat):not(.tax-product_tag) .mnsk7-content h1.woocommerce-products-header__title.page-title {
-  font-size: 0.75rem;
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -289,7 +289,7 @@ body.tax-product_tag .mnsk7-product-table-wrap {
     letter-spacing: 0.09em;
   }
   body.post-type-archive-product:not(.tax-product_cat):not(.tax-product_tag) .woocommerce-products-header__title.page-title {
-    font-size: 0.6875rem;
+    font-size: 0.92rem;
     letter-spacing: 0.09em;
     line-height: 1.35;
   }
@@ -416,6 +416,13 @@ body.woocommerce .mnsk7-plp-toolbar:not(.mnsk7-plp-toolbar--top):not(.mnsk7-plp-
   border-color: var(--color-primary);
 }
 @media (max-width: 480px) {
+  /* Strip nad tabelą: zostaje jedna linija — nie kolumna jak dolny toolbar */
+  .mnsk7-plp-toolbar-strip > .mnsk7-plp-toolbar.mnsk7-plp-toolbar--top {
+    flex-direction: row !important;
+    align-items: center !important;
+    flex-wrap: nowrap !important;
+    gap: 0.4rem 0.5rem !important;
+  }
   .mnsk7-plp-toolbar {
     flex-direction: column;
     align-items: stretch;
@@ -1191,46 +1198,54 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   outline-offset: 2px;
 }
 
-/* Toolbar nad tabelą PLP — bez pola wyszukiwania (wyniki + sortowanie) */
+/* Toolbar nad tabelą PLP — jedna linia, zwarte (wyniki + sortowanie) */
 .mnsk7-plp-toolbar-strip {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.65rem 1rem;
+  justify-content: stretch;
+  gap: 0.5rem 0.65rem;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  margin-bottom: var(--space-16);
+  margin-bottom: 0.65rem;
 }
 .mnsk7-plp-toolbar-strip .mnsk7-plp-toolbar--top {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.45rem 0.6rem;
   flex: 1 1 auto;
   margin: 0;
   min-width: 0;
-  justify-content: space-between;
+  width: 100%;
 }
-@media (max-width: 767px) {
-  .mnsk7-plp-toolbar-strip .mnsk7-plp-toolbar--top {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 0.45rem;
-  }
-  .mnsk7-plp-toolbar-strip .mnsk7-plp-toolbar__count,
-  .mnsk7-plp-toolbar-strip .woocommerce-result-count {
-    white-space: normal;
-    text-align: center;
-    font-size: var(--fs-xs);
-    line-height: 1.35;
-  }
-  .mnsk7-plp-toolbar-strip .woocommerce-ordering {
-    width: 100%;
-    margin: 0;
-  }
-  .mnsk7-plp-toolbar-strip .orderby {
-    width: 100%;
-    min-height: 44px;
-    box-sizing: border-box;
-  }
+.mnsk7-plp-toolbar-strip .mnsk7-plp-toolbar__count {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+body.woocommerce .mnsk7-plp-toolbar-strip .woocommerce-result-count {
+  font-size: var(--fs-xs);
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.mnsk7-plp-toolbar-strip .woocommerce-ordering {
+  flex: 0 1 auto;
+  margin: 0;
+  min-width: 0;
+  max-width: min(52%, 13.5rem);
+}
+.mnsk7-plp-toolbar-strip .woocommerce-ordering .orderby {
+  width: 100%;
+  max-width: 100%;
+  min-height: 34px;
+  padding: 0.2rem 1.5rem 0.2rem 0.4rem;
+  font-size: var(--fs-xs);
+  box-sizing: border-box;
 }
 
 /* FB-05: search over table. Row: search + toolbar (wyniki, sortowanie, paginacja) w jednej linii, ten sam styl. */
