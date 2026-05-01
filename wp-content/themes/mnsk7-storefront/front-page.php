@@ -198,20 +198,26 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 		<div class="col-full">
 			<p class="mnsk7-section__eyebrow"><?php esc_html_e( 'Stała współpraca', 'mnsk7-storefront' ); ?></p>
 			<h2 class="mnsk7-section__title"><?php esc_html_e( 'Program rabatowy dla stałych klientów', 'mnsk7-storefront' ); ?></h2>
-			<p class="mnsk7-section__sub mnsk7-loyalty-intro"><?php esc_html_e( 'Im więcej zamawiasz w ciągu roku, tym większy stały rabat na każde kolejne zamówienie i bardziej przewidywalne koszty zakupów.', 'mnsk7-storefront' ); ?></p>
+			<p class="mnsk7-section__sub mnsk7-loyalty-intro"><?php esc_html_e( 'Po rejestracji masz stale 5%. Przy zakupach 5 000 zł i więcej w roku — 10%, od 10 000 zł w roku — 15% (maksymalnie).', 'mnsk7-storefront' ); ?></p>
 			<div class="mnsk7-loyalty-tiers">
 				<?php
-				$tiers = array(
-					array( 'from' => '1 000', 'pct' => '5%', 'label' => '' ),
-					array( 'from' => '3 000', 'pct' => '10%', 'label' => '' ),
-					array( 'from' => '5 000', 'pct' => '15%', 'label' => '' ),
-					array( 'from' => '10 000', 'pct' => '20%', 'label' => '' ),
+				$loyalty_tiers_display = array(
+					array( 'pct' => '5%', 'sub' => __( 'Konto po rejestracji — stale', 'mnsk7-storefront' ) ),
+					array( 'pct' => '10%', 'sub' => sprintf(
+						/* translators: yearly spend threshold formatted with spaces thousands */
+						__( 'Od %s zł łącznie w roku', 'mnsk7-storefront' ),
+						'5 000'
+					) ),
+					array( 'pct' => '15%', 'sub' => sprintf(
+						__( 'Od %s zł łącznie w roku (max)', 'mnsk7-storefront' ),
+						'10 000'
+					) ),
 				);
-				foreach ( $tiers as $tier ) :
+				foreach ( $loyalty_tiers_display as $lt ) :
 					?>
 				<div class="mnsk7-loyalty-tier">
-					<span class="mnsk7-loyalty-tier__pct" data-mnsk7-counter><?php echo esc_html( $tier['pct'] ); ?></span>
-					<span class="mnsk7-loyalty-tier__from"><?php printf( esc_html__( 'od %s zł/rok', 'mnsk7-storefront' ), esc_html( $tier['from'] ) ); ?></span>
+					<span class="mnsk7-loyalty-tier__pct" data-mnsk7-counter><?php echo esc_html( $lt['pct'] ); ?></span>
+					<span class="mnsk7-loyalty-tier__from"><?php echo esc_html( $lt['sub'] ); ?></span>
 				</div>
 				<?php endforeach; ?>
 			</div>

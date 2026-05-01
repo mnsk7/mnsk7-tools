@@ -1,15 +1,49 @@
 <?php
 /**
  * MNK7 Tools — system rabatów lojalnościowych.
- * Progi roczne, blok w "Moje konto", auto-rabat w koszyku.
+ * 5% po rejestracji (stały, zalogowany), 10% od 5 000 zł/rok, 15% (max) od 10 000 zł/rok.
+ * Koszyk: dla gości bez rabatu; dla zalogowanych fee wg sumy zamówień roku + wartość koszyka.
  *
  * @package mnsk7-tools
  */
 
 defined( 'ABSPATH' ) || exit;
 
+/**
+ * Próg zakupów w roku → procent rabatu (klucz 0 = baza dla kont klientów).
+ *
+ * @return array<int,int>
+ */
 function mnsk7_loyalty_tiers() {
-	return array( 1000 => 5, 3000 => 10, 5000 => 15, 10000 => 20 );
+	return array( 0 => 5, 5000 => 10, 10000 => 15 );
+}
+
+/**
+ * Linia wyjaśniająca próg dla list (<ul>), HTML escapowany.
+ *
+ * @param int $thr Prog zakupów rocznych (0 dla rabatu bazowego).
+ * @param int $pct Procent rabatu.
+ */
+function mnsk7_loyalty_tier_public_line_html( $thr, $pct ) {
+	$pct = absint( $pct );
+	$thr = (int) $thr;
+	if ( 0 === $thr ) {
+		return esc_html(
+			sprintf(
+				/* translators: %d loyalty base discount */
+				__( '%d%% po rejestracji — stały rabat na koncie klienta', 'mnsk7-tools' ),
+				$pct
+			)
+		);
+	}
+	return esc_html(
+		sprintf(
+			/* translators: 1 yearly spend threshold (PLN, formatted), 2 discount percent */
+			__( 'od %1$s zł łącznie w roku → %2$d%%', 'mnsk7-tools' ),
+			number_format_i18n( $thr, 0 ),
+			$pct
+		)
+	);
 }
 
 function mnsk7_get_customer_year_total( $user_id = 0 ) {
@@ -103,7 +137,7 @@ function mnsk7_loyalty_block_html() {
 	}
 	$html .= '<ul class="mnsk7-loyalty-block__tiers">';
 	foreach ( $tiers as $thr => $pct ) {
-		$html .= '<li>' . sprintf( __( '%s zł → %d%%', 'mnsk7-tools' ), number_format_i18n( $thr, 0 ), $pct ) . '</li>';
+		$html .= '<li>' . mnsk7_loyalty_tier_public_line_html( (int) $thr, $pct ) . '</li>';
 	}
 	$html .= '</ul></div>';
 	return $html;
@@ -141,6 +175,9 @@ add_action( 'woocommerce_cart_calculate_fees', function ( $cart ) {
 	if ( ! apply_filters( 'mnsk7_loyalty_apply_discount', true ) ) {
 		return;
 	}
+	if ( ! is_user_logged_in() ) {
+		return;
+	}
 	$total_for_tier = mnsk7_loyalty_total_for_tier( $cart );
 	$tier           = mnsk7_loyalty_current_tier( $total_for_tier );
 	if ( $tier['percent'] <= 0 ) {
@@ -165,13 +202,21 @@ function mnsk7_loyalty_cart_block_html() {
 	if ( ! function_exists( 'WC' ) || ! WC()->cart ) {
 		return '';
 	}
-	$total_for_tier = mnsk7_loyalty_total_for_tier();
-	$tier           = mnsk7_loyalty_current_tier( $total_for_tier );
-	$tiers          = mnsk7_loyalty_tiers();
-	$subtotal       = (float) WC()->cart->get_subtotal();
-	$user_id        = get_current_user_id();
-	$year_total     = $user_id && function_exists( 'mnsk7_get_customer_year_total' ) ? mnsk7_get_customer_year_total( $user_id ) : 0;
-	$year           = date( 'Y' );
+	$subtotal   = (float) WC()->cart->get_subtotal();
+	$user_id    = get_current_user_id();
+	$year_total = $user_id && function_exists( 'mnsk7_get_customer_year_total' ) ? mnsk7_get_customer_year_total( $user_id ) : 0;
+
+	/* Gość: żadnego „sztucznego” progu z koszykiem rabat nie przysługuje dopóki brak konta */
+	$total_for_tier = $user_id ? mnsk7_loyalty_total_for_tier() : 0;
+	$tier   = $user_id ? mnsk7_loyalty_current_tier( $total_for_tier ) : array(
+		'percent'  => 0,
+		'next_at'  => null,
+		'lack'     => null,
+		'next_pct' => null,
+	);
+
+	$tiers = mnsk7_loyalty_tiers();
+	$year  = date( 'Y' );
 
 	$html = '<div class="mnsk7-cart-loyalty">';
 	$html .= '<h3 class="mnsk7-cart-loyalty__title">' . esc_html__( 'Rabaty dla stałych klientów — oszczędzaj przy każdym zamówieniu', 'mnsk7-tools' ) . '</h3>';
@@ -184,7 +229,7 @@ function mnsk7_loyalty_cart_block_html() {
 		) . '</p>';
 	} elseif ( $user_id ) {
 		$html .= '<p class="mnsk7-cart-loyalty__sum">' . sprintf(
-			__( 'Wartość koszyka: %s zł. W tym roku nie masz jeszcze zamówień — każde zamówienie liczy się do progu rabatu.', 'mnsk7-tools' ),
+			__( 'Wartość koszyka: %s zł. Stały rabat 5%% na koncie po rejestracji; wyżej: 10%% od 5 000 zł i 15%% od 10 000 zł łącznie w roku (zamówienia zrealizowane).', 'mnsk7-tools' ),
 			number_format_i18n( $subtotal, 2 )
 		) . '</p>';
 	} else {
@@ -193,7 +238,13 @@ function mnsk7_loyalty_cart_block_html() {
 			__( 'Wartość koszyka: %s zł.', 'mnsk7-tools' ),
 			number_format_i18n( $subtotal, 2 )
 		) . '</p>';
-		$html .= '<p class="mnsk7-cart-loyalty__guest-cta"><a href="' . esc_url( $myaccount_url ) . '" class="mnsk7-cart-loyalty__cta-link">' . esc_html__( 'Zaloguj się i zacznij oszczędzać — Twoje zamówienia będą liczone do rabatu do 20%.', 'mnsk7-tools' ) . '</a></p>';
+		$html .= '<p class="mnsk7-cart-loyalty__guest-cta"><a href="' . esc_url( $myaccount_url ) . '" class="mnsk7-cart-loyalty__cta-link">' . esc_html(
+			sprintf(
+				/* translators: %d maximal loyalty discount */
+				__( 'Zaloguj się — dla kont stały rabat 5%%; maksymalnie %d%% przy wyższej sumie zakupów w roku.', 'mnsk7-tools' ),
+				15
+			)
+		) . '</a></p>';
 	}
 	if ( $tier['percent'] > 0 ) {
 		$html .= '<p class="mnsk7-cart-loyalty__pct mnsk7-cart-loyalty__pct--active">' . sprintf(
@@ -211,8 +262,14 @@ function mnsk7_loyalty_cart_block_html() {
 	}
 	$html .= '<ul class="mnsk7-cart-loyalty__tiers" aria-label="' . esc_attr__( 'Progi rabatowe', 'mnsk7-tools' ) . '">';
 	foreach ( $tiers as $thr => $pct ) {
-		$reached = $total_for_tier >= $thr;
-		$html .= '<li class="' . ( $reached ? 'mnsk7-cart-loyalty__tier--reached' : '' ) . '">' . sprintf( __( '%s zł → %d%%', 'mnsk7-tools' ), number_format_i18n( $thr, 0 ), $pct ) . '</li>';
+		$thr     = (int) $thr;
+		$reached = $user_id ? ( $total_for_tier >= $thr ) : false;
+		if ( $reached ) {
+			$html .= '<li class="mnsk7-cart-loyalty__tier--reached">';
+		} else {
+			$html .= '<li>';
+		}
+		$html .= mnsk7_loyalty_tier_public_line_html( $thr, $pct ) . '</li>';
 	}
 	$html .= '</ul></div>';
 	return $html;

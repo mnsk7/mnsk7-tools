@@ -32,7 +32,7 @@ function mnsk7_get_faq_set( $set = '' ) {
 		'sklep' => array(
 			array( 'q' => 'Skąd pochodzi mnsk7-tools.pl?', 'a' => 'Jesteśmy polską firmą MNSK7 sp. z o.o. z siedzibą w Warszawie. Sprzedajemy przez sklep internetowy i Allegro (383+ pozytywne oceny, 100% satysfakcji).' ),
 			array( 'q' => 'Jak skontaktować się ze sklepem?', 'a' => 'Email: office@mnsk7.pl, telefon: +48 451 696 511. Godziny: pn.–pt. 9:00–17:00, sob. 10:00–12:00.' ),
-			array( 'q' => 'Czy możliwy jest zakup hurtowy?', 'a' => 'Tak, obsługujemy zamówienia hurtowe i oferujemy program rabatowy: od 1 000 zł/rok → 5%, od 3 000 zł → 10%, od 5 000 zł → 15%, od 10 000 zł → 20%.' ),
+			array( 'q' => 'Czy możliwy jest zakup hurtowy?', 'a' => 'Tak, obsługujemy zamówienia hurtowe i oferujemy program rabatowy: stały rabat 5% po rejestracji konta, 10% przy zakupach od 5 000 zł łącznie w roku, maksymalnie 15% przy zakupach od 10 000 zł w roku.' ),
 		),
 	);
 	if ( $set === '' ) {

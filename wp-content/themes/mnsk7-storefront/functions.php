@@ -605,7 +605,7 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	$dostawa_url = home_url( '/dostawa-i-platnosci/' );
 	$account_url = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/moje-konto/' );
 	$delivery = '<span class="mnsk7-promo-bar__item"><span class="mnsk7-promo-bar__badge">' . esc_html__( 'DOSTAWA', 'mnsk7-storefront' ) . '</span><span class="mnsk7-promo-bar__value">' . esc_html__( 'Gratis od 300 zł', 'mnsk7-storefront' ) . '</span></span>';
-	$loyalty  = '<span class="mnsk7-promo-bar__item"><span class="mnsk7-promo-bar__badge">' . esc_html__( 'RABAT', 'mnsk7-storefront' ) . '</span><span class="mnsk7-promo-bar__value">' . esc_html__( 'Program lojalnościowy do 20%', 'mnsk7-storefront' ) . '</span></span>';
+	$loyalty  = '<span class="mnsk7-promo-bar__item"><span class="mnsk7-promo-bar__badge">' . esc_html__( 'RABAT', 'mnsk7-storefront' ) . '</span><span class="mnsk7-promo-bar__value">' . esc_html__( 'Program lojalnościowy stale 5%, do 15%', 'mnsk7-storefront' ) . '</span></span>';
 	$cta      = '<a class="mnsk7-promo-bar__cta" href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Dostawa', 'mnsk7-storefront' ) . '</a>';
 	$cta2     = '<a class="mnsk7-promo-bar__cta" href="' . esc_url( $account_url ) . '">' . esc_html__( 'Rabat', 'mnsk7-storefront' ) . '</a>';
 	$actions  = '<span class="mnsk7-promo-bar__actions">' . $cta . $cta2 . '</span>';
