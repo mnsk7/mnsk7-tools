@@ -60,6 +60,12 @@
 .mnsk7-promo-bar__meta {
   opacity: 0.95;
 }
+.mnsk7-promo-bar__actions {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+}
 .mnsk7-promo-bar__text a,
 .mnsk7-promo-bar__cta {
   color: inherit;
@@ -166,7 +172,31 @@
   }
 }
 
-/* Mobile: promo bar — 2-line layout jeśli potrzeba, close nie najeżdża */
+/* Mobile / wąski viewport: promo — kolumna (bez „ściany tekstu”), CTA w jednym rzędzie */
+@media (max-width: 767px) {
+  .mnsk7-promo-bar__text {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    line-height: 1.4;
+  }
+  .mnsk7-promo-bar__item {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  .mnsk7-promo-bar__item .mnsk7-promo-bar__value {
+    min-width: 0;
+    flex: 1 1 auto;
+  }
+  .mnsk7-promo-bar__actions {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    gap: 0.5rem;
+  }
+}
+
 @media (max-width: 480px) {
   .mnsk7-promo-bar {
     padding: 0.5rem 0.75rem 0.5rem 1rem;
@@ -179,14 +209,6 @@
   }
   .mnsk7-promo-bar__text {
     text-align: left;
-    line-height: 1.4;
-    gap: 0.35rem 0.45rem;
-  }
-  .mnsk7-promo-bar__item {
-    width: 100%;
-  }
-  .mnsk7-promo-bar__cta {
-    padding-left: 0;
   }
   .mnsk7-promo-bar__close {
     margin-top: -0.125rem;

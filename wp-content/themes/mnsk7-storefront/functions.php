@@ -608,7 +608,8 @@ add_filter( 'mnsk7_header_promo_text', function ( $text ) {
 	$loyalty  = '<span class="mnsk7-promo-bar__item"><span class="mnsk7-promo-bar__badge">' . esc_html__( 'RABAT', 'mnsk7-storefront' ) . '</span><span class="mnsk7-promo-bar__value">' . esc_html__( 'Program lojalnościowy do 20%', 'mnsk7-storefront' ) . '</span></span>';
 	$cta      = '<a class="mnsk7-promo-bar__cta" href="' . esc_url( $dostawa_url ) . '">' . esc_html__( 'Dostawa', 'mnsk7-storefront' ) . '</a>';
 	$cta2     = '<a class="mnsk7-promo-bar__cta" href="' . esc_url( $account_url ) . '">' . esc_html__( 'Rabat', 'mnsk7-storefront' ) . '</a>';
-	return $delivery . ' ' . $loyalty . ' ' . $cta . ' ' . $cta2;
+	$actions  = '<span class="mnsk7-promo-bar__actions">' . $cta . $cta2 . '</span>';
+	return $delivery . ' ' . $loyalty . ' ' . $actions;
 }, 5 );
 
 /** Audit task 14: H1 na stronie Moje konto — jeden nagłówek (zalogowani: przed nawigacją; goście: przed formularzem). Bez duplikatu. */
