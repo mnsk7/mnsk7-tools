@@ -98,6 +98,7 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 		echo '<details class="' . esc_attr( $dropdown_class ) . '">';
 		echo '<summary class="mnsk7-plp-dropdown__summary"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title">' . esc_html( $label ) . '</span><span class="mnsk7-plp-dropdown__summary-meta">' . esc_html( $summary_meta ) . '</span></span></summary>';
 		echo '<div class="mnsk7-plp-dropdown__panel">';
+		echo '<div class="mnsk7-plp-dropdown__panel-head"><span class="mnsk7-plp-dropdown__panel-title">' . esc_html( $label ) . '</span><button type="button" class="mnsk7-plp-dropdown__close" aria-label="' . esc_attr__( 'Zamknij filtr', 'mnsk7-storefront' ) . '">' . esc_html__( 'Zamknij', 'mnsk7-storefront' ) . '</button></div>';
 		echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--nav" role="navigation" aria-label="' . esc_attr( $label ) . '">';
 		echo '<div class="mnsk7-plp-chips__scroll">';
 		foreach ( $terms as $term ) {
@@ -195,6 +196,7 @@ $render_plp_attribute_section = function ( $clear_all_url ) use ( $plp_is_mobile
 			echo '<details class="' . esc_attr( $dropdown_class ) . '">';
 			echo '<summary class="mnsk7-plp-dropdown__summary"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title">' . esc_html( $attribute_filter['label'] ) . '</span><span class="mnsk7-plp-dropdown__summary-meta">' . esc_html( $summary_meta ) . '</span></span></summary>';
 			echo '<div class="mnsk7-plp-dropdown__panel">';
+			echo '<div class="mnsk7-plp-dropdown__panel-head"><span class="mnsk7-plp-dropdown__panel-title">' . esc_html( $attribute_filter['label'] ) . '</span><button type="button" class="mnsk7-plp-dropdown__close" aria-label="' . esc_attr__( 'Zamknij filtr', 'mnsk7-storefront' ) . '">' . esc_html__( 'Zamknij', 'mnsk7-storefront' ) . '</button></div>';
 			echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs" role="navigation" aria-label="' . esc_attr( $aria_label ) . '">';
 			echo '<div class="mnsk7-plp-chips__scroll">';
 			foreach ( $chips_list as $slug => $label ) {
