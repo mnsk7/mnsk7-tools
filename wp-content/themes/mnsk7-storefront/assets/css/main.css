@@ -5215,11 +5215,6 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin-right: auto;
 }
 
-.mnsk7-loyalty-intro {
-  margin-bottom: 1.15rem;
-  max-width: 42rem;
-}
-
 .mnsk7-loyalty-tiers-kicker {
   margin: 0 auto 1rem;
   max-width: min(36rem, 100%);
@@ -9687,10 +9682,17 @@ nav.woocommerce-breadcrumb {
     border-radius: 20px;
   }
 
-  .mnsk7-trust-stats,
   .mnsk7-loyalty-tiers {
     grid-template-columns: 1fr;
     gap: 0.8rem;
+  }
+
+  /* Trust stats: jeden wiersz (4 kolumny), kompakt — zamiast 1 kolumny stack */
+  .mnsk7-trust-stats {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.35rem;
+    margin-bottom: 1.25rem;
+    align-items: stretch;
   }
 
   .mnsk7-section--trust .mnsk7-section__eyebrow,
@@ -9710,22 +9712,32 @@ nav.woocommerce-breadcrumb {
   }
 
   .mnsk7-trust-stats__item {
-    padding: 0.95rem 0.95rem;
-    min-height: 128px;
+    padding: 0.45rem 0.28rem;
+    min-height: 0;
     justify-content: center;
     align-items: center;
     text-align: center;
+    gap: 0.2rem;
+  }
+
+  .mnsk7-trust-stats__number {
+    font-size: clamp(0.82rem, 3.1vw, 1.05rem);
+    line-height: 1.05;
+  }
+
+  .mnsk7-trust-stats__label {
+    width: 100%;
+    text-align: center;
+    font-size: clamp(0.56rem, 2.1vw, 0.68rem);
+    line-height: 1.12;
+    hyphens: auto;
+    overflow-wrap: break-word;
   }
 
   .mnsk7-loyalty-tier {
     padding: 0.95rem 0.95rem;
     justify-content: center;
     align-items: center;
-    text-align: center;
-  }
-
-  .mnsk7-trust-stats__label {
-    width: 100%;
     text-align: center;
   }
 
