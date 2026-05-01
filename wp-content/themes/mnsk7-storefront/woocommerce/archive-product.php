@@ -94,7 +94,8 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 				_n( '%d opcja', '%d opcji', count( $terms ), 'mnsk7-storefront' ),
 				count( $terms )
 			);
-		echo '<details class="mnsk7-plp-dropdown mnsk7-plp-dropdown--nav col-full">';
+		$dropdown_class = 'mnsk7-plp-dropdown mnsk7-plp-dropdown--nav col-full' . ( $active_name ? ' mnsk7-plp-dropdown--active' : '' );
+		echo '<details class="' . esc_attr( $dropdown_class ) . '">';
 		echo '<summary class="mnsk7-plp-dropdown__summary"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title">' . esc_html( $label ) . '</span><span class="mnsk7-plp-dropdown__summary-meta">' . esc_html( $summary_meta ) . '</span></span></summary>';
 		echo '<div class="mnsk7-plp-dropdown__panel">';
 		echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--nav" role="navigation" aria-label="' . esc_attr( $label ) . '">';
@@ -108,7 +109,7 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 			$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
 			$name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $name ) : $name;
 			$active = $active_term_id && (int) $term->term_id === (int) $active_term_id;
-			printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $link ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $name ) );
+			printf( '<a href="%s" class="mnsk7-plp-chip %s"%s>%s</a>', esc_url( $link ), $active ? 'mnsk7-plp-chip--active' : '', $active ? ' aria-current="page"' : '', esc_html( $name ) );
 		}
 		echo '</div>';
 		echo '</div>';
@@ -128,7 +129,7 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 		$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
 		$name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $name ) : $name;
 		$active = $active_term_id && (int) $term->term_id === (int) $active_term_id;
-		printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $link ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $name ) );
+		printf( '<a href="%s" class="mnsk7-plp-chip %s"%s>%s</a>', esc_url( $link ), $active ? 'mnsk7-plp-chip--active' : '', $active ? ' aria-current="page"' : '', esc_html( $name ) );
 	}
 	if ( ! empty( $hidden ) ) {
 		$more_id = 'mnsk7-plp-more-nav-' . sanitize_title( $label );
@@ -142,7 +143,7 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 			$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
 			$name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $name ) : $name;
 			$active = $active_term_id && (int) $term->term_id === (int) $active_term_id;
-			printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $link ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $name ) );
+			printf( '<a href="%s" class="mnsk7-plp-chip %s"%s>%s</a>', esc_url( $link ), $active ? 'mnsk7-plp-chip--active' : '', $active ? ' aria-current="page"' : '', esc_html( $name ) );
 		}
 		echo '</span>';
 		echo '<button type="button" class="mnsk7-plp-chips-toggle" data-controls="' . esc_attr( $more_id ) . '" aria-controls="' . esc_attr( $more_id ) . '" aria-expanded="false">' . esc_html__( 'Więcej', 'mnsk7-storefront' ) . '</button>';
@@ -190,7 +191,8 @@ $render_plp_attribute_section = function ( $clear_all_url ) use ( $plp_is_mobile
 					_n( '%d opcja', '%d opcji', count( $chips_list ), 'mnsk7-storefront' ),
 					count( $chips_list )
 				);
-			echo '<details class="mnsk7-plp-dropdown mnsk7-plp-dropdown--attrs col-full">';
+			$dropdown_class = 'mnsk7-plp-dropdown mnsk7-plp-dropdown--attrs col-full' . ( $active_label ? ' mnsk7-plp-dropdown--active' : '' );
+			echo '<details class="' . esc_attr( $dropdown_class ) . '">';
 			echo '<summary class="mnsk7-plp-dropdown__summary"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title">' . esc_html( $attribute_filter['label'] ) . '</span><span class="mnsk7-plp-dropdown__summary-meta">' . esc_html( $summary_meta ) . '</span></span></summary>';
 			echo '<div class="mnsk7-plp-dropdown__panel">';
 			echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs" role="navigation" aria-label="' . esc_attr( $aria_label ) . '">';
@@ -199,7 +201,7 @@ $render_plp_attribute_section = function ( $clear_all_url ) use ( $plp_is_mobile
 				$url = add_query_arg( $param, $slug );
 				$url = $anchor_fn ? $anchor_fn( $url ) : $url;
 				$active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) === $slug;
-				printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
+				printf( '<a href="%s" class="mnsk7-plp-chip %s"%s>%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', $active ? ' aria-current="page"' : '', esc_html( $label ) );
 			}
 			echo '</div>';
 			echo '</div>';
@@ -214,7 +216,7 @@ $render_plp_attribute_section = function ( $clear_all_url ) use ( $plp_is_mobile
 			$url = add_query_arg( $param, $slug );
 			$url = $anchor_fn ? $anchor_fn( $url ) : $url;
 			$active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) === $slug;
-			printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
+			printf( '<a href="%s" class="mnsk7-plp-chip %s"%s>%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', $active ? ' aria-current="page"' : '', esc_html( $label ) );
 		}
 		if ( ! empty( $hidden ) ) {
 			echo '<span class="mnsk7-plp-chips-more" id="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" hidden aria-hidden="true">';
@@ -222,7 +224,7 @@ $render_plp_attribute_section = function ( $clear_all_url ) use ( $plp_is_mobile
 				$url = add_query_arg( $param, $slug );
 				$url = $anchor_fn ? $anchor_fn( $url ) : $url;
 				$active = isset( $_GET[ $param ] ) && sanitize_text_field( wp_unslash( $_GET[ $param ] ) ) === $slug;
-				printf( '<a href="%s" class="mnsk7-plp-chip %s">%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', esc_html( $label ) );
+				printf( '<a href="%s" class="mnsk7-plp-chip %s"%s>%s</a>', esc_url( $url ), $active ? 'mnsk7-plp-chip--active' : '', $active ? ' aria-current="page"' : '', esc_html( $label ) );
 			}
 			echo '</span>';
 			echo '<button type="button" class="mnsk7-plp-chips-toggle" data-controls="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" aria-controls="mnsk7-plp-more-' . esc_attr( sanitize_title( $param ) ) . '" aria-expanded="false">' . esc_html__( 'Więcej', 'mnsk7-storefront' ) . '</button>';
