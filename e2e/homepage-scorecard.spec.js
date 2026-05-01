@@ -42,7 +42,7 @@ test.describe('Homepage scorecard', () => {
     }
   });
 
-  test('768x900: trust appears before catalog and homepage sections remain ordered', async ({ page }) => {
+  test('768x900: catalog after bestsellers, trust after catalog', async ({ page }) => {
     await page.setViewportSize({ width: 768, height: 900 });
     await page.setExtraHTTPHeaders({ 'User-Agent': MOBILE_UA });
     await page.goto('/', { waitUntil: 'domcontentloaded' });
@@ -55,8 +55,8 @@ test.describe('Homepage scorecard', () => {
     expect(trustTop).not.toBeNull();
     expect(catalogTop).not.toBeNull();
 
-    expect(trustTop).toBeGreaterThanOrEqual(bestsellersTop);
-    expect(catalogTop).toBeGreaterThanOrEqual(trustTop);
+    expect(catalogTop).toBeGreaterThanOrEqual(bestsellersTop);
+    expect(trustTop).toBeGreaterThanOrEqual(catalogTop);
   });
 
   test('1280x900: bestsellers block exposes a see-all continuation link', async ({ page }) => {

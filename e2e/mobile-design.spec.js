@@ -223,7 +223,7 @@ test.describe('Mobile design — footer', () => {
 
 test.describe('Mobile design — sections order (homepage)', () => {
   for (const viewport of VIEWPORTS) {
-    test(`viewport ${viewport.width}x${viewport.height}: hero → bestsellers → trust/catalog order`, async ({ page }) => {
+    test(`viewport ${viewport.width}x${viewport.height}: hero → bestsellers → catalog → trust order`, async ({ page }) => {
       await page.setViewportSize(viewport);
       await page.goto('/', { waitUntil: 'domcontentloaded' });
 
@@ -237,8 +237,8 @@ test.describe('Mobile design — sections order (homepage)', () => {
         return;
       }
       if (bestsellersRect) expect(bestsellersRect.top).toBeGreaterThanOrEqual(heroRect.bottom - OVERLAP_TOLERANCE);
-      if (trustRect && bestsellersRect) expect(trustRect.top).toBeGreaterThanOrEqual(bestsellersRect.bottom - OVERLAP_TOLERANCE);
-      if (catalogRect && trustRect) expect(catalogRect.top).toBeGreaterThanOrEqual(trustRect.bottom - OVERLAP_TOLERANCE);
+      if (catalogRect && bestsellersRect) expect(catalogRect.top).toBeGreaterThanOrEqual(bestsellersRect.bottom - OVERLAP_TOLERANCE);
+      if (trustRect && catalogRect) expect(trustRect.top).toBeGreaterThanOrEqual(catalogRect.bottom - OVERLAP_TOLERANCE);
     });
   }
 });
