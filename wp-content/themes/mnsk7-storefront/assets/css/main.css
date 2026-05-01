@@ -11401,7 +11401,7 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 /* table-layout: fixed — proporcje kolumn. min-width: czytelne kolumny przy poziomym przewijaniu (wąski desktop). */
 .mnsk7-product-table {
   width: 100%;
-  min-width: 50rem;
+  min-width: 56rem;
   table-layout: fixed;
   border-collapse: collapse;
   font-size: var(--fs-sm);
@@ -11446,9 +11446,9 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-product-table th.mnsk7-table-cell--stock,
 .mnsk7-product-table .mnsk7-table-cell--stock { width: 11%; }
 .mnsk7-product-table th.mnsk7-table-cell--qty,
-.mnsk7-product-table .mnsk7-table-cell--qty { width: 14%; min-width: 10rem; }
+.mnsk7-product-table .mnsk7-table-cell--qty { width: 14%; min-width: 11.5rem; }
 .mnsk7-product-table th.mnsk7-table-cell--action,
-.mnsk7-product-table .mnsk7-table-cell--action { width: 19%; min-width: 13.5rem; }
+.mnsk7-product-table .mnsk7-table-cell--action { width: 19%; min-width: 14rem; }
 
 .mnsk7-product-table tbody tr {
   border-bottom: 1px solid var(--color-border);
@@ -11589,10 +11589,10 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   font-size: var(--fs-sm);
   color: var(--color-text-secondary);
 }
-/* Jak mini-tabela: siatka z „żyłkami” (gap + tło jak nagłówki shop_table PLP). */
+/* Jak mini-tabela: „żyłki” = gap + tło komórek; czytelność = ta sama typografia w dt/dd (różnica: obramowanie/tło). */
 .mnsk7-table-key-params {
   display: grid;
-  grid-template-columns: minmax(7.25rem, 42%) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 7.75rem) minmax(0, 1fr);
   gap: 1px;
   margin: 0.5rem 0 0;
   max-width: 100%;
@@ -11602,24 +11602,42 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   overflow: hidden;
   background: var(--color-border);
 }
-.mnsk7-table-key-params dt {
-  margin: 0;
-  padding: 0.45rem 0.55rem;
-  font-size: var(--fs-xs);
-  color: var(--color-text-muted);
-  font-weight: 600;
-  line-height: 1.38;
-  background: rgba(12, 125, 219, 0.06);
-}
+.mnsk7-table-key-params dt,
 .mnsk7-table-key-params dd {
   margin: 0;
   padding: 0.45rem 0.55rem;
   font-size: var(--fs-sm);
-  color: var(--color-text);
+  font-family: var(--font-base);
   font-weight: 600;
   line-height: 1.38;
+  color: var(--color-text);
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.mnsk7-table-key-params dt {
+  background: rgba(12, 125, 219, 0.06);
+  border-left: 3px solid var(--color-primary);
+  box-sizing: border-box;
+}
+.mnsk7-table-key-params dd {
   font-variant-numeric: tabular-nums;
   background: var(--color-white);
+}
+
+@supports (container-type: inline-size) {
+  .mnsk7-product-table .mnsk7-table-cell--title {
+    container-type: inline-size;
+    container-name: plp-keyparams;
+  }
+  /* Bardzo wąska kolumna tytułu: jedna kolumna siatki (dt nad dd), bez łamania szerokich etykiet obok wartości */
+  @container plp-keyparams (max-width: 280px) {
+    .mnsk7-table-key-params {
+      grid-template-columns: 1fr;
+    }
+    .mnsk7-table-key-params dt {
+      border-left-width: 0;
+    }
+  }
 }
 
 .mnsk7-product-table .mnsk7-table-cell--title a {
@@ -11808,16 +11826,6 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   font-weight: 400;
   margin-top: 0.15rem;
 }
-@media (max-width: 768px) {
-  .mnsk7-table-key-params {
-    grid-template-columns: minmax(0, 40%) minmax(0, 1fr);
-    margin-top: 0.35rem;
-  }
-  .mnsk7-table-key-params dt,
-  .mnsk7-table-key-params dd {
-    padding: 0.32rem 0.42rem;
-  }
-}
 .mnsk7-product-table tbody tr.mnsk7-row--fixed-qty .mnsk7-table-cell--qty .mnsk7-table-qty-implicit--fixed {
   display: none;
 }
@@ -11879,7 +11887,47 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   cursor: not-allowed;
 }
 
+/* Laptop / wąski desktop: mniejszy stepper — mieści się w min-width kolumny obok CTA */
+@media (max-width: 1400px) and (min-width: 769px) {
+  .mnsk7-product-table .mnsk7-table-cell--qty .quantity.quantity--stepper .mnsk7-qty-btn {
+    min-width: 40px;
+    min-height: 40px;
+    font-size: 1.05rem;
+  }
+  .mnsk7-product-table .mnsk7-table-cell--qty .quantity.quantity--stepper .mnsk7-table-qty-input {
+    width: 3rem;
+    min-width: 3rem;
+    min-height: 40px;
+  }
+}
+
+@media (max-width: 1240px) and (min-width: 769px) {
+  .mnsk7-product-table .mnsk7-table-cell--qty .quantity.quantity--stepper {
+    gap: 0.0625rem;
+    padding: 0.0625rem;
+  }
+  .mnsk7-product-table .mnsk7-table-cell--qty .quantity.quantity--stepper .mnsk7-qty-btn {
+    min-width: 38px;
+    min-height: 38px;
+    font-size: 1rem;
+  }
+  .mnsk7-product-table .mnsk7-table-cell--qty .quantity.quantity--stepper .mnsk7-table-qty-input {
+    width: 2.75rem;
+    min-width: 2.75rem;
+    min-height: 38px;
+    padding: 0.35rem 0.2rem;
+  }
+}
+
 @media (max-width: 768px) {
+  .mnsk7-table-key-params {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    margin-top: 0.35rem;
+  }
+  .mnsk7-table-key-params dt,
+  .mnsk7-table-key-params dd {
+    padding: 0.32rem 0.42rem;
+  }
   .mnsk7-product-table-wrap {
     padding: 0.65rem 0.5rem;
   }
@@ -11989,11 +12037,11 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 
 @media (max-width: 1180px) and (min-width: 769px) {
   .mnsk7-product-table {
-    min-width: 52rem;
+    min-width: 56rem;
   }
 
   .mnsk7-product-table .mnsk7-table-cell {
-    padding: 0.85rem 0.75rem;
+    padding: 0.85rem 0.65rem;
   }
 
   .mnsk7-product-table th.mnsk7-table-cell--thumb,
@@ -12007,18 +12055,18 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 
   .mnsk7-product-table th.mnsk7-table-cell--qty,
   .mnsk7-product-table .mnsk7-table-cell--qty {
-    min-width: 10rem;
+    min-width: 11.25rem;
   }
 
   .mnsk7-product-table th.mnsk7-table-cell--action,
   .mnsk7-product-table .mnsk7-table-cell--action {
-    min-width: 12rem;
+    min-width: 13.5rem;
   }
 
   .mnsk7-product-table .mnsk7-table-cell--action .button,
   .mnsk7-product-table .mnsk7-table-cell--action .add_to_cart_button,
   .mnsk7-product-table .mnsk7-table-cell--action .mnsk7-table-addcart-btn {
-    padding: 0.65rem 0.95rem;
+    padding: 0.65rem 0.85rem;
     font-size: var(--fs-sm);
     line-height: 1.25;
   }
