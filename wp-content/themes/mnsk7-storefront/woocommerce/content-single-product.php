@@ -83,7 +83,7 @@ if ( isset( $product ) && is_a( $product, 'WC_Product' ) && $product->is_purchas
 	?>
 	<div id="mnsk7-pdp-sticky-cta" class="mnsk7-pdp-sticky-cta" aria-hidden="true" hidden>
 		<div class="mnsk7-pdp-sticky-cta__left">
-			<span class="mnsk7-pdp-sticky-cta__price"><?php echo $product->get_price_html(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?></span>
+			<span class="mnsk7-pdp-sticky-cta__price"><?php echo wp_kses_post( $product->get_price_html() ); ?></span>
 			<span class="mnsk7-pdp-sticky-cta__stock"><?php echo esc_html( $stock_text ); ?></span>
 		</div>
 		<?php

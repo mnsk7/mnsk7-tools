@@ -112,7 +112,7 @@ $thumb_zoom_label = sprintf(
 		<?php endif; ?>
 	</th>
 	<td class="mnsk7-table-cell mnsk7-table-cell--price">
-		<?php echo $product->get_price_html(); ?>
+		<?php echo wp_kses_post( $product->get_price_html() ); ?>
 	</td>
 	<td class="mnsk7-table-cell mnsk7-table-cell--stock">
 		<?php echo wp_kses_post( $stock_html ); ?>

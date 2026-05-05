@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.32' );
+	define( 'MNSK7_THEME_VERSION', '1.0.33' );
 }
 
 /**
@@ -1597,7 +1597,7 @@ add_action( 'wp_footer', function () {
 	(function() {
 		var btn = document.getElementById('mnsk7-cart-checkout-button') || document.querySelector('.woocommerce-cart a.checkout-button');
 		if (!btn || !btn.href) return;
-		var checkoutUrl = <?php echo json_encode( $url ); ?>;
+		var checkoutUrl = <?php echo wp_json_encode( $url ); ?>;
 		function normalizePath(u) {
 			try {
 				var url = new URL(u, window.location.href);
@@ -1772,7 +1772,7 @@ add_action( 'wp_footer', function () {
 		}
 		var variationsForm = document.querySelector('.single-product form.variations_form');
 		var defaultBtnLabel = stickyBtn ? stickyBtn.textContent : '';
-		var chooseLbl = <?php echo json_encode( __( 'Wybierz wariant', 'mnsk7-storefront' ) ); ?>;
+		var chooseLbl = <?php echo wp_json_encode( __( 'Wybierz wariant', 'mnsk7-storefront' ) ); ?>;
 		function syncStickyActionability(action) {
 			if (!stickyBtn) return;
 			var disabled = action === 'add' ? !!mainBtn.disabled : false;
@@ -1866,7 +1866,7 @@ add_action( 'wp_footer', function () {
 		var btn = wrap.querySelector('.mnsk7-plp-load-more');
 		var tbody = document.querySelector('.mnsk7-product-table tbody');
 		if (!btn || !tbody) return;
-		var ajaxUrl = <?php echo json_encode( $ajax_url ); ?>;
+		var ajaxUrl = <?php echo wp_json_encode( $ajax_url ); ?>;
 		btn.addEventListener('click', function(e) {
 			e.preventDefault();
 			if (btn.disabled) return;
@@ -1995,8 +1995,8 @@ add_action( 'wp_footer', function () {
 
 		function initPlpToggles() {
 			var toggles = document.querySelectorAll('.mnsk7-plp-chips-toggle');
-			var moreLabel = <?php echo json_encode( $more_text ); ?>;
-			var lessLabel = <?php echo json_encode( $less_text ); ?>;
+			var moreLabel = <?php echo wp_json_encode( $more_text ); ?>;
+			var lessLabel = <?php echo wp_json_encode( $less_text ); ?>;
 			toggles.forEach(function(btn) {
 				var id = btn.getAttribute('data-controls');
 				if (!id) return;
@@ -2107,8 +2107,8 @@ add_action( 'wp_footer', function () {
 
 		function initCatalogChipsToggles() {
 			var toggles = document.querySelectorAll('.mnsk7-catalog-chips-toggle');
-			var moreLabel = <?php echo json_encode( __( 'Więcej', 'mnsk7-storefront' ) ); ?>;
-			var lessLabel = <?php echo json_encode( __( 'Mniej', 'mnsk7-storefront' ) ); ?>;
+			var moreLabel = <?php echo wp_json_encode( __( 'Więcej', 'mnsk7-storefront' ) ); ?>;
+			var lessLabel = <?php echo wp_json_encode( __( 'Mniej', 'mnsk7-storefront' ) ); ?>;
 			toggles.forEach(function(btn) {
 				var id = btn.getAttribute('data-controls');
 				if (!id) return;
