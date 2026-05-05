@@ -2549,6 +2549,17 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   padding: 0 1rem 1.5rem;
 }
 
+.single-product div.product .mnsk7-pdp-main {
+  display: flex;
+  flex: 1 1 100%;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1.5rem;
+  width: 100%;
+  min-width: 100%;
+  overflow: visible;
+}
+
 /* Opis, podobne produkty i cała treść pod buyboxem — pełna szerokość, pod zdjęciem i summary */
 .single-product div.product > .mnsk7-product-description-accordion,
 .single-product div.product > .mnsk7-product-extra-media,
@@ -3446,7 +3457,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 @media (max-width: 900px) {
-  .single-product div.product {
+  .single-product div.product,
+  .single-product div.product .mnsk7-pdp-main {
     flex-direction: column;
     gap: 1rem;
   }
@@ -3502,7 +3514,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
 /* Touch fallback: real phones with desktop-width layout viewport still need mobile PDP stack. */
 @media (hover: none) and (pointer: coarse) {
-  .single-product div.product {
+  .single-product div.product,
+  .single-product div.product .mnsk7-pdp-main {
     flex-direction: column;
     gap: 1rem;
   }
@@ -3544,7 +3557,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 @media (min-width: 901px) {
-  .single-product div.product {
+  .single-product div.product,
+  .single-product div.product .mnsk7-pdp-main {
     overflow: visible !important;
   }
 
@@ -3563,6 +3577,10 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
     gap: 0.85rem;
     margin-top: 0.4rem;
     padding: 0 1rem 1.25rem;
+  }
+
+  .single-product div.product .mnsk7-pdp-main {
+    gap: 0.85rem;
   }
 
   .single-product .summary .product_title {
