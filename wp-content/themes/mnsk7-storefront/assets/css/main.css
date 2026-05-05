@@ -3544,6 +3544,10 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 @media (min-width: 901px) {
+  .single-product div.product {
+    overflow: visible !important;
+  }
+
   .single-product div.product .woocommerce-product-gallery.images,
   .single-product div.product .images {
     position: sticky !important;
