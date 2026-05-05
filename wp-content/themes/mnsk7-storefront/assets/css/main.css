@@ -1993,24 +1993,33 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     display: none !important;
   }
 }
-/* Tablet (769-1023px): search row zawsze widoczna — druga linia pod headerem, jeden składany control (input + przycisk bez szpary) */
+/* Tablet (769-1023px): compact search opens on demand instead of occupying a full header row. */
 @media (min-width: 769px) and (max-width: 1023px) {
   .mnsk7-header__search-wrap {
-    display: none !important;
+    display: flex !important;
   }
   .mnsk7-header-search-panel {
+    display: none !important;
+  }
+  .mnsk7-header-search-panel[hidden] {
+    display: none !important;
+  }
+  body.mnsk7-search-open .mnsk7-header-search-panel {
     display: block !important;
-    box-shadow: none;
-    border-bottom: 1px solid var(--color-border);
-    padding: 0.5rem 1rem;
+    width: min(30rem, calc(100vw - 2rem));
+    margin: 0.5rem max(1rem, calc((100vw - var(--content-max, 1200px)) / 2)) 0.5rem auto;
+    padding: 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-sm);
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.14);
   }
   /* Strona główna: bez białej wstęgi nad search barem — panel tuż pod headerem */
   body.home .mnsk7-header-search-panel {
-    padding-top: 0;
+    padding-top: 0.5rem;
   }
   .mnsk7-header-search-panel__form {
-    max-width: var(--content-max, 1200px);
-    margin: 0 auto;
+    max-width: none;
+    margin: 0;
   }
 }
 /* Mobile (≤768px): panel tylko po kliknięciu ikony */
@@ -3456,33 +3465,43 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1023px) {
   .single-product div.product,
   .single-product div.product .mnsk7-pdp-main {
     flex-direction: column;
     gap: 1rem;
   }
 
-  .single-product div.product > .summary.mnsk7-pdp-buybox {
+  .single-product div.product > .summary.mnsk7-pdp-buybox,
+  .single-product div.product .mnsk7-pdp-main > .summary.mnsk7-pdp-buybox {
     order: 2;
   }
 
   .single-product div.product .images {
-    position: static;
-    top: auto;
+    position: static !important;
+    top: auto !important;
     max-width: 100%;
     order: 1;
     width: 100%;
     min-width: 0;
+    flex: 0 0 100%;
+    float: none;
   }
 
+  .single-product div.product .woocommerce-product-gallery.images,
   .single-product .images .woocommerce-product-gallery {
-    position: static;
-    top: auto;
+    position: static !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100%;
+    float: none;
   }
 
   .single-product div.product .summary.mnsk7-pdp-buybox {
     max-width: 100%;
+    width: 100%;
+    min-width: 0;
+    flex-basis: 100%;
   }
 
   .single-product div.product > .mnsk7-product-extra-media,

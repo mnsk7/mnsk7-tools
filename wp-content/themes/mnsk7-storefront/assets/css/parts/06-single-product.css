@@ -933,33 +933,43 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1023px) {
   .single-product div.product,
   .single-product div.product .mnsk7-pdp-main {
     flex-direction: column;
     gap: 1rem;
   }
 
-  .single-product div.product > .summary.mnsk7-pdp-buybox {
+  .single-product div.product > .summary.mnsk7-pdp-buybox,
+  .single-product div.product .mnsk7-pdp-main > .summary.mnsk7-pdp-buybox {
     order: 2;
   }
 
   .single-product div.product .images {
-    position: static;
-    top: auto;
+    position: static !important;
+    top: auto !important;
     max-width: 100%;
     order: 1;
     width: 100%;
     min-width: 0;
+    flex: 0 0 100%;
+    float: none;
   }
 
+  .single-product div.product .woocommerce-product-gallery.images,
   .single-product .images .woocommerce-product-gallery {
-    position: static;
-    top: auto;
+    position: static !important;
+    top: auto !important;
+    width: 100% !important;
+    max-width: 100%;
+    float: none;
   }
 
   .single-product div.product .summary.mnsk7-pdp-buybox {
     max-width: 100%;
+    width: 100%;
+    min-width: 0;
+    flex-basis: 100%;
   }
 
   .single-product div.product > .mnsk7-product-extra-media,
