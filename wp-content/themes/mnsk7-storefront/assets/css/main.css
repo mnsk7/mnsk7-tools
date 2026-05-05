@@ -3562,13 +3562,21 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
     overflow: visible !important;
   }
 
+  .single-product div.product .mnsk7-pdp-main {
+    padding-bottom: 2rem;
+  }
+
   .single-product div.product .woocommerce-product-gallery.images,
   .single-product div.product .images {
     position: sticky !important;
-    top: calc(var(--header-h, 56px) + 1rem) !important;
+    top: calc(var(--mnsk7-promo-h, 0px) + var(--header-h, 56px) + 1rem) !important;
     z-index: 2;
     align-self: flex-start;
     height: fit-content;
+  }
+
+  .single-product div.product .flex-control-thumbs {
+    display: none !important;
   }
 }
 
