@@ -104,6 +104,26 @@ function mnsk7_key_param_slug_to_taxonomy( $slug ) {
 	return taxonomy_exists( $taxonomy ) ? $taxonomy : null;
 }
 
+function mnsk7_normalize_key_param_value( $value ) {
+	$value = trim( wp_strip_all_tags( (string) $value ) );
+	if ( $value === '' ) {
+		return '';
+	}
+
+	$value = preg_replace( '/\s+/', ' ', $value );
+	$value = preg_replace( '/(\d)\.(\d)/', '$1,$2', $value );
+	$value = preg_replace( '/(\d)\s*(mm|cm|m|°|deg)\b/iu', '$1 $2', $value );
+	$value = str_ireplace( array( ' deg', ' °' ), array( '°', '°' ), $value );
+	return trim( $value );
+}
+
+function mnsk7_key_param_option_key( $value ) {
+	$value = mnsk7_normalize_key_param_value( $value );
+	$value = mb_strtolower( $value );
+	$value = preg_replace( '/\s+/', '', $value );
+	return sanitize_title( $value );
+}
+
 function mnsk7_get_product_primary_category_id( $product ) {
 	if ( ! is_a( $product, 'WC_Product' ) ) {
 		return 0;
@@ -221,7 +241,7 @@ function mnsk7_get_key_param_model_links( $product, $taxonomy ) {
 		if ( ! $attr_tax || $attr_tax === $taxonomy ) {
 			continue;
 		}
-		$current_value = trim( wp_strip_all_tags( $product->get_attribute( $attr_tax ) ) );
+		$current_value = mnsk7_normalize_key_param_value( $product->get_attribute( $attr_tax ) );
 		if ( $current_value !== '' ) {
 			$current_attrs[ $attr_tax ] = $current_value;
 		}
@@ -233,14 +253,14 @@ function mnsk7_get_key_param_model_links( $product, $taxonomy ) {
 			continue;
 		}
 
-		$value = trim( wp_strip_all_tags( $linked->get_attribute( $taxonomy ) ) );
+		$value = mnsk7_normalize_key_param_value( $linked->get_attribute( $taxonomy ) );
 		if ( '' === $value ) {
 			continue;
 		}
 
 		$score = ( (int) $product_id === (int) $product->get_id() ) ? 1000 : 0;
 		foreach ( $current_attrs as $attr_tax => $current_value ) {
-			$linked_value = trim( wp_strip_all_tags( $linked->get_attribute( $attr_tax ) ) );
+			$linked_value = mnsk7_normalize_key_param_value( $linked->get_attribute( $attr_tax ) );
 			if ( $linked_value !== '' && $linked_value === $current_value ) {
 				$score++;
 			}
@@ -249,7 +269,7 @@ function mnsk7_get_key_param_model_links( $product, $taxonomy ) {
 			$score += 0.1;
 		}
 
-		$key = sanitize_title( $value );
+		$key = mnsk7_key_param_option_key( $value );
 		if ( isset( $options[ $key ] ) && $score <= $options[ $key ]['score'] ) {
 			continue;
 		}
@@ -484,18 +504,29 @@ function mnsk7_single_product_key_params() {
 			$val = $product->get_attribute( str_replace( 'pa_', '', $slug ) );
 		}
 		if ( $val !== '' && $val !== null ) {
-			$found[ $slug ] = array( 'label' => $labels[ $slug ], 'value' => $val );
+			$found[ $slug ] = array( 'label' => $labels[ $slug ], 'value' => mnsk7_normalize_key_param_value( $val ) );
 		}
 	}
 
 	if ( empty( $found ) ) {
 		$parsed = mnsk7_parse_excerpt_params( $product );
 		foreach ( $parsed as $label => $value ) {
-			$found[ 'excerpt_' . sanitize_title( $label ) ] = array( 'label' => $label, 'value' => $value );
+			$found[ 'excerpt_' . sanitize_title( $label ) ] = array( 'label' => $label, 'value' => mnsk7_normalize_key_param_value( $value ) );
 		}
 	}
 
 	if ( empty( $found ) ) {
+		$model_variant_links = mnsk7_get_model_variant_links( $product );
+		if ( $model_variant_links ) {
+			echo '<div class="mnsk7-product-key-params">';
+			echo '<h4 class="mnsk7-product-key-params__title">' . esc_html__( 'Kluczowe parametry', 'mnsk7-tools' ) . '</h4>';
+			echo '<dl class="mnsk7-product-key-params__list">';
+			echo '<dt>' . esc_html__( 'Wariant', 'mnsk7-tools' ) . '</dt>';
+			echo '<dd class="mnsk7-product-key-params__dd--options">';
+			mnsk7_render_key_param_model_links( $model_variant_links );
+			echo '</dd>';
+			echo '</dl></div>';
+		}
 		return;
 	}
 
