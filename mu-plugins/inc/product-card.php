@@ -217,7 +217,7 @@ function mnsk7_get_key_param_model_links( $product, $taxonomy ) {
 	$options = array();
 	foreach ( $model_ids as $product_id ) {
 		$linked = wc_get_product( $product_id );
-		if ( ! $linked || ! $linked->is_visible() || ! $linked->is_in_stock() ) {
+		if ( ! $linked || ! $linked->is_visible() ) {
 			continue;
 		}
 
@@ -253,6 +253,68 @@ function mnsk7_get_key_param_model_links( $product, $taxonomy ) {
 	} );
 
 	return array_values( $options );
+}
+
+function mnsk7_get_model_variant_label( $linked ) {
+	if ( ! is_a( $linked, 'WC_Product' ) ) {
+		return '';
+	}
+
+	$title = wp_strip_all_tags( $linked->get_name() );
+	if ( preg_match( '/\b([0-9]+L)\b/i', $title, $m ) ) {
+		return strtoupper( $m[1] );
+	}
+	if ( preg_match( '/\b([0-9]+P)\b/i', $title, $m ) ) {
+		return strtoupper( $m[1] );
+	}
+
+	$sku = trim( (string) $linked->get_sku() );
+	if ( $sku !== '' ) {
+		return $sku;
+	}
+
+	return (string) $linked->get_id();
+}
+
+function mnsk7_get_model_variant_links( $product ) {
+	if ( ! is_a( $product, 'WC_Product' ) ) {
+		return array();
+	}
+
+	$model_ids = mnsk7_get_wpclv_model_product_ids( $product->get_id(), '' );
+	if ( count( $model_ids ) < 2 ) {
+		return array();
+	}
+
+	$options = array();
+	foreach ( $model_ids as $product_id ) {
+		$linked = wc_get_product( $product_id );
+		if ( ! $linked || ! $linked->is_visible() ) {
+			continue;
+		}
+
+		$label = mnsk7_get_model_variant_label( $linked );
+		if ( $label === '' ) {
+			continue;
+		}
+
+		$options[] = array(
+			'product_id' => (int) $product_id,
+			'value'      => $label,
+			'url'        => get_permalink( $product_id ),
+			'current'    => ( (int) $product_id === (int) $product->get_id() ),
+		);
+	}
+
+	if ( count( $options ) < 2 ) {
+		return array();
+	}
+
+	usort( $options, static function ( $a, $b ) {
+		return strnatcasecmp( $a['value'], $b['value'] );
+	} );
+
+	return $options;
 }
 
 function mnsk7_render_key_param_model_links( $links ) {
@@ -414,6 +476,7 @@ function mnsk7_single_product_key_params() {
 	$var_attrs   = $is_variable ? $product->get_variation_attributes() : array();
 	$short_labels = function_exists( 'mnsk7_get_key_param_short_labels' ) ? mnsk7_get_key_param_short_labels() : array();
 	$shown_labels = array();
+	$has_model_link_row = false;
 
 	echo '<div class="mnsk7-product-key-params">';
 	echo '<h4 class="mnsk7-product-key-params__title">' . esc_html__( 'Kluczowe parametry', 'mnsk7-tools' ) . '</h4>';
@@ -434,6 +497,7 @@ function mnsk7_single_product_key_params() {
 			echo '<dd class="mnsk7-product-key-params__dd--options">';
 			mnsk7_render_key_param_model_links( $model_links );
 			echo '</dd>';
+			$has_model_link_row = true;
 		} elseif ( $is_var_attr && ! empty( $var_attrs[ $slug ] ) ) {
 			$name = 'attribute_' . esc_attr( $slug );
 			echo '<dd class="mnsk7-product-key-params__dd--select">';
@@ -464,6 +528,15 @@ function mnsk7_single_product_key_params() {
 			}
 		} else {
 			echo '<dd>' . esc_html( $value ) . '</dd>';
+		}
+	}
+	if ( ! $has_model_link_row ) {
+		$model_variant_links = mnsk7_get_model_variant_links( $product );
+		if ( $model_variant_links ) {
+			echo '<dt>' . esc_html__( 'Wariant', 'mnsk7-tools' ) . '</dt>';
+			echo '<dd class="mnsk7-product-key-params__dd--options">';
+			mnsk7_render_key_param_model_links( $model_variant_links );
+			echo '</dd>';
 		}
 	}
 	echo '</dl></div>';
