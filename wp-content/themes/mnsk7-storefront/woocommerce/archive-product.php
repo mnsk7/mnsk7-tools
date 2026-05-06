@@ -95,9 +95,10 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 				count( $terms )
 			);
 		$dropdown_class = 'mnsk7-plp-dropdown mnsk7-plp-dropdown--nav col-full' . ( $active_name ? ' mnsk7-plp-dropdown--active' : '' );
+		$panel_id       = 'mnsk7-plp-dropdown-panel-nav-' . sanitize_title( $label );
 		echo '<details class="' . esc_attr( $dropdown_class ) . '">';
-		echo '<summary class="mnsk7-plp-dropdown__summary"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title">' . esc_html( $label ) . '</span><span class="mnsk7-plp-dropdown__summary-meta">' . esc_html( $summary_meta ) . '</span></span></summary>';
-		echo '<div class="mnsk7-plp-dropdown__panel">';
+		echo '<summary class="mnsk7-plp-dropdown__summary" aria-haspopup="dialog" aria-expanded="false" aria-controls="' . esc_attr( $panel_id ) . '"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title">' . esc_html( $label ) . '</span><span class="mnsk7-plp-dropdown__summary-meta">' . esc_html( $summary_meta ) . '</span></span></summary>';
+		echo '<div id="' . esc_attr( $panel_id ) . '" class="mnsk7-plp-dropdown__panel" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1" aria-label="' . esc_attr( $label ) . '">';
 		echo '<div class="mnsk7-plp-dropdown__panel-head"><span class="mnsk7-plp-dropdown__panel-title">' . esc_html( $label ) . '</span><button type="button" class="mnsk7-plp-dropdown__close" aria-label="' . esc_attr__( 'Zamknij filtr', 'mnsk7-storefront' ) . '">' . esc_html__( 'Zamknij', 'mnsk7-storefront' ) . '</button></div>';
 		echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--nav" role="navigation" aria-label="' . esc_attr( $label ) . '">';
 		echo '<div class="mnsk7-plp-chips__scroll">';
@@ -193,9 +194,10 @@ $render_plp_attribute_section = function ( $clear_all_url ) use ( $plp_is_mobile
 					count( $chips_list )
 				);
 			$dropdown_class = 'mnsk7-plp-dropdown mnsk7-plp-dropdown--attrs col-full' . ( $active_label ? ' mnsk7-plp-dropdown--active' : '' );
+			$panel_id       = 'mnsk7-plp-dropdown-panel-' . sanitize_title( $param );
 			echo '<details class="' . esc_attr( $dropdown_class ) . '">';
-			echo '<summary class="mnsk7-plp-dropdown__summary"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title">' . esc_html( $attribute_filter['label'] ) . '</span><span class="mnsk7-plp-dropdown__summary-meta">' . esc_html( $summary_meta ) . '</span></span></summary>';
-			echo '<div class="mnsk7-plp-dropdown__panel">';
+			echo '<summary class="mnsk7-plp-dropdown__summary" aria-haspopup="dialog" aria-expanded="false" aria-controls="' . esc_attr( $panel_id ) . '"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title">' . esc_html( $attribute_filter['label'] ) . '</span><span class="mnsk7-plp-dropdown__summary-meta">' . esc_html( $summary_meta ) . '</span></span></summary>';
+			echo '<div id="' . esc_attr( $panel_id ) . '" class="mnsk7-plp-dropdown__panel" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1" aria-label="' . esc_attr( $attribute_filter['label'] ) . '">';
 			echo '<div class="mnsk7-plp-dropdown__panel-head"><span class="mnsk7-plp-dropdown__panel-title">' . esc_html( $attribute_filter['label'] ) . '</span><button type="button" class="mnsk7-plp-dropdown__close" aria-label="' . esc_attr__( 'Zamknij filtr', 'mnsk7-storefront' ) . '">' . esc_html__( 'Zamknij', 'mnsk7-storefront' ) . '</button></div>';
 			echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--attrs" role="navigation" aria-label="' . esc_attr( $aria_label ) . '">';
 			echo '<div class="mnsk7-plp-chips__scroll">';

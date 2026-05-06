@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.40' );
+	define( 'MNSK7_THEME_VERSION', '1.0.41' );
 }
 
 /**
@@ -1075,7 +1075,7 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( $fragments ) {
 		: sprintf( _n( 'Koszyk, %d pozycja', 'Koszyk, %d pozycji', $cart_count, 'mnsk7-storefront' ), $cart_count );
 	ob_start();
 	?>
-	<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php echo esc_attr( $cart_aria_label ); ?>" aria-expanded="false" aria-controls="mnsk7-header-cart-dropdown">
+	<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php echo esc_attr( $cart_aria_label ); ?>" aria-haspopup="dialog" aria-expanded="false" aria-controls="mnsk7-header-cart-dropdown">
 		<span class="mnsk7-header__cart-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
 		<span class="mnsk7-header__cart-count" aria-hidden="true"><?php echo absint( $cart_count ); ?></span>
 	</a>
@@ -1240,6 +1240,11 @@ add_action( 'wp_footer', function () {
 			cartWrap.classList.remove('is-open');
 			var trigger = cartWrap.querySelector('.mnsk7-header__cart-trigger, .cart-contents');
 			if (trigger) trigger.setAttribute('aria-expanded', 'false');
+			var dropdown = cartWrap.querySelector('.mnsk7-header__cart-dropdown');
+			if (dropdown) {
+				dropdown.hidden = true;
+				dropdown.setAttribute('aria-hidden', 'true');
+			}
 		}
 
 		function closeAllMobileOverlays(except) {
@@ -1441,6 +1446,7 @@ add_action( 'wp_footer', function () {
 			if (isNaN(count)) count = 0;
 			wrap.classList.toggle('mnsk7-header__cart--empty', count === 0);
 			cartLink.setAttribute('aria-controls', 'mnsk7-header-cart-dropdown');
+			cartLink.setAttribute('aria-haspopup', 'dialog');
 			if (!cartLink.hasAttribute('aria-expanded')) {
 				cartLink.setAttribute('aria-expanded', 'false');
 			}
@@ -1461,6 +1467,8 @@ add_action( 'wp_footer', function () {
 			if (trigger && dropdown) {
 				function setCartExpanded(open) {
 					trigger.setAttribute('aria-expanded', open ? 'true' : 'false');
+					dropdown.hidden = !open;
+					dropdown.setAttribute('aria-hidden', open ? 'false' : 'true');
 				}
 				document.addEventListener('click', function(e) {
 					if (!cartWrap.contains(e.target)) {
@@ -2015,20 +2023,37 @@ add_action( 'wp_footer', function () {
 			var dropdowns = document.querySelectorAll('.mnsk7-plp-dropdown');
 			if (!dropdowns.length) return;
 			function closeDropdown(details) {
-				if (details) details.removeAttribute('open');
+				if (!details) return;
+				details.removeAttribute('open');
+				var summary = details.querySelector('.mnsk7-plp-dropdown__summary');
+				var panel = details.querySelector('.mnsk7-plp-dropdown__panel');
+				if (summary) summary.setAttribute('aria-expanded', 'false');
+				if (panel) panel.setAttribute('aria-hidden', 'true');
 			}
 			dropdowns.forEach(function(details) {
+				var summary = details.querySelector('.mnsk7-plp-dropdown__summary');
+				var panel = details.querySelector('.mnsk7-plp-dropdown__panel');
+				if (summary) summary.setAttribute('aria-expanded', details.open ? 'true' : 'false');
+				if (panel) panel.setAttribute('aria-hidden', details.open ? 'false' : 'true');
 				details.addEventListener('toggle', function() {
-					if (!details.open) return;
+					var isOpen = details.open;
+					var detailsSummary = details.querySelector('.mnsk7-plp-dropdown__summary');
+					var detailsPanel = details.querySelector('.mnsk7-plp-dropdown__panel');
+					if (detailsSummary) detailsSummary.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+					if (detailsPanel) detailsPanel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+					if (!isOpen) return;
 					dropdowns.forEach(function(other) {
 						if (other !== details) closeDropdown(other);
 					});
+					if (detailsPanel) setTimeout(function() { detailsPanel.focus({ preventScroll: true }); }, 0);
 				});
 				var close = details.querySelector('.mnsk7-plp-dropdown__close');
 				if (close) {
 					close.addEventListener('click', function(e) {
 						e.preventDefault();
 						closeDropdown(details);
+						var summary = details.querySelector('.mnsk7-plp-dropdown__summary');
+						if (summary) summary.focus();
 					});
 				}
 			});
@@ -2053,11 +2078,19 @@ add_action( 'wp_footer', function () {
 				var details = document.createElement('details');
 				details.className = 'mnsk7-plp-dropdown mnsk7-plp-dropdown--fallback ' + (row.classList.contains('mnsk7-plp-chips--attrs') ? 'mnsk7-plp-dropdown--attrs' : 'mnsk7-plp-dropdown--nav') + (active ? ' mnsk7-plp-dropdown--active' : '');
 				details.innerHTML =
-					'<summary class="mnsk7-plp-dropdown__summary"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title"></span><span class="mnsk7-plp-dropdown__summary-meta"></span></span></summary>' +
-					'<div class="mnsk7-plp-dropdown__panel"><div class="mnsk7-plp-dropdown__panel-head"><span class="mnsk7-plp-dropdown__panel-title"></span><button type="button" class="mnsk7-plp-dropdown__close" aria-label="Zamknij filtr">Zamknij</button></div></div>';
+					'<summary class="mnsk7-plp-dropdown__summary" aria-haspopup="dialog" aria-expanded="false"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title"></span><span class="mnsk7-plp-dropdown__summary-meta"></span></span></summary>' +
+					'<div class="mnsk7-plp-dropdown__panel" role="dialog" aria-modal="true" aria-hidden="true" tabindex="-1"><div class="mnsk7-plp-dropdown__panel-head"><span class="mnsk7-plp-dropdown__panel-title"></span><button type="button" class="mnsk7-plp-dropdown__close" aria-label="Zamknij filtr">Zamknij</button></div></div>';
 				details.querySelector('.mnsk7-plp-dropdown__summary-title').textContent = label;
 				details.querySelector('.mnsk7-plp-dropdown__summary-meta').textContent = meta;
 				details.querySelector('.mnsk7-plp-dropdown__panel-title').textContent = label;
+				var panel = details.querySelector('.mnsk7-plp-dropdown__panel');
+				var summary = details.querySelector('.mnsk7-plp-dropdown__summary');
+				var panelId = 'mnsk7-plp-dropdown-fallback-' + index;
+				if (panel) {
+					panel.id = panelId;
+					panel.setAttribute('aria-label', label);
+				}
+				if (summary) summary.setAttribute('aria-controls', panelId);
 				row.dataset.mnsk7MobileModal = '1';
 				row.parentNode.insertBefore(details, row);
 				details.querySelector('.mnsk7-plp-dropdown__panel').appendChild(row);

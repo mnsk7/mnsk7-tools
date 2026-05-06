@@ -207,11 +207,11 @@ endif;
 					: sprintf( _n( 'Koszyk, %d pozycja', 'Koszyk, %d pozycji', $cart_count, 'mnsk7-storefront' ), $cart_count );
 				?>
 				<div class="mnsk7-header__cart<?php echo esc_attr( $cart_empty_class ); ?>">
-					<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php echo esc_attr( $cart_aria_label ); ?>" aria-expanded="false" aria-controls="mnsk7-header-cart-dropdown">
+					<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php echo esc_attr( $cart_aria_label ); ?>" aria-haspopup="dialog" aria-expanded="false" aria-controls="mnsk7-header-cart-dropdown">
 						<span class="mnsk7-header__cart-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
 						<span class="mnsk7-header__cart-count" aria-hidden="true"><?php echo absint( $cart_count ); ?></span>
 					</a>
-					<div id="mnsk7-header-cart-dropdown" class="mnsk7-header__cart-dropdown" role="region" aria-label="<?php esc_attr_e( 'Koszyk', 'mnsk7-storefront' ); ?>">
+					<div id="mnsk7-header-cart-dropdown" class="mnsk7-header__cart-dropdown" role="dialog" aria-modal="false" aria-hidden="true" aria-label="<?php esc_attr_e( 'Koszyk', 'mnsk7-storefront' ); ?>" tabindex="-1" hidden>
 						<?php
 						$loyalty_discount = function_exists( 'mnsk7_header_cart_loyalty_discount' ) ? mnsk7_header_cart_loyalty_discount() : 0.0;
 						echo function_exists( 'mnsk7_header_cart_summary_html' )
@@ -229,7 +229,7 @@ endif;
 		</div>
 	</div>
 </header>
-<div id="mnsk7-header-search-panel" class="mnsk7-header-search-panel" aria-hidden="true">
+<div id="mnsk7-header-search-panel" class="mnsk7-header-search-panel" aria-hidden="true" hidden>
 	<form role="search" method="get" class="mnsk7-header-search-panel__form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
 		<label for="mnsk7-header-search-panel-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
 		<input type="search" id="mnsk7-header-search-panel-input" class="mnsk7-header-search-panel__input" placeholder="<?php esc_attr_e( 'Szukaj produktów…', 'mnsk7-storefront' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>" name="s" />
