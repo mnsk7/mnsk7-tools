@@ -3498,10 +3498,11 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   }
 
   .single-product div.product .summary.mnsk7-pdp-buybox {
-    max-width: 100%;
-    width: 100%;
+    max-width: 100% !important;
+    width: 100% !important;
     min-width: 0;
-    flex-basis: 100%;
+    flex: 0 0 100%;
+    float: none;
   }
 
   .single-product div.product > .mnsk7-product-extra-media,
