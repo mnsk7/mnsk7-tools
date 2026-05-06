@@ -111,8 +111,6 @@
    ----------------------------------------------------------------- */
 
 .related.products ul.products:has(> li.product:first-child:nth-last-child(1)),
-.upsells.products ul.products:has(> li.product:first-child:nth-last-child(1)),
-.up-sells.products ul.products:has(> li.product:first-child:nth-last-child(1)),
 .cross-sells ul.products:has(> li.product:first-child:nth-last-child(1)),
 .mnsk7-section--bestsellers ul.products:has(> li.product:first-child:nth-last-child(1)) {
   grid-template-columns: 1fr !important;

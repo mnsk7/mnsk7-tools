@@ -19,6 +19,7 @@ function mnsk7_get_key_param_short_labels() {
 		__( 'Średnica trzpienia', 'mnsk7-tools' )       => __( 'Trzpień', 'mnsk7-tools' ),
 		__( 'Długość robocza', 'mnsk7-tools' )          => __( 'Dł. robocza', 'mnsk7-tools' ),
 		__( 'Długość całkowita', 'mnsk7-tools' )       => __( 'Dł. całkowita', 'mnsk7-tools' ),
+		__( 'Kąt skosu', 'mnsk7-tools' )               => __( 'Kąt', 'mnsk7-tools' ),
 		__( 'Liczba zębów', 'mnsk7-tools' )             => __( 'Ilość ostrzy', 'mnsk7-tools' ),
 		__( 'Materiał obróbki', 'mnsk7-tools' )         => __( 'Materiał', 'mnsk7-tools' ),
 		__( 'Typ operacji', 'mnsk7-tools' )             => __( 'Typ', 'mnsk7-tools' ),
@@ -35,9 +36,11 @@ function mnsk7_get_key_param_short_labels() {
 function mnsk7_get_key_param_attributes() {
 	return array(
 		'pa_srednica'             => __( 'Średnica części roboczej', 'mnsk7-tools' ),
+		'pa_fi'                   => __( 'Średnica trzpienia', 'mnsk7-tools' ),
 		'pa_srednica-trzpienia'   => __( 'Średnica trzpienia', 'mnsk7-tools' ),
 		'pa_dlugosc-robocza-h'    => __( 'Długość robocza', 'mnsk7-tools' ),
 		'pa_dlugosc-calkowita-l'  => __( 'Długość całkowita', 'mnsk7-tools' ),
+		'pa_kat-skosu'            => __( 'Kąt skosu', 'mnsk7-tools' ),
 		'pa_r'                    => __( 'Promień R', 'mnsk7-tools' ),
 		'pa_typ'                  => __( 'Typ', 'mnsk7-tools' ),
 		'pa_ksztalt'              => __( 'Kształt', 'mnsk7-tools' ),
@@ -192,6 +195,75 @@ function mnsk7_get_wpclv_model_product_ids( $product_id, $taxonomy = '' ) {
 
 	wp_cache_set( $cache_key, $fallback, 'mnsk7_product_card', HOUR_IN_SECONDS );
 	return $fallback;
+}
+
+/**
+ * Direct product links for a key parameter inside the current production model group.
+ *
+ * @param WC_Product $product Current product.
+ * @param string     $taxonomy Attribute taxonomy.
+ * @return array<int,array{product_id:int,value:string,url:string,current:bool}>
+ */
+function mnsk7_get_key_param_model_links( $product, $taxonomy ) {
+	if ( ! is_a( $product, 'WC_Product' ) || ! $taxonomy || ! taxonomy_exists( $taxonomy ) ) {
+		return array();
+	}
+
+	$model_ids = mnsk7_get_wpclv_model_product_ids( $product->get_id(), $taxonomy );
+	if ( empty( $model_ids ) ) {
+		return array();
+	}
+
+	$options = array();
+	foreach ( $model_ids as $product_id ) {
+		$linked = wc_get_product( $product_id );
+		if ( ! $linked || ! $linked->is_visible() || ! $linked->is_in_stock() ) {
+			continue;
+		}
+
+		$value = trim( wp_strip_all_tags( $linked->get_attribute( $taxonomy ) ) );
+		if ( '' === $value ) {
+			continue;
+		}
+
+		$key = sanitize_title( $value );
+		if ( isset( $options[ $key ] ) && $product_id !== $product->get_id() ) {
+			continue;
+		}
+
+		$options[ $key ] = array(
+			'product_id' => (int) $product_id,
+			'value'      => $value,
+			'url'        => get_permalink( $product_id ),
+			'current'    => ( (int) $product_id === (int) $product->get_id() ),
+		);
+	}
+
+	if ( count( $options ) < 2 ) {
+		return array();
+	}
+
+	uasort( $options, static function ( $a, $b ) {
+		$an = (float) str_replace( ',', '.', preg_replace( '/[^0-9,.\-]/', '', $a['value'] ) );
+		$bn = (float) str_replace( ',', '.', preg_replace( '/[^0-9,.\-]/', '', $b['value'] ) );
+		if ( $an === $bn ) {
+			return strnatcasecmp( $a['value'], $b['value'] );
+		}
+		return $an <=> $bn;
+	} );
+
+	return array_values( $options );
+}
+
+function mnsk7_render_key_param_model_links( $links ) {
+	echo '<div class="mnsk7-key-param-options" role="list">';
+	foreach ( $links as $link ) {
+		$class = 'mnsk7-key-param-option' . ( ! empty( $link['current'] ) ? ' is-current' : '' );
+		echo '<a class="' . esc_attr( $class ) . '" role="listitem" href="' . esc_url( $link['url'] ) . '"' . ( ! empty( $link['current'] ) ? ' aria-current="page"' : '' ) . '>';
+		echo esc_html( $link['value'] );
+		echo '</a>';
+	}
+	echo '</div>';
 }
 
 /**
@@ -356,7 +428,13 @@ function mnsk7_single_product_key_params() {
 		$shown_labels[ $display_label ] = true;
 		echo '<dt>' . esc_html( $display_label ) . '</dt>';
 		$is_var_attr = $is_variable && strpos( $slug, 'excerpt_' ) !== 0 && isset( $var_attrs[ $slug ] );
-		if ( $is_var_attr && ! empty( $var_attrs[ $slug ] ) ) {
+		$taxonomy = ( strpos( $slug, 'excerpt_' ) !== 0 ) ? mnsk7_key_param_slug_to_taxonomy( $slug ) : '';
+		$model_links = $taxonomy ? mnsk7_get_key_param_model_links( $product, $taxonomy ) : array();
+		if ( $model_links ) {
+			echo '<dd class="mnsk7-product-key-params__dd--options">';
+			mnsk7_render_key_param_model_links( $model_links );
+			echo '</dd>';
+		} elseif ( $is_var_attr && ! empty( $var_attrs[ $slug ] ) ) {
 			$name = 'attribute_' . esc_attr( $slug );
 			echo '<dd class="mnsk7-product-key-params__dd--select">';
 			echo '<select name="' . $name . '" data-attribute_name="' . esc_attr( $slug ) . '" class="mnsk7-key-param-select">';
