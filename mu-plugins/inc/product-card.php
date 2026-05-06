@@ -113,6 +113,88 @@ function mnsk7_get_product_primary_category_id( $product ) {
 }
 
 /**
+ * Product IDs from WPC Linked Variation group for current product.
+ *
+ * Production uses WPC linked groups as the source of "same model" products.
+ * When a group exists, PDP key-param switches must stay inside it instead of
+ * widening to the whole product category.
+ *
+ * @param int    $product_id Current product ID.
+ * @param string $taxonomy   Attribute taxonomy currently rendered.
+ * @return int[]
+ */
+function mnsk7_get_wpclv_model_product_ids( $product_id, $taxonomy = '' ) {
+	$product_id = absint( $product_id );
+	if ( $product_id <= 0 || ! post_type_exists( 'wpclv' ) ) {
+		return array();
+	}
+
+	$cache_key = 'mnsk7_wpclv_model_products_' . $product_id . '_' . sanitize_key( $taxonomy );
+	$cached    = wp_cache_get( $cache_key, 'mnsk7_product_card' );
+	if ( false !== $cached ) {
+		return is_array( $cached ) ? $cached : array();
+	}
+
+	$groups = get_posts( array(
+		'post_type'              => 'wpclv',
+		'post_status'            => 'publish',
+		'posts_per_page'         => 100,
+		'fields'                 => 'ids',
+		'no_found_rows'          => true,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
+	) );
+
+	if ( empty( $groups ) ) {
+		wp_cache_set( $cache_key, array(), 'mnsk7_product_card', HOUR_IN_SECONDS );
+		return array();
+	}
+
+	$taxonomy_id = 0;
+	if ( $taxonomy && function_exists( 'wc_attribute_taxonomy_id_by_name' ) ) {
+		$taxonomy_id = absint( wc_attribute_taxonomy_id_by_name( str_replace( 'pa_', '', $taxonomy ) ) );
+	}
+
+	$fallback = array();
+	foreach ( $groups as $group_id ) {
+		$raw  = get_post_meta( $group_id, 'wpclv_link', true );
+		$data = maybe_unserialize( $raw );
+		if ( is_string( $data ) ) {
+			$data = maybe_unserialize( $data );
+		}
+		if ( ! is_array( $data ) || empty( $data['products'] ) ) {
+			continue;
+		}
+
+		$ids = array_values( array_filter( array_map( 'absint', explode( ',', (string) $data['products'] ) ) ) );
+		if ( ! in_array( $product_id, $ids, true ) ) {
+			continue;
+		}
+
+		$attr_ids = array();
+		if ( ! empty( $data['attributes'] ) && is_array( $data['attributes'] ) ) {
+			foreach ( $data['attributes'] as $attr_ref ) {
+				if ( preg_match( '/^id:(\d+)$/', (string) $attr_ref, $m ) ) {
+					$attr_ids[] = absint( $m[1] );
+				}
+			}
+		}
+
+		if ( $taxonomy_id > 0 && in_array( $taxonomy_id, $attr_ids, true ) ) {
+			wp_cache_set( $cache_key, $ids, 'mnsk7_product_card', HOUR_IN_SECONDS );
+			return $ids;
+		}
+
+		if ( empty( $fallback ) ) {
+			$fallback = $ids;
+		}
+	}
+
+	wp_cache_set( $cache_key, $fallback, 'mnsk7_product_card', HOUR_IN_SECONDS );
+	return $fallback;
+}
+
+/**
  * Get variant options for a key param: other values available in the same category.
  * Used to show select/links on PDP so user can switch to another product (category + filter).
  *
@@ -142,25 +224,36 @@ function mnsk7_get_key_param_variant_options( $product, $attr_slug, $value ) {
 		return $cached;
 	}
 
-	$product_ids = get_posts( array(
+	$model_product_ids = mnsk7_get_wpclv_model_product_ids( $product->get_id(), $taxonomy );
+	$query_args        = array(
 		'post_type'              => 'product',
 		'post_status'            => 'publish',
 		'fields'                 => 'ids',
-		'posts_per_page'         => 150,
+		'posts_per_page'         => $model_product_ids ? max( 150, count( $model_product_ids ) ) : 150,
 		'no_found_rows'          => true,
 		'update_post_meta_cache' => false,
 		'update_post_term_cache' => false,
-		'tax_query'              => array(
+		'meta_query'             => array(
+			array(
+				'key'   => '_stock_status',
+				'value' => 'instock',
+			),
+		),
+	);
+
+	if ( $model_product_ids ) {
+		$query_args['post__in'] = $model_product_ids;
+	} else {
+		$query_args['tax_query'] = array(
 			array(
 				'taxonomy' => 'product_cat',
 				'field'    => 'term_id',
 				'terms'    => $cat_id,
 			),
-		),
-		'meta_query' => array(
-			array( 'key' => '_stock_status', 'value' => 'instock' ),
-		),
-	) );
+		);
+	}
+
+	$product_ids = get_posts( $query_args );
 
 	if ( empty( $product_ids ) ) {
 		wp_cache_set( $cache_key, null, 'mnsk7_product_card', HOUR_IN_SECONDS );

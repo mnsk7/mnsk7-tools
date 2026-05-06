@@ -6,7 +6,8 @@
 
 /* Task 8: zapobiegaj poziomemu przewijaniu. clip (not hidden) — nie tworzy scroll container, nie łamie position:sticky. */
 html {
-  overflow-x: visible;
+  overflow-x: visible !important;
+  overflow-y: visible !important;
   max-width: 100%;
   /* iOS Safari can auto-enlarge text and break tight header geometry. Keep scale consistent with desktop tests. */
   -webkit-text-size-adjust: 100%;
