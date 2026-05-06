@@ -215,6 +215,18 @@ function mnsk7_get_key_param_model_links( $product, $taxonomy ) {
 	}
 
 	$options = array();
+	$current_attrs = array();
+	foreach ( array_keys( mnsk7_get_key_param_attributes() ) as $attr_slug ) {
+		$attr_tax = mnsk7_key_param_slug_to_taxonomy( $attr_slug );
+		if ( ! $attr_tax || $attr_tax === $taxonomy ) {
+			continue;
+		}
+		$current_value = trim( wp_strip_all_tags( $product->get_attribute( $attr_tax ) ) );
+		if ( $current_value !== '' ) {
+			$current_attrs[ $attr_tax ] = $current_value;
+		}
+	}
+
 	foreach ( $model_ids as $product_id ) {
 		$linked = wc_get_product( $product_id );
 		if ( ! $linked || get_post_status( $product_id ) !== 'publish' ) {
@@ -226,8 +238,19 @@ function mnsk7_get_key_param_model_links( $product, $taxonomy ) {
 			continue;
 		}
 
+		$score = ( (int) $product_id === (int) $product->get_id() ) ? 1000 : 0;
+		foreach ( $current_attrs as $attr_tax => $current_value ) {
+			$linked_value = trim( wp_strip_all_tags( $linked->get_attribute( $attr_tax ) ) );
+			if ( $linked_value !== '' && $linked_value === $current_value ) {
+				$score++;
+			}
+		}
+		if ( $linked->is_in_stock() ) {
+			$score += 0.1;
+		}
+
 		$key = sanitize_title( $value );
-		if ( isset( $options[ $key ] ) && $product_id !== $product->get_id() ) {
+		if ( isset( $options[ $key ] ) && $score <= $options[ $key ]['score'] ) {
 			continue;
 		}
 
@@ -236,6 +259,7 @@ function mnsk7_get_key_param_model_links( $product, $taxonomy ) {
 			'value'      => $value,
 			'url'        => get_permalink( $product_id ),
 			'current'    => ( (int) $product_id === (int) $product->get_id() ),
+			'score'      => $score,
 		);
 	}
 
@@ -252,7 +276,10 @@ function mnsk7_get_key_param_model_links( $product, $taxonomy ) {
 		return $an <=> $bn;
 	} );
 
-	return array_values( $options );
+	return array_map( static function ( $option ) {
+		unset( $option['score'] );
+		return $option;
+	}, array_values( $options ) );
 }
 
 function mnsk7_get_model_variant_label( $linked ) {
