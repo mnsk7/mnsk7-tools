@@ -217,7 +217,7 @@ function mnsk7_get_key_param_model_links( $product, $taxonomy ) {
 	$options = array();
 	foreach ( $model_ids as $product_id ) {
 		$linked = wc_get_product( $product_id );
-		if ( ! $linked || ! $linked->is_visible() ) {
+		if ( ! $linked || get_post_status( $product_id ) !== 'publish' ) {
 			continue;
 		}
 
@@ -289,7 +289,7 @@ function mnsk7_get_model_variant_links( $product ) {
 	$options = array();
 	foreach ( $model_ids as $product_id ) {
 		$linked = wc_get_product( $product_id );
-		if ( ! $linked || ! $linked->is_visible() ) {
+		if ( ! $linked || get_post_status( $product_id ) !== 'publish' ) {
 			continue;
 		}
 
