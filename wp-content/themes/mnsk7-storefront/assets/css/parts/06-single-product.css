@@ -392,6 +392,22 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   box-shadow: inset 0 0 0 1px var(--color-primary);
 }
 
+@media (max-width: 767px) {
+  .mnsk7-key-param-options {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    padding: 0.08rem 0.05rem 0.28rem;
+    scrollbar-width: thin;
+  }
+
+  .mnsk7-key-param-option {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+}
+
 .mnsk7-product-key-params__dd--select .mnsk7-key-param-select {
   width: 100%;
   max-width: 140px;

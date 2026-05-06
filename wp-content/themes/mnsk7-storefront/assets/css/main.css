@@ -13061,3 +13061,19 @@ button[type="submit"],
   }
 }
 
+@media (max-width: 767px) {
+  .mnsk7-key-param-options {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    padding: 0.08rem 0.05rem 0.28rem;
+    scrollbar-width: thin;
+  }
+
+  .mnsk7-key-param-option {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+}
+
