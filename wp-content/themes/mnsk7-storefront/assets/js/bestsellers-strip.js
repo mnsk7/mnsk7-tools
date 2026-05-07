@@ -37,8 +37,8 @@
 
 		function syncTabStops() {
 			var scrollerRect = scroller.getBoundingClientRect();
-			var left = scrollerRect.left - 1;
-			var right = scrollerRect.right + 1;
+			var left = Math.max(scrollerRect.left, 0) - 1;
+			var right = Math.min(scrollerRect.right, window.innerWidth || document.documentElement.clientWidth) + 1;
 			focusables.forEach(function(el) {
 				var rect = el.getBoundingClientRect();
 				var enabled = rect.width > 0 && rect.height > 0 && rect.left >= left && rect.right <= right;
