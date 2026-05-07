@@ -239,3 +239,10 @@ endif;
 </div>
 
 <div id="content" class="site-content mnsk7-content">
+<?php
+if ( function_exists( 'is_cart' ) && is_cart() ) {
+	echo '<h1 class="screen-reader-text">' . esc_html__( 'Koszyk', 'mnsk7-storefront' ) . '</h1>';
+} elseif ( function_exists( 'is_checkout' ) && is_checkout() ) {
+	echo '<h1 class="screen-reader-text">' . esc_html__( 'Zamówienie', 'mnsk7-storefront' ) . '</h1>';
+}
+?>

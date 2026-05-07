@@ -2685,22 +2685,6 @@ function mnsk7_render_trust_badges( $wrapper_class = 'mnsk7-pdp-trust' ) {
 	echo '</div>';
 }
 
-add_action( 'woocommerce_before_main_content', function () {
-	static $mnsk7_rendered_woo_page_h1 = false;
-	if ( $mnsk7_rendered_woo_page_h1 ) {
-		return;
-	}
-	if ( function_exists( 'is_cart' ) && is_cart() ) {
-		$mnsk7_rendered_woo_page_h1 = true;
-		echo '<h1 class="screen-reader-text">' . esc_html__( 'Koszyk', 'mnsk7-storefront' ) . '</h1>';
-		return;
-	}
-	if ( function_exists( 'is_checkout' ) && is_checkout() ) {
-		$mnsk7_rendered_woo_page_h1 = true;
-		echo '<h1 class="screen-reader-text">' . esc_html__( 'Zamówienie', 'mnsk7-storefront' ) . '</h1>';
-	}
-}, 1 );
-
 /**
  * Product imagery hardening:
  * - fallback alt text for Woo thumbnails when media alt is empty/hash-like,
