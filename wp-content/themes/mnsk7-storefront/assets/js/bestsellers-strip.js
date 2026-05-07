@@ -41,7 +41,8 @@
 			var right = Math.min(scrollerRect.right, window.innerWidth || document.documentElement.clientWidth) + 1;
 			focusables.forEach(function(el) {
 				var rect = el.getBoundingClientRect();
-				var enabled = rect.width > 0 && rect.height > 0 && rect.left >= left && rect.right <= right;
+				var center = rect.left + (rect.width / 2);
+				var enabled = rect.width > 0 && rect.height > 0 && center >= left && center <= right && rect.left >= left && rect.right <= right;
 				setFocusableState(el, enabled);
 			});
 		}
