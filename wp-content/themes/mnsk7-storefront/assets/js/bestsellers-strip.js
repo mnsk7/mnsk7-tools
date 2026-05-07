@@ -14,9 +14,42 @@
 			return;
 		}
 
+		var focusableSelector = 'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]';
+		var focusables = Array.prototype.slice.call(scroller.querySelectorAll(focusableSelector));
+
+		function setFocusableState(el, enabled) {
+			if (!el.dataset.mnsk7BestsellerTabindexSaved) {
+				el.dataset.mnsk7BestsellerTabindexSaved = '1';
+				if (el.hasAttribute('tabindex')) {
+					el.dataset.mnsk7BestsellerTabindex = el.getAttribute('tabindex');
+				}
+			}
+			if (enabled) {
+				if (el.dataset.mnsk7BestsellerTabindex !== undefined) {
+					el.setAttribute('tabindex', el.dataset.mnsk7BestsellerTabindex);
+				} else {
+					el.removeAttribute('tabindex');
+				}
+			} else {
+				el.setAttribute('tabindex', '-1');
+			}
+		}
+
+		function syncTabStops() {
+			var scrollerRect = scroller.getBoundingClientRect();
+			var left = scrollerRect.left - 1;
+			var right = scrollerRect.right + 1;
+			focusables.forEach(function(el) {
+				var rect = el.getBoundingClientRect();
+				var enabled = rect.width > 0 && rect.height > 0 && rect.left >= left && rect.right <= right;
+				setFocusableState(el, enabled);
+			});
+		}
+
 		function scrollStep(direction) {
 			var amount = Math.max(160, Math.round(scroller.clientWidth * 0.82));
 			scroller.scrollBy({ left: direction * amount, behavior: 'smooth' });
+			window.setTimeout(syncTabStops, 260);
 		}
 
 		prev.addEventListener('click', function () {
@@ -25,5 +58,10 @@
 		next.addEventListener('click', function () {
 			scrollStep(1);
 		});
+		scroller.addEventListener('scroll', function() {
+			window.requestAnimationFrame(syncTabStops);
+		}, { passive: true });
+		window.addEventListener('resize', syncTabStops, { passive: true });
+		syncTabStops();
 	});
 })();
