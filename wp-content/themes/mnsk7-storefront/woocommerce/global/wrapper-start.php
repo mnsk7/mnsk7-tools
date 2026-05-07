@@ -14,3 +14,10 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 <div id="primary" class="content-area mnsk7-content-area">
 	<main id="main" class="site-main mnsk7-main" role="main">
+		<?php
+		if ( function_exists( 'is_cart' ) && is_cart() ) {
+			echo '<h1 class="screen-reader-text">' . esc_html__( 'Koszyk', 'mnsk7-storefront' ) . '</h1>';
+		} elseif ( function_exists( 'is_checkout' ) && is_checkout() ) {
+			echo '<h1 class="screen-reader-text">' . esc_html__( 'Zamówienie', 'mnsk7-storefront' ) . '</h1>';
+		}
+		?>
