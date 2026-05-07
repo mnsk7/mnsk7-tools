@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.41' );
+	define( 'MNSK7_THEME_VERSION', '1.0.42' );
 }
 
 /**
@@ -2678,12 +2678,20 @@ function mnsk7_render_trust_badges( $wrapper_class = 'mnsk7-pdp-trust' ) {
 	$eta_label = preg_replace( '/\s*[-–—]+\s*$/u', '', (string) $eta_label );
 	$item_class = $wrapper_class . '__item';
 	echo '<div class="' . esc_attr( $wrapper_class ) . '" role="list">';
-	echo '<span class="' . esc_attr( $item_class ) . '">' . esc_html( $eta_label ) . '</span>';
-	echo '<span class="' . esc_attr( $item_class ) . '">' . esc_html__( 'Faktura VAT', 'mnsk7-storefront' ) . '</span>';
-	echo '<span class="' . esc_attr( $item_class ) . '">' . esc_html__( 'Darmowa dostawa od 300 zł', 'mnsk7-storefront' ) . '</span>';
-	echo '<span class="' . esc_attr( $item_class ) . '">' . esc_html__( 'Zwroty 30 dni', 'mnsk7-storefront' ) . '</span>';
+	echo '<span class="' . esc_attr( $item_class ) . '" role="listitem">' . esc_html( $eta_label ) . '</span>';
+	echo '<span class="' . esc_attr( $item_class ) . '" role="listitem">' . esc_html__( 'Faktura VAT', 'mnsk7-storefront' ) . '</span>';
+	echo '<span class="' . esc_attr( $item_class ) . '" role="listitem">' . esc_html__( 'Darmowa dostawa od 300 zł', 'mnsk7-storefront' ) . '</span>';
+	echo '<span class="' . esc_attr( $item_class ) . '" role="listitem">' . esc_html__( 'Zwroty 30 dni', 'mnsk7-storefront' ) . '</span>';
 	echo '</div>';
 }
+
+add_action( 'woocommerce_before_cart', function () {
+	echo '<h1 class="screen-reader-text">' . esc_html__( 'Koszyk', 'mnsk7-storefront' ) . '</h1>';
+}, 1 );
+
+add_action( 'woocommerce_before_checkout_form', function () {
+	echo '<h1 class="screen-reader-text">' . esc_html__( 'Zamówienie', 'mnsk7-storefront' ) . '</h1>';
+}, 1 );
 
 /**
  * Product imagery hardening:

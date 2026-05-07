@@ -365,10 +365,10 @@ function mnsk7_get_model_variant_links( $product ) {
 }
 
 function mnsk7_render_key_param_model_links( $links ) {
-	echo '<div class="mnsk7-key-param-options" role="list">';
+	echo '<div class="mnsk7-key-param-options">';
 	foreach ( $links as $link ) {
 		$class = 'mnsk7-key-param-option' . ( ! empty( $link['current'] ) ? ' is-current' : '' );
-		echo '<a class="' . esc_attr( $class ) . '" role="listitem" href="' . esc_url( $link['url'] ) . '"' . ( ! empty( $link['current'] ) ? ' aria-current="page"' : '' ) . '>';
+		echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $link['url'] ) . '"' . ( ! empty( $link['current'] ) ? ' aria-current="page"' : '' ) . '>';
 		echo esc_html( $link['value'] );
 		echo '</a>';
 	}
@@ -519,7 +519,7 @@ function mnsk7_single_product_key_params() {
 		$model_variant_links = mnsk7_get_model_variant_links( $product );
 		if ( $model_variant_links ) {
 			echo '<div class="mnsk7-product-key-params">';
-			echo '<h4 class="mnsk7-product-key-params__title">' . esc_html__( 'Kluczowe parametry', 'mnsk7-tools' ) . '</h4>';
+			echo '<div class="mnsk7-product-key-params__title">' . esc_html__( 'Kluczowe parametry', 'mnsk7-tools' ) . '</div>';
 			echo '<dl class="mnsk7-product-key-params__list">';
 			echo '<dt>' . esc_html__( 'Wariant', 'mnsk7-tools' ) . '</dt>';
 			echo '<dd class="mnsk7-product-key-params__dd--options">';
@@ -537,7 +537,7 @@ function mnsk7_single_product_key_params() {
 	$has_model_link_row = false;
 
 	echo '<div class="mnsk7-product-key-params">';
-	echo '<h4 class="mnsk7-product-key-params__title">' . esc_html__( 'Kluczowe parametry', 'mnsk7-tools' ) . '</h4>';
+	echo '<div class="mnsk7-product-key-params__title">' . esc_html__( 'Kluczowe parametry', 'mnsk7-tools' ) . '</div>';
 	echo '<dl class="mnsk7-product-key-params__list">';
 	foreach ( $found as $slug => $item ) {
 		$long_label = $item['label'];
