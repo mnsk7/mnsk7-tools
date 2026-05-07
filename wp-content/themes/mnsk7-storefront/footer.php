@@ -116,6 +116,18 @@ $privacy_policy_url = $privacy_policy_url ? $privacy_policy_url : home_url( '/pr
 				<!-- mnsk7-footer newsletter -->
 				<p class="mnsk7-footer__newsletter-desc"><?php esc_html_e( 'Otrzymuj informacje o promocjach, nowościach i poradach.', 'mnsk7-storefront' ); ?></p>
 				<form class="mnsk7-footer__newsletter-form" action="<?php echo esc_url( home_url( '/' ) ); ?>" method="post" aria-label="<?php esc_attr_e( 'Zapisz się do newslettera', 'mnsk7-storefront' ); ?>">
+					<?php if ( isset( $_GET['mnsk7_newsletter'] ) ) : ?>
+						<?php
+						$newsletter_status = sanitize_key( wp_unslash( $_GET['mnsk7_newsletter'] ) );
+						$newsletter_ok     = $newsletter_status === 'ok';
+						$newsletter_msg    = $newsletter_ok
+							? __( 'Dziękujemy za zapis do newslettera.', 'mnsk7-storefront' )
+							: __( 'Podaj poprawny adres e-mail.', 'mnsk7-storefront' );
+						?>
+						<p class="woocommerce-<?php echo $newsletter_ok ? 'message' : 'error'; ?> mnsk7-footer__newsletter-notice" role="<?php echo $newsletter_ok ? 'status' : 'alert'; ?>" tabindex="-1">
+							<?php echo esc_html( $newsletter_msg ); ?>
+						</p>
+					<?php endif; ?>
 					<?php wp_nonce_field( 'mnsk7_newsletter', 'mnsk7_newsletter_nonce' ); ?>
 					<input type="hidden" name="mnsk7_newsletter" value="1" />
 					<label for="mnsk7-newsletter-email" class="screen-reader-text"><?php esc_html_e( 'Adres e-mail', 'mnsk7-storefront' ); ?></label>

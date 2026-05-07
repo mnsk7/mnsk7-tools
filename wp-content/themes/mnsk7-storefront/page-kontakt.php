@@ -35,6 +35,18 @@ get_header();
 								<h2 class="mnsk7-contact-form__title"><?php esc_html_e( 'Formularz kontaktowy', 'mnsk7-storefront' ); ?></h2>
 								<p class="mnsk7-contact-form__desc"><?php esc_html_e( 'Napisz do nas — odpowiadamy w dni robocze.', 'mnsk7-storefront' ); ?></p>
 								<form class="mnsk7-contact-form" action="<?php echo esc_url( get_permalink() ); ?>" method="post" aria-label="<?php esc_attr_e( 'Wyślij wiadomość', 'mnsk7-storefront' ); ?>">
+									<?php if ( isset( $_GET['mnsk7_contact'] ) ) : ?>
+										<?php
+										$contact_status = sanitize_key( wp_unslash( $_GET['mnsk7_contact'] ) );
+										$contact_ok     = $contact_status === 'ok';
+										$contact_msg    = $contact_ok
+											? __( 'Dziękujemy. Twoja wiadomość została wysłana. Odpowiemy w dni robocze.', 'mnsk7-storefront' )
+											: __( 'Wystąpił błąd podczas wysyłania. Spróbuj ponownie lub napisz na podany e-mail.', 'mnsk7-storefront' );
+										?>
+										<p class="woocommerce-<?php echo $contact_ok ? 'message' : 'error'; ?> mnsk7-contact-form__notice" role="<?php echo $contact_ok ? 'status' : 'alert'; ?>" tabindex="-1">
+											<?php echo esc_html( $contact_msg ); ?>
+										</p>
+									<?php endif; ?>
 									<?php wp_nonce_field( 'mnsk7_contact_form', 'mnsk7_contact_nonce' ); ?>
 									<input type="hidden" name="mnsk7_contact_form" value="1" />
 									<p class="mnsk7-contact-form__row">

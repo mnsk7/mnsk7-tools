@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.42' );
+	define( 'MNSK7_THEME_VERSION', '1.0.43' );
 }
 
 /**
@@ -726,16 +726,6 @@ add_action( 'template_redirect', function () {
 	exit;
 }, 5 );
 
-add_action( 'wp_footer', function () {
-	if ( ! isset( $_GET['mnsk7_newsletter'] ) ) {
-		return;
-	}
-	$status = sanitize_key( wp_unslash( $_GET['mnsk7_newsletter'] ) );
-	$msg    = ( $status === 'ok' )
-		? __( 'Dziękujemy za zapis do newslettera.', 'mnsk7-storefront' )
-		: __( 'Podaj poprawny adres e-mail.', 'mnsk7-storefront' );
-	echo '<script>document.addEventListener("DOMContentLoaded",function(){if(typeof wc_add_to_cart_params!=="undefined"){alert("' . esc_js( $msg ) . '");}else{alert("' . esc_js( $msg ) . '");}});</script>';
-}, 1 );
 
 add_action( 'wp_footer', function () {
 	if ( ! function_exists( 'is_checkout' ) || ! is_checkout() || is_order_received_page() ) {
@@ -809,16 +799,6 @@ add_action( 'template_redirect', function () {
 	exit;
 }, 5 );
 
-add_action( 'wp_footer', function () {
-	if ( ! isset( $_GET['mnsk7_contact'] ) ) {
-		return;
-	}
-	$status = sanitize_key( wp_unslash( $_GET['mnsk7_contact'] ) );
-	$msg    = ( $status === 'ok' )
-		? __( 'Dziękujemy. Twoja wiadomość została wysłana. Odpowiemy w dni robocze.', 'mnsk7-storefront' )
-		: __( 'Wystąpił błąd podczas wysyłania. Spróbuj ponownie lub napisz na podany e-mail.', 'mnsk7-storefront' );
-	echo '<script>document.addEventListener("DOMContentLoaded",function(){alert("' . esc_js( $msg ) . '");});</script>';
-}, 1 );
 
 /** Fallback menu for header when no primary menu set (callable by name for cache-safe wp_nav_menu). */
 function mnsk7_header_fallback_menu() {
