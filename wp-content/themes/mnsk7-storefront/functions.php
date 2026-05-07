@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.44' );
+	define( 'MNSK7_THEME_VERSION', '1.0.45' );
 }
 
 /**
@@ -735,6 +735,21 @@ add_action( 'wp_footer', function () {
 	?>
 	<script>
 	(function() {
+		function fixPaymentLogoAlt(root) {
+			(root || document).querySelectorAll('img[src*="woo-przelewy24"][alt]').forEach(function(img) {
+				img.alt = '';
+			});
+		}
+		fixPaymentLogoAlt(document);
+		try {
+			new MutationObserver(function(mutations) {
+				mutations.forEach(function(mutation) {
+					mutation.addedNodes.forEach(function(node) {
+						if (node.nodeType === 1) fixPaymentLogoAlt(node);
+					});
+				});
+			}).observe(document.body, { childList: true, subtree: true });
+		} catch (e) {}
 		if (window.innerWidth > 768) return;
 		var selectors = [
 			'.woocommerce-form-login-toggle',
@@ -754,9 +769,6 @@ add_action( 'wp_footer', function () {
 			if (index > 0) {
 				el.classList.add('mnsk7-checkout-notice-card--compact');
 			}
-		});
-		document.querySelectorAll('img[src*="woo-przelewy24"][alt]').forEach(function(img) {
-			img.alt = '';
 		});
 	})();
 	</script>
