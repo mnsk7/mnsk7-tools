@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.43' );
+	define( 'MNSK7_THEME_VERSION', '1.0.44' );
 }
 
 /**
@@ -688,6 +688,7 @@ add_action( 'woocommerce_before_checkout_form', function () {
 	if ( ! function_exists( 'is_checkout' ) || ! is_checkout() || is_order_received_page() ) {
 		return;
 	}
+	echo '<h2 class="screen-reader-text">' . esc_html__( 'Dane zamówienia', 'mnsk7-storefront' ) . '</h2>';
 	echo '<nav class="mnsk7-checkout-steps" aria-label="' . esc_attr__( 'Etapy zamówienia', 'mnsk7-storefront' ) . '">';
 	echo '<span class="mnsk7-checkout-steps__item mnsk7-checkout-steps__item--done">' . esc_html__( 'Koszyk', 'mnsk7-storefront' ) . '</span>';
 	echo '<span class="mnsk7-checkout-steps__divider" aria-hidden="true">→</span>';
@@ -753,6 +754,9 @@ add_action( 'wp_footer', function () {
 			if (index > 0) {
 				el.classList.add('mnsk7-checkout-notice-card--compact');
 			}
+		});
+		document.querySelectorAll('img[src*="woo-przelewy24"][alt]').forEach(function(img) {
+			img.alt = '';
 		});
 	})();
 	</script>
