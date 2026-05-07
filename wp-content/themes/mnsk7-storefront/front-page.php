@@ -129,7 +129,7 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 
 			<?php if ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) ) : ?>
 			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $tags_label ); ?>">
-				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $tags_label ); ?></h3>
+				<h2 class="mnsk7-catalog-aside__title"><?php echo esc_html( $tags_label ); ?></h2>
 				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud">
 					<?php foreach ( $tags as $tag ) :
 						$t_link = get_term_link( $tag );
@@ -148,7 +148,7 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 
 			<?php if ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) : ?>
 			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--categories" role="navigation" aria-label="<?php echo esc_attr( $cats_label ); ?>">
-				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $cats_label ); ?></h3>
+				<h2 class="mnsk7-catalog-aside__title"><?php echo esc_html( $cats_label ); ?></h2>
 				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud mnsk7-catalog-chips__scroll--categories">
 					<?php foreach ( $cats as $cat ) :
 						$link = get_term_link( $cat );
@@ -170,7 +170,7 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 
 			<?php if ( ! empty( $accessory_cats ) ) : ?>
 			<div class="mnsk7-catalog-aside mnsk7-catalog-aside--tags" role="navigation" aria-label="<?php echo esc_attr( $accessories_label ); ?>">
-				<h3 class="mnsk7-catalog-aside__title"><?php echo esc_html( $accessories_label ); ?></h3>
+				<h2 class="mnsk7-catalog-aside__title"><?php echo esc_html( $accessories_label ); ?></h2>
 				<div class="mnsk7-catalog-chips__scroll mnsk7-catalog-chips__scroll--cloud">
 					<?php foreach ( $accessory_cats as $cat ) :
 						$link = get_term_link( $cat );
