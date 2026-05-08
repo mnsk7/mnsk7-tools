@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.49' );
+	define( 'MNSK7_THEME_VERSION', '1.0.50' );
 }
 
 /**
@@ -2022,6 +2022,7 @@ add_action( 'wp_footer', function () {
 		function initPlpDropdownModals() {
 			var dropdowns = document.querySelectorAll('.mnsk7-plp-dropdown');
 			if (!dropdowns.length) return;
+			var activeDropdown = null;
 			function closeDropdown(details) {
 				if (!details) return;
 				details.removeAttribute('open');
@@ -2042,6 +2043,7 @@ add_action( 'wp_footer', function () {
 					if (detailsSummary) detailsSummary.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
 					if (detailsPanel) detailsPanel.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
 					if (!isOpen) return;
+					activeDropdown = details;
 					dropdowns.forEach(function(other) {
 						if (other !== details) closeDropdown(other);
 					});
@@ -2059,9 +2061,14 @@ add_action( 'wp_footer', function () {
 			});
 			document.addEventListener('keydown', function(e) {
 				if (e.key !== 'Escape') return;
+				var focusTarget = activeDropdown && activeDropdown.open ? activeDropdown.querySelector('.mnsk7-plp-dropdown__summary') : null;
 				dropdowns.forEach(function(details) {
 					closeDropdown(details);
 				});
+				if (focusTarget) {
+					e.preventDefault();
+					setTimeout(function() { focusTarget.focus({ preventScroll: true }); }, 0);
+				}
 			});
 		}
 		function enhanceMobileFallbackFilterRows() {
