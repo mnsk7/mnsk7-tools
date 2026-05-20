@@ -125,7 +125,10 @@ def build_variant_group_key(name, features):
     # Remove dimensions that form sibling offers, keeping tool family words.
     base = re.sub(r"\btrzpien\s+\d+(?:[,.]\d+)?\s*mm\b", " ", base)
     base = re.sub(r"\bfi\s+\d+(?:[,.]\d+)?(?:\s*x\s*\d+(?:[,.]\d+)?){0,3}\b", " ", base)
+    base = re.sub(r"\b\d+(?:[,.]\d+)?\s*mm\s+\d+(?:[,.]\d+)?\s*mm\b", " ", base)
     base = re.sub(r"\br\s*\d+(?:[,.]\d+)?\b", " ", base)
+    base = re.sub(r"\btyp\s+[a-z0-9]+\b", " ", base)
+    base = re.sub(r"\bpoglebiacz\b", " ", base)
     base = re.sub(r"\b\d+(?:[,.]\d+)?\s*x\s*\d+(?:[,.]\d+)?(?:\s*x\s*\d+(?:[,.]\d+)?){0,2}\b", " ", base)
 
     material = normalize_key(features.get("material", {}).get("value", ""))
@@ -133,6 +136,13 @@ def build_variant_group_key(name, features):
         base = f"{base} {material}"
 
     return re.sub(r"\s+", " ", base).strip()
+
+
+def extract_type_from_name(name):
+    match = re.search(r"\btyp\s+([a-z0-9]+)\b", normalize_key(name), flags=re.IGNORECASE)
+    if not match:
+        return ""
+    return f"Typ {match.group(1).upper()}"
 
 
 FEATURE_ALIAS_INDEX = {
@@ -612,6 +622,15 @@ def build_wc_payload(product, product_id, language, price_group_id, warehouse_id
         payload["images"] = images
 
     features, unknown_features = extract_features(product, language)
+    if "typ" not in features:
+        type_value = extract_type_from_name(name.strip())
+        if type_value:
+            features["typ"] = {
+                "label": "Typ narzędzia",
+                "slug": "typ",
+                "value": type_value,
+                "source": "name",
+            }
     for feature in features.values():
         feature["value"] = normalize_dimension_value(feature["value"])
     if features:
