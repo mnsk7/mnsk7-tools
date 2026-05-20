@@ -169,8 +169,9 @@ function mnsk7_get_wpclv_model_product_ids( $product_id, $taxonomy = '' ) {
 	) );
 
 	if ( empty( $groups ) ) {
-		wp_cache_set( $cache_key, array(), 'mnsk7_product_card', HOUR_IN_SECONDS );
-		return array();
+		$fallback_ids = mnsk7_get_bl_variant_group_product_ids( $product_id );
+		wp_cache_set( $cache_key, $fallback_ids, 'mnsk7_product_card', HOUR_IN_SECONDS );
+		return $fallback_ids;
 	}
 
 	$taxonomy_id = 0;
@@ -213,8 +214,52 @@ function mnsk7_get_wpclv_model_product_ids( $product_id, $taxonomy = '' ) {
 		}
 	}
 
+	if ( empty( $fallback ) ) {
+		$fallback = mnsk7_get_bl_variant_group_product_ids( $product_id );
+	}
+
 	wp_cache_set( $cache_key, $fallback, 'mnsk7_product_card', HOUR_IN_SECONDS );
 	return $fallback;
+}
+
+/**
+ * BaseLinker import fallback for "same model" products.
+ *
+ * Import writes _mnsk7_bl_variant_group from a normalized product family name.
+ * This keeps Allegro-like diameter chips working without hand-maintained WPC
+ * linked variation groups after catalog rebuild.
+ *
+ * @param int $product_id Current product ID.
+ * @return int[]
+ */
+function mnsk7_get_bl_variant_group_product_ids( $product_id ) {
+	$product_id = absint( $product_id );
+	if ( $product_id <= 0 ) {
+		return array();
+	}
+	$group = (string) get_post_meta( $product_id, '_mnsk7_bl_variant_group', true );
+	if ( '' === $group ) {
+		return array();
+	}
+	$ids = get_posts( array(
+		'post_type'              => 'product',
+		'post_status'            => 'publish',
+		'posts_per_page'         => 50,
+		'fields'                 => 'ids',
+		'no_found_rows'          => true,
+		'update_post_meta_cache' => false,
+		'update_post_term_cache' => false,
+		'meta_query'             => array(
+			array(
+				'key'   => '_mnsk7_bl_variant_group',
+				'value' => $group,
+			),
+		),
+	) );
+	if ( ! is_array( $ids ) || count( $ids ) < 2 ) {
+		return array();
+	}
+	return array_values( array_map( 'absint', $ids ) );
 }
 
 /**

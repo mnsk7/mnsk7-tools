@@ -106,6 +106,35 @@ def normalize_key(value):
     return re.sub(r"[^a-z0-9]+", " ", text).strip()
 
 
+def normalize_dimension_value(value):
+    text = str(value).strip()
+    if not text:
+        return ""
+    if re.search(r"\bmm\b", text, flags=re.IGNORECASE):
+        return text
+    if re.fullmatch(r"\d+(?:[,.]\d+)?", text):
+        return f"{text} mm"
+    return text
+
+
+def build_variant_group_key(name, features):
+    base = normalize_key(name)
+    if not base:
+        return ""
+
+    # Remove dimensions that form sibling offers, keeping tool family words.
+    base = re.sub(r"\btrzpien\s+\d+(?:[,.]\d+)?\s*mm\b", " ", base)
+    base = re.sub(r"\bfi\s+\d+(?:[,.]\d+)?(?:\s*x\s*\d+(?:[,.]\d+)?){0,3}\b", " ", base)
+    base = re.sub(r"\br\s*\d+(?:[,.]\d+)?\b", " ", base)
+    base = re.sub(r"\b\d+(?:[,.]\d+)?\s*x\s*\d+(?:[,.]\d+)?(?:\s*x\s*\d+(?:[,.]\d+)?){0,2}\b", " ", base)
+
+    material = normalize_key(features.get("material", {}).get("value", ""))
+    if material and material not in base:
+        base = f"{base} {material}"
+
+    return re.sub(r"\s+", " ", base).strip()
+
+
 FEATURE_ALIAS_INDEX = {
     normalize_key(alias): definition
     for definition in FEATURE_ATTRIBUTE_MAP
@@ -583,8 +612,15 @@ def build_wc_payload(product, product_id, language, price_group_id, warehouse_id
         payload["images"] = images
 
     features, unknown_features = extract_features(product, language)
+    for feature in features.values():
+        feature["value"] = normalize_dimension_value(feature["value"])
     if features:
         meta_data.append({"key": "_mnsk7_bl_features_raw", "value": json.dumps(features, ensure_ascii=False)})
+    variant_group = build_variant_group_key(name.strip(), features)
+    if variant_group:
+        meta_data.append({"key": "_mnsk7_bl_variant_group", "value": variant_group})
+    if "srednica" in features:
+        meta_data.append({"key": "_mnsk7_bl_variant_axis", "value": "srednica"})
     payload["meta_data"] = meta_data
 
     return payload, features, unknown_features, None
