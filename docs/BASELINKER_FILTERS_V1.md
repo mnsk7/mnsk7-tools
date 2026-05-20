@@ -81,6 +81,40 @@ Do zrobienia osobno:
    - `_mnsk7_bl_features_raw`
 9. Dodać raport: ile produktów zsynchronizowano, ile pominięto, ile nie miało SKU, ile miało nieznane cechy.
 
+## Sync script v1
+
+Repo contains `scripts/baselinker_sync_products.py` as the first sync job for the architecture above.
+
+Default mode is dry-run:
+
+```bash
+python scripts/baselinker_sync_products.py --limit 10
+```
+
+Apply mode writes to WooCommerce:
+
+```bash
+python scripts/baselinker_sync_products.py --limit 10 --apply
+```
+
+Required environment values:
+
+- `BASELINKER_API_TOKEN`
+- `BASELINKER_INVENTORY_ID`
+- `WP_BASE_URL` or `WOO_BASE_URL`
+- `WOO_CONSUMER_KEY` or `WC_CONSUMER_KEY`
+- `WOO_CONSUMER_SECRET` or `WC_CONSUMER_SECRET`
+
+Optional values:
+
+- `BASELINKER_LANGUAGE` default `pl`
+- `BASELINKER_PRICE_GROUP_ID`
+- `BASELINKER_WAREHOUSE_ID`
+- `BL_SYNC_PRODUCT_STATUS` default `publish`
+- `BL_SYNC_CREATE_MISSING` default `1`
+
+The script maps known BaseLinker `text_fields.features` keys into global Woo attributes, creates missing attributes/terms only in `--apply` mode, updates products by SKU, and reports unknown feature names for mapping expansion.
+
 ## Acceptance criteria dla v1
 
 - Na stronie sklepu/kategorii/tagu pokazuje się blok `Filtry techniczne`, jeżeli istnieją odpowiednie atrybuty WooCommerce.
