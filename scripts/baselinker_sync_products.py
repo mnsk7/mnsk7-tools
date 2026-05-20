@@ -19,7 +19,7 @@ FEATURE_ATTRIBUTE_MAP = [
     {
         "label": "Materiał",
         "slug": "material",
-        "aliases": ["materiał", "material", "obrabiany materiał", "zastosowanie"],
+        "aliases": ["materiał", "material", "materiał wykonania", "material wykonania", "obrabiany materiał", "zastosowanie"],
     },
     {
         "label": "Średnica trzpienia",
@@ -155,6 +155,11 @@ class BaseLinkerClient:
             )
         return data
 
+    def list_inventories(self):
+        response = self.call("getInventories", {})
+        inventories = response.get("inventories", [])
+        return inventories if isinstance(inventories, list) else []
+
     def list_product_ids(self, inventory_id, limit=None):
         product_ids = []
         page = 1
@@ -247,11 +252,29 @@ class WooClient:
                 return item
         return data[0]
 
+    def list_products(self, status="any"):
+        products = []
+        page = 1
+        while True:
+            path = f"/products?status={urllib.parse.quote(status)}&per_page=100&page={page}"
+            data = self.request("GET", path)
+            if not isinstance(data, list) or not data:
+                break
+            products.extend(data)
+            if len(data) < 100:
+                break
+            page += 1
+        return products
+
     def create_product(self, payload):
         return self.request("POST", "/products", payload)
 
     def update_product(self, product_id, payload):
         return self.request("PUT", f"/products/{product_id}", payload)
+
+    def delete_product(self, product_id, force=True):
+        force_value = "true" if force else "false"
+        return self.request("DELETE", f"/products/{product_id}?force={force_value}")
 
     def list_attributes(self):
         return self.request("GET", "/products/attributes?per_page=100")
@@ -572,6 +595,34 @@ def chunked(items, size):
         yield items[idx : idx + size]
 
 
+def resolve_inventory_id(bl, requested_inventory_id):
+    if requested_inventory_id:
+        return requested_inventory_id
+    inventories = bl.list_inventories()
+    if len(inventories) == 1:
+        return str(inventories[0].get("inventory_id", "")).strip()
+    if not inventories:
+        raise SystemExit("Missing BASELINKER_INVENTORY_ID and BaseLinker returned no inventories")
+    print("Missing BASELINKER_INVENTORY_ID. Available inventories:")
+    for inventory in inventories:
+        print(f"- {inventory.get('inventory_id')}: {inventory.get('name')}")
+    raise SystemExit("Set BASELINKER_INVENTORY_ID before running sync")
+
+
+def ensure_rebuild_is_explicit(args, woo_base_url):
+    host = urllib.parse.urlparse(woo_base_url).hostname or ""
+    if args.rebuild_catalog and not args.apply:
+        return
+    if args.rebuild_catalog and not args.confirm_rebuild:
+        raise SystemExit("Refusing rebuild apply without --confirm-rebuild")
+    if args.rebuild_catalog and args.apply and args.limit:
+        raise SystemExit("Refusing rebuild apply with --limit. Use full import or dry-run first.")
+    if args.rebuild_catalog and args.apply and "staging" not in host and not args.allow_production_host:
+        raise SystemExit(
+            f"Refusing production-like target host '{host}' without --allow-production-host"
+        )
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Sync products from BaseLinker to WooCommerce (update existing by SKU, create missing)."
@@ -579,13 +630,33 @@ def main():
     parser.add_argument("--env-file", default=".env", help="Path to .env file (default: .env in repo root)")
     parser.add_argument("--limit", type=int, default=0, help="Optional max number of BaseLinker products")
     parser.add_argument("--apply", action="store_true", help="Apply write operations (default is dry-run)")
+    parser.add_argument(
+        "--rebuild-catalog",
+        action="store_true",
+        help="Delete Woo products before importing BaseLinker products. Dry-run by default.",
+    )
+    parser.add_argument(
+        "--confirm-rebuild",
+        action="store_true",
+        help="Required together with --apply --rebuild-catalog before deleting Woo products.",
+    )
+    parser.add_argument(
+        "--allow-production-host",
+        action="store_true",
+        help="Allow destructive apply when WP_BASE_URL/WOO_BASE_URL does not contain staging.",
+    )
     args = parser.parse_args()
 
     env = {}
     env.update(load_env(args.env_file))
     env.update(os.environ)
 
-    baselinker_token = env.get("BASELINKER_API_TOKEN", "").strip()
+    baselinker_token = (
+        env.get("BASELINKER_API_TOKEN")
+        or env.get("BASE_API_TOKEN")
+        or env.get("base_api_token")
+        or ""
+    ).strip()
     inventory_id = env.get("BASELINKER_INVENTORY_ID", "").strip()
     price_group_id = env.get("BASELINKER_PRICE_GROUP_ID", "").strip()
     warehouse_id = env.get("BASELINKER_WAREHOUSE_ID", "").strip()
@@ -611,20 +682,23 @@ def main():
 
     if not baselinker_token:
         raise SystemExit("Missing BASELINKER_API_TOKEN")
-    if not inventory_id:
-        raise SystemExit("Missing BASELINKER_INVENTORY_ID")
     if not woo_base_url or not woo_key or not woo_secret:
         raise SystemExit("Missing WP_BASE_URL/WOO_BASE_URL and WOO_CONSUMER_KEY + WOO_CONSUMER_SECRET")
+
+    ensure_rebuild_is_explicit(args, woo_base_url)
+
+    bl = BaseLinkerClient(baselinker_token)
+    inventory_id = resolve_inventory_id(bl, inventory_id)
+    woo = WooClient(woo_base_url, woo_key, woo_secret)
 
     print("BaseLinker -> Woo sync")
     print(f"- inventory_id: {inventory_id}")
     print(f"- language: {language}")
+    print(f"- woo_host: {urllib.parse.urlparse(woo_base_url).hostname or woo_base_url}")
     print(f"- dry-run: {dry_run}")
     print(f"- create-missing: {create_missing}")
+    print(f"- rebuild-catalog: {args.rebuild_catalog}")
     print("")
-
-    bl = BaseLinkerClient(baselinker_token)
-    woo = WooClient(woo_base_url, woo_key, woo_secret)
 
     limit = args.limit if args.limit > 0 else None
     product_ids = bl.list_product_ids(inventory_id, limit=limit)
@@ -638,6 +712,24 @@ def main():
     failed = 0
     features_synced = 0
     unknown_feature_counts = {}
+
+    existing_products = woo.list_products(status="any")
+    if args.rebuild_catalog:
+        print(f"Woo products scheduled for deletion: {len(existing_products)}")
+        if dry_run:
+            for product in existing_products[:20]:
+                print(
+                    f"[DRY] DELETE wc_id={product.get('id')} "
+                    f"sku={product.get('sku') or '-'} name={product.get('name') or '-'}"
+                )
+            if len(existing_products) > 20:
+                print(f"[DRY] DELETE ... {len(existing_products) - 20} more products")
+        else:
+            for product in existing_products:
+                woo.delete_product(product.get("id"), force=True)
+                print(f"[OK] DELETE wc_id={product.get('id')} sku={product.get('sku') or '-'}")
+                time.sleep(0.1)
+        existing_products = []
 
     print(f"Fetched IDs: {len(product_ids)}")
     for id_batch in chunked(product_ids, 100):
@@ -658,7 +750,7 @@ def main():
 
             sku = payload["sku"]
             try:
-                existing = woo.find_product_by_sku(sku)
+                existing = None if args.rebuild_catalog else woo.find_product_by_sku(sku)
                 wc_attributes = build_wc_attributes(woo, features, dry_run=dry_run) if features else []
                 if wc_attributes:
                     base_attrs = existing.get("attributes", []) if existing else []

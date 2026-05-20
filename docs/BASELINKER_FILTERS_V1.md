@@ -115,6 +115,20 @@ Optional values:
 
 The script maps known BaseLinker `text_fields.features` keys into global Woo attributes, creates missing attributes/terms only in `--apply` mode, updates products by SKU, and reports unknown feature names for mapping expansion.
 
+Catalog rebuild dry-run:
+
+```bash
+python scripts/baselinker_sync_products.py --rebuild-catalog
+```
+
+Catalog rebuild apply requires explicit destructive flags:
+
+```bash
+python scripts/baselinker_sync_products.py --rebuild-catalog --apply --confirm-rebuild
+```
+
+For a production-like host, add `--allow-production-host` after a clean dry-run. The script refuses destructive rebuilds with `--limit`.
+
 ## Acceptance criteria dla v1
 
 - Na stronie sklepu/kategorii/tagu pokazuje się blok `Filtry techniczne`, jeżeli istnieją odpowiednie atrybuty WooCommerce.
