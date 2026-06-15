@@ -2327,3 +2327,40 @@
   border-color: var(--color-primary, #0c7ddb);
   background: #fff;
 }
+/* Homepage migration hardening: stable glyphs and bestseller alignment. */
+.mnsk7-allegro-reviews__item::before {
+  content: "\2605\2605\2605\2605\2605";
+}
+
+.mnsk7-front-page #bestsellery .mnsk7-section__header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 1rem 2rem;
+}
+
+.mnsk7-front-page #bestsellery .mnsk7-section__header-copy {
+  min-width: 0;
+}
+
+.mnsk7-front-page #bestsellery .mnsk7-section__eyebrow,
+.mnsk7-front-page #bestsellery .mnsk7-section__title {
+  max-width: 100%;
+  overflow-wrap: break-word;
+}
+
+.mnsk7-front-page #bestsellery .mnsk7-bestsellers-strip-rail,
+.mnsk7-front-page #bestsellery .mnsk7-bestsellers-strip-rail__track,
+.mnsk7-front-page #bestsellery .mnsk7-bestsellers,
+.mnsk7-front-page #bestsellery .woocommerce {
+  min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 768px) {
+  .mnsk7-front-page #bestsellery .mnsk7-section__header {
+    grid-template-columns: minmax(0, 1fr);
+    align-items: start;
+    gap: 0.75rem;
+  }
+}

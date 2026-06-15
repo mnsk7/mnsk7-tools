@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.50' );
+	define( 'MNSK7_THEME_VERSION', '1.0.53' );
 }
 
 /**
@@ -837,7 +837,7 @@ function mnsk7_should_render_home_instagram() {
  * Zawsze te same zasoby niezależnie od URL (cache). B1: theme ładuje się po WC (priority 20).
  */
 add_action( 'wp_enqueue_scripts', function () {
-	$v = defined( 'MNSK7_THEME_VERSION' ) ? MNSK7_THEME_VERSION : '3.0.11';
+	$v = defined( 'MNSK7_THEME_VERSION' ) ? MNSK7_THEME_VERSION : '3.0.12';
 	$child_deps = array();
 	if ( mnsk7_parent_storefront_available() ) {
 		wp_enqueue_style( 'storefront-style', get_template_directory_uri() . '/style.css' );

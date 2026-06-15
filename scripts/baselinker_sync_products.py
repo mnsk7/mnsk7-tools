@@ -19,17 +19,27 @@ FEATURE_ATTRIBUTE_MAP = [
     {
         "label": "Materiał",
         "slug": "material",
-        "aliases": ["materiał", "material", "materiał wykonania", "material wykonania", "obrabiany materiał", "zastosowanie"],
+        "aliases": ["materiał", "material", "materiał wykonania", "material wykonania", "obrabiany materiał"],
+    },
+    {
+        "label": "Zastosowanie",
+        "slug": "zastosowanie",
+        "aliases": ["zastosowanie", "do czego", "materiał obróbki"],
     },
     {
         "label": "Średnica trzpienia",
         "slug": "srednica-trzpienia",
-        "aliases": ["średnica trzpienia", "srednica trzpienia", "trzpień", "trzpien", "shk"],
+        "aliases": ["średnica trzpienia", "srednica trzpienia", "trzpień", "trzpien", "shk", "chwyt"],
+    },
+    {
+        "label": "Trzpienie / chwyt",
+        "slug": "trzpienie",
+        "aliases": ["trzpienie / chwyt", "trzpienie", "chwyt / trzpienie"],
     },
     {
         "label": "Średnica robocza",
         "slug": "srednica",
-        "aliases": ["średnica robocza", "srednica robocza", "średnica", "srednica", "fi", "d"],
+        "aliases": ["średnica robocza", "srednica robocza", "średnica części roboczej", "srednica", "fi", "d", "ø"],
     },
     {
         "label": "Długość robocza",
@@ -50,7 +60,17 @@ FEATURE_ATTRIBUTE_MAP = [
     {
         "label": "Typ narzędzia",
         "slug": "typ",
-        "aliases": ["typ", "typ frezu", "typ pilnika", "rodzaj"],
+        "aliases": ["typ", "typ frezu", "typ pilnika", "typ narzędzia", "rodzaj"],
+    },
+    {
+        "label": "Typ operacji",
+        "slug": "typ-operacji",
+        "aliases": ["typ operacji", "operacja"],
+    },
+    {
+        "label": "Kształt",
+        "slug": "ksztalt",
+        "aliases": ["kształt", "ksztalt", "shape"],
     },
     {
         "label": "Liczba ostrzy",
@@ -62,7 +82,33 @@ FEATURE_ATTRIBUTE_MAP = [
         "slug": "pokrycie",
         "aliases": ["powłoka", "powloka", "pokrycie", "coating"],
     },
+    {
+        "label": "Skok gwintu",
+        "slug": "skok-gwintu",
+        "aliases": ["skok gwintu", "tpi", "pitch"],
+    },
 ]
+FEATURE_ATTRIBUTE_MAP.append(
+    {
+        "label": "Kąt skosu",
+        "slug": "kat-skosu",
+        "aliases": ["kąt", "kat", "kąt skosu", "kat skosu", "angle", "stopień", "stopien"],
+    }
+)
+FEATURE_ATTRIBUTE_MAP.extend(
+    [
+        {
+            "label": "Promien R",
+            "slug": "r",
+            "aliases": ["r", "promien", "promien r", "radius"],
+        },
+        {
+            "label": "ER",
+            "slug": "er",
+            "aliases": ["er", "typ er", "rozmiar er"],
+        },
+    ]
+)
 
 
 def load_env(env_file):
@@ -150,6 +196,59 @@ FEATURE_ALIAS_INDEX = {
     for definition in FEATURE_ATTRIBUTE_MAP
     for alias in definition["aliases"]
 }
+MAPPED_ATTRIBUTE_SLUGS = {definition["slug"] for definition in FEATURE_ATTRIBUTE_MAP}
+MAPPED_ATTRIBUTE_LABELS = {normalize_key(definition["label"]) for definition in FEATURE_ATTRIBUTE_MAP}
+
+
+def slug_to_feature_entry(slug, value, source="title"):
+    for definition in FEATURE_ATTRIBUTE_MAP:
+        if definition["slug"] == slug:
+            return {
+                "label": definition["label"],
+                "slug": slug,
+                "value": value,
+                "source": source,
+            }
+    return None
+
+
+def merge_title_features(name, features):
+    try:
+        from product_param_parse import parse_title_params
+    except ImportError:
+        import sys
+        from pathlib import Path
+
+        sys.path.insert(0, str(Path(__file__).resolve().parent))
+        from product_param_parse import parse_title_params
+
+    parsed = parse_title_params(name)
+    merged = dict(features or {})
+    for slug, value in parsed.items():
+        if slug in merged:
+            continue
+        entry = slug_to_feature_entry(slug, normalize_dimension_value(value), source="title")
+        if entry:
+            merged[slug] = entry
+    return merged
+
+
+def replace_mapped_product_attributes(existing_attrs, mapped_attrs):
+    """Keep non-catalog attrs; replace all mapped slugs with fresh BL/title values only."""
+    kept = []
+    mapped_ids = {item.get("id") for item in mapped_attrs if item.get("id")}
+    mapped_names = {normalize_key(item.get("name", "")) for item in mapped_attrs if item.get("name")}
+    for attr in existing_attrs or []:
+        attr_id = attr.get("id")
+        attr_name = normalize_key(attr.get("name", ""))
+        if attr_id in mapped_ids or attr_name in MAPPED_ATTRIBUTE_LABELS or attr_name in mapped_names:
+            continue
+        options = attr.get("options") or []
+        if not options or all(not str(option).strip() for option in options):
+            continue
+        kept.append(attr)
+    kept.extend(mapped_attrs)
+    return kept
 
 
 class BaseLinkerClient:
@@ -246,6 +345,26 @@ class BaseLinkerClient:
             return products
         return {}
 
+    def list_categories(self, inventory_id):
+        params = {}
+        if inventory_id:
+            params["inventory_id"] = int(inventory_id)
+        response = self.call("getInventoryCategories", params)
+        categories = response.get("categories", [])
+        return categories if isinstance(categories, list) else []
+
+    def update_product_features(self, inventory_id, product_id, sku, feature_map, language="pl"):
+        lang_key = f"features|{language}"
+        self.call(
+            "addInventoryProduct",
+            {
+                "inventory_id": int(inventory_id),
+                "product_id": int(product_id),
+                "sku": sku,
+                "text_fields": {lang_key: feature_map},
+            },
+        )
+
 
 class WooClient:
     def __init__(self, base_url, consumer_key, consumer_secret):
@@ -261,6 +380,7 @@ class WooClient:
         }
         self.attribute_cache = {}
         self.term_cache = {}
+        self.category_cache = {}
 
     def request(self, method, path, payload=None):
         body = None
@@ -316,7 +436,17 @@ class WooClient:
         return self.request("DELETE", f"/products/{product_id}?force={force_value}")
 
     def list_attributes(self):
-        return self.request("GET", "/products/attributes?per_page=100")
+        attributes = []
+        page = 1
+        while True:
+            data = self.request("GET", f"/products/attributes?per_page=100&page={page}")
+            if not isinstance(data, list) or not data:
+                break
+            attributes.extend(data)
+            if len(data) < 100:
+                break
+            page += 1
+        return attributes
 
     def get_or_create_attribute(self, label, slug, dry_run=False):
         cache_key = slug
@@ -326,7 +456,8 @@ class WooClient:
         attrs = self.list_attributes()
         if isinstance(attrs, list):
             for attr in attrs:
-                if str(attr.get("slug", "")).strip() == slug:
+                attr_slug = str(attr.get("slug", "")).strip()
+                if attr_slug in {slug, f"pa_{slug}"}:
                     self.attribute_cache[cache_key] = attr
                     return attr
 
@@ -380,6 +511,43 @@ class WooClient:
         )
         self.term_cache[cache_key] = term
         return term
+
+    def list_product_categories(self):
+        categories = []
+        page = 1
+        while True:
+            data = self.request("GET", f"/products/categories?per_page=100&page={page}")
+            if not isinstance(data, list) or not data:
+                break
+            categories.extend(data)
+            if len(data) < 100:
+                break
+            page += 1
+        return categories
+
+    def get_or_create_product_category(self, name, parent_id=0, dry_run=False):
+        name = str(name).strip()
+        if not name:
+            return None
+        cache_key = (normalize_key(name), int(parent_id or 0))
+        if cache_key in self.category_cache:
+            return self.category_cache[cache_key]
+
+        for category in self.list_product_categories():
+            if normalize_key(category.get("name", "")) == normalize_key(name):
+                if int(category.get("parent", 0) or 0) == int(parent_id or 0):
+                    self.category_cache[cache_key] = category
+                    return category
+
+        if dry_run:
+            return {"id": None, "name": name, "dry_run": True}
+
+        payload = {"name": name}
+        if parent_id:
+            payload["parent"] = int(parent_id)
+        category = self.request("POST", "/products/categories", payload)
+        self.category_cache[cache_key] = category
+        return category
 
 
 def pick_text_field(text_fields, field_name, lang):
@@ -465,6 +633,78 @@ def extract_features(product, language):
         else:
             unknown[label] = value_text
     return features, unknown
+
+
+def pick_manual_variant_group(unknown_features):
+    if not isinstance(unknown_features, dict):
+        return ""
+    accepted_keys = {
+        "mnk7 grupa wariantu",
+        "mnsk7 grupa wariantu",
+        "mnk7 model wariantowy",
+        "mnsk7 model wariantowy",
+    }
+    for key, value in unknown_features.items():
+        if normalize_key(key) in accepted_keys:
+            return normalize_key(value)
+    return ""
+
+
+def pick_manual_variant_axis(unknown_features):
+    if not isinstance(unknown_features, dict):
+        return ""
+
+    accepted_keys = {
+        "mnk7 os wariantu",
+        "mnsk7 os wariantu",
+        "mnk7 variant axis",
+        "mnsk7 variant axis",
+    }
+    axis_map = {
+        "srednica": "srednica",
+        "fi": "srednica",
+        "trzpien": "srednica-trzpienia",
+        "srednica trzpienia": "srednica-trzpienia",
+        "kat": "kat-skosu",
+        "kat skosu": "kat-skosu",
+        "m": "typ",
+        "typ": "typ",
+        "ksztalt": "ksztalt",
+        "kolor": "kolor",
+    }
+
+    for key, value in unknown_features.items():
+        if normalize_key(key) not in accepted_keys:
+            continue
+
+        raw_axes = re.split(r"[,;/|]+", str(value))
+        axes = []
+        for raw_axis in raw_axes:
+            norm = normalize_key(raw_axis)
+            if not norm:
+                continue
+            mapped = axis_map.get(norm, re.sub(r"\s+", "-", norm))
+            if mapped and mapped not in axes:
+                axes.append(mapped)
+        return ",".join(axes)
+
+    return ""
+
+
+def infer_variant_axis(features):
+    if not isinstance(features, dict) or not features:
+        return ""
+
+    axes = []
+    if "srednica-trzpienia" in features:
+        axes.append("srednica-trzpienia")
+    if "srednica" in features:
+        axes.append("srednica")
+    if "kat-skosu" in features:
+        axes.append("kat-skosu")
+    if "typ" in features:
+        axes.append("typ")
+    return ",".join(axes)
 
 
 def merge_product_attributes(existing_attrs, mapped_attrs):
@@ -571,7 +811,7 @@ def build_wc_attributes(woo, features, dry_run=False):
     return attributes
 
 
-def build_wc_payload(product, product_id, language, price_group_id, warehouse_id, publish_status):
+def build_wc_payload(product, product_id, language, price_group_id, warehouse_id, publish_status, category_resolver=None):
     text_fields = product.get("text_fields", {})
     sku = str(product.get("sku", "")).strip()
     if not sku:
@@ -622,6 +862,7 @@ def build_wc_payload(product, product_id, language, price_group_id, warehouse_id
         payload["images"] = images
 
     features, unknown_features = extract_features(product, language)
+    features = merge_title_features(name.strip(), features)
     if "typ" not in features:
         type_value = extract_type_from_name(name.strip())
         if type_value:
@@ -635,12 +876,19 @@ def build_wc_payload(product, product_id, language, price_group_id, warehouse_id
         feature["value"] = normalize_dimension_value(feature["value"])
     if features:
         meta_data.append({"key": "_mnsk7_bl_features_raw", "value": json.dumps(features, ensure_ascii=False)})
-    variant_group = build_variant_group_key(name.strip(), features)
+    variant_group = pick_manual_variant_group(unknown_features) or build_variant_group_key(name.strip(), features)
     if variant_group:
         meta_data.append({"key": "_mnsk7_bl_variant_group", "value": variant_group})
-    if "srednica" in features:
-        meta_data.append({"key": "_mnsk7_bl_variant_axis", "value": "srednica"})
+    variant_axis = pick_manual_variant_axis(unknown_features) or infer_variant_axis(features)
+    if variant_axis:
+        meta_data.append({"key": "_mnsk7_bl_variant_axis", "value": variant_axis})
     payload["meta_data"] = meta_data
+
+    bl_category_id = product.get("category_id")
+    if category_resolver and bl_category_id not in (None, "", 0, "0"):
+        woo_cat_id = category_resolver.resolve(bl_category_id)
+        if woo_cat_id:
+            payload["categories"] = [{"id": int(woo_cat_id)}]
 
     return payload, features, unknown_features, None
 
@@ -648,6 +896,52 @@ def build_wc_payload(product, product_id, language, price_group_id, warehouse_id
 def chunked(items, size):
     for idx in range(0, len(items), size):
         yield items[idx : idx + size]
+
+
+class BlCategoryResolver:
+    def __init__(self, bl, woo, inventory_id, dry_run=False):
+        self.bl_map = {}
+        self.woo_map = {}
+        self.dry_run = dry_run
+        categories = bl.list_categories(inventory_id)
+        for row in categories:
+            cid = row.get("category_id")
+            if cid is not None:
+                self.bl_map[int(cid)] = row
+
+        # Create Woo categories in parent-first order.
+        pending = list(self.bl_map.values())
+        created = {}
+        while pending:
+            progress = False
+            next_pending = []
+            for row in pending:
+                bl_id = int(row.get("category_id"))
+                parent_bl = int(row.get("parent_id") or 0)
+                if parent_bl and parent_bl not in created:
+                    next_pending.append(row)
+                    continue
+                parent_woo = created.get(parent_bl, 0) if parent_bl else 0
+                woo_cat = woo.get_or_create_product_category(
+                    row.get("name") or f"BL {bl_id}",
+                    parent_id=parent_woo,
+                    dry_run=dry_run,
+                )
+                woo_id = woo_cat.get("id") if woo_cat else None
+                if woo_id:
+                    created[bl_id] = int(woo_id)
+                    self.woo_map[bl_id] = int(woo_id)
+                progress = True
+            if not progress:
+                break
+            pending = next_pending
+
+    def resolve(self, bl_category_id):
+        try:
+            key = int(bl_category_id)
+        except (TypeError, ValueError):
+            return None
+        return self.woo_map.get(key)
 
 
 def resolve_inventory_id(bl, requested_inventory_id):
@@ -700,6 +994,11 @@ def main():
         action="store_true",
         help="Allow destructive apply when WP_BASE_URL/WOO_BASE_URL does not contain staging.",
     )
+    parser.add_argument(
+        "--skip-categories",
+        action="store_true",
+        help="Do not map BaseLinker category_id to Woo product categories.",
+    )
     args = parser.parse_args()
 
     env = {}
@@ -745,6 +1044,12 @@ def main():
     bl = BaseLinkerClient(baselinker_token)
     inventory_id = resolve_inventory_id(bl, inventory_id)
     woo = WooClient(woo_base_url, woo_key, woo_secret)
+    category_resolver = None
+    if not args.skip_categories:
+        print("Syncing BaseLinker categories -> Woo product_cat...")
+        category_resolver = BlCategoryResolver(bl, woo, inventory_id, dry_run=dry_run)
+        print(f"- woo categories mapped: {len(category_resolver.woo_map)}")
+        print("")
 
     print("BaseLinker -> Woo sync")
     print(f"- inventory_id: {inventory_id}")
@@ -797,6 +1102,7 @@ def main():
                 price_group_id=price_group_id,
                 warehouse_id=warehouse_id,
                 publish_status=publish_status,
+                category_resolver=category_resolver,
             )
             if skip_reason:
                 print(f"[SKIP] {skip_reason}")
@@ -809,7 +1115,7 @@ def main():
                 wc_attributes = build_wc_attributes(woo, features, dry_run=dry_run) if features else []
                 if wc_attributes:
                     base_attrs = existing.get("attributes", []) if existing else []
-                    payload["attributes"] = merge_product_attributes(base_attrs, wc_attributes)
+                    payload["attributes"] = replace_mapped_product_attributes(base_attrs, wc_attributes)
                     features_synced += len(wc_attributes)
                 if existing:
                     payload["meta_data"] = merge_meta_data(existing.get("meta_data", []), payload["meta_data"])

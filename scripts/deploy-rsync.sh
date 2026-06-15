@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Rsync: mu-plugins, themes (i opcjonalnie plugins) na staging lub prod.
 # Użycie: ./scripts/deploy-rsync.sh [staging|prod]
+# Prod deploy (GitHub): .github/workflows/deploy-production.yml (secrets PROD_*)
 # Dry-run: DRY_RUN=1 ./scripts/deploy-rsync.sh [staging|prod]
 # Nie kopiujemy nigdy: wp-config.php, .env (ich nie ma w repo).
 # Dla prod: pracujemy tylko w public_html/wp-content/... — katalog staging/ nie jest dotykany.

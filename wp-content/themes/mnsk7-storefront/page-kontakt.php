@@ -35,6 +35,47 @@ get_header();
 								<h2 class="mnsk7-contact-form__title"><?php esc_html_e( 'Formularz kontaktowy', 'mnsk7-storefront' ); ?></h2>
 								<p class="mnsk7-contact-form__desc"><?php esc_html_e( 'Napisz do nas — odpowiadamy w dni robocze.', 'mnsk7-storefront' ); ?></p>
 								<form class="mnsk7-contact-form" action="<?php echo esc_url( get_permalink() ); ?>" method="post" aria-label="<?php esc_attr_e( 'Wyślij wiadomość', 'mnsk7-storefront' ); ?>">
+									<?php
+									$prefill_email   = '';
+									$prefill_phone   = '';
+									$prefill_subject = '';
+									$prefill_message = '';
+
+									if ( isset( $_POST['mnsk7_contact_email'] ) ) {
+										$prefill_email = sanitize_email( wp_unslash( $_POST['mnsk7_contact_email'] ) );
+									} elseif ( isset( $_GET['contact_email'] ) ) {
+										$prefill_email = sanitize_email( wp_unslash( $_GET['contact_email'] ) );
+									}
+
+									if ( isset( $_POST['mnsk7_contact_phone'] ) ) {
+										$prefill_phone = sanitize_text_field( wp_unslash( $_POST['mnsk7_contact_phone'] ) );
+									} elseif ( isset( $_GET['contact_phone'] ) ) {
+										$prefill_phone = sanitize_text_field( wp_unslash( $_GET['contact_phone'] ) );
+									}
+
+									if ( isset( $_POST['mnsk7_contact_subject'] ) ) {
+										$prefill_subject = sanitize_text_field( wp_unslash( $_POST['mnsk7_contact_subject'] ) );
+									} elseif ( isset( $_GET['contact_subject'] ) ) {
+										$prefill_subject = sanitize_text_field( wp_unslash( $_GET['contact_subject'] ) );
+									}
+
+									if ( isset( $_POST['mnsk7_contact_message'] ) ) {
+										$prefill_message = sanitize_textarea_field( wp_unslash( $_POST['mnsk7_contact_message'] ) );
+									} elseif ( isset( $_GET['contact_message'] ) ) {
+										$prefill_message = sanitize_textarea_field( wp_unslash( $_GET['contact_message'] ) );
+									}
+
+									if ( '' === $prefill_message && isset( $_GET['contact_product'] ) ) {
+										$product_url = esc_url_raw( wp_unslash( $_GET['contact_product'] ) );
+										if ( '' !== (string) $product_url ) {
+											$prefill_message = sprintf(
+												__( 'Proszę o informację, kiedy produkt wróci na stan:%1$s%2$s', 'mnsk7-storefront' ),
+												"\n",
+												$product_url
+											);
+										}
+									}
+									?>
 									<?php if ( isset( $_GET['mnsk7_contact'] ) ) : ?>
 										<?php
 										$contact_status = sanitize_key( wp_unslash( $_GET['mnsk7_contact'] ) );
@@ -55,19 +96,19 @@ get_header();
 									</p>
 									<p class="mnsk7-contact-form__row">
 										<label for="mnsk7-contact-email"><?php esc_html_e( 'E-mail', 'mnsk7-storefront' ); ?> <span class="required">*</span></label>
-										<input type="email" id="mnsk7-contact-email" name="mnsk7_contact_email" required class="mnsk7-contact-form__input" placeholder="<?php esc_attr_e( 'jan@example.pl', 'mnsk7-storefront' ); ?>" value="<?php echo isset( $_POST['mnsk7_contact_email'] ) ? esc_attr( sanitize_email( wp_unslash( $_POST['mnsk7_contact_email'] ) ) ) : ''; ?>" />
+										<input type="email" id="mnsk7-contact-email" name="mnsk7_contact_email" required class="mnsk7-contact-form__input" placeholder="<?php esc_attr_e( 'jan@example.pl', 'mnsk7-storefront' ); ?>" value="<?php echo esc_attr( $prefill_email ); ?>" />
 									</p>
 									<p class="mnsk7-contact-form__row">
 										<label for="mnsk7-contact-phone"><?php esc_html_e( 'Telefon', 'mnsk7-storefront' ); ?></label>
-										<input type="tel" id="mnsk7-contact-phone" name="mnsk7_contact_phone" class="mnsk7-contact-form__input" placeholder="<?php esc_attr_e( '+48 123 456 789', 'mnsk7-storefront' ); ?>" value="<?php echo isset( $_POST['mnsk7_contact_phone'] ) ? esc_attr( sanitize_text_field( wp_unslash( $_POST['mnsk7_contact_phone'] ) ) ) : ''; ?>" />
+										<input type="tel" id="mnsk7-contact-phone" name="mnsk7_contact_phone" class="mnsk7-contact-form__input" placeholder="<?php esc_attr_e( '+48 123 456 789', 'mnsk7-storefront' ); ?>" value="<?php echo esc_attr( $prefill_phone ); ?>" />
 									</p>
 									<p class="mnsk7-contact-form__row">
 										<label for="mnsk7-contact-subject"><?php esc_html_e( 'Temat', 'mnsk7-storefront' ); ?></label>
-										<input type="text" id="mnsk7-contact-subject" name="mnsk7_contact_subject" class="mnsk7-contact-form__input" placeholder="<?php esc_attr_e( 'np. zapytanie o produkt', 'mnsk7-storefront' ); ?>" value="<?php echo isset( $_POST['mnsk7_contact_subject'] ) ? esc_attr( sanitize_text_field( wp_unslash( $_POST['mnsk7_contact_subject'] ) ) ) : ''; ?>" />
+										<input type="text" id="mnsk7-contact-subject" name="mnsk7_contact_subject" class="mnsk7-contact-form__input" placeholder="<?php esc_attr_e( 'np. zapytanie o produkt', 'mnsk7-storefront' ); ?>" value="<?php echo esc_attr( $prefill_subject ); ?>" />
 									</p>
 									<p class="mnsk7-contact-form__row mnsk7-contact-form__row--full">
 										<label for="mnsk7-contact-message"><?php esc_html_e( 'Wiadomość', 'mnsk7-storefront' ); ?> <span class="required">*</span></label>
-										<textarea id="mnsk7-contact-message" name="mnsk7_contact_message" required class="mnsk7-contact-form__input mnsk7-contact-form__textarea" rows="5" placeholder="<?php esc_attr_e( 'Opisz swoją sprawę…', 'mnsk7-storefront' ); ?>"><?php echo isset( $_POST['mnsk7_contact_message'] ) ? esc_textarea( wp_unslash( $_POST['mnsk7_contact_message'] ) ) : ''; ?></textarea>
+										<textarea id="mnsk7-contact-message" name="mnsk7_contact_message" required class="mnsk7-contact-form__input mnsk7-contact-form__textarea" rows="5" placeholder="<?php esc_attr_e( 'Opisz swoją sprawę…', 'mnsk7-storefront' ); ?>"><?php echo esc_textarea( $prefill_message ); ?></textarea>
 									</p>
 									<p class="mnsk7-contact-form__row mnsk7-contact-form__row--submit">
 										<button type="submit" class="button mnsk7-contact-form__submit"><?php esc_html_e( 'Wyślij wiadomość', 'mnsk7-storefront' ); ?></button>

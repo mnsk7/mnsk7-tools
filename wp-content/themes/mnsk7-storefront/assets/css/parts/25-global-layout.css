@@ -5,6 +5,14 @@
 /* Page top — jedyne źródło odstępu header→treść: padding-top #content (header.php zamyka #content, wewnątrz main/hero).
    Root cause: docs/ROOT-CAUSE-WHITE-STRIP-HOME.md. Główna NIGDY nie dostaje padding-top — ustawiamy go tylko dla body:not(.home).
    Archiwa produktów (shop / kategoria / tag): kompaktowy padding-top z 24-plp-table.css — nie nadpisywać tutaj (plp-01). */
+body {
+  background-color: #f3f8ff;
+  background-image:
+    linear-gradient(rgba(30, 64, 175, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(30, 64, 175, 0.04) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
 #content,
 .site-content,
 .mnsk7-content {
@@ -100,7 +108,7 @@ body.home .mnsk7-content {
 #content,
 .site-content,
 .mnsk7-content {
-  background: var(--color-bg, #fff);
+  background: transparent;
 }
 
 /* Woo clearfix: usuń ::before, który psuł grid produktów */
@@ -436,3 +444,217 @@ button[type="submit"],
   }
 }
 
+/* Prod mobile final: keep full-bleed home sections aligned to the content gutter. */
+body.home #content,
+body.home .site-content,
+body.home .mnsk7-content,
+.mnsk7-front-page {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+@media (min-width: 768px) {
+  .mnsk7-front-page .mnsk7-hero,
+  .mnsk7-front-page .mnsk7-section--bestsellers,
+  .mnsk7-section--trust.mnsk7-section--light,
+  .mnsk7-section--loyalty.mnsk7-section--light,
+  .mnsk7-section--catalog.mnsk7-section--light,
+  .mnsk7-section--insta {
+    margin-left: -1.5rem !important;
+    margin-right: -1.5rem !important;
+    width: calc(100% + 3rem) !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .mnsk7-front-page .mnsk7-hero {
+    margin-left: -1rem !important;
+    margin-right: -1rem !important;
+    width: calc(100% + 2rem) !important;
+    padding: 2.35rem 1rem 2.6rem !important;
+  }
+
+  .mnsk7-front-page .mnsk7-hero__split {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+
+  .mnsk7-front-page .mnsk7-hero__rail {
+    display: none !important;
+  }
+
+  .mnsk7-front-page .mnsk7-hero__title {
+    max-width: 12.5ch;
+    font-size: clamp(2rem, 11vw, 2.65rem) !important;
+    line-height: 1.02 !important;
+  }
+
+  .mnsk7-front-page .mnsk7-hero__lead {
+    font-size: 0.98rem !important;
+    line-height: 1.55 !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .mnsk7-front-page .mnsk7-hero__stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 0.55rem !important;
+  }
+
+  .mnsk7-front-page .mnsk7-section {
+    padding-top: 2.35rem;
+    padding-bottom: 2.45rem;
+  }
+
+  .mnsk7-front-page #bestsellery ul.products,
+  .mnsk7-front-page #bestsellery .woocommerce ul.products {
+    padding-left: 1rem !important;
+    padding-right: 1rem !important;
+    scroll-padding-inline: 1rem !important;
+  }
+
+  .mnsk7-front-page #bestsellery ul.products > li.product {
+    flex-basis: min(76vw, 242px) !important;
+    width: min(76vw, 242px) !important;
+    max-width: min(76vw, 242px) !important;
+  }
+}
+
+@media (max-width: 360px) {
+  .mnsk7-front-page .mnsk7-hero,
+  .mnsk7-front-page .mnsk7-section--bestsellers,
+  .mnsk7-section--trust.mnsk7-section--light,
+  .mnsk7-section--loyalty.mnsk7-section--light,
+  .mnsk7-section--catalog.mnsk7-section--light,
+  .mnsk7-section--insta {
+    margin-left: -0.5rem !important;
+    margin-right: -0.5rem !important;
+    width: calc(100% + 1rem) !important;
+  }
+}
+
+/* Prod mobile final: compact readable Sklep accordion. */
+@media (max-width: 1023px) {
+  .mnsk7-header__nav .mnsk7-header__menu {
+    padding: 0.5rem 0.75rem 0.85rem !important;
+    gap: 0.4rem !important;
+    background: #fff !important;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+    max-height: calc(100vh - var(--header-h, 56px) - env(safe-area-inset-top, 0px)) !important;
+  }
+
+  .mnsk7-header__nav .mnsk7-header__menu > li {
+    border: 0 !important;
+  }
+
+  .mnsk7-header__nav .mnsk7-header__menu > li > a {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 48px;
+    padding: 0.72rem 0.85rem !important;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 8px;
+    background: #f8fafc;
+    font-weight: 700;
+  }
+
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children > a::after {
+    margin-left: auto;
+  }
+
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children > .sub-menu.mnsk7-megamenu {
+    margin: 0.35rem 0 0 !important;
+    padding: 0.55rem !important;
+    gap: 0.55rem !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    border-radius: 10px !important;
+    background: #f7fafc !important;
+  }
+
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__heading {
+    display: block;
+    margin: 0 !important;
+    padding: 0.2rem 0.25rem 0.35rem !important;
+    letter-spacing: 0 !important;
+    color: #475569 !important;
+  }
+
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 0.25rem !important;
+  }
+
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list a {
+    min-height: 42px !important;
+    padding: 0.58rem 0.7rem !important;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 8px;
+    background: #fff;
+    font-size: 0.875rem !important;
+    line-height: 1.3;
+  }
+
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__footer {
+    margin: 0 !important;
+    padding: 0.2rem 0.25rem 0 !important;
+    border: 0 !important;
+  }
+
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__footer a {
+    display: flex !important;
+    justify-content: center;
+    width: 100%;
+    min-height: 44px !important;
+    margin: 0 !important;
+    border-radius: 8px !important;
+    background: var(--color-primary, #0c7ddb) !important;
+    color: #fff !important;
+  }
+}
+/* Final production migration fixes: loaded last to win over legacy modules. */
+.mnsk7-section--trust .mnsk7-allegro-reviews__item::before {
+  content: "\2605\2605\2605\2605\2605" !important;
+  font-family: Arial, sans-serif !important;
+}
+
+.single-product .mnsk7-product-description-accordion[open] .mnsk7-product-description-accordion__summary::before {
+  content: "- " !important;
+}
+
+@media (min-width: 992px) {
+  .mnsk7-front-page #bestsellery .mnsk7-section__header {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) auto !important;
+    align-items: end !important;
+    gap: 1.25rem 2rem !important;
+  }
+
+  .mnsk7-front-page #bestsellery .mnsk7-section__header-copy {
+    width: auto !important;
+    max-width: none !important;
+    min-width: 0 !important;
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+
+  .mnsk7-front-page #bestsellery .mnsk7-section__title {
+    width: auto !important;
+    max-width: 24ch !important;
+    margin-inline: 0 !important;
+    font-size: clamp(2rem, 3.1vw, 3rem) !important;
+    line-height: 1.08 !important;
+    text-align: left !important;
+    text-wrap: balance;
+  }
+
+  .mnsk7-front-page #bestsellery .mnsk7-section__eyebrow {
+    margin-inline: 0 !important;
+  }
+
+  .mnsk7-front-page #bestsellery .mnsk7-section__more {
+    width: auto !important;
+    margin: 0 !important;
+    align-self: end !important;
+  }
+}

@@ -42,6 +42,7 @@ function mnsk7_get_key_param_attributes() {
 		'pa_dlugosc-calkowita-l'  => __( 'Długość całkowita', 'mnsk7-tools' ),
 		'pa_kat-skosu'            => __( 'Kąt skosu', 'mnsk7-tools' ),
 		'pa_r'                    => __( 'Promień R', 'mnsk7-tools' ),
+		'pa_er'                   => __( 'ER', 'mnsk7-tools' ),
 		'pa_typ'                  => __( 'Typ', 'mnsk7-tools' ),
 		'pa_ksztalt'              => __( 'Kształt', 'mnsk7-tools' ),
 		'pa_zastosowanie'         => __( 'Zastosowanie', 'mnsk7-tools' ),
@@ -104,6 +105,33 @@ function mnsk7_key_param_slug_to_taxonomy( $slug ) {
 	return taxonomy_exists( $taxonomy ) ? $taxonomy : null;
 }
 
+function mnsk7_get_product_variant_axis_slugs( $product_id ) {
+	$axis = (string) get_post_meta( absint( $product_id ), '_mnsk7_bl_variant_axis', true );
+	if ( '' === trim( $axis ) || 'model' === sanitize_title( $axis ) ) {
+		return array();
+	}
+
+	$slugs = array();
+	foreach ( preg_split( '/[,;|]+/', $axis ) as $raw_slug ) {
+		$slug = sanitize_title( trim( (string) $raw_slug ) );
+		if ( $slug !== '' && ! in_array( $slug, $slugs, true ) ) {
+			$slugs[] = $slug;
+		}
+	}
+	return $slugs;
+}
+
+function mnsk7_is_variant_axis_param( $slug, $axis_slugs ) {
+	if ( empty( $axis_slugs ) ) {
+		return true;
+	}
+	if ( ! is_string( $slug ) || strpos( $slug, 'excerpt_' ) === 0 ) {
+		return false;
+	}
+	$slug = ( strpos( $slug, 'pa_' ) === 0 ) ? substr( $slug, 3 ) : $slug;
+	return in_array( sanitize_title( $slug ), $axis_slugs, true );
+}
+
 function mnsk7_normalize_key_param_value( $value ) {
 	$value = trim( wp_strip_all_tags( (string) $value ) );
 	if ( $value === '' ) {
@@ -148,8 +176,12 @@ function mnsk7_get_product_primary_category_id( $product ) {
  */
 function mnsk7_get_wpclv_model_product_ids( $product_id, $taxonomy = '' ) {
 	$product_id = absint( $product_id );
-	if ( $product_id <= 0 || ! post_type_exists( 'wpclv' ) ) {
+	if ( $product_id <= 0 ) {
 		return array();
+	}
+
+	if ( ! post_type_exists( 'wpclv' ) ) {
+		return mnsk7_get_bl_variant_group_product_ids( $product_id );
 	}
 
 	$cache_key = 'mnsk7_wpclv_model_products_' . $product_id . '_' . sanitize_key( $taxonomy );
@@ -375,6 +407,9 @@ function mnsk7_get_model_variant_links( $product ) {
 
 	$model_ids = mnsk7_get_wpclv_model_product_ids( $product->get_id(), '' );
 	if ( count( $model_ids ) < 2 ) {
+		$model_ids = mnsk7_get_bl_variant_group_product_ids( $product->get_id() );
+	}
+	if ( count( $model_ids ) < 2 ) {
 		return array();
 	}
 
@@ -418,6 +453,37 @@ function mnsk7_render_key_param_model_links( $links ) {
 		echo '</a>';
 	}
 	echo '</div>';
+}
+
+function mnsk7_render_model_visual_links( $links ) {
+	echo '<div class="mnsk7-variant-visuals mnsk7-variant-visuals--linked" aria-label="' . esc_attr__( 'Dostępne warianty', 'mnsk7-tools' ) . '">';
+	foreach ( $links as $link ) {
+		$product_id = isset( $link['product_id'] ) ? absint( $link['product_id'] ) : 0;
+		if ( $product_id <= 0 || empty( $link['url'] ) ) {
+			continue;
+		}
+		$label     = isset( $link['value'] ) ? (string) $link['value'] : '';
+		$image_src = get_the_post_thumbnail_url( $product_id, 'woocommerce_thumbnail' );
+		$class     = 'mnsk7-variant-visual' . ( ! empty( $link['current'] ) ? ' is-current' : '' );
+		echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $link['url'] ) . '"' . ( ! empty( $link['current'] ) ? ' aria-current="page"' : '' ) . ' aria-label="' . esc_attr( $label ) . '">';
+		echo '<span class="mnsk7-variant-visual__media">';
+		if ( $image_src ) {
+			echo '<img src="' . esc_url( $image_src ) . '" alt="" loading="lazy" decoding="async" />';
+		} else {
+			echo '<span class="mnsk7-variant-visual__fallback">' . esc_html( $label ) . '</span>';
+		}
+		echo '</span>';
+		echo '</a>';
+	}
+	echo '</div>';
+}
+
+function mnsk7_should_render_visual_model_links( $links, $is_model_axis = false ) {
+	if ( ! is_array( $links ) || empty( $links ) ) {
+		return false;
+	}
+
+	return $is_model_axis || count( $links ) >= 6;
 }
 
 /**
@@ -540,6 +606,9 @@ function mnsk7_single_product_key_params() {
 	if ( ! is_a( $product, 'WC_Product' ) ) {
 		return;
 	}
+	$variant_axis = (string) get_post_meta( $product->get_id(), '_mnsk7_bl_variant_axis', true );
+	$is_model_axis = ( 'model' === sanitize_title( $variant_axis ) );
+	$axis_slugs    = mnsk7_get_product_variant_axis_slugs( $product->get_id() );
 
 	$labels = mnsk7_get_key_param_attributes();
 	$found  = array(); // slug => [ 'label' => long label, 'value' => value ] — jeden wpis na atrybut (tylko pa_*)
@@ -549,7 +618,11 @@ function mnsk7_single_product_key_params() {
 			$val = $product->get_attribute( str_replace( 'pa_', '', $slug ) );
 		}
 		if ( $val !== '' && $val !== null ) {
-			$found[ $slug ] = array( 'label' => $labels[ $slug ], 'value' => mnsk7_normalize_key_param_value( $val ) );
+			$normalized = mnsk7_normalize_key_param_value( $val );
+			if ( $normalized === '' ) {
+				continue;
+			}
+			$found[ $slug ] = array( 'label' => $labels[ $slug ], 'value' => $normalized );
 		}
 	}
 
@@ -560,17 +633,25 @@ function mnsk7_single_product_key_params() {
 		}
 	}
 
+	$model_variant_links        = mnsk7_get_model_variant_links( $product );
+	$has_model_variants         = ! empty( $model_variant_links );
+	$render_visual_model_links  = mnsk7_should_render_visual_model_links( $model_variant_links, $is_model_axis );
+
 	if ( empty( $found ) ) {
-		$model_variant_links = mnsk7_get_model_variant_links( $product );
 		if ( $model_variant_links ) {
 			echo '<div class="mnsk7-product-key-params">';
-			echo '<div class="mnsk7-product-key-params__title">' . esc_html__( 'Kluczowe parametry', 'mnsk7-tools' ) . '</div>';
-			echo '<dl class="mnsk7-product-key-params__list">';
-			echo '<dt>' . esc_html__( 'Wariant', 'mnsk7-tools' ) . '</dt>';
-			echo '<dd class="mnsk7-product-key-params__dd--options">';
-			mnsk7_render_key_param_model_links( $model_variant_links );
-			echo '</dd>';
-			echo '</dl></div>';
+			echo '<div class="mnsk7-product-key-params__title">' . esc_html__( 'Wybierz wariant', 'mnsk7-tools' ) . '</div>';
+			if ( $render_visual_model_links ) {
+				mnsk7_render_model_visual_links( $model_variant_links );
+			} else {
+				echo '<dl class="mnsk7-product-key-params__list">';
+				echo '<dt>' . esc_html__( 'Wariant', 'mnsk7-tools' ) . '</dt>';
+				echo '<dd class="mnsk7-product-key-params__dd--options">';
+				mnsk7_render_key_param_model_links( $model_variant_links );
+				echo '</dd>';
+				echo '</dl>';
+			}
+			echo '</div>';
 		}
 		return;
 	}
@@ -580,9 +661,65 @@ function mnsk7_single_product_key_params() {
 	$short_labels = function_exists( 'mnsk7_get_key_param_short_labels' ) ? mnsk7_get_key_param_short_labels() : array();
 	$shown_labels = array();
 	$has_model_link_row = false;
+	$block_class = $is_variable ? ' mnsk7-product-key-params--variable' : '';
+	$title       = __( 'Szczegóły produktu', 'mnsk7-tools' );
+	if ( $is_variable ) {
+		$title = __( 'Wybierz wariant', 'mnsk7-tools' );
+	} elseif ( $has_model_variants ) {
+		$title = __( 'Wybierz wariant', 'mnsk7-tools' );
+	}
+	$available_variations = $is_variable ? $product->get_available_variations() : array();
 
-	echo '<div class="mnsk7-product-key-params">';
-	echo '<div class="mnsk7-product-key-params__title">' . esc_html__( 'Kluczowe parametry', 'mnsk7-tools' ) . '</div>';
+	echo '<div class="mnsk7-product-key-params' . esc_attr( $block_class ) . '">';
+	echo '<div class="mnsk7-product-key-params__title">' . esc_html( $title ) . '</div>';
+	if ( $is_variable && ! empty( $available_variations ) ) {
+		echo '<div class="mnsk7-variant-visuals" aria-label="' . esc_attr__( 'Dostępne warianty', 'mnsk7-tools' ) . '">';
+		foreach ( $available_variations as $variation_data ) {
+			$variation_id = isset( $variation_data['variation_id'] ) ? absint( $variation_data['variation_id'] ) : 0;
+			$attributes   = isset( $variation_data['attributes'] ) && is_array( $variation_data['attributes'] ) ? $variation_data['attributes'] : array();
+			if ( $variation_id <= 0 || empty( $attributes ) ) {
+				continue;
+			}
+
+			$attr_map = array();
+			$summary  = array();
+			foreach ( array_keys( $var_attrs ) as $variation_slug ) {
+				$attr_name = 'attribute_' . $variation_slug;
+				$attr_value = isset( $attributes[ $attr_name ] ) ? (string) $attributes[ $attr_name ] : '';
+				if ( '' === $attr_value ) {
+					continue;
+				}
+
+				$term_obj   = taxonomy_exists( $variation_slug ) ? get_term_by( 'slug', $attr_value, $variation_slug ) : false;
+				$attr_label = $term_obj ? $term_obj->name : $attr_value;
+				$attr_map[ $attr_name ] = $attr_value;
+				$summary[] = $attr_label;
+			}
+
+			if ( empty( $attr_map ) ) {
+				continue;
+			}
+
+			$image_src = '';
+			if ( ! empty( $variation_data['image']['thumb_src'] ) ) {
+				$image_src = $variation_data['image']['thumb_src'];
+			} elseif ( ! empty( $variation_data['image']['src'] ) ) {
+				$image_src = $variation_data['image']['src'];
+			}
+
+			$summary_text = implode( ' x ', $summary );
+			echo '<button type="button" class="mnsk7-variant-visual" data-variation-id="' . esc_attr( $variation_id ) . '" data-attributes="' . esc_attr( wp_json_encode( $attr_map ) ) . '" aria-label="' . esc_attr( $summary_text ) . '">';
+			echo '<span class="mnsk7-variant-visual__media">';
+			if ( $image_src ) {
+				echo '<img src="' . esc_url( $image_src ) . '" alt="' . esc_attr( $summary_text ) . '" loading="lazy" decoding="async" />';
+			} else {
+				echo '<span class="mnsk7-variant-visual__fallback">' . esc_html( $summary_text ) . '</span>';
+			}
+			echo '</span>';
+			echo '</button>';
+		}
+		echo '</div>';
+	}
 	echo '<dl class="mnsk7-product-key-params__list">';
 	foreach ( $found as $slug => $item ) {
 		$long_label = $item['label'];
@@ -595,25 +732,29 @@ function mnsk7_single_product_key_params() {
 		echo '<dt>' . esc_html( $display_label ) . '</dt>';
 		$is_var_attr = $is_variable && strpos( $slug, 'excerpt_' ) !== 0 && isset( $var_attrs[ $slug ] );
 		$taxonomy = ( strpos( $slug, 'excerpt_' ) !== 0 ) ? mnsk7_key_param_slug_to_taxonomy( $slug ) : '';
-		$model_links = $taxonomy ? mnsk7_get_key_param_model_links( $product, $taxonomy ) : array();
-		if ( $model_links ) {
-			echo '<dd class="mnsk7-product-key-params__dd--options">';
-			mnsk7_render_key_param_model_links( $model_links );
-			echo '</dd>';
-			$has_model_link_row = true;
-		} elseif ( $is_var_attr && ! empty( $var_attrs[ $slug ] ) ) {
-			$name = 'attribute_' . esc_attr( $slug );
-			echo '<dd class="mnsk7-product-key-params__dd--select">';
-			echo '<select name="' . $name . '" data-attribute_name="' . esc_attr( $slug ) . '" class="mnsk7-key-param-select">';
-			echo '<option value="">' . esc_html__( 'Wybierz', 'mnsk7-tools' ) . '</option>';
+		$is_axis_param = mnsk7_is_variant_axis_param( $slug, $axis_slugs );
+		$model_links = ( $taxonomy && $is_axis_param ) ? mnsk7_get_key_param_model_links( $product, $taxonomy ) : array();
+		if ( $is_var_attr && $is_axis_param && ! empty( $var_attrs[ $slug ] ) ) {
+			echo '<dd class="mnsk7-product-key-params__dd--options mnsk7-product-key-params__dd--options-product">';
+			echo '<div class="mnsk7-key-param-options mnsk7-key-param-options--product" data-attribute-name="' . esc_attr( 'attribute_' . $slug ) . '" role="list" aria-label="' . esc_attr( $display_label ) . '">';
 			foreach ( $var_attrs[ $slug ] as $opt_val ) {
 				$term_obj  = get_term_by( 'slug', $opt_val, $slug );
 				$opt_label = $term_obj ? $term_obj->name : $opt_val;
-				$selected  = ( $opt_val === $value || sanitize_title( $opt_label ) === sanitize_title( $value ) ) ? ' selected' : '';
-				echo '<option value="' . esc_attr( $opt_val ) . '"' . $selected . '>' . esc_html( $opt_label ) . '</option>';
+				$is_current = ( $opt_val === $value || sanitize_title( $opt_label ) === sanitize_title( $value ) );
+				$button_class = 'mnsk7-key-param-option mnsk7-key-param-option--product' . ( $is_current ? ' is-current' : '' );
+				echo '<button type="button" class="' . esc_attr( $button_class ) . '" data-attribute-name="' . esc_attr( 'attribute_' . $slug ) . '" data-option-value="' . esc_attr( $opt_val ) . '" aria-pressed="' . ( $is_current ? 'true' : 'false' ) . '">';
+				echo esc_html( $opt_label );
+				echo '</button>';
 			}
-			echo '</select></dd>';
-		} elseif ( function_exists( 'mnsk7_get_key_param_variant_options' ) ) {
+			echo '</div></dd>';
+		} elseif ( $model_links ) {
+			echo '<dd class="mnsk7-product-key-params__dd--options">';
+			mnsk7_render_key_param_model_links( $model_links );
+			echo '</dd>';
+			if ( ! $render_visual_model_links ) {
+				$has_model_link_row = true;
+			}
+		} elseif ( $is_axis_param && function_exists( 'mnsk7_get_key_param_variant_options' ) ) {
 			$variant = mnsk7_get_key_param_variant_options( $product, $slug, $value );
 			if ( $variant && count( $variant['options'] ) > 1 ) {
 				$param = $variant['param'];
@@ -633,13 +774,18 @@ function mnsk7_single_product_key_params() {
 			echo '<dd>' . esc_html( $value ) . '</dd>';
 		}
 	}
-	if ( ! $has_model_link_row ) {
-		$model_variant_links = mnsk7_get_model_variant_links( $product );
+	if ( ! $is_variable && ! $has_model_link_row ) {
 		if ( $model_variant_links ) {
-			echo '<dt>' . esc_html__( 'Wariant', 'mnsk7-tools' ) . '</dt>';
-			echo '<dd class="mnsk7-product-key-params__dd--options">';
-			mnsk7_render_key_param_model_links( $model_variant_links );
-			echo '</dd>';
+			if ( $render_visual_model_links ) {
+				echo '<dd class="mnsk7-product-key-params__dd--options mnsk7-product-key-params__dd--options-product mnsk7-product-key-params__dd--visuals">';
+				mnsk7_render_model_visual_links( $model_variant_links );
+				echo '</dd>';
+			} else {
+				echo '<dt>' . esc_html__( 'Wariant', 'mnsk7-tools' ) . '</dt>';
+				echo '<dd class="mnsk7-product-key-params__dd--options">';
+				mnsk7_render_key_param_model_links( $model_variant_links );
+				echo '</dd>';
+			}
 		}
 	}
 	echo '</dl></div>';
@@ -690,7 +836,34 @@ function mnsk7_single_product_value_statement() {
 }
 
 function mnsk7_single_product_trust_badges() {
-	global $product;
+	$min = number_format_i18n( MNK7_FREE_SHIPPING_MIN, 0 );
+	$eta = function_exists( 'mnsk7_delivery_eta_badge_label' ) ? mnsk7_delivery_eta_badge_label() : __( 'Dostawa jutro', 'mnsk7-tools' );
+	$badges = array(
+		array(
+			'label' => $eta,
+			'icon'  => 'clock',
+		),
+		array(
+			'label' => __( 'Faktura VAT', 'mnsk7-tools' ),
+			'icon'  => 'file',
+		),
+		array(
+			'label' => sprintf( __( 'Darmowa dostawa od %s zł', 'mnsk7-tools' ), $min ),
+			'icon'  => 'truck',
+		),
+		array(
+			'label' => __( 'Zwroty 30 dni', 'mnsk7-tools' ),
+			'icon'  => 'shield',
+		),
+	);
+	echo '<div class="mnsk7-product-trust">';
+	foreach ( $badges as $badge ) {
+		$icon = isset( $badge['icon'] ) ? sanitize_html_class( $badge['icon'] ) : 'dot';
+		echo '<span class="mnsk7-product-trust__badge"><i class="mnsk7-product-trust__badge-icon mnsk7-product-trust__badge-icon--' . esc_attr( $icon ) . '" aria-hidden="true"></i><span class="mnsk7-product-trust__badge-label">' . esc_html( $badge['label'] ) . '</span></span>';
+	}
+	echo '</div>';
+	return;
+
 	$min    = number_format_i18n( MNK7_FREE_SHIPPING_MIN, 0 );
 	$eta    = function_exists( 'mnsk7_delivery_eta_badge_label' ) ? mnsk7_delivery_eta_badge_label() : __( 'Dostawa jutro', 'mnsk7-tools' );
 	$badges = array(
@@ -704,6 +877,45 @@ function mnsk7_single_product_trust_badges() {
 		echo '<span class="mnsk7-product-trust__badge"><i class="mnsk7-product-trust__badge-icon" aria-hidden="true"></i><span class="mnsk7-product-trust__badge-label">' . esc_html( $badge ) . '</span></span>';
 	}
 	echo '</div>';
+}
+
+function mnsk7_get_notify_stock_contact_url( $product ) {
+	if ( ! is_a( $product, 'WC_Product' ) ) {
+		return '';
+	}
+
+	$product_url = get_permalink( $product->get_id() );
+	$kontakt_url = ( get_page_by_path( 'kontakt' ) ) ? get_permalink( get_page_by_path( 'kontakt' ) ) : home_url( '/kontakt/' );
+	$subject     = __( 'Powiadomienie o dostępności produktu', 'mnsk7-tools' );
+	$message     = sprintf(
+		/* translators: 1: product name, 2: product url */
+		__( 'Proszę o informację, gdy produkt będzie ponownie dostępny:%1$s%2$s', 'mnsk7-tools' ),
+		"\n",
+		( $product->get_name() . "\n" . $product_url )
+	);
+
+	return add_query_arg(
+		array(
+			'contact_subject' => $subject,
+			'contact_message' => $message,
+			'contact_product' => (string) $product_url,
+		),
+		$kontakt_url
+	);
+}
+
+function mnsk7_single_product_notify_button_if_out_of_stock() {
+	global $product;
+	if ( ! is_a( $product, 'WC_Product' ) || $product->is_in_stock() ) {
+		return;
+	}
+
+	$url = mnsk7_get_notify_stock_contact_url( $product );
+	if ( '' === $url ) {
+		return;
+	}
+
+	echo '<a class="button alt single_add_to_cart_button mnsk7-notify-stock-btn" href="' . esc_url( $url ) . '">' . esc_html__( 'Powiadom o dostępności', 'mnsk7-tools' ) . '</a>';
 }
 
 function mnsk7_single_product_schema_video_placeholder() {
@@ -724,7 +936,48 @@ add_filter( 'woocommerce_get_stock_html', function ( $html ) {
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_availability', 8 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_value_statement', 17 );
 add_action( 'woocommerce_before_add_to_cart_button', 'mnsk7_single_product_availability_inline', 5 );
+add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_notify_button_if_out_of_stock', 30 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_key_params', 21 );
+
+add_action( 'wp_head', function () {
+	if ( ! is_singular( 'product' ) ) {
+		return;
+	}
+	?>
+	<style id="mnsk7-pdp-hotfix-2026-05-28">
+	.single-product div.product .summary form.cart .woocommerce-variation-add-to-cart {
+		display: grid !important;
+		grid-template-columns: minmax(132px, 176px) minmax(0, 1fr) !important;
+		grid-template-areas: "stock stock" "qty cta" !important;
+		gap: 0.6rem 0.7rem !important;
+		padding: 0 !important;
+		margin-top: 0 !important;
+	}
+	.single-product div.product .summary form.cart .woocommerce-variation-add-to-cart .mnsk7-product-availability--inline {
+		grid-area: stock !important;
+		margin: 0 !important;
+		padding: 0 !important;
+		border: 0 !important;
+	}
+	.single-product div.product .summary form.cart .woocommerce-variation-add-to-cart .quantity {
+		grid-area: qty !important;
+	}
+	.single-product div.product .summary form.cart .woocommerce-variation-add-to-cart .single_add_to_cart_button {
+		grid-area: cta !important;
+	}
+	.single-product div.product .summary form.cart .woocommerce-variation-add-to-cart .shopengine_add_to_list_action,
+	.single-product div.product .summary form.cart .woocommerce-variation-add-to-cart .shopengine_comparison_add_to_list_action {
+		display: none !important;
+	}
+	@media (max-width: 768px) {
+		.single-product div.product .summary form.cart .woocommerce-variation-add-to-cart {
+			grid-template-columns: minmax(0, 1fr) !important;
+			grid-template-areas: "stock" "qty" "cta" !important;
+		}
+	}
+	</style>
+	<?php
+}, 99 );
 
 add_action( 'wp_footer', function () {
 	if ( ! is_singular( 'product' ) ) {
@@ -737,6 +990,261 @@ add_action( 'wp_footer', function () {
 			el.addEventListener('change', function() {
 				var url = this.options[this.selectedIndex].value;
 				if (url) { window.location.href = url; }
+			});
+		});
+
+		(function initLinkedProductSwitchNoReload() {
+			var isLoading = false;
+			function isSameOriginUrl(url) {
+				try {
+					var parsed = new URL(url, window.location.href);
+					return parsed.origin === window.location.origin;
+				} catch (_error) {
+					return false;
+				}
+			}
+			function getCurrentProductNode() {
+				return document.querySelector('.single-product main .product');
+			}
+			function extractIncomingProductNode(doc) {
+				return doc.querySelector('.single-product main .product');
+			}
+			function replaceProductNodeFromHtml(html, nextUrl, pushState) {
+				var parser = new DOMParser();
+				var nextDoc = parser.parseFromString(html, 'text/html');
+				var currentNode = getCurrentProductNode();
+				var nextNode = extractIncomingProductNode(nextDoc);
+				if (!currentNode || !nextNode) {
+					return false;
+				}
+
+				currentNode.replaceWith(nextNode);
+				if (nextDoc.title) {
+					document.title = nextDoc.title;
+				}
+				if (pushState) {
+					window.history.pushState({ mnsk7PdpAjax: true }, '', nextUrl);
+				}
+				window.scrollTo({ top: 0, behavior: 'instant' });
+				if (window.jQuery) {
+					try { window.jQuery(document.body).trigger('wc_fragment_refresh'); } catch (_e) {}
+					try {
+						window.jQuery('.variations_form').each(function() {
+							window.jQuery(this).wc_variation_form();
+						});
+					} catch (_e2) {}
+				}
+				return true;
+			}
+			async function loadProductWithoutReload(nextUrl, pushState) {
+				if (isLoading || !isSameOriginUrl(nextUrl)) {
+					return;
+				}
+				isLoading = true;
+				document.body.classList.add('mnsk7-pdp-switching');
+				try {
+					var response = await fetch(nextUrl, {
+						credentials: 'same-origin',
+						headers: { 'X-Requested-With': 'XMLHttpRequest' }
+					});
+					if (!response.ok) {
+						window.location.href = nextUrl;
+						return;
+					}
+					var html = await response.text();
+					if (!replaceProductNodeFromHtml(html, nextUrl, pushState)) {
+						window.location.href = nextUrl;
+					}
+				} catch (_error) {
+					window.location.href = nextUrl;
+				} finally {
+					isLoading = false;
+					document.body.classList.remove('mnsk7-pdp-switching');
+				}
+			}
+
+			document.addEventListener('click', function(event) {
+				var link = event.target && event.target.closest
+					? event.target.closest('a.mnsk7-key-param-option[href], a.mnsk7-variant-visual[href]')
+					: null;
+				if (!link) {
+					return;
+				}
+				var href = link.getAttribute('href');
+				if (!href || !isSameOriginUrl(href)) {
+					return;
+				}
+				event.preventDefault();
+				loadProductWithoutReload(href, true);
+			}, true);
+
+			window.addEventListener('popstate', function() {
+				loadProductWithoutReload(window.location.href, false);
+			});
+		})();
+
+		var productPanel = document.querySelector('.single-product .mnsk7-product-key-params--variable');
+		var variationsForm = document.querySelector('.single-product form.variations_form');
+		if (!productPanel || !variationsForm || !window.jQuery) {
+			return;
+		}
+
+		var $form = window.jQuery(variationsForm);
+		var attributeButtons = Array.prototype.slice.call(productPanel.querySelectorAll('.mnsk7-key-param-option--product'));
+		var visualCards = Array.prototype.slice.call(productPanel.querySelectorAll('.mnsk7-variant-visual'));
+		if (!attributeButtons.length && !visualCards.length) {
+			return;
+		}
+
+		function getHiddenSelect(attributeName) {
+			return variationsForm.querySelector('select[name="' + attributeName + '"]');
+		}
+
+		function getHiddenOption(hiddenSelect, value) {
+			if (!hiddenSelect) {
+				return null;
+			}
+
+			for (var i = 0; i < hiddenSelect.options.length; i += 1) {
+				if (hiddenSelect.options[i].value === value) {
+					return hiddenSelect.options[i];
+				}
+			}
+
+			return null;
+		}
+
+		function getCurrentAttributes() {
+			var current = {};
+			Array.prototype.forEach.call(variationsForm.querySelectorAll('select[name^="attribute_"]'), function(hiddenSelect) {
+				current[hiddenSelect.name] = hiddenSelect.value || '';
+			});
+			return current;
+		}
+
+		function syncButtonsFromHidden() {
+			attributeButtons.forEach(function(button) {
+				var hiddenSelect = getHiddenSelect(button.dataset.attributeName);
+				if (!hiddenSelect) {
+					return;
+				}
+
+				var hiddenOption = getHiddenOption(hiddenSelect, button.dataset.optionValue);
+				var isDisabled = !!(hiddenOption && hiddenOption.disabled);
+				var isCurrent = hiddenSelect.value === button.dataset.optionValue;
+
+				button.disabled = isDisabled;
+				button.classList.toggle('is-current', isCurrent);
+				button.setAttribute('aria-pressed', isCurrent ? 'true' : 'false');
+			});
+		}
+
+		function syncVisualCards() {
+			var currentAttributes = getCurrentAttributes();
+			var variationIdField = variationsForm.querySelector('input[name="variation_id"]');
+			var selectedVariationId = String(variationIdField ? variationIdField.value : '');
+
+			visualCards.forEach(function(card) {
+				var attrs = {};
+				try {
+					attrs = JSON.parse(card.dataset.attributes || '{}');
+				} catch (error) {
+					attrs = {};
+				}
+
+				var matches = Object.keys(currentAttributes).every(function(attrName) {
+					return !currentAttributes[attrName] || !attrs[attrName] || attrs[attrName] === currentAttributes[attrName];
+				});
+				var isCurrent = !!selectedVariationId && selectedVariationId === String(card.dataset.variationId || '');
+
+				card.classList.toggle('is-match', matches);
+				card.classList.toggle('is-current', isCurrent);
+				card.classList.toggle('is-dimmed', !matches);
+			});
+		}
+
+		function syncVariantUi() {
+			syncButtonsFromHidden();
+			syncVisualCards();
+		}
+
+		function setHiddenSelectValue(attributeName, value) {
+			var hiddenSelect = getHiddenSelect(attributeName);
+			if (!hiddenSelect) {
+				return;
+			}
+
+			if (hiddenSelect.value !== value) {
+				hiddenSelect.value = value;
+			}
+
+			window.jQuery(hiddenSelect).trigger('change');
+		}
+
+		function selectFirstVariationIfEmpty() {
+			var current = getCurrentAttributes();
+			var hasSelected = Object.keys(current).some(function(attrName) {
+				return !!current[attrName];
+			});
+			if (hasSelected || !visualCards.length) {
+				return;
+			}
+
+			var attrs = {};
+			try {
+				attrs = JSON.parse(visualCards[0].dataset.attributes || '{}');
+			} catch (error) {
+				attrs = {};
+			}
+
+			Object.keys(attrs).forEach(function(attributeName) {
+				setHiddenSelectValue(attributeName, attrs[attributeName]);
+			});
+		}
+
+		attributeButtons.forEach(function(button) {
+			button.addEventListener('click', function() {
+				if (button.disabled) {
+					return;
+				}
+
+				setHiddenSelectValue(button.dataset.attributeName, button.dataset.optionValue);
+			});
+		});
+
+		visualCards.forEach(function(card) {
+			card.addEventListener('click', function() {
+				var attrs = {};
+				try {
+					attrs = JSON.parse(card.dataset.attributes || '{}');
+				} catch (error) {
+					attrs = {};
+				}
+
+				Object.keys(attrs).forEach(function(attributeName) {
+					var hiddenSelect = getHiddenSelect(attributeName);
+					if (!hiddenSelect) {
+						return;
+					}
+
+					if (hiddenSelect.value !== attrs[attributeName]) {
+						hiddenSelect.value = attrs[attributeName];
+					}
+
+					window.jQuery(hiddenSelect).trigger('change');
+				});
+			});
+		});
+
+		selectFirstVariationIfEmpty();
+		syncVariantUi();
+		$form.on('woocommerce_update_variation_values woocommerce_variation_has_changed show_variation hide_variation reset_data', function() {
+			window.requestAnimationFrame(syncVariantUi);
+		});
+
+		Array.prototype.forEach.call(variationsForm.querySelectorAll('select[name^="attribute_"]'), function(hiddenSelect) {
+			window.jQuery(hiddenSelect).on('change', function() {
+				window.requestAnimationFrame(syncVariantUi);
 			});
 		});
 	});

@@ -1,7 +1,7 @@
 # mnsk7-tools.pl — staging / deploy
 # Wymaga: .env (cyberfolks_ssh_*), na serwerze wp-cli
 
-.PHONY: staging-refresh deploy-files deploy-mu-plugins staging-fix-db sync-prod-to-staging github-create-repo check-db
+.PHONY: staging-refresh deploy-files deploy-mu-plugins deploy-prod staging-fix-db sync-prod-to-staging github-create-repo check-db
 
 # Создать репо на GitHub и запушить (gh auth login нужен один раз): make github-create-repo REPO=mnsk7-tools
 github-create-repo:
@@ -26,6 +26,10 @@ staging-refresh:
 # Rsync: mu-plugins (i opcjonalnie themes/plugins) na staging
 deploy-files:
 	./scripts/deploy-rsync.sh staging
+
+# Rsync na produkcję (wymaga .env z cyberfolks_ssh_*)
+deploy-prod:
+	./scripts/deploy-rsync.sh prod
 
 # Tylko mu-plugins
 deploy-mu-plugins: deploy-files
