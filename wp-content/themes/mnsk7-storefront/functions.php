@@ -862,6 +862,33 @@ add_action( 'wp_enqueue_scripts', function () {
 	}
 }, 20 );
 
+/**
+ * Moje konto (zalogowany): inline po main.css — wygrywa z Customize My Account (width:15% na nav).
+ */
+add_action(
+	'wp_enqueue_scripts',
+	static function () {
+		if ( ! is_user_logged_in() || ! function_exists( 'is_account_page' ) || ! is_account_page() ) {
+			return;
+		}
+		if ( ! wp_style_is( 'mnsk7-main', 'enqueued' ) ) {
+			return;
+		}
+		$css  = '@media (min-width:769px){';
+		$css .= 'body.woocommerce-account.logged-in .woocommerce{display:grid!important;grid-template-columns:minmax(220px,260px) minmax(0,1fr)!important;grid-template-areas:"title title" "nav content"!important;gap:1.25rem 2rem!important;align-items:start!important}';
+		$css .= 'body.woocommerce-account.logged-in .mnsk7-account-title{grid-area:title!important}';
+		$css .= 'body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation,body.woocommerce-account.logged-in nav.woocommerce-MyAccount-navigation{grid-area:nav!important;float:none!important;width:100%!important;min-width:220px!important;max-width:100%!important;margin:0!important}';
+		$css .= 'body.woocommerce-account.logged-in .woocommerce-MyAccount-content{grid-area:content!important;float:none!important;width:auto!important;max-width:none!important;min-width:0!important;margin:0!important}';
+		$css .= 'body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation ul,body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation ul.wcmamtx_vertical_menu{display:flex!important;flex-direction:column!important;flex-wrap:nowrap!important;width:100%!important;max-width:100%!important}';
+		$css .= 'body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation li,body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation ul.wcmamtx_vertical_menu li{display:block!important;width:100%!important;min-width:0!important;max-width:none!important}';
+		$css .= 'body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation a,body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation .woocommerce-MyAccount-navigation-link_a,body.woocommerce-account.logged-in .wcmamtx_default_text_below_avatar,body.woocommerce-account.logged-in .wcmamtx_intro_text{white-space:normal!important;word-break:normal!important;writing-mode:horizontal-tb!important}';
+		$css .= 'body.woocommerce-account.logged-in nav.wcmam-nav.wcmam-style-1{float:none!important;width:100%!important;min-width:220px!important;max-width:100%!important}';
+		$css .= '}';
+		wp_add_inline_style( 'mnsk7-main', $css );
+	},
+	100
+);
+
 /** Storefront parent enqueue child style.css again as storefront-child-style (ver from style header) — duplicate of mnsk7-storefront-style. */
 add_action( 'wp_enqueue_scripts', function () {
 	wp_dequeue_style( 'storefront-child-style' );
