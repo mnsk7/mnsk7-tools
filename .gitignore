@@ -29,9 +29,11 @@ wp-content/wp-rocket-config/
 wp-content/wflogs/
 *.log
 wp-content/mu-plugins/
-wp-content/themes/twentytwentyfive/
-wp-content/themes/twentytwentyfour/
 wp-content/plugins/
+
+# Only child theme is versioned; parent Storefront stays on server
+wp-content/themes/*
+!wp-content/themes/mnsk7-storefront/
 
 # Server and plugin noise
 cgi-bin/
@@ -48,26 +50,53 @@ sync-from-server.sh
 PORADKEK-DZIALAN.txt
 instalacje.txt
 staging-plan.txt
+README-ARCHIVE.txt
 
-# E2E artifacts
+# Agent / pipeline tooling (local only)
+.cursor/
+.codex/
+.cursorrules
+AGENTS.md
+OPERATING-MODEL.md
+FINAL_REPORT_UI_SYSTEM.md
+Makefile
+skills-lock.json
+tasks/
+docs/
+
+# E2E / QA tooling
+e2e/
 node_modules/
 playwright-report/
 test-results/
 .playwright/
 artifacts/
-output/prod-snapshot/
+audit-shots/
+output/
+lighthouserc.json
+package.json
+package-lock.json
+playwright.config.js
 
-# Cursor local artifacts
-.cursor/hooks/state/
-.cursor/ralph-loop.local.json
-.cursor/*REPORT*.md
-.cursor/*PLAN*.md
+# Extra CI workflows (production deploy only in repo)
+.github/PULL_REQUEST_TEMPLATE.md
+.github/workflows/deploy-staging.yml
+.github/workflows/manual-trigger.yml
+.github/workflows/php-lint.yml
 
-# Codex local artifacts
-.codex/artifacts/
-.codex/state/
-.codex/tmp/
-.codex/*.local.*
+# Agent / verify scripts
+scripts/cancel-ralph-loop.sh
+scripts/codex-ralph-cancel.sh
+scripts/codex-ralph-next.sh
+scripts/codex-ralph-start.sh
+scripts/codex-ralph-status.sh
+scripts/setup-ralph-loop.sh
+scripts/e2e-run-and-suggest.sh
+scripts/e2e-suggest.js
+scripts/lighthouse-report.js
+scripts/task4-regression-check.sh
+scripts/github-create-repo.sh
+scripts/verify/
 
 # System files
 .DS_Store

@@ -244,19 +244,167 @@
 .woocommerce-account .entry-header {
   display: none;
 }
-/* Moje konto — layout stabilny, w obrębie content-max */
-.woocommerce-account .entry-content,
-.woocommerce-account .woocommerce-MyAccount-content,
-.woocommerce-account .woocommerce-account .col-full {
+
+.mnsk7-account-title {
+  margin: 0 0 1rem;
+  font-size: clamp(1.35rem, 2.4vw, var(--fs-2xl));
+  font-weight: 700;
+  line-height: 1.2;
+  color: var(--color-text);
+}
+
+/* Kontener strony konta */
+body.woocommerce-account #content,
+body.woocommerce-account .mnsk7-content,
+body.woocommerce-account .site-main,
+body.woocommerce-account .mnsk7-main {
   max-width: var(--content-max);
   margin-left: auto;
   margin-right: auto;
-  padding: 0 1.5rem var(--space-32);
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
   box-sizing: border-box;
 }
-.woocommerce-account .woocommerce-MyAccount-navigation {
-  margin-bottom: 1.5rem;
+
+body.woocommerce-account .col-full {
+  max-width: 100%;
+  padding-left: 0;
+  padding-right: 0;
 }
+
+/* -----------------------------------------------------------------
+   Gość: logowanie + rejestracja (bez gridu dashboardu!)
+   ----------------------------------------------------------------- */
+body.woocommerce-account:not(.logged-in) .woocommerce {
+  display: block;
+  max-width: 980px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 0 var(--space-32);
+  box-sizing: border-box;
+}
+
+body.woocommerce-account:not(.logged-in) .mnsk7-login-benefits {
+  margin: 0 0 1.5rem;
+  padding: 1rem 1.125rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  background: var(--color-surface);
+}
+
+body.woocommerce-account:not(.logged-in) .mnsk7-login-benefits__title {
+  margin: 0 0 0.5rem;
+  font-size: var(--fs-base);
+  font-weight: 700;
+}
+
+body.woocommerce-account:not(.logged-in) .mnsk7-login-benefits__list {
+  margin: 0;
+  padding-left: 1.15rem;
+  display: grid;
+  gap: 0.35rem;
+}
+
+body.woocommerce-account:not(.logged-in) .woocommerce #customer_login,
+body.woocommerce-account:not(.logged-in) .woocommerce .u-columns.col2-set {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  align-items: start;
+  float: none;
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+
+body.woocommerce-account:not(.logged-in) .woocommerce .u-column1,
+body.woocommerce-account:not(.logged-in) .woocommerce .u-column2 {
+  float: none !important;
+  width: auto !important;
+  max-width: none !important;
+  margin: 0 !important;
+}
+
+body.woocommerce-account:not(.logged-in) .woocommerce form.login,
+body.woocommerce-account:not(.logged-in) .woocommerce form.register {
+  margin: 0;
+  padding: 1.25rem 1.35rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-md);
+  background: var(--color-white);
+  box-shadow: var(--shadow-sm, 0 1px 3px rgba(15, 23, 42, 0.06));
+}
+
+body.woocommerce-account:not(.logged-in) .woocommerce form h2 {
+  margin: 0 0 1rem;
+  font-size: var(--fs-lg);
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+body.woocommerce-account:not(.logged-in) .woocommerce form .form-row {
+  margin-bottom: 1rem;
+}
+
+body.woocommerce-account:not(.logged-in) .woocommerce form label {
+  display: block;
+  margin-bottom: 0.35rem;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+body.woocommerce-account:not(.logged-in) .woocommerce form .woocommerce-Input,
+body.woocommerce-account:not(.logged-in) .woocommerce form input.input-text {
+  width: 100%;
+  box-sizing: border-box;
+  min-height: 44px;
+}
+
+body.woocommerce-account:not(.logged-in) .woocommerce form .woocommerce-LostPassword {
+  margin-top: 0.75rem;
+  font-size: var(--fs-sm);
+}
+
+body.woocommerce-account:not(.logged-in) .woocommerce form .woocommerce-privacy-policy-text {
+  margin: 0.75rem 0 1rem;
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+  color: var(--color-text-muted);
+}
+
+/* -----------------------------------------------------------------
+   Zalogowany: nawigacja boczna + treść (tylko .logged-in)
+   ----------------------------------------------------------------- */
+body.woocommerce-account.logged-in .woocommerce {
+  display: grid;
+  grid-template-columns: minmax(200px, 240px) minmax(0, 1fr);
+  grid-template-areas:
+    "title title"
+    "nav content";
+  gap: 1.25rem 2rem;
+  align-items: start;
+  max-width: var(--content-max);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 0 var(--space-32);
+  box-sizing: border-box;
+}
+
+body.woocommerce-account.logged-in .mnsk7-account-title {
+  grid-area: title;
+}
+
+body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation {
+  grid-area: nav;
+  margin-bottom: 0;
+}
+
+body.woocommerce-account.logged-in .woocommerce-MyAccount-content {
+  grid-area: content;
+  min-width: 0;
+}
+
 .woocommerce-account .woocommerce-MyAccount-navigation ul {
   list-style: none;
   padding: 0;
@@ -265,6 +413,12 @@
   flex-wrap: wrap;
   gap: 0.5rem;
 }
+
+body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation ul {
+  flex-direction: column;
+  flex-wrap: nowrap;
+}
+
 .woocommerce-account .woocommerce-MyAccount-navigation a {
   display: block;
   padding: 0.5rem 1rem;
@@ -275,49 +429,82 @@
   border: 1px solid var(--color-border);
   background: var(--color-surface);
   color: var(--color-text);
-  transition: background 0.15s ease, border-color 0.15s ease;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
 }
+
+body.woocommerce-account.logged-in .woocommerce-MyAccount-navigation a {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.woocommerce-account .woocommerce-MyAccount-navigation li.is-active a,
 .woocommerce-account .woocommerce-MyAccount-navigation a:hover {
   background: var(--color-white);
   border-color: var(--color-primary);
   color: var(--color-primary);
 }
 
-/* Dashboard Woo: nawigacja + treść w dwóch kolumnach (bez wtyczki CMAFW) */
-@media (min-width: 769px) {
-  body.woocommerce-account .woocommerce {
-    display: grid;
-    grid-template-columns: minmax(200px, 260px) minmax(0, 1fr);
-    gap: 2rem;
-    align-items: start;
-  }
-  body.woocommerce-account .woocommerce-MyAccount-navigation {
-    margin-bottom: 0;
-  }
-  body.woocommerce-account .woocommerce-MyAccount-navigation ul {
-    flex-direction: column;
-  }
-  body.woocommerce-account .woocommerce-MyAccount-navigation a {
-    width: 100%;
-    box-sizing: border-box;
-  }
-}
-.woocommerce-account .mnsk7-login-benefits {
-  margin: 0.75rem 0 1.25rem;
-  padding: 1rem 1.125rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--r-md);
-  background: var(--color-surface);
-}
-.woocommerce-account .mnsk7-login-benefits__title {
-  margin: 0 0 0.5rem;
-  font-size: var(--fs-base);
-}
-.woocommerce-account .mnsk7-login-benefits__list {
+.woocommerce-account .woocommerce-MyAccount-content {
+  max-width: none;
   margin: 0;
-  padding-left: 1rem;
-  display: grid;
-  gap: 0.35rem;
+  padding: 0;
+}
+
+@media (max-width: 768px) {
+  body.woocommerce-account:not(.logged-in) .woocommerce #customer_login,
+  body.woocommerce-account:not(.logged-in) .woocommerce .u-columns.col2-set {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  body.woocommerce-account:not(.logged-in) .woocommerce .u-column2 {
+    margin-top: 0;
+  }
+
+  body.woocommerce-account.logged-in .woocommerce {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "title"
+      "nav"
+      "content";
+    gap: 1rem;
+  }
+
+  body.woocommerce-account .woocommerce-MyAccount-navigation ul {
+    gap: 0.4rem;
+  }
+
+  body.woocommerce-account .woocommerce-MyAccount-navigation a {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  body.woocommerce-account:not(.logged-in) .woocommerce,
+  body.woocommerce-account.logged-in .woocommerce {
+    padding-bottom: var(--space-24);
+  }
+}
+
+@media (min-width: 769px) and (max-width: 900px) {
+  body.woocommerce-account:not(.logged-in) .woocommerce #customer_login,
+  body.woocommerce-account:not(.logged-in) .woocommerce .u-columns.col2-set {
+    gap: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mnsk7-header__link--account {
+    min-width: 0;
+    max-width: 12rem;
+  }
+
+  .mnsk7-header__link--account .mnsk7-header__link-text {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
 }
 
 /* Przewodnik (single post) — lista artykułów w porządku */
@@ -387,24 +574,6 @@
   .mnsk7-contact-info .mnsk7-contact-info__line,
   .mnsk7-contact-form__desc {
     font-size: var(--fs-sm);
-  }
-
-  .woocommerce-account .entry-content,
-  .woocommerce-account .woocommerce-MyAccount-navigation,
-  .woocommerce-account .woocommerce-MyAccount-content {
-    padding-left: 0;
-    padding-right: 0;
-    padding-bottom: var(--space-24);
-  }
-
-  .woocommerce-account .woocommerce-MyAccount-navigation ul {
-    gap: 0.4rem;
-  }
-
-  .woocommerce-account .woocommerce-MyAccount-navigation a {
-    min-height: 44px;
-    display: inline-flex;
-    align-items: center;
   }
 }
 
