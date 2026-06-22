@@ -862,6 +862,12 @@ add_action( 'wp_enqueue_scripts', function () {
 	}
 }, 20 );
 
+/** Storefront parent enqueue child style.css again as storefront-child-style (ver from style header) — duplicate of mnsk7-storefront-style. */
+add_action( 'wp_enqueue_scripts', function () {
+	wp_dequeue_style( 'storefront-child-style' );
+	wp_deregister_style( 'storefront-child-style' );
+}, 25 );
+
 /* Override WooCommerce clearfix: woocommerce-layout.css ładuje się PO naszej temie i ustawia .woocommerce ul.products::before{display:table}, co daje pustą pierwszą "komórkę" w gridzie. Dodajemy inline do handle WooCommerce, żeby nasze display:none było po ich regule. Również Moje konto: przyciski + padding (wygrywamy z WC). */
 add_action( 'wp_enqueue_scripts', function () {
 	if ( ! wp_style_is( 'woocommerce-layout', 'registered' ) ) {
