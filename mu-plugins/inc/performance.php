@@ -16,8 +16,12 @@ function mnsk7_perf_um_context() {
 	if ( function_exists( 'is_account_page' ) && is_account_page() ) {
 		return true;
 	}
-	if ( function_exists( 'um_is_core_page' ) && um_is_core_page() ) {
-		return true;
+	if ( function_exists( 'um_is_core_page' ) ) {
+		foreach ( array( 'login', 'register', 'account', 'password-reset', 'user', 'logout', 'members' ) as $um_page ) {
+			if ( um_is_core_page( $um_page ) ) {
+				return true;
+			}
+		}
 	}
 	return false;
 }
