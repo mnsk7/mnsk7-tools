@@ -1,5 +1,6 @@
-# Deploy to production (CyberFolks) on push to main or manual dispatch.
-# Secrets: PROD_SSH_KEY, PROD_SSH_HOST, PROD_SSH_USER, PROD_SSH_PORT, PROD_REMOTE_PATH
+# Deploy to production (dhosting) on push to main or manual dispatch.
+# Secrets: PROD_SSH_PASSWORD, PROD_SSH_HOST, PROD_SSH_USER, PROD_SSH_PORT, PROD_REMOTE_PATH
+# Example: host=mnsk7tools.ssh.dhosting.pl path=mnsk7-tools.pl/public_html
 
 name: Deploy to Production
 
@@ -38,13 +39,16 @@ jobs:
 
       - name: Verify production target
         env:
+          SSH_PASSWORD: ${{ secrets.PROD_SSH_PASSWORD }}
           SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
+          SSH_USER: ${{ secrets.PROD_SSH_USER }}
           REMOTE_PATH: ${{ secrets.PROD_REMOTE_PATH }}
         run: |
           HOST="${SSH_HOST:-}"
+          USER="${SSH_USER:-}"
           RP="${REMOTE_PATH:-}"
-          if [[ -z "$HOST" || -z "$RP" ]]; then
-            echo "::error::PROD_SSH_HOST and PROD_REMOTE_PATH secrets are required."
+          if [[ -z "$SSH_PASSWORD" || -z "$HOST" || -z "$USER" || -z "$RP" ]]; then
+            echo "::error::PROD_SSH_PASSWORD, PROD_SSH_HOST, PROD_SSH_USER, and PROD_REMOTE_PATH secrets are required."
             exit 1
           fi
           if [[ " ${HOST} ${RP} " =~ [Ss]taging ]]; then
@@ -55,32 +59,32 @@ jobs:
 
       - name: Setup SSH
         env:
-          SSH_KEY: ${{ secrets.PROD_SSH_KEY }}
           SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
           SSH_PORT: ${{ secrets.PROD_SSH_PORT }}
         run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq sshpass rsync
           mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
           ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts 2>/dev/null || true
 
       - name: Deploy mu-plugins and theme
         env:
+          SSHPASS: ${{ secrets.PROD_SSH_PASSWORD }}
           SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
           SSH_USER: ${{ secrets.PROD_SSH_USER }}
           SSH_PORT: ${{ secrets.PROD_SSH_PORT }}
           REMOTE_PATH: ${{ secrets.PROD_REMOTE_PATH }}
         run: |
-          RSYNC_SSH="ssh -i ~/.ssh/deploy_key -p $SSH_PORT -o StrictHostKeyChecking=no"
+          RSYNC_SSH="sshpass -e ssh -p $SSH_PORT -o StrictHostKeyChecking=yes"
           rsync -avz --delete -e "$RSYNC_SSH" mu-plugins/ "$SSH_USER@$SSH_HOST:~/$REMOTE_PATH/wp-content/mu-plugins/"
           rsync -avz --delete -e "$RSYNC_SSH" wp-content/themes/mnsk7-storefront/ "$SSH_USER@$SSH_HOST:~/$REMOTE_PATH/wp-content/themes/mnsk7-storefront/"
 
       - name: Clear WP Rocket cache
         env:
+          SSHPASS: ${{ secrets.PROD_SSH_PASSWORD }}
           SSH_HOST: ${{ secrets.PROD_SSH_HOST }}
           SSH_USER: ${{ secrets.PROD_SSH_USER }}
           SSH_PORT: ${{ secrets.PROD_SSH_PORT }}
           REMOTE_PATH: ${{ secrets.PROD_REMOTE_PATH }}
         run: |
-          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" -o StrictHostKeyChecking=no \
+          sshpass -e ssh -p "$SSH_PORT" -o StrictHostKeyChecking=yes \
             "$SSH_USER@$SSH_HOST" "rm -rf ~/$REMOTE_PATH/wp-content/cache/min/ ~/$REMOTE_PATH/wp-content/cache/wp-rocket/ 2>/dev/null; echo 'Cache cleared'"

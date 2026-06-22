@@ -19,6 +19,48 @@ DEPLOY_DIRS = [
 SKIP_PARTS = {".git", "__pycache__", "node_modules", ".DS_Store"}
 
 
+def require_manual_prod_deploy(dry_run=False):
+    """Break-glass only — normal path is GitHub Actions push to main."""
+    if dry_run:
+        return
+    flag = (os.environ.get("ALLOW_MANUAL_PROD_DEPLOY") or "").strip().lower()
+    if flag in {"1", "true", "yes"}:
+        return
+    raise SystemExit(
+        "Manual prod deploy blocked. Push to main (GitHub Actions) or set "
+        "ALLOW_MANUAL_PROD_DEPLOY=1 for break-glass only."
+    )
+
+
+def resolve_prod_ssh(env):
+    """Prefer new_server_* from .env; fallback to legacy cyberfolks_*."""
+    new_host = (env.get("new_server_ssh_host") or "").strip()
+    if new_host:
+        return {
+            "host": new_host,
+            "port": int((env.get("new_server_ssh_port") or "22").strip()),
+            "user": (env.get("new_server_ssh_user") or "").strip(),
+            "password": (env.get("new_server_ssh_password") or "").strip(),
+            "wp_path": (
+                env.get("STAGING_PROD_PATH")
+                or env.get("NEW_SERVER_WP_PATH")
+                or "mnsk7-tools.pl/public_html"
+            )
+            .strip()
+            .strip("/"),
+        }
+
+    return {
+        "host": (env.get("cyberfolks_ssh_host") or "").strip(),
+        "port": int((env.get("cyberfolks_ssh_port") or "22").strip()),
+        "user": (env.get("cyberfolks_ssh_user") or "").strip(),
+        "password": (env.get("cyberfolks_ssh_password") or "").strip(),
+        "wp_path": (env.get("STAGING_PROD_PATH") or "domains/mnsk7-tools.pl/public_html")
+        .strip()
+        .strip("/"),
+    }
+
+
 def sftp_mkdirs(sftp, path):
     current = ""
     for part in path.strip("/").split("/"):
@@ -51,15 +93,18 @@ def main():
     env.update(load_env(".env"))
     env.update(os.environ)
 
-    host = (env.get("cyberfolks_ssh_host") or "").strip()
-    port = int((env.get("cyberfolks_ssh_port") or "22").strip())
-    user = (env.get("cyberfolks_ssh_user") or "").strip()
-    password = (env.get("cyberfolks_ssh_password") or "").strip()
-    wp_path = (env.get("STAGING_PROD_PATH") or "domains/mnsk7-tools.pl/public_html").strip().strip("/")
+    cfg = resolve_prod_ssh(env)
+    host = cfg["host"]
+    port = cfg["port"]
+    user = cfg["user"]
+    password = cfg["password"]
+    wp_path = cfg["wp_path"]
     dry_run = bool(env.get("DRY_RUN"))
 
+    require_manual_prod_deploy(dry_run=dry_run)
+
     if not all([host, user, password]):
-        raise SystemExit("Missing SSH credentials in .env")
+        raise SystemExit("Missing SSH credentials in .env (new_server_ssh_* or cyberfolks_ssh_*)")
 
     files = []
     for local_rel, remote_rel in DEPLOY_DIRS:
@@ -70,7 +115,7 @@ def main():
             rel = path.relative_to(local_root).as_posix()
             files.append((path, posixpath.join(remote_rel, rel)))
 
-    print(f"Deploy prod SFTP dry_run={dry_run} files={len(files)} path={wp_path}")
+    print(f"Deploy prod SFTP host={host} dry_run={dry_run} files={len(files)} path={wp_path}")
     if dry_run:
         for local, remote in files[:15]:
             print(f"[DRY-RUN] {local} -> {remote}")

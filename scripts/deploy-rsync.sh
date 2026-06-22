@@ -2,6 +2,7 @@
 # Rsync: mu-plugins, themes (i opcjonalnie plugins) na staging lub prod.
 # Użycie: ./scripts/deploy-rsync.sh [staging|prod]
 # Prod deploy (GitHub): .github/workflows/deploy-production.yml (secrets PROD_*)
+# Manual prod (break-glass): ALLOW_MANUAL_PROD_DEPLOY=1 ./scripts/deploy-rsync.sh prod
 # Dry-run: DRY_RUN=1 ./scripts/deploy-rsync.sh [staging|prod]
 # Nie kopiujemy nigdy: wp-config.php, .env (ich nie ma w repo).
 # Dla prod: pracujemy tylko w public_html/wp-content/... — katalog staging/ nie jest dotykany.
@@ -11,21 +12,38 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(dirname "$SCRIPT_DIR")"
 cd "$ROOT"
 
-# Jawne ścieżki (jedna prawda) — override przez .env: STAGING_REMOTE_PATH, STAGING_PROD_PATH
+# Jawne ścieżki — override przez .env: STAGING_REMOTE_PATH, STAGING_PROD_PATH, NEW_SERVER_WP_PATH
 STAGE_PATH="${STAGING_REMOTE_PATH:-domains/mnsk7-tools.pl/public_html/staging}"
-PROD_PATH="${STAGING_PROD_PATH:-domains/mnsk7-tools.pl/public_html}"
+PROD_PATH="${STAGING_PROD_PATH:-${NEW_SERVER_WP_PATH:-domains/mnsk7-tools.pl/public_html}}"
 
 if [[ ! -f .env ]]; then
   echo "Brak .env"
   exit 1
 fi
 
-SSH_HOST=$(grep '^cyberfolks_ssh_host=' .env | cut -d= -f2)
-SSH_PORT=$(grep '^cyberfolks_ssh_port=' .env | cut -d= -f2)
-SSH_USER=$(grep '^cyberfolks_ssh_user=' .env | cut -d= -f2)
+# Prefer new dhosting SSH; fallback to legacy CyberFolks.
+NEW_HOST=$(grep -E '^new_server_ssh_host=' .env | cut -d= -f2- | tr -d '\r')
+if [[ -n "$NEW_HOST" ]]; then
+  SSH_HOST="$NEW_HOST"
+  SSH_PORT=$(grep -E '^new_server_ssh_port=' .env | cut -d= -f2- | tr -d '\r')
+  SSH_USER=$(grep -E '^new_server_ssh_user=' .env | cut -d= -f2- | tr -d '\r')
+  NEW_WP=$(grep -E '^NEW_SERVER_WP_PATH=' .env | cut -d= -f2- | tr -d '\r')
+  if [[ -n "$NEW_WP" ]]; then
+    PROD_PATH="$NEW_WP"
+  fi
+else
+  SSH_HOST=$(grep -E '^cyberfolks_ssh_host=' .env | cut -d= -f2- | tr -d '\r')
+  SSH_PORT=$(grep -E '^cyberfolks_ssh_port=' .env | cut -d= -f2- | tr -d '\r')
+  SSH_USER=$(grep -E '^cyberfolks_ssh_user=' .env | cut -d= -f2- | tr -d '\r')
+fi
+SSH_PORT="${SSH_PORT:-22}"
 TARGET="${1:-staging}"
 
 if [[ "$TARGET" == "prod" ]]; then
+  if [[ -z "${ALLOW_MANUAL_PROD_DEPLOY:-}" ]]; then
+    echo "BŁĄD: ręczny deploy prod zablokowany. Użyj GitHub Actions (push main) lub ALLOW_MANUAL_PROD_DEPLOY=1."
+    exit 1
+  fi
   REMOTE_BASE="$PROD_PATH"
   if [[ "$REMOTE_BASE" == *"staging"* ]]; then
     echo "BŁĄD: Ścieżka prod nie może zawierać 'staging'. PROD_PATH=$PROD_PATH"

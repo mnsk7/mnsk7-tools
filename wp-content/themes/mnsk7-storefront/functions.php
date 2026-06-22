@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.53' );
+	define( 'MNSK7_THEME_VERSION', '1.0.62' );
 }
 
 /**
@@ -1704,7 +1704,7 @@ add_action( 'wp_footer', function () {
 	<?php
 }, 6 );
 
-/* PDP: sticky CTA na mobile — pokaż gdy formularz poza viewport, klik przewija i uruchamia główny przycisk */
+/* PDP: sticky CTA na mobile/tablet — pokaż gdy formularz poza viewport, klik przewija i uruchamia główny przycisk */
 add_action( 'wp_footer', function () {
 	if ( ! is_singular( 'product' ) ) {
 		return;
@@ -1724,7 +1724,9 @@ add_action( 'wp_footer', function () {
 		var defaultStickyPrice = stickyPrice ? stickyPrice.innerHTML : '';
 		var defaultStickyStock = stickyStock ? stickyStock.textContent : '';
 		var isSubmitting = false;
-		function isMobile() { return window.matchMedia('(max-width: 768px)').matches; }
+		function useStickyBottomBar() {
+			return window.matchMedia('(max-width: 1023px)').matches;
+		}
 		function isInViewport(el) {
 			if (!el) return false;
 			var r = el.getBoundingClientRect();
@@ -1737,9 +1739,10 @@ add_action( 'wp_footer', function () {
 			try { document.body.style.removeProperty('--mnsk7-sticky-cta-h'); } catch (e) {}
 		}
 		function setStickyVisible(visible) {
-			if (!isMobile()) {
+			if (!useStickyBottomBar()) {
 				sticky.setAttribute('hidden', '');
 				sticky.classList.remove('is-visible');
+				sticky.setAttribute('aria-hidden', 'true');
 				document.body.classList.remove('mnsk7-pdp-sticky-cta-visible');
 				clearStickyHeightVar();
 				return;
@@ -1759,7 +1762,7 @@ add_action( 'wp_footer', function () {
 			}
 		}
 		var observer = new IntersectionObserver(function(entries) {
-			if (!isMobile()) return;
+			if (!useStickyBottomBar()) return;
 			var e = entries[0];
 			setStickyVisible(!e.isIntersecting);
 		}, { root: null, rootMargin: '0px', threshold: 0.1 });
@@ -1808,7 +1811,7 @@ add_action( 'wp_footer', function () {
 		}
 		updateStickyBtnState();
 		stickyBtn.addEventListener('click', function() {
-			if (!isMobile() || isSubmitting) return;
+			if (!useStickyBottomBar() || isSubmitting) return;
 			if (stickyBtn.dataset.action === 'choose') {
 				form.scrollIntoView({ behavior: 'smooth', block: 'center' });
 				var firstEmpty = null;
@@ -1830,7 +1833,10 @@ add_action( 'wp_footer', function () {
 			setTimeout(function() { isSubmitting = false; }, 600);
 		});
 		window.addEventListener('resize', function() {
-			if (!isMobile()) { setStickyVisible(false); return; }
+			if (!useStickyBottomBar()) {
+				setStickyVisible(false);
+				return;
+			}
 			if (sticky.classList.contains('is-visible')) setStickyHeightVar();
 		}, { passive: true });
 		syncStickyMeta();
@@ -3037,7 +3043,7 @@ function mnsk7_get_product_attribute_taxonomy_names() {
 }
 
 /**
- * Canonical PLP attribute filters — tylko średnica trzpienia (razem z Rodzaje frezów + Zastosowanie i materiały w archive-product.php).
+ * Canonical PLP attribute filters — średnica robocza, trzpień, długości (razem z Rodzaje frezów + Zastosowanie w archive-product.php).
  * Pierwszy pasujący slug z listy (fi / srednica-trzpienia / …) — jedna taksonomia na archiwum.
  *
  * @return array<string,string> Map taxonomy => customer-facing label.
@@ -3046,8 +3052,20 @@ function mnsk7_get_plp_attribute_filter_taxonomies() {
 	$available = array_flip( function_exists( 'mnsk7_get_product_attribute_taxonomy_names' ) ? mnsk7_get_product_attribute_taxonomy_names() : array() );
 	$groups    = array(
 		array(
+			'label' => __( 'Średnica robocza', 'mnsk7-storefront' ),
+			'slugs' => array( 'srednica', 'srednica-robocza' ),
+		),
+		array(
 			'label' => __( 'Średnica trzpienia', 'mnsk7-storefront' ),
 			'slugs' => array( 'fi', 'srednica-trzpienia', 'srednica_trzpienia', 'wymiary-trzpienia' ),
+		),
+		array(
+			'label' => __( 'Długość robocza', 'mnsk7-storefront' ),
+			'slugs' => array( 'dlugosc-robocza-h', 'dlugosc-robocza', 'dlugosc-czesci-roboczej' ),
+		),
+		array(
+			'label' => __( 'Długość całkowita', 'mnsk7-storefront' ),
+			'slugs' => array( 'dlugosc-calkowita-l', 'dlugosc-calkowita' ),
 		),
 	);
 	$resolved = array();
@@ -3299,15 +3317,22 @@ function mnsk7_normalize_archive_chip_label( $label, $taxonomy = '' ) {
  */
 function mnsk7_get_archive_filter_priority( $term ) {
 	return array(
+		'pa_srednica',
+		'pa_srednica-robocza',
 		'pa_fi',
 		'pa_srednica-trzpienia',
 		'pa_srednica_trzpienia',
 		'pa_wymiary-trzpienia',
+		'pa_dlugosc-robocza-h',
+		'pa_dlugosc-robocza',
+		'pa_dlugosc-czesci-roboczej',
+		'pa_dlugosc-calkowita-l',
+		'pa_dlugosc-calkowita',
 	);
 }
 
 /**
- * Attribute filter chips for PLP — wyłącznie Średnica trzpienia (Źródło taksonomii: mnsk7_get_plp_attribute_filter_taxonomies).
+ * Attribute filter chips for PLP — atrybuty techniczne z mnsk7_get_plp_attribute_filter_taxonomies().
  * FB-02 (zestawy / pa_srednica): nie dotyczy — filtr średnicy roboczej nie jest już na PLP.
  * FB-03: only terms that have in-stock products in the current category are shown (no fallback to global terms).
  * Labels from WooCommerce (e.g. Średnica robocza, Dł. robocza, Dł. całkowita, Promień R).

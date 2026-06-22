@@ -370,10 +370,6 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   color: var(--color-text);
 }
 
-.single-product .summary .wpclv-attributes-single {
-  display: none !important;
-}
-
 .mnsk7-product-key-params__dd--options {
   min-width: 0;
 }
@@ -778,7 +774,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 }
 
 .single-product .summary.mnsk7-pdp-buybox > .mnsk7-pdp-description-intro {
-  display: none !important;
+  order: 3 !important;
 }
 
 .single-product .summary.mnsk7-pdp-buybox > .mnsk7-product-key-params {
@@ -1613,7 +1609,7 @@ body.mnsk7-pdp-switching .single-product main .product {
   }
 }
 
-@media (min-width: 901px) {
+@media (min-width: 1024px) {
   .single-product div.product,
   .single-product div.product .mnsk7-pdp-main {
     overflow: visible !important;
@@ -1621,8 +1617,10 @@ body.mnsk7-pdp-switching .single-product main .product {
 
   .single-product div.product .mnsk7-pdp-main {
     padding-bottom: 2rem;
+    align-items: flex-start;
   }
 
+  /* Left gallery: sticky, one slide via WC flexslider — do not override wrapper/flex-viewport layout. */
   .single-product div.product .woocommerce-product-gallery.images,
   .single-product div.product .images {
     position: sticky !important;
@@ -1632,8 +1630,90 @@ body.mnsk7-pdp-switching .single-product main .product {
     height: fit-content;
   }
 
+  .single-product .images .woocommerce-product-gallery__image img {
+    width: 100%;
+    height: auto;
+    max-height: none;
+    object-fit: contain;
+  }
+
+  /* No tiny thumb strip on desktop — use slider arrows / lightbox. */
   .single-product div.product .flex-control-thumbs {
     display: none !important;
+  }
+
+  .single-product .woocommerce-product-gallery .flex-direction-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .single-product .woocommerce-product-gallery .flex-direction-nav a {
+    position: absolute;
+    top: 50%;
+    z-index: 3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    margin-top: -1.125rem;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.94);
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+    color: var(--color-text);
+    text-indent: -9999px;
+    overflow: hidden;
+    opacity: 0.92;
+    transition: opacity 0.15s ease, transform 0.15s ease;
+  }
+
+  .single-product .woocommerce-product-gallery .flex-direction-nav a:hover {
+    opacity: 1;
+    transform: scale(1.04);
+  }
+
+  .single-product .woocommerce-product-gallery .flex-direction-nav .flex-prev {
+    left: 0.65rem;
+  }
+
+  .single-product .woocommerce-product-gallery .flex-direction-nav .flex-next {
+    right: 0.65rem;
+  }
+
+  .single-product .woocommerce-product-gallery .flex-direction-nav a::before {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-indent: 0;
+    font-size: 1.35rem;
+    line-height: 1;
+    font-weight: 700;
+  }
+
+  .single-product .woocommerce-product-gallery .flex-direction-nav .flex-prev::before {
+    content: "‹";
+  }
+
+  .single-product .woocommerce-product-gallery .flex-direction-nav .flex-next::before {
+    content: "›";
+  }
+
+  .single-product .woocommerce-product-gallery {
+    position: relative;
+  }
+
+  /* If slider JS failed, never stack all slides vertically. */
+  .single-product .woocommerce-product-gallery:not(:has(.flex-viewport)) .woocommerce-product-gallery__wrapper > .woocommerce-product-gallery__image:not(:first-child) {
+    display: none !important;
+  }
+
+  /* Long short description below CTA, not above. */
+  .single-product .summary.mnsk7-pdp-buybox > .mnsk7-pdp-description-intro {
+    order: 7 !important;
   }
 }
 
@@ -1766,7 +1846,7 @@ body.mnsk7-pdp-switching .single-product main .product {
   }
 }
 
-/* Sticky CTA na mobile (PDP): widoczny tylko ≤768px, ukrywany gdy główny formularz w viewport */
+/* Sticky CTA: mobile/tablet only (≤1023px). Desktop uses sticky buybox column instead. */
 .mnsk7-pdp-sticky-cta {
   display: none;
   position: fixed;
@@ -1792,9 +1872,27 @@ body.mnsk7-pdp-switching .single-product main .product {
   display: flex !important;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1023px) {
   body.mnsk7-pdp-sticky-cta-visible {
     padding-bottom: calc(var(--mnsk7-sticky-cta-h, 88px) + env(safe-area-inset-bottom, 0px));
+  }
+}
+
+@media (min-width: 1024px) {
+  .mnsk7-pdp-sticky-cta,
+  .mnsk7-pdp-sticky-cta.is-visible {
+    display: none !important;
+  }
+
+  body.mnsk7-pdp-sticky-cta-visible {
+    padding-bottom: 0 !important;
+  }
+
+  /* Desktop: keep buybox + CTA in view while scrolling description/related below. */
+  .single-product div.product .summary.mnsk7-pdp-buybox {
+    position: sticky;
+    top: calc(var(--mnsk7-promo-h, 0px) + var(--header-h, 56px) + 1rem);
+    align-self: flex-start;
   }
 }
 
@@ -1842,12 +1940,6 @@ body.mnsk7-pdp-switching .single-product main .product {
 .mnsk7-pdp-sticky-cta__btn:hover {
   background: var(--color-primary-hover);
   color: var(--color-white);
-}
-
-@media (min-width: 769px) {
-  .mnsk7-pdp-sticky-cta {
-    display: none !important;
-  }
 }
 
 /* PDP final cleanup: compact desktop buybox and no duplicate "second selector" UX */
@@ -1902,7 +1994,7 @@ body.mnsk7-pdp-switching .single-product main .product {
   }
 }
 
-/* Prod mobile CRO: put the buying path before the gallery and keep it compact. */
+/* Prod mobile compact buybox: gallery stays first (UI_SPEC_V2); tighter spacing below fold. */
 @media (max-width: 768px) {
   .single-product div.product {
     margin-top: 0.25rem !important;
@@ -1914,25 +2006,10 @@ body.mnsk7-pdp-switching .single-product main .product {
     gap: 0.65rem !important;
   }
 
-  .single-product div.product > .summary.mnsk7-pdp-buybox,
-  .single-product div.product .mnsk7-pdp-main > .summary.mnsk7-pdp-buybox {
-    order: 1 !important;
-  }
-
-  .single-product div.product .images,
-  .single-product div.product .mnsk7-pdp-main > .images {
-    order: 2 !important;
-  }
-
   .single-product div.product .summary.mnsk7-pdp-buybox {
     padding: 0.82rem !important;
     border-radius: 10px !important;
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08) !important;
-  }
-
-  .single-product .summary .mnsk7-breadcrumb-wrap,
-  .single-product .summary .mnsk7-pdp-breadcrumb-slot {
-    display: none !important;
   }
 
   .single-product .summary .product_title {

@@ -8,11 +8,16 @@ import time
 import paramiko
 
 from baselinker_sync_products import load_env
+from deploy_prod_sftp import resolve_prod_ssh, require_manual_prod_deploy
 
 
 FILES = [
     ("mu-plugins/inc/product-card.php", "wp-content/mu-plugins/inc/product-card.php"),
     ("wp-content/themes/mnsk7-storefront/functions.php", "wp-content/themes/mnsk7-storefront/functions.php"),
+    (
+        "wp-content/themes/mnsk7-storefront/woocommerce/archive-product.php",
+        "wp-content/themes/mnsk7-storefront/woocommerce/archive-product.php",
+    ),
     ("wp-content/themes/mnsk7-storefront/page-kontakt.php", "wp-content/themes/mnsk7-storefront/page-kontakt.php"),
     ("wp-content/themes/mnsk7-storefront/assets/css/main.css", "wp-content/themes/mnsk7-storefront/assets/css/main.css"),
     (
@@ -49,12 +54,14 @@ def main():
     env.update(load_env(".env"))
     env.update(os.environ)
 
-    host = (env.get("cyberfolks_ssh_host") or "").strip()
-    port = int((env.get("cyberfolks_ssh_port") or "22").strip())
-    user = (env.get("cyberfolks_ssh_user") or "").strip()
-    password = (env.get("cyberfolks_ssh_password") or "").strip()
-    wp_path = (env.get("STAGING_PROD_PATH") or "domains/mnsk7-tools.pl/public_html").strip().strip("/")
+    cfg = resolve_prod_ssh(env)
+    host = cfg["host"]
+    port = cfg["port"]
+    user = cfg["user"]
+    password = cfg["password"]
+    wp_path = cfg["wp_path"]
     dry_run = bool(env.get("DRY_RUN"))
+    require_manual_prod_deploy(dry_run=dry_run)
     if not all([host, user, password]):
         raise SystemExit("Missing SSH credentials")
 

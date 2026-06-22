@@ -65,23 +65,28 @@ def load_config(env_file):
 
 
 def find_bl_product_id_by_sku(bl, inventory_id, sku):
-    response = bl.call(
-        "getInventoryProductsList",
-        {
-            "inventory_id": inventory_id,
-            "filter_sku": sku,
-            "page": 1,
-        },
-    )
-    products = response.get("products", {})
-    rows = products.values() if isinstance(products, dict) else products
-    for row in rows or []:
-        if not isinstance(row, dict):
+    from product_param_parse import normalize_offer_sku
+
+    for candidate in dict.fromkeys([sku, normalize_offer_sku(sku)]):
+        if not candidate:
             continue
-        row_sku = str(row.get("sku", "")).strip()
-        if row_sku.lower() != str(sku).strip().lower():
-            continue
-        return str(row.get("product_id") or row.get("id") or "").strip()
+        response = bl.call(
+            "getInventoryProductsList",
+            {
+                "inventory_id": inventory_id,
+                "filter_sku": candidate,
+                "page": 1,
+            },
+        )
+        products = response.get("products", {})
+        rows = products.values() if isinstance(products, dict) else products
+        for row in rows or []:
+            if not isinstance(row, dict):
+                continue
+            row_sku = str(row.get("sku", "")).strip()
+            if row_sku.lower() != str(candidate).strip().lower():
+                continue
+            return str(row.get("product_id") or row.get("id") or "").strip()
     return ""
 
 

@@ -83,6 +83,11 @@ FEATURE_ATTRIBUTE_MAP = [
         "aliases": ["powłoka", "powloka", "pokrycie", "coating"],
     },
     {
+        "label": "Twardość",
+        "slug": "twardosc",
+        "aliases": ["twardość", "twardosc", "hrc", "twardość hrc", "twardosc hrc"],
+    },
+    {
         "label": "Skok gwintu",
         "slug": "skok-gwintu",
         "aliases": ["skok gwintu", "tpi", "pitch"],
@@ -635,6 +640,14 @@ def extract_features(product, language):
     return features, unknown
 
 
+def normalize_variant_group_value(value):
+    text = str(value or "").strip()
+    if not text:
+        return ""
+    slug = re.sub(r"[^a-zA-Z0-9_-]+", "-", text).strip("-").lower()
+    return slug or normalize_key(text).replace(" ", "-")
+
+
 def pick_manual_variant_group(unknown_features):
     if not isinstance(unknown_features, dict):
         return ""
@@ -643,10 +656,13 @@ def pick_manual_variant_group(unknown_features):
         "mnsk7 grupa wariantu",
         "mnk7 model wariantowy",
         "mnsk7 model wariantowy",
+        "model",
+        "mnk7 model",
+        "mnsk7 model",
     }
     for key, value in unknown_features.items():
         if normalize_key(key) in accepted_keys:
-            return normalize_key(value)
+            return normalize_variant_group_value(value)
     return ""
 
 
@@ -833,6 +849,8 @@ def build_wc_payload(product, product_id, language, price_group_id, warehouse_id
         payload["description"] = description
 
     short_description = pick_text_field(text_fields, "description_extra1", language)
+    if not short_description:
+        short_description = pick_text_field(text_fields, "description_extra", language)
     if short_description:
         payload["short_description"] = short_description
 
@@ -879,7 +897,14 @@ def build_wc_payload(product, product_id, language, price_group_id, warehouse_id
     variant_group = pick_manual_variant_group(unknown_features) or build_variant_group_key(name.strip(), features)
     if variant_group:
         meta_data.append({"key": "_mnsk7_bl_variant_group", "value": variant_group})
-    variant_axis = pick_manual_variant_axis(unknown_features) or infer_variant_axis(features)
+    variant_axis = pick_manual_variant_axis(unknown_features)
+    if not variant_axis:
+        if isinstance(unknown_features, dict) and any(
+            normalize_key(key) == "model" and str(value).strip() for key, value in unknown_features.items()
+        ):
+            variant_axis = "model"
+        else:
+            variant_axis = infer_variant_axis(features)
     if variant_axis:
         meta_data.append({"key": "_mnsk7_bl_variant_axis", "value": variant_axis})
     payload["meta_data"] = meta_data
@@ -972,7 +997,22 @@ def ensure_rebuild_is_explicit(args, woo_base_url):
         )
 
 
+def sync_log(message):
+    text = str(message)
+    try:
+        print(text, flush=True)
+    except UnicodeEncodeError:
+        enc = getattr(sys.stdout, "encoding", None) or "utf-8"
+        sys.stdout.buffer.write((text + "\n").encode(enc, errors="replace"))
+        sys.stdout.flush()
+
+
 def main():
+    if hasattr(sys.stdout, "reconfigure"):
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    if hasattr(sys.stderr, "reconfigure"):
+        sys.stderr.reconfigure(encoding="utf-8", errors="replace")
+
     parser = argparse.ArgumentParser(
         description="Sync products from BaseLinker to WooCommerce (update existing by SKU, create missing)."
     )

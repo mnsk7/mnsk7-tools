@@ -47,6 +47,7 @@ function mnsk7_get_key_param_attributes() {
 		'pa_ksztalt'              => __( 'Kształt', 'mnsk7-tools' ),
 		'pa_zastosowanie'         => __( 'Zastosowanie', 'mnsk7-tools' ),
 		'pa_material'             => __( 'Materiał obróbki', 'mnsk7-tools' ),
+		'pa_twardosc'             => __( 'Twardość', 'mnsk7-tools' ),
 		'pa_typ-operacji'         => __( 'Typ operacji', 'mnsk7-tools' ),
 		'pa_pokrycie'             => __( 'Pokrycie', 'mnsk7-tools' ),
 		'pa_liczba-zebow'         => __( 'Liczba zębów', 'mnsk7-tools' ),
@@ -121,7 +122,15 @@ function mnsk7_get_product_variant_axis_slugs( $product_id ) {
 	return $slugs;
 }
 
-function mnsk7_is_variant_axis_param( $slug, $axis_slugs ) {
+function mnsk7_is_model_variant_axis( $product_id ) {
+	$axis = (string) get_post_meta( absint( $product_id ), '_mnsk7_bl_variant_axis', true );
+	return 'model' === sanitize_title( $axis );
+}
+
+function mnsk7_is_variant_axis_param( $slug, $axis_slugs, $is_model_axis = false ) {
+	if ( $is_model_axis ) {
+		return false;
+	}
 	if ( empty( $axis_slugs ) ) {
 		return true;
 	}
@@ -384,7 +393,38 @@ function mnsk7_get_model_variant_label( $linked ) {
 		return '';
 	}
 
+	$parts = array();
+	foreach ( array(
+		'pa_srednica'            => 'fi',
+		'pa_srednica-trzpienia'  => 'SHK',
+		'pa_dlugosc-calkowita-l' => 'L',
+	) as $taxonomy => $prefix ) {
+		$val = mnsk7_normalize_key_param_value( $linked->get_attribute( $taxonomy ) );
+		if ( $val === '' ) {
+			continue;
+		}
+		if ( 'fi' === $prefix ) {
+			$num = preg_replace( '/\s*mm\b/iu', '', $val );
+			$parts[] = 'fi ' . trim( $num ) . ' mm';
+		} elseif ( 'L' === $prefix ) {
+			if ( preg_match( '/\b([0-9]+)\s*L\b/i', $val, $m ) ) {
+				$parts[] = strtoupper( $m[1] . 'L' );
+			} else {
+				$parts[] = preg_replace( '/\s*mm\b/iu', 'L', $val );
+			}
+		} else {
+			$parts[] = $val;
+		}
+	}
+	if ( count( $parts ) >= 2 ) {
+		return implode( ' | ', $parts );
+	}
+
 	$title = wp_strip_all_tags( $linked->get_name() );
+	$segments = array_values( array_filter( array_map( 'trim', explode( '|', $title ) ) ) );
+	if ( count( $segments ) >= 2 ) {
+		return implode( ' | ', array_slice( $segments, -min( 3, count( $segments ) - 1 ) ) );
+	}
 	if ( preg_match( '/\b([0-9]+L)\b/i', $title, $m ) ) {
 		return strtoupper( $m[1] );
 	}
@@ -449,7 +489,11 @@ function mnsk7_render_key_param_model_links( $links ) {
 	foreach ( $links as $link ) {
 		$class = 'mnsk7-key-param-option' . ( ! empty( $link['current'] ) ? ' is-current' : '' );
 		echo '<a class="' . esc_attr( $class ) . '" href="' . esc_url( $link['url'] ) . '"' . ( ! empty( $link['current'] ) ? ' aria-current="page"' : '' ) . '>';
-		echo esc_html( $link['value'] );
+		$label = (string) $link['value'];
+		if ( preg_match( '/^\d+(?:[.,]\d+)?$/', $label ) ) {
+			$label .= ' mm';
+		}
+		echo esc_html( $label );
 		echo '</a>';
 	}
 	echo '</div>';
@@ -672,6 +716,18 @@ function mnsk7_single_product_key_params() {
 
 	echo '<div class="mnsk7-product-key-params' . esc_attr( $block_class ) . '">';
 	echo '<div class="mnsk7-product-key-params__title">' . esc_html( $title ) . '</div>';
+	if ( $is_model_axis && $has_model_variants ) {
+		if ( $render_visual_model_links ) {
+			mnsk7_render_model_visual_links( $model_variant_links );
+		} else {
+			echo '<dl class="mnsk7-product-key-params__list mnsk7-product-key-params__list--model-axis">';
+			echo '<dt>' . esc_html__( 'Wariant', 'mnsk7-tools' ) . '</dt>';
+			echo '<dd class="mnsk7-product-key-params__dd--options mnsk7-product-key-params__dd--options-product">';
+			mnsk7_render_key_param_model_links( $model_variant_links );
+			echo '</dd></dl>';
+		}
+		$has_model_link_row = true;
+	}
 	if ( $is_variable && ! empty( $available_variations ) ) {
 		echo '<div class="mnsk7-variant-visuals" aria-label="' . esc_attr__( 'Dostępne warianty', 'mnsk7-tools' ) . '">';
 		foreach ( $available_variations as $variation_data ) {
@@ -732,8 +788,11 @@ function mnsk7_single_product_key_params() {
 		echo '<dt>' . esc_html( $display_label ) . '</dt>';
 		$is_var_attr = $is_variable && strpos( $slug, 'excerpt_' ) !== 0 && isset( $var_attrs[ $slug ] );
 		$taxonomy = ( strpos( $slug, 'excerpt_' ) !== 0 ) ? mnsk7_key_param_slug_to_taxonomy( $slug ) : '';
-		$is_axis_param = mnsk7_is_variant_axis_param( $slug, $axis_slugs );
-		$model_links = ( $taxonomy && $is_axis_param ) ? mnsk7_get_key_param_model_links( $product, $taxonomy ) : array();
+		$is_axis_param = mnsk7_is_variant_axis_param( $slug, $axis_slugs, $is_model_axis );
+		$model_links   = array();
+		if ( $taxonomy && ! $is_var_attr && ( ( $is_model_axis && $has_model_variants ) || $is_axis_param ) ) {
+			$model_links = mnsk7_get_key_param_model_links( $product, $taxonomy );
+		}
 		if ( $is_var_attr && $is_axis_param && ! empty( $var_attrs[ $slug ] ) ) {
 			echo '<dd class="mnsk7-product-key-params__dd--options mnsk7-product-key-params__dd--options-product">';
 			echo '<div class="mnsk7-key-param-options mnsk7-key-param-options--product" data-attribute-name="' . esc_attr( 'attribute_' . $slug ) . '" role="list" aria-label="' . esc_attr( $display_label ) . '">';
@@ -921,6 +980,53 @@ function mnsk7_single_product_notify_button_if_out_of_stock() {
 function mnsk7_single_product_schema_video_placeholder() {
 	return '';
 }
+
+/**
+ * Compact PDP title from pipe-separated Woo name (SEO/import name unchanged in DB).
+ *
+ * @param WC_Product $product Product.
+ * @return string
+ */
+function mnsk7_get_pdp_display_title( $product ) {
+	if ( ! is_a( $product, 'WC_Product' ) ) {
+		return '';
+	}
+
+	$name     = wp_strip_all_tags( $product->get_name() );
+	$segments = array_values( array_filter( array_map( 'trim', explode( '|', $name ) ) ) );
+	if ( count( $segments ) <= 1 ) {
+		return $name;
+	}
+
+	$base   = array_shift( $segments );
+	$extras = array_slice( $segments, 0, 2 );
+	if ( empty( $extras ) ) {
+		return $base;
+	}
+
+	return $base . ' | ' . implode( ' | ', $extras );
+}
+
+function mnsk7_template_single_product_title() {
+	global $product;
+	if ( ! is_a( $product, 'WC_Product' ) ) {
+		return;
+	}
+	$display = mnsk7_get_pdp_display_title( $product );
+	if ( '' === $display ) {
+		$display = $product->get_name();
+	}
+	echo '<h1 class="product_title entry-title">' . esc_html( $display ) . '</h1>';
+}
+
+add_action(
+	'init',
+	static function () {
+		remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_title', 5 );
+		add_action( 'woocommerce_single_product_summary', 'mnsk7_template_single_product_title', 5 );
+	},
+	20
+);
 
 /*
  * WooCommerce domyślnie wyświetla "X w magazynie" wewnątrz formularza "Dodaj do koszyka"

@@ -55,6 +55,7 @@ playwright-report/
 test-results/
 .playwright/
 artifacts/
+output/prod-snapshot/
 
 # Cursor local artifacts
 .cursor/hooks/state/

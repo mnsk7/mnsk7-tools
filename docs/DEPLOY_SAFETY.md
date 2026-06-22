@@ -6,10 +6,15 @@
 
 ## 1. Пути на сервере (одна правда)
 
-| Окружение | Путь |
-|-----------|------|
-| **Prod** | `/home/llojjlcemq/domains/mnsk7-tools.pl/public_html` |
-| **Stage** | `/home/llojjlcemq/domains/mnsk7-tools.pl/public_html/staging` |
+| Окружение | Хост | Путь |
+|-----------|------|------|
+| **Prod (актуально)** | dhosting `mnsk7tools.ssh.dhosting.pl` | `~/mnsk7-tools.pl/public_html` |
+| **Prod (legacy)** | CyberFolks `s56.cyber-folks.pl` | `~/domains/mnsk7-tools.pl/public_html` |
+| **Stage** | тот же хост или отдельный | `.../public_html/staging` (если есть) |
+
+**Канонический деплой prod:** push в `main` → GitHub Actions `deploy-production.yml` (secrets `PROD_*`).
+
+**Ручной SFTP/rsync на prod** — только break-glass: `ALLOW_MANUAL_PROD_DEPLOY=1` + обязательный commit в git в течение 24 ч.
 
 Stage вложен в prod. Поэтому:
 - деплой в **prod** не должен рекурсивно трогать `staging/` (ни `rm -rf`, ни `rsync --delete` в корень без исключения);
@@ -55,13 +60,12 @@ rsync -avz --delete -e "ssh -p $SSH_PORT ..." wp-content/plugins/ "$SSH_USER@$SS
 Итог: мы пишем только в `public_html/wp-content/themes/` и `.../mu-plugins/`, **не** в `public_html/` рекурсивно. Каталог `public_html/staging/` не затрагивается, потому что rsync идёт в подкаталоги `wp-content/...`, а не в корень `public_html` с `--delete`.  
 Если бы когда-нибудь делали `rsync SOURCE/ public_html/`, тогда обязательно: `--exclude=staging --exclude=wp-config.php`.
 
-### GitHub Actions (только staging)
+### GitHub Actions (prod + staging)
 
-Workflow `deploy-staging.yml` срабатывает по push в ветку `staging`. В нём:
+- **Prod:** `deploy-production.yml` — push в `main` или `workflow_dispatch`. Secrets: `PROD_SSH_HOST`, `PROD_SSH_PORT`, `PROD_SSH_USER`, `PROD_SSH_PASSWORD`, `PROD_REMOTE_PATH` (dhosting: `mnsk7-tools.pl/public_html`).
+- **Staging:** `deploy-staging.yml` — только `workflow_dispatch`. Secrets: `STAGING_*`.
 
-- `REMOTE_PATH` = секрет `STAGING_REMOTE_PATH` (должен быть `domains/mnsk7-tools.pl/public_html/staging`).
-- Копируются только `mu-plugins/` и `wp-content/themes/` в `~/$REMOTE_PATH/wp-content/...`.
-- Prod в Actions не деплоится.
+Перед первым push в `main` после миграции хоста — **сначала** обновить secrets, **потом** push (иначе задеплоится старый код или на старый хост).
 
 ---
 
