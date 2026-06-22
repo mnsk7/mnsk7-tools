@@ -371,7 +371,7 @@
 }
 
 .mnsk7-section--light {
-  background: linear-gradient(180deg, #f8fbff 0%, #f1f6fb 100%);
+  background: transparent;
 }
 
 .mnsk7-section--bestsellers {
@@ -479,7 +479,7 @@
 /* Przeglądaj asortyment (TASK 12) — białe tło, chipy białe z czarną ramką, hover niebieski */
 .mnsk7-section--catalog.mnsk7-section--light,
 .mnsk7-section.mnsk7-section--catalog {
-  background: var(--color-white) !important;
+  background: transparent !important;
 }
 .mnsk7-section--catalog .mnsk7-tags-chip {
   background: var(--color-white);
@@ -2143,13 +2143,9 @@
 
 .mnsk7-front-page .mnsk7-hero {
   background:
-    radial-gradient(circle at 12% 18%, rgba(216, 154, 87, 0.16), transparent 18%),
-    radial-gradient(circle at 86% 14%, rgba(12, 125, 219, 0.12), transparent 22%),
-    linear-gradient(180deg, rgba(255,255,255,0.54), transparent 28%),
-    linear-gradient(to right, rgba(12, 125, 219, 0.045) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(18, 38, 63, 0.04) 1px, transparent 1px),
-    linear-gradient(180deg, #fbf6ef 0%, #f5f8fc 56%, #eef4fb 100%);
-  background-size: auto, auto, auto, 88px 88px, 88px 88px, auto;
+    radial-gradient(circle at 12% 18%, rgba(216, 154, 87, 0.14), transparent 18%),
+    radial-gradient(circle at 86% 14%, rgba(12, 125, 219, 0.1), transparent 22%),
+    transparent;
   color: var(--color-text, #111827);
   border-bottom: 1px solid var(--color-border, #e5e7eb);
 }
@@ -2235,12 +2231,7 @@
   max-width: none;
   box-sizing: border-box;
   padding: clamp(3rem, 6vw, 4.5rem) 1rem;
-  background:
-    radial-gradient(circle at 14% 0%, rgba(216, 154, 87, 0.1), transparent 28%),
-    linear-gradient(to right, rgba(12, 125, 219, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(18, 38, 63, 0.035) 1px, transparent 1px),
-    linear-gradient(180deg, #f9fbfe 0%, #f1f6fc 100%);
-  background-size: auto, 88px 88px, 88px 88px, auto;
+  background: transparent;
 }
 
 @media (min-width: 768px) {

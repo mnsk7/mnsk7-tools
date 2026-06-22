@@ -1277,6 +1277,11 @@ add_action( 'wp_footer', function () {
 				}
 				nav.classList.toggle('is-open');
 				if (!willOpen) closeMobileSubmenus();
+				if (window.innerWidth < DESKTOP_MIN && willOpen) {
+					requestAnimationFrame(function() {
+						resetMobileMenuPosition();
+					});
+				}
 				setMenuAria();
 			});
 		}
