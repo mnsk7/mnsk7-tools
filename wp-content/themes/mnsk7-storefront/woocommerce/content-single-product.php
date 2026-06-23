@@ -23,8 +23,11 @@ if ( post_password_required() ) {
 <div id="product-<?php the_ID(); ?>" <?php wc_product_class( '', $product ); ?>>
 
 	<div class="mnsk7-pdp-main mnsk7-pdp-main--equal-height">
+	<div class="mnsk7-pdp-media-col">
 	<?php do_action( 'woocommerce_before_single_product_summary' ); ?>
+	</div>
 
+	<div class="mnsk7-pdp-buybox-col">
 	<div class="summary entry-summary mnsk7-pdp-buybox">
 		<?php if ( function_exists( 'woocommerce_breadcrumb' ) ) : ?>
 			<div class="mnsk7-pdp-breadcrumb-slot">
@@ -55,6 +58,7 @@ if ( post_password_required() ) {
 		 */
 		do_action( 'woocommerce_single_product_summary' );
 		?>
+	</div>
 	</div>
 	</div>
 
