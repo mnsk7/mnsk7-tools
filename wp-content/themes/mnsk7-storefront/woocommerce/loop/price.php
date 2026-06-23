@@ -1,9 +1,13 @@
 <?php
 /**
- * Loop Price — override: zawsze pokazuj blok ceny (Bestsellery, Related); fallback gdy brak ceny.
+ * Loop Price
  *
- * @see     woocommerce/templates/loop/price.php
- * @package WooCommerce\Templates
+ * Override: mnsk7-storefront. Zawsze pokazuj blok ceny (bestsellery, related); fallback gdy brak ceny.
+ *
+ * @see         https://woocommerce.com/document/template-structure/
+ * @see         woocommerce/templates/loop/price.php
+ * @package     WooCommerce\Templates
+ * @version     1.6.4
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -1,9 +1,13 @@
 <?php
 /**
- * Proceed to checkout button — override dla pewnego przejścia na checkout (audit).
+ * Proceed to checkout button
  *
- * @see plugins/woocommerce/templates/cart/proceed-to-checkout-button.php
- * @package mnsk7-storefront
+ * Override: mnsk7-storefront. Polski CTA, trust badges i nota pod przyciskiem.
+ *
+ * @see     https://woocommerce.com/document/template-structure/
+ * @see     woocommerce/templates/cart/proceed-to-checkout-button.php
+ * @package WooCommerce\Templates
+ * @version 7.0.1
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

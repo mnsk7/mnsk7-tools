@@ -1,9 +1,12 @@
 <?php
 /**
- * Content wrapper end. Paired with wrapper-start.php.
- * Footer closes #content and #page.
+ * Content wrappers
  *
- * @package WooCommerce\Templates
+ * Override: mnsk7-storefront. Footer zamyka #content i #page.
+ *
+ * @see         https://woocommerce.com/document/template-structure/
+ * @package     WooCommerce\Templates
+ * @version     3.3.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

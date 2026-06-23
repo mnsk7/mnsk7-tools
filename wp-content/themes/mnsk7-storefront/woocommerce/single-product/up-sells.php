@@ -2,11 +2,12 @@
 /**
  * Single Product Up-Sells
  *
- * Override: mnsk7-storefront. Podtytuł i spójna struktura z related (H2 + subtitle).
+ * Override: mnsk7-storefront. Spójna struktura z related (H2 + siatka produktów).
  *
- * @see     woocommerce/templates/single-product/up-sells.php
- * @package WooCommerce\Templates
- * @version 3.0.0
+ * @see         https://woocommerce.com/document/template-structure/
+ * @see         woocommerce/templates/single-product/up-sells.php
+ * @package     WooCommerce\Templates
+ * @version     9.6.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -14,6 +15,9 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 if ( $upsells ) :
+	/**
+	 * Lazy-load threshold bump (jak w related.php 10.3.0) — mnsk7 custom.
+	 */
 	if ( function_exists( 'wp_increase_content_media_count' ) ) {
 		$content_media_count = wp_increase_content_media_count( 0 );
 		if ( $content_media_count < wp_omit_loading_attr_threshold() ) {
@@ -25,26 +29,33 @@ if ( $upsells ) :
 	<section class="up-sells upsells products">
 		<?php
 		$heading = apply_filters( 'woocommerce_product_upsells_products_heading', __( 'You may also like&hellip;', 'woocommerce' ) );
+
 		if ( $heading ) :
 			?>
 			<h2><?php echo esc_html( $heading ); ?></h2>
 		<?php endif; ?>
+
 		<?php woocommerce_product_loop_start(); ?>
 
 			<?php foreach ( $upsells as $upsell ) : ?>
+
 				<?php
-				$product_id = is_object( $upsell ) ? $upsell->get_id() : (int) $upsell;
-				$post_object = get_post( $product_id );
+				$post_object = get_post( $upsell->get_id() );
 				if ( ! $post_object ) {
 					continue;
 				}
+
 				setup_postdata( $GLOBALS['post'] = $post_object ); // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited, Squiz.PHP.DisallowMultipleAssignments.Found
+
 				wc_get_template_part( 'content', 'product' );
 				?>
+
 			<?php endforeach; ?>
 
 		<?php woocommerce_product_loop_end(); ?>
+
 	</section>
+
 	<?php
 endif;
 

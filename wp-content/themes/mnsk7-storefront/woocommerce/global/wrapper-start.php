@@ -1,11 +1,15 @@
 <?php
 /**
- * Content wrapper start. Override for mnsk7-storefront (parent: Storefront).
- * Header already opened #page and #content; here we add Woo content-area + main.
+ * Content wrappers
  *
- * @see wp-content/themes/mnsk7-storefront/header.php (opens #content)
- * @see docs/WRAPPERS_LAYOUT.md
- * @package WooCommerce\Templates
+ * Override: mnsk7-storefront (parent: Storefront). Header otwiera #page i #content;
+ * tutaj dodajemy content-area Woo + main.
+ *
+ * @see         https://woocommerce.com/document/template-structure/
+ * @see         wp-content/themes/mnsk7-storefront/header.php (opens #content)
+ * @see         docs/WRAPPERS_LAYOUT.md
+ * @package     WooCommerce\Templates
+ * @version     3.3.0
  */
 
 if ( ! defined( 'ABSPATH' ) ) {
