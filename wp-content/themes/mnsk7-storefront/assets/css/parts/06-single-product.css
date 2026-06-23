@@ -48,6 +48,8 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .single-product div.product .mnsk7-pdp-main > .woocommerce-product-gallery.images {
   float: none !important;
   clear: none !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
 }
 
 .single-product div.product .mnsk7-pdp-main > .summary,
