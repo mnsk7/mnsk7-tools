@@ -22,7 +22,7 @@ if ( post_password_required() ) {
 ?>
 <div id="product-<?php the_ID(); ?>" <?php wc_product_class( '', $product ); ?>>
 
-	<div class="mnsk7-pdp-main">
+	<div class="mnsk7-pdp-main mnsk7-pdp-main--equal-height">
 	<?php do_action( 'woocommerce_before_single_product_summary' ); ?>
 
 	<div class="summary entry-summary mnsk7-pdp-buybox">

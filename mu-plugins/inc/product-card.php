@@ -1397,7 +1397,7 @@ function mnsk7_single_product_meta_chips() {
 	if ( ! $cats && ! $tags ) {
 		return;
 	}
-	echo '<div class="mnsk7-product-meta-chips">';
+	echo '<div class="mnsk7-product-meta-chips mnsk7-pdp-buybox__footer">';
 	if ( $cats ) {
 		echo '<div class="mnsk7-product-meta-chips__row">' . $cats . '</div>';
 	}

@@ -1634,12 +1634,13 @@ body.mnsk7-pdp-switching .single-product main .product {
     overflow: visible !important;
   }
 
-  .single-product div.product .mnsk7-pdp-main {
+  .single-product div.product .mnsk7-pdp-main,
+  .single-product div.product .mnsk7-pdp-main--equal-height {
     display: grid;
     grid-template-columns: minmax(280px, 48%) minmax(300px, 1fr);
     gap: 1.5rem;
     padding-bottom: 2rem;
-    align-items: start;
+    align-items: stretch;
   }
 
   .single-product div.product .mnsk7-pdp-main > .images,
@@ -1651,14 +1652,44 @@ body.mnsk7-pdp-switching .single-product main .product {
     flex: none;
   }
 
-  /* Left gallery: sticky, one slide via WC flexslider — do not override wrapper/flex-viewport layout. */
+  /* Left gallery: sticky; stretch column so card bottom aligns with buybox/tags row. */
+  .single-product div.product .mnsk7-pdp-main > .images,
+  .single-product div.product .mnsk7-pdp-main > .woocommerce-product-gallery.images {
+    display: flex;
+    flex-direction: column;
+    align-self: stretch;
+    min-height: 100%;
+    height: auto;
+  }
+
   .single-product div.product .woocommerce-product-gallery.images,
   .single-product div.product .images {
     position: sticky !important;
     top: calc(var(--mnsk7-promo-h, 0px) + var(--header-h, 56px) + 1rem) !important;
     z-index: 2;
-    align-self: flex-start;
-    height: fit-content;
+    align-self: stretch;
+    height: auto;
+    min-height: 100%;
+  }
+
+  .single-product .images .woocommerce-product-gallery {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+    height: 100%;
+    box-sizing: border-box;
+  }
+
+  .single-product .summary.mnsk7-pdp-buybox {
+    min-height: 100%;
+    height: auto;
+    box-sizing: border-box;
+  }
+
+  .single-product .summary.mnsk7-pdp-buybox > .mnsk7-product-meta-chips,
+  .single-product .summary.mnsk7-pdp-buybox > .mnsk7-pdp-buybox__footer {
+    margin-top: auto;
   }
 
   .single-product .images .woocommerce-product-gallery__image img {
