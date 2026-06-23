@@ -1,9 +1,7 @@
 /* =================================================================
    MNK7 Storefront — main.css (built from parts)
    Build: 2026-06-23
-   Run: scripts/build-main-css.sh or scripts/build_main_css.py
    ================================================================= */
-
 /* === 00-fonts-inter.css === */
 /* =================================================================
    Inter — local variable font (no Google Fonts dependency)
@@ -2719,9 +2717,9 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   margin: 0;
 }
 
-.single-product .images .woocommerce-product-gallery {
-  position: static;
-  top: auto;
+.single-product .images .woocommerce-product-gallery,
+.single-product div.product .mnsk7-pdp-main > .woocommerce-product-gallery.images,
+.single-product div.product .mnsk7-pdp-gallery-col > .woocommerce-product-gallery.images {
   opacity: 1 !important;
   padding: 1rem;
   background: #fff;
@@ -2729,6 +2727,13 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   border-radius: calc(var(--r-md) + 4px);
   box-shadow: 0 18px 44px rgba(15, 23, 42, 0.08);
   overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* Nested gallery inside .images wrapper — sticky na rodzicu, karta bez position. */
+.single-product .images .woocommerce-product-gallery {
+  position: static;
+  top: auto;
 }
 
 .single-product .woocommerce-product-gallery.images {
@@ -4155,7 +4160,19 @@ body.mnsk7-pdp-switching .single-product main .product {
   }
 
   .single-product div.product .images,
-  .single-product div.product .woocommerce-product-gallery.images {
+  .single-product div.product .mnsk7-pdp-gallery-col {
+    position: static !important;
+    top: auto !important;
+    max-width: 100%;
+    order: 1;
+    width: 100%;
+    min-width: 0;
+    flex: 0 0 100%;
+    float: none;
+  }
+
+  .single-product div.product .woocommerce-product-gallery.images,
+  .single-product div.product .mnsk7-pdp-gallery-col > .woocommerce-product-gallery.images {
     position: static !important;
     top: auto !important;
     max-width: 100%;
@@ -4267,20 +4284,35 @@ body.mnsk7-pdp-switching .single-product main .product {
     padding-bottom: 2rem;
   }
 
-  .single-product div.product .mnsk7-pdp-main > .images {
+  .single-product div.product .mnsk7-pdp-main > .images,
+  .single-product div.product .mnsk7-pdp-main > .mnsk7-pdp-gallery-col {
     flex: 0 0 48%;
     max-width: 48%;
     min-width: 280px;
     width: auto;
-    align-self: flex-start;
+    align-self: stretch;
     position: static;
+    display: flex;
+    flex-direction: column;
   }
 
+  /* Fallback: brak wrappera PHP — sticky na bezpośrednim dziecku .mnsk7-pdp-main. */
   .single-product div.product .mnsk7-pdp-main > .woocommerce-product-gallery.images {
     flex: 0 0 48%;
     max-width: 48%;
     min-width: 280px;
     width: auto;
+    align-self: flex-start;
+    position: sticky !important;
+    top: calc(var(--mnsk7-promo-h, 0px) + var(--header-h, 56px) + 1rem) !important;
+    z-index: 2;
+    height: fit-content;
+  }
+
+  .single-product div.product .mnsk7-pdp-gallery-col > .woocommerce-product-gallery.images {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 100%;
     align-self: flex-start;
     position: sticky !important;
     top: calc(var(--mnsk7-promo-h, 0px) + var(--header-h, 56px) + 1rem) !important;
@@ -14681,4 +14713,5 @@ body.home .mnsk7-content,
     max-width: 100% !important;
   }
 }
+
 

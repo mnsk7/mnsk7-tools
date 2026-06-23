@@ -320,6 +320,20 @@ add_action( 'wp', function () {
 	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_rating', 10 );
 } );
 
+/** PDP desktop: wrapper kolumny galerii — stretch do wysokości buyboxa, sticky na wewnętrznym .woocommerce-product-gallery. */
+add_action( 'woocommerce_before_single_product_summary', function () {
+	if ( ! function_exists( 'is_product' ) || ! is_product() ) {
+		return;
+	}
+	echo '<div class="mnsk7-pdp-gallery-col">';
+}, 19 );
+add_action( 'woocommerce_before_single_product_summary', function () {
+	if ( ! function_exists( 'is_product' ) || ! is_product() ) {
+		return;
+	}
+	echo '</div>';
+}, 21 );
+
 /** PDP: cena + "X osób kupiło" w jednym rzędzie (otwarcie wrappera przed ceną) */
 add_action( 'woocommerce_single_product_summary', function () {
 	echo '<div class="mnsk7-pdp-price-row">';
