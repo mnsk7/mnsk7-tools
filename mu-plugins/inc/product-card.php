@@ -1092,6 +1092,8 @@ add_action( 'wp_footer', function () {
 	?>
 	<script>
 	document.addEventListener('DOMContentLoaded', function() {
+		document.querySelector('.single-product div.product')?.classList.add('mnsk7-pdp-layout-ready');
+
 		document.querySelectorAll('.mnsk7-key-param-select--archive').forEach(function(el) {
 			el.addEventListener('change', function() {
 				var url = this.options[this.selectedIndex].value;
@@ -1139,7 +1141,13 @@ add_action( 'wp_footer', function () {
 							window.jQuery(this).wc_variation_form();
 						});
 					} catch (_e2) {}
+					try {
+						window.jQuery('.woocommerce-product-gallery').each(function() {
+							window.jQuery(this).wc_product_gallery();
+						});
+					} catch (_e3) {}
 				}
+				document.querySelector('.single-product div.product')?.classList.add('mnsk7-pdp-layout-ready');
 				return true;
 			}
 			async function loadProductWithoutReload(nextUrl, pushState) {

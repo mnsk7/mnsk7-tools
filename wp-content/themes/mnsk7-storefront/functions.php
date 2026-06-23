@@ -901,6 +901,7 @@ add_action( 'wp_enqueue_scripts', function () {
 		return;
 	}
 	$css = 'ul.products::before,.woocommerce ul.products::before,.woocommerce-page ul.products::before,ul.products.columns-3::before,ul.products.columns-4::before{content:none!important;display:none!important}';
+	$css .= '.single-product div.product::before,.single-product div.product::after{content:none!important;display:none!important}';
 	$css .= 'body.woocommerce-account .mnsk7-header__search-input,body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-input{border-radius:var(--r-sm)!important;background:var(--color-white)!important}';
 	$css .= 'body.woocommerce-account .mnsk7-header__search-submit,body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-submit{border-radius:var(--r-md)!important}';
 	$css .= 'body.woocommerce-account .mnsk7-header__search-dropdown .mnsk7-header__search-input{border-radius:var(--r-sm) 0 0 var(--r-sm)!important}';

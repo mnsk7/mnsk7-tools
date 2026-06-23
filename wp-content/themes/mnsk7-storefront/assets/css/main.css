@@ -2590,6 +2590,25 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   overflow: visible;
 }
 
+/* Storefront/Woo: float:left/right na .images/.summary psuje flex/grid PDP przy pierwszym renderze z katalogu. */
+.single-product div.product::before,
+.single-product div.product::after {
+  content: none !important;
+  display: none !important;
+}
+
+.single-product div.product .mnsk7-pdp-main > .images,
+.single-product div.product .mnsk7-pdp-main > .woocommerce-product-gallery.images {
+  float: none !important;
+  clear: none !important;
+}
+
+.single-product div.product .mnsk7-pdp-main > .summary,
+.single-product div.product .mnsk7-pdp-main > .summary.mnsk7-pdp-buybox {
+  float: none !important;
+  clear: none !important;
+}
+
 /* Opis, podobne produkty i cała treść pod buyboxem — pełna szerokość, pod zdjęciem i summary */
 .single-product div.product > .mnsk7-product-description-accordion,
 .single-product div.product > .mnsk7-product-extra-media,
@@ -4169,8 +4188,20 @@ body.mnsk7-pdp-switching .single-product main .product {
   }
 
   .single-product div.product .mnsk7-pdp-main {
+    display: grid;
+    grid-template-columns: minmax(280px, 48%) minmax(300px, 1fr);
+    gap: 1.5rem;
     padding-bottom: 2rem;
-    align-items: flex-start;
+    align-items: start;
+  }
+
+  .single-product div.product .mnsk7-pdp-main > .images,
+  .single-product div.product .mnsk7-pdp-main > .woocommerce-product-gallery.images,
+  .single-product div.product .mnsk7-pdp-main > .summary.mnsk7-pdp-buybox {
+    max-width: none !important;
+    min-width: 0;
+    width: auto;
+    flex: none;
   }
 
   /* Left gallery: sticky, one slide via WC flexslider — do not override wrapper/flex-viewport layout. */
