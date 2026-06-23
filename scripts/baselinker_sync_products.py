@@ -358,6 +358,18 @@ class BaseLinkerClient:
         categories = response.get("categories", [])
         return categories if isinstance(categories, list) else []
 
+    def list_inventory_tags(self, inventory_id):
+        response = self.call("getInventoryTags", {"inventory_id": int(inventory_id)})
+        tags = response.get("tags", [])
+        if not isinstance(tags, list):
+            return []
+        names = []
+        for row in tags:
+            name = str(row.get("name", "")).strip()
+            if name:
+                names.append(name)
+        return names
+
     def update_product_features(self, inventory_id, product_id, sku, feature_map, language="pl"):
         lang_key = f"features|{language}"
         self.call(
@@ -386,6 +398,7 @@ class WooClient:
         self.attribute_cache = {}
         self.term_cache = {}
         self.category_cache = {}
+        self.tag_cache = {}
 
     def request(self, method, path, payload=None):
         body = None
@@ -435,6 +448,13 @@ class WooClient:
 
     def update_product(self, product_id, payload):
         return self.request("PUT", f"/products/{product_id}", payload)
+
+    def update_variation(self, parent_id, variation_id, payload):
+        return self.request(
+            "PUT",
+            f"/products/{int(parent_id)}/variations/{int(variation_id)}",
+            payload,
+        )
 
     def delete_product(self, product_id, force=True):
         force_value = "true" if force else "false"
@@ -553,6 +573,39 @@ class WooClient:
         category = self.request("POST", "/products/categories", payload)
         self.category_cache[cache_key] = category
         return category
+
+    def list_product_tags(self):
+        tags = []
+        page = 1
+        while True:
+            data = self.request("GET", f"/products/tags?per_page=100&page={page}")
+            if not isinstance(data, list) or not data:
+                break
+            tags.extend(data)
+            if len(data) < 100:
+                break
+            page += 1
+        return tags
+
+    def get_or_create_product_tag(self, name, dry_run=False):
+        name = str(name).strip()
+        if not name:
+            return None
+        cache_key = normalize_key(name)
+        if cache_key in self.tag_cache:
+            return self.tag_cache[cache_key]
+
+        for tag in self.list_product_tags():
+            if normalize_key(tag.get("name", "")) == cache_key:
+                self.tag_cache[cache_key] = tag
+                return tag
+
+        if dry_run:
+            return {"id": None, "name": name, "dry_run": True}
+
+        tag = self.request("POST", "/products/tags", {"name": name})
+        self.tag_cache[cache_key] = tag
+        return tag
 
 
 def pick_text_field(text_fields, field_name, lang):
@@ -760,6 +813,46 @@ def merge_meta_data(existing_meta, new_meta):
     return merged
 
 
+VARIATION_PARENT_KEYS = frozenset({"categories", "tags", "name", "description", "short_description", "images"})
+VARIATION_STRIP_KEYS = VARIATION_PARENT_KEYS | frozenset({"type", "status"})
+
+
+def extract_parent_catalog_payload(payload):
+    """Categories/tags belong on the variable parent, not on variations."""
+    parent_payload = {}
+    for key in VARIATION_PARENT_KEYS:
+        value = payload.get(key)
+        if value:
+            parent_payload[key] = value
+    return parent_payload
+
+
+def adapt_payload_for_wc_existing(existing, payload):
+    """Route BL payload fields to the correct Woo product type."""
+    product_type = str(existing.get("type") or "simple").strip()
+    adapted = dict(payload)
+    if product_type == "variation":
+        parent_id = int(existing.get("parent_id") or 0)
+        variation_payload = {key: value for key, value in adapted.items() if key not in VARIATION_STRIP_KEYS}
+        return "variation", parent_id, variation_payload, extract_parent_catalog_payload(adapted)
+    if product_type != "simple":
+        adapted.pop("type", None)
+    return product_type, None, adapted, {}
+
+
+def upsert_wc_product_from_bl(woo, existing, payload):
+    """Update simple/variable parent or variation using the proper Woo REST endpoint."""
+    kind, parent_id, adapted, parent_payload = adapt_payload_for_wc_existing(existing, payload)
+    if kind == "variation":
+        if not parent_id:
+            raise RuntimeError(f"variation wc_id={existing.get('id')} missing parent_id")
+        result = woo.update_variation(parent_id, existing["id"], adapted)
+        if parent_payload:
+            woo.update_product(parent_id, parent_payload)
+        return result
+    return woo.update_product(existing["id"], adapted)
+
+
 def pick_stock(product, warehouse_id):
     stock = product.get("stock")
     if not isinstance(stock, dict) or not stock:
@@ -827,7 +920,16 @@ def build_wc_attributes(woo, features, dry_run=False):
     return attributes
 
 
-def build_wc_payload(product, product_id, language, price_group_id, warehouse_id, publish_status, category_resolver=None):
+def build_wc_payload(
+    product,
+    product_id,
+    language,
+    price_group_id,
+    warehouse_id,
+    publish_status,
+    category_resolver=None,
+    tag_resolver=None,
+):
     text_fields = product.get("text_fields", {})
     sku = str(product.get("sku", "")).strip()
     if not sku:
@@ -915,12 +1017,48 @@ def build_wc_payload(product, product_id, language, price_group_id, warehouse_id
         if woo_cat_id:
             payload["categories"] = [{"id": int(woo_cat_id)}]
 
+    if tag_resolver is not None:
+        payload["tags"] = tag_resolver.resolve_product_tags(product)
+
     return payload, features, unknown_features, None
 
 
 def chunked(items, size):
     for idx in range(0, len(items), size):
         yield items[idx : idx + size]
+
+
+class BlTagResolver:
+    """Map BaseLinker inventory tags to Woo product_tag (BL -> Woo only)."""
+
+    def __init__(self, bl, inventory_id):
+        self.canonical_by_norm = {}
+        for name in bl.list_inventory_tags(inventory_id):
+            self.canonical_by_norm[normalize_key(name)] = name
+
+    def resolve_product_tags(self, product):
+        raw = product.get("tags") or []
+        if not isinstance(raw, list):
+            return []
+        out = []
+        seen = set()
+        for item in raw:
+            name = str(item).strip()
+            if not name:
+                continue
+            canonical = self.canonical_by_norm.get(normalize_key(name))
+            if not canonical:
+                continue
+            key = normalize_key(canonical)
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append({"name": canonical})
+        return out
+
+    @property
+    def allowed_names(self):
+        return list(self.canonical_by_norm.values())
 
 
 class BlCategoryResolver:
@@ -1085,11 +1223,17 @@ def main():
     inventory_id = resolve_inventory_id(bl, inventory_id)
     woo = WooClient(woo_base_url, woo_key, woo_secret)
     category_resolver = None
+    tag_resolver = None
     if not args.skip_categories:
         print("Syncing BaseLinker categories -> Woo product_cat...")
         category_resolver = BlCategoryResolver(bl, woo, inventory_id, dry_run=dry_run)
         print(f"- woo categories mapped: {len(category_resolver.woo_map)}")
         print("")
+
+    print("Loading BaseLinker inventory tags (BL -> Woo)...")
+    tag_resolver = BlTagResolver(bl, inventory_id)
+    print(f"- BL tags allowed: {len(tag_resolver.allowed_names)}")
+    print("")
 
     print("BaseLinker -> Woo sync")
     print(f"- inventory_id: {inventory_id}")
@@ -1143,6 +1287,7 @@ def main():
                 warehouse_id=warehouse_id,
                 publish_status=publish_status,
                 category_resolver=category_resolver,
+                tag_resolver=tag_resolver,
             )
             if skip_reason:
                 print(f"[SKIP] {skip_reason}")
@@ -1170,9 +1315,9 @@ def main():
                             f"features={len(wc_attributes)} unknown_features={len(unknown_features)}"
                         )
                     else:
-                        woo.update_product(product_id_wc, payload)
+                        upsert_wc_product_from_bl(woo, existing, payload)
                         print(
-                            f"[OK] UPDATE sku={sku} wc_id={product_id_wc} "
+                            f"[OK] UPDATE sku={sku} wc_id={product_id_wc} type={existing.get('type')} "
                             f"features={len(wc_attributes)} unknown_features={len(unknown_features)}"
                         )
                     updated += 1
