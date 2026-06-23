@@ -15,13 +15,7 @@ $footer_contact = apply_filters( 'mnsk7_footer_contact', array(
 	'instagram_url'  => defined( 'MNK7_INSTAGRAM_URL' ) ? MNK7_INSTAGRAM_URL : 'https://www.instagram.com/mnsk7tools/',
 	'instagram_label'=> '@mnsk7tools',
 ) );
-$top_cats = array();
-if ( taxonomy_exists( 'product_cat' ) ) {
-	$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true ) );
-	if ( is_wp_error( $top_cats ) ) {
-		$top_cats = array();
-	}
-}
+$top_cats = function_exists( 'mnsk7_get_footer_product_categories' ) ? mnsk7_get_footer_product_categories() : array();
 $dostawa_url = home_url( '/dostawa-i-platnosci/' );
 $kontakt_url = home_url( '/kontakt/' );
 $regulamin_zwroty_url = home_url( '/regulamin/#zwroty' );
@@ -65,6 +59,7 @@ $privacy_policy_url = $privacy_policy_url ? $privacy_policy_url : home_url( '/pr
 						$link = get_term_link( $term );
 						if ( is_wp_error( $link ) ) { continue; }
 						$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
+						$name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $name ) : $name;
 						echo '<li><a href="' . esc_url( $link ) . '">' . esc_html( $name ) . '</a></li>';
 					}
 					?>

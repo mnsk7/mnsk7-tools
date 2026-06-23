@@ -1,8 +1,9 @@
 /* =================================================================
    MNK7 Storefront — main.css (built from parts)
-   Build: 2026-06-22
+   Build: 2026-06-23
    Run: scripts/build-main-css.sh
    ================================================================= */
+
 /* === 00-fonts-inter.css === */
 /* =================================================================
    Inter — local variable font (no Google Fonts dependency)
@@ -726,18 +727,18 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
   list-style: none;
   margin: 0;
-  padding: 0.75rem 1rem 0.6rem;
+  padding: 0.85rem 1.1rem 0.7rem;
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 360px;
-  max-width: min(560px, calc(100vw - 2rem));
-  max-height: none;
+  min-width: 380px;
+  max-width: min(720px, calc(100vw - 2rem));
+  max-height: min(70vh, 520px);
   overflow-x: hidden; /* Task 8: no horizontal scrollbar */
-  overflow-y: visible;
+  overflow-y: auto;
   background: var(--color-white);
   border: 1px solid var(--color-border);
-  border-radius: var(--r-sm);
+  border-radius: var(--r-md);
   box-shadow: var(--shadow-md);
   opacity: 0;
   visibility: hidden;
@@ -746,9 +747,44 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   z-index: 100;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.65rem;
   pointer-events: auto;
   box-sizing: border-box;
+  scrollbar-gutter: stable;
+}
+.mnsk7-megamenu__mobile-bar {
+  display: none;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.mnsk7-megamenu__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  padding: 0.5rem 0.75rem;
+  margin: 0;
+  border: 0;
+  border-radius: var(--r-sm);
+  background: transparent;
+  color: var(--color-text);
+  font: inherit;
+  font-size: var(--fs-sm);
+  font-weight: 600;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.mnsk7-megamenu__back:hover {
+  background: rgba(0, 0, 0, 0.05);
+}
+.mnsk7-megamenu__back:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
+}
+.mnsk7-megamenu__back-icon {
+  font-size: 1.1em;
+  line-height: 1;
 }
 @media (min-width: 1024px) {
   .site-header.mnsk7-header.mnsk7-header--sticky,
@@ -771,9 +807,38 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     overflow-y: visible !important;
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
-    max-height: none !important;
+    max-height: min(70vh, 520px) !important;
     overflow-x: hidden !important;
-    overflow-y: visible !important;
+    overflow-y: auto !important;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    grid-template-areas:
+      "cats cats"
+      "tags acc"
+      "foot foot";
+    gap: 0.65rem 1rem;
+    align-items: start;
+  }
+  .mnsk7-megamenu__mobile-bar {
+    display: none !important;
+  }
+  .mnsk7-megamenu__group--categories {
+    grid-area: cats;
+  }
+  .mnsk7-megamenu__group--tags {
+    grid-area: tags;
+  }
+  .mnsk7-megamenu__group--accessories {
+    grid-area: acc;
+  }
+  .mnsk7-megamenu__footer {
+    grid-area: foot;
+  }
+  .mnsk7-megamenu__group--accessories:empty,
+  .mnsk7-megamenu__group--tags:empty {
+    display: none;
   }
   .mnsk7-header__menu a,
   .mnsk7-header__link,
@@ -793,13 +858,13 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 .mnsk7-megamenu__heading {
   display: block;
   font-size: 0.6875rem;
-  font-weight: 700;
-  color: var(--color-text);
+  font-weight: 600;
+  color: var(--color-text-muted, #64748b);
   text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.35rem;
-  padding-bottom: 0.25rem;
-  border-bottom: 1px solid var(--color-border-strong);
+  letter-spacing: 0.06em;
+  margin-bottom: 0.4rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--color-border);
   line-height: 1.2;
 }
 .mnsk7-megamenu__list {
@@ -828,9 +893,9 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   display: block;
   width: 100%;
   box-sizing: border-box;
-  padding: 0.25rem 0.4rem;
+  padding: 0.3rem 0.45rem;
   font-size: var(--fs-xs);
-  line-height: 1.35;
+  line-height: 1.4;
   border-radius: var(--r-sm);
   white-space: normal;
   overflow-wrap: normal;
@@ -841,6 +906,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   border-bottom: none;
   color: var(--color-text);
   min-width: 0;
+  transition: background-color 0.12s ease, color 0.12s ease;
 }
 .mnsk7-megamenu__list a:hover {
   background: rgba(0, 0, 0, 0.06);
@@ -956,6 +1022,15 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 /* Mobile (<=1023px): Sklep rozwijany — submenu ukryte domyślnie, widoczne gdy li.is-open; układ pionowy, tap targets 44px */
 @media (max-width: 1023px) {
+  .mnsk7-megamenu__mobile-bar {
+    display: block;
+    margin: 0 0 0.25rem;
+    padding: 0 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children.is-open > a.mnsk7-menu-item-sklep {
+    font-weight: 700;
+  }
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu {
     position: static;
     opacity: 1;
@@ -10615,6 +10690,18 @@ nav.woocommerce-breadcrumb {
 /* === 21-responsive-mobile.css === */
 /* 21-responsive-mobile — Mobile: 2 kolumny gdzie sensowne, overflow-x hidden, 1 kol. tylko na bardzo wąskich.
    Task 8: overflow-x: hidden — zapobiega przewijaniu w poziomie na wąskich ekranach (szerokie tabele/obrazy). */
+
+@media (max-width: 1023px) {
+  /* Mobile nav drawer: scroll from top, no horizontal bleed (e-commerce canonical pattern). */
+  .mnsk7-header__nav.is-open .mnsk7-header__menu {
+    overscroll-behavior: contain;
+    scroll-behavior: auto;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children.is-open > .sub-menu.mnsk7-megamenu {
+    max-height: none;
+    overflow: visible;
+  }
+}
 
 @media (max-width: 768px) {
   body,

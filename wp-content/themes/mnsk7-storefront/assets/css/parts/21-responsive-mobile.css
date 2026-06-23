@@ -1,6 +1,18 @@
 /* 21-responsive-mobile — Mobile: 2 kolumny gdzie sensowne, overflow-x hidden, 1 kol. tylko na bardzo wąskich.
    Task 8: overflow-x: hidden — zapobiega przewijaniu w poziomie na wąskich ekranach (szerokie tabele/obrazy). */
 
+@media (max-width: 1023px) {
+  /* Mobile nav drawer: scroll from top, no horizontal bleed (e-commerce canonical pattern). */
+  .mnsk7-header__nav.is-open .mnsk7-header__menu {
+    overscroll-behavior: contain;
+    scroll-behavior: auto;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children.is-open > .sub-menu.mnsk7-megamenu {
+    max-height: none;
+    overflow: visible;
+  }
+}
+
 @media (max-width: 768px) {
   body,
   .site,

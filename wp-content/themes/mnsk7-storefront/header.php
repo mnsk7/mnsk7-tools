@@ -101,9 +101,15 @@ endif;
 					}
 					?>
 					<ul id="mnsk7-menu-submenu-sklep" class="sub-menu mnsk7-megamenu" role="menu" aria-label="<?php esc_attr_e( 'Sklep — kategorie i tagi', 'mnsk7-storefront' ); ?>">
+						<li class="mnsk7-megamenu__mobile-bar">
+							<button type="button" class="mnsk7-megamenu__back" data-mnsk7-megamenu-back aria-label="<?php esc_attr_e( 'Wróć do menu', 'mnsk7-storefront' ); ?>">
+								<span class="mnsk7-megamenu__back-icon" aria-hidden="true">&larr;</span>
+								<?php esc_html_e( 'Wróć', 'mnsk7-storefront' ); ?>
+							</button>
+						</li>
 						<?php
 						if ( ! empty( $top_cats ) ) : ?>
-						<li class="mnsk7-megamenu__group">
+						<li class="mnsk7-megamenu__group mnsk7-megamenu__group--categories">
 							<span class="mnsk7-megamenu__heading"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) ) ); ?></span>
 							<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--cols">
 								<?php
@@ -120,7 +126,7 @@ endif;
 						</li>
 						<?php endif; ?>
 						<?php if ( ! empty( $top_tags ) ) : ?>
-						<li class="mnsk7-megamenu__group">
+						<li class="mnsk7-megamenu__group mnsk7-megamenu__group--tags">
 							<span class="mnsk7-megamenu__heading"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) ) ); ?></span>
 							<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--tags">
 								<?php
@@ -137,7 +143,7 @@ endif;
 						</li>
 						<?php endif; ?>
 						<?php if ( ! empty( $accessory_cats ) ) : ?>
-						<li class="mnsk7-megamenu__group">
+						<li class="mnsk7-megamenu__group mnsk7-megamenu__group--accessories">
 							<span class="mnsk7-megamenu__heading"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_accessories', __( 'Akcesoria i zestawy', 'mnsk7-storefront' ) ) ); ?></span>
 							<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--tags">
 								<?php

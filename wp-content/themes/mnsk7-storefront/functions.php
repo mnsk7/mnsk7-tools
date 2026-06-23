@@ -932,6 +932,36 @@ add_action( 'init', function () {
 /* Layout overrides: source of truth w 25-global-layout.css (ostatni part). Bez wp_footer — HANDOFF LAYOUT-STATE-REFACTOR. */
 
 /**
+ * Top-level Woo product categories for header/footer navigation (BL-aligned, no artificial cap).
+ *
+ * @return WP_Term[]
+ */
+function mnsk7_fetch_top_level_product_categories() {
+	if ( ! taxonomy_exists( 'product_cat' ) ) {
+		return array();
+	}
+	$terms = get_terms(
+		array(
+			'taxonomy'   => 'product_cat',
+			'parent'     => 0,
+			'hide_empty' => true,
+			'orderby'    => 'name',
+			'order'      => 'ASC',
+		)
+	);
+	return is_wp_error( $terms ) ? array() : $terms;
+}
+
+/**
+ * Footer category list: all canonical top-level categories with products.
+ *
+ * @return WP_Term[]
+ */
+function mnsk7_get_footer_product_categories() {
+	return mnsk7_fetch_top_level_product_categories();
+}
+
+/**
  * P2.7: Zwraca kategorie i tagi do megamenu (z transient cache). Inwalidacja przy zapisie termu.
  */
 function mnsk7_get_megamenu_terms() {
@@ -939,24 +969,34 @@ function mnsk7_get_megamenu_terms() {
 	if ( is_array( $cached ) && isset( $cached['cats'] ) && isset( $cached['tags'] ) && isset( $cached['accessories'] ) ) {
 		return $cached;
 	}
-	$top_cats = array();
+	$top_cats    = array();
 	$accessories = array();
-	$top_tags = array();
+	$top_tags    = array();
 	if ( taxonomy_exists( 'product_cat' ) ) {
-		$top_cats = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => 0, 'hide_empty' => true, 'number' => 16, 'orderby' => 'name' ) );
-		$top_cats = is_wp_error( $top_cats ) ? array() : $top_cats;
-		$grouped = function_exists( 'mnsk7_split_catalog_category_terms' ) ? mnsk7_split_catalog_category_terms( $top_cats ) : array( 'core' => $top_cats, 'accessories' => array() );
+		$all_cats = mnsk7_fetch_top_level_product_categories();
+		$grouped  = function_exists( 'mnsk7_split_catalog_category_terms' ) ? mnsk7_split_catalog_category_terms( $all_cats ) : array( 'core' => $all_cats, 'accessories' => array() );
 		$top_cats = isset( $grouped['core'] ) ? $grouped['core'] : array();
 		$accessories = isset( $grouped['accessories'] ) ? $grouped['accessories'] : array();
 	}
 	if ( taxonomy_exists( 'product_tag' ) ) {
-		$top_tags = get_terms( array( 'taxonomy' => 'product_tag', 'hide_empty' => true, 'number' => 10, 'orderby' => 'count', 'order' => 'DESC' ) );
+		$top_tags = get_terms(
+			array(
+				'taxonomy'   => 'product_tag',
+				'hide_empty' => true,
+				'number'     => 20,
+				'orderby'    => 'count',
+				'order'      => 'DESC',
+			)
+		);
 		$top_tags = is_wp_error( $top_tags ) ? array() : $top_tags;
-		$top_tags = array_filter( $top_tags, function ( $t ) {
-			$slug_ok = isset( $t->slug ) && strtolower( $t->slug ) !== 'sklep';
-			$name_ok = empty( $t->name ) || trim( strtolower( $t->name ) ) !== 'sklep';
-			return $slug_ok && $name_ok;
-		} );
+		$top_tags = array_filter(
+			$top_tags,
+			function ( $t ) {
+				$slug_ok = isset( $t->slug ) && strtolower( $t->slug ) !== 'sklep';
+				$name_ok = empty( $t->name ) || trim( strtolower( $t->name ) ) !== 'sklep';
+				return $slug_ok && $name_ok;
+			}
+		);
 	}
 	set_transient( 'mnsk7_megamenu_terms', array( 'cats' => $top_cats, 'accessories' => $accessories, 'tags' => $top_tags ), 12 * HOUR_IN_SECONDS );
 	return array( 'cats' => $top_cats, 'accessories' => $accessories, 'tags' => $top_tags );
@@ -973,6 +1013,12 @@ function mnsk7_is_accessory_product_category( $term ) {
 		return false;
 	}
 	$slug = isset( $term->slug ) ? sanitize_title( $term->slug ) : '';
+	$slug_aliases = array(
+		'p-ytki-wieloostrzowe' => 'plytki-wieloostrzowe',
+	);
+	if ( isset( $slug_aliases[ $slug ] ) ) {
+		$slug = $slug_aliases[ $slug ];
+	}
 	return in_array(
 		$slug,
 		array(
@@ -989,6 +1035,12 @@ function mnsk7_is_hidden_catalog_product_category( $term ) {
 		return false;
 	}
 	$slug = isset( $term->slug ) ? sanitize_title( $term->slug ) : '';
+	$slug_aliases = array(
+		'p-ytki-wieloostrzowe' => 'plytki-wieloostrzowe',
+	);
+	if ( isset( $slug_aliases[ $slug ] ) ) {
+		$slug = $slug_aliases[ $slug ];
+	}
 	return in_array(
 		$slug,
 		array(
@@ -1413,6 +1465,23 @@ add_action( 'wp_footer', function () {
 				nav.classList.remove('is-open');
 				if (menuToggle) { menuToggle.setAttribute('aria-expanded', 'false'); if (menuToggle.getAttribute('data-open-label')) menuToggle.setAttribute('aria-label', menuToggle.getAttribute('data-open-label')); }
 			});
+			var megamenuBack = menu.querySelector('[data-mnsk7-megamenu-back]');
+			if (megamenuBack) {
+				megamenuBack.addEventListener('click', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					if (window.innerWidth >= DESKTOP_MIN) return;
+					closeMobileSubmenus();
+					resetMobileMenuPosition();
+					var sklepLi = megamenuBack.closest('li.menu-item-has-children');
+					if (sklepLi) {
+						var sklepLink = sklepLi.firstElementChild && sklepLi.firstElementChild.tagName === 'A' ? sklepLi.firstElementChild : null;
+						if (sklepLink) {
+							try { sklepLink.focus(); } catch (err) {}
+						}
+					}
+				});
+			}
 		}
 		if (searchToggle || searchDropdown || searchPanel) {
 			function updateSearchStateOnResize() {
@@ -3172,7 +3241,7 @@ function mnsk7_normalize_catalog_term_label( $name ) {
 		return $normalized;
 	}
 	$map = array(
-		'Pilnik oborotowy' => 'Pilnik obrotowy',
+		'Pilnik oborotowy'  => 'Pilnik obrotowy',
 		'Pilniki oborotowe' => 'Pilniki obrotowe',
 	);
 	$normalized = isset( $map[ $normalized ] ) ? $map[ $normalized ] : $normalized;

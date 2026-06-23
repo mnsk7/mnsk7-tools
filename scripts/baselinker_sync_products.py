@@ -157,6 +157,18 @@ def normalize_key(value):
     return re.sub(r"[^a-z0-9]+", " ", text).strip()
 
 
+def format_catalog_tag_name(name):
+    """Polish storefront label: capitalize first letter, preserve BL remainder (incl. MDF/PCV)."""
+    text = str(name).strip()
+    if not text:
+        return text
+    first = text[0]
+    rest = text[1:]
+    if first.isalpha():
+        first = first.upper()
+    return first + rest
+
+
 def normalize_dimension_value(value):
     text = str(value).strip()
     if not text:
@@ -588,7 +600,7 @@ class WooClient:
         return tags
 
     def get_or_create_product_tag(self, name, dry_run=False):
-        name = str(name).strip()
+        name = format_catalog_tag_name(name)
         if not name:
             return None
         cache_key = normalize_key(name)
@@ -597,6 +609,10 @@ class WooClient:
 
         for tag in self.list_product_tags():
             if normalize_key(tag.get("name", "")) == cache_key:
+                tag_id = tag.get("id")
+                existing_name = str(tag.get("name", "")).strip()
+                if tag_id and existing_name != name and not dry_run:
+                    tag = self.request("PUT", f"/products/tags/{int(tag_id)}", {"name": name})
                 self.tag_cache[cache_key] = tag
                 return tag
 
@@ -1034,7 +1050,7 @@ class BlTagResolver:
     def __init__(self, bl, inventory_id):
         self.canonical_by_norm = {}
         for name in bl.list_inventory_tags(inventory_id):
-            self.canonical_by_norm[normalize_key(name)] = name
+            self.canonical_by_norm[normalize_key(name)] = format_catalog_tag_name(name)
 
     def resolve_product_tags(self, product):
         raw = product.get("tags") or []
