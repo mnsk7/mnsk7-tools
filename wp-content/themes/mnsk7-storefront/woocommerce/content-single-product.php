@@ -49,13 +49,18 @@ if ( post_password_required() ) {
 		 * 23  – mnsk7_single_product_zastosowanie
 		 * 30  – add_to_cart
 		 * 32  – mnsk7_single_product_trust_badges
-		 * 40  – mnsk7_single_product_meta_chips
+		 *
+		 * Poniżej .mnsk7-pdp-main (hook mnsk7_after_pdp_main): description-intro, meta-chips.
 		 *
 		 * Removed: excerpt (20), old meta (40) — replaced by structured blocks.
 		 */
 		do_action( 'woocommerce_single_product_summary' );
 		?>
 	</div>
+	</div>
+
+	<div class="mnsk7-pdp-secondary">
+		<?php do_action( 'mnsk7_after_pdp_main' ); ?>
 	</div>
 
 	<?php

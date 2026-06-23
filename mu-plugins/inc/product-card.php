@@ -1367,7 +1367,7 @@ add_action( 'wp_footer', function () {
 }, 25 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_zastosowanie', 23 );
 add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_trust_badges', 32 );
-add_action( 'woocommerce_single_product_summary', 'mnsk7_single_product_meta_chips', 40 );
+add_action( 'mnsk7_after_pdp_main', 'mnsk7_single_product_meta_chips', 20 );
 
 add_action( 'woocommerce_before_single_product', function () {
 	remove_action( 'woocommerce_single_product_summary', 'woocommerce_template_single_excerpt', 20 );
