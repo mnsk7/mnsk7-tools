@@ -1131,6 +1131,16 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   color: #fff !important;
 }
 
+.mnsk7-plp-chip--disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  pointer-events: none;
+  background: var(--color-bg-subtle, #f3f4f6);
+  border-color: var(--color-border);
+  color: var(--color-text-muted, #64748b);
+  text-decoration: none;
+}
+
 .mnsk7-plp-chips__label {
   font-size: var(--fs-sm);
   font-weight: 600;

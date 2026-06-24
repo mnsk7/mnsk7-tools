@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.62' );
+	define( 'MNSK7_THEME_VERSION', '1.0.63' );
 }
 
 /**
@@ -983,9 +983,8 @@ function mnsk7_get_megamenu_terms() {
 			array(
 				'taxonomy'   => 'product_tag',
 				'hide_empty' => true,
-				'number'     => 20,
-				'orderby'    => 'count',
-				'order'      => 'DESC',
+				'orderby'    => 'name',
+				'order'      => 'ASC',
 			)
 		);
 		$top_tags = is_wp_error( $top_tags ) ? array() : $top_tags;
@@ -3281,6 +3280,240 @@ function mnsk7_get_all_attribute_filter_param_names() {
 }
 
 /**
+ * Cross-taxonomy PLP filters (tag/category layered on shop or archive).
+ *
+ * @return array<string,string> Query param => taxonomy.
+ */
+function mnsk7_get_plp_nav_filter_params() {
+	return array(
+		'filter_product_tag' => 'product_tag',
+		'filter_product_cat' => 'product_cat',
+	);
+}
+
+/**
+ * All active PLP filters from the query string.
+ *
+ * @return array<string,string> param => slug
+ */
+function mnsk7_get_active_plp_filters() {
+	$active = array();
+	$params = array_merge(
+		array_keys( mnsk7_get_plp_nav_filter_params() ),
+		mnsk7_get_all_attribute_filter_param_names()
+	);
+	foreach ( $params as $param ) {
+		if ( empty( $_GET[ $param ] ) ) {
+			continue;
+		}
+		$val = sanitize_text_field( wp_unslash( $_GET[ $param ] ) );
+		if ( $val !== '' ) {
+			$active[ $param ] = $val;
+		}
+	}
+	return $active;
+}
+
+/**
+ * Build PLP URL with merged filters (preserves unrelated active filters).
+ *
+ * @param string               $base_url Base URL.
+ * @param array<string,string> $set      Params to set (empty value removes).
+ * @param string[]             $remove   Param names to drop.
+ * @return string
+ */
+function mnsk7_build_plp_filter_url( $base_url, $set = array(), $remove = array() ) {
+	$active = mnsk7_get_active_plp_filters();
+	foreach ( $remove as $param ) {
+		unset( $active[ $param ] );
+	}
+	foreach ( $set as $param => $slug ) {
+		$slug = (string) $slug;
+		if ( $slug === '' ) {
+			unset( $active[ $param ] );
+			continue;
+		}
+		$active[ $param ] = sanitize_title( $slug );
+	}
+	$all_params = array_merge(
+		array_keys( mnsk7_get_plp_nav_filter_params() ),
+		mnsk7_get_all_attribute_filter_param_names()
+	);
+	$url = remove_query_arg( $all_params, (string) $base_url );
+	if ( ! empty( $active ) ) {
+		$url = add_query_arg( $active, $url );
+	}
+	return function_exists( 'mnsk7_plp_anchor_results' ) ? mnsk7_plp_anchor_results( $url ) : $url;
+}
+
+/**
+ * Chip URL for category/tag navigation with combined PLP filters.
+ *
+ * @param WP_Term      $term         Target term.
+ * @param WP_Term|null $archive_term Current archive term, if any.
+ * @return string
+ */
+function mnsk7_plp_nav_term_chip_url( $term, $archive_term = null ) {
+	if ( ! ( $term instanceof WP_Term ) ) {
+		return function_exists( 'wc_get_page_permalink' ) ? (string) wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
+	}
+	$taxonomy = (string) $term->taxonomy;
+	$slug     = (string) $term->slug;
+
+	if ( $taxonomy === 'product_tag' && $archive_term instanceof WP_Term && $archive_term->taxonomy === 'product_cat' ) {
+		$base = get_term_link( $archive_term );
+		if ( is_wp_error( $base ) ) {
+			$base = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
+		}
+		$active_tag = isset( $_GET['filter_product_tag'] ) ? sanitize_title( wp_unslash( $_GET['filter_product_tag'] ) ) : '';
+		if ( $active_tag === $slug ) {
+			return mnsk7_build_plp_filter_url( $base, array(), array( 'filter_product_tag' ) );
+		}
+		return mnsk7_build_plp_filter_url( $base, array( 'filter_product_tag' => $slug ) );
+	}
+
+	if ( $taxonomy === 'product_cat' && $archive_term instanceof WP_Term && $archive_term->taxonomy === 'product_tag' ) {
+		$base = get_term_link( $archive_term );
+		if ( is_wp_error( $base ) ) {
+			$base = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
+		}
+		return mnsk7_build_plp_filter_url( $base, array( 'filter_product_cat' => $slug ) );
+	}
+
+	$base = get_term_link( $term );
+	if ( is_wp_error( $base ) ) {
+		$base = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
+	}
+	$remove = array( 'filter_product_cat' );
+	if ( $taxonomy === 'product_tag' ) {
+		$remove = array( 'filter_product_tag' );
+	}
+	return mnsk7_build_plp_filter_url( $base, array(), $remove );
+}
+
+/**
+ * Product IDs in current PLP scope (archive + layered filters), optionally excluding one param.
+ *
+ * @param string|null $exclude_param Query param to omit (for compatibility checks).
+ * @return int[]
+ */
+function mnsk7_get_plp_scope_product_ids( $exclude_param = null ) {
+	$tax_query = array();
+	$term      = get_queried_object();
+	$on_shop   = function_exists( 'is_shop' ) && is_shop() && ! is_product_taxonomy();
+
+	if ( ! $on_shop && $term instanceof WP_Term && isset( $term->term_id ) ) {
+		$tax_query[] = array(
+			'taxonomy' => (string) $term->taxonomy,
+			'field'    => 'term_id',
+			'terms'    => (int) $term->term_id,
+		);
+	}
+
+	foreach ( mnsk7_get_plp_nav_filter_params() as $param => $taxonomy ) {
+		if ( $param === $exclude_param || empty( $_GET[ $param ] ) ) {
+			continue;
+		}
+		$slug = sanitize_title( wp_unslash( $_GET[ $param ] ) );
+		if ( $slug === '' ) {
+			continue;
+		}
+		if ( $term instanceof WP_Term && $term->taxonomy === $taxonomy && $term->slug === $slug ) {
+			continue;
+		}
+		$tax_query[] = array(
+			'taxonomy' => $taxonomy,
+			'field'    => 'slug',
+			'terms'    => $slug,
+		);
+	}
+
+	$attr_taxonomies = array_keys( mnsk7_get_plp_attribute_filter_taxonomies() );
+	foreach ( $attr_taxonomies as $attr_tax ) {
+		$param = 'filter_' . str_replace( 'pa_', '', $attr_tax );
+		if ( $param === $exclude_param || empty( $_GET[ $param ] ) ) {
+			continue;
+		}
+		$slug = sanitize_text_field( wp_unslash( $_GET[ $param ] ) );
+		if ( $slug === '' ) {
+			continue;
+		}
+		$tax_query[] = array(
+			'taxonomy' => $attr_tax,
+			'field'    => 'slug',
+			'terms'    => $slug,
+		);
+	}
+
+	$query_args = array(
+		'post_type'      => 'product',
+		'post_status'    => 'publish',
+		'fields'         => 'ids',
+		'posts_per_page' => 800,
+		'no_found_rows'  => true,
+		'meta_query'     => array(
+			array(
+				'key'   => '_stock_status',
+				'value' => 'instock',
+			),
+		),
+	);
+	if ( ! empty( $tax_query ) ) {
+		$query_args['tax_query'] = array_merge( array( 'relation' => 'AND' ), $tax_query );
+	} elseif ( ! $on_shop ) {
+		return array();
+	}
+
+	$q = new WP_Query( $query_args );
+	return $q->posts ? array_map( 'intval', $q->posts ) : array();
+}
+
+/**
+ * Whether a taxonomy term has in-stock products in the given PLP scope.
+ *
+ * @param WP_Term $term         Term to test.
+ * @param int[]   $product_ids  Scope product IDs.
+ * @return bool
+ */
+function mnsk7_plp_term_is_compatible( $term, $product_ids ) {
+	if ( empty( $product_ids ) || ! ( $term instanceof WP_Term ) ) {
+		return true;
+	}
+	$matches = get_terms(
+		array(
+			'taxonomy'   => (string) $term->taxonomy,
+			'hide_empty' => true,
+			'object_ids' => $product_ids,
+			'include'    => array( (int) $term->term_id ),
+		)
+	);
+	return ! is_wp_error( $matches ) && ! empty( $matches );
+}
+
+/**
+ * Whether an attribute slug exists on products in the given PLP scope.
+ *
+ * @param string $taxonomy    pa_* taxonomy.
+ * @param string $slug        Attribute term slug.
+ * @param int[]  $product_ids Scope product IDs.
+ * @return bool
+ */
+function mnsk7_plp_attribute_slug_is_compatible( $taxonomy, $slug, $product_ids ) {
+	if ( empty( $product_ids ) || $slug === '' || ! taxonomy_exists( $taxonomy ) ) {
+		return true;
+	}
+	$matches = get_terms(
+		array(
+			'taxonomy'   => $taxonomy,
+			'hide_empty' => true,
+			'object_ids' => $product_ids,
+			'slug'       => sanitize_title( $slug ),
+		)
+	);
+	return ! is_wp_error( $matches ) && ! empty( $matches );
+}
+
+/**
  * Append #mnsk7-plp-results to URL so after filter/category/tag navigation user lands at products.
  * Used for PLP chip and filter links (reload → scroll to results).
  *
@@ -3324,6 +3557,24 @@ add_action( 'woocommerce_product_query', function ( $q ) {
 			'terms'    => $slug,
 		);
 	}
+	$queried = get_queried_object();
+	foreach ( mnsk7_get_plp_nav_filter_params() as $param => $taxonomy ) {
+		if ( empty( $_GET[ $param ] ) ) {
+			continue;
+		}
+		$slug = sanitize_title( wp_unslash( $_GET[ $param ] ) );
+		if ( $slug === '' ) {
+			continue;
+		}
+		if ( $queried instanceof WP_Term && $queried->taxonomy === $taxonomy && $queried->slug === $slug ) {
+			continue;
+		}
+		$tax[] = array(
+			'taxonomy' => $taxonomy,
+			'field'    => 'slug',
+			'terms'    => $slug,
+		);
+	}
 	if ( ! empty( $tax ) ) {
 		$q->set( 'tax_query', array_merge( array( 'relation' => 'AND' ), $tax ) );
 	}
@@ -3337,53 +3588,7 @@ add_action( 'woocommerce_product_query', function ( $q ) {
  * @return int[] Product IDs, or empty array.
  */
 function mnsk7_get_archive_product_ids_for_chips( $attrs_to_try ) {
-	$on_shop = function_exists( 'is_shop' ) && is_shop() && ! is_product_taxonomy();
-	$term    = get_queried_object();
-	if ( $on_shop ) {
-		$tax_query = array();
-	} elseif ( $term instanceof WP_Term && isset( $term->term_id ) ) {
-		$tax_query = array(
-			array(
-				'taxonomy' => $term->taxonomy,
-				'field'    => 'term_id',
-				'terms'    => $term->term_id,
-			),
-		);
-	} else {
-		return array();
-	}
-	// Add current attribute filters from URL so chips reflect only terms that exist for filtered set.
-	foreach ( $attrs_to_try as $tax => $label ) {
-		$param = 'filter_' . str_replace( 'pa_', '', $tax );
-		if ( empty( $_GET[ $param ] ) || ! taxonomy_exists( $tax ) ) {
-			continue;
-		}
-		$slug = sanitize_text_field( wp_unslash( $_GET[ $param ] ) );
-		if ( $slug === '' ) {
-			continue;
-		}
-		$tax_query[] = array(
-			'taxonomy' => $tax,
-			'field'    => 'slug',
-			'terms'    => $slug,
-		);
-	}
-	$query_args = array(
-		'post_type'      => 'product',
-		'post_status'    => 'publish',
-		'fields'         => 'ids',
-		'posts_per_page' => 800,
-		'no_found_rows'  => true,
-		'tax_query'      => array_merge( array( 'relation' => 'AND' ), $tax_query ),
-		'meta_query'     => array(
-			array(
-				'key'   => '_stock_status',
-				'value' => 'instock',
-			),
-		),
-	);
-	$q = new WP_Query( $query_args );
-	return $q->posts ? array_map( 'intval', $q->posts ) : array();
+	return mnsk7_get_plp_scope_product_ids();
 }
 
 /**
@@ -3502,13 +3707,18 @@ function mnsk7_get_archive_attribute_filter_chips() {
 		if ( count( $terms ) < 2 && $active_val === '' ) {
 			continue;
 		}
-		$chips = array();
+		$scope_for_row = mnsk7_get_plp_scope_product_ids( $param );
+		$chips         = array();
 		foreach ( $terms as $t ) {
 			$normalized_label = function_exists( 'mnsk7_normalize_archive_chip_label' ) ? mnsk7_normalize_archive_chip_label( $t->name, $tax ) : $t->name;
 			if ( $normalized_label === '' ) {
 				continue;
 			}
-			$chips[ $t->slug ] = $normalized_label;
+			$compatible = mnsk7_plp_attribute_slug_is_compatible( $tax, $t->slug, $scope_for_row );
+			$chips[ $t->slug ] = array(
+				'label'      => $normalized_label,
+				'compatible' => $compatible,
+			);
 		}
 		if ( empty( $chips ) ) {
 			continue;

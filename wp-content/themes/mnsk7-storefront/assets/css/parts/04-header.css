@@ -317,18 +317,19 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   transform: rotate(45deg);
   vertical-align: 0.15em;
 }
-/* Megamenu Sklep: overlay panel — własna szerokość od viewport, nie od kontenera nav (NNG/Baymard) */
+/* Megamenu Sklep: szeroki panel, grid bez poziomego scrolla (e-commerce pattern) */
 .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
   list-style: none;
   margin: 0;
-  padding: 0.85rem 1.1rem 0.7rem;
+  padding: 1rem 1.25rem 0.85rem;
   position: absolute;
   top: 100%;
   left: 0;
-  min-width: 380px;
-  max-width: min(720px, calc(100vw - 2rem));
-  max-height: min(70vh, 520px);
-  overflow-x: hidden; /* Task 8: no horizontal scrollbar */
+  min-width: min(920px, calc(100vw - 2rem));
+  max-width: min(920px, calc(100vw - 2rem));
+  width: min(920px, calc(100vw - 2rem));
+  max-height: min(72vh, 540px);
+  overflow-x: hidden;
   overflow-y: auto;
   background: var(--color-white);
   border: 1px solid var(--color-border);
@@ -336,15 +337,16 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   box-shadow: var(--shadow-md);
   opacity: 0;
   visibility: hidden;
-  transform: translateY(4px);
-  transition: opacity 0.15s ease, visibility 0.15s ease, transform 0.15s ease;
+  transform: translateY(6px);
+  transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
   z-index: 100;
   display: flex;
   flex-direction: column;
-  gap: 0.65rem;
+  gap: 0.85rem;
   pointer-events: auto;
   box-sizing: border-box;
   scrollbar-gutter: stable;
+  scrollbar-width: thin;
 }
 .mnsk7-megamenu__mobile-bar {
   display: none;
@@ -401,18 +403,25 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     overflow-y: visible !important;
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
-    max-height: min(70vh, 520px) !important;
+    max-height: min(72vh, 540px) !important;
     overflow-x: hidden !important;
     overflow-y: auto !important;
+    left: 50%;
+    right: auto;
+    transform: translateX(-50%) translateY(6px);
+  }
+  .mnsk7-header__menu li.menu-item-has-children.mnsk7-megamenu-open .sub-menu.mnsk7-megamenu,
+  .mnsk7-header__menu li.menu-item-has-children:focus-within .sub-menu.mnsk7-megamenu {
+    transform: translateX(-50%) translateY(0);
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
     display: grid;
-    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
     grid-template-areas:
       "cats cats"
       "tags acc"
       "foot foot";
-    gap: 0.65rem 1rem;
+    gap: 0.85rem 1.25rem;
     align-items: start;
   }
   .mnsk7-megamenu__mobile-bar {
@@ -451,51 +460,48 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 .mnsk7-megamenu__heading {
   display: block;
-  font-size: 0.6875rem;
-  font-weight: 600;
+  font-size: var(--fs-xs);
+  font-weight: 700;
   color: var(--color-text-muted, #64748b);
   text-transform: uppercase;
-  letter-spacing: 0.06em;
-  margin-bottom: 0.4rem;
-  padding-bottom: 0.3rem;
+  letter-spacing: 0.07em;
+  margin-bottom: 0.55rem;
+  padding-bottom: 0.4rem;
   border-bottom: 1px solid var(--color-border);
-  line-height: 1.2;
+  line-height: 1.3;
 }
 .mnsk7-megamenu__list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 0.125rem 0.875rem;
+  gap: 0.2rem 0.65rem;
   align-content: start;
   align-items: start;
   min-width: 0;
 }
-/* 3 kolumny — min 11em/9em, zawijanie tylko między słowami (bez łamania w środku) */
 .mnsk7-megamenu__list--cols {
-  grid-template-columns: repeat(3, minmax(11em, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
 }
 .mnsk7-megamenu__list--tags {
-  grid-template-columns: repeat(3, minmax(9em, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
 }
 .mnsk7-megamenu__list li {
   margin: 0;
   min-width: 0;
-  overflow: hidden; /* Task 8: clip grid cell to avoid spill */
 }
 .mnsk7-megamenu__list a {
   display: block;
   width: 100%;
   box-sizing: border-box;
-  padding: 0.3rem 0.45rem;
-  font-size: var(--fs-xs);
-  line-height: 1.4;
+  padding: 0.42rem 0.55rem;
+  font-size: var(--fs-sm);
+  line-height: 1.45;
   border-radius: var(--r-sm);
   white-space: normal;
-  overflow-wrap: normal;
-  word-wrap: normal;
+  overflow-wrap: anywhere;
   word-break: normal;
-  hyphens: none;
+  hyphens: auto;
   text-decoration: none;
   border-bottom: none;
   color: var(--color-text);
@@ -528,8 +534,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 .mnsk7-megamenu__footer a {
   display: inline-block;
-  padding: 0.25rem 0.4rem;
-  font-size: var(--fs-xs);
+  padding: 0.35rem 0.5rem;
+  font-size: var(--fs-sm);
   font-weight: 600;
   color: var(--color-text);
   text-decoration: none;
@@ -542,14 +548,14 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 @media (max-width: 419px) {
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
     max-width: calc(100vw - 1.5rem);
-    padding: 0.5rem 0.75rem 0.4rem;
-    gap: 0.5rem;
+    width: calc(100vw - 1.5rem);
+    min-width: 0;
+    padding: 0.65rem 0.85rem 0.55rem;
+    gap: 0.65rem;
   }
-  .mnsk7-megamenu__list--cols {
-    grid-template-columns: repeat(2, minmax(9em, 1fr));
-  }
+  .mnsk7-megamenu__list--cols,
   .mnsk7-megamenu__list--tags {
-    grid-template-columns: repeat(2, minmax(7em, 1fr));
+    grid-template-columns: 1fr;
   }
 }
 /* Legacy: zwykły sub-menu (tylko gdy bez .mnsk7-megamenu) */
@@ -596,13 +602,13 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__menu li.menu-item-has-children:hover .sub-menu.mnsk7-megamenu {
     opacity: 0;
     visibility: hidden;
-    transform: translateY(4px);
+    transform: translateX(-50%) translateY(6px);
   }
   .mnsk7-header__menu li.menu-item-has-children.mnsk7-megamenu-open .sub-menu.mnsk7-megamenu,
   .mnsk7-header__menu li.menu-item-has-children:focus-within .sub-menu.mnsk7-megamenu {
     opacity: 1;
     visibility: visible;
-    transform: translateY(0);
+    transform: translateX(-50%) translateY(0);
   }
   .mnsk7-header__menu li.menu-item-has-children:hover > a {
     color: inherit;
