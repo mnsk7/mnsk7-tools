@@ -3,6 +3,7 @@
 import argparse
 import base64
 import datetime
+import html
 import json
 import math
 import os
@@ -534,7 +535,7 @@ class WooClient:
             return self.term_cache[cache_key]
 
         for term in self.list_attribute_terms(attribute_id):
-            if normalize_key(term.get("name", "")) == normalize_key(term_name):
+            if normalize_key(html.unescape(str(term.get("name", "")))) == normalize_key(term_name):
                 self.term_cache[cache_key] = term
                 return term
 
@@ -571,7 +572,7 @@ class WooClient:
             return self.category_cache[cache_key]
 
         for category in self.list_product_categories():
-            if normalize_key(category.get("name", "")) == normalize_key(name):
+            if normalize_key(html.unescape(str(category.get("name", "")))) == normalize_key(name):
                 if int(category.get("parent", 0) or 0) == int(parent_id or 0):
                     self.category_cache[cache_key] = category
                     return category
@@ -608,9 +609,9 @@ class WooClient:
             return self.tag_cache[cache_key]
 
         for tag in self.list_product_tags():
-            if normalize_key(tag.get("name", "")) == cache_key:
+            if normalize_key(html.unescape(str(tag.get("name", "")))) == cache_key:
                 tag_id = tag.get("id")
-                existing_name = str(tag.get("name", "")).strip()
+                existing_name = html.unescape(str(tag.get("name", ""))).strip()
                 if tag_id and existing_name != name and not dry_run:
                     tag = self.request("PUT", f"/products/tags/{int(tag_id)}", {"name": name})
                 self.tag_cache[cache_key] = tag
