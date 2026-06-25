@@ -75,7 +75,9 @@ echo '<div id="mnsk7-plp-results" class="mnsk7-plp-results-anchor" aria-hidden="
 $plp_nav_chips_limit = $plp_is_mobile_request ? 0 : 12;
 $plp_archive_term    = ( $is_taxonomy && $current_term instanceof WP_Term ) ? $current_term : null;
 $plp_nav_scope_ids   = function_exists( 'mnsk7_get_plp_scope_product_ids' ) ? mnsk7_get_plp_scope_product_ids() : array();
-$render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $plp_nav_chips_limit, $plp_is_mobile_request, $plp_archive_term, $plp_nav_scope_ids ) {
+$render_plp_nav_row = function ( $label, $terms, $active_term_id = 0, $extra_class = '', $scope_ids = null ) use ( $plp_nav_chips_limit, $plp_is_mobile_request, $plp_archive_term, $plp_nav_scope_ids ) {
+	$extra_class = is_string( $extra_class ) ? trim( $extra_class ) : '';
+	$effective_scope_ids = is_array( $scope_ids ) ? $scope_ids : $plp_nav_scope_ids;
 	if ( empty( $terms ) || ! is_array( $terms ) ) {
 		return;
 	}
@@ -83,7 +85,7 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 	$visible = $plp_nav_chips_limit > 0 ? array_slice( $terms, 0, $plp_nav_chips_limit ) : $terms;
 	$hidden  = $plp_nav_chips_limit > 0 ? array_slice( $terms, $plp_nav_chips_limit, null ) : array();
 	$anchor  = function_exists( 'mnsk7_plp_anchor_results' ) ? 'mnsk7_plp_anchor_results' : null;
-	$render_chip = function ( $term, $active_term_id ) use ( $anchor, $plp_archive_term, $plp_nav_scope_ids ) {
+	$render_chip = function ( $term, $active_term_id ) use ( $anchor, $plp_archive_term, $effective_scope_ids ) {
 		$link = function_exists( 'mnsk7_plp_nav_term_chip_url' )
 			? mnsk7_plp_nav_term_chip_url( $term, $plp_archive_term )
 			: get_term_link( $term );
@@ -101,7 +103,7 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 			$active = sanitize_title( wp_unslash( $_GET['filter_product_cat'] ) ) === (string) $term->slug;
 		}
 		$compatible = function_exists( 'mnsk7_plp_term_is_compatible' )
-			? mnsk7_plp_term_is_compatible( $term, $plp_nav_scope_ids )
+			? mnsk7_plp_term_is_compatible( $term, $effective_scope_ids )
 			: true;
 		$classes = 'mnsk7-plp-chip';
 		if ( $active ) {
@@ -142,7 +144,7 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 				_n( '%d opcja', '%d opcji', count( $terms ), 'mnsk7-storefront' ),
 				count( $terms )
 			);
-		$dropdown_class = 'mnsk7-plp-dropdown mnsk7-plp-dropdown--nav col-full' . ( $active_name ? ' mnsk7-plp-dropdown--active' : '' );
+		$dropdown_class = 'mnsk7-plp-dropdown mnsk7-plp-dropdown--nav col-full' . ( $active_name ? ' mnsk7-plp-dropdown--active' : '' ) . ( $extra_class ? ' ' . $extra_class : '' );
 		$panel_id       = 'mnsk7-plp-dropdown-panel-nav-' . sanitize_title( $label );
 		echo '<details class="' . esc_attr( $dropdown_class ) . '">';
 		echo '<summary class="mnsk7-plp-dropdown__summary" aria-haspopup="dialog" aria-expanded="false" aria-controls="' . esc_attr( $panel_id ) . '"><span class="mnsk7-plp-dropdown__summary-main"><span class="mnsk7-plp-dropdown__summary-title">' . esc_html( $label ) . '</span><span class="mnsk7-plp-dropdown__summary-meta">' . esc_html( $summary_meta ) . '</span></span></summary>';
@@ -159,7 +161,7 @@ $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $pl
 		echo '</details>';
 		return;
 	}
-	echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--nav col-full" role="navigation" aria-label="' . esc_attr( $label ) . '">';
+	echo '<div class="mnsk7-plp-chips mnsk7-plp-chips--nav col-full' . ( $extra_class ? ' ' . esc_attr( $extra_class ) : '' ) . '" role="navigation" aria-label="' . esc_attr( $label ) . '">';
 	echo '<span class="mnsk7-plp-chips__label">' . esc_html( $label ) . '</span>';
 	echo '<div class="mnsk7-plp-chips__scroll">';
 	foreach ( $visible as $term ) {
@@ -337,6 +339,38 @@ $render_plp_attribute_section = function ( $clear_all_url ) use ( $plp_is_mobile
 	}
 };
 
+/* Nawigacja kategorii z hierarchią rodzic → dziecko.
+   Główny rząd "Kategoria" = kategorie nadrzędne (top-level). Gdy jesteśmy w gałęzi danego rodzica,
+   pod spodem pokazujemy wcięty rząd "Podkategorie" z jego dziećmi — przejrzysty drill-down. */
+$render_plp_category_nav_rows = function ( $current_term ) use ( $render_plp_nav_row ) {
+	$nav = function_exists( 'mnsk7_get_plp_category_nav' ) ? mnsk7_get_plp_category_nav( $current_term ) : array();
+	$parents          = isset( $nav['parents'] ) && is_array( $nav['parents'] ) ? $nav['parents'] : array();
+	$children         = isset( $nav['children'] ) && is_array( $nav['children'] ) ? $nav['children'] : array();
+	$active_parent_id = isset( $nav['active_parent_id'] ) ? (int) $nav['active_parent_id'] : 0;
+	$active_child_id  = isset( $nav['active_child_id'] ) ? (int) $nav['active_child_id'] : 0;
+	$parent_name      = isset( $nav['parent_name'] ) ? (string) $nav['parent_name'] : '';
+
+	if ( empty( $parents ) ) {
+		return;
+	}
+	/* Chipy kategorii muszą umożliwiać swobodną nawigację między kategoriami. Na stronie KATEGORII liczymy
+	   dostępność bez ograniczenia bieżącą kategorią (klik = zmiana kategorii), inaczej inne kategorie byłyby
+	   błędnie wyłączone. Na Sklepie/tagu używamy domyślnego zakresu (na tagu chip kategorii łączy się z tagiem). */
+	$is_cat_archive = ( $current_term instanceof WP_Term && (string) $current_term->taxonomy === 'product_cat' );
+	$cat_scope_ids  = ( $is_cat_archive && function_exists( 'mnsk7_get_plp_scope_product_ids' ) )
+		? mnsk7_get_plp_scope_product_ids( null, false )
+		: null;
+	$render_plp_nav_row( __( 'Kategoria', 'mnsk7-storefront' ), $parents, $active_parent_id, '', $cat_scope_ids );
+
+	if ( ! empty( $children ) ) {
+		$parent_label = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $parent_name ) : $parent_name;
+		$subcat_label = $parent_label !== ''
+			? sprintf( /* translators: %s: parent category name */ __( 'Podkategorie: %s', 'mnsk7-storefront' ), $parent_label )
+			: __( 'Podkategorie', 'mnsk7-storefront' );
+		$render_plp_nav_row( $subcat_label, $children, $active_child_id, 'mnsk7-plp-chips--subcats', $cat_scope_ids );
+	}
+};
+
 /* Чипсы na stronie taksonomii (kategoria/tag): rząd kategorii + rząd tagów (jak w megamenu), potem filtry atrybutów. */
 if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
 
@@ -362,26 +396,8 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 	echo '<a href="' . esc_url( $shop_all_url ) . '" class="button mnsk7-plp-reset mnsk7-plp-reset--shop">' . esc_html__( 'Wszystkie produkty', 'mnsk7-storefront' ) . '</a>';
 	echo '</div>';
 
-	$cat_row_terms = array();
-	if ( $current_term->taxonomy === 'product_cat' ) {
-		$parent_id     = $current_term->parent;
-		$cat_row_terms = get_terms( array(
-			'taxonomy'   => 'product_cat',
-			'parent'     => $parent_id,
-			'hide_empty' => true,
-		) );
-	} else {
-		$cat_row_terms = get_terms( array(
-			'taxonomy'   => 'product_cat',
-			'parent'     => 0,
-			'hide_empty' => true,
-			'number'     => 12,
-		) );
-	}
-	$cat_label = __( 'Kategoria', 'mnsk7-storefront' );
-	if ( ! is_wp_error( $cat_row_terms ) && ! empty( $cat_row_terms ) ) {
-		$render_plp_nav_row( $cat_label, $cat_row_terms, $current_term->taxonomy === 'product_cat' ? $current_term->term_id : 0 );
-	}
+	/* Rząd kategorii z hierarchią rodzic → dziecko (na kategorii product_cat pokazuje też podkategorie). */
+	$render_plp_category_nav_rows( $current_term->taxonomy === 'product_cat' ? $current_term : null );
 	$megamenu_terms = function_exists( 'mnsk7_get_megamenu_terms' ) ? mnsk7_get_megamenu_terms() : array( 'tags' => array(), 'accessories' => array() );
 	$tags_row      = isset( $megamenu_terms['tags'] ) ? $megamenu_terms['tags'] : array();
 	$tags_label    = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
@@ -398,18 +414,10 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 /* Strona Sklep (bez taksonomii): dwie grupy chipów — kategorie i tagi (jak w megamenu). */
 if ( ! $is_empty_filtered_state && is_shop() && ! $is_taxonomy ) {
 	$megamenu = function_exists( 'mnsk7_get_megamenu_terms' ) ? mnsk7_get_megamenu_terms() : array( 'cats' => array(), 'accessories' => array(), 'tags' => array() );
-	$shop_cats = isset( $megamenu['cats'] ) && is_array( $megamenu['cats'] ) ? $megamenu['cats'] : array();
-	$shop_accessories = isset( $megamenu['accessories'] ) && is_array( $megamenu['accessories'] ) ? $megamenu['accessories'] : array();
 	$shop_tags = isset( $megamenu['tags'] ) ? $megamenu['tags'] : array();
-	/* Akcesoria/zestawy to też kategorie — scalamy je z rzędem "Kategoria" zamiast osobnej, mylącej sekcji. */
-	if ( ! empty( $shop_accessories ) ) {
-		$shop_cats = array_merge( $shop_cats, $shop_accessories );
-	}
-	$cat_label = __( 'Kategoria', 'mnsk7-storefront' );
 	$tags_label = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
-	if ( ! is_wp_error( $shop_cats ) && ! empty( $shop_cats ) ) {
-		$render_plp_nav_row( $cat_label, $shop_cats, 0 );
-	}
+	/* Rząd "Kategoria" = kategorie nadrzędne (top-level + akcesoria); drill-down do podkategorii po kliknięciu rodzica. */
+	$render_plp_category_nav_rows( null );
 	if ( ! is_wp_error( $shop_tags ) && ! empty( $shop_tags ) ) {
 		$render_plp_nav_row( $tags_label, $shop_tags, 0 );
 	}

@@ -997,6 +997,21 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   color: var(--color-primary, #0c7ddb);
 }
 
+/* Hierarchia kategorii: wcięty rząd "Podkategorie" pod rzędem kategorii nadrzędnej.
+   Wizualnie podrzędny (lżejsze tło, wcięta etykieta z łącznikiem), połączony z rzędem rodzica. */
+.mnsk7-plp-chips--nav.mnsk7-plp-chips--subcats {
+  background: rgba(12, 125, 219, 0.045);
+  border-color: rgba(12, 125, 219, 0.16);
+}
+.mnsk7-plp-chips--nav.mnsk7-plp-chips--subcats .mnsk7-plp-chips__label {
+  color: var(--color-text-muted, #475569);
+  font-weight: 600;
+}
+.mnsk7-plp-chips--nav.mnsk7-plp-chips--subcats .mnsk7-plp-chip {
+  font-size: var(--fs-xs);
+  background: var(--color-white, #fff);
+}
+
 @media (max-width: 768px) {
   .mnsk7-plp-chips:not(.mnsk7-plp-chips--attrs):not(.mnsk7-plp-chips--nav) {
     flex-wrap: wrap;
@@ -1224,6 +1239,28 @@ body.tax-product_tag .mnsk7-plp-content > .col-full {
   .mnsk7-plp-chips-toggle {
     align-self: center;
     margin-left: 0;
+  }
+
+  /* Rząd podkategorii łączy się wizualnie z rzędem kategorii nadrzędnej (bez przerwy + przerywana linia). */
+  .mnsk7-plp-chips--nav.mnsk7-plp-chips--subcats {
+    margin-top: calc(var(--archive-gap-filter-rows) * -1);
+    border-top: 1px dashed rgba(12, 125, 219, 0.22);
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+  .mnsk7-plp-chips--nav.mnsk7-plp-chips--subcats .mnsk7-plp-chips__label {
+    position: relative;
+    padding-left: 1.15rem;
+  }
+  .mnsk7-plp-chips--nav.mnsk7-plp-chips--subcats .mnsk7-plp-chips__label::before {
+    content: "\21B3"; /* ↳ łącznik hierarchii */
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    color: rgba(12, 125, 219, 0.6);
+    font-size: 1rem;
+    line-height: 1;
   }
 }
 

@@ -3520,6 +3520,81 @@ function mnsk7_plp_shop_url() {
 }
 
 /**
+ * Build category navigation data for the PLP "Kategoria" filter with parent → child hierarchy.
+ *
+ * Parent (top-level) categories are always shown as the main chip row. When the current archive
+ * sits inside a parent branch, the parent's direct children are returned for an indented sub-row,
+ * so users drill down parent → child while keeping the parent context visible.
+ *
+ * @param WP_Term|null $current_term Current archive term (product_cat) or null on the main shop.
+ * @return array{parents:WP_Term[],active_parent_id:int,children:WP_Term[],active_child_id:int,parent_name:string}
+ */
+function mnsk7_get_plp_category_nav( $current_term = null ) {
+	$mega    = function_exists( 'mnsk7_get_megamenu_terms' ) ? mnsk7_get_megamenu_terms() : array();
+	$parents = ( isset( $mega['cats'] ) && is_array( $mega['cats'] ) ) ? $mega['cats'] : array();
+	if ( isset( $mega['accessories'] ) && is_array( $mega['accessories'] ) && ! empty( $mega['accessories'] ) ) {
+		$parents = array_merge( $parents, $mega['accessories'] );
+	}
+
+	$active_parent_id = 0;
+	$active_child_id  = 0;
+	$parent_name      = '';
+	$children         = array();
+
+	if ( $current_term instanceof WP_Term && (string) $current_term->taxonomy === 'product_cat' ) {
+		/* Najwyższy przodek bieżącego termu = chip rodzica, który podświetlamy. */
+		$ancestor = $current_term;
+		$guard    = 0;
+		while ( $ancestor instanceof WP_Term && (int) $ancestor->parent > 0 && $guard < 10 ) {
+			$parent = get_term( (int) $ancestor->parent, 'product_cat' );
+			if ( ! ( $parent instanceof WP_Term ) ) {
+				break;
+			}
+			$ancestor = $parent;
+			$guard++;
+		}
+		if ( $ancestor instanceof WP_Term ) {
+			$active_parent_id = (int) $ancestor->term_id;
+			$parent_name      = $ancestor->name;
+		}
+
+		/* Bieżący term to bezpośrednie dziecko przodka (lub schodzimy do tego dziecka). */
+		if ( (int) $current_term->parent > 0 ) {
+			$node  = $current_term;
+			$guard = 0;
+			while ( $node instanceof WP_Term && (int) $node->parent > 0 && (int) $node->parent !== $active_parent_id && $guard < 10 ) {
+				$node = get_term( (int) $node->parent, 'product_cat' );
+				$guard++;
+			}
+			if ( $node instanceof WP_Term ) {
+				$active_child_id = (int) $node->term_id;
+			}
+		}
+
+		if ( $active_parent_id > 0 ) {
+			$child_terms = get_terms(
+				array(
+					'taxonomy'   => 'product_cat',
+					'parent'     => $active_parent_id,
+					'hide_empty' => true,
+					'orderby'    => 'name',
+					'order'      => 'ASC',
+				)
+			);
+			$children = is_wp_error( $child_terms ) ? array() : $child_terms;
+		}
+	}
+
+	return array(
+		'parents'          => is_array( $parents ) ? $parents : array(),
+		'active_parent_id' => $active_parent_id,
+		'children'         => $children,
+		'active_child_id'  => $active_child_id,
+		'parent_name'      => $parent_name,
+	);
+}
+
+/**
  * "Broader view" URL when de-selecting a category: parent category if any, else the full shop.
  * Used to make an active category chip removable (clicking off a selected chip).
  *
@@ -3599,12 +3674,12 @@ function mnsk7_plp_nav_term_chip_url( $term, $archive_term = null ) {
  * @param string|null $exclude_param Query param to omit (for compatibility checks).
  * @return int[]
  */
-function mnsk7_get_plp_scope_product_ids( $exclude_param = null ) {
+function mnsk7_get_plp_scope_product_ids( $exclude_param = null, $include_archive_term = true ) {
 	$tax_query = array();
 	$term      = get_queried_object();
 	$on_shop   = function_exists( 'is_shop' ) && is_shop() && ! is_product_taxonomy();
 
-	if ( ! $on_shop && $term instanceof WP_Term && isset( $term->term_id ) ) {
+	if ( $include_archive_term && ! $on_shop && $term instanceof WP_Term && isset( $term->term_id ) ) {
 		$tax_query[] = array(
 			'taxonomy' => (string) $term->taxonomy,
 			'field'    => 'term_id',
@@ -3681,12 +3756,22 @@ function mnsk7_plp_term_is_compatible( $term, $product_ids ) {
 	if ( empty( $product_ids ) || ! ( $term instanceof WP_Term ) ) {
 		return true;
 	}
+	/* Kategorie produktów są hierarchiczne: produkty często są przypisane WYŁĄCZNIE do podkategorii,
+	   a nie do kategorii nadrzędnej. Sprawdzamy więc, czy term LUB którykolwiek z jego potomków
+	   ma produkty w bieżącym zakresie — inaczej rodzic z pełnymi podkategoriami byłby błędnie wyłączony. */
+	$term_ids = array( (int) $term->term_id );
+	if ( (string) $term->taxonomy === 'product_cat' ) {
+		$children = get_term_children( (int) $term->term_id, 'product_cat' );
+		if ( ! is_wp_error( $children ) && ! empty( $children ) ) {
+			$term_ids = array_merge( $term_ids, array_map( 'intval', $children ) );
+		}
+	}
 	$matches = get_terms(
 		array(
 			'taxonomy'   => (string) $term->taxonomy,
 			'hide_empty' => true,
 			'object_ids' => $product_ids,
-			'include'    => array( (int) $term->term_id ),
+			'include'    => $term_ids,
 		)
 	);
 	return ! is_wp_error( $matches ) && ! empty( $matches );
