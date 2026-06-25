@@ -386,12 +386,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     top: calc(100% - 1px);
     left: 50%;
     right: auto;
-    width: min(980px, calc(100vw - 2rem));
+    width: min(1180px, calc(100vw - 2rem));
     max-width: calc(100vw - 2rem);
-    max-height: min(74vh, 600px) !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
-    padding: 1.25rem 1.5rem;
+    max-height: none !important;
+    overflow: visible !important;
+    padding: 0.9rem 1.4rem 0.85rem;
     background: var(--color-white);
     border: 1px solid var(--color-border);
     border-radius: var(--r-md);
@@ -401,11 +400,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     visibility: hidden;
     transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
     z-index: 200;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
-    gap: 1.1rem 1.5rem;
-    align-items: start;
-    scrollbar-width: thin;
+    /* Multi-column layout balansuje wysokość kolumn → cały tree mieści się bez scrolla. */
+    display: block;
+    column-count: 5;
+    column-gap: 1.5rem;
+    column-fill: balance;
   }
   .mnsk7-header__menu li.menu-item-has-children.mnsk7-megamenu-open .sub-menu.mnsk7-megamenu,
   .mnsk7-header__menu li.menu-item-has-children:focus-within .sub-menu.mnsk7-megamenu {
@@ -417,7 +416,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     display: none !important;
   }
   .mnsk7-megamenu__footer {
-    grid-column: 1 / -1;
+    column-span: all;
   }
   .mnsk7-header__menu a,
   .mnsk7-header__link,
@@ -429,23 +428,30 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     gap: 0.4rem;
   }
 }
-/* Kolumna megamenu = kategoria nadrzędna (nagłówek) + jej podkategorie. */
+/* Kolumna megamenu = kategoria nadrzędna (nagłówek) + jej podkategorie.
+   W layoucie kolumnowym każda grupa pozostaje w całości w jednej kolumnie. */
 .mnsk7-megamenu__col {
-  margin: 0;
+  margin: 0 0 0.85rem;
   list-style: none;
   min-width: 0;
+  display: inline-block;
+  width: 100%;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  vertical-align: top;
 }
 .mnsk7-megamenu__col-title {
   display: block;
   box-sizing: border-box;
-  font-size: var(--fs-sm);
+  font-size: 0.92rem;
   font-weight: 700;
   color: var(--color-text);
   text-decoration: none;
-  border-bottom: 1px solid var(--color-border);
-  padding: 0 0 0.4rem;
-  margin: 0 0 0.4rem;
-  line-height: 1.35;
+  border-bottom: 2px solid var(--color-border);
+  padding: 0 0 0.3rem;
+  margin: 0 0 0.32rem;
+  line-height: 1.3;
   letter-spacing: 0.01em;
 }
 a.mnsk7-megamenu__col-title:hover,
@@ -465,10 +471,11 @@ a.mnsk7-megamenu__col-title:focus-visible {
 .mnsk7-megamenu__list {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0 0 0.7rem;
+  border-left: 2px solid var(--color-border);
   display: flex;
   flex-direction: column;
-  gap: 1px;
+  gap: 0;
   min-width: 0;
 }
 .mnsk7-megamenu__list li {
@@ -479,9 +486,9 @@ a.mnsk7-megamenu__col-title:focus-visible {
   display: block;
   width: 100%;
   box-sizing: border-box;
-  padding: 0.4rem 0.5rem;
-  font-size: var(--fs-sm);
-  line-height: 1.4;
+  padding: 0.22rem 0.45rem;
+  font-size: 0.82rem;
+  line-height: 1.3;
   border-radius: var(--r-sm);
   white-space: normal;
   overflow-wrap: anywhere;
@@ -509,26 +516,27 @@ a.mnsk7-megamenu__col-title:focus-visible {
   outline-offset: 2px;
 }
 .mnsk7-megamenu__footer {
-  margin: 0;
-  padding-top: 0.75rem;
-  margin-top: 0.25rem;
+  margin: 0.35rem 0 0;
+  padding-top: 0.85rem;
   border-top: 1px solid var(--color-border);
   list-style: none;
 }
 .mnsk7-megamenu__footer a {
   display: inline-flex;
   align-items: center;
-  gap: 0.3rem;
-  padding: 0.4rem 0.5rem;
+  gap: 0.35rem;
+  padding: 0.45rem 0.85rem;
   font-size: var(--fs-sm);
   font-weight: 700;
   color: var(--color-primary);
+  background: var(--color-bg-subtle, #f1f5f9);
   text-decoration: none;
   border-radius: var(--r-sm);
   line-height: 1.35;
 }
 .mnsk7-megamenu__footer a:hover {
-  background: rgba(0, 0, 0, 0.06);
+  background: var(--color-primary);
+  color: var(--color-white);
 }
 /* Legacy: zwykły sub-menu (tylko gdy bez .mnsk7-megamenu) */
 .mnsk7-header__menu .sub-menu:not(.mnsk7-megamenu) {

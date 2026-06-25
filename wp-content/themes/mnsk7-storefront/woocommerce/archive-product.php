@@ -339,6 +339,29 @@ $render_plp_attribute_section = function ( $clear_all_url ) use ( $plp_is_mobile
 
 /* Чипсы na stronie taksonomii (kategoria/tag): rząd kategorii + rząd tagów (jak w megamenu), potem filtry atrybutów. */
 if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $current_term->taxonomy ) ) {
+
+	/* Aktywna kategoria/tag jako usuwalny chip (klik w ✕ = powrót do widoku nadrzędnego / sklepu) + reset do pełnego sklepu. */
+	$active_archive_label = function_exists( 'mnsk7_normalize_catalog_term_label' )
+		? mnsk7_normalize_catalog_term_label( $current_term->name )
+		: $current_term->name;
+	$shop_all_url = function_exists( 'mnsk7_plp_shop_url' ) ? mnsk7_plp_shop_url() : ( function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' ) );
+	$shop_all_url = function_exists( 'mnsk7_plp_anchor_results' ) ? mnsk7_plp_anchor_results( $shop_all_url ) : $shop_all_url;
+	if ( $current_term->taxonomy === 'product_cat' && function_exists( 'mnsk7_plp_term_broader_url' ) ) {
+		$archive_remove_url = mnsk7_plp_term_broader_url( $current_term );
+	} else {
+		$archive_remove_url = $shop_all_url;
+	}
+	echo '<div class="mnsk7-plp-selected mnsk7-plp-selected--archive col-full">';
+	echo '<span class="mnsk7-plp-selected__label">' . esc_html__( 'Wybrana kategoria:', 'mnsk7-storefront' ) . '</span>';
+	printf(
+		'<a href="%s" class="mnsk7-plp-chip mnsk7-plp-chip--active mnsk7-plp-chip--remove" aria-label="%s">%s ×</a>',
+		esc_url( $archive_remove_url ),
+		esc_attr( sprintf( /* translators: %s: category name */ __( 'Usuń kategorię: %s', 'mnsk7-storefront' ), $active_archive_label ) ),
+		esc_html( $active_archive_label )
+	);
+	echo '<a href="' . esc_url( $shop_all_url ) . '" class="button mnsk7-plp-reset mnsk7-plp-reset--shop">' . esc_html__( 'Wszystkie produkty', 'mnsk7-storefront' ) . '</a>';
+	echo '</div>';
+
 	$cat_row_terms = array();
 	if ( $current_term->taxonomy === 'product_cat' ) {
 		$parent_id     = $current_term->parent;

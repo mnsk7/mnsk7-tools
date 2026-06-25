@@ -3507,6 +3507,40 @@ function mnsk7_build_plp_filter_url( $base_url, $set = array(), $remove = array(
 }
 
 /**
+ * Shop (full catalog) URL with safe fallback.
+ *
+ * @return string
+ */
+function mnsk7_plp_shop_url() {
+	$shop = function_exists( 'wc_get_page_permalink' ) ? (string) wc_get_page_permalink( 'shop' ) : '';
+	if ( $shop === '' ) {
+		$shop = home_url( '/sklep/' );
+	}
+	return $shop;
+}
+
+/**
+ * "Broader view" URL when de-selecting a category: parent category if any, else the full shop.
+ * Used to make an active category chip removable (clicking off a selected chip).
+ *
+ * @param WP_Term $term Currently active product category.
+ * @return string URL (anchored to results).
+ */
+function mnsk7_plp_term_broader_url( $term ) {
+	$target = mnsk7_plp_shop_url();
+	if ( $term instanceof WP_Term && (string) $term->taxonomy === 'product_cat' && (int) $term->parent > 0 ) {
+		$parent = get_term( (int) $term->parent, 'product_cat' );
+		if ( $parent instanceof WP_Term ) {
+			$plink = get_term_link( $parent );
+			if ( ! is_wp_error( $plink ) ) {
+				$target = $plink;
+			}
+		}
+	}
+	return function_exists( 'mnsk7_plp_anchor_results' ) ? mnsk7_plp_anchor_results( $target ) : $target;
+}
+
+/**
  * Chip URL for category/tag navigation with combined PLP filters.
  *
  * @param WP_Term      $term         Target term.
@@ -3519,6 +3553,14 @@ function mnsk7_plp_nav_term_chip_url( $term, $archive_term = null ) {
 	}
 	$taxonomy = (string) $term->taxonomy;
 	$slug     = (string) $term->slug;
+
+	/* Aktywny chip kategorii (jesteśmy na tym archiwum) → klik = odznaczenie do widoku nadrzędnego/sklepu. */
+	if ( $taxonomy === 'product_cat'
+		&& $archive_term instanceof WP_Term
+		&& (string) $archive_term->taxonomy === 'product_cat'
+		&& (int) $archive_term->term_id === (int) $term->term_id ) {
+		return mnsk7_plp_term_broader_url( $term );
+	}
 
 	if ( $taxonomy === 'product_tag' && $archive_term instanceof WP_Term && $archive_term->taxonomy === 'product_cat' ) {
 		$base = get_term_link( $archive_term );
