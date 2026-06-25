@@ -83,7 +83,7 @@ endif;
 						$current_archive_taxonomy = (string) $current_archive_term->taxonomy;
 					}
 				}
-				$sklep_class = $is_shop_archive ? ' class="current-menu-item menu-item-has-children"' : ' class="menu-item-has-children"';
+				$sklep_class = $is_shop_archive ? ' class="current-menu-item menu-item-has-children mnsk7-megamenu-parent"' : ' class="menu-item-has-children mnsk7-megamenu-parent"';
 				?>
 				<li<?php echo $sklep_class; ?>>
 					<a href="<?php echo esc_url( $shop_url ); ?>" class="mnsk7-menu-item-sklep" aria-haspopup="true" aria-expanded="false" aria-controls="mnsk7-menu-submenu-sklep" data-mnsk7="sklep-parent"><?php esc_html_e( 'Sklep', 'mnsk7-storefront' ); ?></a>
@@ -100,6 +100,14 @@ endif;
 						$top_tags = isset( $terms['tags'] ) ? $terms['tags'] : array();
 					}
 					?>
+					<?php
+					$mm_tree = function_exists( 'mnsk7_get_megamenu_category_tree' ) ? mnsk7_get_megamenu_category_tree() : array();
+					$mm_label = function ( $raw ) {
+						$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $raw ) : $raw;
+						$name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $name ) : $name;
+						return $name;
+					};
+					?>
 					<ul id="mnsk7-menu-submenu-sklep" class="sub-menu mnsk7-megamenu" role="menu" aria-label="<?php esc_attr_e( 'Sklep — kategorie i tagi', 'mnsk7-storefront' ); ?>">
 						<li class="mnsk7-megamenu__mobile-bar">
 							<button type="button" class="mnsk7-megamenu__back" data-mnsk7-megamenu-back aria-label="<?php esc_attr_e( 'Wróć do menu', 'mnsk7-storefront' ); ?>">
@@ -108,33 +116,49 @@ endif;
 							</button>
 						</li>
 						<?php
-						if ( ! empty( $top_cats ) ) : ?>
-						<li class="mnsk7-megamenu__group mnsk7-megamenu__group--categories">
-							<span class="mnsk7-megamenu__heading"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) ) ); ?></span>
-							<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--cols">
-								<?php
-								foreach ( $top_cats as $term ) {
-									$link = get_term_link( $term );
-									if ( is_wp_error( $link ) ) { continue; }
-									$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
-									$name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $name ) : $name;
-									$link_class = ( $current_archive_taxonomy === 'product_cat' && $current_archive_term_id === (int) $term->term_id ) ? ' class="mnsk7-megamenu__link--active"' : '';
-									echo '<li><a href="' . esc_url( $link ) . '"' . $link_class . '>' . esc_html( $name ) . '</a></li>';
+						/* Każda kolumna = kategoria nadrzędna (nagłówek-link) + jej podkategorie (drzewo Woo). */
+						foreach ( $mm_tree as $node ) {
+							$parent = isset( $node['term'] ) ? $node['term'] : null;
+							if ( ! ( $parent instanceof WP_Term ) ) {
+								continue;
+							}
+							$plink = get_term_link( $parent );
+							if ( is_wp_error( $plink ) ) {
+								continue;
+							}
+							$pname     = $mm_label( $parent->name );
+							$p_active  = ( $current_archive_taxonomy === 'product_cat' && $current_archive_term_id === (int) $parent->term_id );
+							$children  = isset( $node['children'] ) && is_array( $node['children'] ) ? $node['children'] : array();
+							echo '<li class="mnsk7-megamenu__col">';
+							echo '<a class="mnsk7-megamenu__col-title' . ( $p_active ? ' mnsk7-megamenu__link--active' : '' ) . '" href="' . esc_url( $plink ) . '">' . esc_html( $pname ) . '</a>';
+							if ( ! empty( $children ) ) {
+								echo '<ul class="mnsk7-megamenu__list">';
+								foreach ( $children as $child ) {
+									if ( ! ( $child instanceof WP_Term ) ) {
+										continue;
+									}
+									$clink = get_term_link( $child );
+									if ( is_wp_error( $clink ) ) {
+										continue;
+									}
+									$cname    = $mm_label( $child->name );
+									$c_active = ( $current_archive_taxonomy === 'product_cat' && $current_archive_term_id === (int) $child->term_id ) ? ' class="mnsk7-megamenu__link--active"' : '';
+									echo '<li><a href="' . esc_url( $clink ) . '"' . $c_active . '>' . esc_html( $cname ) . '</a></li>';
 								}
-								?>
-							</ul>
-						</li>
-						<?php endif; ?>
+								echo '</ul>';
+							}
+							echo '</li>';
+						}
+						?>
 						<?php if ( ! empty( $top_tags ) ) : ?>
-						<li class="mnsk7-megamenu__group mnsk7-megamenu__group--tags">
-							<span class="mnsk7-megamenu__heading"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) ) ); ?></span>
-							<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--tags">
+						<li class="mnsk7-megamenu__col mnsk7-megamenu__col--tags">
+							<span class="mnsk7-megamenu__col-title"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) ) ); ?></span>
+							<ul class="mnsk7-megamenu__list">
 								<?php
 								foreach ( $top_tags as $term ) {
 									$link = get_term_link( $term );
 									if ( is_wp_error( $link ) ) { continue; }
-									$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
-									$name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $name ) : $name;
+									$name = $mm_label( $term->name );
 									$link_class = ( $current_archive_taxonomy === 'product_tag' && $current_archive_term_id === (int) $term->term_id ) ? ' class="mnsk7-megamenu__link--active"' : '';
 									echo '<li><a href="' . esc_url( $link ) . '"' . $link_class . '>' . esc_html( $name ) . '</a></li>';
 								}
@@ -143,15 +167,14 @@ endif;
 						</li>
 						<?php endif; ?>
 						<?php if ( ! empty( $accessory_cats ) ) : ?>
-						<li class="mnsk7-megamenu__group mnsk7-megamenu__group--accessories">
-							<span class="mnsk7-megamenu__heading"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_accessories', __( 'Akcesoria i zestawy', 'mnsk7-storefront' ) ) ); ?></span>
-							<ul class="mnsk7-megamenu__list mnsk7-megamenu__list--tags">
+						<li class="mnsk7-megamenu__col mnsk7-megamenu__col--accessories">
+							<span class="mnsk7-megamenu__col-title"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_accessories', __( 'Akcesoria i zestawy', 'mnsk7-storefront' ) ) ); ?></span>
+							<ul class="mnsk7-megamenu__list">
 								<?php
 								foreach ( $accessory_cats as $term ) {
 									$link = get_term_link( $term );
 									if ( is_wp_error( $link ) ) { continue; }
-									$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
-									$name = function_exists( 'mnsk7_normalize_catalog_term_label' ) ? mnsk7_normalize_catalog_term_label( $name ) : $name;
+									$name = $mm_label( $term->name );
 									$link_class = ( $current_archive_taxonomy === 'product_cat' && $current_archive_term_id === (int) $term->term_id ) ? ' class="mnsk7-megamenu__link--active"' : '';
 									echo '<li><a href="' . esc_url( $link ) . '"' . $link_class . '>' . esc_html( $name ) . '</a></li>';
 								}

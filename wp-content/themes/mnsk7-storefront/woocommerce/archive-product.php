@@ -69,8 +69,10 @@ if ( is_search() && get_query_var( 'post_type' ) === 'product' ) {
 /* Scroll target: górna granica strefy wyników (chips + search + USP + lista). Po zastosowaniu filtra użytkownik ląduje tutaj, nie przy pierwszej karcie. */
 echo '<div id="mnsk7-plp-results" class="mnsk7-plp-results-anchor" aria-hidden="true"></div>';
 
-/* Render jednego rzędu chipów nawigacyjnych (kategorie/tagi): etykieta + grid, bez poziomego scrolla. */
-$plp_nav_chips_limit = $plp_is_mobile_request ? 0 : 0;
+/* Render jednego rzędu chipów nawigacyjnych (kategorie/tagi): etykieta + grid, bez poziomego scrolla.
+   Desktop: limit widocznych chipów; nadmiar chowamy za "Więcej" (spójnie dla wszystkich grup).
+   Mobile: 0 = wszystkie w modalu dropdown. */
+$plp_nav_chips_limit = $plp_is_mobile_request ? 0 : 12;
 $plp_archive_term    = ( $is_taxonomy && $current_term instanceof WP_Term ) ? $current_term : null;
 $plp_nav_scope_ids   = function_exists( 'mnsk7_get_plp_scope_product_ids' ) ? mnsk7_get_plp_scope_product_ids() : array();
 $render_plp_nav_row = function ( $label, $terms, $active_term_id = 0 ) use ( $plp_nav_chips_limit, $plp_is_mobile_request, $plp_archive_term, $plp_nav_scope_ids ) {
@@ -353,7 +355,7 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 			'number'     => 12,
 		) );
 	}
-	$cat_label = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
+	$cat_label = __( 'Kategoria', 'mnsk7-storefront' );
 	if ( ! is_wp_error( $cat_row_terms ) && ! empty( $cat_row_terms ) ) {
 		$render_plp_nav_row( $cat_label, $cat_row_terms, $current_term->taxonomy === 'product_cat' ? $current_term->term_id : 0 );
 	}
@@ -373,20 +375,20 @@ if ( ! $is_empty_filtered_state && $is_taxonomy && $current_term && isset( $curr
 /* Strona Sklep (bez taksonomii): dwie grupy chipów — kategorie i tagi (jak w megamenu). */
 if ( ! $is_empty_filtered_state && is_shop() && ! $is_taxonomy ) {
 	$megamenu = function_exists( 'mnsk7_get_megamenu_terms' ) ? mnsk7_get_megamenu_terms() : array( 'cats' => array(), 'accessories' => array(), 'tags' => array() );
-	$shop_cats = isset( $megamenu['cats'] ) ? $megamenu['cats'] : array();
-	$shop_accessories = isset( $megamenu['accessories'] ) ? $megamenu['accessories'] : array();
+	$shop_cats = isset( $megamenu['cats'] ) && is_array( $megamenu['cats'] ) ? $megamenu['cats'] : array();
+	$shop_accessories = isset( $megamenu['accessories'] ) && is_array( $megamenu['accessories'] ) ? $megamenu['accessories'] : array();
 	$shop_tags = isset( $megamenu['tags'] ) ? $megamenu['tags'] : array();
-	$cat_label = apply_filters( 'mnsk7_megamenu_heading_categories', __( 'Rodzaje frezów', 'mnsk7-storefront' ) );
+	/* Akcesoria/zestawy to też kategorie — scalamy je z rzędem "Kategoria" zamiast osobnej, mylącej sekcji. */
+	if ( ! empty( $shop_accessories ) ) {
+		$shop_cats = array_merge( $shop_cats, $shop_accessories );
+	}
+	$cat_label = __( 'Kategoria', 'mnsk7-storefront' );
 	$tags_label = apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) );
-	$accessories_label = apply_filters( 'mnsk7_megamenu_heading_accessories', __( 'Akcesoria i zestawy', 'mnsk7-storefront' ) );
 	if ( ! is_wp_error( $shop_cats ) && ! empty( $shop_cats ) ) {
 		$render_plp_nav_row( $cat_label, $shop_cats, 0 );
 	}
 	if ( ! is_wp_error( $shop_tags ) && ! empty( $shop_tags ) ) {
 		$render_plp_nav_row( $tags_label, $shop_tags, 0 );
-	}
-	if ( ! is_wp_error( $shop_accessories ) && ! empty( $shop_accessories ) ) {
-		$render_plp_nav_row( $accessories_label, $shop_accessories, 0 );
 	}
 	$shop_clear = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'shop' ) : '';
 	$shop_clear = $shop_clear ? ( function_exists( 'mnsk7_plp_anchor_results' ) ? mnsk7_plp_anchor_results( $shop_clear ) : $shop_clear ) : home_url( '/' );

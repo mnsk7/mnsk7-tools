@@ -317,36 +317,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   transform: rotate(45deg);
   vertical-align: 0.15em;
 }
-/* Megamenu Sklep: szeroki panel, grid bez poziomego scrolla (e-commerce pattern) */
+/* Megamenu Sklep (rebuilt): panel zawsze w obrębie viewportu, kolumny = drzewo kategorii. */
 .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
   list-style: none;
   margin: 0;
-  padding: 1rem 1.25rem 0.85rem;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  min-width: min(920px, calc(100vw - 2rem));
-  max-width: min(920px, calc(100vw - 2rem));
-  width: min(920px, calc(100vw - 2rem));
-  max-height: min(72vh, 540px);
-  overflow-x: hidden;
-  overflow-y: auto;
-  background: var(--color-white);
-  border: 1px solid var(--color-border);
-  border-radius: var(--r-md);
-  box-shadow: var(--shadow-md);
-  opacity: 0;
-  visibility: hidden;
-  transform: translateY(6px);
-  transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  gap: 0.85rem;
-  pointer-events: auto;
   box-sizing: border-box;
-  scrollbar-gutter: stable;
-  scrollbar-width: thin;
 }
 .mnsk7-megamenu__mobile-bar {
   display: none;
@@ -402,46 +377,47 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     max-height: none !important;
     overflow-y: visible !important;
   }
+  /* Containing block = sticky header (full width), więc panel nigdy nie wyjdzie poza viewport. */
+  .mnsk7-header__menu li.menu-item-has-children.mnsk7-megamenu-parent {
+    position: static;
+  }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
-    max-height: min(72vh, 540px) !important;
-    overflow-x: hidden !important;
-    overflow-y: auto !important;
+    position: absolute;
+    top: calc(100% - 1px);
     left: 50%;
     right: auto;
-    transform: translateX(-50%) translateY(6px);
+    width: min(980px, calc(100vw - 2rem));
+    max-width: calc(100vw - 2rem);
+    max-height: min(74vh, 600px) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    padding: 1.25rem 1.5rem;
+    background: var(--color-white);
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16);
+    transform: translateX(-50%) translateY(8px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
+    z-index: 200;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+    gap: 1.1rem 1.5rem;
+    align-items: start;
+    scrollbar-width: thin;
   }
   .mnsk7-header__menu li.menu-item-has-children.mnsk7-megamenu-open .sub-menu.mnsk7-megamenu,
   .mnsk7-header__menu li.menu-item-has-children:focus-within .sub-menu.mnsk7-megamenu {
+    opacity: 1;
+    visibility: visible;
     transform: translateX(-50%) translateY(0);
-  }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
-    display: grid;
-    grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr);
-    grid-template-areas:
-      "cats cats"
-      "tags acc"
-      "foot foot";
-    gap: 0.85rem 1.25rem;
-    align-items: start;
   }
   .mnsk7-megamenu__mobile-bar {
     display: none !important;
   }
-  .mnsk7-megamenu__group--categories {
-    grid-area: cats;
-  }
-  .mnsk7-megamenu__group--tags {
-    grid-area: tags;
-  }
-  .mnsk7-megamenu__group--accessories {
-    grid-area: acc;
-  }
   .mnsk7-megamenu__footer {
-    grid-area: foot;
-  }
-  .mnsk7-megamenu__group--accessories:empty,
-  .mnsk7-megamenu__group--tags:empty {
-    display: none;
+    grid-column: 1 / -1;
   }
   .mnsk7-header__menu a,
   .mnsk7-header__link,
@@ -453,38 +429,47 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     gap: 0.4rem;
   }
 }
-.mnsk7-megamenu__group {
+/* Kolumna megamenu = kategoria nadrzędna (nagłówek) + jej podkategorie. */
+.mnsk7-megamenu__col {
   margin: 0;
   list-style: none;
   min-width: 0;
 }
-.mnsk7-megamenu__heading {
+.mnsk7-megamenu__col-title {
   display: block;
-  font-size: var(--fs-xs);
+  box-sizing: border-box;
+  font-size: var(--fs-sm);
   font-weight: 700;
-  color: var(--color-text-muted, #64748b);
-  text-transform: uppercase;
-  letter-spacing: 0.07em;
-  margin-bottom: 0.55rem;
-  padding-bottom: 0.4rem;
+  color: var(--color-text);
+  text-decoration: none;
   border-bottom: 1px solid var(--color-border);
-  line-height: 1.3;
+  padding: 0 0 0.4rem;
+  margin: 0 0 0.4rem;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+}
+a.mnsk7-megamenu__col-title:hover,
+a.mnsk7-megamenu__col-title:focus-visible {
+  color: var(--color-primary);
+}
+a.mnsk7-megamenu__col-title:focus {
+  outline: none;
+}
+a.mnsk7-megamenu__col-title:focus-visible {
+  outline: 2px solid var(--color-focus, var(--color-primary));
+  outline-offset: 2px;
+}
+.mnsk7-megamenu__col--tags .mnsk7-megamenu__col-title {
+  color: #0f766e;
 }
 .mnsk7-megamenu__list {
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  gap: 0.2rem 0.65rem;
-  align-content: start;
-  align-items: start;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
   min-width: 0;
-}
-.mnsk7-megamenu__list--cols {
-  grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
-}
-.mnsk7-megamenu__list--tags {
-  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
 }
 .mnsk7-megamenu__list li {
   margin: 0;
@@ -494,17 +479,15 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   display: block;
   width: 100%;
   box-sizing: border-box;
-  padding: 0.42rem 0.55rem;
+  padding: 0.4rem 0.5rem;
   font-size: var(--fs-sm);
-  line-height: 1.45;
+  line-height: 1.4;
   border-radius: var(--r-sm);
   white-space: normal;
   overflow-wrap: anywhere;
-  word-break: normal;
-  hyphens: auto;
   text-decoration: none;
   border-bottom: none;
-  color: var(--color-text);
+  color: var(--color-text-muted, #475569);
   min-width: 0;
   transition: background-color 0.12s ease, color 0.12s ease;
 }
@@ -512,10 +495,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   background: rgba(0, 0, 0, 0.06);
   color: var(--color-text);
 }
+.mnsk7-megamenu__col-title.mnsk7-megamenu__link--active,
 .mnsk7-megamenu__list a.mnsk7-megamenu__link--active,
 .mnsk7-megamenu__footer a.mnsk7-megamenu__link--active {
-  background: rgba(12, 125, 219, 0.1);
-  color: var(--color-text);
+  color: var(--color-primary);
   font-weight: 700;
 }
 .mnsk7-megamenu__list a:focus {
@@ -527,36 +510,25 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
 }
 .mnsk7-megamenu__footer {
   margin: 0;
-  padding-top: 0.5rem;
-  margin-top: 0.2rem;
+  padding-top: 0.75rem;
+  margin-top: 0.25rem;
   border-top: 1px solid var(--color-border);
   list-style: none;
 }
 .mnsk7-megamenu__footer a {
-  display: inline-block;
-  padding: 0.35rem 0.5rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.4rem 0.5rem;
   font-size: var(--fs-sm);
-  font-weight: 600;
-  color: var(--color-text);
+  font-weight: 700;
+  color: var(--color-primary);
   text-decoration: none;
   border-radius: var(--r-sm);
   line-height: 1.35;
 }
 .mnsk7-megamenu__footer a:hover {
   background: rgba(0, 0, 0, 0.06);
-}
-@media (max-width: 419px) {
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
-    max-width: calc(100vw - 1.5rem);
-    width: calc(100vw - 1.5rem);
-    min-width: 0;
-    padding: 0.65rem 0.85rem 0.55rem;
-    gap: 0.65rem;
-  }
-  .mnsk7-megamenu__list--cols,
-  .mnsk7-megamenu__list--tags {
-    grid-template-columns: 1fr;
-  }
 }
 /* Legacy: zwykły sub-menu (tylko gdy bez .mnsk7-megamenu) */
 .mnsk7-header__menu .sub-menu:not(.mnsk7-megamenu) {
@@ -664,24 +636,22 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     max-height: none;
     overflow: visible;
   }
-  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__group {
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col {
     margin-bottom: 0;
   }
-  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__heading {
-    font-size: 0.6875rem;
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col-title {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--fs-sm);
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--color-text-muted);
-    margin-bottom: 0.35rem;
-    padding-left: 0.75rem;
-    padding-right: 0.5rem;
-    border-bottom: none;
+    color: var(--color-text);
+    margin: 0;
+    padding: 0.4rem 0.75rem;
+    border-bottom: 1px solid var(--color-border);
     line-height: 1.3;
   }
-  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list,
-  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list--cols,
-  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list--tags {
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list {
     grid-template-columns: 1fr;
     gap: 0.125rem;
   }

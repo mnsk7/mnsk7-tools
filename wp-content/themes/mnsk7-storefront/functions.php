@@ -1002,6 +1002,45 @@ function mnsk7_get_megamenu_terms() {
 }
 
 /**
+ * Megamenu category TREE: top-level "core" cutter families with their direct children.
+ * Renders parent categories as column headers and child categories beneath them.
+ *
+ * @return array<int,array{term:WP_Term,children:WP_Term[]}>
+ */
+function mnsk7_get_megamenu_category_tree() {
+	$cached = get_transient( 'mnsk7_megamenu_tree' );
+	if ( is_array( $cached ) ) {
+		return $cached;
+	}
+	$tree = array();
+	if ( taxonomy_exists( 'product_cat' ) ) {
+		$top     = mnsk7_fetch_top_level_product_categories();
+		$grouped = function_exists( 'mnsk7_split_catalog_category_terms' ) ? mnsk7_split_catalog_category_terms( $top ) : array( 'core' => $top );
+		$core    = isset( $grouped['core'] ) ? $grouped['core'] : array();
+		foreach ( $core as $parent ) {
+			if ( ! ( $parent instanceof WP_Term ) ) {
+				continue;
+			}
+			$children = get_terms(
+				array(
+					'taxonomy'   => 'product_cat',
+					'parent'     => (int) $parent->term_id,
+					'hide_empty' => true,
+					'orderby'    => 'name',
+					'order'      => 'ASC',
+				)
+			);
+			$tree[] = array(
+				'term'     => $parent,
+				'children' => is_wp_error( $children ) ? array() : $children,
+			);
+		}
+	}
+	set_transient( 'mnsk7_megamenu_tree', $tree, 12 * HOUR_IN_SECONDS );
+	return $tree;
+}
+
+/**
  * Whether a top-level product category should be treated as accessory/navigation-secondary.
  *
  * @param WP_Term $term Product category term.
@@ -1080,6 +1119,7 @@ function mnsk7_split_catalog_category_terms( $terms ) {
 
 function mnsk7_clear_megamenu_transient() {
 	delete_transient( 'mnsk7_megamenu_terms' );
+	delete_transient( 'mnsk7_megamenu_tree' );
 }
 add_action( 'edited_product_cat', 'mnsk7_clear_megamenu_transient' );
 add_action( 'created_product_cat', 'mnsk7_clear_megamenu_transient' );
@@ -1451,6 +1491,14 @@ add_action( 'wp_footer', function () {
 					if (e.key === 'Escape' && megamenuLi.classList.contains('mnsk7-megamenu-open')) {
 						setMegamenuExpanded(false);
 						if (megamenuLink) megamenuLink.focus();
+					}
+				});
+				// Outside click closes the megamenu (desktop).
+				document.addEventListener('click', function(e) {
+					if (window.innerWidth < DESKTOP_MIN) return;
+					if (megamenuLi.classList.contains('mnsk7-megamenu-open') && !megamenuLi.contains(e.target)) {
+						clearTimeout(openTimer);
+						setMegamenuExpanded(false);
 					}
 				});
 			}
@@ -1981,12 +2029,16 @@ add_action( 'wp_footer', function () {
 	?>
 	<script>
 	(function() {
+		var ajaxUrl = <?php echo wp_json_encode( $ajax_url ); ?>;
+		var loadMoreNonce = <?php echo wp_json_encode( wp_create_nonce( 'mnsk7_plp_load_more' ) ); ?>;
+		function initLoadMore() {
 		var wrap = document.querySelector('.mnsk7-plp-load-more-wrap');
 		if (!wrap) return;
 		var btn = wrap.querySelector('.mnsk7-plp-load-more');
 		var tbody = document.querySelector('.mnsk7-product-table tbody');
 		if (!btn || !tbody) return;
-		var ajaxUrl = <?php echo wp_json_encode( $ajax_url ); ?>;
+		if (btn.dataset.mnsk7Bound === '1') return;
+		btn.dataset.mnsk7Bound = '1';
 		btn.addEventListener('click', function(e) {
 			e.preventDefault();
 			if (btn.disabled) return;
@@ -2006,7 +2058,7 @@ add_action( 'wp_footer', function () {
 			form.append('term', term);
 			form.append('orderby', orderby);
 			form.append('order', order);
-			form.append('nonce', <?php echo wp_json_encode( wp_create_nonce( 'mnsk7_plp_load_more' ) ); ?>);
+			form.append('nonce', loadMoreNonce);
 			fetch(ajaxUrl, { method: 'POST', body: form, credentials: 'same-origin' })
 				.then(function(r) { return r.json(); })
 				.then(function(data) {
@@ -2028,10 +2080,113 @@ add_action( 'wp_footer', function () {
 					btn.classList.remove('loading');
 				});
 		});
+		}
+		window.mnsk7InitPlpLoadMore = initLoadMore;
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initLoadMore);
+		} else {
+			initLoadMore();
+		}
 	})();
 	</script>
 	<?php
 }, 20 );
+
+/* 1e quater. PLP filtry przez AJAX: klik w chip/filtr odświeża listę produktów + URL (pushState),
+   bez przeładowania całej strony. Fallback bez JS: linki działają normalnie (pełny reload).
+   Zakres podmiany: #main (filtry + breadcrumb + lista). Dodanie do koszyka działa dalej (delegowane handlery Woo). */
+add_action( 'wp_footer', function () {
+	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_category() && ! is_product_tag() ) ) {
+		return;
+	}
+	?>
+	<script>
+	(function() {
+		if (!window.fetch || !window.history || !window.history.pushState || !window.DOMParser) return;
+		var main = document.getElementById('main');
+		if (!main) return;
+		var FILTER_CONTAINERS = '.mnsk7-plp-chips, .mnsk7-plp-selected, .mnsk7-bl-filters, .mnsk7-plp-empty';
+
+		function sameOrigin(url) {
+			try { return new URL(url, window.location.href).origin === window.location.origin; }
+			catch (e) { return false; }
+		}
+		function stripResultsHash(url) {
+			try {
+				var u = new URL(url, window.location.href);
+				if (u.hash === '#mnsk7-plp-results') { u.hash = ''; }
+				return u.href;
+			} catch (e) { return url; }
+		}
+		function setBusy(b) {
+			main.setAttribute('aria-busy', b ? 'true' : 'false');
+			main.classList.toggle('mnsk7-plp-loading', !!b);
+		}
+		function reinit() {
+			if (typeof window.mnsk7InitPlpFilters === 'function') { try { window.mnsk7InitPlpFilters(); } catch (e) {} }
+			if (typeof window.mnsk7InitPlpLoadMore === 'function') { try { window.mnsk7InitPlpLoadMore(); } catch (e) {} }
+			if (window.jQuery) { try { window.jQuery(document.body).trigger('wc_fragment_refresh'); } catch (e) {} }
+			try { document.dispatchEvent(new CustomEvent('mnsk7:plp:updated')); } catch (e) {}
+		}
+		var reqSeq = 0;
+		function loadUrl(url, push) {
+			if (!sameOrigin(url)) { window.location.href = url; return; }
+			var reqId = ++reqSeq;
+			setBusy(true);
+			fetch(url, { credentials: 'same-origin', headers: { 'X-Requested-With': 'XMLHttpRequest' } })
+				.then(function(r) { return r.text(); })
+				.then(function(html) {
+					if (reqId !== reqSeq) { return; }
+					var doc = new DOMParser().parseFromString(html, 'text/html');
+					var newMain = doc.getElementById('main');
+					if (!newMain) { window.location.href = url; return; }
+					main.innerHTML = newMain.innerHTML;
+					if (doc.title) { document.title = doc.title; }
+					if (push) {
+						try { window.history.pushState({ mnsk7plp: 1 }, '', stripResultsHash(url)); } catch (e) {}
+					}
+					reinit();
+					var anchor = document.getElementById('mnsk7-plp-results');
+					if (anchor && anchor.scrollIntoView) { anchor.scrollIntoView({ behavior: 'smooth', block: 'start' }); }
+					setBusy(false);
+				})
+				.catch(function() { window.location.href = url; });
+		}
+
+		document.addEventListener('click', function(e) {
+			if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) { return; }
+			var a = e.target.closest ? e.target.closest('a[href]') : null;
+			if (!a || !main.contains(a)) { return; }
+			if (a.target === '_blank' || a.classList.contains('mnsk7-plp-load-more')) { return; }
+			if (!a.closest(FILTER_CONTAINERS)) { return; }
+			if (!sameOrigin(a.href)) { return; }
+			e.preventDefault();
+			loadUrl(a.href, true);
+		});
+
+		// Sortowanie: capture-phase, własny AJAX zachowujący filtry z URL; blokuje natywny pełny reload Woo.
+		document.addEventListener('change', function(e) {
+			var sel = e.target;
+			if (!sel || !sel.matches || !sel.matches('select.orderby, .woocommerce-ordering select[name="orderby"]')) { return; }
+			if (!main.contains(sel)) { return; }
+			e.preventDefault();
+			if (e.stopImmediatePropagation) { e.stopImmediatePropagation(); }
+			var u;
+			try { u = new URL(window.location.href); } catch (err) { return; }
+			u.searchParams.set('orderby', sel.value);
+			u.searchParams.delete('paged');
+			u.searchParams.delete('product-page');
+			u.hash = '';
+			loadUrl(u.href, true);
+		}, true);
+
+		window.addEventListener('popstate', function() {
+			loadUrl(window.location.href, false);
+		});
+	})();
+	</script>
+	<?php
+}, 22 );
 
 /* PLP layout sync: when viewport crosses mobile breakpoint, reload once to render proper server layout (table/list). */
 add_action( 'wp_footer', function () {
@@ -2222,10 +2377,15 @@ add_action( 'wp_footer', function () {
 				el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 			}
 		}
-		function init() {
+		// Re-runnable: po podmianie listy przez AJAX trzeba ponownie podpiąć toggcle/dropdowny.
+		function reinitControls() {
 			initPlpToggles();
 			enhanceMobileFallbackFilterRows();
 			initPlpDropdownModals();
+		}
+		window.mnsk7InitPlpFilters = reinitControls;
+		function init() {
+			reinitControls();
 			scrollToResults();
 		}
 		if (document.readyState === 'loading') {
