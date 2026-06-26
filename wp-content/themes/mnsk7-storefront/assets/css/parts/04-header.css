@@ -388,24 +388,29 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     max-height: none !important;
     overflow-y: visible !important;
   }
-  /* Containing block = sticky header (full width), więc panel nigdy nie wyjdzie poza viewport. */
+  /* Containing block = sticky header (pełna szerokość) → panel nigdy nie wychodzi poza viewport. */
   .mnsk7-header__menu li.menu-item-has-children.mnsk7-megamenu-parent {
     position: static;
   }
+  /* ── Megamenu desktop: ADAPTACYJNY PO SZEROKOŚCI ──────────────────────────
+     Panel ma klamrowaną szerokość (skaluje się z viewportem, ale capped i nigdy
+     nie wychodzi poza ekran w poziomie) i jest wyśrodkowany. Wysokość ograniczona
+     do przestrzeni pod sticky headerem — to TYLKO zabezpieczenie; przy standardowych
+     rozdzielczościach całość (15 kart + stopka) mieści się bez wewnętrznego scrolla.
+     Liczbę kolumn wyznacza szerokość panelu (column-width), a column-fill: balance
+     pakuje karty o różnej wysokości (0–10 podkategorii) kompaktowo:
+       1024px ≈ 4 kol. · ~1100px ≈ 5 kol. · 1280–1920px ≈ 6 kol. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
     position: absolute;
     top: calc(100% - 1px);
     left: 50%;
     right: auto;
-    width: min(1180px, calc(100vw - 2rem));
-    max-width: calc(100vw - 2rem);
-    /* Panel nigdy nie przekracza dostępnej wysokości viewportu pod sticky headerem
-       (promo bar + header + zapas). Dzięki temu na ekranach 15" (np. 1366x768 /
-       1280x720) całe menu — wszystkie karty + stopka — mieści się bez ucięcia. */
-    max-height: calc(100vh - var(--mnsk7-promo-h, 2.5rem) - var(--header-h, 56px) - 1.25rem) !important;
-    overflow-x: hidden !important;
+    width: min(1240px, calc(100vw - 2.5rem));
+    max-width: calc(100vw - 2.5rem);
+    max-height: calc(100vh - var(--mnsk7-promo-h, 2.5rem) - var(--header-h, 56px) - 1.5rem) !important;
+    overflow-x: hidden;
     overflow-y: auto !important;
-    padding: 0.9rem 1.4rem 0.85rem;
+    padding: 1rem 1.4rem 0.9rem;
     background: var(--color-white);
     border: 1px solid var(--color-border);
     border-radius: var(--r-md);
@@ -415,17 +420,16 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     visibility: hidden;
     transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
     z-index: 200;
-    /* Blok przewijany pionowo (ostateczność na bardzo niskich ekranach); stopka jest
-       sticky i zawsze widoczna. W typowych przypadkach treść mieści się bez scrolla. */
     display: block;
   }
-  /* Obszar kart = multi-column packing (balansuje wysokość → cały tree krótszy).
-     Więcej kolumn = niższy panel; na 1180px daje ~6 kolumn. */
+  /* Obszar kart: kolumny CSS o stałej szerokości → liczba kolumn skaluje się
+     płynnie z szerokością panelu; column-fill: balance wyrównuje wysokość kolumn,
+     więc karty o skrajnie różnej wysokości pakują się kompaktowo bez scrolla. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards {
     display: block;
     min-width: 0;
-    columns: 11.5rem;
-    column-gap: 0.85rem;
+    column-width: 11rem;
+    column-gap: 1rem;
     column-fill: balance;
   }
   .mnsk7-header__menu li.menu-item-has-children.mnsk7-megamenu-open .sub-menu.mnsk7-megamenu,
@@ -492,99 +496,37 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     gap: 0.4rem;
   }
 }
-/* ── Megamenu: adaptacja do WYSOKOŚCI viewportu (laptopy 15": 1366x768, 1280x720…) ──
-   Na niskich ekranach przełączamy multi-column na column-fill:auto z JAWNĄ wysokością
-   równą dostępnej przestrzeni — karty pakują się kolumnami "od góry do dołu" i cały
-   tree mieści się bez pionowego scrolla (więcej kolumn = krótszy panel). Dodatkowo
-   ciaśniejsza typografia/odstępy. Stopka jest sticky, więc zawsze widoczna.
-   UWAGA: column-fill:balance (domyślny) na tych ekranach uparcie zostawiał ~5 kolumn
-   i zawyżał wysokość → stąd auto + height. Przy skrajnie niskich ekranach (<=579px)
-   wracamy do balance + scroll panelu (sticky footer) jako udokumentowana ostateczność. */
-@media (min-width: 1024px) and (max-height: 820px) {
+/* ── Krótkie ekrany (< ~600px dostępnej wysokości: laptopy z paskiem zakładek/
+   rozszerzeniami) — JEDYNY height-fallback. Zwężamy kolumny (→ więcej, niższych
+   kolumn) i lekko zagęszczamy typografię/odstępy, by 15 kart + stopka nadal
+   mieściło się bez scrolla. Bez hardcodowanej wysokości i column-fill:auto —
+   balance pakuje karty samodzielnie. Stopka pozostaje sticky; gdyby ekran był
+   skrajnie niski, panel ma overflow-y:auto jako ostateczność. */
+@media (min-width: 1024px) and (max-height: 600px) {
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
-    padding: 0.7rem 1.1rem 0.65rem;
-  }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards {
-    column-fill: auto;
-    /* Wysokość obszaru kart = viewport - promo - header - (padding panelu + stopka + zapas). */
-    height: calc(100vh - var(--mnsk7-promo-h, 2.5rem) - var(--header-h, 56px) - 6.5rem);
-    column-width: 9.5rem;
-    column-gap: 0.7rem;
-  }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col {
-    padding: 0.45rem 0.6rem 0.5rem;
-    margin: 0 0 0.7rem;
-  }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col-title {
-    padding: 0 0 0.28rem;
-    margin: 0 0 0.32rem;
-    font-size: 0.84rem;
-    line-height: 1.25;
-  }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list a {
-    padding: 0.16rem 0.4rem;
-    font-size: 0.8rem;
-    line-height: 1.25;
-  }
-}
-@media (min-width: 1024px) and (max-height: 720px) {
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
-    padding: 0.55rem 0.95rem 0.55rem;
+    padding: 0.65rem 1.05rem 0.6rem;
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards {
     column-width: 9rem;
-    column-gap: 0.6rem;
+    column-gap: 0.7rem;
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col {
-    padding: 0.38rem 0.55rem 0.42rem;
-    margin: 0 0 0.55rem;
+    padding: 0.4rem 0.55rem 0.45rem;
+    margin: 0 0 0.6rem;
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col-title {
-    padding: 0 0 0.24rem;
-    margin: 0 0 0.26rem;
+    padding: 0 0 0.26rem;
+    margin: 0 0 0.3rem;
     font-size: 0.82rem;
-    line-height: 1.2;
+    line-height: 1.22;
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list a {
     padding: 0.12rem 0.38rem;
     font-size: 0.78rem;
-    line-height: 1.2;
+    line-height: 1.22;
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__footer {
-    padding-top: 0.45rem;
-  }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__footer a {
-    padding: 0.32rem 0.7rem;
-  }
-}
-@media (min-width: 1024px) and (max-height: 640px) {
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards {
-    column-width: 8.5rem;
-    column-gap: 0.5rem;
-  }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col {
-    padding: 0.3rem 0.45rem 0.34rem;
-    margin: 0 0 0.45rem;
-  }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col-title {
-    padding: 0 0 0.2rem;
-    margin: 0 0 0.22rem;
-    font-size: 0.8rem;
-    line-height: 1.15;
-  }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list a {
-    padding: 0.08rem 0.32rem;
-    font-size: 0.76rem;
-    line-height: 1.18;
-  }
-}
-/* Ostateczność: ekran tak niski, że nawet po zagęszczeniu i column-fill:auto karty
-   wymagałyby więcej kolumn niż mieści szerokość. Wracamy do balansu + delikatny
-   scroll panelu; stopka pozostaje sticky i zawsze widoczna. */
-@media (min-width: 1024px) and (max-height: 579px) {
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards {
-    column-fill: balance;
-    height: auto;
+    padding-top: 0.5rem;
   }
 }
 /* Kolumna megamenu = kategoria nadrzędna (nagłówek) + jej podkategorie.
