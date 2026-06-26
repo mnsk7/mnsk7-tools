@@ -881,7 +881,8 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   page-break-inside: avoid;
   vertical-align: top;
 }
-.mnsk7-megamenu__col-title {
+.mnsk7-megamenu__col-title,
+a.mnsk7-megamenu__col-title:visited {
   display: block;
   box-sizing: border-box;
   font-size: 0.92rem;
@@ -922,12 +923,17 @@ a.mnsk7-megamenu__col-title:focus-visible {
   margin: 0;
   min-width: 0;
 }
-.mnsk7-megamenu__list a {
+/* Wszystkie linki podkategorii w karcie mają JEDEN, spójny styl (kolor + waga),
+   niezależnie od aktualnie otwartej strony. Stan "current" nie zmienia bazowego
+   wyglądu w dropdownie — tylko hover/focus różnicuje (Baymard: brak losowych akcentów). */
+.mnsk7-megamenu__list a,
+.mnsk7-megamenu__list a:visited {
   display: block;
   width: 100%;
   box-sizing: border-box;
   padding: 0.22rem 0.45rem;
   font-size: 0.82rem;
+  font-weight: 400;
   line-height: 1.3;
   border-radius: var(--r-sm);
   white-space: normal;
@@ -938,15 +944,23 @@ a.mnsk7-megamenu__col-title:focus-visible {
   min-width: 0;
   transition: background-color 0.12s ease, color 0.12s ease;
 }
-.mnsk7-megamenu__list a:hover {
+.mnsk7-megamenu__list a:hover,
+.mnsk7-megamenu__list a:focus-visible {
   background: rgba(0, 0, 0, 0.06);
   color: var(--color-text);
+  text-decoration: underline;
 }
+/* Neutralizacja "current"/active w megamenu desktop: nagłówki kart i podkategorie
+   pozostają identyczne jak rodzeństwo (bez primary/bold), by uniknąć szary-vs-czarny. */
 .mnsk7-megamenu__col-title.mnsk7-megamenu__link--active,
-.mnsk7-megamenu__list a.mnsk7-megamenu__link--active,
-.mnsk7-megamenu__footer a.mnsk7-megamenu__link--active {
-  color: var(--color-primary);
+a.mnsk7-megamenu__col-title.mnsk7-megamenu__link--active:visited {
+  color: var(--color-text);
   font-weight: 700;
+}
+.mnsk7-megamenu__list a.mnsk7-megamenu__link--active,
+.mnsk7-megamenu__list a.mnsk7-megamenu__link--active:visited {
+  color: var(--color-text-muted, #475569);
+  font-weight: 400;
 }
 .mnsk7-megamenu__list a:focus {
   outline: none;
