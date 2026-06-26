@@ -1997,7 +1997,7 @@ body .site .site-content {
     flex-direction: column;
     gap: 0;
     transform: translateX(100%);
-    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.28s;
     visibility: hidden;
     opacity: 1;
     overflow-y: auto;
@@ -2012,10 +2012,10 @@ body .site .site-content {
     top: 0;
     z-index: 3;
   }
-  /* Otwarty poziom — wsuwa się do widoku. */
+  /* Otwarty poziom — wsuwa się do widoku (!important: wygrywa nad bazową regułą panelu o wyższej specyficzności). */
   .mnsk7-header__nav .mnsk7-header__menu .mnsk7-drawer__panel--open {
-    transform: translateX(0);
-    visibility: visible;
+    transform: translateX(0) !important;
+    visibility: visible !important;
   }
 
   /* Wiersze kategorii (poziom 1) */

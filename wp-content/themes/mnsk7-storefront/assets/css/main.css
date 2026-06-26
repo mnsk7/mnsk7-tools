@@ -2398,7 +2398,7 @@ body .site .site-content {
     flex-direction: column;
     gap: 0;
     transform: translateX(100%);
-    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.28s;
     visibility: hidden;
     opacity: 1;
     overflow-y: auto;
@@ -2413,10 +2413,10 @@ body .site .site-content {
     top: 0;
     z-index: 3;
   }
-  /* Otwarty poziom — wsuwa się do widoku. */
+  /* Otwarty poziom — wsuwa się do widoku (!important: wygrywa nad bazową regułą panelu o wyższej specyficzności). */
   .mnsk7-header__nav .mnsk7-header__menu .mnsk7-drawer__panel--open {
-    transform: translateX(0);
-    visibility: visible;
+    transform: translateX(0) !important;
+    visibility: visible !important;
   }
 
   /* Wiersze kategorii (poziom 1) */
@@ -14771,80 +14771,82 @@ body.home .mnsk7-content,
   }
 }
 
-/* Prod mobile final: compact readable Sklep accordion. */
+/* Prod mobile final: natywny przesuwany drawer (ładowany ostatni, wygrywa nad legacy).
+   Pozycjonowanie/transform/visibility paneli pochodzą z 04-header.css; tutaj tylko
+   doprecyzowanie warstwy "prod" (padding/tło/wiersze) zgodne z drawerem. */
 @media (max-width: 1023px) {
   .mnsk7-header__nav .mnsk7-header__menu {
-    padding: 0.5rem 0.75rem 0.85rem !important;
-    gap: 0.4rem !important;
+    padding: 0 !important;
+    gap: 0 !important;
     background: #fff !important;
-    border-top: 1px solid rgba(15, 23, 42, 0.08);
-    max-height: calc(100vh - var(--header-h, 56px) - env(safe-area-inset-top, 0px)) !important;
+    border-top: 0 !important;
+    overflow: hidden !important;
+    flex-direction: column !important;
+    height: calc(100dvh - env(safe-area-inset-top, 0px) - var(--header-h, 56px)) !important;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - var(--header-h, 56px)) !important;
+  }
+  body.mnsk7-has-promo .mnsk7-header__nav .mnsk7-header__menu {
+    height: calc(100dvh - env(safe-area-inset-top, 0px) - var(--mnsk7-promo-h, 2.5rem) - var(--header-h, 56px)) !important;
+    max-height: calc(100dvh - env(safe-area-inset-top, 0px) - var(--mnsk7-promo-h, 2.5rem) - var(--header-h, 56px)) !important;
   }
 
   .mnsk7-header__nav .mnsk7-header__menu > li {
     border: 0 !important;
+    flex: 0 0 auto;
   }
-
   .mnsk7-header__nav .mnsk7-header__menu > li > a {
     display: flex !important;
     align-items: center;
-    justify-content: space-between;
-    min-height: 48px;
-    padding: 0.72rem 0.85rem !important;
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    border-radius: 8px;
-    background: #f8fafc;
-    font-weight: 700;
+    min-height: 52px;
+    padding: 0.75rem 0.9rem !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--color-border) !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    font-weight: 600;
   }
-
-  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children > a::after {
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children > a.mnsk7-menu-item-sklep::after {
     margin-left: auto;
   }
 
-  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children > .sub-menu.mnsk7-megamenu {
-    margin: 0.35rem 0 0 !important;
-    padding: 0.55rem !important;
-    gap: 0.55rem !important;
-    border: 1px solid rgba(15, 23, 42, 0.08) !important;
-    border-radius: 10px !important;
-    background: #f7fafc !important;
-  }
-
-  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__heading {
-    display: block;
+  /* Panele poziomów (submenu = lvl1, lista podkategorii = lvl2): pełne tło, bez kart/marginesów. */
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children > .sub-menu.mnsk7-megamenu,
+  .mnsk7-header__nav .mnsk7-header__menu .mnsk7-megamenu__col > .mnsk7-megamenu__list {
     margin: 0 !important;
-    padding: 0.2rem 0.25rem 0.35rem !important;
-    letter-spacing: 0 !important;
-    color: #475569 !important;
+    padding: 0 0 1.5rem !important;
+    gap: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+    background: #fff !important;
   }
 
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list {
-    display: grid !important;
+    display: flex !important;
     grid-template-columns: 1fr !important;
-    gap: 0.25rem !important;
+    gap: 0 !important;
   }
-
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list a {
-    min-height: 42px !important;
-    padding: 0.58rem 0.7rem !important;
-    border: 1px solid rgba(15, 23, 42, 0.08);
-    border-radius: 8px;
-    background: #fff;
-    font-size: 0.875rem !important;
+    min-height: 48px !important;
+    padding: 0.6rem 0.9rem !important;
+    border: 0 !important;
+    border-bottom: 1px solid var(--color-border) !important;
+    border-radius: 0 !important;
+    background: #fff !important;
+    font-size: 0.9375rem !important;
     line-height: 1.3;
   }
 
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__footer {
-    margin: 0 !important;
-    padding: 0.2rem 0.25rem 0 !important;
+    margin: 0.75rem 0.9rem 0 !important;
+    padding: 0.75rem 0 0 !important;
     border: 0 !important;
+    border-top: 1px solid var(--color-border) !important;
   }
-
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__footer a {
     display: flex !important;
     justify-content: center;
     width: 100%;
-    min-height: 44px !important;
+    min-height: 48px !important;
     margin: 0 !important;
     border-radius: 8px !important;
     background: var(--color-primary, #0c7ddb) !important;

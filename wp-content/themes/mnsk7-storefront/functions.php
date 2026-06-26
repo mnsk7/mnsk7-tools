@@ -1616,9 +1616,14 @@ add_action( 'wp_footer', function () {
 					if (e.key !== 'Tab' || window.innerWidth >= DESKTOP_MIN || !nav.classList.contains('is-open')) return;
 					var f = visibleFocusables();
 					if (!f.length) return;
-					var first = f[0], last = f[f.length - 1];
-					if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
-					else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+					// Pełne zatrzymanie focusa w obrębie aktualnego poziomu (tła/poziomy zakryte pomijane).
+					var idx = f.indexOf(document.activeElement);
+					e.preventDefault();
+					var nextIdx;
+					if (idx === -1) { nextIdx = 0; }
+					else if (e.shiftKey) { nextIdx = (idx - 1 + f.length) % f.length; }
+					else { nextIdx = (idx + 1) % f.length; }
+					try { f[nextIdx].focus(); } catch (err) {}
 				});
 
 				// Esc / zamykanie sterowane z głównego handlera: pop poziomu lub zamknij drawer.
