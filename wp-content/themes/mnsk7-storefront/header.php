@@ -168,7 +168,7 @@ endif;
 						<?php endif; ?>
 						<?php if ( ! empty( $accessory_cats ) ) : ?>
 						<li class="mnsk7-megamenu__col mnsk7-megamenu__col--accessories">
-							<span class="mnsk7-megamenu__col-title"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_accessories', __( 'Akcesoria i zestawy', 'mnsk7-storefront' ) ) ); ?></span>
+							<span class="mnsk7-megamenu__col-title"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_accessories', __( 'Osprzęt i akcesoria', 'mnsk7-storefront' ) ) ); ?></span>
 							<ul class="mnsk7-megamenu__list">
 								<?php
 								foreach ( $accessory_cats as $term ) {
