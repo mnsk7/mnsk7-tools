@@ -115,6 +115,7 @@ endif;
 								<?php esc_html_e( 'Wróć', 'mnsk7-storefront' ); ?>
 							</button>
 						</li>
+						<div class="mnsk7-megamenu__cards">
 						<?php
 						/* Każda kolumna = kategoria nadrzędna (nagłówek-link) + jej podkategorie (drzewo Woo). */
 						foreach ( $mm_tree as $node ) {
@@ -182,6 +183,7 @@ endif;
 							</ul>
 						</li>
 						<?php endif; ?>
+						</div>
 						<li class="mnsk7-megamenu__footer">
 							<a href="<?php echo esc_url( $shop_url ); ?>"<?php echo is_shop() ? ' class="mnsk7-megamenu__link--active"' : ''; ?>><?php esc_html_e( 'Wszystkie produkty', 'mnsk7-storefront' ); ?> &rarr;</a>
 						</li>

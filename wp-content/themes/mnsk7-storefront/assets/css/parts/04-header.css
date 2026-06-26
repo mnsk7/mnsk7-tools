@@ -323,6 +323,13 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   margin: 0;
   box-sizing: border-box;
 }
+/* Wrapper kart: na mobile/drawerze przezroczysty (karty = bezpośrednie dzieci listy,
+   zachowują dotychczasowy układ). Na desktopie staje się obszarem z kolumnami,
+   oddzielonym od zawsze widocznej stopki — patrz @media (min-width:1024px). */
+.mnsk7-megamenu__cards {
+  display: contents;
+  min-width: 0;
+}
 .mnsk7-megamenu__mobile-bar {
   display: none;
   list-style: none;
@@ -392,8 +399,12 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     right: auto;
     width: min(1180px, calc(100vw - 2rem));
     max-width: calc(100vw - 2rem);
-    max-height: none !important;
-    overflow: visible !important;
+    /* Panel nigdy nie przekracza dostępnej wysokości viewportu pod sticky headerem
+       (promo bar + header + zapas). Dzięki temu na ekranach 15" (np. 1366x768 /
+       1280x720) całe menu — wszystkie karty + stopka — mieści się bez ucięcia. */
+    max-height: calc(100vh - var(--mnsk7-promo-h, 2.5rem) - var(--header-h, 56px) - 1.25rem) !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
     padding: 0.9rem 1.4rem 0.85rem;
     background: var(--color-white);
     border: 1px solid var(--color-border);
@@ -404,10 +415,16 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     visibility: hidden;
     transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
     z-index: 200;
-    /* Grid of bordered cards (each parent + children = one card). Multi-column packing
-       balansuje wysokość kart → cały tree mieści się bez wewnętrznego scrolla. */
+    /* Blok przewijany pionowo (ostateczność na bardzo niskich ekranach); stopka jest
+       sticky i zawsze widoczna. W typowych przypadkach treść mieści się bez scrolla. */
     display: block;
-    columns: 13.5rem;
+  }
+  /* Obszar kart = multi-column packing (balansuje wysokość → cały tree krótszy).
+     Więcej kolumn = niższy panel; na 1180px daje ~6 kolumn. */
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards {
+    display: block;
+    min-width: 0;
+    columns: 11.5rem;
     column-gap: 0.85rem;
     column-fill: balance;
   }
@@ -420,8 +437,16 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-megamenu__mobile-bar {
     display: none !important;
   }
-  .mnsk7-megamenu__footer {
-    column-span: all;
+  /* Stopka "Wszystkie produkty" zawsze widoczna: jest poza obszarem kart i przyklejona
+     do dołu panelu, więc nigdy nie zostaje ucięta ani schowana pod scrollem. */
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__footer {
+    position: sticky;
+    bottom: 0;
+    z-index: 2;
+    margin: 0.35rem 0 0;
+    padding-top: 0.6rem;
+    padding-bottom: 0.1rem;
+    background: var(--color-white);
   }
   /* Desktop: każda grupa (rodzic + dzieci) = osobna karta z obwódką. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col {
@@ -465,6 +490,76 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   }
   .mnsk7-header__actions {
     gap: 0.4rem;
+  }
+}
+/* ── Megamenu: adaptacja do WYSOKOŚCI viewportu (laptopy 15": 1366x768, 1280x720…) ──
+   Im niższy ekran, tym więcej kolumn (węższe karty → niższy panel) i ciaśniejsze
+   odstępy/typografia. Cel: cały tree + stopka mieszczą się bez wewnętrznego scrolla.
+   Scroll panelu (overflow-y:auto powyżej) pozostaje tylko jako ostateczność na
+   skrajnie niskich ekranach — wtedy stopka i tak jest zawsze widoczna (sticky). */
+@media (min-width: 1024px) and (max-height: 820px) {
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
+    padding: 0.7rem 1.1rem 0.65rem;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards {
+    columns: 10.5rem;
+    column-gap: 0.7rem;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col {
+    padding: 0.45rem 0.6rem 0.5rem;
+    margin: 0 0 0.7rem;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col-title {
+    padding: 0 0 0.28rem;
+    margin: 0 0 0.32rem;
+    font-size: 0.84rem;
+    line-height: 1.25;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list a {
+    padding: 0.16rem 0.4rem;
+    font-size: 0.8rem;
+    line-height: 1.25;
+  }
+}
+@media (min-width: 1024px) and (max-height: 720px) {
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
+    padding: 0.55rem 0.95rem 0.55rem;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards {
+    columns: 9.75rem;
+    column-gap: 0.6rem;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col {
+    padding: 0.38rem 0.55rem 0.42rem;
+    margin: 0 0 0.6rem;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col-title {
+    padding: 0 0 0.24rem;
+    margin: 0 0 0.26rem;
+    font-size: 0.82rem;
+    line-height: 1.2;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list a {
+    padding: 0.12rem 0.38rem;
+    font-size: 0.78rem;
+    line-height: 1.2;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__footer a {
+    padding: 0.32rem 0.7rem;
+  }
+}
+@media (min-width: 1024px) and (max-height: 640px) {
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards {
+    columns: 9rem;
+    column-gap: 0.5rem;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col {
+    padding: 0.32rem 0.5rem 0.36rem;
+    margin: 0 0 0.5rem;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list a {
+    padding: 0.1rem 0.34rem;
+    font-size: 0.76rem;
   }
 }
 /* Kolumna megamenu = kategoria nadrzędna (nagłówek) + jej podkategorie.
