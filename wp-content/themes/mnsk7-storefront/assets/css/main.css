@@ -783,7 +783,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__menu > li.menu-item-has-children {
     overflow: visible !important;
   }
-  .mnsk7-header__menu .sub-menu {
+  .mnsk7-header__menu .sub-menu:not(.mnsk7-megamenu) {
     max-height: none !important;
     overflow-y: visible !important;
   }
@@ -791,27 +791,25 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__menu li.menu-item-has-children.mnsk7-megamenu-parent {
     position: static;
   }
-  /* ── Megamenu desktop: adaptacja po SZEROKOŚCI + jeden height-fallback ─────
-     Panel: klamrowany min(1240px, 100vw−2.5rem), wyśrodkowany, max-height =
-     viewport pod sticky headerem (zabezpieczenie). Kolumny CSS (column-width)
-     → liczba kolumn rośnie ze szerokością panelu.
-     Domyślnie column-fill:balance — wypełnia szerokość, bez overflow w poziomie.
-     Na krótkich laptopach (≥1280px szer., ≤819px wys.) jeden fallback:
-     column-fill:auto + wysokość = dostępna przestrzeń → kolumny rosną w głąb,
-     cały tree mieści się bez scrolla (1366×768≈6 kol., 1280×720≈7 kol.).
-     Wąski desktop 1024–1279px: balance + węższe kolumny (≈4 kol.), ewentualny
-     delikatny scroll panelu ze sticky stopką jako ostateczność. */
+  /* ── Megamenu desktop: DWUPANELOWY flyout (lewy rail + prawy panel) ─────────
+     Zamiast siatki kart + wewnętrznego scrolla: lewa kolumna to PEŁNA, krótka
+     lista wszystkich 14+ kategorii (zawsze widoczna, bez scrolla), a prawy panel
+     pokazuje podkategorie aktywnej kategorii (hover/focus/klawiatura). Dzięki temu
+     "Pilniki obrotowe" i każda kategoria są zawsze widoczne w lewym railu, a
+     podkategorie pojawiają się na żądanie po prawej. Brak scrollbara, brak
+     upychania — mieści się w 1366×768 / 1280×720. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
+    --mm-left: 16.5rem;
+    --mm-pad: 0.85rem;
     position: absolute;
     top: calc(100% - 1px);
     left: 50%;
     right: auto;
-    width: min(1240px, calc(100vw - 2.5rem));
+    width: min(60rem, calc(100vw - 2.5rem));
     max-width: calc(100vw - 2.5rem);
     max-height: calc(100vh - var(--mnsk7-promo-h, 2.5rem) - var(--header-h, 56px) - 1.5rem) !important;
-    overflow-x: hidden;
-    overflow-y: auto !important;
-    padding: 1rem 1.4rem 0.9rem;
+    overflow: hidden !important;
+    padding: 0;
     background: var(--color-white);
     border: 1px solid var(--color-border);
     border-radius: var(--r-md);
@@ -823,15 +821,30 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     z-index: 200;
     display: block;
   }
-  /* Obszar kart: column-width → liczba kolumn skaluje się z szerokością panelu.
-     balance pakietuje karty o różnej wysokości (0–10 podkategorii) kompaktowo. */
+  /* Dwa panele: lewy rail (lista kategorii) + prawy panel (podkategorie absolutnie). */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards {
+    position: relative;
     display: block;
     min-width: 0;
-    column-width: 10rem;
-    column-gap: 0.85rem;
+    column-width: auto;
+    column-count: 1;
+    column-gap: 0;
     column-fill: balance;
+    min-height: 22rem;
     height: auto;
+    padding: var(--mm-pad);
+    box-sizing: border-box;
+  }
+  /* Pionowa linia rozdzielająca rail od prawego panelu. */
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards::after {
+    content: "";
+    position: absolute;
+    top: var(--mm-pad);
+    bottom: var(--mm-pad);
+    left: calc(var(--mm-left) + var(--mm-pad));
+    width: 1px;
+    background: var(--color-border);
+    pointer-events: none;
   }
   .mnsk7-header__menu li.menu-item-has-children.mnsk7-megamenu-open .sub-menu.mnsk7-megamenu,
   .mnsk7-header__menu li.menu-item-has-children:focus-within .sub-menu.mnsk7-megamenu {
@@ -842,46 +855,136 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-megamenu__mobile-bar {
     display: none !important;
   }
-  /* Stopka "Wszystkie produkty" zawsze widoczna: jest poza obszarem kart i przyklejona
-     do dołu panelu, więc nigdy nie zostaje ucięta ani schowana pod scrollem. */
+  /* Stopka "Wszystkie produkty" — pełnoszerokościowy pasek na dole panelu,
+     zawsze widoczny pod dwoma panelami (poza obszarem kart). */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__footer {
-    position: sticky;
-    bottom: 0;
+    position: relative;
     z-index: 2;
-    margin: 0.35rem 0 0;
-    padding-top: 0.6rem;
-    padding-bottom: 0.1rem;
+    margin: 0;
+    padding: var(--mm-pad);
+    border-top: 1px solid var(--color-border);
     background: var(--color-white);
   }
-  /* Desktop: każda grupa (rodzic + dzieci) = osobna karta z obwódką. */
+  /* Lewy rail: każda kategoria = jeden krótki wiersz (tylko nagłówek). */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col {
     box-sizing: border-box;
-    border: 1px solid var(--color-border);
-    border-radius: var(--r-md);
-    background: var(--color-white);
-    padding: 0.55rem 0.7rem 0.6rem;
-    margin: 0 0 0.85rem;
-    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    display: block;
+    width: var(--mm-left);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    transition: none;
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col:hover {
-    border-color: var(--color-border-strong);
-    box-shadow: var(--shadow-sm);
+    border-color: transparent;
+    box-shadow: none;
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col-title {
-    border-bottom: 1px solid var(--color-border);
-    padding: 0 0 0.35rem;
-    margin: 0 0 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    box-sizing: border-box;
+    width: 100%;
+    border: 0;
+    border-bottom: 0;
+    border-radius: var(--r-sm);
+    padding: 0.45rem 0.6rem;
+    margin: 0;
     font-size: 0.875rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--color-text);
+    cursor: pointer;
   }
-  /* Leaf card (brak podkategorii): sam nagłówek, bez kreski. */
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col-title:last-child {
-    border-bottom: none;
-    padding-bottom: 0;
-    margin-bottom: 0;
+  /* Chevron tylko dla kategorii z podkategoriami. */
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col:has(.mnsk7-megamenu__list) > .mnsk7-megamenu__col-title::after {
+    content: "";
+    margin-left: auto;
+    width: 0.45em;
+    height: 0.45em;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: rotate(-45deg);
+    opacity: 0.55;
+    flex: 0 0 auto;
   }
+  /* Aktywny wiersz (hover / focus / klawiatura) — podświetlenie + akcent. */
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col.is-active > .mnsk7-megamenu__col-title,
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col > .mnsk7-megamenu__col-title:hover,
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col > .mnsk7-megamenu__col-title:focus-visible {
+    background: var(--color-bg-subtle, #f1f5f9);
+    color: var(--color-primary);
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col.is-active > .mnsk7-megamenu__col-title::after {
+    opacity: 1;
+  }
+  /* Spójny kolor nagłówków railu — także dla "Zastosowanie i materiały" (bez teal). */
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col--tags .mnsk7-megamenu__col-title {
+    color: var(--color-text);
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col--tags.is-active .mnsk7-megamenu__col-title,
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col--tags .mnsk7-megamenu__col-title:hover {
+    color: var(--color-primary);
+  }
+  /* Prawy panel: lista podkategorii aktywnej kategorii (absolutnie w obszarze kart). */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list {
-    border-left: none;
+    position: absolute;
+    top: var(--mm-pad);
+    left: calc(var(--mm-left) + var(--mm-pad) * 2);
+    right: var(--mm-pad);
+    bottom: var(--mm-pad);
+    margin: 0;
+    padding: 0;
+    border: 0;
+    border-left: 0;
     padding-left: 0;
+    display: none;
+    column-width: 12rem;
+    column-gap: 1.25rem;
+    column-fill: balance;
+    align-content: flex-start;
+    overflow: hidden;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col.is-active > .mnsk7-megamenu__list {
+    display: block;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list li {
+    break-inside: avoid;
+    -webkit-column-break-inside: avoid;
+  }
+  /* Leaf (kategoria bez podkategorii): prawy panel pokazuje CTA do kategorii. */
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cta {
+    position: absolute;
+    top: var(--mm-pad);
+    left: calc(var(--mm-left) + var(--mm-pad) * 2);
+    right: var(--mm-pad);
+    bottom: var(--mm-pad);
+    display: flex;
+    align-items: flex-start;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cta[hidden] {
+    display: none;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.5rem 0.85rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    background: var(--color-bg-subtle, #f1f5f9);
+    border-radius: var(--r-sm);
+    text-decoration: none;
+    line-height: 1.35;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cta-link:hover,
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cta-link:focus-visible {
+    background: var(--color-primary);
+    color: var(--color-white);
   }
   /* "Zobacz wszystkie" — wstrzykiwany tylko dla drawer mobilnego; ukryty na desktopie. */
   .mnsk7-drawer__viewall {
@@ -897,41 +1000,29 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     gap: 0.4rem;
   }
 }
-/* Krótkie laptopy (≥1280px szer., ≤819px wys.): auto-fill kolumn w pionie —
-   jedyny height-fallback. Wysokość obszaru kart = viewport − promo − header −
-   (padding panelu + stopka). Kolumny rosną w liczbie, tree mieści się bez scrolla;
-   zweryfikowane: 1366×768 (6 kol.), 1280×720 (7 kol.), bez overflow w poziomie. */
-@media (min-width: 1280px) and (max-height: 819px) {
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards {
-    column-fill: auto;
-    height: calc(100vh - var(--mnsk7-promo-h, 2.5rem) - var(--header-h, 56px) - 8rem);
-  }
-}
-/* Wąski desktop 1024–1279px: węższe kolumny (≈4), balance — bez auto (overflow
-   w poziomie). Delikatny scroll panelu + sticky stopka jako ostateczność. */
+/* Wąski desktop 1024–1279px: węższy rail + panel, by dwa panele wygodnie się mieściły. */
 @media (min-width: 1024px) and (max-width: 1279px) {
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
-    width: min(1240px, calc(100vw - 2rem));
+    --mm-left: 14.5rem;
+    width: min(56rem, calc(100vw - 2rem));
     max-width: calc(100vw - 2rem);
-    padding: 0.85rem 1.15rem 0.75rem;
   }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards {
-    column-width: 9rem;
-    column-gap: 0.75rem;
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list {
+    column-width: 11rem;
+    column-gap: 1rem;
   }
 }
-/* Kolumna megamenu = kategoria nadrzędna (nagłówek) + jej podkategorie.
-   Desktop: kolumny CSS — każda grupa w całości w jednej kolumnie. */
+/* Lewy rail: pozycje listy bez marginesów/numeracji (override bazowych reguł). */
 @media (min-width: 1024px) {
   .mnsk7-megamenu__col {
-    margin: 0 0 0.85rem;
+    margin: 0;
     list-style: none;
     min-width: 0;
-    display: inline-block;
-    width: 100%;
-    break-inside: avoid;
-    -webkit-column-break-inside: avoid;
-    page-break-inside: avoid;
+    display: block;
+    width: var(--mm-left);
+    break-inside: auto;
+    -webkit-column-break-inside: auto;
+    page-break-inside: auto;
     vertical-align: top;
   }
 }
@@ -1161,6 +1252,14 @@ a.mnsk7-megamenu__col-title.mnsk7-megamenu__link--active:visited {
     padding: 0;
     border: 0;
     background: transparent;
+  }
+  /* Desktopowy CTA (leaf) i linia rozdzielająca rail — tylko desktop. */
+  .mnsk7-megamenu__cta,
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cta {
+    display: none !important;
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards::after {
+    display: none !important;
   }
 }
 

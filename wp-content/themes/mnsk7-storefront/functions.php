@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.70' );
+	define( 'MNSK7_THEME_VERSION', '1.0.72' );
 }
 
 /**
@@ -856,6 +856,7 @@ add_action( 'wp_enqueue_scripts', function () {
 	}
 	if ( is_singular( 'product' ) ) {
 		wp_enqueue_script( 'mnsk7-pdp-gallery-a11y', get_stylesheet_directory_uri() . '/assets/js/pdp-gallery-a11y.js', array(), $v, true );
+		wp_enqueue_script( 'mnsk7-pdp-gallery', get_stylesheet_directory_uri() . '/assets/js/pdp-gallery.js', array(), $v, true );
 	}
 	if ( function_exists( 'is_shop' ) && ( is_shop() || is_product_category() || is_product_tag() ) ) {
 		wp_enqueue_script( 'mnsk7-plp-thumb-dialog', get_stylesheet_directory_uri() . '/assets/js/plp-thumb-dialog.js', array(), $v, true );
@@ -1428,6 +1429,7 @@ add_action( 'wp_footer', function () {
 				function setMegamenuExpanded(open) {
 					if (megamenuLink) megamenuLink.setAttribute('aria-expanded', open ? 'true' : 'false');
 					if (open) megamenuLi.classList.add('mnsk7-megamenu-open'); else megamenuLi.classList.remove('mnsk7-megamenu-open');
+					if (open && typeof window.mnsk7MegamenuActivateDefault === 'function') { window.mnsk7MegamenuActivateDefault(); }
 				}
 				function openMegamenu() {
 					clearTimeout(closeTimer);
@@ -1460,6 +1462,96 @@ add_action( 'wp_footer', function () {
 					}
 				});
 			}
+			// === Desktop: dwupanelowy megamenu (lewy rail kategorii → prawy panel podkategorii) ===
+			(function initDesktopTwoPane() {
+				var panel = menu.querySelector('.sub-menu.mnsk7-megamenu');
+				if (!panel) return;
+				var cards = panel.querySelector('.mnsk7-megamenu__cards');
+				if (!cards) return;
+				var cols = Array.prototype.slice.call(cards.querySelectorAll(':scope > .mnsk7-megamenu__col'));
+				if (!cols.length) return;
+				var CTA_PREFIX = <?php echo wp_json_encode( __( 'Zobacz wszystkie produkty w', 'mnsk7-storefront' ) ); ?>;
+
+				// Nagłówki bez linku (np. "Zastosowanie i materiały") — focusowalne klawiaturą.
+				cols.forEach(function(col) {
+					var title = col.querySelector(':scope > .mnsk7-megamenu__col-title');
+					if (title && title.tagName !== 'A' && !title.hasAttribute('tabindex')) {
+						title.setAttribute('tabindex', '0');
+					}
+				});
+
+				// Wspólny element CTA dla kategorii-liści (bez podkategorii) — tylko desktop.
+				var cta = cards.querySelector('.mnsk7-megamenu__cta');
+				if (!cta) {
+					cta = document.createElement('div');
+					cta.className = 'mnsk7-megamenu__cta';
+					cta.setAttribute('hidden', '');
+					var a = document.createElement('a');
+					a.className = 'mnsk7-megamenu__cta-link';
+					a.setAttribute('href', '#');
+					cta.appendChild(a);
+					cards.appendChild(cta);
+				}
+				var ctaLink = cta.querySelector('.mnsk7-megamenu__cta-link');
+
+				function activate(col) {
+					if (!col) return;
+					cols.forEach(function(c) { if (c !== col) c.classList.remove('is-active'); });
+					col.classList.add('is-active');
+					var list = col.querySelector(':scope > .mnsk7-megamenu__list');
+					var title = col.querySelector(':scope > .mnsk7-megamenu__col-title');
+					if (list) {
+						cta.setAttribute('hidden', '');
+					} else if (title && title.getAttribute('href')) {
+						ctaLink.setAttribute('href', title.getAttribute('href'));
+						ctaLink.textContent = CTA_PREFIX + ' \u201E' + (title.textContent || '').trim() + '\u201D \u2192';
+						cta.removeAttribute('hidden');
+					} else {
+						cta.setAttribute('hidden', '');
+					}
+				}
+
+				cols.forEach(function(col) {
+					var title = col.querySelector(':scope > .mnsk7-megamenu__col-title');
+					col.addEventListener('mouseenter', function() { if (window.innerWidth >= DESKTOP_MIN) activate(col); });
+					if (title) {
+						title.addEventListener('focus', function() { if (window.innerWidth >= DESKTOP_MIN) activate(col); });
+					}
+				});
+
+				// Domyślnie aktywuj pierwszą kategorię z podkategoriami przy otwarciu panelu (desktop).
+				window.mnsk7MegamenuActivateDefault = function() {
+					if (window.innerWidth < DESKTOP_MIN) return;
+					if (cards.querySelector('.mnsk7-megamenu__col.is-active')) return;
+					var firstWithList = null;
+					for (var k = 0; k < cols.length; k++) {
+						if (cols[k].querySelector(':scope > .mnsk7-megamenu__list')) { firstWithList = cols[k]; break; }
+					}
+					activate(firstWithList || cols[0]);
+				};
+
+				// Klawiatura: ↑/↓ po railu, → wchodzi w prawy panel, ← wraca do railu.
+				cards.addEventListener('keydown', function(e) {
+					if (window.innerWidth < DESKTOP_MIN) return;
+					var titles = cols.map(function(c) { return c.querySelector(':scope > .mnsk7-megamenu__col-title'); }).filter(Boolean);
+					var idx = titles.indexOf(document.activeElement);
+					if (e.key === 'ArrowDown') {
+						if (idx > -1) { e.preventDefault(); titles[(idx + 1) % titles.length].focus(); }
+					} else if (e.key === 'ArrowUp') {
+						if (idx > -1) { e.preventDefault(); titles[(idx - 1 + titles.length) % titles.length].focus(); }
+					} else if (e.key === 'ArrowRight') {
+						var active = cards.querySelector('.mnsk7-megamenu__col.is-active');
+						var target = active && active.querySelector('.mnsk7-megamenu__list a');
+						if (!target && cta && !cta.hasAttribute('hidden')) { target = ctaLink; }
+						if (target) { e.preventDefault(); target.focus(); }
+					} else if (e.key === 'ArrowLeft') {
+						var act = cards.querySelector('.mnsk7-megamenu__col.is-active');
+						var t = act && act.querySelector(':scope > .mnsk7-megamenu__col-title');
+						if (t) { e.preventDefault(); t.focus(); }
+					}
+				});
+			})();
+
 			// === Mobile drawer: natywne, przesuwane poziomy (parent → kategoria → podkategoria) ===
 			(function initMobileDrawer() {
 				var ROOT_TITLE = <?php echo wp_json_encode( __( 'Menu', 'mnsk7-storefront' ) ); ?>;
