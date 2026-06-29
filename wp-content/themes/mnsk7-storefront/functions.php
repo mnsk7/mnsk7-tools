@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.76' );
+	define( 'MNSK7_THEME_VERSION', '1.0.77' );
 }
 
 /**
@@ -1471,6 +1471,7 @@ add_action( 'wp_footer', function () {
 				var cols = Array.prototype.slice.call(cards.querySelectorAll(':scope > .mnsk7-megamenu__col'));
 				if (!cols.length) return;
 				var CTA_PREFIX = <?php echo wp_json_encode( __( 'Zobacz wszystkie produkty w', 'mnsk7-storefront' ) ); ?>;
+				var PANE_ALL = <?php echo wp_json_encode( __( 'Zobacz wszystkie', 'mnsk7-storefront' ) ); ?>;
 
 				// Nagłówki bez linku (np. "Zastosowanie i materiały") — focusowalne klawiaturą.
 				cols.forEach(function(col) {
@@ -1495,11 +1496,19 @@ add_action( 'wp_footer', function () {
 				var ctaLink = cta.querySelector('.mnsk7-megamenu__cta-link');
 				var paneHeader = cards.querySelector('.mnsk7-megamenu__pane-header');
 				if (!paneHeader) {
-					paneHeader = document.createElement('div');
+					paneHeader = document.createElement('a');
 					paneHeader.className = 'mnsk7-megamenu__pane-header';
 					paneHeader.setAttribute('hidden', '');
+					var phTitle = document.createElement('span');
+					phTitle.className = 'mnsk7-megamenu__pane-header-title';
+					var phAll = document.createElement('span');
+					phAll.className = 'mnsk7-megamenu__pane-header-all';
+					paneHeader.appendChild(phTitle);
+					paneHeader.appendChild(phAll);
 					cards.appendChild(paneHeader);
 				}
+				var paneHeaderTitle = paneHeader.querySelector('.mnsk7-megamenu__pane-header-title');
+				var paneHeaderAll = paneHeader.querySelector('.mnsk7-megamenu__pane-header-all');
 
 				function activate(col) {
 					if (!col) return;
@@ -1518,12 +1527,21 @@ add_action( 'wp_footer', function () {
 						if (list.children.length >= 5) {
 							list.classList.add('mnsk7-megamenu__list--grid');
 						}
-						if (title) {
-							paneHeader.textContent = (title.textContent || '').trim();
-							paneHeader.removeAttribute('hidden');
+					if (title) {
+						var nm = (title.textContent || '').trim();
+						if (paneHeaderTitle) paneHeaderTitle.textContent = nm;
+						var headHref = title.getAttribute ? title.getAttribute('href') : null;
+						if (headHref) {
+							paneHeader.setAttribute('href', headHref);
+							if (paneHeaderAll) { paneHeaderAll.textContent = PANE_ALL + ' \u2192'; paneHeaderAll.hidden = false; }
 						} else {
-							paneHeader.setAttribute('hidden', '');
+							paneHeader.removeAttribute('href');
+							if (paneHeaderAll) { paneHeaderAll.textContent = ''; paneHeaderAll.hidden = true; }
 						}
+						paneHeader.removeAttribute('hidden');
+					} else {
+						paneHeader.setAttribute('hidden', '');
+					}
 					} else if (title && title.getAttribute('href')) {
 						paneHeader.setAttribute('hidden', '');
 						ctaLink.setAttribute('href', title.getAttribute('href'));

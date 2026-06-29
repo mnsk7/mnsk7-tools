@@ -398,16 +398,17 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
      podkategorie pojawiają się na żądanie po prawej. Brak scrollbara, brak
      upychania — mieści się w 1366×768 / 1280×720. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
-    --mm-left: 15.5rem;
-    --mm-right-min: 13.5rem;
-    --mm-pad: 0.65rem;
+    --mm-left: 16rem;            /* lewy rail (stała szerokość) */
+    --mm-pad: 1rem;              /* wewnętrzny padding panelu */
+    --mm-col: 14.5rem;           /* min. szerokość kolumny podkategorii (mieści najdłuższe nazwy) */
+    --mm-head: 3rem;             /* wysokość nagłówka prawego panelu (nazwa + „zobacz wszystkie”) */
     position: absolute;
     top: calc(100% - 1px);
     left: 50%;
     right: auto;
-    width: max-content;
-    min-width: calc(var(--mm-left) + var(--mm-right-min) + var(--mm-pad) * 3);
-    max-width: min(44rem, calc(100vw - 2.5rem));
+    /* Stała, przewidywalna szerokość panelu — BEZ max-content. Zawsze w obrębie viewportu:
+       64rem (1024px) na szerokich ekranach, a na wąskich = viewport minus margines. */
+    width: min(64rem, calc(100vw - 3rem));
     /* Bez promo: panel startuje pod samym headerem. */
     max-height: calc(100vh - var(--header-h, 56px) - 1rem) !important;
     overflow: hidden !important;
@@ -420,7 +421,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
-    z-index: 200;
+    z-index: 1200;
     display: block;
   }
   /* Z promo barem: panel startuje niżej (promo + header). */
@@ -432,14 +433,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     position: relative;
     display: block;
     min-width: 0;
-    column-width: auto;
-    column-count: 1;
-    column-gap: 0;
-    column-fill: balance;
-    min-height: 0;
+    /* Floor wysokości — sparse kategorie wyglądają zrównoważnie; rail (14+ kat.) i tak go przekracza. */
+    min-height: 19rem;
     height: auto;
     padding: var(--mm-pad);
-    padding-right: calc(var(--mm-right-min) + var(--mm-pad) * 2);
     box-sizing: border-box;
   }
   /* Pionowa linia rozdzielająca rail od prawego panelu. */
@@ -448,7 +445,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     position: absolute;
     top: var(--mm-pad);
     bottom: var(--mm-pad);
-    left: calc(var(--mm-left) + var(--mm-pad));
+    left: calc(var(--mm-left) + var(--mm-pad) * 1.5);
     width: 1px;
     background: var(--color-border);
     pointer-events: none;
@@ -539,81 +536,96 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col--tags .mnsk7-megamenu__col-title:hover {
     color: var(--color-primary);
   }
-  /* Prawy panel: podkategorie aktywnej kategorii — tylko na wysokość treści (bez pustej przepaści). */
+  /* ── Prawy panel (strefa treści) ──────────────────────────────────────────
+     KLUCZ poprawki: nagłówek, lista i CTA są PRZYPIĘTE do lewej i prawej krawędzi
+     strefy (left + right), więc ich szerokość = stała szerokość strefy = (panel −
+     rail − paddingi). Nigdy nie rosną wg max-content i nigdy nie wychodzą poza
+     panel → overflow:hidden panelu obcina już tylko zaokrąglone rogi, NIGDY tekst.
+     Najdłuższe nazwy mieszczą się w kolumnie ≥14.5rem (jedna linia) lub czysto
+     zawijają do 2 linii. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list {
     position: absolute;
-    top: var(--mm-pad);
+    top: calc(var(--mm-pad) + var(--mm-head));
     left: calc(var(--mm-left) + var(--mm-pad) * 2);
-    right: auto;
-    bottom: auto;
-    width: max-content;
-    min-width: var(--mm-right-min);
-    max-width: min(22rem, calc(100vw - var(--mm-left) - 4rem));
-    max-height: calc(100vh - var(--header-h, 56px) - 5rem);
+    right: var(--mm-pad);
+    bottom: var(--mm-pad);
+    width: auto;
     margin: 0;
-    padding: 0.15rem 0 0;
+    padding: 0;
     border: 0;
     border-left: 0;
     padding-left: 0;
     display: none;
-    column-width: 10.5rem;
-    column-gap: 1rem;
-    column-fill: balance;
-    align-content: flex-start;
+    grid-template-columns: repeat(auto-fill, minmax(var(--mm-col), 1fr));
+    grid-auto-rows: min-content;
+    gap: 0.1rem 1rem;
+    align-content: start;
     overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior: contain;
   }
-  /* Prawy panel zawsze JEDNOKOLUMNOWY: 2 kolumny przy wąskim panelu wychodziły poza
-     jego prawą krawędź (overflow:hidden) i ucinały dłuższe listy (np. Pilniki typ G/K/L,
-     Zestawy). Pojedyncza kolumna mieści wszystkie podkategorie pionowo bez przycinania. */
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list.mnsk7-megamenu__list--grid {
-    display: none;
-    column-width: auto;
-    column-count: 1;
-    column-gap: 0;
-  }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col.is-active > .mnsk7-megamenu__list {
-    display: block;
-    top: calc(var(--mm-pad) + 1.35rem);
-  }
+  /* Stara klasa --grid jest już zbędna (grid auto-fill obsługuje każdą liczbę
+     podkategorii); zachowana dla zgodności i renderuje się identycznie. */
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col.is-active > .mnsk7-megamenu__list,
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col.is-active > .mnsk7-megamenu__list.mnsk7-megamenu__list--grid {
-    display: block;
+    display: grid;
   }
+  /* Nagłówek prawego panelu = link „Nazwa kategorii + Zobacz wszystkie →”. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__pane-header {
     position: absolute;
     top: var(--mm-pad);
     left: calc(var(--mm-left) + var(--mm-pad) * 2);
-    right: auto;
-    width: max-content;
-    min-width: var(--mm-right-min);
-    max-width: min(22rem, calc(100vw - var(--mm-left) - 4rem));
+    right: var(--mm-pad);
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
     margin: 0;
-    padding: 0 0 0.35rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: var(--color-text-muted, #64748b);
-    pointer-events: none;
+    padding: 0 0 0.55rem;
+    border-bottom: 1px solid var(--color-border);
+    text-decoration: none;
+    color: var(--color-text);
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__pane-header[hidden] {
     display: none;
   }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list li {
-    break-inside: avoid;
-    -webkit-column-break-inside: avoid;
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__pane-header-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-text);
   }
-  /* Leaf (kategoria bez podkategorii): prawy panel pokazuje CTA do kategorii. */
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__pane-header-all {
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-primary);
+  }
+  a.mnsk7-megamenu__pane-header:hover .mnsk7-megamenu__pane-header-title,
+  a.mnsk7-megamenu__pane-header:focus-visible .mnsk7-megamenu__pane-header-title,
+  a.mnsk7-megamenu__pane-header:hover .mnsk7-megamenu__pane-header-all,
+  a.mnsk7-megamenu__pane-header:focus-visible .mnsk7-megamenu__pane-header-all {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+  a.mnsk7-megamenu__pane-header:focus {
+    outline: none;
+  }
+  a.mnsk7-megamenu__pane-header:focus-visible {
+    outline: 2px solid var(--color-focus, var(--color-primary));
+    outline-offset: 2px;
+    border-radius: var(--r-sm);
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list li {
+    margin: 0;
+    min-width: 0;
+  }
+  /* Leaf (kategoria bez podkategorii): prawy panel pokazuje duże CTA do kategorii. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cta {
     position: absolute;
     top: var(--mm-pad);
     left: calc(var(--mm-left) + var(--mm-pad) * 2);
-    right: auto;
+    right: var(--mm-pad);
     bottom: auto;
-    width: max-content;
-    min-width: var(--mm-right-min);
-    max-width: min(22rem, calc(100vw - var(--mm-left) - 4rem));
     display: flex;
     align-items: flex-start;
   }
@@ -652,19 +664,12 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     gap: 0.4rem;
   }
 }
-/* Wąski desktop 1024–1279px: węższy rail + panel, by dwa panele wygodnie się mieściły. */
+/* Wąski desktop 1024–1279px: węższy rail + kolumny, by strefy wygodnie się mieściły. */
 @media (min-width: 1024px) and (max-width: 1279px) {
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
-    --mm-left: 14rem;
-    --mm-right-min: 12rem;
-    min-width: calc(var(--mm-left) + var(--mm-right-min) + var(--mm-pad) * 3);
-    max-width: min(40rem, calc(100vw - 2rem));
-  }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list {
-    column-width: auto;
-    column-count: 1;
-    column-gap: 0;
-    max-width: min(20rem, calc(100vw - var(--mm-left) - 3.5rem));
+    --mm-left: 14.5rem;
+    --mm-col: 13.5rem;
+    width: min(58rem, calc(100vw - 2.5rem));
   }
 }
 /* Lewy rail: pozycje listy bez marginesów/numeracji (override bazowych reguł). */
@@ -908,9 +913,11 @@ a.mnsk7-megamenu__col-title.mnsk7-megamenu__link--active:visited {
     border: 0;
     background: transparent;
   }
-  /* Desktopowy CTA (leaf) i linia rozdzielająca rail — tylko desktop. */
+  /* Desktopowy CTA (leaf), nagłówek prawego panelu i linia rozdzielająca rail — tylko desktop. */
   .mnsk7-megamenu__cta,
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cta {
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cta,
+  .mnsk7-megamenu__pane-header,
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__pane-header {
     display: none !important;
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards::after {

@@ -799,16 +799,17 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
      podkategorie pojawiają się na żądanie po prawej. Brak scrollbara, brak
      upychania — mieści się w 1366×768 / 1280×720. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
-    --mm-left: 15.5rem;
-    --mm-right-min: 13.5rem;
-    --mm-pad: 0.65rem;
+    --mm-left: 16rem;            /* lewy rail (stała szerokość) */
+    --mm-pad: 1rem;              /* wewnętrzny padding panelu */
+    --mm-col: 14.5rem;           /* min. szerokość kolumny podkategorii (mieści najdłuższe nazwy) */
+    --mm-head: 3rem;             /* wysokość nagłówka prawego panelu (nazwa + „zobacz wszystkie”) */
     position: absolute;
     top: calc(100% - 1px);
     left: 50%;
     right: auto;
-    width: max-content;
-    min-width: calc(var(--mm-left) + var(--mm-right-min) + var(--mm-pad) * 3);
-    max-width: min(44rem, calc(100vw - 2.5rem));
+    /* Stała, przewidywalna szerokość panelu — BEZ max-content. Zawsze w obrębie viewportu:
+       64rem (1024px) na szerokich ekranach, a na wąskich = viewport minus margines. */
+    width: min(64rem, calc(100vw - 3rem));
     /* Bez promo: panel startuje pod samym headerem. */
     max-height: calc(100vh - var(--header-h, 56px) - 1rem) !important;
     overflow: hidden !important;
@@ -821,7 +822,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
-    z-index: 200;
+    z-index: 1200;
     display: block;
   }
   /* Z promo barem: panel startuje niżej (promo + header). */
@@ -833,14 +834,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     position: relative;
     display: block;
     min-width: 0;
-    column-width: auto;
-    column-count: 1;
-    column-gap: 0;
-    column-fill: balance;
-    min-height: 0;
+    /* Floor wysokości — sparse kategorie wyglądają zrównoważnie; rail (14+ kat.) i tak go przekracza. */
+    min-height: 19rem;
     height: auto;
     padding: var(--mm-pad);
-    padding-right: calc(var(--mm-right-min) + var(--mm-pad) * 2);
     box-sizing: border-box;
   }
   /* Pionowa linia rozdzielająca rail od prawego panelu. */
@@ -849,7 +846,7 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     position: absolute;
     top: var(--mm-pad);
     bottom: var(--mm-pad);
-    left: calc(var(--mm-left) + var(--mm-pad));
+    left: calc(var(--mm-left) + var(--mm-pad) * 1.5);
     width: 1px;
     background: var(--color-border);
     pointer-events: none;
@@ -940,81 +937,96 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col--tags .mnsk7-megamenu__col-title:hover {
     color: var(--color-primary);
   }
-  /* Prawy panel: podkategorie aktywnej kategorii — tylko na wysokość treści (bez pustej przepaści). */
+  /* ── Prawy panel (strefa treści) ──────────────────────────────────────────
+     KLUCZ poprawki: nagłówek, lista i CTA są PRZYPIĘTE do lewej i prawej krawędzi
+     strefy (left + right), więc ich szerokość = stała szerokość strefy = (panel −
+     rail − paddingi). Nigdy nie rosną wg max-content i nigdy nie wychodzą poza
+     panel → overflow:hidden panelu obcina już tylko zaokrąglone rogi, NIGDY tekst.
+     Najdłuższe nazwy mieszczą się w kolumnie ≥14.5rem (jedna linia) lub czysto
+     zawijają do 2 linii. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list {
     position: absolute;
-    top: var(--mm-pad);
+    top: calc(var(--mm-pad) + var(--mm-head));
     left: calc(var(--mm-left) + var(--mm-pad) * 2);
-    right: auto;
-    bottom: auto;
-    width: max-content;
-    min-width: var(--mm-right-min);
-    max-width: min(22rem, calc(100vw - var(--mm-left) - 4rem));
-    max-height: calc(100vh - var(--header-h, 56px) - 5rem);
+    right: var(--mm-pad);
+    bottom: var(--mm-pad);
+    width: auto;
     margin: 0;
-    padding: 0.15rem 0 0;
+    padding: 0;
     border: 0;
     border-left: 0;
     padding-left: 0;
     display: none;
-    column-width: 10.5rem;
-    column-gap: 1rem;
-    column-fill: balance;
-    align-content: flex-start;
+    grid-template-columns: repeat(auto-fill, minmax(var(--mm-col), 1fr));
+    grid-auto-rows: min-content;
+    gap: 0.1rem 1rem;
+    align-content: start;
     overflow-x: hidden;
     overflow-y: auto;
     overscroll-behavior: contain;
   }
-  /* Prawy panel zawsze JEDNOKOLUMNOWY: 2 kolumny przy wąskim panelu wychodziły poza
-     jego prawą krawędź (overflow:hidden) i ucinały dłuższe listy (np. Pilniki typ G/K/L,
-     Zestawy). Pojedyncza kolumna mieści wszystkie podkategorie pionowo bez przycinania. */
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list.mnsk7-megamenu__list--grid {
-    display: none;
-    column-width: auto;
-    column-count: 1;
-    column-gap: 0;
-  }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col.is-active > .mnsk7-megamenu__list {
-    display: block;
-    top: calc(var(--mm-pad) + 1.35rem);
-  }
+  /* Stara klasa --grid jest już zbędna (grid auto-fill obsługuje każdą liczbę
+     podkategorii); zachowana dla zgodności i renderuje się identycznie. */
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col.is-active > .mnsk7-megamenu__list,
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col.is-active > .mnsk7-megamenu__list.mnsk7-megamenu__list--grid {
-    display: block;
+    display: grid;
   }
+  /* Nagłówek prawego panelu = link „Nazwa kategorii + Zobacz wszystkie →”. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__pane-header {
     position: absolute;
     top: var(--mm-pad);
     left: calc(var(--mm-left) + var(--mm-pad) * 2);
-    right: auto;
-    width: max-content;
-    min-width: var(--mm-right-min);
-    max-width: min(22rem, calc(100vw - var(--mm-left) - 4rem));
+    right: var(--mm-pad);
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
     margin: 0;
-    padding: 0 0 0.35rem;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.02em;
-    text-transform: uppercase;
-    color: var(--color-text-muted, #64748b);
-    pointer-events: none;
+    padding: 0 0 0.55rem;
+    border-bottom: 1px solid var(--color-border);
+    text-decoration: none;
+    color: var(--color-text);
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__pane-header[hidden] {
     display: none;
   }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list li {
-    break-inside: avoid;
-    -webkit-column-break-inside: avoid;
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__pane-header-title {
+    font-size: 0.95rem;
+    font-weight: 700;
+    line-height: 1.25;
+    color: var(--color-text);
   }
-  /* Leaf (kategoria bez podkategorii): prawy panel pokazuje CTA do kategorii. */
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__pane-header-all {
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--color-primary);
+  }
+  a.mnsk7-megamenu__pane-header:hover .mnsk7-megamenu__pane-header-title,
+  a.mnsk7-megamenu__pane-header:focus-visible .mnsk7-megamenu__pane-header-title,
+  a.mnsk7-megamenu__pane-header:hover .mnsk7-megamenu__pane-header-all,
+  a.mnsk7-megamenu__pane-header:focus-visible .mnsk7-megamenu__pane-header-all {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+  a.mnsk7-megamenu__pane-header:focus {
+    outline: none;
+  }
+  a.mnsk7-megamenu__pane-header:focus-visible {
+    outline: 2px solid var(--color-focus, var(--color-primary));
+    outline-offset: 2px;
+    border-radius: var(--r-sm);
+  }
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list li {
+    margin: 0;
+    min-width: 0;
+  }
+  /* Leaf (kategoria bez podkategorii): prawy panel pokazuje duże CTA do kategorii. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cta {
     position: absolute;
     top: var(--mm-pad);
     left: calc(var(--mm-left) + var(--mm-pad) * 2);
-    right: auto;
+    right: var(--mm-pad);
     bottom: auto;
-    width: max-content;
-    min-width: var(--mm-right-min);
-    max-width: min(22rem, calc(100vw - var(--mm-left) - 4rem));
     display: flex;
     align-items: flex-start;
   }
@@ -1053,19 +1065,12 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     gap: 0.4rem;
   }
 }
-/* Wąski desktop 1024–1279px: węższy rail + panel, by dwa panele wygodnie się mieściły. */
+/* Wąski desktop 1024–1279px: węższy rail + kolumny, by strefy wygodnie się mieściły. */
 @media (min-width: 1024px) and (max-width: 1279px) {
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
-    --mm-left: 14rem;
-    --mm-right-min: 12rem;
-    min-width: calc(var(--mm-left) + var(--mm-right-min) + var(--mm-pad) * 3);
-    max-width: min(40rem, calc(100vw - 2rem));
-  }
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list {
-    column-width: auto;
-    column-count: 1;
-    column-gap: 0;
-    max-width: min(20rem, calc(100vw - var(--mm-left) - 3.5rem));
+    --mm-left: 14.5rem;
+    --mm-col: 13.5rem;
+    width: min(58rem, calc(100vw - 2.5rem));
   }
 }
 /* Lewy rail: pozycje listy bez marginesów/numeracji (override bazowych reguł). */
@@ -1309,9 +1314,11 @@ a.mnsk7-megamenu__col-title.mnsk7-megamenu__link--active:visited {
     border: 0;
     background: transparent;
   }
-  /* Desktopowy CTA (leaf) i linia rozdzielająca rail — tylko desktop. */
+  /* Desktopowy CTA (leaf), nagłówek prawego panelu i linia rozdzielająca rail — tylko desktop. */
   .mnsk7-megamenu__cta,
-  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cta {
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cta,
+  .mnsk7-megamenu__pane-header,
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__pane-header {
     display: none !important;
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards::after {
@@ -3136,7 +3143,7 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .single-product .images .woocommerce-product-gallery,
 .single-product div.product .mnsk7-pdp-main > .woocommerce-product-gallery.images {
   opacity: 1 !important;
-  padding: 1rem;
+  padding: 0.65rem;
   background: #fff;
   border: 1px solid rgba(15, 23, 42, 0.1);
   border-radius: calc(var(--r-md) + 4px);
@@ -3158,7 +3165,35 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 .single-product .images .woocommerce-product-gallery__image {
   border-radius: var(--r-md);
   overflow: hidden;
-  background: #fff;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+}
+
+.single-product .images .woocommerce-product-gallery__image a {
+  display: block;
+  position: relative;
+  aspect-ratio: 1 / 1;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+}
+
+.single-product .images .woocommerce-product-gallery__image a::after {
+  content: "";
+  position: absolute;
+  right: 0.55rem;
+  bottom: 0.55rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.94) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='18' viewBox='0 0 24 24' fill='none' stroke='%230f172a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Ccircle cx='11' cy='11' r='7'/%3E%3Cline x1='21' y1='21' x2='16.65' y2='16.65'/%3E%3Cline x1='11' y1='8' x2='11' y2='14'/%3E%3Cline x1='8' y1='11' x2='14' y2='11'/%3E%3C/svg%3E") center / 1rem no-repeat;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.12);
+  pointer-events: none;
+  opacity: 0.92;
+  transition: opacity 0.15s ease, transform 0.15s ease;
+}
+
+.single-product .images .woocommerce-product-gallery__image a:hover::after {
+  opacity: 1;
+  transform: scale(1.04);
 }
 
 .single-product div.product .summary.mnsk7-pdp-buybox {
@@ -3211,20 +3246,6 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   order: 21;
 }
 
-.mnsk7-pdp-description-intro {
-  margin: 0;
-  padding: 0.95rem 1rem;
-  border: 1px solid rgba(15, 23, 42, 0.08);
-  border-radius: var(--r-md);
-  background: linear-gradient(180deg, #f8fbff 0%, #f3f7fb 100%);
-  color: var(--color-text);
-  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.05);
-}
-
-.mnsk7-pdp-description-intro p:last-child {
-  margin-bottom: 0;
-}
-
 .mnsk7-pdp-secondary {
   display: flex;
   flex-direction: column;
@@ -3233,40 +3254,50 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
 
 .single-product .images img {
   border-radius: var(--r-md);
-  width: 100%;
-  height: auto;
-  display: block;
-  background: var(--color-surface);
 }
 
 .single-product .images .woocommerce-product-gallery__image img {
-  min-width: 200px;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
 }
 
-/* Audit task 8: miniaturki — flex-wrap, bez wewnętrznego scrolla */
+/* Audit task 8: miniaturki — poziomy pasek ze scroll-snap (desktop + mobile). */
 .single-product .images .flex-control-thumbs {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   gap: 0.5rem;
-  margin-top: 0.75rem;
+  margin-top: 0.65rem;
   max-width: 100%;
   padding-bottom: 2px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-snap-type: x proximity;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+}
+
+.single-product .images .flex-control-thumbs::-webkit-scrollbar {
+  height: 4px;
 }
 
 .single-product .images .flex-control-thumbs li {
   width: auto;
-  min-width: 56px;
-  flex-shrink: 0;
+  min-width: 0;
+  flex: 0 0 auto;
+  scroll-snap-align: start;
 }
 
 .single-product .images .flex-control-thumbs img {
-  min-width: 56px;
-  width: 56px;
-  height: 56px;
+  width: 76px;
+  height: 76px;
+  min-width: 76px;
   object-fit: cover;
   border-radius: var(--r-sm);
-  border: 2px solid transparent;
-  transition: border-color 0.15s ease;
+  border: 2px solid rgba(15, 23, 42, 0.1);
+  transition: border-color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
 }
 
 .single-product .images .flex-control-thumbs li.flex-active img {
@@ -4162,7 +4193,18 @@ body.single-product .mnsk7-content .woocommerce-sidebar {
   }
 
   .single-product div.product .flex-control-thumbs {
-    display: none !important;
+    display: flex !important;
+    flex-wrap: nowrap;
+    gap: 0.45rem;
+    margin-top: 0.55rem;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .single-product div.product .flex-control-thumbs::-webkit-scrollbar {
+    display: none;
   }
 
   .single-product div.product .summary form.cart {
@@ -4469,22 +4511,24 @@ body.mnsk7-pdp-switching .single-product main .product {
   color: var(--color-text);
 }
 
-/* Opis jako harmonijka (domyślnie zwinięty) — zawsze pod blokiem zdjęcie+buybox. Task 8: overflow: hidden — obcięcie do border-radius. */
+/* Opis jako harmonijka (domyślnie zwinięty) — karta spójna z buyboxem PDP. */
 .mnsk7-product-description-accordion {
-  margin: 1.25rem 0 0.5rem;
-  border: 1px solid var(--color-border);
-  border-radius: var(--r-sm);
+  margin: 1rem 0 0.5rem;
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  border-radius: calc(var(--r-md) + 2px);
   overflow: hidden;
+  background: #fff;
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
 }
 
 .mnsk7-product-description-accordion__summary {
-  padding: 0.75rem 1rem;
+  padding: 0.85rem 1rem;
   font-weight: 600;
   font-size: var(--fs-sm);
   color: var(--color-text);
   cursor: pointer;
   list-style: none;
-  background: var(--color-surface);
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
   user-select: none;
 }
 
@@ -4502,10 +4546,12 @@ body.mnsk7-pdp-switching .single-product main .product {
 }
 
 .mnsk7-product-description-accordion__content {
-  padding: var(--space-16);
+  padding: var(--space-16) var(--space-16) var(--space-24);
   border-top: 1px solid var(--color-border);
   font-size: var(--fs-sm);
-  line-height: 1.6;
+  line-height: 1.65;
+  color: var(--color-text);
+  background: #fff;
 }
 
 .woocommerce-tabs .panel h2 {
@@ -4723,22 +4769,35 @@ body.mnsk7-pdp-switching .single-product main .product {
     height: fit-content;
   }
 
+  .single-product .woocommerce-product-gallery .flex-viewport {
+    border-radius: var(--r-md);
+    overflow: hidden;
+    background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+  }
+
+  .single-product .woocommerce-product-gallery .flex-viewport .woocommerce-product-gallery__image a {
+    aspect-ratio: 1 / 1;
+  }
+
   .single-product .images .woocommerce-product-gallery__image img {
     width: 100%;
-    height: auto;
+    height: 100%;
     max-height: none;
     object-fit: contain;
   }
 
-  /* Desktop: tasteful horizontal thumbnail strip under the main image (click swaps main). */
+  /* Desktop: horizontal thumbnail strip with scroll-snap when many images. */
   .single-product div.product .flex-control-thumbs {
     display: flex !important;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 0.5rem;
-    margin-top: 0.85rem;
+    margin-top: 0.75rem;
     padding: 0;
     list-style: none;
     max-width: 100%;
+    overflow-x: auto;
+    scroll-snap-type: x proximity;
+    scrollbar-width: thin;
   }
 
   .single-product div.product .flex-control-thumbs li {
@@ -4749,14 +4808,14 @@ body.mnsk7-pdp-switching .single-product main .product {
   }
 
   .single-product div.product .flex-control-thumbs img {
-    width: 64px;
-    height: 64px;
-    min-width: 64px;
+    width: 76px;
+    height: 76px;
+    min-width: 76px;
     object-fit: cover;
     border-radius: var(--r-sm);
     border: 2px solid rgba(15, 23, 42, 0.12);
     cursor: pointer;
-    opacity: 0.86;
+    opacity: 0.9;
     transition: border-color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
   }
 
@@ -4887,15 +4946,27 @@ body.mnsk7-pdp-switching .single-product main .product {
     background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
   }
 
+  .single-product .images .woocommerce-product-gallery__image a {
+    aspect-ratio: 4 / 3;
+  }
+
   .single-product .images .woocommerce-product-gallery__image img {
     min-width: 0;
-    max-height: 320px;
+    max-height: none;
+    height: 100%;
     object-fit: contain;
   }
 
   .single-product .images .flex-control-thumbs {
-    gap: 0.35rem;
-    margin-top: 0.5rem;
+    gap: 0.4rem;
+    margin-top: 0.55rem;
+    padding-inline: 0.05rem;
+  }
+
+  .single-product .images .flex-control-thumbs img {
+    width: 68px;
+    height: 68px;
+    min-width: 68px;
   }
 
   .single-product .summary .single_add_to_cart_button {
@@ -5297,11 +5368,23 @@ body.mnsk7-pdp-switching .single-product main .product {
   border-top: 1px solid var(--color-border);
 }
 
+.mnsk7-bl-desc__main,
+.mnsk7-bl-desc__extra {
+  max-width: 72ch;
+}
+
 .mnsk7-bl-desc__heading {
-  font-size: var(--fs-base);
+  font-size: clamp(0.95rem, 2.2vw, var(--fs-base));
   font-weight: 700;
   color: var(--color-text);
   margin: 0 0 0.6rem;
+}
+
+.mnsk7-bl-desc__main p,
+.mnsk7-bl-desc__extra-body p,
+.mnsk7-bl-desc__extra-body li {
+  font-size: inherit;
+  line-height: 1.65;
 }
 
 .mnsk7-bl-desc__main p:last-child,
@@ -5311,7 +5394,23 @@ body.mnsk7-pdp-switching .single-product main .product {
 
 .mnsk7-bl-desc__extra-body p {
   margin: 0 0 0.6rem;
-  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .mnsk7-product-description-accordion {
+    margin-inline: 0;
+    border-radius: var(--r-md);
+  }
+
+  .mnsk7-product-description-accordion__content {
+    padding: var(--space-16) var(--space-12) var(--space-16);
+    font-size: var(--fs-sm);
+  }
+
+  .mnsk7-bl-desc__main,
+  .mnsk7-bl-desc__extra {
+    max-width: none;
+  }
 }
 
 /* === 07-mnsk7-blocks.css === */
