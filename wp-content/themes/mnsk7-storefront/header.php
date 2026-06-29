@@ -144,7 +144,8 @@ endif;
 									}
 									$cname    = $mm_label( $child->name );
 									$c_active = ( $current_archive_taxonomy === 'product_cat' && $current_archive_term_id === (int) $child->term_id ) ? ' class="mnsk7-megamenu__link--active"' : '';
-									echo '<li><a href="' . esc_url( $clink ) . '"' . $c_active . '>' . esc_html( $cname ) . '</a></li>';
+									$ccount   = ( $child instanceof WP_Term && (int) $child->count > 0 ) ? '<span class="mnsk7-megamenu__count" aria-hidden="true">' . esc_html( number_format_i18n( (int) $child->count ) ) . '</span>' : '';
+									echo '<li><a href="' . esc_url( $clink ) . '"' . $c_active . '><span class="mnsk7-megamenu__name">' . esc_html( $cname ) . '</span>' . $ccount . '</a></li>';
 								}
 								echo '</ul>';
 							}

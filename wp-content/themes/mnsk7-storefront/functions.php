@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.77' );
+	define( 'MNSK7_THEME_VERSION', '1.0.78' );
 }
 
 /**
@@ -1471,7 +1471,15 @@ add_action( 'wp_footer', function () {
 				var cols = Array.prototype.slice.call(cards.querySelectorAll(':scope > .mnsk7-megamenu__col'));
 				if (!cols.length) return;
 				var CTA_PREFIX = <?php echo wp_json_encode( __( 'Zobacz wszystkie produkty w', 'mnsk7-storefront' ) ); ?>;
-				var PANE_ALL = <?php echo wp_json_encode( __( 'Zobacz wszystkie', 'mnsk7-storefront' ) ); ?>;
+				var PODKAT_1 = <?php echo wp_json_encode( _x( 'podkategoria', 'megamenu', 'mnsk7-storefront' ) ); ?>;
+				var PODKAT_FEW = <?php echo wp_json_encode( _x( 'podkategorie', 'megamenu', 'mnsk7-storefront' ) ); ?>;
+				var PODKAT_MANY = <?php echo wp_json_encode( _x( 'podkategorii', 'megamenu', 'mnsk7-storefront' ) ); ?>;
+				function plPodkat(n) {
+					if (n === 1) return PODKAT_1;
+					var d = n % 10, h = n % 100;
+					if (d >= 2 && d <= 4 && !(h >= 12 && h <= 14)) return PODKAT_FEW;
+					return PODKAT_MANY;
+				}
 
 				// Nagłówki bez linku (np. "Zastosowanie i materiały") — focusowalne klawiaturą.
 				cols.forEach(function(col) {
@@ -1516,36 +1524,31 @@ add_action( 'wp_footer', function () {
 					col.classList.add('is-active');
 					var list = col.querySelector(':scope > .mnsk7-megamenu__list');
 					var title = col.querySelector(':scope > .mnsk7-megamenu__col-title');
-					cols.forEach(function(c) {
-						var siblingList = c.querySelector(':scope > .mnsk7-megamenu__list');
-						if (siblingList) {
-							siblingList.classList.remove('mnsk7-megamenu__list--grid');
-						}
-					});
-					if (list) {
-						cta.setAttribute('hidden', '');
-						if (list.children.length >= 5) {
-							list.classList.add('mnsk7-megamenu__list--grid');
-						}
-					if (title) {
-						var nm = (title.textContent || '').trim();
+					var nm = title ? (title.textContent || '').trim() : '';
+					var href = (title && title.getAttribute) ? title.getAttribute('href') : null;
+					// Liczba realnych podkategorii (bez wstrzykniętego mobilnego „Wszystkie:").
+					var subCount = list ? list.querySelectorAll(':scope > li:not(.mnsk7-drawer__viewall)').length : 0;
+					if (list && subCount > 0) {
+						// Nagłówek: nazwa + „N podkategorii".
 						if (paneHeaderTitle) paneHeaderTitle.textContent = nm;
-						var headHref = title.getAttribute ? title.getAttribute('href') : null;
-						if (headHref) {
-							paneHeader.setAttribute('href', headHref);
-							if (paneHeaderAll) { paneHeaderAll.textContent = PANE_ALL + ' \u2192'; paneHeaderAll.hidden = false; }
-						} else {
-							paneHeader.removeAttribute('href');
-							if (paneHeaderAll) { paneHeaderAll.textContent = ''; paneHeaderAll.hidden = true; }
-						}
+						if (paneHeaderAll) paneHeaderAll.textContent = subCount + ' ' + plPodkat(subCount);
+						if (href) { paneHeader.setAttribute('href', href); } else { paneHeader.removeAttribute('href'); }
 						paneHeader.removeAttribute('hidden');
-					} else {
+						// Dolna karta CTA „Zobacz wszystkie produkty w …" (tylko gdy kategoria ma link).
+						cta.classList.remove('mnsk7-megamenu__cta--leaf');
+						if (href) {
+							ctaLink.setAttribute('href', href);
+							ctaLink.textContent = CTA_PREFIX + ' \u201E' + nm + '\u201D';
+							cta.removeAttribute('hidden');
+						} else {
+							cta.setAttribute('hidden', '');
+						}
+					} else if (title && href) {
+						// Liść (kategoria bez podkategorii): wyśrodkowane CTA w całej strefie.
 						paneHeader.setAttribute('hidden', '');
-					}
-					} else if (title && title.getAttribute('href')) {
-						paneHeader.setAttribute('hidden', '');
-						ctaLink.setAttribute('href', title.getAttribute('href'));
-						ctaLink.textContent = CTA_PREFIX + ' \u201E' + (title.textContent || '').trim() + '\u201D \u2192';
+						cta.classList.add('mnsk7-megamenu__cta--leaf');
+						ctaLink.setAttribute('href', href);
+						ctaLink.textContent = CTA_PREFIX + ' \u201E' + nm + '\u201D';
 						cta.removeAttribute('hidden');
 					} else {
 						paneHeader.setAttribute('hidden', '');
@@ -1553,11 +1556,25 @@ add_action( 'wp_footer', function () {
 					}
 				}
 
+				// Hover-intent: przełączamy aktywną kategorię dopiero gdy kursor ZATRZYMA
+				// się na nowym wierszu railu (120ms). Szybki, ukośny ruch z railu do
+				// podkategorii po prawej mija po drodze inne wiersze — timer jest kasowany
+				// na mouseleave, więc panel NIE „soskakuje" i nie miga.
+				var hoverTimer = null;
+				var HOVER_SWITCH_MS = 120;
 				cols.forEach(function(col) {
 					var title = col.querySelector(':scope > .mnsk7-megamenu__col-title');
-					col.addEventListener('mouseenter', function() { if (window.innerWidth >= DESKTOP_MIN) activate(col); });
+					col.addEventListener('mouseenter', function() {
+						if (window.innerWidth < DESKTOP_MIN) return;
+						clearTimeout(hoverTimer);
+						if (col.classList.contains('is-active')) return;
+						hoverTimer = setTimeout(function() { activate(col); }, HOVER_SWITCH_MS);
+					});
+					col.addEventListener('mouseleave', function() {
+						clearTimeout(hoverTimer);
+					});
 					if (title) {
-						title.addEventListener('focus', function() { if (window.innerWidth >= DESKTOP_MIN) activate(col); });
+						title.addEventListener('focus', function() { if (window.innerWidth >= DESKTOP_MIN) { clearTimeout(hoverTimer); activate(col); } });
 					}
 				});
 
