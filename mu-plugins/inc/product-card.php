@@ -1441,13 +1441,47 @@ add_filter( 'woocommerce_product_tabs', function ( $tabs ) {
 	return $tabs;
 }, 25 );
 
+/**
+ * Opis produktu: łączy opis główny (BL „opis” → post_content) z opisem
+ * dodatkowym (BL „opis dodatkowy” / description_extra1 → short description),
+ * który na PDP jest normalnie ukryty. Oba pokazujemy RAZEM, w jednym czytelnym
+ * bloku, z wyraźnym nagłówkiem między częściami.
+ */
 function mnsk7_product_description_accordion() {
+	global $product;
+
 	$content = get_the_content( null, false, get_the_ID() );
-	if ( trim( $content ) === '' ) {
+	$main    = trim( (string) $content );
+
+	$extra = '';
+	if ( is_a( $product, 'WC_Product' ) ) {
+		// get_short_description() zwraca surową treść (filtr wyświetlania
+		// woocommerce_short_description, który czyści ją na PDP, tu nie działa).
+		$extra = trim( (string) $product->get_short_description() );
+	}
+
+	if ( $main === '' && $extra === '' ) {
 		return;
 	}
+
 	echo '<details class="mnsk7-product-description-accordion">';
-	echo '<summary class="mnsk7-product-description-accordion__summary">' . esc_html__( 'Pokaż opis', 'mnsk7-tools' ) . '</summary>';
-	echo '<div class="mnsk7-product-description-accordion__content">' . apply_filters( 'the_content', $content ) . '</div>';
+	echo '<summary class="mnsk7-product-description-accordion__summary">' . esc_html__( 'Pokaż opis i specyfikację', 'mnsk7-tools' ) . '</summary>';
+	echo '<div class="mnsk7-product-description-accordion__content mnsk7-bl-desc">';
+
+	if ( $main !== '' ) {
+		echo '<div class="mnsk7-bl-desc__section mnsk7-bl-desc__main">';
+		echo apply_filters( 'the_content', $content ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		echo '</div>';
+	}
+
+	if ( $extra !== '' ) {
+		$extra_html = ( strpos( $extra, '<' ) === false ) ? wpautop( $extra ) : $extra;
+		echo '<div class="mnsk7-bl-desc__section mnsk7-bl-desc__extra">';
+		echo '<h3 class="mnsk7-bl-desc__heading">' . esc_html__( 'Specyfikacja i dodatkowe informacje', 'mnsk7-tools' ) . '</h3>';
+		echo '<div class="mnsk7-bl-desc__extra-body">' . wp_kses_post( $extra_html ) . '</div>';
+		echo '</div>';
+	}
+
+	echo '</div>';
 	echo '</details>';
 }

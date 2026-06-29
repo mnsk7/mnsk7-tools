@@ -967,11 +967,21 @@ def build_wc_payload(
     if description:
         payload["description"] = description
 
-    short_description = pick_text_field(text_fields, "description_extra1", language)
-    if not short_description:
-        short_description = pick_text_field(text_fields, "description_extra", language)
-    if short_description:
-        payload["short_description"] = short_description
+    # "Opis dodatkowy" (BaseLinker): description_extra1..4. Bring every populated
+    # extra field into Woo's short description so it is never dropped; the theme
+    # renders it together with the main description on the PDP (one readable block).
+    extra_parts = []
+    primary_extra = pick_text_field(text_fields, "description_extra1", language)
+    if not primary_extra:
+        primary_extra = pick_text_field(text_fields, "description_extra", language)
+    if primary_extra:
+        extra_parts.append(primary_extra)
+    for extra_idx in range(2, 5):
+        extra_value = pick_text_field(text_fields, f"description_extra{extra_idx}", language)
+        if extra_value and extra_value not in extra_parts:
+            extra_parts.append(extra_value)
+    if extra_parts:
+        payload["short_description"] = "\n\n".join(extra_parts)
 
     regular_price = pick_price(product, price_group_id)
     if regular_price:
@@ -1194,6 +1204,12 @@ def main():
         action="store_true",
         help="Do not map BaseLinker category_id to Woo product categories.",
     )
+    parser.add_argument(
+        "--sku",
+        action="append",
+        default=[],
+        help="Only process these SKUs (repeatable). Use for targeted re-sync of samples.",
+    )
     args = parser.parse_args()
 
     env = {}
@@ -1261,6 +1277,10 @@ def main():
     print(f"- rebuild-catalog: {args.rebuild_catalog}")
     print("")
 
+    sku_filter = {str(value).strip() for value in (args.sku or []) if str(value).strip()}
+    if sku_filter:
+        print(f"- sku filter (targeted re-sync): {sorted(sku_filter)}")
+
     limit = args.limit if args.limit > 0 else None
     product_ids = bl.list_product_ids(inventory_id, limit=limit)
     if not product_ids:
@@ -1312,6 +1332,8 @@ def main():
                 continue
 
             sku = payload["sku"]
+            if sku_filter and sku not in sku_filter:
+                continue
             try:
                 existing = None if args.rebuild_catalog else woo.find_product_by_sku(sku)
                 wc_attributes = build_wc_attributes(woo, features, dry_run=dry_run) if features else []

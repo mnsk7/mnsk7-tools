@@ -1,6 +1,6 @@
 /* =================================================================
    MNK7 Storefront — main.css (built from parts)
-   Build: 2026-06-26
+   Build: 2026-06-29
    Run: scripts/build-main-css.sh
    ================================================================= */
 /* === 00-fonts-inter.css === */
@@ -4670,9 +4670,46 @@ body.mnsk7-pdp-switching .single-product main .product {
     object-fit: contain;
   }
 
-  /* No tiny thumb strip on desktop — use slider arrows / lightbox. */
+  /* Desktop: tasteful horizontal thumbnail strip under the main image (click swaps main). */
   .single-product div.product .flex-control-thumbs {
-    display: none !important;
+    display: flex !important;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 0.85rem;
+    padding: 0;
+    list-style: none;
+    max-width: 100%;
+  }
+
+  .single-product div.product .flex-control-thumbs li {
+    width: auto;
+    min-width: 0;
+    margin: 0;
+    flex: 0 0 auto;
+  }
+
+  .single-product div.product .flex-control-thumbs img {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+    object-fit: cover;
+    border-radius: var(--r-sm);
+    border: 2px solid rgba(15, 23, 42, 0.12);
+    cursor: pointer;
+    opacity: 0.86;
+    transition: border-color 0.15s ease, opacity 0.15s ease, transform 0.15s ease;
+  }
+
+  .single-product div.product .flex-control-thumbs img:hover {
+    opacity: 1;
+    transform: translateY(-1px);
+    border-color: rgba(15, 23, 42, 0.3);
+  }
+
+  .single-product div.product .flex-control-thumbs li.flex-active img,
+  .single-product div.product .flex-control-thumbs img.flex-active {
+    opacity: 1;
+    border-color: var(--color-primary);
   }
 
   .single-product .woocommerce-product-gallery .flex-direction-nav {
@@ -5126,6 +5163,95 @@ body.mnsk7-pdp-switching .single-product main .product {
 /* Encoding-safe accordion state marker. */
 .mnsk7-product-description-accordion[open] .mnsk7-product-description-accordion__summary::before {
   content: "- ";
+}
+
+/* =========================================================================
+   PDP gallery viewer — thumbnails (desktop), swipe dots (mobile), lightbox.
+   ========================================================================= */
+
+/* Main image hints it can be opened in the lightbox / zoomed. */
+.single-product .woocommerce-product-gallery__image a,
+.single-product .woocommerce-product-gallery__image img {
+  cursor: zoom-in;
+}
+
+/* Default WooCommerce trigger is an unstyled emoji link — hide it; the main
+   image click opens the PhotoSwipe lightbox and hover triggers zoom. */
+.single-product .woocommerce-product-gallery__trigger {
+  display: none !important;
+}
+
+/* Mobile swipe dots (built by pdp-gallery.js from the gallery images). */
+.mnsk7-gallery-dots {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.15rem;
+  margin: 0.55rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mnsk7-gallery-dots__dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.mnsk7-gallery-dots__dot::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.24);
+  transition: background 0.15s ease, transform 0.15s ease;
+}
+
+.mnsk7-gallery-dots__dot.is-active::before {
+  background: var(--color-primary);
+  transform: scale(1.35);
+}
+
+@media (max-width: 768px) {
+  /* Show dots only when JS added them (multi-image galleries). */
+  .single-product .images .mnsk7-gallery-dots {
+    display: flex;
+  }
+}
+
+/* =========================================================================
+   PDP description: opis (główny) + opis dodatkowy (specyfikacja) razem.
+   ========================================================================= */
+.mnsk7-bl-desc__section + .mnsk7-bl-desc__section {
+  margin-top: 1.15rem;
+  padding-top: 1.15rem;
+  border-top: 1px solid var(--color-border);
+}
+
+.mnsk7-bl-desc__heading {
+  font-size: var(--fs-base);
+  font-weight: 700;
+  color: var(--color-text);
+  margin: 0 0 0.6rem;
+}
+
+.mnsk7-bl-desc__main p:last-child,
+.mnsk7-bl-desc__extra-body p:last-child {
+  margin-bottom: 0;
+}
+
+.mnsk7-bl-desc__extra-body p {
+  margin: 0 0 0.6rem;
+  line-height: 1.6;
 }
 
 /* === 07-mnsk7-blocks.css === */
