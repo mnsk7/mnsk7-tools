@@ -800,14 +800,15 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
      upychania — mieści się w 1366×768 / 1280×720. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
     --mm-left: 16.5rem;
-    --mm-pad: 0.85rem;
+    --mm-pad: 0.75rem;
     position: absolute;
     top: calc(100% - 1px);
     left: 50%;
     right: auto;
     width: min(60rem, calc(100vw - 2.5rem));
     max-width: calc(100vw - 2.5rem);
-    max-height: calc(100vh - var(--mnsk7-promo-h, 2.5rem) - var(--header-h, 56px) - 1.5rem) !important;
+    /* Bez promo: panel startuje pod samym headerem. */
+    max-height: calc(100vh - var(--header-h, 56px) - 1rem) !important;
     overflow: hidden !important;
     padding: 0;
     background: var(--color-white);
@@ -820,6 +821,10 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     transition: opacity 0.18s ease, visibility 0.18s ease, transform 0.18s ease;
     z-index: 200;
     display: block;
+  }
+  /* Z promo barem: panel startuje niżej (promo + header). */
+  body.mnsk7-has-promo .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
+    max-height: calc(100vh - var(--mnsk7-promo-h, 2.5rem) - var(--header-h, 56px) - 1rem) !important;
   }
   /* Dwa panele: lewy rail (lista kategorii) + prawy panel (podkategorie absolutnie). */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__cards {
@@ -888,10 +893,11 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     gap: 0.4rem;
     box-sizing: border-box;
     width: 100%;
+    min-height: 0;
     border: 0;
     border-bottom: 0;
     border-radius: var(--r-sm);
-    padding: 0.45rem 0.6rem;
+    padding: 0.4rem 0.6rem;
     margin: 0;
     font-size: 0.875rem;
     font-weight: 500;
