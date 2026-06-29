@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.73' );
+	define( 'MNSK7_THEME_VERSION', '1.0.75' );
 }
 
 /**
@@ -1493,6 +1493,13 @@ add_action( 'wp_footer', function () {
 					cards.appendChild(cta);
 				}
 				var ctaLink = cta.querySelector('.mnsk7-megamenu__cta-link');
+				var paneHeader = cards.querySelector('.mnsk7-megamenu__pane-header');
+				if (!paneHeader) {
+					paneHeader = document.createElement('div');
+					paneHeader.className = 'mnsk7-megamenu__pane-header';
+					paneHeader.setAttribute('hidden', '');
+					cards.appendChild(paneHeader);
+				}
 
 				function activate(col) {
 					if (!col) return;
@@ -1500,13 +1507,30 @@ add_action( 'wp_footer', function () {
 					col.classList.add('is-active');
 					var list = col.querySelector(':scope > .mnsk7-megamenu__list');
 					var title = col.querySelector(':scope > .mnsk7-megamenu__col-title');
+					cols.forEach(function(c) {
+						var siblingList = c.querySelector(':scope > .mnsk7-megamenu__list');
+						if (siblingList) {
+							siblingList.classList.remove('mnsk7-megamenu__list--grid');
+						}
+					});
 					if (list) {
 						cta.setAttribute('hidden', '');
+						if (list.children.length >= 5) {
+							list.classList.add('mnsk7-megamenu__list--grid');
+						}
+						if (title) {
+							paneHeader.textContent = (title.textContent || '').trim();
+							paneHeader.removeAttribute('hidden');
+						} else {
+							paneHeader.setAttribute('hidden', '');
+						}
 					} else if (title && title.getAttribute('href')) {
+						paneHeader.setAttribute('hidden', '');
 						ctaLink.setAttribute('href', title.getAttribute('href'));
 						ctaLink.textContent = CTA_PREFIX + ' \u201E' + (title.textContent || '').trim() + '\u201D \u2192';
 						cta.removeAttribute('hidden');
 					} else {
+						paneHeader.setAttribute('hidden', '');
 						cta.setAttribute('hidden', '');
 					}
 				}
@@ -3146,20 +3170,6 @@ add_action( 'woocommerce_single_product_summary', function () {
 	}
 	echo '</tbody></table></div>';
 }, 21 );
-
-add_action( 'mnsk7_after_pdp_main', function () {
-	global $product;
-	if ( ! $product || ! is_a( $product, 'WC_Product' ) ) {
-		return;
-	}
-	$short_description = trim( (string) $product->get_short_description() );
-	if ( $short_description === '' ) {
-		return;
-	}
-	echo '<div class="mnsk7-pdp-description-intro">';
-	echo wp_kses_post( wpautop( $short_description ) );
-	echo '</div>';
-}, 10 );
 
 /** Trust badges HTML (PDP i PLP — wspólna treść: dostawa, faktura, zwroty) */
 function mnsk7_render_trust_badges( $wrapper_class = 'mnsk7-pdp-trust' ) {
