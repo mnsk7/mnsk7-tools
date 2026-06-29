@@ -965,11 +965,14 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     overflow-y: auto;
     overscroll-behavior: contain;
   }
+  /* Prawy panel zawsze JEDNOKOLUMNOWY: 2 kolumny przy wąskim panelu wychodziły poza
+     jego prawą krawędź (overflow:hidden) i ucinały dłuższe listy (np. Pilniki typ G/K/L,
+     Zestawy). Pojedyncza kolumna mieści wszystkie podkategorie pionowo bez przycinania. */
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list.mnsk7-megamenu__list--grid {
     display: none;
-    column-width: 9.5rem;
-    column-count: 2;
-    column-gap: 0.85rem;
+    column-width: auto;
+    column-count: 1;
+    column-gap: 0;
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col.is-active > .mnsk7-megamenu__list {
     display: block;
@@ -1059,8 +1062,9 @@ body.mnsk7-has-promo .mnsk7-header.mnsk7-header--sticky {
     max-width: min(40rem, calc(100vw - 2rem));
   }
   .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list {
-    column-width: 9.5rem;
-    column-gap: 0.75rem;
+    column-width: auto;
+    column-count: 1;
+    column-gap: 0;
     max-width: min(20rem, calc(100vw - var(--mm-left) - 3.5rem));
   }
 }
