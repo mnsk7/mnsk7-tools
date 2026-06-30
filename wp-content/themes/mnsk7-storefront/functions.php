@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.83' );
+	define( 'MNSK7_THEME_VERSION', '1.0.84' );
 }
 
 /**
@@ -1280,9 +1280,16 @@ add_action( 'wp_footer', function () {
 			header.dataset.mnsk7ShrinkInit = '1';
 		}
 
+		function setMenuScrollLock(locked) {
+			var on = !!locked && window.innerWidth < DESKTOP_MIN;
+			document.documentElement.classList.toggle('mnsk7-menu-locked', on);
+			document.body.classList.toggle('mnsk7-menu-locked', on);
+		}
+
 		function closeMenu() {
 			if (!nav) return;
 			nav.classList.remove('is-open');
+			setMenuScrollLock(false);
 			if (typeof window.mnsk7DrawerReset === 'function') { window.mnsk7DrawerReset(); }
 			closeMobileSubmenus();
 			resetMobileMenuPosition();
@@ -1386,6 +1393,7 @@ add_action( 'wp_footer', function () {
 			var menuCloseLabel = menuToggle.getAttribute('data-close-label') || 'Zamknij menu';
 			function setMenuAria() {
 				var open = nav.classList.contains('is-open');
+				setMenuScrollLock(open);
 				menuToggle.setAttribute('aria-expanded', open);
 				menuToggle.setAttribute('aria-label', open ? menuCloseLabel : menuOpenLabel);
 			}
@@ -1405,6 +1413,16 @@ add_action( 'wp_footer', function () {
 					});
 				}
 				setMenuAria();
+			});
+			// Tap na przyciemnienie (poza panelem menu) zamyka drawer.
+			nav.addEventListener('click', function(e) {
+				if (window.innerWidth >= DESKTOP_MIN || !nav.classList.contains('is-open')) return;
+				if (menu && menu.contains(e.target)) return;
+				closeMenu();
+				if (menuToggle) { try { menuToggle.focus(); } catch (err) {} }
+			});
+			window.addEventListener('resize', function() {
+				if (window.innerWidth >= DESKTOP_MIN) setMenuScrollLock(false);
 			});
 		}
 		window.addEventListener('pageshow', function(e) {

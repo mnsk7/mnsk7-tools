@@ -2373,6 +2373,31 @@ body.mnsk7-pdp-switching .single-product main .product {
   flex-direction: column;
 }
 
+/* Mobile drawer open: gallery perspective/stacking must stay under header drawer overlay. */
+@media (max-width: 1023px) {
+  html.mnsk7-menu-locked .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced,
+  body.mnsk7-menu-locked .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced,
+  html:has(.mnsk7-header__nav.is-open) .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced,
+  body:has(.mnsk7-header__nav.is-open) .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced {
+    z-index: 1 !important;
+    isolation: isolate;
+  }
+  html.mnsk7-menu-locked .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__wrapper,
+  body.mnsk7-menu-locked .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__wrapper,
+  html:has(.mnsk7-header__nav.is-open) .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__wrapper,
+  body:has(.mnsk7-header__nav.is-open) .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__wrapper {
+    perspective: none !important;
+  }
+  html.mnsk7-menu-locked .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__image,
+  body.mnsk7-menu-locked .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__image,
+  html:has(.mnsk7-header__nav.is-open) .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__image,
+  body:has(.mnsk7-header__nav.is-open) .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__image {
+    z-index: auto !important;
+    transform: none !important;
+    will-change: auto;
+  }
+}
+
 /* Custom rail replaces WooCommerce flexslider thumbs/arrows. */
 .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .flex-control-thumbs,
 .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .flex-direction-nav {

@@ -2162,7 +2162,7 @@ body .site .site-content {
     border-bottom: 1px solid var(--color-border);
     background: var(--color-white);
     position: relative;
-    z-index: 5;
+    z-index: 10051;
   }
   .mnsk7-drawer__back,
   .mnsk7-drawer__close {
@@ -2221,16 +2221,18 @@ body .site .site-content {
     transform: rotate(-45deg);
   }
 
-  /* Poziomy 1 (submenu) i 2 (lista podkategorii) — pełna wysokość drawera pod chrome. */
-  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu,
+  /* Poziomy 1 (submenu) i 2 (lista podkategorii) — fixed względem viewportu.
+     absolute wewnątrz submenu dziedziczy desktopowe offsety (~--mm-left) i przy
+     translateX(0) poziom 2 ląduje poza ekranem po lewej (pusty panel). */
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children > .sub-menu.mnsk7-megamenu,
   .mnsk7-header__nav .mnsk7-header__menu .mnsk7-megamenu__col > .mnsk7-megamenu__list {
-    position: absolute !important;
+    position: fixed !important;
     left: 0 !important;
     right: 0 !important;
-    top: var(--drawer-chrome-h, 52px) !important;
+    top: calc(env(safe-area-inset-top, 0px) + var(--header-h, 56px) + var(--drawer-chrome-h, 52px)) !important;
     bottom: 0 !important;
     width: 100% !important;
-    max-width: none !important;
+    max-width: 100vw !important;
     max-height: none !important;
     height: auto !important;
     margin: 0 !important;
@@ -2240,23 +2242,41 @@ body .site .site-content {
     display: flex !important;
     flex-direction: column;
     gap: 0;
-    transform: translateX(100%);
+    transform: translate3d(100%, 0, 0);
     transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.28s;
     visibility: hidden;
     opacity: 1;
     overflow-x: hidden;
-    overflow-y: hidden;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior: contain;
-    z-index: 2;
+    z-index: 10042;
+    box-sizing: border-box;
+  }
+  body.mnsk7-has-promo .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children > .sub-menu.mnsk7-megamenu,
+  body.mnsk7-has-promo .mnsk7-header__nav .mnsk7-header__menu .mnsk7-megamenu__col > .mnsk7-megamenu__list {
+    top: calc(env(safe-area-inset-top, 0px) + var(--mnsk7-promo-h, 2.5rem) + var(--header-h, 56px) + var(--drawer-chrome-h, 52px)) !important;
   }
   .mnsk7-header__nav .mnsk7-header__menu .mnsk7-megamenu__col > .mnsk7-megamenu__list {
-    z-index: 3;
+    z-index: 10044;
   }
   /* Otwarty poziom — wsuwa się do widoku */
   .mnsk7-header__nav .mnsk7-header__menu .mnsk7-drawer__panel--open {
-    transform: translateX(0) !important;
+    transform: translate3d(0, 0, 0) !important;
     visibility: visible !important;
+  }
+
+  /* Półprzezroczyste tło za drawerem (nad treścią PDP, pod panelem menu). */
+  .mnsk7-header__nav.is-open::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.45);
+    z-index: 10040;
+    pointer-events: auto;
+  }
+  .mnsk7-header__nav.is-open .mnsk7-header__menu {
+    z-index: 10050 !important;
   }
 
   /* Obszar kart w poziomie 1: zwykła pionowa lista */
@@ -2494,6 +2514,7 @@ body.mnsk7-menu-locked {
 
   /* — Prominentna karta „Wszystkie: <kat>" na górze poziomu 2 — */
   .mnsk7-header__nav .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list .mnsk7-drawer__viewall {
+    display: block;
     padding: 0.75rem 1rem 0.5rem;
     border-bottom: 1px solid var(--color-border);
   }
