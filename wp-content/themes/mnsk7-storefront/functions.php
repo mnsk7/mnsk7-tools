@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.88' );
+	define( 'MNSK7_THEME_VERSION', '1.0.89' );
 }
 
 /**
@@ -1414,11 +1414,13 @@ add_action( 'wp_footer', function () {
 				}
 				setMenuAria();
 			});
-			// Tap na przyciemnienie (poza panelem menu) zamyka drawer.
-			nav.addEventListener('click', function(e) {
+			// Tap na przyciemnienie / treść PDP (poza drawerem) zamyka menu.
+			document.addEventListener('click', function(e) {
 				if (window.innerWidth >= DESKTOP_MIN || !nav.classList.contains('is-open')) return;
-				if (menuToggle && (e.target === menuToggle || menuToggle.contains(e.target))) return;
-				if (menu && menu.contains(e.target)) return;
+				var t = e.target;
+				if (menuToggle && (t === menuToggle || menuToggle.contains(t))) return;
+				if (menu && menu.contains(t)) return;
+				if (t.closest && t.closest('.mnsk7-drawer__l2-panel, .mnsk7-drawer__chrome, .sub-menu.mnsk7-megamenu.mnsk7-drawer__panel--open')) return;
 				closeMenu();
 				if (menuToggle) { try { menuToggle.focus(); } catch (err) {} }
 			});
