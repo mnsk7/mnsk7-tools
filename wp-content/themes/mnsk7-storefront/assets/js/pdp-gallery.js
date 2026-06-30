@@ -170,7 +170,19 @@
 		thumbsWrap.appendChild(chevPrev);
 		thumbsWrap.appendChild(track);
 		thumbsWrap.appendChild(chevNext);
-		gallery.appendChild(thumbsWrap);
+
+		// Thumbs above the main stage (wrapper, or flex-viewport if flexslider ran first).
+		var stage = wrapper.parentElement && wrapper.parentElement.classList.contains('flex-viewport')
+			? wrapper.parentElement
+			: wrapper;
+		gallery.insertBefore(thumbsWrap, stage);
+
+		function purgeLegacyGalleryChrome() {
+			gallery.querySelectorAll('.flex-control-thumbs, .flex-direction-nav').forEach(function (el) {
+				el.parentNode.removeChild(el);
+			});
+		}
+		purgeLegacyGalleryChrome();
 
 		chevPrev.addEventListener('click', function () {
 			track.scrollBy({ left: -track.clientWidth * 0.8, behavior: 'smooth' });
@@ -392,6 +404,9 @@
 				window.jQuery(gallery).on('woocommerce_gallery_reset_slide_position', function () {
 					window.setTimeout(onVariationReset, 30);
 				});
+				window.jQuery(gallery).on('woocommerce_gallery_init_slider', function () {
+					purgeLegacyGalleryChrome();
+				});
 				window.jQuery(gallery).closest('.product').find('.variations_form')
 					.on('reset_data', function () {
 						window.setTimeout(onVariationReset, 30);
@@ -418,6 +433,8 @@
 		updateChrome(0);
 		window.setTimeout(syncChevrons, 60);
 		window.setTimeout(syncChevrons, 600);
+		window.setTimeout(purgeLegacyGalleryChrome, 0);
+		window.setTimeout(purgeLegacyGalleryChrome, 120);
 	}
 
 	function init() {

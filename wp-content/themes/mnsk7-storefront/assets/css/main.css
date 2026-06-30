@@ -5643,6 +5643,14 @@ body.mnsk7-pdp-switching .single-product main .product {
 .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced {
   opacity: 1 !important;
   position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Custom rail replaces WooCommerce flexslider thumbs/arrows. */
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .flex-control-thumbs,
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .flex-direction-nav {
+  display: none !important;
 }
 
 /* The wrapper becomes the flip "stage": a square, GPU-perspective container. */
@@ -5780,7 +5788,9 @@ body.mnsk7-pdp-switching .single-product main .product {
 /* Thumbnail rail — clean, no raw scrollbar. */
 .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs {
   position: relative;
-  margin-top: 0.65rem;
+  order: -1;
+  margin-top: 0;
+  margin-bottom: 0.65rem;
 }
 
 .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs__track {

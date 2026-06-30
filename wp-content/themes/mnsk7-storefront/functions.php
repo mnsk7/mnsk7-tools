@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.81' );
+	define( 'MNSK7_THEME_VERSION', '1.0.82' );
 }
 
 /**
@@ -2774,7 +2774,10 @@ add_action( 'wp_enqueue_scripts', function () {
 add_action( 'after_setup_theme', function () {
 	add_theme_support( 'woocommerce' );
 	add_theme_support( 'wc-product-gallery-lightbox' );
-} );
+	// Parent / Woo may register slider+zoom — strip so flexslider does not inject a second thumb rail.
+	remove_theme_support( 'wc-product-gallery-slider' );
+	remove_theme_support( 'wc-product-gallery-zoom' );
+}, 100 );
 
 /* 4. Storefront header customization */
 add_filter( 'storefront_custom_header_args', function ( $args ) {
