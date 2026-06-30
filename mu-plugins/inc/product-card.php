@@ -896,7 +896,7 @@ function mnsk7_single_product_value_statement() {
 
 function mnsk7_single_product_trust_badges() {
 	$min = number_format_i18n( MNK7_FREE_SHIPPING_MIN, 0 );
-	$eta = function_exists( 'mnsk7_delivery_eta_badge_label' ) ? mnsk7_delivery_eta_badge_label() : __( 'Dostawa jutro', 'mnsk7-tools' );
+	$eta = function_exists( 'mnsk7_delivery_eta_badge_label' ) ? mnsk7_delivery_eta_badge_label() : __( 'Wysyłka jutro', 'mnsk7-tools' );
 	$badges = array(
 		array(
 			'label' => $eta,
@@ -924,7 +924,7 @@ function mnsk7_single_product_trust_badges() {
 	return;
 
 	$min    = number_format_i18n( MNK7_FREE_SHIPPING_MIN, 0 );
-	$eta    = function_exists( 'mnsk7_delivery_eta_badge_label' ) ? mnsk7_delivery_eta_badge_label() : __( 'Dostawa jutro', 'mnsk7-tools' );
+	$eta    = function_exists( 'mnsk7_delivery_eta_badge_label' ) ? mnsk7_delivery_eta_badge_label() : __( 'Wysyłka jutro', 'mnsk7-tools' );
 	$badges = array(
 		$eta,
 		__( 'Faktura VAT', 'mnsk7-tools' ),

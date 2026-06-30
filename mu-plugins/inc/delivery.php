@@ -29,7 +29,7 @@ function mnsk7_contact_info_html() {
  * Oblicza najwcześniejszą datę dostawy (InPost + DPD, Polska).
  * Reguły: InPost pn.–pt. do 15:00 → nast. dzień; sb. do 11:00 → pon.; DPD pn.–czw. do 17:00 → nast. dzień; pt. do 17:00 → pon.
  *
- * @return string Etykieta: "Dostawa dziś", "Dostawa jutro", "Dostawa w poniedziałek" itd.
+ * @return string Etykieta: "Wysyłka dziś", "Wysyłka jutro", "Wysyłka w poniedziałek" itd.
  */
 function mnsk7_delivery_eta_badge_label() {
 	$tz = new DateTimeZone( 'Europe/Warsaw' );
@@ -73,10 +73,10 @@ function mnsk7_delivery_eta_badge_label() {
 	$earliest_wday = (int) $earliest->format( 'w' );
 
 	if ( $days === 0 ) {
-		return __( 'Dostawa dziś', 'mnsk7-tools' );
+		return __( 'Wysyłka dziś', 'mnsk7-tools' );
 	}
 	if ( $days === 1 ) {
-		return __( 'Dostawa jutro', 'mnsk7-tools' );
+		return __( 'Wysyłka jutro', 'mnsk7-tools' );
 	}
 
 	$weekdays = array(
@@ -89,7 +89,7 @@ function mnsk7_delivery_eta_badge_label() {
 		6 => __( 'sobotę', 'mnsk7-tools' ),
 	);
 	$day_name = isset( $weekdays[ $earliest_wday ] ) ? $weekdays[ $earliest_wday ] : $earliest->format( 'd.m' );
-	return sprintf( __( 'Dostawa w %s', 'mnsk7-tools' ), $day_name );
+	return sprintf( __( 'Wysyłka w %s', 'mnsk7-tools' ), $day_name );
 }
 
 function mnsk7_delivery_rules_table_html() {
