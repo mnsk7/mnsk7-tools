@@ -1838,8 +1838,9 @@ body.mnsk7-pdp-switching .single-product main .product {
     position: relative;
   }
 
-  /* If slider JS failed, never stack all slides vertically. */
-  .single-product .woocommerce-product-gallery:not(:has(.flex-viewport)) .woocommerce-product-gallery__wrapper > .woocommerce-product-gallery__image:not(:first-child) {
+  /* If slider JS failed (and the enhanced flip viewer is not active), never
+     stack all slides vertically. */
+  .single-product .woocommerce-product-gallery:not(.mnsk7-gallery--enhanced):not(:has(.flex-viewport)) .woocommerce-product-gallery__wrapper > .woocommerce-product-gallery__image:not(:first-child) {
     display: none !important;
   }
 }
@@ -2353,5 +2354,288 @@ body.mnsk7-pdp-switching .single-product main .product {
   .mnsk7-bl-desc__main,
   .mnsk7-bl-desc__extra {
     max-width: none;
+  }
+}
+
+/* =========================================================================
+   PDP gallery — "magazine" page-flip viewer (built by pdp-gallery.js).
+   Flexslider + hover-zoom are disabled in functions.php, so the wrapper is a
+   clean deck of `.woocommerce-product-gallery__image` nodes that we stack and
+   flip like turning a page. Scoped to `.mnsk7-gallery--enhanced` so a JS/CSS
+   failure falls back to the plain first-image gallery.
+   High specificity (+ !important on layout) overrides the legacy flexslider
+   and mobile scroll-snap rules above.
+   ========================================================================= */
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced {
+  opacity: 1 !important;
+  position: relative;
+}
+
+/* The wrapper becomes the flip "stage": a square, GPU-perspective container. */
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__wrapper {
+  position: relative !important;
+  display: block !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  aspect-ratio: 1 / 1;
+  overflow: hidden !important;
+  transform: none !important;
+  scroll-snap-type: none !important;
+  -webkit-overflow-scrolling: auto;
+  perspective: 1800px;
+  border-radius: var(--r-md);
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+  touch-action: pan-y;
+}
+
+/* Each image is an absolutely-stacked "page" hinged on its left edge. */
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__wrapper > .woocommerce-product-gallery__image {
+  position: absolute !important;
+  inset: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-width: 0 !important;
+  margin: 0 !important;
+  flex: none !important;
+  display: block !important;
+  transform-origin: left center;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.16);
+  background: linear-gradient(180deg, #f8fafc 0%, #eef2f7 100%);
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__image a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto !important;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__image img {
+  width: 100% !important;
+  height: 100% !important;
+  max-height: none !important;
+  object-fit: contain;
+  display: block;
+}
+
+/* Soft "paper" sheen while a page is mid-turn (transform-only, GPU-friendly). */
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__image.is-turning::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+  background: linear-gradient(90deg, rgba(15, 23, 42, 0.16) 0%, rgba(15, 23, 42, 0) 32%);
+  border-radius: var(--r-md);
+}
+
+/* Navigation arrows over the main image. */
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.94);
+  color: var(--color-text);
+  box-shadow: 0 4px 14px rgba(15, 23, 42, 0.16);
+  cursor: pointer;
+  opacity: 0.95;
+  transition: opacity 0.15s ease, transform 0.15s ease, background 0.15s ease;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-nav svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-nav:hover {
+  opacity: 1;
+  transform: translateY(-50%) scale(1.06);
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-nav:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-nav--prev {
+  left: 0.6rem;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-nav--next {
+  right: 0.6rem;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-nav[disabled] {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* "i / n" page indicator. */
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-counter {
+  position: absolute;
+  z-index: 6;
+  bottom: 0.55rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.2rem 0.62rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.72);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  line-height: 1.4;
+  pointer-events: none;
+}
+
+/* Thumbnail rail — clean, no raw scrollbar. */
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs {
+  position: relative;
+  margin-top: 0.65rem;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs__track {
+  display: flex;
+  gap: 0.5rem;
+  padding: 2px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs__track::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs:not(.is-scrollable) .mnsk7-gallery-thumbs__track {
+  justify-content: center;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumb {
+  flex: 0 0 auto;
+  padding: 0;
+  border: 2px solid rgba(15, 23, 42, 0.1);
+  border-radius: var(--r-sm);
+  background: #fff;
+  line-height: 0;
+  cursor: pointer;
+  overflow: hidden;
+  opacity: 0.92;
+  transition: border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumb img {
+  display: block;
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumb:hover {
+  opacity: 1;
+  border-color: rgba(15, 23, 42, 0.32);
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumb.is-active {
+  opacity: 1;
+  border-color: var(--color-primary);
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumb:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Thumbnail chevrons (desktop only, shown on overflow). */
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs__chevron {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border-radius: 999px;
+  border: 1px solid rgba(15, 23, 42, 0.14);
+  background: rgba(255, 255, 255, 0.97);
+  color: var(--color-text);
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.14);
+  cursor: pointer;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs__chevron svg {
+  width: 1rem;
+  height: 1rem;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs__chevron--prev {
+  left: -0.5rem;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs__chevron--next {
+  right: -0.5rem;
+}
+
+.single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs__chevron[disabled] {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
+@media (min-width: 1024px) {
+  .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs.is-scrollable .mnsk7-gallery-thumbs__chevron {
+    display: flex;
+  }
+
+  .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs.is-scrollable .mnsk7-gallery-thumbs__track {
+    padding-left: 1.6rem;
+    padding-right: 1.6rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumb img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-nav {
+    width: 2.25rem;
+    height: 2.25rem;
+    opacity: 0.9;
+  }
+}
+
+/* Reduced motion: no 3D flip, just a gentle crossfade (JS also branches). */
+@media (prefers-reduced-motion: reduce) {
+  .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__image {
+    box-shadow: none;
+  }
+
+  .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .woocommerce-product-gallery__image.is-turning::before {
+    display: none;
   }
 }

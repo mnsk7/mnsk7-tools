@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.78' );
+	define( 'MNSK7_THEME_VERSION', '1.0.80' );
 }
 
 /**
@@ -2758,12 +2758,16 @@ add_action( 'wp_enqueue_scripts', function () {
 	/* Inter loaded from assets/css/parts/00-fonts-inter.css (first in parts list) */
 }, 20 );
 
-/* 3. Theme support */
+/* 3. Theme support.
+ * PDP gallery: flexslider (`wc-product-gallery-slider`) and hover-zoom
+ * (`wc-product-gallery-zoom`) are intentionally OFF so the custom "magazine"
+ * page-flip viewer (assets/js/pdp-gallery.js) owns the wrapper without
+ * fighting flexslider transforms. Lightbox (PhotoSwipe) stays ON — with the
+ * slider disabled WooCommerce binds it to the main image click directly.
+ */
 add_action( 'after_setup_theme', function () {
 	add_theme_support( 'woocommerce' );
-	add_theme_support( 'wc-product-gallery-zoom' );
 	add_theme_support( 'wc-product-gallery-lightbox' );
-	add_theme_support( 'wc-product-gallery-slider' );
 } );
 
 /* 4. Storefront header customization */
