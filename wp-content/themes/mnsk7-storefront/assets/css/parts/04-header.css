@@ -2363,4 +2363,160 @@ body .site .site-content {
   }
 }
 
+/* =================================================================
+   Mobile drawer polish (v1.0.79) — natywny, dopracowany UX.
+   - Blokada scrolla tła (overflow:hidden na html/body przez JS, bez skoku).
+   - Spójne wiersze 52–54px, liczniki produktów na każdym poziomie, czytelne
+     dzielniki, etykieta sekcji „Kategorie", podświetlenie bieżącej strony.
+   - Prominentna karta „Wszystkie w <kat>" na górze poziomu podkategorii.
+   - Reguły desktopu nietknięte (liczniki/sekcje/quicklink ukryte ≥1024px).
+   ================================================================= */
+html.mnsk7-menu-locked,
+body.mnsk7-menu-locked {
+  overflow: hidden !important;
+}
+/* Blokada scrolla tła bez JS: gdy drawer otwarty na mobile (<=1023px).
+   :has() — wsparcie w nowoczesnych mobilnych Safari/Chrome; desktop nietknięty. */
+@media (max-width: 1023px) {
+  html:has(.mnsk7-header__nav.is-open),
+  body:has(.mnsk7-header__nav.is-open) {
+    overflow: hidden !important;
+    touch-action: none;
+  }
+}
+
+/* Desktop bez zmian: liczniki w railu, etykiety sekcji i quicklink — ukryte. */
+@media (min-width: 1024px) {
+  .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col-title > .mnsk7-megamenu__count {
+    display: none;
+  }
+  .mnsk7-drawer__section,
+  .mnsk7-drawer__quicklink {
+    display: none !important;
+  }
+}
+
+@media (max-width: 1023px) {
+  /* — Chrome (sticky: wstecz / tytuł / zamknij) — */
+  .mnsk7-drawer__chrome {
+    gap: 0.25rem;
+    padding: 0.3rem 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+    box-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  }
+  .mnsk7-drawer__title {
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .mnsk7-drawer__back,
+  .mnsk7-drawer__close {
+    font-size: 1.5rem;
+    color: var(--color-text);
+  }
+
+  /* — Etykieta sekcji „Kategorie" — */
+  .mnsk7-drawer__section {
+    display: block;
+    padding: 0.9rem 1rem 0.4rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--color-text-muted, #64748b);
+    background: var(--color-white);
+  }
+
+  /* — Root (poziom 0): wygodne wiersze, bieżąca strona podświetlona — */
+  .mnsk7-header__nav .mnsk7-header__menu > li > a {
+    min-height: 54px;
+    padding: 0.85rem 1rem;
+    font-size: var(--fs-base);
+    font-weight: 600;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu > li.current-menu-item > a {
+    color: var(--color-primary);
+    box-shadow: inset 3px 0 0 var(--color-primary);
+  }
+
+  /* — Szybki link „Moje konto" w stopce root-menu — */
+  .mnsk7-drawer__quicklink {
+    display: block;
+    border-top: 1px solid var(--color-border);
+  }
+  .mnsk7-drawer__quicklink a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 54px;
+    padding: 0.85rem 1rem;
+    font-size: var(--fs-base);
+    font-weight: 600;
+    color: var(--color-text);
+  }
+  .mnsk7-drawer__quicklink a::before {
+    content: "";
+    width: 20px;
+    height: 20px;
+    flex: 0 0 auto;
+    background: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E") center / contain no-repeat;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E") center / contain no-repeat;
+    color: var(--color-text-muted, #64748b);
+  }
+
+  /* — Poziom 1 (kategorie): nazwa + licznik + chevron — */
+  .mnsk7-header__nav .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__col-title {
+    min-height: 54px;
+    padding: 0.7rem 1rem;
+    gap: 0.5rem;
+    font-size: var(--fs-base);
+  }
+  .mnsk7-header__nav .mnsk7-header__menu .mnsk7-megamenu__col-title .mnsk7-megamenu__name {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu .mnsk7-megamenu__col-title .mnsk7-megamenu__count {
+    margin-left: 0;
+    color: var(--color-text-muted, #94a3b8);
+  }
+
+  /* — Poziom 2 (podkategorie): wygodne wiersze, licznik po prawej — */
+  .mnsk7-header__nav .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list a {
+    min-height: 52px;
+    padding: 0.7rem 1rem;
+    gap: 0.5rem;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list a .mnsk7-megamenu__name {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  /* — Prominentna karta „Wszystkie: <kat>" na górze poziomu 2 — */
+  .mnsk7-header__nav .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list .mnsk7-drawer__viewall {
+    padding: 0.75rem 1rem 0.5rem;
+    border-bottom: 1px solid var(--color-border);
+  }
+  .mnsk7-header__nav .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list .mnsk7-drawer__viewall a {
+    min-height: 48px;
+    padding: 0.7rem 0.9rem;
+    justify-content: center;
+    gap: 0.4rem;
+    background: var(--color-primary);
+    color: var(--color-white);
+    border-radius: var(--r-sm);
+    border-bottom: 0;
+    font-weight: 700;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list .mnsk7-drawer__viewall a::after {
+    content: "\2192";
+    font-weight: 700;
+  }
+  .mnsk7-header__nav .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list .mnsk7-drawer__viewall a:hover,
+  .mnsk7-header__nav .mnsk7-header__menu .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list .mnsk7-drawer__viewall a:focus-visible {
+    background: var(--color-primary-hover, var(--color-primary));
+    color: var(--color-white);
+  }
+}
+
 /* Legacy header paths removed: jeden header = header.php (mnsk7-header). Nie używać .mnsk7-header-actions / .mnsk7-header-link. */

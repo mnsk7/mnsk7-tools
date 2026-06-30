@@ -115,6 +115,7 @@ endif;
 								<?php esc_html_e( 'Wróć', 'mnsk7-storefront' ); ?>
 							</button>
 						</li>
+						<li class="mnsk7-drawer__section" role="presentation"><?php esc_html_e( 'Kategorie', 'mnsk7-storefront' ); ?></li>
 						<div class="mnsk7-megamenu__cards">
 						<?php
 						/* Każda kolumna = kategoria nadrzędna (nagłówek-link) + jej podkategorie (drzewo Woo). */
@@ -130,8 +131,21 @@ endif;
 							$pname     = $mm_label( $parent->name );
 							$p_active  = ( $current_archive_taxonomy === 'product_cat' && $current_archive_term_id === (int) $parent->term_id );
 							$children  = isset( $node['children'] ) && is_array( $node['children'] ) ? $node['children'] : array();
+							// Liczba produktów dla wiersza kategorii: suma podkategorii (produkty zwykle w liściach),
+							// a gdy brak dzieci — własny count kategorii. Pokazujemy tylko gdy > 0.
+							$pcount_num = 0;
+							if ( ! empty( $children ) ) {
+								foreach ( $children as $child ) {
+									if ( $child instanceof WP_Term ) {
+										$pcount_num += (int) $child->count;
+									}
+								}
+							} else {
+								$pcount_num = (int) $parent->count;
+							}
+							$pcount_html = $pcount_num > 0 ? '<span class="mnsk7-megamenu__count" aria-hidden="true">' . esc_html( number_format_i18n( $pcount_num ) ) . '</span>' : '';
 							echo '<li class="mnsk7-megamenu__col">';
-							echo '<a class="mnsk7-megamenu__col-title' . ( $p_active ? ' mnsk7-megamenu__link--active' : '' ) . '" href="' . esc_url( $plink ) . '">' . esc_html( $pname ) . '</a>';
+							echo '<a class="mnsk7-megamenu__col-title' . ( $p_active ? ' mnsk7-megamenu__link--active' : '' ) . '" href="' . esc_url( $plink ) . '"><span class="mnsk7-megamenu__name">' . esc_html( $pname ) . '</span>' . $pcount_html . '</a>';
 							if ( ! empty( $children ) ) {
 								echo '<ul class="mnsk7-megamenu__list">';
 								foreach ( $children as $child ) {
@@ -195,6 +209,15 @@ endif;
 				<li<?php echo ( is_page( 'przewodnik' ) || is_home() || is_singular( 'post' ) ) ? ' class="current-menu-item"' : ''; ?>><a href="<?php echo esc_url( home_url( '/przewodnik/' ) ); ?>"><?php echo esc_html( apply_filters( 'mnsk7_przewodnik_menu_label', __( 'Przewodnik', 'mnsk7-storefront' ) ) ); ?></a></li>
 				<li<?php echo is_page( 'dostawa-i-platnosci' ) ? ' class="current-menu-item"' : ''; ?>><a href="<?php echo esc_url( home_url( '/dostawa-i-platnosci/' ) ); ?>"><?php esc_html_e( 'Dostawa i płatności', 'mnsk7-storefront' ); ?></a></li>
 				<li<?php echo is_page( 'kontakt' ) ? ' class="current-menu-item"' : ''; ?>><a href="<?php echo esc_url( home_url( '/kontakt/' ) ); ?>"><?php esc_html_e( 'Kontakt', 'mnsk7-storefront' ); ?></a></li>
+				<?php
+				// Szybki link „Moje konto" — tylko w mobilnym drawerze (ukryty ≥1024px przez CSS). Ikona konta jest też w pasku akcji.
+				$mnsk7_account_quicklink = function_exists( 'wc_get_page_permalink' ) ? wc_get_page_permalink( 'myaccount' ) : home_url( '/moje-konto/' );
+				if ( $mnsk7_account_quicklink ) :
+					?>
+					<li class="mnsk7-drawer__quicklink"><a href="<?php echo esc_url( $mnsk7_account_quicklink ); ?>"><?php echo esc_html( is_user_logged_in() ? __( 'Moje konto', 'mnsk7-storefront' ) : __( 'Moje konto / Zaloguj się', 'mnsk7-storefront' ) ); ?></a></li>
+					<?php
+				endif;
+				?>
 			</ul>
 		</nav>
 		<div class="mnsk7-header__actions">
