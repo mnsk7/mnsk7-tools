@@ -586,7 +586,7 @@ body.home .mnsk7-content,
     grid-template-columns: 1fr !important;
     gap: 0 !important;
   }
-  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list a {
+  .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children .sub-menu.mnsk7-megamenu .mnsk7-megamenu__list li:not(.mnsk7-drawer__viewall) > a {
     min-height: 48px !important;
     padding: 0.6rem 0.9rem !important;
     border: 0 !important;

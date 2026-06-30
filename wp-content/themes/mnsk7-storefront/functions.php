@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.80' );
+	define( 'MNSK7_THEME_VERSION', '1.0.81' );
 }
 
 /**
@@ -1616,7 +1616,13 @@ add_action( 'wp_footer', function () {
 				var ROOT_TITLE = <?php echo wp_json_encode( __( 'Menu', 'mnsk7-storefront' ) ); ?>;
 				var BACK_LABEL = <?php echo wp_json_encode( __( 'Wstecz', 'mnsk7-storefront' ) ); ?>;
 				var CLOSE_LABEL = <?php echo wp_json_encode( __( 'Zamknij menu', 'mnsk7-storefront' ) ); ?>;
-				var VIEWALL_PREFIX = <?php echo wp_json_encode( __( 'Wszystkie:', 'mnsk7-storefront' ) ); ?>;
+				var VIEWALL_PREFIX = <?php echo wp_json_encode( __( 'Wszystkie w', 'mnsk7-storefront' ) ); ?>;
+
+				function drawerRowLabel(el) {
+					if (!el) return '';
+					var nameEl = el.querySelector('.mnsk7-megamenu__name');
+					return ((nameEl ? nameEl.textContent : el.textContent) || '').trim();
+				}
 
 				// Chrome (back / tytuł / zamknij) — wstrzykiwany raz na górze drawera.
 				var chrome = menu.querySelector('.mnsk7-drawer__chrome');
@@ -1646,7 +1652,7 @@ add_action( 'wp_footer', function () {
 					li.className = 'mnsk7-drawer__viewall';
 					var a = document.createElement('a');
 					a.setAttribute('href', href);
-					a.textContent = VIEWALL_PREFIX + ' ' + (title.textContent || '').trim();
+					a.textContent = VIEWALL_PREFIX + ' ' + drawerRowLabel(title);
 					li.appendChild(a);
 					list.insertBefore(li, list.firstChild);
 				});
@@ -1733,7 +1739,7 @@ add_action( 'wp_footer', function () {
 						if (list) {
 							e.preventDefault();
 							e.stopPropagation();
-							pushLevel(list, (titleHit.textContent || '').trim());
+							pushLevel(list, drawerRowLabel(titleHit));
 							return;
 						}
 						// liść (kategoria bez podkategorii) — przejdź dalej do nawigacji
