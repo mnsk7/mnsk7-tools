@@ -2615,3 +2615,14 @@ body.mnsk7-menu-locked {
 }
 
 /* Legacy header paths removed: jeden header = header.php (mnsk7-header). Nie używać .mnsk7-header-actions / .mnsk7-header-link. */
+
+/* v1.0.91 polish — mobile header icon breathing room on narrow screens */
+@media (max-width: 390px) {
+  .mnsk7-header__inner {
+    gap: 0.5rem;
+  }
+
+  .mnsk7-header__actions {
+    gap: 0.5rem;
+  }
+}

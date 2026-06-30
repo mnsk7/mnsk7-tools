@@ -2674,3 +2674,55 @@ body.mnsk7-pdp-switching .single-product main .product {
     display: none;
   }
 }
+
+/* v1.0.91 polish — variant chips grouping, accordion cohesion, badges, gallery rail */
+.single-product .mnsk7-product-key-params--variable .mnsk7-product-key-params__dd--options {
+  padding: 0.55rem 0.5rem 0.15rem;
+  border-radius: var(--r-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+.single-product .mnsk7-product-key-params--variable .mnsk7-product-key-params__dd--visuals .mnsk7-variant-visuals {
+  padding: 0.5rem 0.45rem 0.2rem;
+  margin-bottom: 0.5rem;
+  border-radius: var(--r-sm);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+}
+
+@media (max-width: 768px) {
+  .single-product .mnsk7-product-description-accordion {
+    margin: 0.65rem 0 0.5rem;
+    border: 1px solid var(--color-border);
+    border-radius: var(--r-md);
+    box-shadow: var(--shadow-md);
+    background: var(--color-white);
+  }
+
+  .single-product .mnsk7-product-description-accordion__summary {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    padding: 0.75rem var(--space-16);
+  }
+
+  .single-product .summary .mnsk7-product-trust__badge {
+    min-height: 44px;
+    align-items: center;
+  }
+
+  .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs {
+    margin-inline: -0.15rem;
+    margin-bottom: 0.55rem;
+  }
+
+  .single-product .woocommerce-product-gallery.mnsk7-gallery--enhanced .mnsk7-gallery-thumbs__track {
+    padding-inline: 0.15rem;
+    gap: 0.45rem;
+  }
+
+  .single-product div.product .summary form.cart {
+    margin-top: 0.35rem !important;
+  }
+}

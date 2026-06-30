@@ -2750,3 +2750,13 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
     min-height: 40px;
   }
 }
+
+/* v1.0.91 polish — PLP mobile: breadcrumbs breathing room under sticky header */
+@media (max-width: 768px) {
+  body.post-type-archive-product,
+  body.tax-product_cat,
+  body.tax-product_tag {
+    --archive-inner-breadcrumb: 0.28rem;
+    --archive-gap-breadcrumbs-title: 0.22rem;
+  }
+}
