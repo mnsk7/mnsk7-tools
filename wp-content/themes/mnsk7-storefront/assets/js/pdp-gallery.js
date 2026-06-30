@@ -14,10 +14,14 @@
  *  - "i / n" page indicator,
  *  - thumbnails scroll cleanly (no raw scrollbar) with desktop chevrons,
  *  - PhotoSwipe lightbox stays intact (WooCommerce binds it to the real
- *    `.woocommerce-product-gallery__image a` links — with the slider off a
- *    click on the active image opens the lightbox at the right index),
- *  - variable products: when WooCommerce swaps the variation image it fires
- *    `woocommerce_gallery_reset_slide_position`; we resync to page 0,
+ *    `.woocommerce-product-gallery__image a` links) but only a genuine TAP
+ *    opens it — a swipe/drag past a small threshold is suppressed so the
+ *    fullscreen viewer never pops open mid-swipe,
+ *  - variable products: when WooCommerce (or a variation-gallery plugin) swaps
+ *    the variation image set it fires `woocommerce_gallery_reset_slide_position`
+ *    / `found_variation` and may re-render the whole wrapper; we re-enhance the
+ *    gallery so the thumbnail rail + counter + arrows always come back for the
+ *    new image set (idempotently — a single top rail, never a duplicate),
  *  - prefers-reduced-motion: the flip degrades to a simple crossfade.
  */
 (function () {
@@ -26,6 +30,9 @@
 	var DUR = 420;
 	var EASE = 'cubic-bezier(0.22, 0.61, 0.20, 1)';
 	var FLIP_OUT = 'rotateY(-118deg)';
+	// Movement (px) beyond which a pointer gesture counts as a swipe/drag, not a
+	// tap — used to suppress the accidental lightbox open while swiping.
+	var TAP_SLOP = 10;
 	var prefersReduced = window.matchMedia
 		? window.matchMedia('(prefers-reduced-motion: reduce)').matches
 		: false;
@@ -73,6 +80,29 @@
 		return img ? (img.getAttribute('alt') || '') : '';
 	}
 
+	function purgeLegacyGalleryChrome(gallery) {
+		gallery.querySelectorAll('.flex-control-thumbs, .flex-direction-nav').forEach(function (el) {
+			if (el.parentNode) {
+				el.parentNode.removeChild(el);
+			}
+		});
+	}
+
+	function clearPageStyles(page) {
+		page.style.transition = '';
+		page.style.transform = '';
+		page.style.opacity = '';
+		page.style.visibility = '';
+		page.style.zIndex = '';
+		page.style.pointerEvents = '';
+		page.classList.remove('mnsk7-pg', 'is-current', 'is-turning');
+	}
+
+	/**
+	 * Enhance one set of gallery pages. Returns a `destroy()` that removes every
+	 * listener and injected node so the gallery can be rebuilt cleanly when a
+	 * variation swaps the image set.
+	 */
 	function build(gallery, wrapper, pages) {
 		var n = pages.length;
 		var current = 0;
@@ -117,14 +147,16 @@
 		wrapper.appendChild(nextBtn);
 		wrapper.appendChild(counter);
 
-		prevBtn.addEventListener('click', function (e) {
+		function onPrev(e) {
 			e.preventDefault();
 			goTo(current - 1);
-		});
-		nextBtn.addEventListener('click', function (e) {
+		}
+		function onNext(e) {
 			e.preventDefault();
 			goTo(current + 1);
-		});
+		}
+		prevBtn.addEventListener('click', onPrev);
+		nextBtn.addEventListener('click', onNext);
 
 		// --- Thumbnails (no raw scrollbar; desktop chevrons on overflow). ---
 		var thumbsWrap = document.createElement('div');
@@ -177,12 +209,7 @@
 			: wrapper;
 		gallery.insertBefore(thumbsWrap, stage);
 
-		function purgeLegacyGalleryChrome() {
-			gallery.querySelectorAll('.flex-control-thumbs, .flex-direction-nav').forEach(function (el) {
-				el.parentNode.removeChild(el);
-			});
-		}
-		purgeLegacyGalleryChrome();
+		purgeLegacyGalleryChrome(gallery);
 
 		chevPrev.addEventListener('click', function () {
 			track.scrollBy({ left: -track.clientWidth * 0.8, behavior: 'smooth' });
@@ -247,14 +274,6 @@
 				}
 			});
 			scrollThumbIntoView(index);
-		}
-
-		function snapTo(index) {
-			pages.forEach(function (page, i) {
-				resetPage(page, i === index);
-			});
-			current = index;
-			updateChrome(index);
 		}
 
 		function goTo(target) {
@@ -347,94 +366,242 @@
 			}
 		}
 
-		// --- Swipe (touch) --------------------------------------------------
-		var touchX = 0;
-		var touchY = 0;
-		var touchT = 0;
-		wrapper.addEventListener('touchstart', function (e) {
-			if (e.touches.length !== 1) {
+		// --- Swipe / tap discrimination -------------------------------------
+		// A single pointer drag past TAP_SLOP flips the page AND is treated as a
+		// swipe: the trailing `click` (which WooCommerce uses to open the
+		// PhotoSwipe lightbox) is cancelled so the fullscreen viewer never opens
+		// by accident. A genuine tap (tiny movement) still opens the lightbox.
+		var startX = 0;
+		var startY = 0;
+		var startT = 0;
+		var pointerSeen = false;
+		var swipeHandled = false;
+
+		function recordStart(x, y) {
+			startX = x;
+			startY = y;
+			startT = Date.now();
+			pointerSeen = true;
+			swipeHandled = false;
+		}
+
+		function onPointerDown(e) {
+			// Ignore multi-touch / non-primary buttons.
+			if (e.button && e.button !== 0) {
 				return;
 			}
-			touchX = e.touches[0].clientX;
-			touchY = e.touches[0].clientY;
-			touchT = Date.now();
-		}, { passive: true });
-		wrapper.addEventListener('touchend', function (e) {
+			recordStart(e.clientX, e.clientY);
+		}
+		function onTouchStart(e) {
+			if (e.touches.length !== 1) {
+				pointerSeen = false;
+				return;
+			}
+			recordStart(e.touches[0].clientX, e.touches[0].clientY);
+		}
+		function onTouchEnd(e) {
 			var t = e.changedTouches && e.changedTouches[0];
 			if (!t) {
 				return;
 			}
-			var dx = t.clientX - touchX;
-			var dy = t.clientY - touchY;
-			var dt = Date.now() - touchT;
-			// Clear, fast horizontal swipe only — keep taps for the lightbox and
-			// let vertical gestures scroll the page.
+			var dx = t.clientX - startX;
+			var dy = t.clientY - startY;
+			var dt = Date.now() - startT;
+			// Clear, fast horizontal swipe flips the page; let vertical gestures
+			// scroll the page.
 			if (dt < 700 && Math.abs(dx) > 42 && Math.abs(dx) > Math.abs(dy) * 1.4) {
+				swipeHandled = true;
 				goTo(dx < 0 ? current + 1 : current - 1);
 			}
-		}, { passive: true });
+		}
+
+		// Capture-phase click guard: runs before WooCommerce's delegated
+		// lightbox handler (and before the link's own handler), so cancelling
+		// here reliably blocks the lightbox after a swipe/drag.
+		function onClickCapture(e) {
+			if (!pointerSeen) {
+				return;
+			}
+			pointerSeen = false;
+			var dx = e.clientX - startX;
+			var dy = e.clientY - startY;
+			var movedFar = Math.sqrt(dx * dx + dy * dy) > TAP_SLOP;
+			if (movedFar || swipeHandled) {
+				e.preventDefault();
+				e.stopPropagation();
+				if (e.stopImmediatePropagation) {
+					e.stopImmediatePropagation();
+				}
+			}
+			swipeHandled = false;
+		}
+
+		var hasPointer = 'PointerEvent' in window;
+		if (hasPointer) {
+			wrapper.addEventListener('pointerdown', onPointerDown, true);
+		} else {
+			wrapper.addEventListener('mousedown', onPointerDown, true);
+		}
+		wrapper.addEventListener('touchstart', onTouchStart, { passive: true });
+		wrapper.addEventListener('touchend', onTouchEnd, { passive: true });
+		wrapper.addEventListener('click', onClickCapture, true);
 
 		// --- Keyboard -------------------------------------------------------
-		gallery.addEventListener('keydown', function (e) {
+		function onKeydown(e) {
 			if (e.key === 'ArrowRight') {
 				goTo(current + 1);
 			} else if (e.key === 'ArrowLeft') {
 				goTo(current - 1);
 			}
-		});
-
-		// --- Variation image swap (variable products) ----------------------
-		function onVariationReset() {
-			pages.forEach(function (page, i) {
-				var btn = thumbs[i];
-				if (btn) {
-					var timg = btn.querySelector('img');
-					var src = thumbSrc(page);
-					if (timg && src && timg.getAttribute('src') !== src) {
-						timg.setAttribute('src', src);
-						timg.setAttribute('alt', pageAlt(page));
-					}
-				}
-			});
-			snapTo(0);
 		}
-
-		if (window.jQuery) {
-			try {
-				window.jQuery(gallery).on('woocommerce_gallery_reset_slide_position', function () {
-					window.setTimeout(onVariationReset, 30);
-				});
-				window.jQuery(gallery).on('woocommerce_gallery_init_slider', function () {
-					purgeLegacyGalleryChrome();
-				});
-				window.jQuery(gallery).closest('.product').find('.variations_form')
-					.on('reset_data', function () {
-						window.setTimeout(onVariationReset, 30);
-					});
-			} catch (err) {}
-		} else {
-			var firstImg = pages[0].querySelector('img');
-			if (firstImg && window.MutationObserver) {
-				var moTick = false;
-				new MutationObserver(function () {
-					if (moTick) {
-						return;
-					}
-					moTick = true;
-					window.setTimeout(function () {
-						moTick = false;
-						onVariationReset();
-					}, 60);
-				}).observe(firstImg, { attributes: true, attributeFilter: ['src', 'srcset'] });
-			}
-		}
+		gallery.addEventListener('keydown', onKeydown);
 
 		// --- Init -----------------------------------------------------------
 		updateChrome(0);
 		window.setTimeout(syncChevrons, 60);
 		window.setTimeout(syncChevrons, 600);
-		window.setTimeout(purgeLegacyGalleryChrome, 0);
-		window.setTimeout(purgeLegacyGalleryChrome, 120);
+		window.setTimeout(function () { purgeLegacyGalleryChrome(gallery); }, 0);
+		window.setTimeout(function () { purgeLegacyGalleryChrome(gallery); }, 120);
+
+		return function destroy() {
+			window.removeEventListener('resize', syncChevrons);
+			gallery.removeEventListener('keydown', onKeydown);
+			if (hasPointer) {
+				wrapper.removeEventListener('pointerdown', onPointerDown, true);
+			} else {
+				wrapper.removeEventListener('mousedown', onPointerDown, true);
+			}
+			wrapper.removeEventListener('touchstart', onTouchStart);
+			wrapper.removeEventListener('touchend', onTouchEnd);
+			wrapper.removeEventListener('click', onClickCapture, true);
+			[prevBtn, nextBtn, counter, thumbsWrap].forEach(function (el) {
+				if (el && el.parentNode) {
+					el.parentNode.removeChild(el);
+				}
+			});
+			pages.forEach(clearPageStyles);
+			gallery.classList.remove('mnsk7-gallery--enhanced');
+		};
+	}
+
+	function listHasGalleryImage(nodeList) {
+		if (!nodeList || !nodeList.length) {
+			return false;
+		}
+		for (var i = 0; i < nodeList.length; i++) {
+			var node = nodeList[i];
+			if (node.nodeType !== 1) {
+				continue;
+			}
+			if (node.classList && node.classList.contains('woocommerce-product-gallery__image')) {
+				return true;
+			}
+			if (node.querySelector && node.querySelector('.woocommerce-product-gallery__image')) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Controller: builds the enhanced gallery and rebuilds it (idempotently)
+	 * whenever the variation image set changes or a plugin re-renders the
+	 * gallery wrapper, so the thumbnail rail always reappears for the variation.
+	 */
+	function enhance(gallery) {
+		var observer = null;
+		var destroyChrome = null;
+		var tick = false;
+
+		function removeStaleChrome() {
+			gallery.querySelectorAll('.mnsk7-gallery-thumbs, .mnsk7-gallery-nav, .mnsk7-gallery-counter')
+				.forEach(function (el) {
+					if (el.parentNode) {
+						el.parentNode.removeChild(el);
+					}
+				});
+			gallery.classList.remove('mnsk7-gallery--enhanced');
+		}
+
+		function rebuild() {
+			if (observer) {
+				observer.disconnect();
+			}
+			try {
+				if (destroyChrome) {
+					destroyChrome();
+					destroyChrome = null;
+				}
+				// Belt-and-braces: drop any rail left behind by a previous init.
+				removeStaleChrome();
+
+				var wrapper = gallery.querySelector('.woocommerce-product-gallery__wrapper');
+				if (!wrapper) {
+					return;
+				}
+				var pages = Array.prototype.slice.call(
+					wrapper.querySelectorAll(':scope > .woocommerce-product-gallery__image')
+				);
+				if (pages.length < 2) {
+					gallery.classList.add('mnsk7-gallery--single');
+					purgeLegacyGalleryChrome(gallery);
+					return;
+				}
+				gallery.classList.remove('mnsk7-gallery--single');
+				destroyChrome = build(gallery, wrapper, pages);
+			} finally {
+				if (observer) {
+					observer.observe(gallery, { childList: true, subtree: true });
+				}
+			}
+		}
+
+		function schedule() {
+			if (tick) {
+				return;
+			}
+			tick = true;
+			window.setTimeout(function () {
+				tick = false;
+				rebuild();
+			}, 60);
+		}
+
+		rebuild();
+
+		// Re-render detection: a variation-gallery plugin swapping the image set
+		// adds/removes `.woocommerce-product-gallery__image` nodes. Our own
+		// chrome (rail/nav/counter) is ignored so we never loop.
+		if (window.MutationObserver) {
+			observer = new MutationObserver(function (mutations) {
+				for (var i = 0; i < mutations.length; i++) {
+					var m = mutations[i];
+					if (listHasGalleryImage(m.addedNodes) || listHasGalleryImage(m.removedNodes)) {
+						schedule();
+						return;
+					}
+				}
+			});
+			observer.observe(gallery, { childList: true, subtree: true });
+		}
+
+		if (window.jQuery) {
+			try {
+				var $gallery = window.jQuery(gallery);
+				$gallery.on('woocommerce_gallery_reset_slide_position woocommerce_gallery_init_slider', schedule);
+				$gallery.closest('.product').find('.variations_form')
+					.on('found_variation reset_data hide_variation', schedule);
+			} catch (err) {}
+		} else {
+			// No jQuery: watch the first image's src for variation swaps.
+			var firstImg = gallery.querySelector('.woocommerce-product-gallery__image img');
+			if (firstImg && window.MutationObserver) {
+				new MutationObserver(schedule).observe(firstImg, {
+					attributes: true,
+					attributeFilter: ['src', 'srcset']
+				});
+			}
+		}
 	}
 
 	function init() {
@@ -442,18 +609,7 @@
 		if (!gallery) {
 			return;
 		}
-		var wrapper = gallery.querySelector('.woocommerce-product-gallery__wrapper');
-		if (!wrapper) {
-			return;
-		}
-		var pages = Array.prototype.slice.call(
-			wrapper.querySelectorAll(':scope > .woocommerce-product-gallery__image')
-		);
-		if (pages.length < 2) {
-			gallery.classList.add('mnsk7-gallery--single');
-			return;
-		}
-		build(gallery, wrapper, pages);
+		enhance(gallery);
 	}
 
 	if (document.readyState === 'loading') {

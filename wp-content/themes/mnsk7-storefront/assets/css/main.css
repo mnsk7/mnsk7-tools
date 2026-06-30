@@ -6688,9 +6688,9 @@ body.mnsk7-pdp-switching .single-product main .product {
   font-weight: 600;
 }
 
-/* Sections */
+/* Sections — zwarty, zbalansowany rytm pionowy (zredukowane zbyt duże odstępy). */
 .mnsk7-section {
-  padding: clamp(3.25rem, 6vw, 5rem) 0;
+  padding: clamp(2.25rem, 4vw, 3.5rem) 0;
   position: relative;
 }
 
@@ -6805,16 +6805,27 @@ body.mnsk7-pdp-switching .single-product main .product {
 .mnsk7-section.mnsk7-section--catalog {
   background: transparent !important;
 }
-.mnsk7-section--catalog .mnsk7-tags-chip {
+/* Chmura tagów na głównej — wygląd jak pozycje w mega-menu (czyste, spójne
+   chipy: miękka ramka, mały promień, stonowany tekst, subtelny hover). Nie
+   dotyczy kart kategorii (.mnsk7-tags-chip--category). Desktop megamenu bez zmian. */
+.mnsk7-section--catalog .mnsk7-tags-chip:not(.mnsk7-tags-chip--category) {
+  padding: 0.34rem 0.7rem;
   background: var(--color-white);
-  border: 1px solid var(--color-black);
-  color: var(--color-text);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-sm);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--color-text-muted, #475569);
+  box-shadow: none;
+  transition: background-color 0.12s ease, color 0.12s ease, border-color 0.12s ease;
 }
-.mnsk7-section--catalog .mnsk7-tags-chip:hover,
-.mnsk7-section--catalog .mnsk7-tags-chip:focus-visible {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  color: var(--color-white);
+.mnsk7-section--catalog .mnsk7-tags-chip:not(.mnsk7-tags-chip--category):hover,
+.mnsk7-section--catalog .mnsk7-tags-chip:not(.mnsk7-tags-chip--category):focus-visible {
+  background: var(--color-bg-subtle, #f1f5f9);
+  border-color: rgba(12, 125, 219, 0.35);
+  color: var(--color-text);
+  transform: none;
+  box-shadow: none;
 }
 .mnsk7-section--catalog .mnsk7-cats__img-wrap {
   border: 1px solid var(--color-primary);
@@ -6939,6 +6950,23 @@ body.mnsk7-pdp-switching .single-product main .product {
 .mnsk7-section--insta .col-full > * {
   position: relative;
   z-index: 1;
+}
+
+/* Mobile: bloki głównej wykorzystują pełną szerokość — spójny, węższy gutter
+   (16px / 12px na bardzo wąskich) zamiast dużego wcięcia panelu. Desktop b.z. */
+@media (max-width: 768px) {
+  .mnsk7-section--catalog .col-full,
+  .mnsk7-section--trust .col-full,
+  .mnsk7-section--loyalty .col-full {
+    padding: var(--space-16);
+  }
+}
+@media (max-width: 380px) {
+  .mnsk7-section--catalog .col-full,
+  .mnsk7-section--trust .col-full,
+  .mnsk7-section--loyalty .col-full {
+    padding: var(--space-12);
+  }
 }
 
 /* Przeglądaj asortyment: Zastosowanie i materiały — chmura chipów (bez Więcej), potem Rodzaje frezów — karty. Jednakowe odstępy pionowe. */
@@ -8554,7 +8582,7 @@ body.mnsk7-pdp-switching .single-product main .product {
   width: calc(100% + 2rem);
   max-width: none;
   box-sizing: border-box;
-  padding: clamp(3rem, 6vw, 4.5rem) 1rem;
+  padding: clamp(2.25rem, 4vw, 3.25rem) 1rem;
   background: transparent;
 }
 
