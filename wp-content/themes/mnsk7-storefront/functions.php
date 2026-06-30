@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.86' );
+	define( 'MNSK7_THEME_VERSION', '1.0.87' );
 }
 
 /**
@@ -1706,11 +1706,13 @@ add_action( 'wp_footer', function () {
 					var ph = document.createComment('mnsk7-drawer-l2');
 					parent.insertBefore(ph, panel);
 					panel.mnsk7DrawerPlaceholder = ph;
+					panel.classList.add('mnsk7-drawer__l2-panel');
 					document.body.appendChild(panel);
 				}
 
 				function unmountL2Panel(panel) {
 					if (!panel || !panel.mnsk7DrawerPlaceholder) return;
+					panel.classList.remove('mnsk7-drawer__l2-panel');
 					var ph = panel.mnsk7DrawerPlaceholder;
 					if (ph.parentNode) {
 						ph.parentNode.insertBefore(panel, ph);
