@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.84' );
+	define( 'MNSK7_THEME_VERSION', '1.0.85' );
 }
 
 /**
@@ -1417,6 +1417,7 @@ add_action( 'wp_footer', function () {
 			// Tap na przyciemnienie (poza panelem menu) zamyka drawer.
 			nav.addEventListener('click', function(e) {
 				if (window.innerWidth >= DESKTOP_MIN || !nav.classList.contains('is-open')) return;
+				if (menuToggle && (e.target === menuToggle || menuToggle.contains(e.target))) return;
 				if (menu && menu.contains(e.target)) return;
 				closeMenu();
 				if (menuToggle) { try { menuToggle.focus(); } catch (err) {} }
