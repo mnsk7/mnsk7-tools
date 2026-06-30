@@ -2667,14 +2667,19 @@ body .site .site-content {
     visibility: visible !important;
   }
 
-  /* Półprzezroczyste tło za drawerem (nad treścią PDP, pod panelem menu). */
-  .mnsk7-header__nav.is-open::before {
+  /* Półprzezroczyste tło za drawerem (pełny viewport, nad treścią PDP). */
+  html.mnsk7-menu-locked::before,
+  body.mnsk7-menu-locked::before {
     content: "";
     position: fixed;
     inset: 0;
     background: rgba(15, 23, 42, 0.45);
     z-index: 10040;
     pointer-events: auto;
+  }
+  html.mnsk7-menu-locked .mnsk7-header,
+  body.mnsk7-menu-locked .mnsk7-header {
+    z-index: 10045 !important;
   }
   .mnsk7-header__nav.is-open .mnsk7-header__menu {
     z-index: 10050 !important;
