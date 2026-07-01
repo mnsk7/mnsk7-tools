@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.91' );
+	define( 'MNSK7_THEME_VERSION', '1.0.92' );
 }
 
 /**
@@ -481,6 +481,42 @@ add_action( 'wp_footer', function () {
 	</script>
 	<?php
 }, 100 );
+
+/** Cart: auto-submit quantity changes so user never needs the disabled "Aktualizuj koszyk" blob. */
+add_action( 'wp_footer', function () {
+	if ( ! function_exists( 'is_cart' ) || ! is_cart() ) {
+		return;
+	}
+	?>
+	<script id="mnsk7-cart-auto-update">
+	(function() {
+		var form = document.querySelector('.woocommerce-cart-form');
+		if (!form) return;
+		var timer = null;
+		function scheduleUpdate() {
+			if (timer) clearTimeout(timer);
+			timer = setTimeout(function() {
+				var btn = form.querySelector('button[name="update_cart"]');
+				if (btn && !btn.disabled) {
+					btn.click();
+					return;
+				}
+				if (typeof form.requestSubmit === 'function') {
+					form.requestSubmit();
+				} else {
+					form.submit();
+				}
+			}, 450);
+		}
+		form.addEventListener('change', function(event) {
+			if (event.target && event.target.matches('input.qty')) {
+				scheduleUpdate();
+			}
+		});
+	})();
+	</script>
+	<?php
+}, 101 );
 
 /** PDP: related products pod opisem (po zakładkach), podtytuł w szablonie related.php */
 add_action( 'wp', function () {

@@ -43,10 +43,21 @@
 }
 
 .woocommerce-cart .woocommerce-cart-form button[name="update_cart"]:disabled {
-  background: var(--color-border-strong) !important;
-  color: var(--color-text-muted) !important;
-  cursor: not-allowed;
+  display: none;
+}
+
+.woocommerce-cart .woocommerce-cart-form button[name="update_cart"]:not(:disabled) {
+  background: var(--color-white) !important;
+  color: var(--color-primary) !important;
+  border: 1px solid rgba(12, 125, 219, 0.35) !important;
+  cursor: pointer;
   box-shadow: none;
+}
+
+.woocommerce-cart .woocommerce-cart-form button[name="update_cart"]:not(:disabled):hover {
+  background: rgba(12, 125, 219, 0.06) !important;
+  border-color: var(--color-primary) !important;
+  color: var(--color-primary-dark, #0a5a9e) !important;
 }
 
 /* --- Loyalty block in cart - wyrazny, sprzedazowy --- */
@@ -388,6 +399,15 @@
 
 .woocommerce-cart .actions {
   padding-top: 1rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.woocommerce-cart .actions > button[name="update_cart"] {
+  margin-left: auto;
 }
 
 .woocommerce-cart .actions .coupon {
@@ -537,9 +557,73 @@
   outline: none;
 }
 
+.woocommerce-checkout .form-row {
+  margin-bottom: 0.85rem;
+}
+
+.woocommerce-checkout .woocommerce-billing-fields h3,
+.woocommerce-checkout .woocommerce-additional-fields h3,
+.woocommerce-checkout #order_review_heading {
+  margin: 0 0 0.85rem;
+  font-size: var(--fs-lg, 1.125rem);
+}
+
+.woocommerce-checkout #order_review {
+  padding: 1rem;
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  border-radius: var(--r-lg, 1rem);
+  background: var(--color-white);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.05);
+}
+
 .woocommerce-checkout #payment {
   background: var(--color-surface);
   border-radius: var(--r-md);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  padding: 0.25rem 0;
+}
+
+.woocommerce-checkout #payment .payment_methods {
+  padding: 0.75rem 1rem 0;
+}
+
+.woocommerce-checkout #payment .payment_methods li {
+  margin-bottom: 0.5rem;
+}
+
+.woocommerce-checkout #payment .place-order {
+  padding: 0.75rem 1rem 1rem;
+}
+
+.woocommerce-checkout #place_order {
+  width: 100%;
+  min-height: 48px;
+  font-size: var(--fs-base);
+  font-weight: 700;
+}
+
+.woocommerce-checkout .mnsk7-checkout-delivery-note {
+  margin: 0 0 0.85rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--r-sm);
+  background: rgba(12, 125, 219, 0.06);
+  color: var(--color-text-secondary);
+  font-size: var(--fs-sm);
+  line-height: 1.5;
+}
+
+.woocommerce-cart .woocommerce-notices-wrapper {
+  margin-bottom: 1rem;
+}
+
+.woocommerce-cart .woocommerce-notices-wrapper .woocommerce-message,
+.woocommerce-cart .woocommerce-notices-wrapper .woocommerce-info,
+.woocommerce-cart .woocommerce-notices-wrapper .woocommerce-error {
+  margin-bottom: 0.75rem;
+}
+
+.woocommerce-checkout .woocommerce-notices-wrapper {
+  margin-bottom: 1rem;
 }
 
 .woocommerce-checkout .woocommerce-form-login-toggle,
@@ -604,6 +688,71 @@
 
 /* Audit task 2-3: na mobile przycisk "Przejdz do platnosci" sticky u dolu - zawsze widoczny i klikalny */
 @media (max-width: 768px) {
+  .woocommerce-cart table.shop_table.shop_table_responsive tbody tr.woocommerce-cart-form__cart-item {
+    display: block;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .woocommerce-cart table.shop_table.shop_table_responsive tbody tr.woocommerce-cart-form__cart-item td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.35rem 0;
+    border: none;
+    text-align: right;
+  }
+
+  .woocommerce-cart table.shop_table.shop_table_responsive tbody tr.woocommerce-cart-form__cart-item td::before {
+    content: attr(data-title);
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    text-align: left;
+    flex: 1 1 auto;
+  }
+
+  .woocommerce-cart table.shop_table.shop_table_responsive .product-thumbnail {
+    text-align: center;
+    justify-content: center;
+  }
+
+  .woocommerce-cart table.shop_table.shop_table_responsive .product-thumbnail::before {
+    display: none;
+  }
+
+  .woocommerce-cart table.shop_table.shop_table_responsive .product-name {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+
+  .woocommerce-cart table.shop_table.shop_table_responsive .product-name::before {
+    margin-bottom: 0.25rem;
+  }
+
+  .woocommerce-cart table.shop_table.shop_table_responsive .product-remove {
+    justify-content: flex-end;
+  }
+
+  .woocommerce-cart table.shop_table.shop_table_responsive .product-remove::before {
+    display: none;
+  }
+
+  .woocommerce-cart .actions {
+    flex-direction: column;
+  }
+
+  .woocommerce-cart .actions > button[name="update_cart"] {
+    margin-left: 0;
+    order: 2;
+  }
+
+  .woocommerce-checkout #order_review {
+    padding: 0.875rem;
+    margin-bottom: 1rem;
+  }
+
   .mnsk7-cart-empty {
     max-width: none;
     padding: 1.5rem 1rem;

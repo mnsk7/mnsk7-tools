@@ -25,6 +25,7 @@ require_once $mnsk7_inc . 'redirects.php';
 require_once $mnsk7_inc . 'faq.php';
 require_once $mnsk7_inc . 'guide-seo.php';
 require_once $mnsk7_inc . 'checkout.php';
+require_once $mnsk7_inc . 'cart.php';
 require_once $mnsk7_inc . 'account-dashboard-cleanup.php';
 require_once $mnsk7_inc . 'woo-ux.php';
 require_once $mnsk7_inc . 'pages-seed.php';
