@@ -141,8 +141,15 @@ function mnsk7_render_related_guide_articles( $articles, $title = '' ) {
 		return '';
 	}
 
+	$classes = array( 'mnsk7-related-guides' );
+	if ( function_exists( 'is_product' ) && is_product() ) {
+		$classes[] = 'mnsk7-related-guides--pdp';
+	} elseif ( function_exists( 'is_product_taxonomy' ) && is_product_taxonomy() ) {
+		$classes[] = 'mnsk7-related-guides--archive';
+	}
+
 	$title = $title ?: __( 'Powiazane poradniki', 'mnsk7-tools' );
-	$out   = '<section class="mnsk7-related-guides" aria-label="' . esc_attr( $title ) . '">';
+	$out   = '<section class="' . esc_attr( implode( ' ', $classes ) ) . '" aria-label="' . esc_attr( $title ) . '">';
 	$out  .= '<div class="mnsk7-related-guides__head">';
 	$out  .= '<span class="mnsk7-related-guides__eyebrow">' . esc_html__( 'Przewodnik', 'mnsk7-tools' ) . '</span>';
 	$out  .= '<h2>' . esc_html( $title ) . '</h2>';
@@ -159,7 +166,12 @@ function mnsk7_render_related_guide_articles( $articles, $title = '' ) {
 	return $out;
 }
 
-add_action( 'woocommerce_archive_description', function () {
+/**
+ * Renders related guide articles near the bottom of product category pages.
+ *
+ * @return void
+ */
+function mnsk7_render_related_guides_on_product_archive() {
 	if ( ! function_exists( 'is_product_taxonomy' ) || ! is_product_taxonomy() ) {
 		return;
 	}
@@ -177,9 +189,15 @@ add_action( 'woocommerce_archive_description', function () {
 	}
 
 	echo mnsk7_render_related_guide_articles( mnsk7_get_related_guide_articles( $signals, 3 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-}, 25 );
+}
+add_action( 'woocommerce_after_main_content', 'mnsk7_render_related_guides_on_product_archive', 8 );
 
-add_action( 'mnsk7_after_pdp_main', function () {
+/**
+ * Renders related guide articles after PDP description.
+ *
+ * @return void
+ */
+function mnsk7_render_related_guides_on_product_page() {
 	if ( ! function_exists( 'is_product' ) || ! is_product() || ! function_exists( 'wc_get_product' ) ) {
 		return;
 	}
@@ -207,7 +225,8 @@ add_action( 'mnsk7_after_pdp_main', function () {
 	}
 
 	echo mnsk7_render_related_guide_articles( mnsk7_get_related_guide_articles( $signals, 3 ), __( 'Poradniki do tego produktu', 'mnsk7-tools' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-}, 35 );
+}
+add_action( 'woocommerce_after_single_product_summary', 'mnsk7_render_related_guides_on_product_page', 12 );
 
 /**
  * Shortcode: linki do kategorii / produktów w artykułach Przewodnik.

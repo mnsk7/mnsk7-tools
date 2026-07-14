@@ -275,14 +275,23 @@
 
 .mnsk7-related-guides {
   max-width: var(--content-max);
-  margin: 1.5rem auto;
-  padding: clamp(1rem, 2.5vw, 1.5rem);
-  border: 1px solid rgba(17, 24, 39, 0.1);
-  border-radius: 1.35rem;
+  margin: clamp(2rem, 5vw, 3.75rem) auto;
+  padding: clamp(1.1rem, 3vw, 2rem);
+  border: 1px solid rgba(17, 24, 39, 0.08);
+  border-radius: 1.6rem;
   background:
-    radial-gradient(circle at 100% 0%, rgba(247, 147, 26, 0.16), transparent 14rem),
-    #ffffff;
-  box-shadow: 0 16px 46px rgba(17, 24, 39, 0.08);
+    radial-gradient(circle at 100% 0%, rgba(247, 147, 26, 0.18), transparent 15rem),
+    linear-gradient(135deg, #ffffff 0%, #fffaf1 100%);
+  box-shadow: 0 18px 52px rgba(17, 24, 39, 0.08);
+}
+
+.mnsk7-related-guides--pdp {
+  margin-top: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+.mnsk7-related-guides--archive {
+  margin-top: clamp(2.5rem, 6vw, 4.5rem);
+  margin-bottom: clamp(2rem, 5vw, 4rem);
 }
 
 .mnsk7-related-guides__head {
@@ -295,6 +304,9 @@
 }
 
 .mnsk7-related-guides__eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   color: #9a4f00;
   font-size: var(--fs-sm);
   font-weight: 900;
@@ -302,11 +314,20 @@
   text-transform: uppercase;
 }
 
+.mnsk7-related-guides__eyebrow::before {
+  content: "";
+  width: 0.55rem;
+  height: 0.55rem;
+  border-radius: 999px;
+  background: #f7931a;
+  box-shadow: 0 0 0 0.28rem rgba(247, 147, 26, 0.16);
+}
+
 .mnsk7-related-guides__head h2 {
   width: 100%;
   margin: 0;
   color: #15120d;
-  font-size: clamp(1.25rem, 2vw, 1.75rem);
+  font-size: clamp(1.45rem, 2.4vw, 2.15rem);
   font-weight: 900;
   letter-spacing: -0.035em;
 }
@@ -322,18 +343,26 @@
   flex-direction: column;
   gap: 0.75rem;
   min-height: 100%;
-  padding: 1rem;
+  padding: clamp(1rem, 2vw, 1.25rem);
   border: 1px solid rgba(17, 24, 39, 0.09);
-  border-radius: 1rem;
+  border-radius: 1.1rem;
   color: #15120d;
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.9);
   font-weight: 850;
   line-height: 1.35;
   text-decoration: none;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
 }
 
 .mnsk7-related-guides__item strong {
-  color: #b55e00;
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-top: auto;
+  padding: 0.35rem 0.7rem;
+  border-radius: 999px;
+  color: #111827;
+  background: rgba(247, 147, 26, 0.18);
   font-size: var(--fs-sm);
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -341,6 +370,8 @@
 
 .mnsk7-related-guides__item:hover {
   border-color: rgba(247, 147, 26, 0.6);
+  box-shadow: 0 14px 34px rgba(17, 24, 39, 0.08);
+  transform: translateY(-2px);
   text-decoration: none;
 }
 
