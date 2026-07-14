@@ -86,6 +86,108 @@ if ( ! empty( $accessory_cats ) ) {
 }
 
 $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || ( $has_tags && ! is_wp_error( $tags ) && ! empty( $tags ) );
+
+if ( ! function_exists( 'mnsk7_front_format_stat_number' ) ) {
+	/**
+	 * Formats homepage counters with the current WordPress locale.
+	 *
+	 * @param int $value Counter value.
+	 * @return string
+	 */
+	function mnsk7_front_format_stat_number( $value ) {
+		return number_format_i18n( max( 0, (int) $value ) );
+	}
+}
+
+if ( ! function_exists( 'mnsk7_front_paginated_total' ) ) {
+	/**
+	 * Reads total count from WooCommerce paginated query results.
+	 *
+	 * @param mixed $result WooCommerce query result.
+	 * @return int
+	 */
+	function mnsk7_front_paginated_total( $result ) {
+		if ( is_object( $result ) && isset( $result->total ) ) {
+			return (int) $result->total;
+		}
+
+		return 0;
+	}
+}
+
+if ( ! function_exists( 'mnsk7_front_product_count' ) ) {
+	/**
+	 * Counts published products for the homepage trust stats.
+	 *
+	 * @return int
+	 */
+	function mnsk7_front_product_count() {
+		if ( ! function_exists( 'wc_get_products' ) ) {
+			return 0;
+		}
+
+		$cached = get_transient( 'mnsk7_front_product_count' );
+		if ( $cached !== false ) {
+			return (int) $cached;
+		}
+
+		$count = mnsk7_front_paginated_total( wc_get_products( array(
+			'status'   => 'publish',
+			'limit'    => 1,
+			'return'   => 'ids',
+			'paginate' => true,
+		) ) );
+
+		set_transient( 'mnsk7_front_product_count', $count, HOUR_IN_SECONDS );
+
+		return $count;
+	}
+}
+
+if ( ! function_exists( 'mnsk7_front_current_year_order_count' ) ) {
+	/**
+	 * Counts active WooCommerce orders created in the current calendar year.
+	 *
+	 * @return int
+	 */
+	function mnsk7_front_current_year_order_count() {
+		if ( ! function_exists( 'wc_get_orders' ) ) {
+			return 0;
+		}
+
+		$year      = wp_date( 'Y' );
+		$cache_key = 'mnsk7_front_order_count_' . $year;
+		$cached    = get_transient( $cache_key );
+		if ( $cached !== false ) {
+			return (int) $cached;
+		}
+
+		$year_start = $year . '-01-01 00:00:00';
+		$result     = wc_get_orders( array(
+			'status'       => array( 'completed', 'processing', 'on-hold' ),
+			'date_created' => '>=' . $year_start,
+			'limit'        => 1,
+			'return'       => 'ids',
+			'paginate'     => true,
+		) );
+
+		$count = mnsk7_front_paginated_total( $result );
+		set_transient( $cache_key, $count, HOUR_IN_SECONDS );
+
+		return $count;
+	}
+}
+
+$mnsk7_home_stats = apply_filters( 'mnsk7_home_trust_stats', array(
+	'positive_reviews_pct' => (string) get_option( 'mnsk7_allegro_positive_reviews_pct', '100%' ),
+	'allegro_reviews'      => (int) get_option( 'mnsk7_allegro_reviews_count', 383 ),
+	'orders_year'          => mnsk7_front_current_year_order_count(),
+	'products'             => mnsk7_front_product_count(),
+) );
+$mnsk7_home_stats['positive_reviews_pct'] = $mnsk7_home_stats['positive_reviews_pct'] ?: '100%';
+$mnsk7_home_stats['allegro_reviews']      = max( 0, (int) $mnsk7_home_stats['allegro_reviews'] );
+$mnsk7_home_stats['orders_year']          = max( 0, (int) $mnsk7_home_stats['orders_year'] );
+$mnsk7_home_stats['products']             = max( 0, (int) $mnsk7_home_stats['products'] );
 ?>
 
 <main id="main" class="site-main mnsk7-front-page">
@@ -243,19 +345,19 @@ $show_catalog = ( $has_cats && ! is_wp_error( $cats ) && ! empty( $cats ) ) || (
 			<p class="mnsk7-section__sub"><?php esc_html_e( 'Łączymy specjalistyczny asortyment CNC z przewidywalną realizacją, realnymi opiniami i obsługą pod zakupy warsztatowe oraz B2B.', 'mnsk7-storefront' ); ?></p>
 			<div class="mnsk7-trust-stats">
 				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number" data-mnsk7-counter>100%</span>
+					<span class="mnsk7-trust-stats__number" data-mnsk7-counter><?php echo esc_html( $mnsk7_home_stats['positive_reviews_pct'] ); ?></span>
 					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'pozytywnych opinii', 'mnsk7-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number" data-mnsk7-counter>383</span>
+					<span class="mnsk7-trust-stats__number" data-mnsk7-counter><?php echo esc_html( mnsk7_front_format_stat_number( $mnsk7_home_stats['allegro_reviews'] ) ); ?></span>
 					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'ocen na Allegro', 'mnsk7-storefront' ); ?></span>
 				</div>
 				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number" data-mnsk7-counter>3 500+</span>
-					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'zamówień w 2025 r.', 'mnsk7-storefront' ); ?></span>
+					<span class="mnsk7-trust-stats__number" data-mnsk7-counter><?php echo esc_html( mnsk7_front_format_stat_number( $mnsk7_home_stats['orders_year'] ) ); ?></span>
+					<span class="mnsk7-trust-stats__label"><?php echo esc_html( sprintf( __( 'zamówień w %s r.', 'mnsk7-storefront' ), wp_date( 'Y' ) ) ); ?></span>
 				</div>
 				<div class="mnsk7-trust-stats__item">
-					<span class="mnsk7-trust-stats__number" data-mnsk7-counter>425</span>
+					<span class="mnsk7-trust-stats__number" data-mnsk7-counter><?php echo esc_html( mnsk7_front_format_stat_number( $mnsk7_home_stats['products'] ) ); ?></span>
 					<span class="mnsk7-trust-stats__label"><?php esc_html_e( 'produktów w ofercie', 'mnsk7-storefront' ); ?></span>
 				</div>
 			</div>

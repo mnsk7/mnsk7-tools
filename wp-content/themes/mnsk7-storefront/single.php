@@ -63,7 +63,6 @@ $przewodnik_label = apply_filters( 'mnsk7_przewodnik_menu_label', __( 'Przewodni
 						<aside class="mnsk7-guide-article__summary" aria-label="<?php esc_attr_e( 'Article information', 'mnsk7-storefront' ); ?>">
 							<span><?php esc_html_e( 'W artykule', 'mnsk7-storefront' ); ?></span>
 							<strong><?php echo esc_html( $reading_time ); ?></strong>
-							<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time>
 							<a href="#mnsk7-guide-products"><?php esc_html_e( 'Produkty i kategorie', 'mnsk7-storefront' ); ?></a>
 						</aside>
 					</div>

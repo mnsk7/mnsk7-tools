@@ -92,7 +92,7 @@ $topics        = array(
 						<article id="post-<?php the_ID(); ?>" <?php post_class( $is_featured ? 'mnsk7-guide-card mnsk7-guide-card--featured' : 'mnsk7-guide-card' ); ?>>
 							<a class="mnsk7-guide-card__link" href="<?php the_permalink(); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Czytaj: %s', 'mnsk7-storefront' ), get_the_title() ) ); ?>">
 								<span class="mnsk7-guide-card__meta">
-									<time datetime="<?php echo esc_attr( get_the_date( 'c' ) ); ?>"><?php echo esc_html( get_the_date() ); ?></time>
+									<span><?php esc_html_e( 'Poradnik techniczny', 'mnsk7-storefront' ); ?></span>
 									<span><?php echo esc_html( mnsk7_guide_estimated_reading_time( get_the_content() ) ); ?></span>
 								</span>
 								<h3 class="mnsk7-guide-card__title"><?php the_title(); ?></h3>
