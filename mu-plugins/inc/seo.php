@@ -213,6 +213,16 @@ add_filter( 'wpseo_title', function ( $title ) {
 }, 20 );
 
 add_filter( 'wpseo_canonical', function ( $canonical ) {
+	if ( is_page( 'frez-prosty' ) && taxonomy_exists( 'product_cat' ) ) {
+		$term = get_term_by( 'slug', 'frezy-proste', 'product_cat' );
+		if ( $term && ! is_wp_error( $term ) ) {
+			$url = get_term_link( $term );
+			if ( ! is_wp_error( $url ) ) {
+				return $url;
+			}
+		}
+	}
+
 	$catalog_canonical = function_exists( 'mnsk7_get_catalog_archive_canonical_url' ) ? mnsk7_get_catalog_archive_canonical_url() : '';
 	if ( $catalog_canonical !== '' ) {
 		return $catalog_canonical;
@@ -227,6 +237,84 @@ add_action( 'wp_head', function () {
 	}
 	echo '<link rel="canonical" href="' . esc_url( $catalog_canonical ) . '">' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }, 2 );
+
+add_action( 'wp_head', function () {
+	if ( ! is_singular( 'post' ) ) {
+		return;
+	}
+
+	$post_id   = get_queried_object_id();
+	$permalink = get_permalink( $post_id );
+	if ( ! $post_id || ! $permalink ) {
+		return;
+	}
+
+	$description = get_the_excerpt( $post_id );
+	if ( $description === '' ) {
+		$description = wp_trim_words( wp_strip_all_tags( get_post_field( 'post_content', $post_id ) ), 28, '' );
+	}
+
+	$image = get_the_post_thumbnail_url( $post_id, 'full' );
+	if ( ! $image ) {
+		$image = get_site_icon_url( 512 ) ?: home_url( '/wp-content/themes/tech-storefront/assets/images/logo.png' );
+	}
+
+	$schema = array(
+		array(
+			'@context'         => 'https://schema.org',
+			'@type'            => 'BlogPosting',
+			'mainEntityOfPage' => array(
+				'@type' => 'WebPage',
+				'@id'   => $permalink,
+			),
+			'headline'         => get_the_title( $post_id ),
+			'description'      => $description,
+			'image'            => array( $image ),
+			'datePublished'    => get_the_date( DATE_W3C, $post_id ),
+			'dateModified'     => get_the_modified_date( DATE_W3C, $post_id ),
+			'author'           => array(
+				'@type' => 'Organization',
+				'name'  => 'MNK7 Tools',
+				'url'   => home_url( '/' ),
+			),
+			'publisher'        => array(
+				'@type' => 'Organization',
+				'name'  => 'MNK7 Tools',
+				'url'   => home_url( '/' ),
+				'logo'  => array(
+					'@type' => 'ImageObject',
+					'url'   => get_site_icon_url( 512 ) ?: $image,
+				),
+			),
+		),
+		array(
+			'@context'        => 'https://schema.org',
+			'@type'           => 'BreadcrumbList',
+			'itemListElement' => array(
+				array(
+					'@type'    => 'ListItem',
+					'position' => 1,
+					'name'     => __( 'Strona główna', 'mnsk7-tools' ),
+					'item'     => home_url( '/' ),
+				),
+				array(
+					'@type'    => 'ListItem',
+					'position' => 2,
+					'name'     => apply_filters( 'mnsk7_przewodnik_menu_label', __( 'Przewodnik', 'mnsk7-tools' ) ),
+					'item'     => home_url( '/przewodnik/' ),
+				),
+				array(
+					'@type'    => 'ListItem',
+					'position' => 3,
+					'name'     => get_the_title( $post_id ),
+					'item'     => $permalink,
+				),
+			),
+		),
+	);
+
+	echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}, 6 );
 
 /* Opis archiwum taksonomii (kategoria, tag) — zastępuje domyślny WooCommerce hook */
 remove_action( 'woocommerce_archive_description', 'woocommerce_taxonomy_archive_description', 10 );
@@ -261,3 +349,64 @@ add_action( 'woocommerce_archive_description', function () {
 	}
 	echo '</div>';
 }, 10 );
+
+add_filter( 'woocommerce_structured_data_product', function ( $markup, $product ) {
+	if ( ! is_a( $product, 'WC_Product' ) ) {
+		return $markup;
+	}
+
+	$rating_count = (int) $product->get_rating_count();
+	$review_count = (int) $product->get_review_count();
+	$average      = (float) $product->get_average_rating();
+
+	if ( $rating_count <= 0 || $average <= 0 ) {
+		return $markup;
+	}
+
+	$markup['aggregateRating'] = array(
+		'@type'       => 'AggregateRating',
+		'ratingValue' => number_format( $average, 2, '.', '' ),
+		'ratingCount' => $rating_count,
+		'reviewCount' => max( $review_count, $rating_count ),
+		'bestRating'  => '5',
+		'worstRating' => '1',
+	);
+
+	$reviews = get_comments(
+		array(
+			'post_id' => $product->get_id(),
+			'status'  => 'approve',
+			'type'    => 'review',
+			'number'  => 5,
+			'orderby' => 'comment_date_gmt',
+			'order'   => 'DESC',
+		)
+	);
+
+	if ( ! empty( $reviews ) ) {
+		$markup['review'] = array();
+		foreach ( $reviews as $review ) {
+			$rating = (int) get_comment_meta( $review->comment_ID, 'rating', true );
+			$item   = array(
+				'@type'         => 'Review',
+				'author'        => array(
+					'@type' => 'Person',
+					'name'  => $review->comment_author ?: __( 'Klient MNK7 Tools', 'mnsk7-tools' ),
+				),
+				'datePublished' => mysql2date( DATE_W3C, $review->comment_date_gmt, false ),
+				'reviewBody'    => wp_trim_words( wp_strip_all_tags( $review->comment_content ), 60, '' ),
+			);
+			if ( $rating > 0 ) {
+				$item['reviewRating'] = array(
+					'@type'       => 'Rating',
+					'ratingValue' => (string) $rating,
+					'bestRating'  => '5',
+					'worstRating' => '1',
+				);
+			}
+			$markup['review'][] = $item;
+		}
+	}
+
+	return $markup;
+}, 20, 2 );

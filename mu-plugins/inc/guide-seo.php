@@ -67,6 +67,7 @@ function mnsk7_guide_products_shortcode( $atts ) {
 	if ( $atts['categories'] !== '' && taxonomy_exists( 'product_cat' ) ) {
 		$slugs = array_filter( array_map( 'trim', explode( ',', $atts['categories'] ) ) );
 		$links = array();
+		$valid_slugs = array();
 		foreach ( $slugs as $slug ) {
 			$term = get_term_by( 'slug', sanitize_title( $slug ), 'product_cat' );
 			if ( $term && ! is_wp_error( $term ) ) {
@@ -74,6 +75,7 @@ function mnsk7_guide_products_shortcode( $atts ) {
 				if ( ! is_wp_error( $url ) ) {
 					$name = function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name;
 					$links[] = '<a href="' . esc_url( $url ) . '">' . esc_html( $name ) . '</a>';
+					$valid_slugs[] = $term->slug;
 				}
 			}
 		}
@@ -88,6 +90,13 @@ function mnsk7_guide_products_shortcode( $atts ) {
 			$out .= '<li>' . $link . '</li>';
 		}
 		$out .= '</ul>';
+		if ( $atts['format'] === 'grid' && ! empty( $valid_slugs ) && function_exists( 'wc_get_loop' ) ) {
+			$out .= do_shortcode( sprintf(
+				'[products category="%s" limit="%d" columns="3" orderby="popularity"]',
+				esc_attr( implode( ',', array_unique( $valid_slugs ) ) ),
+				$limit
+			) );
+		}
 		return '<div class="mnsk7-guide-products">' . $out . '</div>';
 	}
 
