@@ -32,10 +32,10 @@ $category      = get_queried_object();
 $category_name = $category instanceof WP_Term ? $category->name : __( 'Przewodnik', 'mnsk7-storefront' );
 $total_posts   = $category instanceof WP_Term ? (int) $category->count : 0;
 $topics        = array(
-	array( __( 'Frezy CNC', 'mnsk7-storefront' ), home_url( '/frezy-cnc/' ) ),
-	array( __( 'Drewno i MDF', 'mnsk7-storefront' ), home_url( '/frezy-mdf/' ) ),
-	array( __( 'Aluminium', 'mnsk7-storefront' ), home_url( '/frezy-do-aluminium/' ) ),
-	array( __( 'Stal i metal', 'mnsk7-storefront' ), home_url( '/frezy-do-stali/' ) ),
+	array( __( 'Frezy spiralne', 'mnsk7-storefront' ), home_url( '/kategoria-produktu/frezy-spiralne/' ) ),
+	array( __( 'Frezy kompresyjne', 'mnsk7-storefront' ), home_url( '/kategoria-produktu/frezy-kompresyjne-updown-cut/' ) ),
+	array( __( 'Planowanie powierzchni', 'mnsk7-storefront' ), home_url( '/kategoria-produktu/frezy-do-planowania/' ) ),
+	array( __( 'Obróbka 3D', 'mnsk7-storefront' ), home_url( '/kategoria-produktu/frezy-kulowe/' ) ),
 	array( __( 'Frezy proste', 'mnsk7-storefront' ), home_url( '/kategoria-produktu/frezy-proste/' ) ),
 	array( __( 'Pilniki obrotowe', 'mnsk7-storefront' ), home_url( '/kategoria-produktu/pilniki-obrotowe/' ) ),
 );
@@ -46,7 +46,7 @@ $topics        = array(
 		<div class="col-full">
 			<div class="mnsk7-guide-archive__hero-grid">
 				<div class="mnsk7-guide-archive__hero-copy">
-					<p class="mnsk7-guide-archive__eyebrow"><?php esc_html_e( 'Baza wiedzy MNK7 Tools', 'mnsk7-storefront' ); ?></p>
+					<p class="mnsk7-guide-archive__eyebrow"><?php esc_html_e( 'Baza wiedzy MNSK7 Tools', 'mnsk7-storefront' ); ?></p>
 					<h1 class="mnsk7-guide-archive__title"><?php echo esc_html( $category_name ); ?></h1>
 					<p class="mnsk7-guide-archive__lead">
 						<?php esc_html_e( 'Praktyczne poradniki o frezach CNC, doborze narzędzi, materiałach i jakości obróbki. Bez lania wody: co wybrać, kiedy uważać i gdzie przejść do właściwych produktów.', 'mnsk7-storefront' ); ?>
@@ -56,6 +56,7 @@ $topics        = array(
 						<a class="mnsk7-guide-archive__secondary" href="<?php echo esc_url( home_url( '/kontakt/' ) ); ?>"><?php esc_html_e( 'Zapytaj o dobór', 'mnsk7-storefront' ); ?></a>
 					</div>
 				</div>
+
 				<div class="mnsk7-guide-archive__panel" aria-label="<?php esc_attr_e( 'Informacje o przewodniku', 'mnsk7-storefront' ); ?>">
 					<span class="mnsk7-guide-archive__panel-kicker"><?php esc_html_e( 'W archiwum', 'mnsk7-storefront' ); ?></span>
 					<strong class="mnsk7-guide-archive__panel-number"><?php echo esc_html( number_format_i18n( $total_posts ) ); ?></strong>

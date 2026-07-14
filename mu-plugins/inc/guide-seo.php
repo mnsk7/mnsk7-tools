@@ -20,6 +20,196 @@ add_action( 'init', function () {
 }, 8 );
 
 /**
+ * Article-to-catalog relevance map.
+ *
+ * Keys in "terms" can be product_cat slugs, product_tag slugs, or lightweight
+ * keyword hints used on PDP when a product is not tagged enough yet.
+ *
+ * @return array<int,array{slug:string,title:string,terms:string[]}>
+ */
+function mnsk7_get_guide_article_links_map() {
+	return array(
+		array(
+			'slug'  => 'frezy-kompresyjne-do-czego-sluza',
+			'title' => 'Frez kompresyjny - kiedy wybrac UP&DOWN CUT?',
+			'terms' => array( 'frezy-kompresyjne-updown-cut', 'frezy-spiralne', 'mdf', 'drewno', 'sklejka', 'kompresyjny' ),
+		),
+		array(
+			'slug'  => 'frez-do-wyrownania-sleba-i-planowania-powierzchni',
+			'title' => 'Jaki frez do planowania drewna i slabow?',
+			'terms' => array( 'frezy-do-planowania', 'frezy-proste-z-wymiennymi-plytkami', 'drewno', 'mdf', 'planowania', 'slab' ),
+		),
+		array(
+			'slug'  => 'borfrezy-do-metalu-zastosowanie',
+			'title' => 'Pilniki obrotowe i borfrezy - jak wybrac?',
+			'terms' => array( 'pilniki-obrotowe', 'pilniki-obrotowe-typ-a', 'pilniki-obrotowe-typ-f', 'stal', 'metal', 'borfrez' ),
+		),
+		array(
+			'slug'  => 'frezy-do-3d-obrobki-cnc',
+			'title' => 'Frezy do obrobki 3D CNC',
+			'terms' => array( 'frezy-kulowe', 'frezy-stozkowo-kulowe', 'frezy-diamentowe', 'relief', '3d', 'kulowy' ),
+		),
+		array(
+			'slug'  => 'frezy-raszplowe-kukurydza',
+			'title' => 'Frez kukurydza - szybka obrobka zgrubna',
+			'terms' => array( 'frezy-proste-wieloostrzowe', 'frezy-proste', 'kukurydza', 'wieloostrzowy', 'zgrubna' ),
+		),
+		array(
+			'slug'  => 'rodzaje-frezow-do-recznego-frezera-do-drewna',
+			'title' => 'Frezy do recznego frezera do drewna',
+			'terms' => array( 'frezy-z-lozyskiem', 'frezy-krawedziowe', 'frezy-zaokraglajace', 'lozyskiem', 'reczny', 'drewno' ),
+		),
+		array(
+			'slug'  => 'rodzaje-frezow-cnc-do-drewna',
+			'title' => 'Frezy CNC do drewna - rodzaje i zastosowania',
+			'terms' => array( 'frezy-spiralne', 'frezy-kompresyjne-updown-cut', 'frezy-kulowe', 'drewno', 'mdf', 'sklejka' ),
+		),
+		array(
+			'slug'  => 'frezy-koncowe-do-aluminium',
+			'title' => 'Jaki frez do aluminium CNC?',
+			'terms' => array( 'frezy-spiralne-jednopiorowe-1p', 'frezy-spiralne-dwupiorowe-2p', 'aluminium', '1p', '2p' ),
+		),
+		array(
+			'slug'  => 'frezy-do-metalu-stal-i-metale-kolorowe',
+			'title' => 'Frezy CNC do stali i metali kolorowych',
+			'terms' => array( 'frezy-proste', 'frezy-proste-wieloostrzowe', 'frezy-spiralne-czteropiorowe-4p', 'stal', 'metal', 'metale' ),
+		),
+		array(
+			'slug'  => 'liczba-ostrz-frezu-jednopiorowe-dwupiorowe-czteropiorowe',
+			'title' => 'Ile ostrzy ma miec frez: 1P, 2P, 3P czy 4P?',
+			'terms' => array( 'frezy-spiralne-jednopiorowe-1p', 'frezy-spiralne-dwupiorowe-2p', 'frezy-spiralne-trzypiorowe-3p', 'frezy-spiralne-czteropiorowe-4p', '1p', '2p', '3p', '4p' ),
+		),
+	);
+}
+
+/**
+ * Gets related guide posts for catalog/product terms.
+ *
+ * @param string[] $signals Term slugs and keyword hints.
+ * @param int      $limit   Maximum number of posts.
+ * @return array<int,array{title:string,url:string}>
+ */
+function mnsk7_get_related_guide_articles( $signals, $limit = 3 ) {
+	$signals = array_values( array_unique( array_filter( array_map( 'sanitize_title', (array) $signals ) ) ) );
+	if ( empty( $signals ) ) {
+		return array();
+	}
+
+	$scored = array();
+	foreach ( mnsk7_get_guide_article_links_map() as $article ) {
+		$terms = array_map( 'sanitize_title', $article['terms'] );
+		$score = count( array_intersect( $signals, $terms ) );
+		if ( $score <= 0 ) {
+			continue;
+		}
+		$scored[] = array(
+			'score' => $score,
+			'slug'  => $article['slug'],
+			'title' => $article['title'],
+		);
+	}
+
+	usort( $scored, function ( $a, $b ) {
+		return $b['score'] <=> $a['score'];
+	} );
+
+	$out = array();
+	foreach ( array_slice( $scored, 0, max( 1, (int) $limit ) ) as $row ) {
+		$post = get_page_by_path( $row['slug'], OBJECT, 'post' );
+		$url  = $post instanceof WP_Post ? get_permalink( $post ) : home_url( '/' . $row['slug'] . '/' );
+		if ( ! $url ) {
+			continue;
+		}
+		$out[] = array(
+			'title' => $post instanceof WP_Post ? get_the_title( $post ) : $row['title'],
+			'url'   => $url,
+		);
+	}
+
+	return $out;
+}
+
+/**
+ * Renders related guide links.
+ *
+ * @param array<int,array{title:string,url:string}> $articles Related articles.
+ * @param string                                    $title    Block title.
+ * @return string
+ */
+function mnsk7_render_related_guide_articles( $articles, $title = '' ) {
+	if ( empty( $articles ) ) {
+		return '';
+	}
+
+	$title = $title ?: __( 'Powiazane poradniki', 'mnsk7-tools' );
+	$out   = '<section class="mnsk7-related-guides" aria-label="' . esc_attr( $title ) . '">';
+	$out  .= '<div class="mnsk7-related-guides__head">';
+	$out  .= '<span class="mnsk7-related-guides__eyebrow">' . esc_html__( 'Przewodnik', 'mnsk7-tools' ) . '</span>';
+	$out  .= '<h2>' . esc_html( $title ) . '</h2>';
+	$out  .= '</div>';
+	$out  .= '<div class="mnsk7-related-guides__list">';
+	foreach ( $articles as $article ) {
+		$out .= '<a class="mnsk7-related-guides__item" href="' . esc_url( $article['url'] ) . '">';
+		$out .= '<span>' . esc_html( $article['title'] ) . '</span>';
+		$out .= '<strong>' . esc_html__( 'Czytaj', 'mnsk7-tools' ) . '</strong>';
+		$out .= '</a>';
+	}
+	$out .= '</div></section>';
+
+	return $out;
+}
+
+add_action( 'woocommerce_archive_description', function () {
+	if ( ! function_exists( 'is_product_taxonomy' ) || ! is_product_taxonomy() ) {
+		return;
+	}
+	$term = get_queried_object();
+	if ( ! $term instanceof WP_Term ) {
+		return;
+	}
+
+	$signals = array( $term->slug );
+	foreach ( get_ancestors( (int) $term->term_id, $term->taxonomy ) as $ancestor_id ) {
+		$ancestor = get_term( (int) $ancestor_id, $term->taxonomy );
+		if ( $ancestor instanceof WP_Term ) {
+			$signals[] = $ancestor->slug;
+		}
+	}
+
+	echo mnsk7_render_related_guide_articles( mnsk7_get_related_guide_articles( $signals, 3 ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}, 25 );
+
+add_action( 'mnsk7_after_pdp_main', function () {
+	if ( ! function_exists( 'is_product' ) || ! is_product() || ! function_exists( 'wc_get_product' ) ) {
+		return;
+	}
+
+	$product = wc_get_product( get_the_ID() );
+	if ( ! is_a( $product, 'WC_Product' ) ) {
+		return;
+	}
+
+	$signals = array();
+	foreach ( array( 'product_cat', 'product_tag' ) as $taxonomy ) {
+		$terms = wc_get_product_terms( $product->get_id(), $taxonomy );
+		foreach ( $terms as $term ) {
+			if ( $term instanceof WP_Term ) {
+				$signals[] = $term->slug;
+			}
+		}
+	}
+
+	$title_text = strtolower( remove_accents( $product->get_name() ) );
+	foreach ( array( 'aluminium', 'stal', 'metal', 'drewno', 'mdf', 'kompresyjny', 'kulowy', 'kukurydza', '1p', '2p', '3p', '4p' ) as $hint ) {
+		if ( strpos( $title_text, $hint ) !== false ) {
+			$signals[] = $hint;
+		}
+	}
+
+	echo mnsk7_render_related_guide_articles( mnsk7_get_related_guide_articles( $signals, 3 ), __( 'Poradniki do tego produktu', 'mnsk7-tools' ) ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}, 35 );
+
+/**
  * Shortcode: linki do kategorii / produktów w artykułach Przewodnik.
  *
  * @param array $atts category, categories, ids, title, format, limit.
@@ -60,7 +250,7 @@ function mnsk7_guide_products_shortcode( $atts ) {
 				}
 			}
 		}
-		return $out ? '<div class="mnsk7-guide-products">' . $out . '</div>' : '';
+		return $out ? '<div id="mnsk7-guide-products" class="mnsk7-guide-products">' . $out . '</div>' : '';
 	}
 
 	// Wiele kategorii: lista linków
@@ -97,7 +287,7 @@ function mnsk7_guide_products_shortcode( $atts ) {
 				$limit
 			) );
 		}
-		return '<div class="mnsk7-guide-products">' . $out . '</div>';
+		return '<div id="mnsk7-guide-products" class="mnsk7-guide-products">' . $out . '</div>';
 	}
 
 	// Konkretne ID produktów
@@ -122,7 +312,7 @@ function mnsk7_guide_products_shortcode( $atts ) {
 			$out .= '<li>' . $link . '</li>';
 		}
 		$out .= '</ul>';
-		return '<div class="mnsk7-guide-products">' . $out . '</div>';
+		return '<div id="mnsk7-guide-products" class="mnsk7-guide-products">' . $out . '</div>';
 	}
 
 	return '';

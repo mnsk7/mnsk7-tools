@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const MNSK7_GUIDE_ARTICLES_SEED_VERSION = '2026-07-14-docx-v2';
+const MNSK7_GUIDE_ARTICLES_SEED_VERSION = '2026-07-14-docx-v3';
 
 add_action( 'init', 'mnsk7_seed_guide_articles', 25 );
 
@@ -158,7 +158,7 @@ function mnsk7_get_seed_guide_articles() {
 <li>Przewodnik: Frezy CNC do drewna — dobór do materiału.</li>
 </ul>
 
-[mnsk7_guide_products categories="frezy-kompresyjne-updown-cut,frez-kompresyjny-vhm,frezy-do-drewna,frezy-do-mdf" title="Powiazane frezy i kategorie" format="grid" limit="6"]
+[mnsk7_guide_products categories="frezy-kompresyjne-updown-cut,frezy-spiralne,frezy-spiralne-dwupiorowe-2p,frezy-proste" title="Powiazane frezy i kategorie" format="grid" limit="6"]
 HTML
 			,
 			'faq' => array(
@@ -199,7 +199,7 @@ HTML
 <li>Artykuł uzupełniający: Jak przygotować slab do obróbki CNC.</li>
 </ul>
 
-[mnsk7_guide_products categories="frezy-do-planowania,frezy-do-drewna,frezy-do-mdf,frez-z-wymiennymi-plytkami" title="Frezy do planowania i dalszej obrobki" format="grid" limit="6"]
+[mnsk7_guide_products categories="frezy-do-planowania,frezy-proste-z-wymiennymi-plytkami,frezy-proste,frezy-kulowe" title="Frezy do planowania i dalszej obrobki" format="grid" limit="6"]
 HTML
 			,
 			'faq' => array(
@@ -238,7 +238,7 @@ HTML
 <li>Produkty do stali oraz do metali kolorowych.</li>
 </ul>
 
-[mnsk7_guide_products categories="frez-pilnik-obrotowy,pilniki-obrotowe,frezy-do-stali,frezy-do-aluminium" title="Pilniki obrotowe i frezy do metalu" format="grid" limit="6"]
+[mnsk7_guide_products categories="pilniki-obrotowe,pilniki-obrotowe-typ-a,pilniki-obrotowe-typ-f,frezy-proste" title="Pilniki obrotowe i frezy do metalu" format="grid" limit="6"]
 HTML
 			,
 			'faq' => array(
@@ -272,7 +272,7 @@ HTML
 <li>Frezy diamentowe do granitu i kamienia.</li>
 </ul>
 
-[mnsk7_guide_products categories="frez-kulowy-vhm,frez-stozkowy-kulowy-vhm,frezy-do-drewna,frezy-do-mdf" title="Frezy do obrobki 3D" format="grid" limit="6"]
+[mnsk7_guide_products categories="frezy-kulowe,frezy-stozkowo-kulowe,frezy-diamentowe,frezy-grawerskie" title="Frezy do obrobki 3D" format="grid" limit="6"]
 HTML
 			,
 			'faq' => array(
@@ -303,7 +303,7 @@ HTML
 <li>Frezy proste i spiralne do przejścia wykańczającego.</li>
 </ul>
 
-[mnsk7_guide_products categories="frez-wieloostrzowy-vhm,frezy-do-drewna,frezy-do-mdf,frez-prosty-vhm" title="Frezy do obrobki zgrubnej i wykonczeniowej" format="grid" limit="6"]
+[mnsk7_guide_products categories="frezy-proste-wieloostrzowe,frezy-proste,frezy-spiralne,frezy-kulowe" title="Frezy do obrobki zgrubnej i wykonczeniowej" format="grid" limit="6"]
 HTML
 			,
 			'faq' => array(
@@ -341,7 +341,7 @@ HTML
 <li>Kategoria: Frezy zaokrąglające.</li>
 </ul>
 
-[mnsk7_guide_products categories="frez-z-lozyskiem-stal-vhm,frez-prosty-vhm,frezy-do-drewna,frezy-do-mdf" title="Frezy do frezarki recznej i drewna" format="grid" limit="6"]
+[mnsk7_guide_products categories="frezy-z-lozyskiem,frezy-krawedziowe,frezy-zaokraglajace,frezy-proste" title="Frezy do frezarki recznej i drewna" format="grid" limit="6"]
 HTML
 			,
 			'faq' => array(
@@ -380,7 +380,7 @@ HTML
 <li>Frezy kulowe i stożkowo-kulowe.</li>
 </ul>
 
-[mnsk7_guide_products categories="frezy-do-drewna,frezy-do-mdf,frezy-kompresyjne-updown-cut,frez-kulowy-vhm" title="Frezy CNC do drewna" format="grid" limit="6"]
+[mnsk7_guide_products categories="frezy-spiralne,frezy-kompresyjne-updown-cut,frezy-kulowe,frezy-proste" title="Frezy CNC do drewna" format="grid" limit="6"]
 HTML
 			,
 			'faq' => array(
@@ -412,7 +412,7 @@ HTML
 <li>Frezy dwupiórowe i polerowane.</li>
 </ul>
 
-[mnsk7_guide_products category="frezy-do-aluminium" title="Frezy do aluminium w ofercie" format="grid" limit="6"]
+[mnsk7_guide_products categories="frezy-spiralne-jednopiorowe-1p,frezy-spiralne-dwupiorowe-2p,frezy-spiralne,frezy-proste" title="Frezy do aluminium w ofercie" format="grid" limit="6"]
 HTML
 			,
 			'faq' => array(
@@ -450,7 +450,7 @@ HTML
 <li>Pilniki obrotowe do obróbki ręcznej.</li>
 </ul>
 
-[mnsk7_guide_products categories="frezy-do-stali,frezy-do-aluminium,frez-pilnik-obrotowy,frez-palcowy-do-metalu" title="Frezy do metalu i obrobki recznej" format="grid" limit="6"]
+[mnsk7_guide_products categories="frezy-proste,frezy-proste-wieloostrzowe,pilniki-obrotowe,frezy-spiralne-czteropiorowe-4p" title="Frezy do metalu i obrobki recznej" format="grid" limit="6"]
 HTML
 			,
 			'faq' => array(
@@ -485,7 +485,7 @@ HTML
 <li>Frezy czteropiórowe.</li>
 </ul>
 
-[mnsk7_guide_products categories="frezy-do-aluminium,frezy-do-stali,frezy-do-drewna,frezy-do-mdf" title="Dobierz frez wedlug materialu" format="grid" limit="6"]
+[mnsk7_guide_products categories="frezy-spiralne-jednopiorowe-1p,frezy-spiralne-dwupiorowe-2p,frezy-spiralne-trzypiorowe-3p,frezy-spiralne-czteropiorowe-4p" title="Dobierz frez wedlug materialu" format="grid" limit="6"]
 HTML
 			,
 			'faq' => array(
