@@ -502,7 +502,10 @@ if ( woocommerce_product_loop() ) {
 			<dialog id="mnsk7-plp-thumb-dialog" class="mnsk7-plp-thumb-dialog" aria-modal="true" aria-label="<?php esc_attr_e( 'Powiększone zdjęcie produktu', 'mnsk7-storefront' ); ?>">
 				<div class="mnsk7-plp-thumb-dialog__inner">
 					<button type="button" class="mnsk7-plp-thumb-dialog__close" aria-label="<?php esc_attr_e( 'Zamknij', 'mnsk7-storefront' ); ?>"><span aria-hidden="true">&times;</span></button>
+					<button type="button" class="mnsk7-plp-thumb-dialog__nav mnsk7-plp-thumb-dialog__nav--prev" aria-label="<?php esc_attr_e( 'Poprzednie zdjęcie', 'mnsk7-storefront' ); ?>"></button>
 					<img class="mnsk7-plp-thumb-dialog__img" alt="" decoding="async" loading="lazy" />
+					<button type="button" class="mnsk7-plp-thumb-dialog__nav mnsk7-plp-thumb-dialog__nav--next" aria-label="<?php esc_attr_e( 'Następne zdjęcie', 'mnsk7-storefront' ); ?>"></button>
+					<p class="mnsk7-plp-thumb-dialog__counter" aria-live="polite"></p>
 				</div>
 			</dialog>
 			<?php

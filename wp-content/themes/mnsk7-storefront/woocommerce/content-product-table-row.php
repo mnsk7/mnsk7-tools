@@ -51,20 +51,41 @@ if ( (string) $usage_value === '' ) {
 	$usage_value = $product->get_attribute( 'zastosowanie' );
 }
 
-$img_id   = $product->get_image_id();
-$full_src = '';
-if ( $img_id ) {
-	$full_src = wp_get_attachment_image_url( $img_id, 'woocommerce_single' );
-	if ( ! $full_src ) {
-		$full_src = wp_get_attachment_image_url( $img_id, 'large' );
+$img_id      = $product->get_image_id();
+$image_ids   = array_values( array_unique( array_filter( array_merge( array( $img_id ), $product->get_gallery_image_ids() ) ) ) );
+$gallery     = array();
+$full_src    = '';
+$product_alt = wp_strip_all_tags( get_the_title() );
+foreach ( $image_ids as $image_id ) {
+	$image_src = wp_get_attachment_image_url( $image_id, 'large' );
+	if ( ! $image_src ) {
+		$image_src = wp_get_attachment_image_url( $image_id, 'full' );
 	}
-	if ( ! $full_src ) {
-		$full_src = wp_get_attachment_image_url( $img_id, 'full' );
+	if ( ! $image_src ) {
+		continue;
 	}
+	$image_alt = trim( (string) get_post_meta( $image_id, '_wp_attachment_image_alt', true ) );
+	if ( $image_alt === '' ) {
+		$image_alt = $product_alt;
+	}
+	$gallery[] = array(
+		'src' => esc_url_raw( $image_src ),
+		'alt' => wp_strip_all_tags( $image_alt ),
+	);
+}
+
+if ( ! empty( $gallery ) ) {
+	$full_src = $gallery[0]['src'];
 } elseif ( function_exists( 'wc_get_placeholder_image_src' ) ) {
 	$full_src = wc_get_placeholder_image_src( 'woocommerce_single' );
 	if ( ! $full_src ) {
 		$full_src = wc_get_placeholder_image_src();
+	}
+	if ( $full_src ) {
+		$gallery[] = array(
+			'src' => esc_url_raw( $full_src ),
+			'alt' => $product_alt,
+		);
 	}
 }
 
@@ -85,6 +106,7 @@ $thumb_zoom_label = sprintf(
 			type="button"
 			class="mnsk7-table-thumb-zoom"
 			<?php echo $full_src ? ' data-full-src="' . esc_url( $full_src ) . '"' : ''; ?>
+			<?php echo ! empty( $gallery ) ? ' data-gallery="' . esc_attr( wp_json_encode( $gallery ) ) . '"' : ''; ?>
 			aria-label="<?php echo esc_attr( $thumb_zoom_label ); ?>"
 			<?php echo $full_src ? '' : ' disabled aria-disabled="true"'; ?>
 		>

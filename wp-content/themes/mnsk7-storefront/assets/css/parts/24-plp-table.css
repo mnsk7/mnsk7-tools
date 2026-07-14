@@ -2120,23 +2120,23 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-plp-thumb-dialog {
   padding: 0;
   border: none;
-  width: min(156px, calc(100vw - 2rem));
+  width: min(1080px, calc(100vw - 2rem));
   max-width: none;
+  max-height: min(88vh, 820px);
   background: transparent;
   box-sizing: border-box;
 }
 .mnsk7-plp-thumb-dialog::backdrop {
-  background: rgba(15, 23, 42, 0.72);
-  backdrop-filter: blur(2px);
+  background: rgba(15, 23, 42, 0.78);
+  backdrop-filter: blur(4px);
 }
 .mnsk7-plp-thumb-dialog__inner {
   position: relative;
   margin: 0;
-  padding: 0;
+  padding: clamp(1rem, 2vw, 1.5rem);
   width: 100%;
-  aspect-ratio: 156 / 220;
-  max-height: min(220px, 85vh);
-  border-radius: var(--r-md);
+  height: min(88vh, 820px);
+  border-radius: clamp(1rem, 2vw, 1.5rem);
   overflow: hidden;
   background: var(--color-white);
   box-shadow: 0 24px 64px rgba(0, 0, 0, 0.35);
@@ -2150,12 +2150,19 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
   max-height: none;
   object-fit: contain;
   margin: 0;
+  background:
+    linear-gradient(45deg, rgba(148, 163, 184, 0.12) 25%, transparent 25%),
+    linear-gradient(-45deg, rgba(148, 163, 184, 0.12) 25%, transparent 25%),
+    linear-gradient(45deg, transparent 75%, rgba(148, 163, 184, 0.12) 75%),
+    linear-gradient(-45deg, transparent 75%, rgba(148, 163, 184, 0.12) 75%);
+  background-position: 0 0, 0 12px, 12px -12px, -12px 0;
+  background-size: 24px 24px;
 }
 .mnsk7-plp-thumb-dialog__close {
   position: absolute;
-  top: 0.35rem;
-  right: 0.35rem;
-  z-index: 2;
+  top: clamp(0.8rem, 2vw, 1.15rem);
+  right: clamp(0.8rem, 2vw, 1.15rem);
+  z-index: 3;
   display: inline-flex;
   align-items: center;
   justify-content: center;
@@ -2177,6 +2184,85 @@ body.woocommerce .mnsk7-plp-content .mnsk7-plp-grid-mobile ul.products li.produc
 .mnsk7-plp-thumb-dialog__close:focus-visible {
   outline: 2px solid var(--color-primary);
   outline-offset: 2px;
+}
+
+.mnsk7-plp-thumb-dialog__nav {
+  position: absolute;
+  top: 50%;
+  z-index: 3;
+  width: clamp(2.5rem, 5vw, 3.4rem);
+  height: clamp(2.5rem, 5vw, 3.4rem);
+  padding: 0;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  color: var(--color-text);
+  cursor: pointer;
+  box-shadow: 0 14px 34px rgba(15, 23, 42, 0.18);
+  transform: translateY(-50%);
+}
+
+.mnsk7-plp-thumb-dialog__nav::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  width: 0.72rem;
+  height: 0.72rem;
+  margin: auto;
+  border-top: 2px solid currentColor;
+  border-left: 2px solid currentColor;
+}
+
+.mnsk7-plp-thumb-dialog__nav--prev {
+  left: clamp(0.9rem, 2vw, 1.35rem);
+}
+
+.mnsk7-plp-thumb-dialog__nav--prev::before {
+  transform: translateX(0.12rem) rotate(-45deg);
+}
+
+.mnsk7-plp-thumb-dialog__nav--next {
+  right: clamp(0.9rem, 2vw, 1.35rem);
+}
+
+.mnsk7-plp-thumb-dialog__nav--next::before {
+  transform: translateX(-0.12rem) rotate(135deg);
+}
+
+.mnsk7-plp-thumb-dialog__nav:hover {
+  background: var(--color-white);
+}
+
+.mnsk7-plp-thumb-dialog__nav:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.mnsk7-plp-thumb-dialog__counter {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(0.75rem, 2vw, 1.15rem);
+  z-index: 3;
+  margin: 0;
+  padding: 0.38rem 0.72rem;
+  border-radius: 999px;
+  background: rgba(15, 23, 42, 0.78);
+  color: #fff;
+  font-size: var(--fs-sm);
+  font-weight: 800;
+  transform: translateX(-50%);
+}
+
+@media (max-width: 640px) {
+  .mnsk7-plp-thumb-dialog {
+    width: calc(100vw - 1rem);
+    max-height: 86vh;
+  }
+
+  .mnsk7-plp-thumb-dialog__inner {
+    height: 86vh;
+    padding: 0.75rem;
+  }
 }
 
 .mnsk7-table-sku {
