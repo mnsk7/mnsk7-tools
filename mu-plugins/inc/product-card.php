@@ -49,7 +49,7 @@ function mnsk7_get_key_param_attributes() {
 		'pa_material'             => __( 'Materiał obróbki', 'mnsk7-tools' ),
 		'pa_twardosc'             => __( 'Twardość', 'mnsk7-tools' ),
 		'pa_typ-operacji'         => __( 'Typ operacji', 'mnsk7-tools' ),
-		'pa_pokrycie'             => __( 'Pokrycie', 'mnsk7-tools' ),
+		'pa_pokrycie'             => __( 'Powłoka', 'mnsk7-tools' ),
 		'pa_liczba-zebow'         => __( 'Liczba zębów', 'mnsk7-tools' ),
 		'pa_chwyt'                => __( 'Chwyt / trzpienie', 'mnsk7-tools' ),
 		'pa_trzpienie'            => __( 'Trzpienie / chwyt', 'mnsk7-tools' ),

@@ -57,15 +57,17 @@ $gallery     = array();
 $full_src    = '';
 $product_alt = wp_strip_all_tags( get_the_title() );
 foreach ( $image_ids as $image_id ) {
-	$image_src = wp_get_attachment_image_url( $image_id, 'large' );
+	$image_src = wp_get_attachment_image_url( $image_id, 'full' );
 	if ( ! $image_src ) {
-		$image_src = wp_get_attachment_image_url( $image_id, 'full' );
+		$image_src = wp_get_attachment_image_url( $image_id, 'large' );
 	}
 	if ( ! $image_src ) {
 		continue;
 	}
 	$image_alt = trim( (string) get_post_meta( $image_id, '_wp_attachment_image_alt', true ) );
-	if ( $image_alt === '' ) {
+	if ( function_exists( 'mnsk7_image_alt_needs_fallback' ) && mnsk7_image_alt_needs_fallback( $image_alt ) && function_exists( 'mnsk7_product_image_alt_text' ) ) {
+		$image_alt = mnsk7_product_image_alt_text( $product, $image_id, $product_alt );
+	} elseif ( $image_alt === '' ) {
 		$image_alt = $product_alt;
 	}
 	$gallery[] = array(

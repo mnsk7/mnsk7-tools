@@ -14,7 +14,7 @@ get_header();
 	<section class="mnsk7-seo-hero">
 		<div class="col-full">
 			<h1 class="mnsk7-seo-hero__title">Frezy do stali i metalu — CNC</h1>
-			<p class="mnsk7-seo-hero__sub">VHM HRC 65 · 4P · pilniki obrotowe · dostawa następnego dnia · faktura VAT</p>
+			<p class="mnsk7-seo-hero__sub">VHM HRC 65 · 4P · pilniki obrotowe · wysyłka w dni robocze · faktura VAT</p>
 		</div>
 	</section>
 

@@ -9,7 +9,7 @@ defined( 'ABSPATH' ) || exit;
 
 function mnsk7_dostawa_vat_html() {
 	return '<p class="mnsk7-dostawa-vat">'
-		. esc_html__( 'Dostawa następnego dnia. Faktura VAT dostępna na życzenie.', 'mnsk7-tools' )
+		. esc_html__( 'Wysyłka w dni robocze. Faktura VAT dostępna na życzenie.', 'mnsk7-tools' )
 		. '</p>';
 }
 
@@ -26,8 +26,8 @@ function mnsk7_contact_info_html() {
 }
 
 /**
- * Oblicza najwcześniejszą datę dostawy (InPost + DPD, Polska).
- * Reguły: InPost pn.–pt. do 15:00 → nast. dzień; sb. do 11:00 → pon.; DPD pn.–czw. do 17:00 → nast. dzień; pt. do 17:00 → pon.
+ * Oblicza najwcześniejszy termin wysyłki (InPost + DPD, Polska).
+ * Reguły: InPost pn.–pt. do 15:00 → wysyłka dziś; DPD pn.–pt. do 12:00 → wysyłka dziś.
  *
  * @return string Etykieta: "Wysyłka dziś", "Wysyłka jutro", "Wysyłka w poniedziałek" itd.
  */
@@ -35,14 +35,14 @@ function mnsk7_delivery_eta_badge_label() {
 	$tz = new DateTimeZone( 'Europe/Warsaw' );
 	$now = new DateTime( 'now', $tz );
 	$wday = (int) $now->format( 'w' ); // 0 = niedziela, 6 = sobota
-	$hour = (int) $now->format( 'G' );
+	$time = (int) $now->format( 'Hi' );
 	$today = clone $now;
 	$today->setTime( 0, 0, 0 );
 
-	// InPost: pn.–pt. do 15:00 → dostawa dziś; po 15:00 → nast. dzień; pt. po 15:00 → pon.; sb. do 11:00 → pon.; ndz. → pon.
+	// InPost: pn.–pt. do 15:00 → wysyłka dziś; po 15:00 → następny dzień roboczy.
 	$inpost = clone $now;
 	if ( $wday >= 1 && $wday <= 5 ) {
-		if ( $hour < 15 ) {
+		if ( $time <= 1500 ) {
 			$inpost->setTime( 0, 0, 0 ); // dziś
 		} else {
 			$inpost->modify( $wday === 5 ? '+3 days' : '+1 day' );
@@ -53,12 +53,14 @@ function mnsk7_delivery_eta_badge_label() {
 		$inpost->modify( '+1 day' ); // niedziela → poniedziałek
 	}
 
-	// DPD: pn.–czw. do 17:00 → nast. dzień; po 17:00 czw. → pt.; pt. (do 17:00 lub po) → pon.; sb. → pon.; ndz. → pon.
+	// DPD: pn.–pt. do 12:00 → wysyłka dziś; po 12:00 → następny dzień roboczy.
 	$dpd = clone $now;
-	if ( $wday >= 1 && $wday <= 4 ) {
-		$dpd->modify( $hour < 17 ? '+1 day' : '+1 day' ); // czw. po 17:00 → piątek (+1)
-	} elseif ( $wday === 5 ) {
-		$dpd->modify( '+3 days' ); // piątek → poniedziałek
+	if ( $wday >= 1 && $wday <= 5 ) {
+		if ( $time <= 1200 ) {
+			$dpd->setTime( 0, 0, 0 ); // dziś
+		} else {
+			$dpd->modify( $wday === 5 ? '+3 days' : '+1 day' );
+		}
 	} elseif ( $wday === 6 ) {
 		$dpd->modify( '+2 days' );
 	} else {
@@ -94,18 +96,18 @@ function mnsk7_delivery_eta_badge_label() {
 
 function mnsk7_delivery_rules_table_html() {
 	$rows = array(
-		array( 'courier' => 'InPost', 'order' => __( 'pn.–pt. do 15:00', 'mnsk7-tools' ), 'result' => __( 'dostawa tego samego dnia', 'mnsk7-tools' ) ),
-		array( 'courier' => 'InPost', 'order' => __( 'pn.–pt. po 15:00', 'mnsk7-tools' ), 'result' => __( 'dostawa następnego dnia', 'mnsk7-tools' ) ),
-		array( 'courier' => 'InPost', 'order' => __( 'sb. do 11:00', 'mnsk7-tools' ),    'result' => __( 'dostawa w poniedziałek', 'mnsk7-tools' ) ),
-		array( 'courier' => 'DPD',    'order' => __( 'pn.–czw. do 17:00', 'mnsk7-tools' ), 'result' => __( 'dostawa następnego dnia', 'mnsk7-tools' ) ),
-		array( 'courier' => 'DPD',    'order' => __( 'pt. do 17:00', 'mnsk7-tools' ),    'result' => __( 'dostawa w poniedziałek', 'mnsk7-tools' ) ),
+		array( 'courier' => 'InPost', 'order' => __( 'pn.–pt. do 15:00', 'mnsk7-tools' ), 'result' => __( 'wysyłka tego samego dnia', 'mnsk7-tools' ) ),
+		array( 'courier' => 'InPost', 'order' => __( 'pn.–pt. po 15:00', 'mnsk7-tools' ), 'result' => __( 'wysyłka w następnym dniu roboczym', 'mnsk7-tools' ) ),
+		array( 'courier' => 'InPost', 'order' => __( 'weekend', 'mnsk7-tools' ),          'result' => __( 'wysyłka od poniedziałku', 'mnsk7-tools' ) ),
+		array( 'courier' => 'DPD',    'order' => __( 'pn.–pt. do 12:00', 'mnsk7-tools' ), 'result' => __( 'wysyłka tego samego dnia', 'mnsk7-tools' ) ),
+		array( 'courier' => 'DPD',    'order' => __( 'pn.–pt. po 12:00', 'mnsk7-tools' ), 'result' => __( 'wysyłka w następnym dniu roboczym', 'mnsk7-tools' ) ),
 	);
 	$html  = '<div class="mnsk7-delivery-rules">';
-	$html .= '<h4 class="mnsk7-delivery-rules__title">' . esc_html__( 'Orientacyjny czas dostawy (Polska)', 'mnsk7-tools' ) . '</h4>';
+	$html .= '<h4 class="mnsk7-delivery-rules__title">' . esc_html__( 'Orientacyjny termin wysyłki (Polska)', 'mnsk7-tools' ) . '</h4>';
 	$html .= '<table class="mnsk7-delivery-rules__table"><thead><tr>'
 		. '<th>' . esc_html__( 'Kurier', 'mnsk7-tools' ) . '</th>'
 		. '<th>' . esc_html__( 'Kiedy zamówisz', 'mnsk7-tools' ) . '</th>'
-		. '<th>' . esc_html__( 'Dostawa', 'mnsk7-tools' ) . '</th>'
+		. '<th>' . esc_html__( 'Wysyłka', 'mnsk7-tools' ) . '</th>'
 		. '</tr></thead><tbody>';
 	foreach ( $rows as $row ) {
 		$html .= '<tr><td>' . esc_html( $row['courier'] ) . '</td><td>' . esc_html( $row['order'] ) . '</td><td>' . esc_html( $row['result'] ) . '</td></tr>';
@@ -117,29 +119,25 @@ function mnsk7_delivery_rules_table_html() {
 }
 
 function mnsk7_estimated_delivery_text( $courier ) {
-	$hour = (int) current_time( 'G' );
+	$time = (int) current_time( 'Hi' );
 	$wday = (int) current_time( 'w' );
 	if ( $courier === 'inpost' ) {
 		if ( $wday >= 1 && $wday <= 5 ) {
-			return $hour < 15
-				? __( 'InPost: zamów do 15:00 — dostawa następnego dnia.', 'mnsk7-tools' )
-				: __( 'InPost: zamówienie po 15:00 — dostawa zwykle w najbliższy dzień roboczy.', 'mnsk7-tools' );
+			return $time <= 1500
+				? __( 'InPost: zamów do 15:00 — wysyłka tego samego dnia.', 'mnsk7-tools' )
+				: __( 'InPost: zamówienie po 15:00 — wysyłka w następnym dniu roboczym.', 'mnsk7-tools' );
 		}
-		return $wday === 6
-			? __( 'InPost: sobota do 11:00 — dostawa w poniedziałek.', 'mnsk7-tools' )
-			: __( 'InPost: zamówienie w niedzielę — wysyłka od poniedziałku.', 'mnsk7-tools' );
+		return __( 'InPost: zamówienie w weekend — wysyłka od poniedziałku.', 'mnsk7-tools' );
 	}
 	if ( $courier === 'dpd' ) {
-		if ( $wday >= 1 && $wday <= 4 ) {
-			return $hour < 17
-				? __( 'DPD: zamów do 17:00 — dostawa następnego dnia.', 'mnsk7-tools' )
-				: __( 'DPD: zamówienie po 17:00 — dostawa zwykle w najbliższy dzień roboczy.', 'mnsk7-tools' );
+		if ( $wday >= 1 && $wday <= 5 ) {
+			return $time <= 1200
+				? __( 'DPD: zamów do 12:00 — wysyłka tego samego dnia.', 'mnsk7-tools' )
+				: __( 'DPD: zamówienie po 12:00 — wysyłka w następnym dniu roboczym.', 'mnsk7-tools' );
 		}
-		return $wday === 5
-			? __( 'DPD: piątek do 17:00 — dostawa w poniedziałek.', 'mnsk7-tools' )
-			: __( 'DPD: zamówienie w weekend — wysyłka od poniedziałku.', 'mnsk7-tools' );
+		return __( 'DPD: zamówienie w weekend — wysyłka od poniedziałku.', 'mnsk7-tools' );
 	}
-	return __( 'Dostawa: wybierz InPost lub DPD, aby zobaczyć orientacyjny termin.', 'mnsk7-tools' );
+	return __( 'Wysyłka: wybierz InPost lub DPD, aby zobaczyć orientacyjny termin.', 'mnsk7-tools' );
 }
 
 function mnsk7_detect_selected_courier() {

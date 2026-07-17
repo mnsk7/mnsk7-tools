@@ -16,7 +16,7 @@ defined( 'ABSPATH' ) || exit;
 function mnsk7_get_faq_set( $set = '' ) {
 	$sets = array(
 		'dostawa' => array(
-			array( 'q' => 'Ile czasu trwa dostawa?', 'a' => 'Zamówienia złożone w dni robocze do 15:00 (InPost) lub 17:00 (DPD) wysyłamy tego samego dnia — dostawa trafia do Ciebie następnego dnia roboczego. Dostarczamy wyłącznie na terenie Polski.' ),
+			array( 'q' => 'Ile czasu trwa dostawa?', 'a' => 'Zamówienia złożone w dni robocze do 15:00 (InPost) lub 12:00 (DPD) wysyłamy tego samego dnia. Przesyłka zwykle dociera w następnym dniu roboczym. Dostarczamy wyłącznie na terenie Polski.' ),
 			array( 'q' => 'Ile kosztuje dostawa?', 'a' => 'Zamówienia powyżej 300 zł — dostawa gratis. Poniżej tego progu koszt zależy od wybranego kuriera (InPost / DPD).' ),
 			array( 'q' => 'Jakie formy dostawy są dostępne?', 'a' => 'Wysyłamy przez InPost (paczkomaty i kurier) oraz DPD. Wyboru dokonujesz przy składaniu zamówienia.' ),
 			array( 'q' => 'Czy wystawiacie faktury VAT?', 'a' => 'Tak — faktura VAT jest wystawiana na życzenie. Podaj NIP i dane firmy w uwagach lub w polu NIP w koszyku.' ),

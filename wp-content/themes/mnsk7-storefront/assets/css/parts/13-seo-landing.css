@@ -925,3 +925,205 @@
     min-height: 22rem;
   }
 }
+/* Przewodnik v2: ten sam niebieski system wizualny co sklep. */
+.mnsk7-guide-archive,
+.mnsk7-guide-single {
+  background:
+    radial-gradient(circle at 8% 0%, rgba(12, 125, 219, 0.11), transparent 28rem),
+    linear-gradient(180deg, var(--color-surface) 0, var(--color-white) 34rem);
+}
+
+.mnsk7-guide-archive__hero {
+  padding: clamp(2rem, 4vw, 3.5rem) 0 clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.mnsk7-guide-archive__hero::after {
+  background: rgba(12, 125, 219, 0.07);
+}
+
+.mnsk7-guide-archive__hero-grid,
+.mnsk7-guide-article__hero-grid {
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, 22rem);
+  gap: clamp(1rem, 3vw, 2rem);
+}
+
+.mnsk7-guide-archive__eyebrow,
+.mnsk7-guide-article__eyebrow {
+  color: var(--ui-kicker);
+}
+
+.mnsk7-guide-archive__eyebrow::before,
+.mnsk7-guide-article__eyebrow::before {
+  background: var(--color-primary);
+  box-shadow: 0 0 0 0.3rem rgba(12, 125, 219, 0.14);
+}
+
+.mnsk7-guide-archive__title {
+  max-width: none;
+  color: var(--ui-heading);
+  font-size: clamp(2.5rem, 6vw, 4.6rem);
+  font-weight: 850;
+  letter-spacing: -0.055em;
+  line-height: 1;
+}
+
+.mnsk7-guide-archive__lead,
+.mnsk7-guide-article__lead {
+  color: var(--ui-copy);
+}
+
+.mnsk7-guide-archive__primary,
+.mnsk7-guide-article__summary a {
+  border-radius: var(--r-md);
+  color: var(--color-white);
+  background: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.mnsk7-guide-archive__primary:hover,
+.mnsk7-guide-article__summary a:hover {
+  color: var(--color-white);
+  background: var(--color-primary-hover);
+}
+
+.mnsk7-guide-archive__secondary {
+  border-color: var(--color-border-strong);
+  border-radius: var(--r-md);
+  color: var(--color-primary-dark);
+  background: var(--color-white);
+}
+
+.mnsk7-guide-archive__panel,
+.mnsk7-guide-article__summary {
+  min-height: 0;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  border: var(--ui-card-border);
+  border-radius: var(--r-lg);
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: var(--ui-card-shadow);
+}
+
+.mnsk7-guide-archive__panel-kicker,
+.mnsk7-guide-archive__panel-label,
+.mnsk7-guide-archive__panel p,
+.mnsk7-guide-article__summary span,
+.mnsk7-guide-article__summary time {
+  color: var(--ui-copy);
+}
+
+.mnsk7-guide-archive__panel-number,
+.mnsk7-guide-article__summary strong {
+  color: var(--ui-heading);
+}
+
+.mnsk7-guide-archive__panel-number {
+  font-size: clamp(3.5rem, 8vw, 5.5rem);
+}
+
+.mnsk7-guide-archive__topics a {
+  border-color: var(--color-border);
+  border-radius: var(--r-pill);
+  color: var(--color-text-secondary);
+  background: var(--color-white);
+  box-shadow: var(--ui-chip-shadow);
+}
+
+.mnsk7-guide-archive__topics a:hover {
+  border-color: var(--color-primary);
+  color: var(--color-white);
+  background: var(--color-primary);
+}
+
+.mnsk7-guide-archive__section-head h2,
+.mnsk7-guide-card__title,
+.mnsk7-guide-article__title,
+.mnsk7-guide-article__body h2 {
+  color: var(--ui-heading);
+}
+
+.mnsk7-guide-archive__section-head p,
+.mnsk7-guide-card__excerpt {
+  color: var(--ui-copy);
+}
+
+.mnsk7-guide-card__link {
+  border: var(--ui-card-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--ui-card-shadow);
+}
+
+.mnsk7-guide-card__link:hover {
+  border-color: rgba(12, 125, 219, 0.35);
+  box-shadow: var(--ui-card-shadow-hover);
+}
+
+.mnsk7-guide-card--featured .mnsk7-guide-card__link {
+  min-height: 22rem;
+  background:
+    radial-gradient(circle at 92% 0%, rgba(96, 165, 250, 0.3), transparent 18rem),
+    linear-gradient(145deg, var(--ui-heading), var(--color-footer-bottom));
+}
+
+.mnsk7-guide-card--featured .mnsk7-guide-card__title {
+  color: var(--color-white);
+  font-size: clamp(1.9rem, 4vw, 3.3rem);
+  letter-spacing: -0.055em;
+  line-height: 1.02;
+}
+
+.mnsk7-guide-card__cta,
+.mnsk7-guide-card--featured .mnsk7-guide-card__cta {
+  color: var(--color-primary);
+}
+
+.mnsk7-guide-card--featured .mnsk7-guide-card__cta {
+  color: var(--color-footer-link);
+}
+
+.mnsk7-guide-article__header {
+  padding: clamp(1.25rem, 3vw, 2.5rem) 0 clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.mnsk7-guide-article__title {
+  max-width: 16ch;
+  font-size: clamp(2.15rem, 5vw, 4.25rem);
+  font-weight: 850;
+  letter-spacing: -0.055em;
+  line-height: 1.02;
+}
+
+.mnsk7-guide-article__body {
+  color: var(--color-text-secondary);
+}
+
+.mnsk7-guide-products {
+  border: var(--ui-card-border);
+  border-radius: var(--r-lg);
+  background: var(--color-surface);
+  box-shadow: var(--ui-card-shadow);
+}
+
+@media (max-width: 980px) {
+  .mnsk7-guide-archive__hero-grid,
+  .mnsk7-guide-article__hero-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 680px) {
+  .mnsk7-guide-archive,
+  .mnsk7-guide-single {
+    background:
+      radial-gradient(circle at 0% 0%, rgba(12, 125, 219, 0.12), transparent 18rem),
+      linear-gradient(180deg, var(--color-surface) 0, var(--color-white) 26rem);
+  }
+
+  .mnsk7-guide-archive__title {
+    max-width: none;
+  }
+
+  .mnsk7-guide-archive__panel,
+  .mnsk7-guide-article__summary {
+    min-height: 0;
+  }
+}

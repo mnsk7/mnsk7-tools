@@ -1471,7 +1471,7 @@ add_action( 'wp_footer', function () {
 				closeCart();
 			}
 		});
-		// Mobile (<=1023): natywny drawer z przesuwanymi poziomami (init niżej). Desktop: hover megamenu.
+		// Mobile (<=1023): prosty drawer-akordeon (init niżej). Desktop: hover megamenu.
 		if (menu) {
 			// Mega menu (Sklep): hover delay 400ms na desktop — Baymard/NNG, bez flicker przy przejściu na panel
 			var megamenuLi = menu.querySelector('li.menu-item-has-children .sub-menu.mnsk7-megamenu');
@@ -1668,12 +1668,13 @@ add_action( 'wp_footer', function () {
 				});
 			})();
 
-			// === Mobile drawer: natywne, przesuwane poziomy (parent → kategoria → podkategoria) ===
+			// === Mobile drawer: prosty akordeon, bez odpinanych paneli i wielopoziomowych animacji ===
 			(function initMobileDrawer() {
 				var ROOT_TITLE = <?php echo wp_json_encode( __( 'Menu', 'mnsk7-storefront' ) ); ?>;
-				var BACK_LABEL = <?php echo wp_json_encode( __( 'Wstecz', 'mnsk7-storefront' ) ); ?>;
 				var CLOSE_LABEL = <?php echo wp_json_encode( __( 'Zamknij menu', 'mnsk7-storefront' ) ); ?>;
-				var VIEWALL_PREFIX = <?php echo wp_json_encode( __( 'Wszystkie w', 'mnsk7-storefront' ) ); ?>;
+				var EXPAND_LABEL = <?php echo wp_json_encode( __( 'Rozwiń', 'mnsk7-storefront' ) ); ?>;
+				var COLLAPSE_LABEL = <?php echo wp_json_encode( __( 'Zwiń', 'mnsk7-storefront' ) ); ?>;
+				var toggleIndex = 0;
 
 				function drawerRowLabel(el) {
 					if (!el) return '';
@@ -1681,217 +1682,115 @@ add_action( 'wp_footer', function () {
 					return ((nameEl ? nameEl.textContent : el.textContent) || '').trim();
 				}
 
-				// Chrome (back / tytuł / zamknij) — wstrzykiwany raz na górze drawera.
+				// Stały pasek drawera: tytuł + jedno, zawsze widoczne zamknięcie.
 				var chrome = menu.querySelector('.mnsk7-drawer__chrome');
 				if (!chrome) {
 					chrome = document.createElement('li');
-					chrome.className = 'mnsk7-drawer__chrome';
+					chrome.className = 'mnsk7-drawer__chrome mnsk7-drawer__chrome--simple';
 					chrome.setAttribute('role', 'presentation');
 					chrome.innerHTML =
-						'<button type="button" class="mnsk7-drawer__back" aria-label="' + BACK_LABEL + '"><span aria-hidden="true">\u2039</span></button>' +
 						'<span class="mnsk7-drawer__title"></span>' +
 						'<button type="button" class="mnsk7-drawer__close" aria-label="' + CLOSE_LABEL + '"><span aria-hidden="true">\u00d7</span></button>';
 					menu.insertBefore(chrome, menu.firstChild);
 				}
-				var backBtn = chrome.querySelector('.mnsk7-drawer__back');
+				chrome.classList.add('mnsk7-drawer__chrome--simple');
+				var oldBackBtn = chrome.querySelector('.mnsk7-drawer__back');
+				if (oldBackBtn) oldBackBtn.remove();
 				var titleEl = chrome.querySelector('.mnsk7-drawer__title');
 				var closeBtn = chrome.querySelector('.mnsk7-drawer__close');
+				if (titleEl) titleEl.textContent = ROOT_TITLE;
 
-				// Wstrzyknij "Wszystkie: <kategoria>" na początek każdej listy podkategorii (tylko mobile, ukryte na desktopie).
+				function setExpanded(owner, button, expanded) {
+					owner.classList.toggle('is-mobile-expanded', expanded);
+					button.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+					var label = button.getAttribute('data-mnsk7-label') || '';
+					button.setAttribute('aria-label', (expanded ? COLLAPSE_LABEL : EXPAND_LABEL) + ': ' + label);
+				}
+
+				function addAccordionToggle(owner, anchor, panel) {
+					if (!owner || !anchor || !panel || owner.querySelector(':scope > .mnsk7-drawer__submenu-toggle')) return;
+					toggleIndex++;
+					if (!panel.id) panel.id = 'mnsk7-mobile-submenu-' + toggleIndex;
+					var label = drawerRowLabel(anchor);
+					var button = document.createElement('button');
+					button.type = 'button';
+					button.className = 'mnsk7-drawer__submenu-toggle';
+					button.setAttribute('aria-controls', panel.id);
+					button.setAttribute('data-mnsk7-label', label);
+					button.innerHTML = '<span aria-hidden="true"></span>';
+					anchor.insertAdjacentElement('afterend', button);
+					owner.classList.add('mnsk7-drawer__accordion-item');
+					setExpanded(owner, button, false);
+					button.addEventListener('click', function(e) {
+						e.preventDefault();
+						e.stopPropagation();
+						setExpanded(owner, button, button.getAttribute('aria-expanded') !== 'true');
+					});
+				}
+
+				var shopItem = menu.querySelector(':scope > li.menu-item-has-children');
+				var shopLink = shopItem ? shopItem.querySelector(':scope > a.mnsk7-menu-item-sklep') : null;
+				var shopPanel = shopItem ? shopItem.querySelector(':scope > .sub-menu.mnsk7-megamenu') : null;
+				addAccordionToggle(shopItem, shopLink, shopPanel);
+
 				menu.querySelectorAll('.mnsk7-megamenu__col').forEach(function(col) {
 					var list = col.querySelector(':scope > .mnsk7-megamenu__list');
 					var title = col.querySelector(':scope > .mnsk7-megamenu__col-title');
-					if (!list || !title) return;
-					if (list.querySelector(':scope > .mnsk7-drawer__viewall')) return;
-					var href = title.getAttribute('href');
-					if (!href) return;
-					var li = document.createElement('li');
-					li.className = 'mnsk7-drawer__viewall';
-					var a = document.createElement('a');
-					a.setAttribute('href', href);
-					a.textContent = VIEWALL_PREFIX + ' ' + drawerRowLabel(title);
-					li.appendChild(a);
-					list.insertBefore(li, list.firstChild);
+					addAccordionToggle(col, title, list);
 				});
 
-				var stack = []; // [{panel, title, opener}]
-				function currentPanel() { return stack.length ? stack[stack.length - 1].panel : null; }
-
-				function updateChrome() {
-					if (stack.length === 0) {
-						titleEl.textContent = ROOT_TITLE;
-						backBtn.style.visibility = 'hidden';
-					} else {
-						titleEl.textContent = stack[stack.length - 1].title;
-						backBtn.style.visibility = 'visible';
-					}
-				}
-
-				function focusFirst(scope) {
-					if (!scope) return;
-					var f = scope.querySelector('a[href], button:not([disabled])');
-					if (f) { try { f.focus(); } catch (e) {} }
-				}
-
-				function isL2ListPanel(panel) {
-					return !!(panel && panel.classList && panel.classList.contains('mnsk7-megamenu__list'));
-				}
-
-				function mountL2Panel(panel) {
-					if (window.innerWidth >= DESKTOP_MIN || !isL2ListPanel(panel) || panel.mnsk7DrawerPlaceholder) return;
-					var parent = panel.parentNode;
-					if (!parent) return;
-					var ph = document.createComment('mnsk7-drawer-l2');
-					parent.insertBefore(ph, panel);
-					panel.mnsk7DrawerPlaceholder = ph;
-					panel.classList.add('mnsk7-drawer__l2-panel');
-					document.body.appendChild(panel);
-				}
-
-				function unmountL2Panel(panel) {
-					if (!panel || !panel.mnsk7DrawerPlaceholder) return;
-					panel.classList.remove('mnsk7-drawer__l2-panel');
-					var ph = panel.mnsk7DrawerPlaceholder;
-					if (ph.parentNode) {
-						ph.parentNode.insertBefore(panel, ph);
-						ph.remove();
-					}
-					panel.mnsk7DrawerPlaceholder = null;
-				}
-
-				function pushLevel(panel, title) {
-					if (!panel) return;
-					mountL2Panel(panel);
-					try { panel.scrollTop = 0; } catch (e) {}
-					panel.classList.add('mnsk7-drawer__panel--open');
-					stack.push({ panel: panel, title: title });
-					updateChrome();
-					setTimeout(function() { focusFirst(panel); }, 30);
-				}
-
-				function popLevel() {
-					var top = stack.pop();
-					if (top && top.panel) {
-						top.panel.classList.remove('mnsk7-drawer__panel--open');
-						unmountL2Panel(top.panel);
-					}
-					updateChrome();
-					setTimeout(function() { focusFirst(currentPanel() || menu); }, 30);
-				}
-
-				function resetLevels() {
-					stack.slice().reverse().forEach(function(s) {
-						if (s.panel) {
-							s.panel.classList.remove('mnsk7-drawer__panel--open');
-							unmountL2Panel(s.panel);
-						}
+				function resetAccordions() {
+					menu.querySelectorAll('.mnsk7-drawer__accordion-item').forEach(function(item) {
+						var button = item.querySelector(':scope > .mnsk7-drawer__submenu-toggle');
+						if (button) setExpanded(item, button, false);
 					});
-					stack = [];
-					updateChrome();
 				}
 
-				updateChrome();
-
-				backBtn.addEventListener('click', function(e) {
-					e.preventDefault();
-					if (stack.length) popLevel();
-				});
-				closeBtn.addEventListener('click', function(e) {
-					e.preventDefault();
-					closeMenu();
-					if (menuToggle) { try { menuToggle.focus(); } catch (err) {} }
-				});
-
-				// Nawigacja po dotknięciach w obrębie drawera (tylko mobile).
-				document.addEventListener('click', function(e) {
-					if (window.innerWidth >= DESKTOP_MIN) return;
-					if (!nav.classList.contains('is-open')) return;
-					var t = e.target;
-					if (chrome.contains(t)) return;
-					var activePanel = currentPanel();
-					var inDrawer = menu.contains(t) || (activePanel && activePanel.contains(t));
-					if (!inDrawer) return;
-
-					// Sklep → poziom 1 (kategorie)
-					var sklepLink = t.closest ? t.closest('a.mnsk7-menu-item-sklep') : null;
-					if (sklepLink) {
-						var sklepLi = sklepLink.closest('li.menu-item-has-children');
-						var submenu = sklepLi ? sklepLi.querySelector(':scope > .sub-menu.mnsk7-megamenu') : null;
-						if (submenu) {
-							e.preventDefault();
-							e.stopPropagation();
-							pushLevel(submenu, (sklepLink.textContent || '').trim());
-						}
-						return;
-					}
-
-					// Kategoria z podkategoriami → poziom 2
-					var titleHit = t.closest ? t.closest('.mnsk7-megamenu__col-title') : null;
-					if (titleHit) {
-						var col = titleHit.closest('.mnsk7-megamenu__col');
-						var list = col ? col.querySelector(':scope > .mnsk7-megamenu__list') : null;
-						if (list) {
-							e.preventDefault();
-							e.stopPropagation();
-							pushLevel(list, drawerRowLabel(titleHit));
-							return;
-						}
-						// liść (kategoria bez podkategorii) — przejdź dalej do nawigacji
-					}
-
-					// Zwykły link → nawigacja + zamknij drawer
-					var link = t.closest ? t.closest('a[href]') : null;
-					if (link && link.getAttribute('href')) {
+				if (closeBtn) {
+					closeBtn.addEventListener('click', function(e) {
+						e.preventDefault();
 						closeMenu();
-					}
-				}, false);
-
-				// Focus trap w obrębie aktualnego, widocznego poziomu.
-				function visibleFocusables() {
-					var list = [];
-					if (backBtn.style.visibility !== 'hidden') list.push(backBtn);
-					var scope = currentPanel();
-					if (scope) {
-						scope.querySelectorAll('a[href], button:not([disabled])').forEach(function(el) {
-							var r = el.getBoundingClientRect();
-							if (r.width > 0 && r.height > 0) list.push(el);
-						});
-					} else {
-						menu.querySelectorAll(':scope > li:not(.mnsk7-drawer__chrome) > a[href]').forEach(function(el) {
-							list.push(el);
-						});
-					}
-					list.push(closeBtn);
-					return list;
+						if (menuToggle) { try { menuToggle.focus(); } catch (err) {} }
+					});
 				}
+
+				menu.addEventListener('click', function(e) {
+					if (window.innerWidth >= DESKTOP_MIN) return;
+					var link = e.target.closest ? e.target.closest('a[href]') : null;
+					if (link) closeMenu();
+				});
+
 				nav.addEventListener('keydown', function(e) {
 					if (e.key !== 'Tab' || window.innerWidth >= DESKTOP_MIN || !nav.classList.contains('is-open')) return;
-					var f = visibleFocusables();
-					if (!f.length) return;
-					// Pełne zatrzymanie focusa w obrębie aktualnego poziomu (tła/poziomy zakryte pomijane).
-					var idx = f.indexOf(document.activeElement);
-					e.preventDefault();
-					var nextIdx;
-					if (idx === -1) { nextIdx = 0; }
-					else if (e.shiftKey) { nextIdx = (idx - 1 + f.length) % f.length; }
-					else { nextIdx = (idx + 1) % f.length; }
-					try { f[nextIdx].focus(); } catch (err) {}
+					var focusable = Array.prototype.slice.call(
+						menu.querySelectorAll('a[href], button:not([disabled])')
+					).filter(function(el) {
+						return el.offsetParent !== null && el.getAttribute('aria-hidden') !== 'true';
+					});
+					if (!focusable.length) return;
+					var first = focusable[0];
+					var last = focusable[focusable.length - 1];
+					if (e.shiftKey && document.activeElement === first) {
+						e.preventDefault();
+						last.focus();
+					} else if (!e.shiftKey && document.activeElement === last) {
+						e.preventDefault();
+						first.focus();
+					}
 				});
 
-				// Esc / zamykanie sterowane z głównego handlera: pop poziomu lub zamknij drawer.
 				window.mnsk7DrawerBackOrClose = function() {
-					if (stack.length) { popLevel(); return true; }
 					closeMenu();
 					if (menuToggle) { try { menuToggle.focus(); } catch (err) {} }
 					return true;
 				};
-				window.mnsk7DrawerReset = resetLevels;
+				window.mnsk7DrawerReset = resetAccordions;
 				window.mnsk7DrawerOnOpen = function() {
-					resetLevels();
+					resetAccordions();
 					setTimeout(function() {
 						var firstRow = menu.querySelector(':scope > li:not(.mnsk7-drawer__chrome) > a[href]');
 						if (firstRow) { try { firstRow.focus(); } catch (e) {} }
-						else { try { closeBtn.focus(); } catch (e) {} }
+						else if (closeBtn) { try { closeBtn.focus(); } catch (e) {} }
 					}, 40);
 				};
 			})();
@@ -3316,7 +3215,7 @@ add_action( 'woocommerce_single_product_summary', function () {
 
 /** Trust badges HTML (PDP i PLP — wspólna treść: dostawa, faktura, zwroty) */
 function mnsk7_render_trust_badges( $wrapper_class = 'mnsk7-pdp-trust' ) {
-	$eta_label = function_exists( 'mnsk7_delivery_eta_badge_label' ) ? mnsk7_delivery_eta_badge_label() : __( 'Dostawa jutro', 'mnsk7-storefront' );
+	$eta_label = function_exists( 'mnsk7_delivery_eta_badge_label' ) ? mnsk7_delivery_eta_badge_label() : __( 'Wysyłka jutro', 'mnsk7-storefront' );
 	$eta_label = preg_replace( '/\s*[-–—]+\s*$/u', '', (string) $eta_label );
 	$item_class = $wrapper_class . '__item';
 	echo '<div class="' . esc_attr( $wrapper_class ) . '" role="list">';

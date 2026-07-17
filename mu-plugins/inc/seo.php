@@ -70,6 +70,54 @@ if ( ! function_exists( 'mnsk7_get_catalog_archive_seo_context' ) ) {
 	}
 }
 
+if ( ! function_exists( 'mnsk7_is_guide_archive' ) ) {
+	/**
+	 * Whether the current request is the public Przewodnik archive.
+	 *
+	 * @return bool
+	 */
+	function mnsk7_is_guide_archive() {
+		return is_category( 'przewodnik' );
+	}
+}
+
+if ( ! function_exists( 'mnsk7_is_guide_post' ) ) {
+	/**
+	 * Whether the current request is a Przewodnik article.
+	 *
+	 * @return bool
+	 */
+	function mnsk7_is_guide_post() {
+		return is_singular( 'post' ) && has_category( 'przewodnik', get_queried_object_id() );
+	}
+}
+
+if ( ! function_exists( 'mnsk7_get_guide_archive_canonical_url' ) ) {
+	/**
+	 * Returns a self-referencing canonical for the paginated guide archive.
+	 *
+	 * @return string
+	 */
+	function mnsk7_get_guide_archive_canonical_url() {
+		if ( ! mnsk7_is_guide_archive() ) {
+			return '';
+		}
+		$term = get_queried_object();
+		if ( ! $term instanceof WP_Term ) {
+			return '';
+		}
+		$url = get_term_link( $term );
+		if ( is_wp_error( $url ) ) {
+			return '';
+		}
+		$paged = max( 1, (int) get_query_var( 'paged' ) );
+		if ( $paged > 1 ) {
+			return trailingslashit( $url ) . user_trailingslashit( sprintf( 'page/%d', $paged ), 'paged' );
+		}
+		return trailingslashit( $url );
+	}
+}
+
 if ( ! function_exists( 'mnsk7_get_catalog_archive_seo_title' ) ) {
 	/**
 	 * Builds a commercial title for the catalog archive context.
@@ -141,31 +189,85 @@ add_action( 'wp_head', function () {
 		'taxID'      => '5242991741',
 		'sameAs'     => array( MNK7_INSTAGRAM_URL, MNK7_ALLEGRO_SELLER_URL ),
 		'areaServed' => array( '@type' => 'Country', 'name' => 'Poland' ),
-		'description' => __( 'Sklep z frezami CNC i narzędziami do obróbki drewna, MDF, aluminium, stali i tworzyw sztucznych. Dostawa następnego dnia, faktura VAT.', 'mnsk7-tools' ),
+		'description' => __( 'Sklep z frezami CNC i narzędziami do obróbki drewna, MDF, aluminium, stali i tworzyw sztucznych. Wysyłka w dni robocze, faktura VAT.', 'mnsk7-tools' ),
 	);
 	echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }, 5 );
 
-/* Auto-alt dla zdjęć produktów (~1634 bez alt w bazie stagingg) */
+/**
+ * Builds useful, contextual alt text for a product image.
+ *
+ * @param WC_Product $product       Product represented by the image.
+ * @param int        $attachment_id Attachment ID.
+ * @param string     $fallback      Existing useful alt text.
+ * @return string
+ */
+function mnsk7_product_image_alt_text( $product, $attachment_id, $fallback = '' ) {
+	$fallback = trim( wp_strip_all_tags( (string) $fallback ) );
+	if ( ! $product instanceof WC_Product ) {
+		return $fallback;
+	}
+
+	$name      = trim( wp_strip_all_tags( $product->get_name() ) );
+	$image_ids = array_values( array_unique( array_filter( array_merge( array( $product->get_image_id() ), $product->get_gallery_image_ids() ) ) ) );
+	$position  = array_search( (int) $attachment_id, array_map( 'intval', $image_ids ), true );
+	if ( $name !== '' && $position !== false ) {
+		return $position > 0
+			? sprintf( __( '%1$s — zdjęcie %2$d', 'mnsk7-tools' ), $name, $position + 1 )
+			: $name;
+	}
+
+	return $fallback;
+}
+
+/**
+ * Detects empty, hash-like and camera-default alt values.
+ *
+ * @param string $alt Alt text.
+ * @return bool
+ */
+function mnsk7_image_alt_needs_fallback( $alt ) {
+	$alt = trim( (string) $alt );
+	return $alt === ''
+		|| (bool) preg_match( '/^[a-f0-9]{16,}(?:-\d+)?$/i', $alt )
+		|| (bool) preg_match( '/^(?:img|image|photo|dsc)[-_ ]?\d+$/i', $alt );
+}
+
+/* Auto-alt dla zdjęć produktów i artykułów. */
 add_filter( 'wp_get_attachment_image_attributes', function ( $attr, $attachment ) {
-	if ( ! empty( $attr['alt'] ) ) {
+	$current_alt = isset( $attr['alt'] ) ? trim( (string) $attr['alt'] ) : '';
+	if ( ! mnsk7_image_alt_needs_fallback( $current_alt ) ) {
 		return $attr;
 	}
 	$alt = trim( (string) get_post_meta( $attachment->ID, '_wp_attachment_image_alt', true ) );
-	if ( $alt !== '' ) {
+	if ( ! mnsk7_image_alt_needs_fallback( $alt ) ) {
 		$attr['alt'] = $alt;
 		return $attr;
 	}
+
+	global $product;
+	if ( $product instanceof WC_Product ) {
+		$product_alt = mnsk7_product_image_alt_text( $product, $attachment->ID, $current_alt );
+		if ( $product_alt !== '' ) {
+			$attr['alt'] = $product_alt;
+			return $attr;
+		}
+	}
+
 	$parent_id = (int) $attachment->post_parent;
 	if ( $parent_id > 0 ) {
 		$parent = get_post( $parent_id );
 		if ( $parent ) {
-			$sku = $parent->post_type === 'product' ? get_post_meta( $parent_id, '_sku', true ) : '';
-			$attr['alt'] = trim( $parent->post_title . ( $sku ? ' | ' . $sku : '' ) );
+			if ( $parent->post_type === 'product' && function_exists( 'wc_get_product' ) ) {
+				$parent_product = wc_get_product( $parent_id );
+				$attr['alt']    = mnsk7_product_image_alt_text( $parent_product, $attachment->ID, $parent->post_title );
+			} else {
+				$attr['alt'] = trim( wp_strip_all_tags( $parent->post_title ) );
+			}
 			return $attr;
 		}
 	}
-	if ( ! empty( $attachment->post_title ) ) {
+	if ( ! empty( $attachment->post_title ) && ! mnsk7_image_alt_needs_fallback( $attachment->post_title ) ) {
 		$attr['alt'] = $attachment->post_title;
 	}
 	return $attr;
@@ -173,6 +275,11 @@ add_filter( 'wp_get_attachment_image_attributes', function ( $attr, $attachment 
 
 /* Yoast: auto meta description dla produktów */
 add_filter( 'wpseo_metadesc', function ( $desc ) {
+	if ( mnsk7_is_guide_archive() ) {
+		$paged  = max( 1, (int) get_query_var( 'paged' ) );
+		$suffix = $paged > 1 ? sprintf( __( ' Strona %d.', 'mnsk7-tools' ), $paged ) : '';
+		return __( 'Praktyczne poradniki o frezach CNC, doborze narzędzi, obróbce drewna, aluminium, stali i materiałów płytowych.', 'mnsk7-tools' ) . $suffix;
+	}
 	if ( ! empty( $desc ) || ! is_singular( 'product' ) ) {
 		return $desc;
 	}
@@ -188,7 +295,7 @@ add_filter( 'wpseo_metadesc', function ( $desc ) {
 	$zast  = $product->get_attribute( 'zastosowanie' ) ?: $product->get_attribute( 'pa_zastosowanie' );
 	if ( $sred ) $parts[] = '| Ø' . $sred;
 	if ( $zast ) $parts[] = '| ' . $zast;
-	return implode( ' ', $parts ) . ' — ' . __( 'Dostawa następnego dnia. Faktura VAT. Zamów na mnsk7-tools.pl.', 'mnsk7-tools' );
+	return implode( ' ', $parts ) . ' — ' . __( 'Wysyłka w dni robocze. Faktura VAT. Zamów na mnsk7-tools.pl.', 'mnsk7-tools' );
 }, 20 );
 
 /* Yoast: auto meta description dla kategorii */
@@ -199,12 +306,20 @@ add_filter( 'wpseo_metadesc', function ( $desc ) {
 	$cat = get_queried_object();
 	if ( ! $cat ) return $desc;
 	return sprintf(
-		__( '%1$s — %2$d produktów. Dostawa następnego dnia. Faktura VAT. Sklep mnsk7-tools.pl — frezy CNC i narzędzia skrawające.', 'mnsk7-tools' ),
+		__( '%1$s — %2$d produktów. Wysyłka w dni robocze. Faktura VAT. Sklep mnsk7-tools.pl — frezy CNC i narzędzia skrawające.', 'mnsk7-tools' ),
 		$cat->name, (int) $cat->count
 	);
 }, 21 );
 
 add_filter( 'wpseo_title', function ( $title ) {
+	if ( mnsk7_is_guide_archive() ) {
+		$paged  = max( 1, (int) get_query_var( 'paged' ) );
+		$suffix = $paged > 1 ? sprintf( __( ' — strona %d', 'mnsk7-tools' ), $paged ) : '';
+		return __( 'Przewodnik CNC — frezy, dobór narzędzi i obróbka', 'mnsk7-tools' ) . $suffix . ' | MNK7 Tools';
+	}
+	if ( mnsk7_is_guide_post() ) {
+		return get_the_title( get_queried_object_id() ) . ' | MNK7 Tools';
+	}
 	$catalog_title = function_exists( 'mnsk7_get_catalog_archive_seo_title' ) ? mnsk7_get_catalog_archive_seo_title() : '';
 	if ( $catalog_title !== '' ) {
 		return $catalog_title;
@@ -213,6 +328,11 @@ add_filter( 'wpseo_title', function ( $title ) {
 }, 20 );
 
 add_filter( 'wpseo_canonical', function ( $canonical ) {
+	if ( mnsk7_is_guide_archive() ) {
+		// The archive canonical is printed once by our fallback below because Yoast
+		// suppresses its canonical presenter for categories configured as noindex.
+		return '';
+	}
 	if ( is_page( 'frez-prosty' ) && taxonomy_exists( 'product_cat' ) ) {
 		$term = get_term_by( 'slug', 'frezy-proste', 'product_cat' );
 		if ( $term && ! is_wp_error( $term ) ) {
@@ -230,16 +350,97 @@ add_filter( 'wpseo_canonical', function ( $canonical ) {
 	return $canonical;
 }, 20 );
 
+add_filter( 'wpseo_robots', function ( $robots ) {
+	if ( mnsk7_is_guide_archive() && wp_get_environment_type() === 'production' ) {
+		return 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+	}
+	return $robots;
+}, 30 );
+
+add_filter( 'wpseo_opengraph_image', function ( $image ) {
+	if ( ! mnsk7_is_guide_post() || ! function_exists( 'mnsk7_get_guide_primary_image_url' ) ) {
+		return $image;
+	}
+	$guide_image = mnsk7_get_guide_primary_image_url( get_queried_object_id() );
+	return $guide_image !== '' ? $guide_image : $image;
+}, 30 );
+
+add_filter( 'wpseo_schema_article', function ( $data ) {
+	if ( ! mnsk7_is_guide_post() || ! function_exists( 'mnsk7_get_guide_primary_image_url' ) ) {
+		return $data;
+	}
+	$image_url = mnsk7_get_guide_primary_image_url( get_queried_object_id() );
+	if ( $image_url === '' ) {
+		return $data;
+	}
+	$data['image'] = array(
+		'@type'      => 'ImageObject',
+		'@id'        => get_permalink( get_queried_object_id() ) . '#primaryimage',
+		'url'        => $image_url,
+		'contentUrl' => $image_url,
+	);
+	return $data;
+}, 30 );
+
 add_action( 'wp_head', function () {
-	$catalog_canonical = function_exists( 'mnsk7_get_catalog_archive_canonical_url' ) ? mnsk7_get_catalog_archive_canonical_url() : '';
-	if ( $catalog_canonical === '' ) {
+	$guide_canonical = mnsk7_get_guide_archive_canonical_url();
+	if ( $guide_canonical === '' ) {
 		return;
 	}
-	echo '<link rel="canonical" href="' . esc_url( $catalog_canonical ) . '">' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	echo '<link rel="canonical" href="' . esc_url( $guide_canonical ) . '">' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 }, 2 );
 
 add_action( 'wp_head', function () {
+	if ( ! mnsk7_is_guide_archive() ) {
+		return;
+	}
+
+	global $wp_query;
+	$url   = mnsk7_get_guide_archive_canonical_url();
+	$items = array();
+	if ( $wp_query instanceof WP_Query ) {
+		$position = 0;
+		foreach ( $wp_query->posts as $post ) {
+			if ( ! $post instanceof WP_Post ) {
+				continue;
+			}
+			$position++;
+			$items[] = array(
+				'@type'    => 'ListItem',
+				'position' => $position,
+				'name'     => get_the_title( $post ),
+				'url'      => get_permalink( $post ),
+			);
+		}
+	}
+
+	$schema = array(
+		'@context'    => 'https://schema.org',
+		'@type'       => 'CollectionPage',
+		'@id'         => $url . '#collection',
+		'url'         => $url,
+		'name'        => __( 'Przewodnik CNC — frezy, dobór narzędzi i obróbka', 'mnsk7-tools' ),
+		'description' => __( 'Praktyczne poradniki o frezach CNC, doborze narzędzi, obróbce drewna, aluminium, stali i materiałów płytowych.', 'mnsk7-tools' ),
+		'isPartOf'    => array(
+			'@type' => 'WebSite',
+			'@id'   => home_url( '/#website' ),
+		),
+		'mainEntity'  => array(
+			'@type'           => 'ItemList',
+			'numberOfItems'   => count( $items ),
+			'itemListElement' => $items,
+		),
+	);
+
+	echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+}, 6 );
+
+add_action( 'wp_head', function () {
 	if ( ! is_singular( 'post' ) ) {
+		return;
+	}
+	// Yoast owns Article/Breadcrumb schema when active; the block below is a fallback.
+	if ( defined( 'WPSEO_VERSION' ) || class_exists( 'WPSEO_Options' ) ) {
 		return;
 	}
 
@@ -255,6 +456,9 @@ add_action( 'wp_head', function () {
 	}
 
 	$image = get_the_post_thumbnail_url( $post_id, 'full' );
+	if ( ! $image && function_exists( 'mnsk7_get_guide_primary_image_url' ) ) {
+		$image = mnsk7_get_guide_primary_image_url( $post_id );
+	}
 	if ( ! $image ) {
 		$image = get_site_icon_url( 512 ) ?: home_url( '/wp-content/themes/tech-storefront/assets/images/logo.png' );
 	}

@@ -83,6 +83,76 @@ function mnsk7_get_guide_article_links_map() {
 }
 
 /**
+ * Returns a relevant product for a guide article.
+ *
+ * The result is cached because it is also used by social/schema image filters.
+ *
+ * @param int $post_id Guide post ID.
+ * @return WC_Product|null
+ */
+function mnsk7_get_guide_primary_product( $post_id ) {
+	$post_id = absint( $post_id );
+	if ( ! $post_id || ! function_exists( 'wc_get_product' ) || ! function_exists( 'wc_get_products' ) ) {
+		return null;
+	}
+
+	$cache_key = 'mnsk7_guide_primary_product_' . $post_id;
+	$cached_id = get_transient( $cache_key );
+	if ( $cached_id !== false ) {
+		$product = $cached_id ? wc_get_product( (int) $cached_id ) : null;
+		return $product instanceof WC_Product ? $product : null;
+	}
+
+	$post_slug = (string) get_post_field( 'post_name', $post_id );
+	$signals   = array();
+	foreach ( mnsk7_get_guide_article_links_map() as $article ) {
+		if ( $article['slug'] === $post_slug ) {
+			$signals = $article['terms'];
+			break;
+		}
+	}
+
+	foreach ( array_unique( array_map( 'sanitize_title', $signals ) ) as $category_slug ) {
+		if ( ! term_exists( $category_slug, 'product_cat' ) ) {
+			continue;
+		}
+		$products = wc_get_products(
+			array(
+				'status'   => 'publish',
+				'limit'    => 6,
+				'category' => array( $category_slug ),
+				'orderby'  => 'date',
+				'order'    => 'DESC',
+			)
+		);
+		foreach ( $products as $product ) {
+			if ( $product instanceof WC_Product && $product->is_visible() && $product->get_image_id() ) {
+				set_transient( $cache_key, $product->get_id(), 12 * HOUR_IN_SECONDS );
+				return $product;
+			}
+		}
+	}
+
+	set_transient( $cache_key, 0, HOUR_IN_SECONDS );
+	return null;
+}
+
+/**
+ * Returns the full-size relevant product image for a guide article.
+ *
+ * @param int $post_id Guide post ID.
+ * @return string
+ */
+function mnsk7_get_guide_primary_image_url( $post_id ) {
+	$product = mnsk7_get_guide_primary_product( $post_id );
+	if ( ! $product instanceof WC_Product ) {
+		return '';
+	}
+
+	return (string) wp_get_attachment_image_url( $product->get_image_id(), 'full' );
+}
+
+/**
  * Gets related guide posts for catalog/product terms.
  *
  * @param string[] $signals Term slugs and keyword hints.
@@ -260,7 +330,7 @@ function mnsk7_guide_products_shortcode( $atts ) {
 				$out .= '<p class="mnsk7-guide-products__intro">';
 				$out .= '<a href="' . esc_url( $url ) . '">' . esc_html( $name ) . '</a>';
 				$out .= ' — ' . esc_html( sprintf( _n( '%d produkt', '%d produktów', $term->count, 'mnsk7-tools' ), $term->count ) ) . '.</p>';
-				if ( $atts['format'] === 'grid' && function_exists( 'wc_get_loop' ) ) {
+				if ( $atts['format'] === 'grid' && shortcode_exists( 'products' ) ) {
 					$out .= do_shortcode( sprintf(
 						'[products category="%s" limit="%d" columns="3" orderby="popularity"]',
 						esc_attr( $term->slug ),
@@ -299,7 +369,7 @@ function mnsk7_guide_products_shortcode( $atts ) {
 			$out .= '<li>' . $link . '</li>';
 		}
 		$out .= '</ul>';
-		if ( $atts['format'] === 'grid' && ! empty( $valid_slugs ) && function_exists( 'wc_get_loop' ) ) {
+		if ( $atts['format'] === 'grid' && ! empty( $valid_slugs ) && shortcode_exists( 'products' ) ) {
 			$out .= do_shortcode( sprintf(
 				'[products category="%s" limit="%d" columns="3" orderby="popularity"]',
 				esc_attr( implode( ',', array_unique( $valid_slugs ) ) ),

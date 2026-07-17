@@ -14,7 +14,7 @@ get_header();
 	<section class="mnsk7-seo-hero">
 		<div class="col-full">
 			<h1 class="mnsk7-seo-hero__title">Frezy do drewna i MDF — CNC</h1>
-			<p class="mnsk7-seo-hero__sub">Spiralne · z podłożem · jednopiórowe · dostawa następnego dnia · faktura VAT</p>
+			<p class="mnsk7-seo-hero__sub">Spiralne · z podłożem · jednopiórowe · wysyłka w dni robocze · faktura VAT</p>
 		</div>
 	</section>
 

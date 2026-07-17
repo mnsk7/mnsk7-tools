@@ -14,7 +14,7 @@ get_header();
 	<section class="mnsk7-seo-hero">
 		<div class="col-full">
 			<h1 class="mnsk7-seo-hero__title">Frezy do aluminium CNC</h1>
-			<p class="mnsk7-seo-hero__sub">VHM · DLC · 1P / 2P · dostawa następnego dnia · faktura VAT</p>
+			<p class="mnsk7-seo-hero__sub">VHM · DLC · 1P / 2P · wysyłka w dni robocze · faktura VAT</p>
 		</div>
 	</section>
 

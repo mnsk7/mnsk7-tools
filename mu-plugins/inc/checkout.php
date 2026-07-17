@@ -35,7 +35,7 @@ add_filter( 'woocommerce_checkout_fields', function ( $fields ) {
 
 add_action( 'woocommerce_review_order_before_submit', function () {
 	echo '<p class="mnsk7-checkout-delivery-note">'
-		. esc_html__( '🚚 Zamówienia złożone do 15:00 (InPost) lub 17:00 (DPD) wysyłamy tego samego dnia.', 'mnsk7-tools' )
+		. esc_html__( '🚚 Zamówienia złożone do 15:00 (InPost) lub 12:00 (DPD) wysyłamy tego samego dnia.', 'mnsk7-tools' )
 		. '</p>';
 }, 5 );
 
