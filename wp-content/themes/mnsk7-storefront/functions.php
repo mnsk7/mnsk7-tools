@@ -1732,6 +1732,27 @@ add_action( 'wp_footer', function () {
 				var shopLink = shopItem ? shopItem.querySelector(':scope > a.mnsk7-menu-item-sklep') : null;
 				var shopPanel = shopItem ? shopItem.querySelector(':scope > .sub-menu.mnsk7-megamenu') : null;
 				addAccordionToggle(shopItem, shopLink, shopPanel);
+				// Pierwszy tap w „Sklep” na mobile rozwija katalog, zamiast od razu przejść na PLP.
+				// Pełny katalog pozostaje dostępny jako link na początku rozwiniętego menu.
+				if (shopLink && shopItem && shopPanel) {
+					var shopToggle = shopItem.querySelector(':scope > .mnsk7-drawer__submenu-toggle');
+					if (!shopPanel.querySelector(':scope > .mnsk7-drawer__shop-all')) {
+						var shopAll = document.createElement('li');
+						shopAll.className = 'mnsk7-drawer__shop-all';
+						var shopAllLink = document.createElement('a');
+						shopAllLink.href = shopLink.href;
+						shopAllLink.textContent = <?php echo wp_json_encode( __( 'Zobacz cały sklep', 'mnsk7-storefront' ) ); ?>;
+						shopAll.appendChild(shopAllLink);
+						shopPanel.insertBefore(shopAll, shopPanel.firstChild);
+					}
+					shopLink.addEventListener('click', function(e) {
+						if (window.innerWidth >= DESKTOP_MIN) return;
+						e.preventDefault();
+						e.stopPropagation();
+						if (shopToggle) setExpanded(shopItem, shopToggle, shopToggle.getAttribute('aria-expanded') !== 'true');
+						try { shopPanel.scrollIntoView({ block: 'nearest', behavior: 'smooth' }); } catch (err) {}
+					});
+				}
 
 				menu.querySelectorAll('.mnsk7-megamenu__col').forEach(function(col) {
 					var list = col.querySelector(':scope > .mnsk7-megamenu__list');

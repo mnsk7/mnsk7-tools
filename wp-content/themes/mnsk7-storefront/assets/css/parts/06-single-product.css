@@ -1597,6 +1597,13 @@ body.mnsk7-pdp-switching .single-product main .product {
     order: 4;
   }
 
+  /* Poradniki są częścią treści po opisie — nigdy nad akordeonem opisu na mobile. */
+  .single-product div.product > .mnsk7-related-guides--pdp {
+    order: 5;
+    flex: 0 0 100%;
+    width: 100%;
+  }
+
   .single-product div.product > .related.products,
   .single-product div.product > .upsells.products,
   .single-product div.product > .up-sells.products {
@@ -1645,6 +1652,11 @@ body.mnsk7-pdp-switching .single-product main .product {
   .single-product div.product > details.mnsk7-product-description-accordion,
   .single-product div.product > .mnsk7-product-description-accordion {
     order: 4;
+  }
+  .single-product div.product > .mnsk7-related-guides--pdp {
+    order: 5;
+    flex: 0 0 100%;
+    width: 100%;
   }
   .single-product div.product > .related.products,
   .single-product div.product > .upsells.products,

@@ -3037,8 +3037,10 @@ body.mnsk7-menu-locked {
 
 @media (max-width: 1023px) {
   .mnsk7-header__nav .mnsk7-header__menu {
+    min-height: 0;
     overflow-x: hidden !important;
     overflow-y: auto !important;
+    touch-action: pan-y;
     overscroll-behavior: contain;
     -webkit-overflow-scrolling: touch;
   }
@@ -3136,6 +3138,27 @@ body.mnsk7-menu-locked {
   .mnsk7-header__nav .mnsk7-header__menu li.menu-item-has-children.is-mobile-expanded > .sub-menu.mnsk7-megamenu,
   .mnsk7-header__nav .mnsk7-header__menu .mnsk7-megamenu__col.is-mobile-expanded > .mnsk7-megamenu__list {
     display: block !important;
+  }
+
+  .mnsk7-header__nav .mnsk7-header__menu .mnsk7-drawer__shop-all {
+    display: block;
+    margin: 0;
+    padding: 0.5rem;
+    list-style: none;
+    background: var(--color-white);
+    border-bottom: 1px solid var(--color-border);
+  }
+
+  .mnsk7-header__nav .mnsk7-header__menu .mnsk7-drawer__shop-all a {
+    display: flex;
+    align-items: center;
+    min-height: 48px;
+    padding: 0.5rem 1rem;
+    border-radius: var(--r-sm);
+    color: var(--color-white);
+    background: var(--color-primary);
+    font-weight: 800;
+    text-decoration: none;
   }
 
   .mnsk7-header__nav .mnsk7-header__menu .sub-menu.mnsk7-megamenu {
@@ -5126,6 +5149,13 @@ body.mnsk7-pdp-switching .single-product main .product {
     order: 4;
   }
 
+  /* Poradniki są częścią treści po opisie — nigdy nad akordeonem opisu na mobile. */
+  .single-product div.product > .mnsk7-related-guides--pdp {
+    order: 5;
+    flex: 0 0 100%;
+    width: 100%;
+  }
+
   .single-product div.product > .related.products,
   .single-product div.product > .upsells.products,
   .single-product div.product > .up-sells.products {
@@ -5174,6 +5204,11 @@ body.mnsk7-pdp-switching .single-product main .product {
   .single-product div.product > details.mnsk7-product-description-accordion,
   .single-product div.product > .mnsk7-product-description-accordion {
     order: 4;
+  }
+  .single-product div.product > .mnsk7-related-guides--pdp {
+    order: 5;
+    flex: 0 0 100%;
+    width: 100%;
   }
   .single-product div.product > .related.products,
   .single-product div.product > .upsells.products,
