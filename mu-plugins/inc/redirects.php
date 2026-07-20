@@ -25,6 +25,12 @@ if ( ! function_exists( 'mnsk7_retired_url_redirects' ) ) {
 		return array(
 			// WC 441 (SKU H04230302) — stale duplicate of WC 25846 (SKU 2011091144, BL-mapped).
 			'/sklep/frez-do-metalu-huhao-spiralny-4f-881963-h04230302/' => array( 'product_id' => 25846 ),
+			// Retired category slugs retained in Google's historical crawl data.
+			'/kategoria-produktu/frez-prosty/' => array( 'url' => '/kategoria-produktu/frezy-proste/frez-prosty-vhm-frezy-proste/' ),
+			'/kategoria-produktu/frez-kulowy/' => array( 'url' => '/kategoria-produktu/frezy-kulowe/' ),
+			'/kategoria-produktu/tuleje-zaciskowe/' => array( 'url' => '/kategoria-produktu/osprzet-i-akcesoria/tuleje-zaciskowe-osprzet-i-akcesoria/' ),
+			'/kategoria-produktu/frez-spiralny-stozkowo-kulowy/' => array( 'url' => '/kategoria-produktu/frezy-stozkowo-kulowe/' ),
+			'/kategoria-produktu/zestaw-gwintownikow/' => array( 'url' => '/sklep/zestaw-gwintownikow-reczny-metryczny-m3-m4-m5-m6-m8-huhao/' ),
 		);
 	}
 }
