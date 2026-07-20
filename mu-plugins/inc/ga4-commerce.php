@@ -18,17 +18,18 @@ add_action( 'wp_head', function () {
 	if ( is_admin() ) {
 		return;
 	}
-	$choice  = isset( $_COOKIE['mnsk7_cookie_consent'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['mnsk7_cookie_consent'] ) ) : '';
-	$granted = ( 'accept' === $choice || '1' === $choice );
 	?>
 	<script id="mnsk7-google-consent-v2">
 	window.dataLayer = window.dataLayer || [];
 	window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
+	var mnsk7ConsentCookie = document.cookie.match(/(?:^|;\s*)mnsk7_cookie_consent=([^;]+)/);
+	var mnsk7ConsentGranted = !!(mnsk7ConsentCookie && (decodeURIComponent(mnsk7ConsentCookie[1]) === 'accept' || decodeURIComponent(mnsk7ConsentCookie[1]) === '1'));
+	var mnsk7ConsentState = mnsk7ConsentGranted ? 'granted' : 'denied';
 	gtag('consent', 'default', {
-		'ad_storage': <?php echo $granted ? "'granted'" : "'denied'"; ?>,
-		'ad_user_data': <?php echo $granted ? "'granted'" : "'denied'"; ?>,
-		'ad_personalization': <?php echo $granted ? "'granted'" : "'denied'"; ?>,
-		'analytics_storage': <?php echo $granted ? "'granted'" : "'denied'"; ?>
+		'ad_storage': mnsk7ConsentState,
+		'ad_user_data': mnsk7ConsentState,
+		'ad_personalization': mnsk7ConsentState,
+		'analytics_storage': mnsk7ConsentState
 	});
 	gtag('set', 'ads_data_redaction', true);
 	</script>
