@@ -11346,6 +11346,17 @@ body.single-product .woocommerce-product-navigation {
   background: #fff;
 }
 
+.mnsk7-guide-article--slab .mnsk7-guide-article__summary .mnsk7-slab-product-card__more {
+  color: var(--color-primary-dark);
+  background: #fff;
+  box-shadow: none;
+}
+
+.mnsk7-guide-article--slab .mnsk7-guide-article__summary .mnsk7-slab-product-card__more:hover {
+  color: var(--color-primary-dark);
+  background: #eff7ff;
+}
+
 .mnsk7-guide-article--slab .mnsk7-guide-article__content {
   padding-top: clamp(1.5rem, 3vw, 2.5rem);
 }
@@ -11511,6 +11522,10 @@ body.single-product .woocommerce-product-navigation {
 }
 
 @media (max-width: 767px) {
+  body.single-post:has(.mnsk7-guide-article--slab) .site-content {
+    margin-top: 0;
+  }
+
   .mnsk7-guide-article--slab > .mnsk7-guide-article__header {
     padding-top: 0.5rem;
   }
