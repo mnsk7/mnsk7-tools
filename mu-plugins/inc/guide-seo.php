@@ -104,6 +104,17 @@ function mnsk7_get_guide_primary_product( $post_id ) {
 	}
 
 	$post_slug = (string) get_post_field( 'post_name', $post_id );
+	$featured_product_ids = array(
+		'frez-do-wyrownania-sleba-i-planowania-powierzchni' => 6820,
+	);
+	if ( isset( $featured_product_ids[ $post_slug ] ) ) {
+		$featured_product = wc_get_product( $featured_product_ids[ $post_slug ] );
+		if ( $featured_product instanceof WC_Product && $featured_product->is_visible() && $featured_product->get_image_id() ) {
+			set_transient( $cache_key, $featured_product->get_id(), 12 * HOUR_IN_SECONDS );
+			return $featured_product;
+		}
+	}
+
 	$signals   = array();
 	foreach ( mnsk7_get_guide_article_links_map() as $article ) {
 		if ( $article['slug'] === $post_slug ) {
@@ -384,9 +395,11 @@ function mnsk7_guide_products_shortcode( $atts ) {
 		$ids = array_filter( array_map( 'absint', explode( ',', $atts['ids'] ) ) );
 		$ids = array_slice( $ids, 0, 12 );
 		$links = array();
+		$visible_ids = array();
 		foreach ( $ids as $id ) {
 			$product = wc_get_product( $id );
 			if ( $product && $product->is_visible() ) {
+				$visible_ids[] = $id;
 				$links[] = '<a href="' . esc_url( $product->get_permalink() ) . '">' . esc_html( $product->get_name() ) . '</a>';
 			}
 		}
@@ -395,6 +408,14 @@ function mnsk7_guide_products_shortcode( $atts ) {
 		}
 		if ( $atts['title'] ) {
 			$out .= '<h3 class="mnsk7-guide-products__title">' . esc_html( $atts['title'] ) . '</h3>';
+		}
+		if ( $atts['format'] === 'grid' && shortcode_exists( 'products' ) ) {
+			$out .= do_shortcode( sprintf(
+				'[products ids="%s" limit="%d" columns="3" orderby="post__in"]',
+				esc_attr( implode( ',', $visible_ids ) ),
+				min( $limit, count( $visible_ids ) )
+			) );
+			return '<div id="mnsk7-guide-products" class="mnsk7-guide-products mnsk7-guide-products--curated">' . $out . '</div>';
 		}
 		$out .= '<ul class="mnsk7-guide-products__list">';
 		foreach ( $links as $link ) {

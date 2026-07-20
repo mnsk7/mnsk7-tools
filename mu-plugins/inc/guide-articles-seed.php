@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const MNSK7_GUIDE_ARTICLES_SEED_VERSION = '2026-07-14-docx-v3';
+const MNSK7_GUIDE_ARTICLES_SEED_VERSION = '2026-07-20-slab-guide-v4';
 
 add_action( 'init', 'mnsk7_seed_guide_articles', 25 );
 
@@ -90,6 +90,7 @@ function mnsk7_seed_guide_articles() {
 		update_post_meta( $post_id, 'mnsk7_faq_title', $article['faq_title'] );
 		update_post_meta( $post_id, '_yoast_wpseo_metadesc', $article['meta_description'] );
 		update_post_meta( $post_id, '_yoast_wpseo_focuskw', $article['focus_keyphrase'] );
+		delete_transient( 'mnsk7_guide_primary_product_' . $post_id );
 	}
 
 	update_option( 'mnsk7_guide_articles_seed_version', MNSK7_GUIDE_ARTICLES_SEED_VERSION );
@@ -169,43 +170,111 @@ HTML
 		),
 		array(
 			'slug' => 'frez-do-wyrownania-sleba-i-planowania-powierzchni',
-			'title' => 'Jaki frez do planowania drewna i wyrównywania slabów?',
-			'excerpt' => 'Do wyrównywania powierzchni drewna i slabów najczęściej wybiera się frez do planowania o dużej średnicy roboczej, stabilnej konstrukcji i wymiennych płytkach. Pozwala szybko usunąć nierówności, ale dobór zależy od szerokości przejścia, sztywności CNC, rodzaju drewna oraz jakości oczekiwanej po obróbce.',
-			'meta_description' => 'Do wyrównywania powierzchni drewna i slabów najczęściej wybiera się frez do planowania o dużej średnicy roboczej, stabilnej konstrukcji i wymiennych płytkach...',
+			'title' => 'Jaki frez do planowania drewna i wyrównywania slabów? Dobór 38–51 mm',
+			'excerpt' => 'Dobierz frez do planowania do wrzeciona i sztywności CNC. Porównujemy średnice 38,1, 39 i 50,8 mm, trzpienie 8 i 12 mm oraz konstrukcje 3P i 4P. Pokazujemy też parametry startowe, proces pracy i przyczyny fal na powierzchni.',
+			'meta_description' => 'Frez do planowania drewna: porównanie 38,1, 39 i 50,8 mm, trzpieni 8/12 mm, parametrów startowych oraz sposobów usuwania fal po obróbce.',
 			'focus_keyphrase' => 'frez do planowania drewna',
 			'faq_title' => 'FAQ - frez do planowania drewna',
 			'content' => <<<'HTML'
-<h2>Krótka odpowiedź</h2>
-<p>Do wyrównywania powierzchni drewna i slabów najczęściej wybiera się frez do planowania o dużej średnicy roboczej, stabilnej konstrukcji i wymiennych płytkach. Pozwala szybko usunąć nierówności, ale dobór zależy od szerokości przejścia, sztywności CNC, rodzaju drewna oraz jakości oczekiwanej po obróbce.</p>
-<h2>Co robi frez do planowania</h2>
-<p>Planowanie to przejście całej powierzchni narzędziem o szerokim obszarze skrawania. Celem nie jest wycięcie detalu, lecz zbudowanie równej płaszczyzny przed klejeniem, olejowaniem, żywicą lub dalszą obróbką. W przypadku slabów narzędzie usuwa falowanie, ślady po pile i różnice wysokości.</p>
-<h2>Jak dobrać średnicę i płytki</h2>
-<p>Większa średnica skraca liczbę przejść, ale zwiększa wymagania wobec wrzeciona, mocowania i sztywności bramy. Nie należy wybierać największego frezu wyłącznie dla szybkości. Lepiej dobrać średnicę do realnej maszyny i wykonywać powtarzalne, stabilne przejścia.</p>
-<p>Frezy z wymiennymi płytkami ułatwiają eksploatację: po stępieniu obraca się lub wymienia płytkę zamiast kupować całe narzędzie. Przed obróbką sprawdź, czy płytki są czyste, dokręcone i ustawione równo.</p>
-<h2>Proces pracy krok po kroku</h2>
-<ul>
-<li>Zamocuj materiał tak, by nie drgał i nie unosił się po przejściu frezu.</li>
-<li>Ustal punkt zerowy w najwyższym miejscu powierzchni.</li>
-<li>Wykonaj próbne przejście oraz obejrzyj ślad narzędzia.</li>
-<li>Zostaw niewielki naddatek na przejście wykańczające.</li>
-<li>Po planowaniu oceń powierzchnię pod światło; ślady mogą wynikać z niewypoziomowanej bramy, a nie z frezu.</li>
-</ul>
-<h2>Czego unikać</h2>
-<p>Za głęboki zbiór przy dużej średnicy może przeciążyć wrzeciono. Widoczne pasy często oznaczają bicie, źle ustawioną maszynę albo zużyte płytki. Nie ukrywaj problemu pod większym posuwem — najpierw sprawdź geometrię i mocowanie.</p>
-<h2>Co zobaczyć w sklepie</h2>
-<ul>
-<li>Kategoria: Frezy do planowania.</li>
-<li>Frez do planowania z wymiennymi płytkami — produkty.</li>
-<li>Artykuł uzupełniający: Jak przygotować slab do obróbki CNC.</li>
-</ul>
+<div class="mnsk7-guide-answer">
+<p class="mnsk7-guide-answer__label">Krótka odpowiedź</p>
+<p><strong>Do planowania drewna i wyrównywania slabów wybierz frez z wymiennymi płytkami dopasowany przede wszystkim do średnicy tulei, mocy wrzeciona i sztywności maszyny.</strong> Dla uchwytu 8 mm praktycznym punktem wyjścia są modele 38,1–39 mm. Frez 50,8 mm z trzpieniem 12 mm skraca liczbę przejść, ale wymaga sztywniejszego układu i niższego zakresu obrotów.</p>
+</div>
 
-[mnsk7_guide_products categories="frezy-do-planowania,frezy-proste-z-wymiennymi-plytkami,frezy-proste,frezy-kulowe" title="Frezy do planowania i dalszej obrobki" format="grid" limit="6"]
+<nav class="mnsk7-guide-toc" aria-label="Spis treści">
+<strong>W tym poradniku</strong>
+<ol>
+<li><a href="#jak-wybrac-frez">Jak wybrać frez</a></li>
+<li><a href="#porownanie-frezow">Porównanie 38–51 mm</a></li>
+<li><a href="#parametry-startowe">Parametry startowe</a></li>
+<li><a href="#planowanie-krok-po-kroku">Planowanie krok po kroku</a></li>
+<li><a href="#problemy-po-planowaniu">Problemy i rozwiązania</a></li>
+</ol>
+</nav>
+
+<h2 id="jak-wybrac-frez">Jak wybrać frez do planowania drewna</h2>
+<p>Planowanie polega na przejściu całej powierzchni szerokim narzędziem, aby zbudować równą płaszczyznę przed klejeniem, szlifowaniem, olejowaniem, zalaniem żywicą lub dalszą obróbką. Przy slabach usuwa falowanie, ślady po pile i lokalne różnice wysokości. Sam duży frez nie gwarantuje jednak równej powierzchni — równie ważne są geometria maszyny, bicie narzędzia i stabilne mocowanie materiału.</p>
+
+<div class="mnsk7-guide-checklist">
+<h3>Przed zakupem sprawdź pięć rzeczy</h3>
+<ul>
+<li><strong>Średnicę tulei:</strong> trzpień 8 lub 12 mm musi pasować do rzeczywistego uchwytu wrzeciona.</li>
+<li><strong>Dopuszczalną średnicę narzędzia:</strong> sprawdź dokumentację wrzeciona i maszyny, nie tylko średnicę tulei.</li>
+<li><strong>Sztywność bramy i osi Z:</strong> większa średnica zwiększa obciążenie układu.</li>
+<li><strong>Zakres obrotów:</strong> frez 50,8 mm pracuje w niższym zakresie niż modele około 39 mm.</li>
+<li><strong>Odciąg:</strong> planowanie wytwarza dużo wiórów i pyłu, szczególnie przy MDF.</li>
+</ul>
+</div>
+
+<h2 id="porownanie-frezow">Porównanie frezów 38,1, 39 i 50,8 mm</h2>
+<div class="mnsk7-guide-table-wrap" role="region" aria-label="Porównanie frezów do planowania" tabindex="0">
+<table class="mnsk7-guide-compare">
+<thead><tr><th>Wariant</th><th>Trzpień</th><th>Ostrza</th><th>Kiedy wybrać</th></tr></thead>
+<tbody>
+<tr><th>Ø 39 mm</th><td data-label="Trzpień">8 mm</td><td data-label="Ostrza">3P</td><td data-label="Kiedy wybrać">Uniwersalny wybór do CNC z tuleją 8 mm i sprawnym odprowadzaniem wióra.</td></tr>
+<tr><th>Ø 38,1 mm</th><td data-label="Trzpień">8 mm</td><td data-label="Ostrza">4P</td><td data-label="Kiedy wybrać">Gdy maszyna jest stabilna, a priorytetem jest więcej kontaktów ostrza z materiałem.</td></tr>
+<tr><th>Ø 50,8 mm</th><td data-label="Trzpień">12 mm</td><td data-label="Ostrza">4P</td><td data-label="Kiedy wybrać">Do sztywniejszego CNC z uchwytem 12 mm i planowania większych powierzchni.</td></tr>
+</tbody>
+</table>
+</div>
+<p>Większa średnica może skrócić czas obróbki, lecz zwiększa wymagania wobec wrzeciona i mocowania. Różnica między 3P i 4P nie oznacza automatycznie „lepiej” lub „gorzej”: więcej ostrzy daje więcej kontaktów na obrót, ale wymaga poprawnego posuwu i skutecznego usuwania wióra.</p>
+
+<h2 id="parametry-startowe">Parametry startowe dla dostępnych modeli</h2>
+<p>Poniższe wartości pochodzą ze specyfikacji konkretnych produktów MNK7 Tools. Traktuj je jako punkt startowy: wynik zależy od gatunku i wilgotności drewna, wysięgu narzędzia, mocy wrzeciona, sztywności maszyny oraz strategii CAM. Pierwszą próbę wykonuj na małej głębokości i poza docelowym elementem.</p>
+<div class="mnsk7-guide-table-wrap" role="region" aria-label="Parametry startowe frezowania" tabindex="0">
+<table class="mnsk7-guide-compare mnsk7-guide-compare--parameters">
+<thead><tr><th>Frez</th><th>Obroty</th><th>Posuw</th><th>Głębokość przejścia</th></tr></thead>
+<tbody>
+<tr><th>39 mm / 8 mm / 3P</th><td data-label="Obroty">13 000–16 000 RPM</td><td data-label="Posuw">5000 mm/min</td><td data-label="Głębokość">2–3 mm</td></tr>
+<tr><th>38,1 mm / 8 mm / 4P</th><td data-label="Obroty">12 000–16 000 RPM</td><td data-label="Posuw">5000 mm/min</td><td data-label="Głębokość">2–3 mm</td></tr>
+<tr><th>50,8 mm / 12 mm / 4P</th><td data-label="Obroty">8000–12 000 RPM</td><td data-label="Posuw">3500 mm/min</td><td data-label="Głębokość">2–4 mm</td></tr>
+</tbody>
+</table>
+</div>
+
+<h2 id="planowanie-krok-po-kroku">Planowanie slabów krok po kroku</h2>
+<ol class="mnsk7-guide-steps">
+<li><strong>Ustabilizuj materiał.</strong> Slab nie może kołysać się ani unosić po przejściu frezu. Podeprzyj go na całej długości i sprawdź kolizje mocowań z narzędziem.</li>
+<li><strong>Sprawdź tram wrzeciona.</strong> Oś frezu musi być prostopadła do stołu. Błąd ustawienia najczęściej daje regularne progi między przejściami.</li>
+<li><strong>Ustal zero w najwyższym punkcie.</strong> Dzięki temu pierwsza warstwa zdejmie tylko niezbędny materiał.</li>
+<li><strong>Wykonaj przejście próbne.</strong> Zacznij od mniejszej głębokości, obserwuj dźwięk, obciążenie wrzeciona, wiór i jakość powierzchni.</li>
+<li><strong>Planuj równymi pasami.</strong> Zachowaj stałe nakładanie kolejnych ścieżek i nie zmieniaj parametrów w połowie warstwy.</li>
+<li><strong>Zostaw przejście wykańczające.</strong> Ostatni, płytki przejazd poprawia jednolitość powierzchni przed szlifowaniem.</li>
+</ol>
+
+<h2 id="problemy-po-planowaniu">Dlaczego po planowaniu zostają fale lub przypalenia</h2>
+<dl class="mnsk7-guide-troubleshooting">
+<div><dt>Równe progi między ścieżkami</dt><dd>Najpierw sprawdź tram bramy i prostopadłość wrzeciona do stołu.</dd></div>
+<div><dt>Losowe fale i drgania</dt><dd>Skontroluj mocowanie slaba, luzy osi, wysięg frezu, tuleję oraz bicie narzędzia.</dd></div>
+<div><dt>Przypalenia</dt><dd>Przyczyną może być tępa lub zabrudzona płytka, zbyt mały posuw albo wielokrotne tarcie wióra o powierzchnię.</dd></div>
+<div><dt>Wyrywanie włókien</dt><dd>Zmniejsz agresywność przejścia, sprawdź kierunek ścieżki i zaplanuj osobny przejazd wykańczający.</dd></div>
+<div><dt>Przeciążenie wrzeciona</dt><dd>Zmniejsz głębokość zbioru lub średnicę narzędzia i ponownie oceń parametry dla swojej maszyny.</dd></div>
+</dl>
+
+<div class="mnsk7-guide-safety">
+<h2>Bezpieczna praca i obsługa płytek</h2>
+<p>Przed uruchomieniem sprawdź dokręcenie wszystkich płytek, stan śrub i czystość gniazd. Płytki jednego frezu powinny być ustawione jednakowo. Nie przekraczaj parametrów dopuszczonych przez producenta wrzeciona i narzędzia. Stosuj osłonę, odciąg, ochronę oczu i słuchu; nie dotykaj narzędzia przed całkowitym zatrzymaniem wrzeciona.</p>
+</div>
+
+[mnsk7_guide_products ids="6820,6815,20952" title="Wybierz frez do planowania" format="grid" limit="3"]
+
+<p class="mnsk7-guide-category-cta"><a class="button" href="/kategoria-produktu/frezy-do-planowania/">Zobacz wszystkie frezy do planowania</a></p>
+
+<h2>Powiązane poradniki</h2>
+<ul class="mnsk7-guide-related-links">
+<li><a href="/rodzaje-frezow-cnc-do-drewna/">Rodzaje frezów CNC do drewna</a></li>
+<li><a href="/liczba-ostrz-frezu-jednopiorowe-dwupiorowe-czteropiorowe/">Ile ostrzy ma mieć frez: 1P, 2P, 3P czy 4P?</a></li>
+<li><a href="/frezy-do-3d-obrobki-cnc/">Frezy do obróbki 3D CNC</a></li>
+</ul>
 HTML
 			,
 			'faq' => array(
-				array( 'q' => 'Czy frez do planowania nadaje się do MDF?', 'a' => 'Tak, o ile odciąg wióra jest skuteczny, a parametry są dobrane do maszyny.' ),
-				array( 'q' => 'Dlaczego po planowaniu zostają fale?', 'a' => 'Najczęściej przez luz, bicie narzędzia, źle wypoziomowaną bramę albo zbyt agresywne przejście.' ),
-				array( 'q' => 'Czy potrzebne jest przejście wykańczające?', 'a' => 'Zwykle tak — poprawia jednolitość powierzchni przed szlifowaniem.' ),
+				array( 'q' => 'Jaki frez do planowania wybrać do tulei 8 mm?', 'a' => 'Do tulei 8 mm pasują opisane modele o średnicy roboczej 38,1 lub 39 mm. Przed zakupem sprawdź także dopuszczalną średnicę narzędzia i zakres obrotów wrzeciona.' ),
+				array( 'q' => 'Kiedy wybrać frez 50,8 mm z trzpieniem 12 mm?', 'a' => 'Gdy CNC ma tuleję 12 mm, odpowiednio sztywną bramę i wrzeciono przystosowane do pracy narzędziem o tej średnicy. Większy frez nie jest dobrym wyborem wyłącznie dlatego, że szybciej pokrywa powierzchnię.' ),
+				array( 'q' => 'Czy frez do planowania nadaje się do MDF?', 'a' => 'Tak, jeśli produkt jest przeznaczony do drewna i materiałów drewnopochodnych, a odciąg skutecznie usuwa drobny pył. Parametry trzeba dopasować do maszyny i wykonać próbę.' ),
+				array( 'q' => 'Dlaczego po planowaniu zostają regularne fale?', 'a' => 'Regularne progi między ścieżkami najczęściej wskazują na nieprawidłowy tram, czyli brak prostopadłości osi wrzeciona do stołu. Losowe fale częściej wynikają z luzu, drgań lub bicia narzędzia.' ),
+				array( 'q' => 'Czy potrzebne jest przejście wykańczające?', 'a' => 'Zwykle tak. Płytkie przejście wykańczające z równym nakładaniem ścieżek poprawia jednolitość powierzchni przed szlifowaniem.' ),
+				array( 'q' => 'Czy 4 ostrza zawsze dają lepszą powierzchnię niż 3?', 'a' => 'Nie zawsze. Cztery ostrza dają więcej kontaktów na obrót, ale wymagają właściwego posuwu i skutecznego odprowadzania wióra. Dobór zależy od maszyny, materiału i całego procesu.' ),
 			),
 		),
 		array(

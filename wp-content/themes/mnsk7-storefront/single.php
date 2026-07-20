@@ -36,14 +36,17 @@ $przewodnik_label = apply_filters( 'mnsk7_przewodnik_menu_label', __( 'Przewodni
 	<?php
 	while ( have_posts() ) :
 		the_post();
-		$reading_time = mnsk7_guide_single_estimated_reading_time( get_the_content() );
+		$reading_time  = mnsk7_guide_single_estimated_reading_time( get_the_content() );
+		$is_slab_guide = get_post_field( 'post_name', get_the_ID() ) === 'frez-do-wyrownania-sleba-i-planowania-powierzchni';
+		$article_class = $is_slab_guide ? 'mnsk7-guide-article mnsk7-guide-article--slab' : 'mnsk7-guide-article';
+		$hero_product  = $is_slab_guide && function_exists( 'wc_get_product' ) ? wc_get_product( 6820 ) : null;
 		?>
-		<article id="post-<?php the_ID(); ?>" <?php post_class( 'mnsk7-guide-article' ); ?>>
+		<article id="post-<?php the_ID(); ?>" <?php post_class( $article_class ); ?>>
 			<header class="mnsk7-guide-article__header">
 				<div class="col-full">
 					<div class="mnsk7-breadcrumb-wrap mnsk7-guide-article__breadcrumbs">
 						<nav class="woocommerce-breadcrumb" aria-label="<?php esc_attr_e( 'Breadcrumb navigation', 'mnsk7-storefront' ); ?>">
-							<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Strona glowna', 'mnsk7-storefront' ); ?></a>
+							<a href="<?php echo esc_url( home_url( '/' ) ); ?>"><?php esc_html_e( 'Strona główna', 'mnsk7-storefront' ); ?></a>
 							<span class="separator" aria-hidden="true">/</span>
 							<a href="<?php echo esc_url( $przewodnik_url ); ?>"><?php echo esc_html( $przewodnik_label ); ?></a>
 							<span class="separator" aria-hidden="true">/</span>
@@ -58,13 +61,45 @@ $przewodnik_label = apply_filters( 'mnsk7_przewodnik_menu_label', __( 'Przewodni
 							<?php if ( has_excerpt() ) : ?>
 								<p class="mnsk7-guide-article__lead"><?php echo esc_html( get_the_excerpt() ); ?></p>
 							<?php endif; ?>
+							<?php if ( $is_slab_guide ) : ?>
+								<p class="mnsk7-guide-article__byline">
+									<span><?php esc_html_e( 'Opracowanie: Zespół MNK7 Tools', 'mnsk7-storefront' ); ?></span>
+									<span aria-hidden="true">·</span>
+									<time datetime="<?php echo esc_attr( get_the_modified_date( DATE_W3C ) ); ?>"><?php echo esc_html( sprintf( __( 'Aktualizacja: %s', 'mnsk7-storefront' ), get_the_modified_date( 'd.m.Y' ) ) ); ?></time>
+								</p>
+							<?php endif; ?>
 						</div>
 
-						<aside class="mnsk7-guide-article__summary" aria-label="<?php esc_attr_e( 'Article information', 'mnsk7-storefront' ); ?>">
-							<span><?php esc_html_e( 'W artykule', 'mnsk7-storefront' ); ?></span>
-							<strong><?php echo esc_html( $reading_time ); ?></strong>
-							<a href="#mnsk7-guide-products"><?php esc_html_e( 'Produkty i kategorie', 'mnsk7-storefront' ); ?></a>
-						</aside>
+						<?php if ( $is_slab_guide && $hero_product instanceof WC_Product && $hero_product->get_image_id() ) : ?>
+							<aside class="mnsk7-guide-article__summary mnsk7-guide-article__summary--product" aria-label="<?php esc_attr_e( 'Polecany frez i informacje o poradniku', 'mnsk7-storefront' ); ?>">
+								<a class="mnsk7-guide-article__hero-product" href="<?php echo esc_url( $hero_product->get_permalink() ); ?>">
+									<?php
+									echo wp_get_attachment_image(
+										$hero_product->get_image_id(),
+										'large',
+										false,
+										array(
+											'alt'           => esc_attr__( 'Frez do planowania drewna z wymiennymi płytkami, średnica 39 mm', 'mnsk7-storefront' ),
+											'loading'       => 'eager',
+											'fetchpriority' => 'high',
+											'sizes'         => '(max-width: 767px) 88vw, 360px',
+										)
+									); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+									?>
+								</a>
+								<div class="mnsk7-guide-article__summary-copy">
+									<span><?php esc_html_e( 'Praktyczny poradnik', 'mnsk7-storefront' ); ?></span>
+									<strong><?php echo esc_html( $reading_time ); ?></strong>
+									<a href="#mnsk7-guide-products"><?php esc_html_e( 'Porównaj 3 frezy', 'mnsk7-storefront' ); ?></a>
+								</div>
+							</aside>
+						<?php else : ?>
+							<aside class="mnsk7-guide-article__summary" aria-label="<?php esc_attr_e( 'Article information', 'mnsk7-storefront' ); ?>">
+								<span><?php esc_html_e( 'W artykule', 'mnsk7-storefront' ); ?></span>
+								<strong><?php echo esc_html( $reading_time ); ?></strong>
+								<a href="#mnsk7-guide-products"><?php esc_html_e( 'Produkty i kategorie', 'mnsk7-storefront' ); ?></a>
+							</aside>
+						<?php endif; ?>
 					</div>
 				</div>
 			</header>

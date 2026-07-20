@@ -318,6 +318,9 @@ add_filter( 'wpseo_title', function ( $title ) {
 		return __( 'Przewodnik CNC — frezy, dobór narzędzi i obróbka', 'mnsk7-tools' ) . $suffix . ' | MNK7 Tools';
 	}
 	if ( mnsk7_is_guide_post() ) {
+		if ( get_post_field( 'post_name', get_queried_object_id() ) === 'frez-do-wyrownania-sleba-i-planowania-powierzchni' ) {
+			return 'Frez do planowania drewna i slabów — jak wybrać? | MNK7 Tools';
+		}
 		return get_the_title( get_queried_object_id() ) . ' | MNK7 Tools';
 	}
 	$catalog_title = function_exists( 'mnsk7_get_catalog_archive_seo_title' ) ? mnsk7_get_catalog_archive_seo_title() : '';
@@ -379,6 +382,13 @@ add_filter( 'wpseo_schema_article', function ( $data ) {
 		'url'        => $image_url,
 		'contentUrl' => $image_url,
 	);
+	if ( get_post_field( 'post_name', get_queried_object_id() ) === 'frez-do-wyrownania-sleba-i-planowania-powierzchni' ) {
+		$data['author'] = array(
+			'@type' => 'Organization',
+			'name'  => 'Zespół MNK7 Tools',
+			'url'   => home_url( '/' ),
+		);
+	}
 	return $data;
 }, 30 );
 
