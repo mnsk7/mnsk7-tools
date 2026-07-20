@@ -655,4 +655,4 @@ add_filter( 'woocommerce_structured_data_product', function ( $markup, $product 
 	}
 
 	return $markup;
-}, 20, 2 );
+}, 999, 2 );
