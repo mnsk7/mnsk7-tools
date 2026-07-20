@@ -40,6 +40,11 @@ $przewodnik_label = apply_filters( 'mnsk7_przewodnik_menu_label', __( 'Przewodni
 		$is_slab_guide = get_post_field( 'post_name', get_the_ID() ) === 'frez-do-wyrownania-sleba-i-planowania-powierzchni';
 		$article_class = $is_slab_guide ? 'mnsk7-guide-article mnsk7-guide-article--slab' : 'mnsk7-guide-article';
 		$hero_product  = $is_slab_guide && function_exists( 'wc_get_product' ) ? wc_get_product( 6820 ) : null;
+		$hero_image_id = 0;
+		if ( $hero_product instanceof WC_Product ) {
+			$hero_gallery  = $hero_product->get_gallery_image_ids();
+			$hero_image_id = ! empty( $hero_gallery ) ? reset( $hero_gallery ) : $hero_product->get_image_id();
+		}
 		?>
 		<article id="post-<?php the_ID(); ?>" <?php post_class( $article_class ); ?>>
 			<header class="mnsk7-guide-article__header">
@@ -56,30 +61,40 @@ $przewodnik_label = apply_filters( 'mnsk7_przewodnik_menu_label', __( 'Przewodni
 
 					<div class="mnsk7-guide-article__hero-grid">
 						<div class="mnsk7-guide-article__hero-copy">
-							<p class="mnsk7-guide-article__eyebrow"><?php esc_html_e( 'Poradnik techniczny', 'mnsk7-storefront' ); ?></p>
+							<p class="mnsk7-guide-article__eyebrow"><?php echo esc_html( $is_slab_guide ? __( 'Frezy do planowania drewna', 'mnsk7-storefront' ) : __( 'Poradnik techniczny', 'mnsk7-storefront' ) ); ?></p>
 							<h1 class="mnsk7-guide-article__title"><?php the_title(); ?></h1>
 							<?php if ( has_excerpt() ) : ?>
 								<p class="mnsk7-guide-article__lead"><?php echo esc_html( get_the_excerpt() ); ?></p>
 							<?php endif; ?>
 							<?php if ( $is_slab_guide ) : ?>
+								<div class="mnsk7-slab-hero__actions">
+									<a class="button mnsk7-slab-hero__primary" href="#mnsk7-guide-products"><?php esc_html_e( 'Dobierz frez do tulei', 'mnsk7-storefront' ); ?></a>
+									<a class="mnsk7-slab-hero__secondary" href="#jak-wybrac-frez"><?php esc_html_e( 'Jak wybrać średnicę?', 'mnsk7-storefront' ); ?></a>
+								</div>
+								<ul class="mnsk7-slab-hero__trust" aria-label="<?php esc_attr_e( 'Najważniejsze informacje o ofercie', 'mnsk7-storefront' ); ?>">
+									<li><?php esc_html_e( 'Trzpienie 8 i 12 mm', 'mnsk7-storefront' ); ?></li>
+									<li><?php esc_html_e( 'Wymienne płytki', 'mnsk7-storefront' ); ?></li>
+									<li><?php esc_html_e( 'DPD: wysyłka tego samego dnia przy zamówieniu do 12:00', 'mnsk7-storefront' ); ?></li>
+								</ul>
 								<p class="mnsk7-guide-article__byline">
-									<span><?php esc_html_e( 'Opracowanie: Zespół MNK7 Tools', 'mnsk7-storefront' ); ?></span>
+									<span><?php esc_html_e( 'Opracowanie: Zespół MNSK7 Tool', 'mnsk7-storefront' ); ?></span>
 									<span aria-hidden="true">·</span>
 									<time datetime="<?php echo esc_attr( get_the_modified_date( DATE_W3C ) ); ?>"><?php echo esc_html( sprintf( __( 'Aktualizacja: %s', 'mnsk7-storefront' ), get_the_modified_date( 'd.m.Y' ) ) ); ?></time>
 								</p>
 							<?php endif; ?>
 						</div>
 
-						<?php if ( $is_slab_guide && $hero_product instanceof WC_Product && $hero_product->get_image_id() ) : ?>
-							<aside class="mnsk7-guide-article__summary mnsk7-guide-article__summary--product" aria-label="<?php esc_attr_e( 'Polecany frez i informacje o poradniku', 'mnsk7-storefront' ); ?>">
+						<?php if ( $is_slab_guide && $hero_product instanceof WC_Product && $hero_image_id ) : ?>
+							<aside class="mnsk7-guide-article__summary mnsk7-guide-article__summary--product" aria-label="<?php esc_attr_e( 'Polecany frez do planowania', 'mnsk7-storefront' ); ?>">
+								<span class="mnsk7-slab-product-card__badge"><?php esc_html_e( 'Najczęstszy wybór do tulei 8 mm', 'mnsk7-storefront' ); ?></span>
 								<a class="mnsk7-guide-article__hero-product" href="<?php echo esc_url( $hero_product->get_permalink() ); ?>">
 									<?php
 									echo wp_get_attachment_image(
-										$hero_product->get_image_id(),
+										$hero_image_id,
 										'large',
 										false,
 										array(
-											'alt'           => esc_attr__( 'Frez do planowania drewna z wymiennymi płytkami, średnica 39 mm', 'mnsk7-storefront' ),
+											'alt'           => esc_attr__( 'Frez do planowania drewna MNSK7 Tool z wymiennymi płytkami, średnica 39 mm i trzpień 8 mm', 'mnsk7-storefront' ),
 											'loading'       => 'eager',
 											'fetchpriority' => 'high',
 											'sizes'         => '(max-width: 767px) 88vw, 360px',
@@ -87,10 +102,15 @@ $przewodnik_label = apply_filters( 'mnsk7_przewodnik_menu_label', __( 'Przewodni
 									); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 									?>
 								</a>
-								<div class="mnsk7-guide-article__summary-copy">
-									<span><?php esc_html_e( 'Praktyczny poradnik', 'mnsk7-storefront' ); ?></span>
-									<strong><?php echo esc_html( $reading_time ); ?></strong>
-									<a href="#mnsk7-guide-products"><?php esc_html_e( 'Porównaj 3 frezy', 'mnsk7-storefront' ); ?></a>
+								<div class="mnsk7-slab-product-card__details">
+									<p class="mnsk7-slab-product-card__spec"><?php esc_html_e( 'Ø 39 mm · trzpień 8 mm · 3P', 'mnsk7-storefront' ); ?></p>
+									<h2><?php esc_html_e( 'Frez z wymiennymi płytkami do planowania', 'mnsk7-storefront' ); ?></h2>
+									<div class="mnsk7-slab-product-card__price"><?php echo wp_kses_post( $hero_product->get_price_html() ); ?></div>
+									<p><?php esc_html_e( 'Uniwersalny wariant do drewna, MDF i wyrównywania większych powierzchni.', 'mnsk7-storefront' ); ?></p>
+									<div class="mnsk7-slab-product-card__actions">
+										<a href="<?php echo esc_url( $hero_product->add_to_cart_url() ); ?>" data-quantity="1" class="button product_type_simple add_to_cart_button ajax_add_to_cart" data-product_id="<?php echo esc_attr( $hero_product->get_id() ); ?>" data-product_sku="<?php echo esc_attr( $hero_product->get_sku() ); ?>" aria-label="<?php echo esc_attr( sprintf( __( 'Dodaj do koszyka: %s', 'mnsk7-storefront' ), $hero_product->get_name() ) ); ?>"><?php esc_html_e( 'Dodaj do koszyka', 'mnsk7-storefront' ); ?></a>
+										<a class="mnsk7-slab-product-card__more" href="<?php echo esc_url( $hero_product->get_permalink() ); ?>"><?php esc_html_e( 'Szczegóły produktu', 'mnsk7-storefront' ); ?></a>
+									</div>
 								</div>
 							</aside>
 						<?php else : ?>

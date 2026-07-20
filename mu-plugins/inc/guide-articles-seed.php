@@ -7,7 +7,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-const MNSK7_GUIDE_ARTICLES_SEED_VERSION = '2026-07-20-slab-guide-v4';
+const MNSK7_GUIDE_ARTICLES_SEED_VERSION = '2026-07-20-slab-landing-v5';
 
 add_action( 'init', 'mnsk7_seed_guide_articles', 25 );
 
@@ -170,8 +170,8 @@ HTML
 		),
 		array(
 			'slug' => 'frez-do-wyrownania-sleba-i-planowania-powierzchni',
-			'title' => 'Jaki frez do planowania drewna i wyrównywania slabów? Dobór 38–51 mm',
-			'excerpt' => 'Dobierz frez do planowania do wrzeciona i sztywności CNC. Porównujemy średnice 38,1, 39 i 50,8 mm, trzpienie 8 i 12 mm oraz konstrukcje 3P i 4P. Pokazujemy też parametry startowe, proces pracy i przyczyny fal na powierzchni.',
+			'title' => 'Frez do planowania drewna i slabów — dobierz 38–51 mm',
+			'excerpt' => 'Wybierz frez do swojej tulei i maszyny: 38,1 lub 39 mm na trzpieniu 8 mm albo 50,8 mm na trzpieniu 12 mm. Porównaj dostępne warianty, ceny i parametry startowe.',
 			'meta_description' => 'Frez do planowania drewna: porównanie 38,1, 39 i 50,8 mm, trzpieni 8/12 mm, parametrów startowych oraz sposobów usuwania fal po obróbce.',
 			'focus_keyphrase' => 'frez do planowania drewna',
 			'faq_title' => 'FAQ - frez do planowania drewna',
@@ -180,6 +180,32 @@ HTML
 <p class="mnsk7-guide-answer__label">Krótka odpowiedź</p>
 <p><strong>Do planowania drewna i wyrównywania slabów wybierz frez z wymiennymi płytkami dopasowany przede wszystkim do średnicy tulei, mocy wrzeciona i sztywności maszyny.</strong> Dla uchwytu 8 mm praktycznym punktem wyjścia są modele 38,1–39 mm. Frez 50,8 mm z trzpieniem 12 mm skraca liczbę przejść, ale wymaga sztywniejszego układu i niższego zakresu obrotów.</p>
 </div>
+
+<section class="mnsk7-slab-selector" aria-labelledby="mnsk7-slab-selector-title">
+<p class="mnsk7-slab-selector__kicker">Dobór bez zgadywania</p>
+<h2 id="mnsk7-slab-selector-title">Jaki frez pasuje do Twojej maszyny?</h2>
+<div class="mnsk7-slab-selector__grid">
+<a href="/sklep/frez-do-planowania-plaszczyzn-d39mm-s8mm/">
+<span>Tuleja 8 mm · wybór uniwersalny</span>
+<strong>Ø 39 mm / 3P</strong>
+<small>Dobry punkt startowy do typowego CNC i sprawnego odprowadzania wióra.</small>
+</a>
+<a href="/sklep/frez-do-planowania-plaszczyzn-d38-1mm-s8mm/">
+<span>Tuleja 8 mm · więcej ostrzy</span>
+<strong>Ø 38,1 mm / 4P</strong>
+<small>Do stabilnej maszyny, gdy zależy Ci na większej liczbie kontaktów ostrza.</small>
+</a>
+<a href="/sklep/frez-do-planowania-drewna-z-wymiennymi-plytkami-fi-50-8-mm-x-12-mm-4p/">
+<span>Tuleja 12 mm · duże powierzchnie</span>
+<strong>Ø 50,8 mm / 4P</strong>
+<small>Do sztywniejszego CNC, większych slabów i mniejszej liczby przejść.</small>
+</a>
+</div>
+</section>
+
+[mnsk7_guide_products ids="6820,6815,20952" title="Wybierz frez do planowania" format="landing" limit="3"]
+
+<p class="mnsk7-guide-category-cta"><a class="button" href="/kategoria-produktu/frezy-do-planowania/">Zobacz wszystkie frezy do planowania</a></p>
 
 <nav class="mnsk7-guide-toc" aria-label="Spis treści">
 <strong>W tym poradniku</strong>
@@ -220,7 +246,7 @@ HTML
 <p>Większa średnica może skrócić czas obróbki, lecz zwiększa wymagania wobec wrzeciona i mocowania. Różnica między 3P i 4P nie oznacza automatycznie „lepiej” lub „gorzej”: więcej ostrzy daje więcej kontaktów na obrót, ale wymaga poprawnego posuwu i skutecznego usuwania wióra.</p>
 
 <h2 id="parametry-startowe">Parametry startowe dla dostępnych modeli</h2>
-<p>Poniższe wartości pochodzą ze specyfikacji konkretnych produktów MNK7 Tools. Traktuj je jako punkt startowy: wynik zależy od gatunku i wilgotności drewna, wysięgu narzędzia, mocy wrzeciona, sztywności maszyny oraz strategii CAM. Pierwszą próbę wykonuj na małej głębokości i poza docelowym elementem.</p>
+<p>Poniższe wartości pochodzą ze specyfikacji konkretnych produktów MNSK7 Tool. Traktuj je jako punkt startowy: wynik zależy od gatunku i wilgotności drewna, wysięgu narzędzia, mocy wrzeciona, sztywności maszyny oraz strategii CAM. Pierwszą próbę wykonuj na małej głębokości i poza docelowym elementem.</p>
 <div class="mnsk7-guide-table-wrap" role="region" aria-label="Parametry startowe frezowania" tabindex="0">
 <table class="mnsk7-guide-compare mnsk7-guide-compare--parameters">
 <thead><tr><th>Frez</th><th>Obroty</th><th>Posuw</th><th>Głębokość przejścia</th></tr></thead>
@@ -255,10 +281,6 @@ HTML
 <h2>Bezpieczna praca i obsługa płytek</h2>
 <p>Przed uruchomieniem sprawdź dokręcenie wszystkich płytek, stan śrub i czystość gniazd. Płytki jednego frezu powinny być ustawione jednakowo. Nie przekraczaj parametrów dopuszczonych przez producenta wrzeciona i narzędzia. Stosuj osłonę, odciąg, ochronę oczu i słuchu; nie dotykaj narzędzia przed całkowitym zatrzymaniem wrzeciona.</p>
 </div>
-
-[mnsk7_guide_products ids="6820,6815,20952" title="Wybierz frez do planowania" format="grid" limit="3"]
-
-<p class="mnsk7-guide-category-cta"><a class="button" href="/kategoria-produktu/frezy-do-planowania/">Zobacz wszystkie frezy do planowania</a></p>
 
 <h2>Powiązane poradniki</h2>
 <ul class="mnsk7-guide-related-links">

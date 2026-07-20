@@ -396,10 +396,12 @@ function mnsk7_guide_products_shortcode( $atts ) {
 		$ids = array_slice( $ids, 0, 12 );
 		$links = array();
 		$visible_ids = array();
+		$products = array();
 		foreach ( $ids as $id ) {
 			$product = wc_get_product( $id );
 			if ( $product && $product->is_visible() ) {
 				$visible_ids[] = $id;
+				$products[] = $product;
 				$links[] = '<a href="' . esc_url( $product->get_permalink() ) . '">' . esc_html( $product->get_name() ) . '</a>';
 			}
 		}
@@ -408,6 +410,47 @@ function mnsk7_guide_products_shortcode( $atts ) {
 		}
 		if ( $atts['title'] ) {
 			$out .= '<h3 class="mnsk7-guide-products__title">' . esc_html( $atts['title'] ) . '</h3>';
+		}
+		if ( $atts['format'] === 'landing' ) {
+			$product_copy = array(
+				6820  => array( 'title' => 'Frez do planowania Ø 39 mm', 'spec' => 'Trzpień 8 mm · 3P', 'fit' => 'Uniwersalny wybór do typowego CNC' ),
+				6815  => array( 'title' => 'Frez do planowania Ø 38,1 mm', 'spec' => 'Trzpień 8 mm · 4P', 'fit' => 'Więcej kontaktów ostrza na obrót' ),
+				20952 => array( 'title' => 'Frez do planowania Ø 50,8 mm', 'spec' => 'Trzpień 12 mm · 4P', 'fit' => 'Do sztywniejszej maszyny i dużych slabów' ),
+			);
+			$out .= '<p class="mnsk7-slab-products__intro">Wybierz wariant według tulei wrzeciona. Ceny i dostępność są pobierane bezpośrednio ze sklepu.</p>';
+			$out .= '<div class="mnsk7-slab-products">';
+			foreach ( array_slice( $products, 0, $limit ) as $product ) {
+				$product_id = $product->get_id();
+				$copy = isset( $product_copy[ $product_id ] ) ? $product_copy[ $product_id ] : array(
+					'title' => $product->get_name(),
+					'spec'  => '',
+					'fit'   => '',
+				);
+				$gallery_ids = $product->get_gallery_image_ids();
+				$image_id = ! empty( $gallery_ids ) ? reset( $gallery_ids ) : $product->get_image_id();
+				$out .= '<article class="mnsk7-slab-product-card">';
+				$out .= '<a class="mnsk7-slab-product-card__image" href="' . esc_url( $product->get_permalink() ) . '">';
+				$out .= wp_get_attachment_image( $image_id, 'woocommerce_single', false, array(
+					'alt'     => $copy['title'] . ' MNSK7 Tool',
+					'loading' => 'lazy',
+					'sizes'   => '(max-width: 767px) 88vw, 340px',
+				) );
+				$out .= '</a>';
+				$out .= '<div class="mnsk7-slab-product-card__body">';
+				$out .= '<p class="mnsk7-slab-product-card__fit">' . esc_html( $copy['fit'] ) . '</p>';
+				$out .= '<h4><a href="' . esc_url( $product->get_permalink() ) . '">' . esc_html( $copy['title'] ) . '</a></h4>';
+				$out .= '<p class="mnsk7-slab-product-card__spec">' . esc_html( $copy['spec'] ) . '</p>';
+				$out .= '<div class="mnsk7-slab-product-card__price">' . wp_kses_post( $product->get_price_html() ) . '</div>';
+				$out .= '<p class="mnsk7-slab-product-card__stock">' . ( $product->is_in_stock() ? 'Dostępny · wysyłka DPD do 12:00 tego samego dnia' : 'Sprawdź termin dostępności' ) . '</p>';
+				$out .= '<div class="mnsk7-slab-product-card__actions">';
+				if ( $product->is_purchasable() && $product->is_in_stock() ) {
+					$out .= '<a href="' . esc_url( $product->add_to_cart_url() ) . '" data-quantity="1" class="button product_type_simple add_to_cart_button ajax_add_to_cart" data-product_id="' . esc_attr( $product_id ) . '" data-product_sku="' . esc_attr( $product->get_sku() ) . '" aria-label="' . esc_attr( sprintf( __( 'Dodaj do koszyka: %s', 'mnsk7-tools' ), $product->get_name() ) ) . '">Dodaj do koszyka</a>';
+				}
+				$out .= '<a class="mnsk7-slab-product-card__more" href="' . esc_url( $product->get_permalink() ) . '">Szczegóły</a>';
+				$out .= '</div></div></article>';
+			}
+			$out .= '</div>';
+			return '<section id="mnsk7-guide-products" class="mnsk7-guide-products mnsk7-guide-products--landing">' . $out . '</section>';
 		}
 		if ( $atts['format'] === 'grid' && shortcode_exists( 'products' ) ) {
 			$out .= do_shortcode( sprintf(

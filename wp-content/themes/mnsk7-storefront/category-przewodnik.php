@@ -46,7 +46,7 @@ $topics        = array(
 		<div class="col-full">
 			<div class="mnsk7-guide-archive__hero-grid">
 				<div class="mnsk7-guide-archive__hero-copy">
-					<p class="mnsk7-guide-archive__eyebrow"><?php esc_html_e( 'Baza wiedzy MNSK7 Tools', 'mnsk7-storefront' ); ?></p>
+					<p class="mnsk7-guide-archive__eyebrow"><?php esc_html_e( 'Baza wiedzy MNSK7 Tool', 'mnsk7-storefront' ); ?></p>
 					<h1 class="mnsk7-guide-archive__title"><?php echo esc_html( $category_name ); ?></h1>
 					<p class="mnsk7-guide-archive__lead">
 						<?php esc_html_e( 'Praktyczne poradniki o frezach CNC, doborze narzędzi, materiałach i jakości obróbki. Bez lania wody: co wybrać, kiedy uważać i gdzie przejść do właściwych produktów.', 'mnsk7-storefront' ); ?>

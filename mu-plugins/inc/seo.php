@@ -171,7 +171,7 @@ add_action( 'wp_head', function () {
 	$schema = array(
 		'@context'     => 'https://schema.org',
 		'@type'        => array( 'Organization', 'OnlineStore' ),
-		'name'         => 'MNK7 Tools',
+		'name'         => 'MNSK7 Tool',
 		'legalName'    => 'MNSK7 SPÓŁKA Z OGRANICZONĄ ODPOWIEDZIALNOŚCIĄ',
 		'url'          => home_url( '/' ),
 		'logo'         => array( '@type' => 'ImageObject', 'url' => get_site_icon_url( 512 ) ?: home_url( '/wp-content/themes/tech-storefront/assets/images/logo.png' ) ),
@@ -315,13 +315,13 @@ add_filter( 'wpseo_title', function ( $title ) {
 	if ( mnsk7_is_guide_archive() ) {
 		$paged  = max( 1, (int) get_query_var( 'paged' ) );
 		$suffix = $paged > 1 ? sprintf( __( ' — strona %d', 'mnsk7-tools' ), $paged ) : '';
-		return __( 'Przewodnik CNC — frezy, dobór narzędzi i obróbka', 'mnsk7-tools' ) . $suffix . ' | MNK7 Tools';
+		return __( 'Przewodnik CNC — frezy, dobór narzędzi i obróbka', 'mnsk7-tools' ) . $suffix . ' | MNSK7 Tool';
 	}
 	if ( mnsk7_is_guide_post() ) {
 		if ( get_post_field( 'post_name', get_queried_object_id() ) === 'frez-do-wyrownania-sleba-i-planowania-powierzchni' ) {
-			return 'Frez do planowania drewna i slabów — jak wybrać? | MNK7 Tools';
+			return 'Frez do planowania drewna i slabów — jak wybrać? | MNSK7 Tool';
 		}
-		return get_the_title( get_queried_object_id() ) . ' | MNK7 Tools';
+		return get_the_title( get_queried_object_id() ) . ' | MNSK7 Tool';
 	}
 	$catalog_title = function_exists( 'mnsk7_get_catalog_archive_seo_title' ) ? mnsk7_get_catalog_archive_seo_title() : '';
 	if ( $catalog_title !== '' ) {
@@ -385,7 +385,7 @@ add_filter( 'wpseo_schema_article', function ( $data ) {
 	if ( get_post_field( 'post_name', get_queried_object_id() ) === 'frez-do-wyrownania-sleba-i-planowania-powierzchni' ) {
 		$data['author'] = array(
 			'@type' => 'Organization',
-			'name'  => 'Zespół MNK7 Tools',
+			'name'  => 'Zespół MNSK7 Tool',
 			'url'   => home_url( '/' ),
 		);
 	}
@@ -488,12 +488,12 @@ add_action( 'wp_head', function () {
 			'dateModified'     => get_the_modified_date( DATE_W3C, $post_id ),
 			'author'           => array(
 				'@type' => 'Organization',
-				'name'  => 'MNK7 Tools',
+				'name'  => 'MNSK7 Tool',
 				'url'   => home_url( '/' ),
 			),
 			'publisher'        => array(
 				'@type' => 'Organization',
-				'name'  => 'MNK7 Tools',
+				'name'  => 'MNSK7 Tool',
 				'url'   => home_url( '/' ),
 				'logo'  => array(
 					'@type' => 'ImageObject',
@@ -647,7 +647,7 @@ add_filter( 'woocommerce_structured_data_product', function ( $markup, $product 
 				'@type'         => 'Review',
 				'author'        => array(
 					'@type' => 'Person',
-					'name'  => $review->comment_author ?: __( 'Klient MNK7 Tools', 'mnsk7-tools' ),
+					'name'  => $review->comment_author ?: __( 'Klient MNSK7 Tool', 'mnsk7-tools' ),
 				),
 				'datePublished' => mysql2date( DATE_W3C, $review->comment_date_gmt, false ),
 				'reviewBody'    => wp_trim_words( wp_strip_all_tags( $review->comment_content ), 60, '' ),

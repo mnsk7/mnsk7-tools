@@ -25,7 +25,7 @@ get_header();
 	<section class="mnsk7-seo-intro">
 		<div class="col-full">
 			<div class="mnsk7-seo-intro__text">
-				<p>MNK7 Tools to polski sklep specjalizujący się w <strong>frezach CNC i narzędziach skrawających</strong> do obróbki drewna, MDF, aluminium, stali i tworzyw sztucznych. W ofercie <?php echo esc_html( $mnsk7_product_total ); ?> produktów — frezy palcowe, jednopiórowe, kulowe, kopiarkowe, pilniki obrotowe i zestawy frezów.</p>
+				<p>MNSK7 Tool to polski sklep specjalizujący się w <strong>frezach CNC i narzędziach skrawających</strong> do obróbki drewna, MDF, aluminium, stali i tworzyw sztucznych. W ofercie <?php echo esc_html( $mnsk7_product_total ); ?> produktów — frezy palcowe, jednopiórowe, kulowe, kopiarkowe, pilniki obrotowe i zestawy frezów.</p>
 
 				<h2>Co wyróżnia nasze frezy CNC?</h2>
 				<ul>
@@ -36,7 +36,7 @@ get_header();
 				</ul>
 
 				<h2>Dla kogo są nasze produkty?</h2>
-				<p>Frezy CNC z MNK7 Tools wybierają: stolarnie i producenci mebli (drewno, MDF), zakłady obróbki metali i aluminium, serwisy i warsztaty CNC, hobbystyczne frezarki CNC (CNC router, Shapeoko, X-Carve, MakerBot).</p>
+				<p>Frezy CNC z MNSK7 Tool wybierają: stolarnie i producenci mebli (drewno, MDF), zakłady obróbki metali i aluminium, serwisy i warsztaty CNC, hobbystyczne frezarki CNC (CNC router, Shapeoko, X-Carve, MakerBot).</p>
 
 				<h2>Frezy CNC według materiału obróbki</h2>
 				<ul>

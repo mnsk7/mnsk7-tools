@@ -926,6 +926,443 @@
   }
 }
 
+/* Slab landing v3: sprzedaż najpierw, poradnik jako wsparcie decyzji. */
+.mnsk7-guide-article--slab > .mnsk7-guide-article__header {
+  padding: 0.75rem 0 clamp(1.75rem, 4vw, 3rem);
+  background:
+    radial-gradient(circle at 92% 20%, rgba(12, 125, 219, 0.13), transparent 26rem),
+    linear-gradient(180deg, #f8fbff 0%, #fff 100%);
+}
+
+.mnsk7-guide-article--slab .mnsk7-guide-article__breadcrumbs {
+  margin-bottom: clamp(0.75rem, 2vw, 1.25rem);
+}
+
+.mnsk7-guide-article--slab .mnsk7-guide-article__hero-grid {
+  grid-template-columns: minmax(0, 1.08fr) minmax(25rem, 0.72fr);
+  gap: clamp(1.5rem, 4vw, 4rem);
+  align-items: center;
+}
+
+.mnsk7-guide-article--slab .mnsk7-guide-article__eyebrow {
+  margin-bottom: 0.75rem;
+}
+
+.mnsk7-guide-article--slab .mnsk7-guide-article__title {
+  max-width: 18ch;
+  font-size: clamp(2.75rem, 4.7vw, 4.2rem);
+  letter-spacing: -0.052em;
+  line-height: 1.01;
+}
+
+.mnsk7-guide-article--slab .mnsk7-guide-article__lead {
+  max-width: 680px;
+  margin-top: 1rem;
+  font-size: clamp(1rem, 1.35vw, 1.15rem);
+  line-height: 1.55;
+}
+
+.mnsk7-slab-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.35rem;
+}
+
+.mnsk7-slab-hero__actions .button,
+.mnsk7-slab-hero__secondary {
+  display: inline-flex;
+  min-height: 3.15rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.8rem 1.2rem;
+  border-radius: 0.75rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.mnsk7-slab-hero__primary {
+  color: #fff;
+  background: var(--color-primary);
+  box-shadow: 0 12px 28px rgba(12, 125, 219, 0.22);
+}
+
+.mnsk7-slab-hero__secondary {
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-primary-dark);
+  background: #fff;
+}
+
+.mnsk7-slab-hero__trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mnsk7-slab-hero__trust li {
+  position: relative;
+  margin: 0;
+  padding: 0.45rem 0.7rem 0.45rem 1.65rem;
+  border: 1px solid rgba(12, 125, 219, 0.15);
+  border-radius: 999px;
+  color: var(--color-text-secondary);
+  background: rgba(255, 255, 255, 0.8);
+  font-size: 0.82rem;
+  font-weight: 750;
+}
+
+.mnsk7-slab-hero__trust li::before {
+  position: absolute;
+  top: 50%;
+  left: 0.62rem;
+  color: #16a34a;
+  content: "✓";
+  font-weight: 950;
+  transform: translateY(-50%);
+}
+
+.mnsk7-guide-article--slab .mnsk7-guide-article__byline {
+  margin-top: 0.9rem;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.mnsk7-guide-article--slab .mnsk7-guide-article__summary--product {
+  position: relative;
+  display: block;
+  padding: 0;
+  overflow: hidden;
+  border-radius: 1.25rem;
+  background: #fff;
+  box-shadow: 0 24px 60px rgba(8, 38, 74, 0.14);
+}
+
+.mnsk7-slab-product-card__badge {
+  position: absolute;
+  z-index: 2;
+  top: 0.85rem;
+  left: 0.85rem;
+  width: auto !important;
+  padding: 0.42rem 0.65rem;
+  border-radius: 999px;
+  color: #075985 !important;
+  background: #e0f2fe;
+  font-size: 0.72rem !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+.mnsk7-guide-article--slab .mnsk7-guide-article__hero-product {
+  min-height: 13rem;
+  padding: 1rem 1rem 0.25rem;
+  background: linear-gradient(145deg, #eff7ff, #fff);
+}
+
+.mnsk7-guide-article--slab .mnsk7-guide-article__hero-product img {
+  max-width: 22rem;
+  height: 13rem;
+}
+
+.mnsk7-slab-product-card__details {
+  padding: 0.85rem 1.15rem 1.15rem;
+}
+
+.mnsk7-slab-product-card__details h2 {
+  margin: 0.2rem 0 0.45rem;
+  color: var(--ui-heading);
+  font-size: 1.25rem;
+  letter-spacing: -0.025em;
+  line-height: 1.15;
+}
+
+.mnsk7-slab-product-card__details > p {
+  margin: 0.45rem 0 0;
+  color: var(--color-text-secondary);
+  font-size: 0.88rem;
+  line-height: 1.45;
+}
+
+.mnsk7-slab-product-card__spec {
+  color: var(--color-primary-dark) !important;
+  font-size: 0.8rem !important;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.mnsk7-slab-product-card__price {
+  color: var(--color-primary-dark);
+  font-size: 1.6rem;
+  font-weight: 950;
+}
+
+.mnsk7-slab-product-card__price del {
+  color: var(--color-text-muted);
+  font-size: 0.85rem;
+}
+
+.mnsk7-slab-product-card__actions {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.6rem;
+  margin-top: 0.9rem;
+}
+
+.mnsk7-slab-product-card__actions .button,
+.mnsk7-slab-product-card__more {
+  display: inline-flex;
+  min-height: 2.85rem;
+  align-items: center;
+  justify-content: center;
+  margin: 0;
+  padding: 0.7rem 0.9rem;
+  border-radius: 0.65rem;
+  font-weight: 900;
+  text-align: center;
+}
+
+.mnsk7-slab-product-card__more {
+  border: 1px solid var(--color-border-strong);
+  color: var(--color-primary-dark);
+  background: #fff;
+}
+
+.mnsk7-guide-article--slab .mnsk7-guide-article__content {
+  padding-top: clamp(1.5rem, 3vw, 2.5rem);
+}
+
+.mnsk7-slab-selector {
+  margin: 1.5rem 0 2rem;
+}
+
+.mnsk7-slab-selector__kicker {
+  margin: 0 0 0.35rem;
+  color: var(--color-primary);
+  font-size: 0.8rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mnsk7-slab-selector h2 {
+  margin: 0 0 1rem;
+  font-size: clamp(1.65rem, 3vw, 2.4rem);
+}
+
+.mnsk7-slab-selector__grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.mnsk7-slab-selector__grid > a {
+  display: flex;
+  min-height: 10rem;
+  flex-direction: column;
+  padding: 1.1rem;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  color: var(--color-text-secondary);
+  background: #fff;
+  box-shadow: var(--ui-card-shadow);
+}
+
+.mnsk7-slab-selector__grid > a:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--ui-card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.mnsk7-slab-selector__grid span {
+  color: var(--color-primary-dark);
+  font-size: 0.78rem;
+  font-weight: 850;
+}
+
+.mnsk7-slab-selector__grid strong {
+  margin: 0.45rem 0;
+  color: var(--ui-heading);
+  font-size: 1.35rem;
+}
+
+.mnsk7-slab-selector__grid small {
+  margin-top: auto;
+  font-size: 0.87rem;
+  line-height: 1.45;
+}
+
+.mnsk7-guide-products--landing {
+  margin: 2rem 0;
+  padding: clamp(1rem, 2vw, 1.5rem);
+}
+
+.mnsk7-guide-products--landing .mnsk7-guide-products__title {
+  margin: 0;
+  font-size: clamp(1.75rem, 3vw, 2.45rem);
+}
+
+.mnsk7-slab-products__intro {
+  max-width: 46rem;
+  margin: 0.45rem 0 1.25rem;
+}
+
+.mnsk7-slab-products {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.mnsk7-slab-product-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  border-radius: 1rem;
+  background: #fff;
+}
+
+.mnsk7-slab-product-card__image {
+  display: grid;
+  min-height: 14rem;
+  place-items: center;
+  padding: 0.8rem;
+  background: linear-gradient(145deg, #eff7ff, #fff);
+}
+
+.mnsk7-slab-product-card__image img {
+  display: block;
+  width: 100%;
+  height: 13rem;
+  object-fit: contain;
+}
+
+.mnsk7-slab-product-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: 1rem;
+}
+
+.mnsk7-slab-product-card__fit {
+  min-height: 2.4em;
+  margin: 0;
+  color: var(--color-primary-dark);
+  font-size: 0.78rem;
+  font-weight: 850;
+  line-height: 1.35;
+}
+
+.mnsk7-slab-product-card h4 {
+  margin: 0.45rem 0;
+  font-size: 1.18rem;
+  line-height: 1.18;
+}
+
+.mnsk7-slab-product-card h4 a {
+  color: var(--ui-heading);
+}
+
+.mnsk7-slab-product-card__stock {
+  margin: 0.55rem 0 0;
+  color: #15803d;
+  font-size: 0.76rem;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.mnsk7-slab-product-card__body .mnsk7-slab-product-card__actions {
+  margin-top: auto;
+  padding-top: 0.9rem;
+}
+
+.mnsk7-guide-products--landing + .mnsk7-guide-category-cta {
+  margin-top: -0.75rem;
+}
+
+@media (max-width: 980px) {
+  .mnsk7-guide-article--slab .mnsk7-guide-article__hero-grid {
+    grid-template-columns: minmax(0, 1fr) minmax(19rem, 0.72fr);
+    gap: 1.5rem;
+  }
+
+  .mnsk7-guide-article--slab .mnsk7-guide-article__title {
+    font-size: clamp(2.4rem, 5.2vw, 3.45rem);
+  }
+}
+
+@media (max-width: 767px) {
+  .mnsk7-guide-article--slab > .mnsk7-guide-article__header {
+    padding-top: 0.5rem;
+  }
+
+  .mnsk7-guide-article--slab .mnsk7-guide-article__breadcrumbs {
+    display: none;
+  }
+
+  .mnsk7-guide-article--slab .mnsk7-guide-article__hero-grid,
+  .mnsk7-slab-selector__grid,
+  .mnsk7-slab-products {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mnsk7-guide-article--slab .mnsk7-guide-article__hero-grid {
+    gap: 1.25rem;
+  }
+
+  .mnsk7-guide-article--slab .mnsk7-guide-article__title {
+    max-width: none;
+    font-size: clamp(2.05rem, 10vw, 2.7rem);
+    letter-spacing: -0.045em;
+    line-height: 1.03;
+  }
+
+  .mnsk7-guide-article--slab .mnsk7-guide-article__lead {
+    font-size: 0.98rem;
+  }
+
+  .mnsk7-slab-hero__actions,
+  .mnsk7-slab-product-card__actions {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .mnsk7-slab-hero__actions {
+    display: grid;
+  }
+
+  .mnsk7-slab-hero__trust {
+    display: grid;
+  }
+
+  .mnsk7-guide-article--slab .mnsk7-guide-article__byline {
+    margin-top: 0.75rem;
+  }
+
+  .mnsk7-guide-article--slab .mnsk7-guide-article__hero-product {
+    min-height: 12rem;
+  }
+
+  .mnsk7-guide-article--slab .mnsk7-guide-article__hero-product img {
+    height: 11rem;
+  }
+
+  .mnsk7-slab-product-card__actions {
+    display: grid;
+  }
+
+  .mnsk7-slab-selector__grid > a {
+    min-height: 0;
+  }
+
+  .mnsk7-slab-product-card__fit {
+    min-height: 0;
+  }
+}
+
 /* Dedicated commercial guide: planowanie drewna i slabow. */
 .mnsk7-guide-article--slab .mnsk7-guide-article__title {
   max-width: 15ch;
