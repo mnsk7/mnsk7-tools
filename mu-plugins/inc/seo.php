@@ -559,6 +559,27 @@ add_filter( 'woocommerce_structured_data_product', function ( $markup, $product 
 		return $markup;
 	}
 
+	/*
+	 * Merchant listings: the storefront visibly offers a 30-day return period.
+	 * Keep this on each Offer, where Google expects offer-level return data.
+	 */
+	$return_policy = array(
+		'@type'                => 'MerchantReturnPolicy',
+		'applicableCountry'    => 'PL',
+		'returnPolicyCategory' => 'https://schema.org/MerchantReturnFiniteReturnWindow',
+		'merchantReturnDays'   => 30,
+		'merchantReturnLink'   => home_url( '/regulamin/#zwroty' ),
+	);
+	if ( isset( $markup['offers']['@type'] ) ) {
+		$markup['offers']['hasMerchantReturnPolicy'] = $return_policy;
+	} elseif ( isset( $markup['offers'] ) && is_array( $markup['offers'] ) ) {
+		foreach ( $markup['offers'] as $offer_key => $offer ) {
+			if ( is_array( $offer ) && isset( $offer['@type'] ) ) {
+				$markup['offers'][ $offer_key ]['hasMerchantReturnPolicy'] = $return_policy;
+			}
+		}
+	}
+
 	$rating_count = (int) $product->get_rating_count();
 	$review_count = (int) $product->get_review_count();
 	$average      = (float) $product->get_average_rating();
