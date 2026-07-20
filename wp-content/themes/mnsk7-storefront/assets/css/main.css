@@ -11465,7 +11465,7 @@ body.single-product .woocommerce-product-navigation {
     grid-template-columns: minmax(0, 1fr);
   }
 
-  .woocommerce .mnsk7-guide-products--curated ul.products {
+  .mnsk7-guide-products--curated .woocommerce ul.products {
     grid-template-columns: minmax(0, 1fr) !important;
   }
 
