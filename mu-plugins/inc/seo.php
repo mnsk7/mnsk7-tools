@@ -572,6 +572,9 @@ add_filter( 'woocommerce_structured_data_product', function ( $markup, $product 
 	);
 	$last_changed = $product->get_date_modified();
 	$valid_from   = $last_changed instanceof WC_DateTime ? $last_changed->date( DATE_W3C ) : '';
+	if ( $valid_from === '' ) {
+		$valid_from = get_post_modified_time( DATE_W3C, true, $product->get_id() );
+	}
 	if ( isset( $markup['offers']['@type'] ) ) {
 		$markup['offers']['hasMerchantReturnPolicy'] = $return_policy;
 		if ( $valid_from !== '' ) {
