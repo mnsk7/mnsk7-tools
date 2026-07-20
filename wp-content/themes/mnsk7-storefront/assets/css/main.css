@@ -11461,9 +11461,12 @@ body.single-product .woocommerce-product-navigation {
   .mnsk7-guide-toc ol,
   .mnsk7-guide-steps,
   .mnsk7-guide-troubleshooting,
-  .mnsk7-guide-products--curated ul.products,
   .mnsk7-guide-related-links {
     grid-template-columns: minmax(0, 1fr);
+  }
+
+  .woocommerce .mnsk7-guide-products--curated ul.products {
+    grid-template-columns: minmax(0, 1fr) !important;
   }
 
   .mnsk7-guide-compare thead {
