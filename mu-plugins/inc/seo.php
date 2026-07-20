@@ -575,18 +575,28 @@ add_filter( 'woocommerce_structured_data_product', function ( $markup, $product 
 	if ( $valid_from === '' ) {
 		$valid_from = get_post_modified_time( DATE_W3C, true, $product->get_id() );
 	}
-	if ( isset( $markup['offers']['@type'] ) ) {
-		$markup['offers']['hasMerchantReturnPolicy'] = $return_policy;
-		if ( $valid_from !== '' ) {
-			$markup['offers']['validFrom'] = $valid_from;
+	$apply_offer_metadata = static function ( &$offer ) use ( $return_policy, $valid_from ) {
+		$offer['hasMerchantReturnPolicy'] = $return_policy;
+		if ( $valid_from === '' ) {
+			return;
 		}
+		$offer['validFrom'] = $valid_from;
+		if ( isset( $offer['priceSpecification']['@type'] ) ) {
+			$offer['priceSpecification']['validFrom'] = $valid_from;
+		} elseif ( isset( $offer['priceSpecification'] ) && is_array( $offer['priceSpecification'] ) ) {
+			foreach ( $offer['priceSpecification'] as $spec_key => $specification ) {
+				if ( is_array( $specification ) && isset( $specification['@type'] ) ) {
+					$offer['priceSpecification'][ $spec_key ]['validFrom'] = $valid_from;
+				}
+			}
+		}
+	};
+	if ( isset( $markup['offers']['@type'] ) ) {
+		$apply_offer_metadata( $markup['offers'] );
 	} elseif ( isset( $markup['offers'] ) && is_array( $markup['offers'] ) ) {
 		foreach ( $markup['offers'] as $offer_key => $offer ) {
 			if ( is_array( $offer ) && isset( $offer['@type'] ) ) {
-				$markup['offers'][ $offer_key ]['hasMerchantReturnPolicy'] = $return_policy;
-				if ( $valid_from !== '' ) {
-					$markup['offers'][ $offer_key ]['validFrom'] = $valid_from;
-				}
+				$apply_offer_metadata( $markup['offers'][ $offer_key ] );
 			}
 		}
 	}
