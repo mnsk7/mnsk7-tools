@@ -11522,7 +11522,7 @@ body.single-product .woocommerce-product-navigation {
 }
 
 @media (max-width: 767px) {
-  body.single-post:has(.mnsk7-guide-article--slab) #content.site-content {
+  body.single-post:has(.mnsk7-guide-article--slab) #content.site-content.mnsk7-content {
     margin-top: 0;
   }
 
