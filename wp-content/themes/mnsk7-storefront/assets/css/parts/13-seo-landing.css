@@ -1307,7 +1307,7 @@
 }
 
 @media (max-width: 767px) {
-  body.single-post:has(.mnsk7-guide-article--slab) .site-content {
+  body.single-post:has(.mnsk7-guide-article--slab) #content.site-content {
     margin-top: 0;
   }
 
