@@ -570,12 +570,20 @@ add_filter( 'woocommerce_structured_data_product', function ( $markup, $product 
 		'merchantReturnDays'   => 30,
 		'merchantReturnLink'   => home_url( '/regulamin/#zwroty' ),
 	);
+	$last_changed = $product->get_date_modified();
+	$valid_from   = $last_changed instanceof WC_DateTime ? $last_changed->date( DATE_W3C ) : '';
 	if ( isset( $markup['offers']['@type'] ) ) {
 		$markup['offers']['hasMerchantReturnPolicy'] = $return_policy;
+		if ( $valid_from !== '' ) {
+			$markup['offers']['validFrom'] = $valid_from;
+		}
 	} elseif ( isset( $markup['offers'] ) && is_array( $markup['offers'] ) ) {
 		foreach ( $markup['offers'] as $offer_key => $offer ) {
 			if ( is_array( $offer ) && isset( $offer['@type'] ) ) {
 				$markup['offers'][ $offer_key ]['hasMerchantReturnPolicy'] = $return_policy;
+				if ( $valid_from !== '' ) {
+					$markup['offers'][ $offer_key ]['validFrom'] = $valid_from;
+				}
 			}
 		}
 	}
