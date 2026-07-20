@@ -32,3 +32,4 @@ require_once $mnsk7_inc . 'woo-ux.php';
 require_once $mnsk7_inc . 'pages-seed.php';
 require_once $mnsk7_inc . 'performance.php';
 require_once $mnsk7_inc . 'clarity.php';
+require_once $mnsk7_inc . 'ga4-commerce.php';
