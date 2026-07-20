@@ -10,6 +10,31 @@ defined( 'ABSPATH' ) || exit;
 
 const MNSK7_GA4_MEASUREMENT_ID = 'G-WL18DC0S1Z';
 
+/**
+ * Establish Google Consent Mode v2 before GTM emits its first measurement hit.
+ * The storefront banner persists only two choices: accept all or necessary only.
+ */
+add_action( 'wp_head', function () {
+	if ( is_admin() ) {
+		return;
+	}
+	$choice  = isset( $_COOKIE['mnsk7_cookie_consent'] ) ? sanitize_text_field( wp_unslash( $_COOKIE['mnsk7_cookie_consent'] ) ) : '';
+	$granted = ( 'accept' === $choice || '1' === $choice );
+	?>
+	<script id="mnsk7-google-consent-v2">
+	window.dataLayer = window.dataLayer || [];
+	window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
+	gtag('consent', 'default', {
+		'ad_storage': <?php echo $granted ? "'granted'" : "'denied'"; ?>,
+		'ad_user_data': <?php echo $granted ? "'granted'" : "'denied'"; ?>,
+		'ad_personalization': <?php echo $granted ? "'granted'" : "'denied'"; ?>,
+		'analytics_storage': <?php echo $granted ? "'granted'" : "'denied'"; ?>
+	});
+	gtag('set', 'ads_data_redaction', true);
+	</script>
+	<?php
+}, -9999 );
+
 function mnsk7_ga4_measurement_protocol_secret() {
 	if ( defined( 'MNSK7_GA4_MEASUREMENT_PROTOCOL_API_SECRET' ) ) {
 		return (string) MNSK7_GA4_MEASUREMENT_PROTOCOL_API_SECRET;

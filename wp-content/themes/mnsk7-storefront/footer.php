@@ -250,6 +250,18 @@ if ( $show_cookie_bar_markup ) :
 		function onChoice(e, value) {
 			if (e) { e.preventDefault(); e.stopPropagation(); }
 			setConsent(value);
+			// Google Consent Mode v2: update immediately, before a navigation can start.
+			try {
+				window.dataLayer = window.dataLayer || [];
+				window.gtag = window.gtag || function(){ window.dataLayer.push(arguments); };
+				var consentState = value === valAccept ? 'granted' : 'denied';
+				window.gtag('consent', 'update', {
+					'ad_storage': consentState,
+					'ad_user_data': consentState,
+					'ad_personalization': consentState,
+					'analytics_storage': consentState
+				});
+			} catch (err) {}
 			hide();
 			document.dispatchEvent(new CustomEvent('mnsk7-cookie-consent', { detail: value }));
 		}
