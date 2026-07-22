@@ -9,7 +9,7 @@ The production SEO behavior is implemented in `mu-plugins/inc/seo.php` and
   from Yoast and WordPress core sitemaps.
 - Catalog URLs with filter, price, rating, stock or ordering parameters are
   `noindex, follow` and canonicalize to the clean shop/category URL.
-- Cart, checkout, account/login/password, wishlist and ShopEngine template
+- Cart, checkout, account/login/password reset, wishlist and ShopEngine template
   URLs are `noindex, follow` and excluded from Yoast sitemaps.
 - Category pagination remains crawlable. Page 2+ uses a self-referencing
   canonical and is linked with ordinary pagination links.
@@ -18,7 +18,7 @@ The production SEO behavior is implemented in `mu-plugins/inc/seo.php` and
 
 ## Offer variant pages
 
-Pages under `/oferta--warianty/` use `_mnsk7_offer_seo_state` with one of:
+Pages matching `/oferta-*-warianty/` use `_mnsk7_offer_seo_state` with one of:
 
 - `ready`: indexable commercial page;
 - `draft`: `noindex, follow` and excluded from the sitemap;
@@ -26,8 +26,10 @@ Pages under `/oferta--warianty/` use `_mnsk7_offer_seo_state` with one of:
   `_mnsk7_offer_redirect_url` points to an exact equivalent.
 
 Without explicit meta, a visible `w przygotowaniu` notice is treated as
-`draft`; other pages stay `ready`. There is no blanket redirect to the home or
-category page.
+`draft`; other pages stay `ready`. A WordPress numeric duplicate such as
+`*-warianty-2` redirects to the published base page only when both pages have
+the same title. Ready pages are self-canonical. There is no blanket redirect
+to the home or category page.
 
 ## Product category content
 

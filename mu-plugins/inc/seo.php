@@ -31,6 +31,13 @@ if ( ! function_exists( 'mnsk7_is_product_attribute_archive' ) ) {
 	}
 }
 
+if ( ! function_exists( 'mnsk7_get_system_page_paths' ) ) {
+	/** Public utility-page paths that must work but must not appear in search. */
+	function mnsk7_get_system_page_paths() {
+		return array( 'login', 'logowanie', 'wishlist', 'lista-zyczen', 'reset', 'reset-password', 'password-reset', 'lost-password', 'odzyskaj-haslo' );
+	}
+}
+
 if ( ! function_exists( 'mnsk7_is_system_page' ) ) {
 	/** System/customer page that must work but must not appear in search. */
 	function mnsk7_is_system_page() {
@@ -40,29 +47,76 @@ if ( ! function_exists( 'mnsk7_is_system_page' ) ) {
 			return true;
 		}
 
-		return is_page( array( 'login', 'logowanie', 'wishlist', 'lista-zyczen', 'reset', 'reset-password', 'lost-password', 'odzyskaj-haslo' ) );
+		if ( is_page( mnsk7_get_system_page_paths() ) ) {
+			return true;
+		}
+		$request_path = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+		$request_slug = sanitize_title( basename( untrailingslashit( $request_path ) ) );
+		if ( in_array( $request_slug, mnsk7_get_system_page_paths(), true ) ) {
+			return true;
+		}
+
+		$post = get_queried_object();
+		return $post instanceof WP_Post
+			&& $post->post_type === 'page'
+			&& in_array( $post->post_name, mnsk7_get_system_page_paths(), true );
+	}
+}
+
+if ( ! function_exists( 'mnsk7_is_offer_variant_page' ) ) {
+	/** Whether a page belongs to the reusable /oferta-*-warianty/ family. */
+	function mnsk7_is_offer_variant_page( $post ) {
+		if ( ! $post instanceof WP_Post || $post->post_type !== 'page' ) {
+			return false;
+		}
+
+		$uri      = trim( (string) get_page_uri( $post ), '/' );
+		$segments = $uri === '' ? array() : explode( '/', $uri );
+		$slug     = (string) end( $segments );
+		return (bool) preg_match( '/^oferta-[a-z0-9-]*-warianty(?:-[2-9][0-9]*)?$/', $slug );
+	}
+}
+
+if ( ! function_exists( 'mnsk7_get_offer_duplicate_page_id' ) ) {
+	/**
+	 * Resolve WordPress' numeric duplicate suffix only when the exact base page
+	 * exists and has the same commercial title.
+	 */
+	function mnsk7_get_offer_duplicate_page_id( $post ) {
+		if ( ! mnsk7_is_offer_variant_page( $post ) || ! preg_match( '/^(.+-warianty)-([2-9][0-9]*)$/', $post->post_name, $matches ) ) {
+			return 0;
+		}
+
+		$uri         = trim( (string) get_page_uri( $post ), '/' );
+		$base_uri    = preg_replace( '/-([2-9][0-9]*)$/', '', $uri );
+		$target_page = get_page_by_path( $base_uri, OBJECT, 'page' );
+		if ( ! $target_page instanceof WP_Post || $target_page->post_status !== 'publish' || $target_page->ID === $post->ID ) {
+			return 0;
+		}
+
+		$current_title = trim( wp_strip_all_tags( $post->post_title ) );
+		$target_title  = trim( wp_strip_all_tags( $target_page->post_title ) );
+		return $current_title !== '' && $current_title === $target_title ? (int) $target_page->ID : 0;
 	}
 }
 
 if ( ! function_exists( 'mnsk7_get_offer_seo_state' ) ) {
 	/**
-	 * Classify an /oferta--warianty/ page without unsafe blanket redirects.
+	 * Classify an /oferta-*-warianty/ page without unsafe blanket redirects.
 	 * Explicit post meta wins; otherwise only a visible preparation notice is noindexed.
 	 */
 	function mnsk7_get_offer_seo_state( $post_id ) {
 		$post = get_post( $post_id );
-		if ( ! $post instanceof WP_Post || $post->post_type !== 'page' ) {
-			return '';
-		}
-
-		$uri = trim( (string) get_page_uri( $post ), '/' );
-		if ( strpos( $post->post_name, 'oferta--warianty' ) !== 0 && strpos( $uri, 'oferta--warianty/' ) !== 0 ) {
+		if ( ! mnsk7_is_offer_variant_page( $post ) ) {
 			return '';
 		}
 
 		$explicit = sanitize_key( (string) get_post_meta( $post->ID, '_mnsk7_offer_seo_state', true ) );
 		if ( in_array( $explicit, array( 'ready', 'duplicate', 'draft' ), true ) ) {
 			return $explicit;
+		}
+		if ( mnsk7_get_offer_duplicate_page_id( $post ) > 0 ) {
+			return 'duplicate';
 		}
 
 		$content = remove_accents( wp_strip_all_tags( $post->post_title . ' ' . $post->post_content ) );
@@ -87,7 +141,7 @@ if ( ! function_exists( 'mnsk7_should_noindex_request' ) ) {
 		if ( function_exists( 'is_shop' ) && ( is_shop() || is_product_taxonomy() ) && mnsk7_is_catalog_filter_request() ) {
 			return true;
 		}
-		return is_singular( 'page' ) && mnsk7_get_offer_seo_state( get_queried_object_id() ) === 'draft';
+		return is_singular( 'page' ) && in_array( mnsk7_get_offer_seo_state( get_queried_object_id() ), array( 'draft', 'duplicate' ), true );
 	}
 }
 
@@ -463,6 +517,9 @@ add_filter( 'wpseo_canonical', function ( $canonical ) {
 		// clean canonical even when Yoast suppresses canonicals for noindex pages.
 		return '';
 	}
+	if ( is_singular( 'page' ) && mnsk7_get_offer_seo_state( get_queried_object_id() ) === 'ready' ) {
+		return get_permalink( get_queried_object_id() );
+	}
 
 	$catalog_canonical = function_exists( 'mnsk7_get_catalog_archive_canonical_url' ) ? mnsk7_get_catalog_archive_canonical_url() : '';
 	if ( $catalog_canonical !== '' ) {
@@ -521,14 +578,14 @@ add_filter( 'wpseo_exclude_from_sitemap_by_post_ids', function ( $excluded_ids )
 			}
 		}
 	}
-	foreach ( array( 'login', 'logowanie', 'wishlist', 'lista-zyczen', 'reset', 'reset-password', 'lost-password', 'odzyskaj-haslo' ) as $path ) {
+	foreach ( mnsk7_get_system_page_paths() as $path ) {
 		$page = get_page_by_path( $path );
 		if ( $page instanceof WP_Post ) {
 			$excluded_ids[] = $page->ID;
 		}
 	}
 	foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'publish', 'numberposts' => -1 ) ) as $page ) {
-		if ( mnsk7_get_offer_seo_state( $page->ID ) === 'draft' ) {
+		if ( in_array( mnsk7_get_offer_seo_state( $page->ID ), array( 'draft', 'duplicate' ), true ) ) {
 			$excluded_ids[] = $page->ID;
 		}
 	}
@@ -554,12 +611,16 @@ add_filter( 'wp_sitemaps_post_types', function ( $post_types ) {
 	return $post_types;
 } );
 
-/* Duplicate offer pages redirect only when an exact target was explicitly assigned. */
+/* Duplicate offer pages redirect only to an exact resolved or explicitly assigned target. */
 add_action( 'template_redirect', function () {
 	if ( ! is_singular( 'page' ) || mnsk7_get_offer_seo_state( get_queried_object_id() ) !== 'duplicate' ) {
 		return;
 	}
-	$target_id  = absint( get_post_meta( get_queried_object_id(), '_mnsk7_offer_redirect_product_id', true ) );
+	$post       = get_post( get_queried_object_id() );
+	$target_id  = mnsk7_get_offer_duplicate_page_id( $post );
+	if ( $target_id < 1 ) {
+		$target_id = absint( get_post_meta( get_queried_object_id(), '_mnsk7_offer_redirect_product_id', true ) );
+	}
 	$target_url = $target_id > 0 ? get_permalink( $target_id ) : '';
 	if ( ! $target_url ) {
 		$target_url = esc_url_raw( (string) get_post_meta( get_queried_object_id(), '_mnsk7_offer_redirect_url', true ) );
