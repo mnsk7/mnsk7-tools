@@ -20,6 +20,7 @@ require_once $mnsk7_inc . 'loyalty.php';
 require_once $mnsk7_inc . 'product-card.php';
 require_once $mnsk7_inc . 'delivery.php';
 require_once $mnsk7_inc . 'shortcodes.php';
+require_once $mnsk7_inc . 'term-seo.php';
 require_once $mnsk7_inc . 'seo.php';
 require_once $mnsk7_inc . 'redirects.php';
 require_once $mnsk7_inc . 'faq.php';

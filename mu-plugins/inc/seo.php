@@ -7,6 +7,90 @@
 
 defined( 'ABSPATH' ) || exit;
 
+if ( ! function_exists( 'mnsk7_is_catalog_filter_request' ) ) {
+	/** Whether the current catalog URL contains a non-canonical filter/sort state. */
+	function mnsk7_is_catalog_filter_request() {
+		foreach ( array_keys( $_GET ) as $raw_key ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+			$key = sanitize_key( (string) $raw_key );
+			if ( strpos( $key, 'filter_' ) === 0 || strpos( $key, 'query_type_' ) === 0 ) {
+				return true;
+			}
+			if ( in_array( $key, array( 'min_price', 'max_price', 'rating_filter', 'stock_status', 'orderby' ), true ) ) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+if ( ! function_exists( 'mnsk7_is_product_attribute_archive' ) ) {
+	/** Whether this request is a public pa_* WooCommerce attribute archive. */
+	function mnsk7_is_product_attribute_archive() {
+		$term = get_queried_object();
+		return $term instanceof WP_Term && strpos( (string) $term->taxonomy, 'pa_' ) === 0;
+	}
+}
+
+if ( ! function_exists( 'mnsk7_is_system_page' ) ) {
+	/** System/customer page that must work but must not appear in search. */
+	function mnsk7_is_system_page() {
+		if ( ( function_exists( 'is_cart' ) && is_cart() )
+			|| ( function_exists( 'is_checkout' ) && is_checkout() )
+			|| ( function_exists( 'is_account_page' ) && is_account_page() ) ) {
+			return true;
+		}
+
+		return is_page( array( 'login', 'logowanie', 'wishlist', 'lista-zyczen', 'reset', 'reset-password', 'lost-password', 'odzyskaj-haslo' ) );
+	}
+}
+
+if ( ! function_exists( 'mnsk7_get_offer_seo_state' ) ) {
+	/**
+	 * Classify an /oferta--warianty/ page without unsafe blanket redirects.
+	 * Explicit post meta wins; otherwise only a visible preparation notice is noindexed.
+	 */
+	function mnsk7_get_offer_seo_state( $post_id ) {
+		$post = get_post( $post_id );
+		if ( ! $post instanceof WP_Post || $post->post_type !== 'page' ) {
+			return '';
+		}
+
+		$uri = trim( (string) get_page_uri( $post ), '/' );
+		if ( strpos( $post->post_name, 'oferta--warianty' ) !== 0 && strpos( $uri, 'oferta--warianty/' ) !== 0 ) {
+			return '';
+		}
+
+		$explicit = sanitize_key( (string) get_post_meta( $post->ID, '_mnsk7_offer_seo_state', true ) );
+		if ( in_array( $explicit, array( 'ready', 'duplicate', 'draft' ), true ) ) {
+			return $explicit;
+		}
+
+		$content = remove_accents( wp_strip_all_tags( $post->post_title . ' ' . $post->post_content ) );
+		return stripos( $content, 'w przygotowaniu' ) !== false ? 'draft' : 'ready';
+	}
+}
+
+if ( ! function_exists( 'mnsk7_is_shopengine_template_request' ) ) {
+	/** Whether a singular ShopEngine template is being exposed as a public URL. */
+	function mnsk7_is_shopengine_template_request() {
+		$post_type = (string) get_post_type( get_queried_object_id() );
+		return is_singular() && ( $post_type === 'shopengine-template' || strpos( $post_type, 'shopengine' ) === 0 );
+	}
+}
+
+if ( ! function_exists( 'mnsk7_should_noindex_request' ) ) {
+	/** Central robots decision used by Yoast and WordPress core. */
+	function mnsk7_should_noindex_request() {
+		if ( mnsk7_is_product_attribute_archive() || mnsk7_is_system_page() || mnsk7_is_shopengine_template_request() ) {
+			return true;
+		}
+		if ( function_exists( 'is_shop' ) && ( is_shop() || is_product_taxonomy() ) && mnsk7_is_catalog_filter_request() ) {
+			return true;
+		}
+		return is_singular( 'page' ) && mnsk7_get_offer_seo_state( get_queried_object_id() ) === 'draft';
+	}
+}
+
 if ( ! function_exists( 'mnsk7_get_catalog_archive_seo_context' ) ) {
 	/**
 	 * Collects the current catalog archive context for SEO titles/canonicals.
@@ -311,6 +395,19 @@ add_filter( 'wpseo_metadesc', function ( $desc ) {
 	);
 }, 21 );
 
+/* Curated category metadata lives in term meta and overrides generic fallbacks. */
+add_filter( 'wpseo_metadesc', function ( $desc ) {
+	if ( ! function_exists( 'is_product_category' ) || ! is_product_category() ) {
+		return $desc;
+	}
+	$term = get_queried_object();
+	if ( ! $term instanceof WP_Term ) {
+		return $desc;
+	}
+	$custom = trim( (string) get_term_meta( $term->term_id, '_mnsk7_term_seo_metadesc', true ) );
+	return $custom !== '' ? $custom : $desc;
+}, 40 );
+
 add_filter( 'wpseo_title', function ( $title ) {
 	if ( mnsk7_is_guide_archive() ) {
 		$paged  = max( 1, (int) get_query_var( 'paged' ) );
@@ -330,6 +427,22 @@ add_filter( 'wpseo_title', function ( $title ) {
 	return $title;
 }, 20 );
 
+add_filter( 'wpseo_title', function ( $title ) {
+	if ( ! function_exists( 'is_product_category' ) || ! is_product_category() ) {
+		return $title;
+	}
+	$term = get_queried_object();
+	if ( ! $term instanceof WP_Term ) {
+		return $title;
+	}
+	$custom = trim( (string) get_term_meta( $term->term_id, '_mnsk7_term_seo_title', true ) );
+	if ( $custom === '' ) {
+		return $title;
+	}
+	$paged = max( 1, (int) get_query_var( 'paged' ) );
+	return $paged > 1 ? $custom . sprintf( ' — strona %d', $paged ) : $custom;
+}, 40 );
+
 add_filter( 'wpseo_canonical', function ( $canonical ) {
 	if ( mnsk7_is_guide_archive() ) {
 		// The archive canonical is printed once by our fallback below because Yoast
@@ -345,6 +458,11 @@ add_filter( 'wpseo_canonical', function ( $canonical ) {
 			}
 		}
 	}
+	if ( function_exists( 'is_shop' ) && ( is_shop() || is_product_taxonomy() ) && mnsk7_is_catalog_filter_request() ) {
+		// Printed by the fallback below so filtered states always have exactly one
+		// clean canonical even when Yoast suppresses canonicals for noindex pages.
+		return '';
+	}
 
 	$catalog_canonical = function_exists( 'mnsk7_get_catalog_archive_canonical_url' ) ? mnsk7_get_catalog_archive_canonical_url() : '';
 	if ( $catalog_canonical !== '' ) {
@@ -353,12 +471,104 @@ add_filter( 'wpseo_canonical', function ( $canonical ) {
 	return $canonical;
 }, 20 );
 
+add_action( 'wp_head', function () {
+	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_taxonomy() ) || ! mnsk7_is_catalog_filter_request() ) {
+		return;
+	}
+	$url = mnsk7_get_catalog_archive_canonical_url();
+	if ( $url !== '' ) {
+		echo '<link rel="canonical" href="' . esc_url( $url ) . '">' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+	}
+}, 2 );
+
 add_filter( 'wpseo_robots', function ( $robots ) {
+	if ( mnsk7_should_noindex_request() ) {
+		return 'noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
+	}
 	if ( mnsk7_is_guide_archive() && wp_get_environment_type() === 'production' ) {
 		return 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 	}
 	return $robots;
 }, 30 );
+
+/* Keep the same robots policy when Yoast is disabled or replaced. */
+add_filter( 'wp_robots', function ( $robots ) {
+	if ( ! mnsk7_should_noindex_request() ) {
+		return $robots;
+	}
+	$robots['noindex'] = true;
+	$robots['follow']  = true;
+	unset( $robots['index'], $robots['nofollow'] );
+	return $robots;
+}, 30 );
+
+/* Attribute taxonomies and ShopEngine templates never belong in Yoast XML sitemaps. */
+add_filter( 'wpseo_sitemap_exclude_taxonomy', function ( $excluded, $taxonomy ) {
+	return strpos( (string) $taxonomy, 'pa_' ) === 0 ? true : $excluded;
+}, 20, 2 );
+
+add_filter( 'wpseo_sitemap_exclude_post_type', function ( $excluded, $post_type ) {
+	return ( $post_type === 'shopengine-template' || strpos( (string) $post_type, 'shopengine' ) === 0 ) ? true : $excluded;
+}, 20, 2 );
+
+add_filter( 'wpseo_exclude_from_sitemap_by_post_ids', function ( $excluded_ids ) {
+	$excluded_ids = array_map( 'absint', (array) $excluded_ids );
+	if ( function_exists( 'wc_get_page_id' ) ) {
+		foreach ( array( 'cart', 'checkout', 'myaccount' ) as $page_key ) {
+			$page_id = absint( wc_get_page_id( $page_key ) );
+			if ( $page_id > 0 ) {
+				$excluded_ids[] = $page_id;
+			}
+		}
+	}
+	foreach ( array( 'login', 'logowanie', 'wishlist', 'lista-zyczen', 'reset', 'reset-password', 'lost-password', 'odzyskaj-haslo' ) as $path ) {
+		$page = get_page_by_path( $path );
+		if ( $page instanceof WP_Post ) {
+			$excluded_ids[] = $page->ID;
+		}
+	}
+	foreach ( get_posts( array( 'post_type' => 'page', 'post_status' => 'publish', 'numberposts' => -1 ) ) as $page ) {
+		if ( mnsk7_get_offer_seo_state( $page->ID ) === 'draft' ) {
+			$excluded_ids[] = $page->ID;
+		}
+	}
+	return array_values( array_unique( array_filter( $excluded_ids ) ) );
+}, 20 );
+
+/* Core sitemap parity for installations where Yoast is temporarily unavailable. */
+add_filter( 'wp_sitemaps_taxonomies', function ( $taxonomies ) {
+	foreach ( array_keys( (array) $taxonomies ) as $taxonomy ) {
+		if ( strpos( (string) $taxonomy, 'pa_' ) === 0 ) {
+			unset( $taxonomies[ $taxonomy ] );
+		}
+	}
+	return $taxonomies;
+} );
+
+add_filter( 'wp_sitemaps_post_types', function ( $post_types ) {
+	foreach ( array_keys( (array) $post_types ) as $post_type ) {
+		if ( $post_type === 'shopengine-template' || strpos( (string) $post_type, 'shopengine' ) === 0 ) {
+			unset( $post_types[ $post_type ] );
+		}
+	}
+	return $post_types;
+} );
+
+/* Duplicate offer pages redirect only when an exact target was explicitly assigned. */
+add_action( 'template_redirect', function () {
+	if ( ! is_singular( 'page' ) || mnsk7_get_offer_seo_state( get_queried_object_id() ) !== 'duplicate' ) {
+		return;
+	}
+	$target_id  = absint( get_post_meta( get_queried_object_id(), '_mnsk7_offer_redirect_product_id', true ) );
+	$target_url = $target_id > 0 ? get_permalink( $target_id ) : '';
+	if ( ! $target_url ) {
+		$target_url = esc_url_raw( (string) get_post_meta( get_queried_object_id(), '_mnsk7_offer_redirect_url', true ) );
+	}
+	if ( $target_url ) {
+		wp_safe_redirect( $target_url, 301, 'MNSK7 SEO' );
+		exit;
+	}
+}, 1 );
 
 add_filter( 'wpseo_opengraph_image', function ( $image ) {
 	if ( ! mnsk7_is_guide_post() || ! function_exists( 'mnsk7_get_guide_primary_image_url' ) ) {
@@ -542,6 +752,10 @@ add_action( 'woocommerce_archive_description', function () {
 	}
 	$img_id = get_term_meta( $term->term_id, 'thumbnail_id', true );
 	$desc   = term_description();
+	$is_curated_product_category = $term->taxonomy === 'product_cat' && get_term_meta( $term->term_id, '_mnsk7_term_seo_version', true ) !== '';
+	if ( $is_curated_product_category && ( max( 1, (int) get_query_var( 'paged' ) ) > 1 || mnsk7_is_catalog_filter_request() ) ) {
+		return;
+	}
 	if ( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ) {
 		$desc = mnsk7_strip_wpf_filters_from_text( (string) $desc );
 	} else {
@@ -551,7 +765,8 @@ add_action( 'woocommerce_archive_description', function () {
 	if ( empty( $img_id ) && empty( $desc ) ) {
 		return;
 	}
-	echo '<div class="mnsk7-cat-header">';
+	$classes = $is_curated_product_category ? 'mnsk7-cat-header mnsk7-term-seo mnsk7-term-seo__intro' : 'mnsk7-cat-header';
+	echo '<div class="' . esc_attr( $classes ) . '">';
 	if ( $img_id ) {
 		$alt = ( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name );
 		echo '<div class="mnsk7-cat-header__img">'
@@ -563,6 +778,83 @@ add_action( 'woocommerce_archive_description', function () {
 	}
 	echo '</div>';
 }, 10 );
+
+if ( ! function_exists( 'mnsk7_render_term_seo_after_products' ) ) {
+	/** Render long category copy and FAQ after the live WooCommerce product loop. */
+	function mnsk7_render_term_seo_after_products( $term ) {
+		if ( ! $term instanceof WP_Term || $term->taxonomy !== 'product_cat' || max( 1, (int) get_query_var( 'paged' ) ) > 1 || mnsk7_is_catalog_filter_request() ) {
+			return;
+		}
+
+		$after = trim( (string) get_term_meta( $term->term_id, '_mnsk7_term_seo_after', true ) );
+		$faq   = json_decode( (string) get_term_meta( $term->term_id, '_mnsk7_term_seo_faq', true ), true );
+		if ( $after === '' && empty( $faq ) ) {
+			return;
+		}
+
+		echo '<section class="mnsk7-term-seo mnsk7-term-seo__after col-full" aria-label="' . esc_attr__( 'Poradnik wyboru', 'mnsk7-tools' ) . '">';
+		if ( $after !== '' ) {
+			echo '<div class="mnsk7-term-seo__copy">' . wp_kses_post( $after ) . '</div>';
+		}
+
+		$schema_items = array();
+		if ( is_array( $faq ) && ! empty( $faq ) ) {
+			echo '<div class="mnsk7-term-seo__faq">';
+			echo '<h2>' . esc_html__( 'Najczęstsze pytania', 'mnsk7-tools' ) . '</h2>';
+			foreach ( $faq as $item ) {
+				$question = isset( $item['q'] ) ? sanitize_text_field( $item['q'] ) : '';
+				$answer   = isset( $item['a'] ) ? wp_kses_post( $item['a'] ) : '';
+				if ( $question === '' || trim( wp_strip_all_tags( $answer ) ) === '' ) {
+					continue;
+				}
+				echo '<details class="mnsk7-term-seo__faq-item"><summary>' . esc_html( $question ) . '</summary><div>' . $answer . '</div></details>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				$schema_items[] = array(
+					'@type'          => 'Question',
+					'name'           => $question,
+					'acceptedAnswer' => array( '@type' => 'Answer', 'text' => wp_strip_all_tags( $answer ) ),
+				);
+			}
+			echo '</div>';
+		}
+
+		$links = array();
+		$children = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => $term->term_id, 'hide_empty' => true, 'number' => 6 ) );
+		if ( ! is_wp_error( $children ) ) {
+			foreach ( $children as $child ) {
+				$url = get_term_link( $child );
+				if ( ! is_wp_error( $url ) ) {
+					$links[] = array( 'url' => $url, 'label' => $child->name );
+				}
+			}
+		}
+		$guide_slugs = array(
+			'frezy-kompresyjne-updown-cut' => 'frezy-kompresyjne-do-czego-sluza',
+			'frezy-diamentowe'              => 'frez-diamentowy-do-obrobki-3d-cnc',
+			'pilniki-obrotowe'              => 'pilniki-obrotowe-jak-wybrac-typ',
+			'frezy-do-planowania'           => 'frez-do-wyrownania-sleba-i-planowania-powierzchni',
+		);
+		if ( isset( $guide_slugs[ $term->slug ] ) ) {
+			$guide = get_page_by_path( $guide_slugs[ $term->slug ], OBJECT, 'post' );
+			if ( $guide instanceof WP_Post && $guide->post_status === 'publish' ) {
+				$links[] = array( 'url' => get_permalink( $guide ), 'label' => get_the_title( $guide ) );
+			}
+		}
+		if ( ! empty( $links ) ) {
+			echo '<nav class="mnsk7-term-seo__links" aria-label="' . esc_attr__( 'Powiązane kategorie i poradniki', 'mnsk7-tools' ) . '"><h2>' . esc_html__( 'Zobacz także', 'mnsk7-tools' ) . '</h2><ul>';
+			foreach ( $links as $link ) {
+				echo '<li><a href="' . esc_url( $link['url'] ) . '">' . esc_html( $link['label'] ) . '</a></li>';
+			}
+			echo '</ul></nav>';
+		}
+		echo '</section>';
+
+		/* FAQ schema is emitted only for the questions visibly rendered above. */
+		if ( ! empty( $schema_items ) ) {
+			$schema = array( '@context' => 'https://schema.org', '@type' => 'FAQPage', 'mainEntity' => $schema_items );
+			echo '<script type="application/ld+json">' . wp_json_encode( $schema, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES ) . '</script>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+		}
+	}
+}
 
 add_filter( 'woocommerce_structured_data_product', function ( $markup, $product ) {
 	if ( ! is_a( $product, 'WC_Product' ) ) {

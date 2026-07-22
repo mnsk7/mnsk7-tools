@@ -536,6 +536,12 @@ if ( woocommerce_product_loop() ) {
 		}
 		woocommerce_product_loop_end();
 	}
+	/* Crawlable page 2+ URLs remain available even when AJAX "Pokaż więcej" is present. */
+	if ( $use_table && $max_pages > 1 && function_exists( 'woocommerce_pagination' ) ) {
+		echo '<div class="mnsk7-plp-crawl-pagination col-full">';
+		woocommerce_pagination();
+		echo '</div>';
+	}
 	echo '</div><!-- .mnsk7-plp-content -->';
 
 	if ( ! $plp_show_toolbar_at_top ) {
@@ -558,6 +564,10 @@ if ( woocommerce_product_loop() ) {
 	do_action( 'woocommerce_no_products_found' );
 	echo '</div><!-- .mnsk7-plp-content -->';
 	echo '</div><!-- .mnsk7-plp-archive-wrap -->';
+}
+
+if ( $current_term instanceof WP_Term && function_exists( 'mnsk7_render_term_seo_after_products' ) ) {
+	mnsk7_render_term_seo_after_products( $current_term );
 }
 
 do_action( 'woocommerce_after_main_content' );

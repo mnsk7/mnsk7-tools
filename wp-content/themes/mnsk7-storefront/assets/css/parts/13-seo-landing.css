@@ -926,6 +926,107 @@
   }
 }
 
+/* Product-category SEO content; all rules stay inside one local namespace. */
+.mnsk7-term-seo {
+  width: 100%;
+  color: var(--color-text-secondary);
+}
+
+.mnsk7-term-seo__intro {
+  max-width: var(--content-max);
+  margin: 0 auto clamp(1.25rem, 3vw, 2rem);
+  padding: clamp(1rem, 2.5vw, 1.5rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-lg);
+  background: var(--color-surface);
+}
+
+.mnsk7-term-seo__intro .mnsk7-cat-header__desc,
+.mnsk7-term-seo__intro p:last-child {
+  margin-bottom: 0;
+}
+
+.mnsk7-term-seo__after {
+  max-width: var(--content-max);
+  margin: clamp(2rem, 5vw, 4rem) auto;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-lg);
+  background: var(--color-surface);
+  box-shadow: var(--ui-card-shadow);
+}
+
+.mnsk7-term-seo__copy {
+  max-width: 76ch;
+}
+
+.mnsk7-term-seo__copy h2,
+.mnsk7-term-seo__faq h2,
+.mnsk7-term-seo__links h2 {
+  margin: 1.75rem 0 0.75rem;
+  color: var(--ui-heading);
+  font-size: clamp(1.35rem, 2.5vw, 1.8rem);
+}
+
+.mnsk7-term-seo__copy h2:first-child {
+  margin-top: 0;
+}
+
+.mnsk7-term-seo__faq {
+  max-width: 76ch;
+  margin-top: 2rem;
+}
+
+.mnsk7-term-seo__faq-item {
+  border-top: 1px solid var(--color-border);
+}
+
+.mnsk7-term-seo__faq-item:last-child {
+  border-bottom: 1px solid var(--color-border);
+}
+
+.mnsk7-term-seo__faq-item summary {
+  padding: 0.9rem 2rem 0.9rem 0;
+  color: var(--ui-heading);
+  cursor: pointer;
+  font-weight: 800;
+}
+
+.mnsk7-term-seo__faq-item > div {
+  padding: 0 0 1rem;
+}
+
+.mnsk7-term-seo__links ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mnsk7-term-seo__links a {
+  display: inline-flex;
+  min-height: 2.75rem;
+  align-items: center;
+  padding: 0.6rem 0.85rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--r-pill);
+  color: var(--color-primary-dark);
+  background: var(--color-white);
+  font-weight: 750;
+}
+
+.mnsk7-term-seo__links a:hover {
+  border-color: var(--color-primary);
+  color: var(--color-white);
+  background: var(--color-primary);
+}
+
+.mnsk7-plp-crawl-pagination {
+  margin-top: 1.25rem;
+}
+
 /* Slab landing v3: sprzedaż najpierw, poradnik jako wsparcie decyzji. */
 .mnsk7-guide-article--slab > .mnsk7-guide-article__header {
   padding: 0.75rem 0 clamp(1.75rem, 4vw, 3rem);
