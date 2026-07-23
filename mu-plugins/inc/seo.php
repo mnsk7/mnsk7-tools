@@ -998,7 +998,13 @@ add_action( 'wp_head', function () {
 }, 6 );
 
 /* Opis archiwum taksonomii (kategoria, tag) — zastępuje domyślny WooCommerce hook */
-remove_action( 'woocommerce_archive_description', 'woocommerce_taxonomy_archive_description', 10 );
+add_action( 'init', function () {
+	/*
+	 * WooCommerce registers its taxonomy callback after MU plugins load, so an
+	 * immediate remove_action() is too early and causes duplicate descriptions.
+	 */
+	remove_action( 'woocommerce_archive_description', 'woocommerce_taxonomy_archive_description', 10 );
+}, 30 );
 add_action( 'woocommerce_archive_description', function () {
 	if ( ! function_exists( 'is_product_taxonomy' ) || ! is_product_taxonomy() ) {
 		return;
