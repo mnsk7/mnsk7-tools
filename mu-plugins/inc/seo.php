@@ -34,7 +34,74 @@ if ( ! function_exists( 'mnsk7_is_product_attribute_archive' ) ) {
 if ( ! function_exists( 'mnsk7_get_system_page_paths' ) ) {
 	/** Public utility-page paths that must work but must not appear in search. */
 	function mnsk7_get_system_page_paths() {
-		return array( 'login', 'logowanie', 'wishlist', 'lista-zyczen', 'reset', 'reset-password', 'password-reset', 'lost-password', 'odzyskaj-haslo' );
+		return array( 'login', 'logowanie', 'register', 'edit-profile', 'wishlist', 'lista-zyczen', 'reset', 'reset-password', 'password-reset', 'lost-password', 'odzyskaj-haslo' );
+	}
+}
+
+if ( ! function_exists( 'mnsk7_get_indexable_product_tag_slugs' ) ) {
+	/** Controlled SEO facets that have catalog demand and dedicated term content. */
+	function mnsk7_get_indexable_product_tag_slugs() {
+		return array( 'aluminium', 'mdf', 'stal' );
+	}
+}
+
+if ( ! function_exists( 'mnsk7_is_indexable_product_tag' ) ) {
+	/** Whether the current request is one of the controlled product-tag facets. */
+	function mnsk7_is_indexable_product_tag() {
+		$term = get_queried_object();
+		return $term instanceof WP_Term
+			&& $term->taxonomy === 'product_tag'
+			&& in_array( $term->slug, mnsk7_get_indexable_product_tag_slugs(), true );
+	}
+}
+
+if ( ! function_exists( 'mnsk7_get_legacy_seo_page_targets' ) ) {
+	/**
+	 * Exact legacy landing replacements. No page is sent to a broad parent or home.
+	 *
+	 * @return array<string, array{taxonomy: string, term: string}>
+	 */
+	function mnsk7_get_legacy_seo_page_targets() {
+		return array(
+			'frez-spiralny'                 => array( 'taxonomy' => 'product_cat', 'term' => 'frezy-spiralne' ),
+			'frez-prosty'                   => array( 'taxonomy' => 'product_cat', 'term' => 'frezy-proste' ),
+			'frez-spiralny-stozkowo-kulowy' => array( 'taxonomy' => 'product_cat', 'term' => 'frezy-stozkowo-kulowe' ),
+			'frez-grawerski'                => array( 'taxonomy' => 'product_cat', 'term' => 'frezy-grawerskie' ),
+			'frez-kulowy'                   => array( 'taxonomy' => 'product_cat', 'term' => 'frezy-kulowe' ),
+			'plytki-wieloostrzowe'          => array( 'taxonomy' => 'product_cat', 'term' => 'plytki-wieloostrzowe' ),
+			'tuleje-zaciskowe'              => array( 'taxonomy' => 'product_cat', 'term' => 'tuleje-zaciskowe-osprzet-i-akcesoria' ),
+			'frez-diamentowy'               => array( 'taxonomy' => 'product_cat', 'term' => 'frezy-diamentowe' ),
+			'frezy-do-aluminium'            => array( 'taxonomy' => 'product_tag', 'term' => 'aluminium' ),
+			'frezy-mdf'                     => array( 'taxonomy' => 'product_tag', 'term' => 'mdf' ),
+			'frezy-do-stali'                => array( 'taxonomy' => 'product_tag', 'term' => 'stal' ),
+		);
+	}
+}
+
+if ( ! function_exists( 'mnsk7_get_legacy_seo_page_target_url' ) ) {
+	/** Resolve an exact taxonomy target, returning an empty string if catalog data changed. */
+	function mnsk7_get_legacy_seo_page_target_url( $post ) {
+		if ( ! $post instanceof WP_Post || $post->post_type !== 'page' ) {
+			return '';
+		}
+		$targets = mnsk7_get_legacy_seo_page_targets();
+		if ( ! isset( $targets[ $post->post_name ] ) ) {
+			return '';
+		}
+		$target = $targets[ $post->post_name ];
+		$term   = get_term_by( 'slug', $target['term'], $target['taxonomy'] );
+		if ( ! $term instanceof WP_Term ) {
+			return '';
+		}
+		$url = get_term_link( $term );
+		return is_wp_error( $url ) ? '' : (string) $url;
+	}
+}
+
+if ( ! function_exists( 'mnsk7_get_temporary_noindex_page_slugs' ) ) {
+	/** Legacy landings without one defensible exact catalog equivalent. */
+	function mnsk7_get_temporary_noindex_page_slugs() {
+		return array( 'frezy-do-szlifierki', 'frez-z-wymiennymi-plytkami' );
 	}
 }
 
@@ -136,6 +203,9 @@ if ( ! function_exists( 'mnsk7_should_noindex_request' ) ) {
 	/** Central robots decision used by Yoast and WordPress core. */
 	function mnsk7_should_noindex_request() {
 		if ( mnsk7_is_product_attribute_archive() || mnsk7_is_system_page() || mnsk7_is_shopengine_template_request() ) {
+			return true;
+		}
+		if ( is_page( mnsk7_get_temporary_noindex_page_slugs() ) ) {
 			return true;
 		}
 		if ( function_exists( 'is_shop' ) && ( is_shop() || is_product_taxonomy() ) && mnsk7_is_catalog_filter_request() ) {
@@ -449,9 +519,46 @@ add_filter( 'wpseo_metadesc', function ( $desc ) {
 	);
 }, 21 );
 
-/* Curated category metadata lives in term meta and overrides generic fallbacks. */
+/* Indexable brands and pages receive a conservative fallback only when Yoast is empty. */
 add_filter( 'wpseo_metadesc', function ( $desc ) {
-	if ( ! function_exists( 'is_product_category' ) || ! is_product_category() ) {
+	if ( trim( (string) $desc ) !== '' || mnsk7_should_noindex_request() ) {
+		return $desc;
+	}
+
+	$term = get_queried_object();
+	if ( $term instanceof WP_Term && $term->taxonomy === 'product_brand' ) {
+		return sprintf(
+			'%1$s w sklepie MNSK7: sprawdź aktualne produkty, warianty, ceny i dostępność narzędzi do obróbki CNC.',
+			$term->name
+		);
+	}
+	if ( ! is_singular( 'page' ) ) {
+		return $desc;
+	}
+
+	$post = get_post( get_queried_object_id() );
+	if ( ! $post instanceof WP_Post || mnsk7_get_legacy_seo_page_target_url( $post ) !== '' ) {
+		return $desc;
+	}
+	$text = trim( preg_replace( '/\s+/u', ' ', wp_strip_all_tags( strip_shortcodes( $post->post_content ) ) ) );
+	if ( strlen( $text ) >= 80 ) {
+		return wp_html_excerpt( $text, 155, '…' );
+	}
+	if ( mnsk7_is_offer_variant_page( $post ) ) {
+		return wp_html_excerpt( $post->post_title . ' — sprawdź opis wariantu, zastosowanie oraz aktualne dane produktu w sklepie MNSK7.', 155, '…' );
+	}
+	if ( get_page_template_slug( $post->ID ) === 'page-kontakt.php' ) {
+		return 'Skontaktuj się ze sklepem MNSK7 w sprawie doboru frezów CNC, zamówienia, dostawy lub obsługi posprzedażowej.';
+	}
+	if ( get_page_template_slug( $post->ID ) === 'page-dostawa.php' ) {
+		return 'Sprawdź metody, zasady i aktualne informacje dotyczące dostawy zamówień ze sklepu MNSK7.';
+	}
+	return wp_html_excerpt( $post->post_title . ' — praktyczne informacje, dobór narzędzi i aktualna oferta sklepu MNSK7.', 155, '…' );
+}, 30 );
+
+/* Curated taxonomy metadata lives in term meta and overrides generic fallbacks. */
+add_filter( 'wpseo_metadesc', function ( $desc ) {
+	if ( ! function_exists( 'is_product_taxonomy' ) || ! is_product_taxonomy() ) {
 		return $desc;
 	}
 	$term = get_queried_object();
@@ -482,7 +589,7 @@ add_filter( 'wpseo_title', function ( $title ) {
 }, 20 );
 
 add_filter( 'wpseo_title', function ( $title ) {
-	if ( ! function_exists( 'is_product_category' ) || ! is_product_category() ) {
+	if ( ! function_exists( 'is_product_taxonomy' ) || ! is_product_taxonomy() ) {
 		return $title;
 	}
 	$term = get_queried_object();
@@ -503,14 +610,10 @@ add_filter( 'wpseo_canonical', function ( $canonical ) {
 		// suppresses its canonical presenter for categories configured as noindex.
 		return '';
 	}
-	if ( is_page( 'frez-prosty' ) && taxonomy_exists( 'product_cat' ) ) {
-		$term = get_term_by( 'slug', 'frezy-proste', 'product_cat' );
-		if ( $term && ! is_wp_error( $term ) ) {
-			$url = get_term_link( $term );
-			if ( ! is_wp_error( $url ) ) {
-				return $url;
-			}
-		}
+	if ( mnsk7_is_indexable_product_tag() ) {
+		// Printed exactly once by the fallback below because Yoast's taxonomy
+		// setting can suppress its canonical presenter for product tags.
+		return '';
 	}
 	if ( function_exists( 'is_shop' ) && ( is_shop() || is_product_taxonomy() ) && mnsk7_is_catalog_filter_request() ) {
 		// Printed by the fallback below so filtered states always have exactly one
@@ -529,10 +632,16 @@ add_filter( 'wpseo_canonical', function ( $canonical ) {
 }, 20 );
 
 add_action( 'wp_head', function () {
-	if ( ! function_exists( 'is_shop' ) || ( ! is_shop() && ! is_product_taxonomy() ) || ! mnsk7_is_catalog_filter_request() ) {
+	$is_filtered_catalog = function_exists( 'is_shop' )
+		&& ( is_shop() || is_product_taxonomy() )
+		&& mnsk7_is_catalog_filter_request();
+	if ( ! $is_filtered_catalog && ! mnsk7_is_indexable_product_tag() ) {
 		return;
 	}
-	$url = mnsk7_get_catalog_archive_canonical_url();
+	$url = mnsk7_is_indexable_product_tag() ? get_term_link( get_queried_object() ) : mnsk7_get_catalog_archive_canonical_url();
+	if ( is_wp_error( $url ) ) {
+		$url = '';
+	}
 	if ( $url !== '' ) {
 		echo '<link rel="canonical" href="' . esc_url( $url ) . '">' . "\n"; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
 	}
@@ -542,7 +651,7 @@ add_filter( 'wpseo_robots', function ( $robots ) {
 	if ( mnsk7_should_noindex_request() ) {
 		return 'noindex, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 	}
-	if ( mnsk7_is_guide_archive() && wp_get_environment_type() === 'production' ) {
+	if ( ( mnsk7_is_guide_archive() || mnsk7_is_indexable_product_tag() ) && wp_get_environment_type() === 'production' ) {
 		return 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1';
 	}
 	return $robots;
@@ -550,6 +659,12 @@ add_filter( 'wpseo_robots', function ( $robots ) {
 
 /* Keep the same robots policy when Yoast is disabled or replaced. */
 add_filter( 'wp_robots', function ( $robots ) {
+	if ( mnsk7_is_indexable_product_tag() && wp_get_environment_type() === 'production' ) {
+		$robots['index']  = true;
+		$robots['follow'] = true;
+		unset( $robots['noindex'], $robots['nofollow'] );
+		return $robots;
+	}
 	if ( ! mnsk7_should_noindex_request() ) {
 		return $robots;
 	}
@@ -561,8 +676,33 @@ add_filter( 'wp_robots', function ( $robots ) {
 
 /* Attribute taxonomies and ShopEngine templates never belong in Yoast XML sitemaps. */
 add_filter( 'wpseo_sitemap_exclude_taxonomy', function ( $excluded, $taxonomy ) {
-	return strpos( (string) $taxonomy, 'pa_' ) === 0 ? true : $excluded;
+	if ( strpos( (string) $taxonomy, 'pa_' ) === 0 ) {
+		return true;
+	}
+	return $taxonomy === 'product_tag' ? false : $excluded;
 }, 20, 2 );
+
+add_filter( 'wpseo_exclude_from_sitemap_by_term_ids', function ( $excluded_ids ) {
+	$excluded_ids = array_map( 'absint', (array) $excluded_ids );
+	if ( ! taxonomy_exists( 'product_tag' ) ) {
+		return $excluded_ids;
+	}
+	$terms = get_terms( array(
+		'taxonomy'   => 'product_tag',
+		'hide_empty' => false,
+		'fields'     => 'id=>slug',
+	) );
+	if ( is_wp_error( $terms ) ) {
+		return $excluded_ids;
+	}
+	$allowed = mnsk7_get_indexable_product_tag_slugs();
+	foreach ( $terms as $term_id => $slug ) {
+		if ( ! in_array( $slug, $allowed, true ) ) {
+			$excluded_ids[] = absint( $term_id );
+		}
+	}
+	return array_values( array_unique( array_filter( $excluded_ids ) ) );
+}, 20 );
 
 add_filter( 'wpseo_sitemap_exclude_post_type', function ( $excluded, $post_type ) {
 	return ( $post_type === 'shopengine-template' || strpos( (string) $post_type, 'shopengine' ) === 0 ) ? true : $excluded;
@@ -579,6 +719,18 @@ add_filter( 'wpseo_exclude_from_sitemap_by_post_ids', function ( $excluded_ids )
 		}
 	}
 	foreach ( mnsk7_get_system_page_paths() as $path ) {
+		$page = get_page_by_path( $path );
+		if ( $page instanceof WP_Post ) {
+			$excluded_ids[] = $page->ID;
+		}
+	}
+	foreach ( array_keys( mnsk7_get_legacy_seo_page_targets() ) as $path ) {
+		$page = get_page_by_path( $path );
+		if ( $page instanceof WP_Post && mnsk7_get_legacy_seo_page_target_url( $page ) !== '' ) {
+			$excluded_ids[] = $page->ID;
+		}
+	}
+	foreach ( mnsk7_get_temporary_noindex_page_slugs() as $path ) {
 		$page = get_page_by_path( $path );
 		if ( $page instanceof WP_Post ) {
 			$excluded_ids[] = $page->ID;
@@ -601,6 +753,20 @@ add_filter( 'wp_sitemaps_taxonomies', function ( $taxonomies ) {
 	}
 	return $taxonomies;
 } );
+
+add_filter( 'wp_sitemaps_taxonomies_query_args', function ( $args, $taxonomy ) {
+	if ( $taxonomy !== 'product_tag' ) {
+		return $args;
+	}
+	$allowed_ids = get_terms( array(
+		'taxonomy'   => 'product_tag',
+		'hide_empty' => false,
+		'slug'       => mnsk7_get_indexable_product_tag_slugs(),
+		'fields'     => 'ids',
+	) );
+	$args['include'] = is_wp_error( $allowed_ids ) ? array( 0 ) : array_map( 'absint', $allowed_ids );
+	return $args;
+}, 20, 2 );
 
 add_filter( 'wp_sitemaps_post_types', function ( $post_types ) {
 	foreach ( array_keys( (array) $post_types ) as $post_type ) {
@@ -630,6 +796,18 @@ add_action( 'template_redirect', function () {
 		exit;
 	}
 }, 1 );
+
+/* Retire legacy SEO landings only when their exact live catalog equivalent resolves. */
+add_action( 'template_redirect', function () {
+	if ( ! is_singular( 'page' ) ) {
+		return;
+	}
+	$url = mnsk7_get_legacy_seo_page_target_url( get_post( get_queried_object_id() ) );
+	if ( $url !== '' ) {
+		wp_safe_redirect( $url, 301, 'MNSK7 SEO' );
+		exit;
+	}
+}, 2 );
 
 add_filter( 'wpseo_opengraph_image', function ( $image ) {
 	if ( ! mnsk7_is_guide_post() || ! function_exists( 'mnsk7_get_guide_primary_image_url' ) ) {
@@ -813,8 +991,9 @@ add_action( 'woocommerce_archive_description', function () {
 	}
 	$img_id = get_term_meta( $term->term_id, 'thumbnail_id', true );
 	$desc   = term_description();
-	$is_curated_product_category = $term->taxonomy === 'product_cat' && get_term_meta( $term->term_id, '_mnsk7_term_seo_version', true ) !== '';
-	if ( $is_curated_product_category && ( max( 1, (int) get_query_var( 'paged' ) ) > 1 || mnsk7_is_catalog_filter_request() ) ) {
+	$is_curated_term = in_array( $term->taxonomy, array( 'product_cat', 'product_tag' ), true )
+		&& get_term_meta( $term->term_id, '_mnsk7_term_seo_version', true ) !== '';
+	if ( $is_curated_term && ( max( 1, (int) get_query_var( 'paged' ) ) > 1 || mnsk7_is_catalog_filter_request() ) ) {
 		return;
 	}
 	if ( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ) {
@@ -826,7 +1005,7 @@ add_action( 'woocommerce_archive_description', function () {
 	if ( empty( $img_id ) && empty( $desc ) ) {
 		return;
 	}
-	$classes = $is_curated_product_category ? 'mnsk7-cat-header mnsk7-term-seo mnsk7-term-seo__intro' : 'mnsk7-cat-header';
+	$classes = $is_curated_term ? 'mnsk7-cat-header mnsk7-term-seo mnsk7-term-seo__intro' : 'mnsk7-cat-header';
 	echo '<div class="' . esc_attr( $classes ) . '">';
 	if ( $img_id ) {
 		$alt = ( function_exists( 'mnsk7_strip_wpf_filters_from_text' ) ? mnsk7_strip_wpf_filters_from_text( $term->name ) : $term->name );
@@ -843,7 +1022,7 @@ add_action( 'woocommerce_archive_description', function () {
 if ( ! function_exists( 'mnsk7_render_term_seo_after_products' ) ) {
 	/** Render long category copy and FAQ after the live WooCommerce product loop. */
 	function mnsk7_render_term_seo_after_products( $term ) {
-		if ( ! $term instanceof WP_Term || $term->taxonomy !== 'product_cat' || max( 1, (int) get_query_var( 'paged' ) ) > 1 || mnsk7_is_catalog_filter_request() ) {
+		if ( ! $term instanceof WP_Term || ! in_array( $term->taxonomy, array( 'product_cat', 'product_tag' ), true ) || max( 1, (int) get_query_var( 'paged' ) ) > 1 || mnsk7_is_catalog_filter_request() ) {
 			return;
 		}
 
@@ -879,12 +1058,14 @@ if ( ! function_exists( 'mnsk7_render_term_seo_after_products' ) ) {
 		}
 
 		$links = array();
-		$children = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => $term->term_id, 'hide_empty' => true, 'number' => 6 ) );
-		if ( ! is_wp_error( $children ) ) {
-			foreach ( $children as $child ) {
-				$url = get_term_link( $child );
-				if ( ! is_wp_error( $url ) ) {
-					$links[] = array( 'url' => $url, 'label' => $child->name );
+		if ( $term->taxonomy === 'product_cat' ) {
+			$children = get_terms( array( 'taxonomy' => 'product_cat', 'parent' => $term->term_id, 'hide_empty' => true, 'number' => 6 ) );
+			if ( ! is_wp_error( $children ) ) {
+				foreach ( $children as $child ) {
+					$url = get_term_link( $child );
+					if ( ! is_wp_error( $url ) ) {
+						$links[] = array( 'url' => $url, 'label' => $child->name );
+					}
 				}
 			}
 		}

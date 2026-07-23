@@ -24,9 +24,20 @@ get_header();
 		<?php
 		while ( have_posts() ) :
 			the_post();
+			ob_start();
+			the_content();
+			$page_content = (string) ob_get_clean();
+			$has_h1       = preg_match( '/<h1(?:\s|>)/i', $page_content ) === 1;
+			$is_wc_flow   = ( function_exists( 'is_cart' ) && is_cart() )
+				|| ( function_exists( 'is_checkout' ) && is_checkout() );
 			?>
 			<article id="page-<?php the_ID(); ?>" <?php post_class(); ?>>
-				<?php the_content(); ?>
+				<?php
+				if ( ! $has_h1 && ! $is_wc_flow ) {
+					echo '<h1 class="screen-reader-text">' . esc_html( get_the_title() ) . '</h1>';
+				}
+				echo $page_content; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+				?>
 			</article>
 			<?php
 		endwhile;
