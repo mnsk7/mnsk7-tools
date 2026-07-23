@@ -676,33 +676,51 @@ add_filter( 'wp_robots', function ( $robots ) {
 
 /* Attribute taxonomies and ShopEngine templates never belong in Yoast XML sitemaps. */
 add_filter( 'wpseo_sitemap_exclude_taxonomy', function ( $excluded, $taxonomy ) {
-	if ( strpos( (string) $taxonomy, 'pa_' ) === 0 ) {
+	if ( strpos( (string) $taxonomy, 'pa_' ) === 0 || $taxonomy === 'product_tag' ) {
 		return true;
 	}
-	return $taxonomy === 'product_tag' ? false : $excluded;
+	return $excluded;
 }, 20, 2 );
 
-add_filter( 'wpseo_exclude_from_sitemap_by_term_ids', function ( $excluded_ids ) {
-	$excluded_ids = array_map( 'absint', (array) $excluded_ids );
-	if ( ! taxonomy_exists( 'product_tag' ) ) {
-		return $excluded_ids;
+/*
+ * Yoast's global product-tag noindex setting suppresses the native taxonomy
+ * sitemap before term filters run. Publish only the controlled facets through
+ * one small sitemap instead of enabling every product tag.
+ */
+add_filter( 'wpseo_sitemap_index', function ( $sitemap_index ) {
+	$sitemap_index .= '<sitemap><loc>' . esc_url( home_url( '/material-facets-sitemap.xml' ) ) . '</loc></sitemap>';
+	return $sitemap_index;
+}, 20 );
+
+add_action( 'template_redirect', function () {
+	$request_path = isset( $_SERVER['REQUEST_URI'] ) ? (string) wp_parse_url( wp_unslash( $_SERVER['REQUEST_URI'] ), PHP_URL_PATH ) : ''; // phpcs:ignore WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+	if ( untrailingslashit( $request_path ) !== '/material-facets-sitemap.xml' ) {
+		return;
 	}
-	$terms = get_terms( array(
-		'taxonomy'   => 'product_tag',
-		'hide_empty' => false,
-		'fields'     => 'id=>slug',
-	) );
-	if ( is_wp_error( $terms ) ) {
-		return $excluded_ids;
-	}
-	$allowed = mnsk7_get_indexable_product_tag_slugs();
-	foreach ( $terms as $term_id => $slug ) {
-		if ( ! in_array( $slug, $allowed, true ) ) {
-			$excluded_ids[] = absint( $term_id );
+
+	$urls = array();
+	foreach ( mnsk7_get_indexable_product_tag_slugs() as $slug ) {
+		$term = get_term_by( 'slug', $slug, 'product_tag' );
+		if ( ! $term instanceof WP_Term || (int) $term->count < 1 ) {
+			continue;
+		}
+		$url = get_term_link( $term );
+		if ( ! is_wp_error( $url ) ) {
+			$urls[] = $url;
 		}
 	}
-	return array_values( array_unique( array_filter( $excluded_ids ) ) );
-}, 20 );
+
+	status_header( 200 );
+	header( 'Content-Type: application/xml; charset=UTF-8' );
+	header( 'X-Robots-Tag: noindex, follow', true );
+	echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
+	echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+	foreach ( $urls as $url ) {
+		echo '<url><loc>' . esc_xml( $url ) . '</loc></url>';
+	}
+	echo '</urlset>';
+	exit;
+}, 0 );
 
 add_filter( 'wpseo_sitemap_exclude_post_type', function ( $excluded, $post_type ) {
 	return ( $post_type === 'shopengine-template' || strpos( (string) $post_type, 'shopengine' ) === 0 ) ? true : $excluded;

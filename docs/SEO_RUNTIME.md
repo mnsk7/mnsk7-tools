@@ -48,7 +48,9 @@ versioned migration in `mu-plugins/inc/term-seo.php`. CSS is scoped to
 Only the product tags `aluminium`, `mdf` and `stal` are indexable. They use the
 same WooCommerce taxonomy template, live product loop and term-meta content as
 product categories. All other product tags remain under the Yoast taxonomy
-policy and are excluded from the product-tag sitemap by term ID.
+policy. Because the taxonomy is globally noindex in Yoast, the three allowed
+URLs are published through `material-facets-sitemap.xml`; the broad native
+product-tag sitemap stays disabled.
 
 The following thin legacy pages redirect only to exact live taxonomy
 equivalents:
