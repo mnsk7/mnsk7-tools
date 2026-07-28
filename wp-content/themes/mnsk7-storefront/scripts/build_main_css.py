@@ -9,6 +9,7 @@ PARTS = [
     "02-reset-typography",
     "03-storefront-overrides",
     "04-header",
+    "04-header-isolated",
     "05-plp-cards",
     "06-single-product",
     "07-mnsk7-blocks",

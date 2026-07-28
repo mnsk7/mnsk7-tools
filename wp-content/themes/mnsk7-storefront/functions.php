@@ -18,7 +18,7 @@ if ( ! defined( 'MNSK7_BREAKPOINT_MOBILE' ) ) {
 
 /** Wersja motywu (komentarz w header.php — weryfikacja deploy / cache). */
 if ( ! defined( 'MNSK7_THEME_VERSION' ) ) {
-	define( 'MNSK7_THEME_VERSION', '1.0.93' );
+	define( 'MNSK7_THEME_VERSION', '1.0.95' );
 }
 
 /**
@@ -884,6 +884,7 @@ add_action( 'wp_enqueue_scripts', function () {
 	}
 	wp_enqueue_style( 'mnsk7-storefront-style', get_stylesheet_uri(), $child_deps, $v );
 	wp_enqueue_style( 'mnsk7-main', get_stylesheet_directory_uri() . '/assets/css/main.css', array( 'mnsk7-storefront-style' ), $v );
+	wp_enqueue_script( 'mnsk7-header-isolated', get_stylesheet_directory_uri() . '/assets/js/header-isolated.js', array(), $v, true );
 	// Footer accordion: single source of truth = external script (mobile-only behavior inside JS).
 	wp_enqueue_script( 'mnsk7-footer-accordion', get_stylesheet_directory_uri() . '/assets/js/footer-accordion.js', array(), $v, true );
 	if ( is_front_page() ) {
@@ -1237,9 +1238,9 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( $fragments ) {
 		: sprintf( _n( 'Koszyk, %d pozycja', 'Koszyk, %d pozycji', $cart_count, 'mnsk7-storefront' ), $cart_count );
 	ob_start();
 	?>
-	<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger" aria-label="<?php echo esc_attr( $cart_aria_label ); ?>" aria-haspopup="dialog" aria-expanded="false" aria-controls="mnsk7-header-cart-dropdown">
-		<span class="mnsk7-header__cart-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></span>
-		<span class="mnsk7-header__cart-count" aria-hidden="true"><?php echo absint( $cart_count ); ?></span>
+	<a href="<?php echo esc_url( wc_get_cart_url() ); ?>" class="cart-contents mnsk7-header__cart-trigger mnsk7h__action mnsk7h__cart-trigger" aria-label="<?php echo esc_attr( $cart_aria_label ); ?>" aria-expanded="false" aria-controls="mnsk7h-cart-dropdown">
+		<svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
+		<span class="mnsk7-header__cart-count mnsk7h__cart-count" aria-hidden="true"><?php echo absint( $cart_count ); ?></span>
 	</a>
 	<?php
 	$fragments['a.mnsk7-header__cart-trigger'] = ob_get_clean();
@@ -1252,6 +1253,7 @@ add_filter( 'woocommerce_add_to_cart_fragments', function ( $fragments ) {
 
 /* 1d. Header: mobile menu, search toggle, cart dropdown, promo bar dismiss, sticky shrink on scroll. PERFORMANCE: critical UI (menu, search, cart) — od razu; promo/shrink/Instagram — w requestIdleCallback, żeby nie blokować main thread i nie opóźniać pierwszego kliku w menu/search/cart. Na archive: cały init w jednym rIC (timeout 150) — redukcja TBT. */
 add_action( 'wp_footer', function () {
+	return;
 	$mnsk7_is_archive = function_exists( 'is_shop' ) && ( is_shop() || is_product_category() || is_product_tag() );
 	?>
 	<script>
