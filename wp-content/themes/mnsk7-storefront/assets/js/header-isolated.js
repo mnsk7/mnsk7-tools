@@ -130,22 +130,6 @@
       }, true);
     }
 
-    var shopDetails = header.querySelector('.mnsk7h__shop');
-    var closeTimer;
-    if (shopDetails) {
-      shopDetails.addEventListener('mouseenter', function () {
-        if (!isDesktop()) return;
-        window.clearTimeout(closeTimer);
-        shopDetails.open = true;
-      });
-      shopDetails.addEventListener('mouseleave', function () {
-        if (!isDesktop()) return;
-        closeTimer = window.setTimeout(function () {
-          shopDetails.open = false;
-        }, 180);
-      });
-    }
-
     function handleBreakpoint() {
       render('closed');
       closeDetails();
