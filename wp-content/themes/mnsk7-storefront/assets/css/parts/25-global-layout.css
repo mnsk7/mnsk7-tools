@@ -532,10 +532,9 @@ body.home .mnsk7-content,
   }
 }
 
-/* Prod mobile final: natywny przesuwany drawer (ładowany ostatni, wygrywa nad legacy).
-   Pozycjonowanie/transform/visibility paneli pochodzą z 04-header.css; tutaj tylko
-   doprecyzowanie warstwy "prod" (padding/tło/wiersze) zgodne z drawerem. */
-@media (max-width: 1023px) {
+/* Legacy production drawer retained for rollback only.
+   The active mobile header contract lives entirely in 04-header.css. */
+@media (max-width: 0px) {
   .mnsk7-header__nav .mnsk7-header__menu {
     padding: 0 !important;
     gap: 0 !important;
