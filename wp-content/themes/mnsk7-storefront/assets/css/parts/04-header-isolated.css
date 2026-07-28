@@ -259,13 +259,6 @@ body.mnsk7h-has-promo .mnsk7h__mega {
   background: var(--color-surface);
 }
 
-.mnsk7h__count {
-  margin-left: auto;
-  color: var(--color-text-muted);
-  font-size: 0.75rem;
-  font-weight: 500;
-}
-
 .mnsk7h__subcategory-panel {
   border-top: 1px solid var(--color-border);
 }

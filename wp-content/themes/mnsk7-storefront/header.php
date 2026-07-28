@@ -99,7 +99,6 @@ wp_body_open();
 												<details>
 													<summary>
 														<span><?php echo esc_html( $mnsk7_parent_name ); ?></span>
-														<span class="mnsk7h__count" aria-hidden="true"><?php echo esc_html( number_format_i18n( count( $mnsk7_children ) ) ); ?></span>
 													</summary>
 													<div class="mnsk7h__subcategory-panel">
 														<a class="mnsk7h__category-all" href="<?php echo esc_url( $mnsk7_parent_url ); ?>">
@@ -125,9 +124,6 @@ wp_body_open();
 																<li>
 																	<a href="<?php echo esc_url( $mnsk7_child_url ); ?>">
 																		<span><?php echo esc_html( $mnsk7_term_label( $mnsk7_child->name ) ); ?></span>
-																		<?php if ( (int) $mnsk7_child->count > 0 ) : ?>
-																			<span class="mnsk7h__count" aria-hidden="true"><?php echo esc_html( number_format_i18n( (int) $mnsk7_child->count ) ); ?></span>
-																		<?php endif; ?>
 																	</a>
 																</li>
 															<?php endforeach; ?>
@@ -137,9 +133,6 @@ wp_body_open();
 											<?php else : ?>
 												<a href="<?php echo esc_url( $mnsk7_parent_url ); ?>">
 													<span><?php echo esc_html( $mnsk7_parent_name ); ?></span>
-													<?php if ( (int) $mnsk7_parent->count > 0 ) : ?>
-														<span class="mnsk7h__count" aria-hidden="true"><?php echo esc_html( number_format_i18n( (int) $mnsk7_parent->count ) ); ?></span>
-													<?php endif; ?>
 												</a>
 											<?php endif; ?>
 										</li>
