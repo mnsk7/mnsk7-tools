@@ -23,6 +23,14 @@ defined( 'ABSPATH' ) || exit;
 	}
 	?>
 	<?php wp_head(); ?>
+	<?php
+	// Krytyczne style nagłówka inline — gwarantują ten sam wygląd także gdy URL ma parametry ?filter_*
+	// (cache/CDN może serwować stronę bez pełnego CSS; te reguły zapobiegają "złamaniu" headera).
+	?>
+	<style id="mnsk7-header-critical">
+	#masthead.mnsk7-header{background:#fff;position:sticky;top:env(safe-area-inset-top,0px);z-index:1000;border-bottom:1px solid #e9e8cc;box-shadow:0 1px 3px rgba(0,0,0,.06);min-height:56px;box-sizing:border-box;padding-top:0;padding-bottom:0;margin-bottom:0}
+	body.mnsk7-has-promo #masthead.mnsk7-header.mnsk7-header--sticky{top:calc(env(safe-area-inset-top,0px) + var(--mnsk7-promo-h,2.5rem))}
+	</style>
 </head>
 <body <?php body_class(); ?>>
 <?php
@@ -63,12 +71,6 @@ endif;
 				<span class="mnsk7-header__hamburger" aria-hidden="true"></span>
 			</button>
 			<ul id="mnsk7-primary-menu" class="mnsk7-header__menu">
-				<li class="mnsk7-drawer__chrome">
-					<span class="mnsk7-drawer__title"><?php esc_html_e( 'Menu', 'mnsk7-storefront' ); ?></span>
-					<button type="button" class="mnsk7-drawer__close" aria-label="<?php esc_attr_e( 'Zamknij menu', 'mnsk7-storefront' ); ?>">
-						<span aria-hidden="true">&times;</span>
-					</button>
-				</li>
 				<?php
 				$shop_url = ( function_exists( 'wc_get_page_permalink' ) ) ? wc_get_page_permalink( 'shop' ) : home_url( '/sklep/' );
 				$is_shop_archive = function_exists( 'mnsk7_is_plp' ) && mnsk7_is_plp();
@@ -85,9 +87,6 @@ endif;
 				?>
 				<li<?php echo $sklep_class; ?>>
 					<a href="<?php echo esc_url( $shop_url ); ?>" class="mnsk7-menu-item-sklep" aria-haspopup="true" aria-expanded="false" aria-controls="mnsk7-menu-submenu-sklep" data-mnsk7="sklep-parent"><?php esc_html_e( 'Sklep', 'mnsk7-storefront' ); ?></a>
-					<button type="button" class="mnsk7-drawer__submenu-toggle" aria-expanded="false" aria-controls="mnsk7-menu-submenu-sklep" aria-label="<?php esc_attr_e( 'Rozwiń: Sklep', 'mnsk7-storefront' ); ?>">
-						<span aria-hidden="true"></span>
-					</button>
 					<?php
 					$has_submenu = true;
 					$top_cats = array();
@@ -109,13 +108,15 @@ endif;
 						return $name;
 					};
 					?>
-					<ul id="mnsk7-menu-submenu-sklep" class="sub-menu mnsk7-megamenu" aria-label="<?php esc_attr_e( 'Sklep — kategorie i tagi', 'mnsk7-storefront' ); ?>">
-						<li class="mnsk7-drawer__shop-all">
-							<a href="<?php echo esc_url( $shop_url ); ?>"><?php esc_html_e( 'Zobacz cały sklep', 'mnsk7-storefront' ); ?></a>
+					<ul id="mnsk7-menu-submenu-sklep" class="sub-menu mnsk7-megamenu" role="menu" aria-label="<?php esc_attr_e( 'Sklep — kategorie i tagi', 'mnsk7-storefront' ); ?>">
+						<li class="mnsk7-megamenu__mobile-bar">
+							<button type="button" class="mnsk7-megamenu__back" data-mnsk7-megamenu-back aria-label="<?php esc_attr_e( 'Wróć do menu', 'mnsk7-storefront' ); ?>">
+								<span class="mnsk7-megamenu__back-icon" aria-hidden="true">&larr;</span>
+								<?php esc_html_e( 'Wróć', 'mnsk7-storefront' ); ?>
+							</button>
 						</li>
 						<li class="mnsk7-drawer__section" role="presentation"><?php esc_html_e( 'Kategorie', 'mnsk7-storefront' ); ?></li>
-						<li class="mnsk7-megamenu__cards" role="presentation">
-							<ul class="mnsk7-megamenu__cards-list">
+						<div class="mnsk7-megamenu__cards">
 						<?php
 						/* Każda kolumna = kategoria nadrzędna (nagłówek-link) + jej podkategorie (drzewo Woo). */
 						foreach ( $mm_tree as $node ) {
@@ -143,12 +144,10 @@ endif;
 								$pcount_num = (int) $parent->count;
 							}
 							$pcount_html = $pcount_num > 0 ? '<span class="mnsk7-megamenu__count" aria-hidden="true">' . esc_html( number_format_i18n( $pcount_num ) ) . '</span>' : '';
-							$panel_id = 'mnsk7-megamenu-panel-' . (int) $parent->term_id;
 							echo '<li class="mnsk7-megamenu__col">';
 							echo '<a class="mnsk7-megamenu__col-title' . ( $p_active ? ' mnsk7-megamenu__link--active' : '' ) . '" href="' . esc_url( $plink ) . '"><span class="mnsk7-megamenu__name">' . esc_html( $pname ) . '</span>' . $pcount_html . '</a>';
 							if ( ! empty( $children ) ) {
-								echo '<button type="button" class="mnsk7-drawer__submenu-toggle" aria-expanded="false" aria-controls="' . esc_attr( $panel_id ) . '" aria-label="' . esc_attr( sprintf( __( 'Rozwiń: %s', 'mnsk7-storefront' ), $pname ) ) . '"><span aria-hidden="true"></span></button>';
-								echo '<ul id="' . esc_attr( $panel_id ) . '" class="mnsk7-megamenu__list">';
+								echo '<ul class="mnsk7-megamenu__list">';
 								foreach ( $children as $child ) {
 									if ( ! ( $child instanceof WP_Term ) ) {
 										continue;
@@ -170,8 +169,7 @@ endif;
 						<?php if ( ! empty( $top_tags ) ) : ?>
 						<li class="mnsk7-megamenu__col mnsk7-megamenu__col--tags">
 							<span class="mnsk7-megamenu__col-title"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_tags', __( 'Zastosowanie i materiały', 'mnsk7-storefront' ) ) ); ?></span>
-							<button type="button" class="mnsk7-drawer__submenu-toggle" aria-expanded="false" aria-controls="mnsk7-megamenu-panel-tags" aria-label="<?php esc_attr_e( 'Rozwiń: Zastosowanie i materiały', 'mnsk7-storefront' ); ?>"><span aria-hidden="true"></span></button>
-							<ul id="mnsk7-megamenu-panel-tags" class="mnsk7-megamenu__list">
+							<ul class="mnsk7-megamenu__list">
 								<?php
 								foreach ( $top_tags as $term ) {
 									$link = get_term_link( $term );
@@ -187,8 +185,7 @@ endif;
 						<?php if ( ! empty( $accessory_cats ) ) : ?>
 						<li class="mnsk7-megamenu__col mnsk7-megamenu__col--accessories">
 							<span class="mnsk7-megamenu__col-title"><?php echo esc_html( apply_filters( 'mnsk7_megamenu_heading_accessories', __( 'Osprzęt i akcesoria', 'mnsk7-storefront' ) ) ); ?></span>
-							<button type="button" class="mnsk7-drawer__submenu-toggle" aria-expanded="false" aria-controls="mnsk7-megamenu-panel-accessories" aria-label="<?php esc_attr_e( 'Rozwiń: Osprzęt i akcesoria', 'mnsk7-storefront' ); ?>"><span aria-hidden="true"></span></button>
-							<ul id="mnsk7-megamenu-panel-accessories" class="mnsk7-megamenu__list">
+							<ul class="mnsk7-megamenu__list">
 								<?php
 								foreach ( $accessory_cats as $term ) {
 									$link = get_term_link( $term );
@@ -201,15 +198,7 @@ endif;
 							</ul>
 						</li>
 						<?php endif; ?>
-							</ul>
-							<a class="mnsk7-megamenu__pane-header" href="#" hidden>
-								<span class="mnsk7-megamenu__pane-header-title"></span>
-								<span class="mnsk7-megamenu__pane-header-all"></span>
-							</a>
-							<div class="mnsk7-megamenu__cta" hidden>
-								<a class="mnsk7-megamenu__cta-link" href="#"></a>
-							</div>
-						</li>
+						</div>
 						<li class="mnsk7-megamenu__footer">
 							<a href="<?php echo esc_url( $shop_url ); ?>"<?php echo is_shop() ? ' class="mnsk7-megamenu__link--active"' : ''; ?>><?php esc_html_e( 'Wszystkie produkty', 'mnsk7-storefront' ); ?> &rarr;</a>
 						</li>
@@ -236,7 +225,7 @@ endif;
 			// Search: один поиск — только иконка, по клику dropdown (inline form скрыт)
 			?>
 			<div class="mnsk7-header__search-wrap">
-				<button type="button" class="mnsk7-header__search-toggle" aria-expanded="false" aria-controls="mnsk7-header-search" aria-label="<?php esc_attr_e( 'Szukaj', 'mnsk7-storefront' ); ?>" data-close-label="<?php esc_attr_e( 'Zamknij wyszukiwanie', 'mnsk7-storefront' ); ?>" data-open-label="<?php esc_attr_e( 'Szukaj', 'mnsk7-storefront' ); ?>">
+				<button type="button" class="mnsk7-header__search-toggle" aria-expanded="false" aria-controls="mnsk7-header-search-panel" aria-label="<?php esc_attr_e( 'Szukaj', 'mnsk7-storefront' ); ?>" data-close-label="<?php esc_attr_e( 'Zamknij wyszukiwanie', 'mnsk7-storefront' ); ?>" data-open-label="<?php esc_attr_e( 'Szukaj', 'mnsk7-storefront' ); ?>">
 					<span class="mnsk7-header__search-icon" aria-hidden="true"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></span>
 					<span class="mnsk7-header__search-label"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></span>
 				</button>
@@ -295,5 +284,13 @@ endif;
 		</div>
 	</div>
 </header>
+<div id="mnsk7-header-search-panel" class="mnsk7-header-search-panel" aria-hidden="true" hidden>
+	<form role="search" method="get" class="mnsk7-header-search-panel__form" action="<?php echo esc_url( home_url( '/' ) ); ?>">
+		<label for="mnsk7-header-search-panel-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
+		<input type="search" id="mnsk7-header-search-panel-input" class="mnsk7-header-search-panel__input" placeholder="<?php esc_attr_e( 'Szukaj produktów…', 'mnsk7-storefront' ); ?>" value="<?php echo esc_attr( get_search_query() ); ?>" name="s" />
+		<input type="hidden" name="post_type" value="product" />
+		<button type="submit" class="mnsk7-header-search-panel__submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
+	</form>
+</div>
 
 <div id="content" class="site-content mnsk7-content">
