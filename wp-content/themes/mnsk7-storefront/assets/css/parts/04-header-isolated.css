@@ -389,7 +389,7 @@ body.mnsk7h-has-promo .mnsk7h__mega {
   position: relative;
 }
 
-.mnsk7h__cart-count {
+.mnsk7h .mnsk7h__cart-count {
   position: absolute;
   top: -3px;
   right: -3px;
@@ -423,6 +423,13 @@ body.mnsk7h-has-promo .mnsk7h__mega {
 
 .mnsk7h__cart-dropdown[hidden] {
   display: none;
+}
+
+@media (min-width: 1024px) {
+  .mnsk7h__menu-toggle,
+  .mnsk7h__search-toggle {
+    display: none;
+  }
 }
 
 @media (max-width: 1023px) {
