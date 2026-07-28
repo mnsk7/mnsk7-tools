@@ -27,7 +27,7 @@ button.button,
 .single_add_to_cart_button,
 .add_to_cart_button,
 input[type="submit"],
-button[type="submit"] {
+button[type="submit"]:not(.mnsk7h__search-submit) {
   border-radius: var(--r-md) !important;
   min-height: 44px;
   box-sizing: border-box;

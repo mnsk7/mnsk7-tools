@@ -174,7 +174,7 @@ wp_body_open();
 						<label for="mnsk7h-search-input" class="screen-reader-text"><?php esc_html_e( 'Szukaj produktów', 'mnsk7-storefront' ); ?></label>
 						<input id="mnsk7h-search-input" type="search" name="s" value="<?php echo esc_attr( get_search_query() ); ?>" placeholder="<?php esc_attr_e( 'Szukaj produktów…', 'mnsk7-storefront' ); ?>">
 						<input type="hidden" name="post_type" value="product">
-						<button type="submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
+						<button type="submit" class="mnsk7h__search-submit"><?php esc_html_e( 'Szukaj', 'mnsk7-storefront' ); ?></button>
 					</form>
 				</div>
 
