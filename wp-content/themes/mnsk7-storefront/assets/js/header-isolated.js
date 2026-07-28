@@ -19,6 +19,23 @@
     var activeState = 'closed';
     var previousFocus = null;
 
+    function normalizeCartTrigger() {
+      var cart = header.querySelector('.mnsk7h__cart');
+      if (!cart) return null;
+
+      var trigger = cart.querySelector('a.cart-contents, a.mnsk7-header__cart-trigger');
+      if (!trigger) return null;
+
+      trigger.classList.add('mnsk7h__action', 'mnsk7h__cart-trigger');
+      trigger.setAttribute('aria-controls', 'mnsk7h-cart-dropdown');
+      trigger.removeAttribute('aria-haspopup');
+
+      var count = trigger.querySelector('.mnsk7h__cart-count, .mnsk7-header__cart-count, .count');
+      if (count) count.classList.add('mnsk7h__cart-count');
+
+      return trigger;
+    }
+
     function isDesktop() {
       return desktopMedia.matches;
     }
@@ -49,7 +66,7 @@
       setControlState(menuToggle, menuOpen);
       setControlState(searchToggle, searchOpen);
 
-      var cartTrigger = header.querySelector('.mnsk7h__cart-trigger');
+      var cartTrigger = normalizeCartTrigger();
       if (cartTrigger) cartTrigger.setAttribute('aria-expanded', cartOpen ? 'true' : 'false');
       if (cartDropdown) cartDropdown.hidden = !cartOpen;
 
@@ -180,10 +197,12 @@
 
     if (window.jQuery) {
       window.jQuery(document.body).on('wc_fragments_refreshed wc_fragments_loaded added_to_cart', function () {
+        normalizeCartTrigger();
         render('closed');
       });
     }
 
+    normalizeCartTrigger();
     render('closed');
   }
 
